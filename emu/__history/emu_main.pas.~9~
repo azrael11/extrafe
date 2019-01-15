@@ -1,0 +1,21 @@
+unit emu_main;
+
+interface
+uses
+  System.Classes;
+
+  procedure uEmu_Main_Initialization;
+
+implementation
+uses
+  emu,
+  uWindows;
+
+procedure uEmu_Main_Initialization;
+begin
+  Emu_Form.Width:= vMonitor_Resolution.Horizontal;
+  Emu_Form.Height:= vMonitor_Resolution.Vertical;
+end;
+
+
+end.

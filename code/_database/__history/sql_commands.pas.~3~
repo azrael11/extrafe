@@ -1,0 +1,11 @@
+unit sql_commands;
+
+interface
+uses
+  System.Classes;
+
+  function uDatabase_Is_User_Exists(vUser: string): Boolean;
+
+implementation
+
+end.

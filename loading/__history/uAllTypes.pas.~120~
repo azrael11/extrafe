@@ -1,0 +1,229 @@
+unit uAllTypes;
+
+interface
+uses
+  System.Classes,
+  System.Inifiles,
+  FMX.OBjects,
+  FMX.Effects,
+  FMX.Ani,
+  ALFmxTabControl;
+
+
+/// Extrafe variable types
+type TEXTRAFE_BUILD_INFO= record
+  Major: String;
+  Minor: String;
+  Realeash: String;
+  Build: String;
+end;
+
+type TEXTRAFE_LOADING= record
+  Images_Path: String;
+end;
+
+type TEXTRAFE_PROGRAM= record
+  Path: String;
+  Name: String;
+  Lib_Path: String;
+  Version: TEXTRAFE_BUILD_INFO;
+  Desc: String;
+  History_Path: String;
+  State: String;
+end;
+
+type TEXTRAFE_INI= record
+  Path: String;
+  Name: String;
+  Ini: TIniFile;
+end;
+
+type TEXTRAFE_MAIN_POSITIONS= Record
+  X: Single;
+  Y: Single;
+End;
+
+type TEXTRAFE_MAIN_MENU_EMULATOR= record
+  Active: Boolean;
+  Active_Place: Integer;
+  Name: String;
+  Menu_Image: String;
+  Image_Path: String;
+  Second_Level: Integer;
+end;
+
+type TEXTRAFE_MAIN_MENU_EMULATOR_TAB= record
+  IsMainActive: Boolean;
+  Tab: TALTabItem;
+  Logo: TImage;
+  Logo_Glow: TGlowEffect;
+  Story: TText;
+  Long_Icons: TImage;
+end;
+
+type TEXTRAFE_MAIN_MENU_EMULATOR_SETTINGS= record
+  Path: String;
+  Selection: TALTabControl;
+  Selection_Ani: TFloatAnimation;
+  Selection_Tab: array[0..255] of TEXTRAFE_MAIN_MENU_EMULATOR_TAB;
+  First: array [0..4] of TEXTRAFE_MAIN_MENU_EMULATOR;
+  Arcade: array [0..10] of TEXTRAFE_MAIN_MENU_EMULATOR;
+  Computers: array [0..10] of TEXTRAFE_MAIN_MENU_EMULATOR;
+  Consoles: array [0..10] of TEXTRAFE_MAIN_MENU_EMULATOR;
+  Handhelds: array [0..10] of TEXTRAFE_MAIN_MENU_EMULATOR;
+  Pinball: array [0..10] of TEXTRAFE_MAIN_MENU_EMULATOR;
+  Active: Boolean;
+  Active_Num: Integer;
+  Total_Num: Integer;
+  Active_First: Boolean;
+  Level: Integer;
+  Category: Integer;
+end;
+
+type TEXTRAFE_MAIN_SETTINGS= record
+  ShowConfig: Boolean;
+  IsAnyAddon_Active: Boolean;
+  Active_Addon: string;
+  Header_Pos: TEXTRAFE_MAIN_POSITIONS;
+  MainSelection_Pos: TEXTRAFE_MAIN_POSITIONS;
+  Footer_Pos: TEXTRAFE_MAIN_POSITIONS;
+  Config_Pos: TEXTRAFE_MAIN_POSITIONS;
+end;
+
+type TEXTRAFE_MAIN_PATHS= record
+  Images: String;
+  Config_Images: String;
+  Avatar_Images: String;
+  Flags_Images: String;
+end;
+
+type TEXTRAFE_MAIN= record
+  Paths: TEXTRAFE_MAIN_PATHS;
+  Settings: TEXTRAFE_MAIN_SETTINGS;
+  emulators: TEXTRAFE_MAIN_MENU_EMULATOR_SETTINGS;
+end;
+
+type TEXTRAFE_RESOLUTION= Record
+  Fullscreen: Boolean;
+  Width: Integer;
+  Height: Integer;
+end;
+
+type TEXTRAFE_STYLES= record
+  Path: String;
+  Num: Integer;
+  Name: String;
+  Names: TStringList;
+end;
+
+
+type TEXTRAFE= record
+  loading: TEXTRAFE_LOADING;
+  prog: TEXTRAFE_PROGRAM;
+  ini: TEXTRAFE_INI;
+  main: TEXTRAFE_MAIN;
+  users_active: integer;
+  users_total: integer;
+  user_login: boolean;
+  res: TEXTRAFE_RESOLUTION;
+  style: TEXTRAFE_STYLES;
+  database_is_connected: boolean;
+end;
+
+/// Addons Variable Types
+
+type TADDON_WIDGET= record
+  position_x: Single;
+  position_y: Single;
+  width: Integer;
+  height: Integer;
+  blocks_getin_x: Integer;
+  blocks_getin_y: Integer;
+  blocks_start_block_x: Integer;
+  blocks_start_block_y: Integer;
+  name: string;
+  place: Integer;
+end;
+
+type TADDON_TIME= record
+  Active: Boolean;
+  Main_Menu_Position: Integer;
+  Config_Ini: TIniFile;
+  Config_Ini_Name: string;
+  Config_Ini_Path: string;
+  Paths_Images: string;
+  widget: TADDON_WIDGET;
+end;
+
+type TADDON_CALENDAR= record
+  Active: Boolean;
+  Main_Menu_Position: Integer;
+  Config_Ini: TIniFile;
+  Config_Ini_Name: string;
+  Config_Ini_Path: string;
+  widget: TADDON_WIDGET;
+end;
+
+type TADDON_SOUNDPLAYER= record
+  Active: Boolean;
+  Main_Menu_Position: Integer;
+  Config_Ini: TIniFile;
+  Config_Ini_Name: string;
+  Config_Ini_Path: string;
+  Paths_Images: String;
+  Playlists_Path: string;
+  Total_Playlists: SmallInt;
+  Active_Playlist: SmallInt;
+  Playlist_Name: string;
+  Playlist_Type: String;
+  LastPlayed_Song: SmallInt;
+  Last_Volume: Real;
+  wideget: TADDON_WIDGET;
+end;
+
+type TADDON_WEATHER= record
+  Active: Boolean;
+  Main_Menu_Position: Integer;
+  Config_Ini: TIniFile;
+  Config_Ini_Name: string;
+  Config_Ini_Path: string;
+  Images_Path: string;
+  ShowConfig: Boolean;
+  Provider: string;
+  Active_Weoid: Integer;
+  Active_Total: Integer;
+  Weoid_Per_Provider: array of array of Integer;
+  Degree: String;
+  Refresh_Once: Boolean;
+  Iconset_Path: string;
+  Iconset: string;
+  Iconset_Count: Integer;
+  Iconset_Names: TStringList;
+  wideget: TADDON_WIDGET;
+end;
+
+type TADDON= record
+  Active: Boolean;
+  Active_Num: Integer;
+  Active_Now_Num: Integer;
+  Total_Num: Integer;
+  Active_PosNames: array[0..255] of string;
+  Widget_Active: Boolean;
+  Widget_Active_Num: Integer;
+  Widget_Total_Num: Integer;
+  Widget_Active_Names: array[0..100] of TADDON_WIDGET;
+  time: TADDON_TIME;
+  calendar: TADDON_CALENDAR;
+  weather: TADDON_WEATHER;
+  soundplayer: TADDON_SOUNDPLAYER;
+end;
+
+var
+  extrafe: TEXTRAFE;
+  addons: TADDON;
+
+////////////////////////////////////////////////////////////////////////////////
+
+implementation
+
+end.

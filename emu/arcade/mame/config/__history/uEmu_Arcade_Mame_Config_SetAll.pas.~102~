@@ -1,0 +1,163 @@
+unit uEmu_Arcade_Mame_Config_SetAll;
+
+interface
+uses
+  System.Classes,
+  FMX.TabControl,
+  FMX.StdCtrls,
+  FMX.Layouts,
+  FMX.Edit,
+  FMX.Objects,
+  FMX.Listbox,
+  FMX.Dialogs;
+
+
+type TMAME_CONFIG_DIRECTORIES= record
+  TabControl: TTabControl;
+  Roms: TTabItem;
+  Media: TTabItem;
+
+  Roms_Find: TSpeedButton;
+  Roms_VertScrollBox: TVertScrollBox;
+  Roms_Edit: array [0..100] of TEdit;
+  Roms_Del: array [0..100] of TSpeedButton;
+
+  Media_VertScrollBox: TVertScrollBox;
+  Media_Labels: array [0..25] of TLabel;
+  Media_CheckAndDownload: array [0..25] of TText;
+  Media_Edit: array [0..25] of TEdit;
+  Media_Change: array [0..25] of TSpeedButton;
+
+  Check: TPanel;
+  Check_Header: TPanel;
+  Check_Header_Label: TLabel;
+  Check_Main: TPanel;
+  Check_Main_Label: TLabel;
+  Check_Main_ProgressBar: TProgressBar;
+  Check_Cancel: TButton;
+
+end;
+
+type TMAME_CONFIG_DISPLAY= record
+  Checkbox: array [0..12] of TCheckBox;
+  Groupbox: array [0..9] of TGroupBox;
+  Trackbar: array [0..6] of TTrackBar;
+  Labels: array [0..8] of TLabel;
+  Combobox: array [0..1] of TComboBox;
+end;
+
+type TMAME_CONFIG_ADVANCE= record
+  Labels: array [0..6] of TLabel;
+  Checkbox: array [0..5] of TCheckBox;
+  Groupbox: array [0..6] of TGroupBox;
+  Combobox: TComboBox;
+  Edit: TEdit;
+  Trackbar: array [0..4] of TTrackBar;
+  Button: array [0..1] of TButton;
+  FileDialog: TOpenDialog;
+  FileDialog_Result: String;
+end;
+
+type TMAME_CONFIG_SCREEN= record
+  Labels: array [0..4] of TLabel;
+  Checkbox: array [0..1] of TCheckBox;
+  Groupbox: array [0..7] of TGroupBox;
+  Combobox: array [0..4] of TComboBox;
+  Edit: array [0..1] of TEdit;
+  Trackbar: TTrackBar;
+  Start: boolean;
+  JustChangeTheScreens: Boolean;
+end;
+
+type TMAME_CONFIG_OPENGL_BGFX= record
+  Labels: array [0..1] of TLabel;
+  Checkbox: array [0..5] of TCheckBox;
+  Groupbox: array [0..2] of TGroupBox;
+  Combobox: TComboBox;
+  Edit: TEdit;
+  Button: array [0..1] of TButton;
+  OpenDialog: TOpenDialog;
+  OpenDialog_Result: String;
+end;
+
+type TMAME_CONFIG_OPENGL_SHANDERS= record
+  Labels: array [0..1] of TLabel;
+  Groupbox: array [0..7] of TGroupBox;
+  Edit: array [0..7] of TEdit;
+  Button: array [0..15] of TButton;
+  OpenDialog: TOpenDialog;
+  OpenDialog_Result: String;
+end;
+
+type TMAME_CONFIG_VECTOR= record
+  Labels: array [0..5] of TLabel;
+  Groupbox: array [0..3] of TGroupBox;
+  Trackbar: array [0..3] of TTrackBar;
+end;
+
+type TMAME_CONFIG_SOUND= record
+  Labels: array [0..3] of TLabel;
+  Groupbox: array [0..3] of TGroupBox;
+  Trackbar: array [0..1] of TTrackBar;
+  Combobox: array [0..1] of TComboBox;
+  Checkbox: TCheckBox;
+end;
+
+type TMAME_CONFIG_CONTROLLERS= record
+  Labels: array [0..3] of TLabel;
+  Checkbox: array [0..7] of TCheckBox;
+  Groupbox: array [0..4] of TGroupBox;
+  Trackbar: array [0..1] of TTrackBar;
+  Combobox: TComboBox;
+  Edit: TEdit;
+  Button: TButton;
+end;
+
+type TMAME_CONFIG_CONTROLLERS_MAPPING= record
+  Labels: array [0..1] of TLabel;
+  Groupbox: array [0..7] of TGroupBox;
+  Combobox: array [0..7] of TComboBox;
+end;
+
+type TMAME_CONFIG_MISCELLANEOUS= record
+  Labels: array [0..4] of TLabel;
+  Checkbox: array [0..14] of TCheckBox;
+  Groupbox: array [0..3] of TGroupBox;
+  Combobox: TComboBox;
+  Edit: TEdit;
+  Trackbar: TTrackBar;
+  Button: array [0..1] of TButton;
+  FileDialog: TOpenDialog;
+  FileDialog_Result: String;
+end;
+
+type TMAME_CONFIG_MISCELLANEOUS_II= record
+
+end;
+
+type TMAME_CONFIG_SNAP_MOVIE_PLAYBACK= record
+
+end;
+
+type TMAME_CONFIG= record
+  Dirs: TMAME_CONFIG_DIRECTORIES;
+  Display: TMAME_CONFIG_DISPLAY;
+  Advance: TMAME_CONFIG_ADVANCE;
+  Screen: TMAME_CONFIG_SCREEN;
+  OGL_BGFX: TMAME_CONFIG_OPENGL_BGFX;
+  OGL_Shaders: TMAME_CONFIG_OPENGL_SHANDERS;
+  Vector: TMAME_CONFIG_VECTOR;
+  Sound: TMAME_CONFIG_SOUND;
+  Controls: TMAME_CONFIG_CONTROLLERS;
+  Controls_Map: TMAME_CONFIG_CONTROLLERS_MAPPING;
+  Misc: TMAME_CONFIG_MISCELLANEOUS;
+  Misc_II: TMAME_CONFIG_MISCELLANEOUS_II;
+  S_M_P: TMAME_CONFIG_SNAP_MOVIE_PLAYBACK;
+end;
+
+  var
+    vMame_Config: TMAME_CONFIG;
+
+implementation
+
+end.

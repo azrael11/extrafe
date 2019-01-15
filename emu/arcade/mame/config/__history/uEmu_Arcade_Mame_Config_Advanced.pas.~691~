@@ -1,0 +1,437 @@
+unit uEmu_Arcade_Mame_Config_Advanced;
+
+interface
+uses
+  System.Classes,
+  System.UITypes,
+  System.SysUtils,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Edit,
+  FMX.Listbox,
+  FMX.Objects,
+  FMX.Dialogs;
+
+  procedure uEmu_Arcade_Mame_Config_Create_Advanced_Panel;
+
+  procedure uEmu_Arcade_Mame_Config_Advanced_CheckboxClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Advanced_TrackbarChange(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Advanced_ButtonClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Advanced_ComboboxChange(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Advanced_OpenDialogOnClose;
+
+implementation
+uses
+  uTText,
+  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_SetAll,
+  uEmu_Arcade_Mame_Config,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Config_Mouse;
+
+procedure uEmu_Arcade_Mame_Config_Create_Advanced_Panel;
+begin
+  vMame.Config.Panel.Advance.OpenDialog:= TOpenDialog.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.OpenDialog.Name:= 'Mame_Adv_Effect_OpenDialog';
+  vMame.Config.Panel.Advance.OpenDialog.Filter:= 'Effects (*.png)|*.png';
+  vMame.Config.Panel.Advance.OpenDialog.OnClose:= mame.Config.Input.Mouse.OpenDialog.OnClose;
+
+  vMame.Config.Panel.Advance.Labels[0]:= TLabel.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Labels[0].Name:= 'Mame_Advanced_InfoLabel_1';
+  vMame.Config.Panel.Advance.Labels[0].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Labels[0].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Advance.Labels[0].Text:= 'Global Options';
+  vMame.Config.Panel.Advance.Labels[0].Position.Y:= 5;
+  vMame.Config.Panel.Advance.Labels[0].Position.X:= vMame.Config.Scene.Right_Panels[2].Width- vMame.Config.Panel.Advance.Labels[0].Width- 10;
+  vMame.Config.Panel.Advance.Labels[0].Visible:= True;
+
+  vMame.Config.Panel.Advance.Labels[1]:= TLabel.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Labels[1].Name:= 'Mame_Advanced_InfoLabel_2';
+  vMame.Config.Panel.Advance.Labels[1].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Labels[1].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Advance.Labels[1].Text:= 'Default options used by all games';
+  vMame.Config.Panel.Advance.Labels[1].Width:= 180;
+  vMame.Config.Panel.Advance.Labels[1].Position.Y:= 22;
+  vMame.Config.Panel.Advance.Labels[1].Position.X:= vMame.Config.Scene.Right_Panels[2].Width- vMame.Config.Panel.Advance.Labels[1].Width- 10;
+  vMame.Config.Panel.Advance.Labels[1].Visible:= True;
+
+  //left
+  vMame.Config.Panel.Advance.Checkbox[0]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Checkbox[0].Name:= 'Mame_Advanced_Checkbox_TripleBuffering';
+  vMame.Config.Panel.Advance.Checkbox[0].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Checkbox[0].Text:= 'Triple buffering';
+  vMame.Config.Panel.Advance.Checkbox[0].Font.Style:= vMame.Config.Panel.Advance.Checkbox[0].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Advance.Checkbox[0].SetBounds(10,40,180,19);
+  vMame.Config.Panel.Advance.Checkbox[0].IsChecked:= mame.Emu.Ini.FULLSCREEN_triplebuffer;
+  vMame.Config.Panel.Advance.Checkbox[0].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Advance.Checkbox[0].Visible:= True;
+
+  vMame.Config.Panel.Advance.Checkbox[1]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Checkbox[1].Name:= 'Mame_Advanced_Checkbox_SyncToMonitorRefresh';
+  vMame.Config.Panel.Advance.Checkbox[1].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Checkbox[1].Text:= 'Sync to monitor refresh';
+  vMame.Config.Panel.Advance.Checkbox[1].Font.Style:= vMame.Config.Panel.Advance.Checkbox[1].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Advance.Checkbox[1].SetBounds(10,60,180,19);
+  if (mame.Emu.Name= 'mame.exe') or (mame.Emu.Name= 'mame64.exe') then
+    vMame.Config.Panel.Advance.Checkbox[1].IsChecked:= mame.Emu.Ini.OSD_VIDEO_syncrefresh
+  else if (mame.Emu.Name= 'arcade32.exe') or (mame.Emu.Name= 'arcade64.exe') then
+    vMame.Config.Panel.Advance.Checkbox[1].IsChecked:= mame.Emu.Ini.CORE_PERFORMANCE_syncrefresh;
+  vMame.Config.Panel.Advance.Checkbox[1].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Advance.Checkbox[1].Visible:= True;
+
+  vMame.Config.Panel.Advance.Checkbox[2]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Checkbox[2].Name:= 'Mame_Advanced_Checkbox_WaitForVerticalSync';
+  vMame.Config.Panel.Advance.Checkbox[2].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Checkbox[2].Text:= 'Wait for vertical sync';
+  vMame.Config.Panel.Advance.Checkbox[2].Font.Style:= vMame.Config.Panel.Advance.Checkbox[2].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Advance.Checkbox[2].SetBounds(10,80,180,19);
+  vMame.Config.Panel.Advance.Checkbox[2].IsChecked:= mame.Emu.Ini.OSD_VIDEO_waitvsync;
+  vMame.Config.Panel.Advance.Checkbox[2].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Advance.Checkbox[2].Visible:= True;
+
+  vMame.Config.Panel.Advance.Checkbox[3]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Checkbox[3].Name:= 'Mame_Advanced_Checkbox_RefreshSpeed';
+  vMame.Config.Panel.Advance.Checkbox[3].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Checkbox[3].Text:= 'Refresh speed';
+  vMame.Config.Panel.Advance.Checkbox[3].Font.Style:= vMame.Config.Panel.Advance.Checkbox[3].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Advance.Checkbox[3].SetBounds(10,100,180,19);
+  vMame.Config.Panel.Advance.Checkbox[3].IsChecked:= mame.Emu.Ini.CORE_PERFORMANCE_refreshspeed;
+  vMame.Config.Panel.Advance.Checkbox[3].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Advance.Checkbox[3].Visible:= True;
+
+  vMame.Config.Panel.Advance.Checkbox[4]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Checkbox[4].Name:= 'Mame_Advanced_Checkbox_EnableHLSL';
+  vMame.Config.Panel.Advance.Checkbox[4].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Checkbox[4].Text:= 'Enable HLSL';
+  vMame.Config.Panel.Advance.Checkbox[4].Font.Style:= vMame.Config.Panel.Advance.Checkbox[0].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Advance.Checkbox[4].SetBounds(10,120,180,19);
+  if (mame.Emu.Ini.OSD_VIDEO_video= 'auto') or (mame.Emu.Ini.OSD_VIDEO_video= 'direct3d') then
+    vMame.Config.Panel.Advance.Checkbox[4].Enabled:= True
+  else
+    vMame.Config.Panel.Advance.Checkbox[4].Enabled:= False;
+  vMame.Config.Panel.Advance.Checkbox[4].IsChecked:= mame.Emu.Ini.DIRECT3D_hlsl_enable;
+  vMame.Config.Panel.Advance.Checkbox[4].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Advance.Checkbox[4].Visible:= True;
+
+  vMame.Config.Panel.Advance.Groupbox[0]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Groupbox[0].Name:= 'Mame_Advanced_Groupbox_FrameSkipping';
+  vMame.Config.Panel.Advance.Groupbox[0].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Groupbox[0].SetBounds(10,140,((vMame.Config.Scene.Right_Panels[2].Width/ 2)- 15),100);
+  vMame.Config.Panel.Advance.Groupbox[0].Text:= 'Frame skipping';
+  vMame.Config.Panel.Advance.Groupbox[0].Visible:= True;
+
+  vMame.Config.Panel.Advance.Checkbox[5]:= TCheckBox.Create(vMame.Config.Panel.Advance.Groupbox[0]);
+  vMame.Config.Panel.Advance.Checkbox[5].Name:= 'Mame_Advanced_Checkbox_FrameSkippingAutomatic';
+  vMame.Config.Panel.Advance.Checkbox[5].Parent:= vMame.Config.Panel.Advance.Groupbox[0];
+  vMame.Config.Panel.Advance.Checkbox[5].Text:= 'Automatic';
+  vMame.Config.Panel.Advance.Checkbox[5].Font.Style:= vMame.Config.Panel.Advance.Checkbox[5].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Advance.Checkbox[5].SetBounds(5,25,180,19);
+  vMame.Config.Panel.Advance.Checkbox[5].IsChecked:= mame.Emu.Ini.CORE_PERFORMANCE_autoframeskip;
+  vMame.Config.Panel.Advance.Checkbox[5].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Advance.Checkbox[5].Visible:= True;
+
+  vMame.Config.Panel.Advance.Combobox:= TComboBox.Create(vMame.Config.Panel.Advance.Groupbox[0]);
+  vMame.Config.Panel.Advance.Combobox.Name:= 'Mame_Advanced_Combobox_FrameSkipping';
+  vMame.Config.Panel.Advance.Combobox.Parent:= vMame.Config.Panel.Advance.Groupbox[0];
+  vMame.Config.Panel.Advance.Combobox.SetBounds(5,55,(vMame.Config.Panel.Advance.Groupbox[0].Width- 10),25);
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Draw every frame');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 1 frame');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 2 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 3 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 4 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 5 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 6 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 7 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 8 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 9 frames');
+  vMame.Config.Panel.Advance.Combobox.Items.Add('Skip 10 frames');
+  vMame.Config.Panel.Advance.Combobox.ItemIndex:= 0;
+  vMame.Config.Panel.Advance.Combobox.ItemIndex:= mame.Emu.Ini.CORE_PERFORMANCE_frameskip;
+  vMame.Config.Panel.Advance.Combobox.OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Advance.Combobox.Visible:= True;
+
+  //right
+  vMame.Config.Panel.Advance.Groupbox[1]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Groupbox[1].Name:= 'Mame_Advanced_Groupbox_FullscreenGamma';
+  vMame.Config.Panel.Advance.Groupbox[1].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Groupbox[1].SetBounds(((vMame.Config.Scene.Right_Panels[2].Width /2)+ 5),40,((vMame.Config.Scene.Right_Panels[2].Width/ 2)- 15),70);
+  vMame.Config.Panel.Advance.Groupbox[1].Text:= 'Fullscreen gamma';
+  vMame.Config.Panel.Advance.Groupbox[1].Visible:= True;
+
+  vMame.Config.Panel.Advance.Trackbar[0]:= TTrackBar.Create(vMame.Config.Panel.Advance.Groupbox[1]);
+  vMame.Config.Panel.Advance.Trackbar[0].Name:= 'Mame_Advanced_Trackbar_FullscreenGamma';
+  vMame.Config.Panel.Advance.Trackbar[0].Parent:= vMame.Config.Panel.Advance.Groupbox[1];
+  vMame.Config.Panel.Advance.Trackbar[0].SetBounds(5,35,(vMame.Config.Panel.Advance.Groupbox[1].Width- 45),25);
+  vMame.Config.Panel.Advance.Trackbar[0].Min:= 0;
+  vMame.Config.Panel.Advance.Trackbar[0].Max:= 3;
+  vMame.Config.Panel.Advance.Trackbar[0].Frequency:= 0.01;
+  if Length(mame.Emu.Ini.FULLSCREEN_full_screen_gamma)= 1 then
+    mame.Emu.Ini.FULLSCREEN_full_screen_gamma:= mame.Emu.Ini.FULLSCREEN_full_screen_gamma+ '.00'
+  else if Length(mame.Emu.Ini.FULLSCREEN_full_screen_gamma)= 3 then
+    mame.Emu.Ini.FULLSCREEN_full_screen_gamma:= mame.Emu.Ini.FULLSCREEN_full_screen_gamma+ '0';
+  vMame.Config.Panel.Advance.Trackbar[0].Value:= StrToFloat(mame.Emu.Ini.FULLSCREEN_full_screen_gamma);
+  vMame.Config.Panel.Advance.Trackbar[0].OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Advance.Trackbar[0].Visible:= True;
+
+  vMame.Config.Panel.Advance.Labels[2]:= TLabel.Create(vMame.Config.Panel.Advance.Groupbox[1]);
+  vMame.Config.Panel.Advance.Labels[2].Name:= 'Mame_Advanced_Label_FullscreenGamma';
+  vMame.Config.Panel.Advance.Labels[2].Parent:= vMame.Config.Panel.Advance.Groupbox[1];
+  vMame.Config.Panel.Advance.Labels[2].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Advance.Labels[2].Text:= mame.Emu.Ini.FULLSCREEN_full_screen_gamma;
+  vMame.Config.Panel.Advance.Labels[2].Position.X:= 125;
+  vMame.Config.Panel.Advance.Labels[2].Position.Y:= 35;
+  vMame.Config.Panel.Advance.Labels[2].Visible:= True;
+
+  vMame.Config.Panel.Advance.Groupbox[2]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Groupbox[2].Name:= 'Mame_Advanced_Groupbox_FullscreenBrightness';
+  vMame.Config.Panel.Advance.Groupbox[2].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Groupbox[2].SetBounds(((vMame.Config.Scene.Right_Panels[2].Width /2)+ 5),115,((vMame.Config.Scene.Right_Panels[2].Width/ 2)- 15),70);
+  vMame.Config.Panel.Advance.Groupbox[2].Text:= 'Fullscreen brightness';
+  vMame.Config.Panel.Advance.Groupbox[2].Visible:= True;
+
+  vMame.Config.Panel.Advance.Trackbar[1]:= TTrackBar.Create(vMame.Config.Panel.Advance.Groupbox[2]);
+  vMame.Config.Panel.Advance.Trackbar[1].Name:= 'Mame_Advanced_Trackbar_FullscreenBrightness';
+  vMame.Config.Panel.Advance.Trackbar[1].Parent:= vMame.Config.Panel.Advance.Groupbox[2];
+  vMame.Config.Panel.Advance.Trackbar[1].SetBounds(5,35,(vMame.Config.Panel.Advance.Groupbox[2].Width- 45),25);
+  vMame.Config.Panel.Advance.Trackbar[1].Min:= 0;
+  vMame.Config.Panel.Advance.Trackbar[1].Max:= 2;
+  vMame.Config.Panel.Advance.Trackbar[1].Frequency:= 0.01;
+  if Length(mame.Emu.Ini.FULLSCREEN_full_screen_brightness)= 1 then
+    mame.Emu.Ini.FULLSCREEN_full_screen_brightness:= mame.Emu.Ini.FULLSCREEN_full_screen_brightness+ '.00'
+  else if Length(mame.Emu.Ini.FULLSCREEN_full_screen_brightness)= 3 then
+    mame.Emu.Ini.FULLSCREEN_full_screen_brightness:= mame.Emu.Ini.FULLSCREEN_full_screen_brightness+ '0';
+  vMame.Config.Panel.Advance.Trackbar[1].Value:= StrToFloat(mame.Emu.Ini.FULLSCREEN_full_screen_brightness);
+  vMame.Config.Panel.Advance.Trackbar[1].OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Advance.Trackbar[1].Visible:= True;
+
+  vMame.Config.Panel.Advance.Labels[3]:= TLabel.Create(vMame.Config.Panel.Advance.Groupbox[2]);
+  vMame.Config.Panel.Advance.Labels[3].Name:= 'Mame_Advanced_Label_FullscreenBrightness';
+  vMame.Config.Panel.Advance.Labels[3].Parent:= vMame.Config.Panel.Advance.Groupbox[2];
+  vMame.Config.Panel.Advance.Labels[3].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Advance.Labels[3].Text:= mame.Emu.Ini.FULLSCREEN_full_screen_brightness;
+  vMame.Config.Panel.Advance.Labels[3].Position.X:= 125;
+  vMame.Config.Panel.Advance.Labels[3].Position.Y:= 35;
+  vMame.Config.Panel.Advance.Labels[3].Visible:= True;
+
+  vMame.Config.Panel.Advance.Groupbox[3]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Groupbox[3].Name:= 'Mame_Advanced_Groupbox_FullscreenContrast';
+  vMame.Config.Panel.Advance.Groupbox[3].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Groupbox[3].SetBounds(((vMame.Config.Scene.Right_Panels[2].Width /2)+ 5),190,((vMame.Config.Scene.Right_Panels[2].Width/ 2)- 15),70);
+  vMame.Config.Panel.Advance.Groupbox[3].Text:= 'Fullscreen contrast';
+  vMame.Config.Panel.Advance.Groupbox[3].Visible:= True;
+
+  vMame.Config.Panel.Advance.Trackbar[2]:= TTrackBar.Create(vMame.Config.Panel.Advance.Groupbox[3]);
+  vMame.Config.Panel.Advance.Trackbar[2].Name:= 'Mame_Advanced_Trackbar_FullscreenContrast';
+  vMame.Config.Panel.Advance.Trackbar[2].Parent:= vMame.Config.Panel.Advance.Groupbox[3];
+  vMame.Config.Panel.Advance.Trackbar[2].SetBounds(5,35,(vMame.Config.Panel.Advance.Groupbox[3].Width- 45),25);
+  vMame.Config.Panel.Advance.Trackbar[2].Min:= 0;
+  vMame.Config.Panel.Advance.Trackbar[2].Max:= 2;
+  vMame.Config.Panel.Advance.Trackbar[2].Frequency:= 0.01;
+  if Length(mame.Emu.Ini.FULLSCREEN_full_screen_contrast)= 1 then
+    mame.Emu.Ini.FULLSCREEN_full_screen_contrast:= mame.Emu.Ini.FULLSCREEN_full_screen_contrast+ '.00'
+  else if Length(mame.Emu.Ini.FULLSCREEN_full_screen_contrast)= 3 then
+    mame.Emu.Ini.FULLSCREEN_full_screen_contrast:= mame.Emu.Ini.FULLSCREEN_full_screen_contrast+ '0';
+  vMame.Config.Panel.Advance.Trackbar[2].Value:= StrToFloat(mame.Emu.Ini.FULLSCREEN_full_screen_contrast);
+  vMame.Config.Panel.Advance.Trackbar[2].OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Advance.Trackbar[2].Visible:= True;
+
+  vMame.Config.Panel.Advance.Labels[4]:= TLabel.Create(vMame.Config.Panel.Advance.Groupbox[3]);
+  vMame.Config.Panel.Advance.Labels[4].Name:= 'Mame_Advanced_Label_FullscreenContrast';
+  vMame.Config.Panel.Advance.Labels[4].Parent:= vMame.Config.Panel.Advance.Groupbox[3];
+  vMame.Config.Panel.Advance.Labels[4].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Advance.Labels[4].Text:= '1.00';
+  vMame.Config.Panel.Advance.Labels[4].Text:= mame.Emu.Ini.FULLSCREEN_full_screen_contrast;
+  vMame.Config.Panel.Advance.Labels[4].Position.X:= 125;
+  vMame.Config.Panel.Advance.Labels[4].Position.Y:= 35;
+  vMame.Config.Panel.Advance.Labels[4].Visible:= True;
+
+  vMame.Config.Panel.Advance.Groupbox[4]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Groupbox[4].Name:= 'Mame_Advanced_Groupbox_SecondsToRun';
+  vMame.Config.Panel.Advance.Groupbox[4].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Groupbox[4].SetBounds(((vMame.Config.Scene.Right_Panels[2].Width /2)+ 5),265,((vMame.Config.Scene.Right_Panels[2].Width/ 2)- 15),70);
+  vMame.Config.Panel.Advance.Groupbox[4].Text:= 'Seconds to run';
+  vMame.Config.Panel.Advance.Groupbox[4].Visible:= True;
+
+  vMame.Config.Panel.Advance.Trackbar[3]:= TTrackBar.Create(vMame.Config.Panel.Advance.Groupbox[4]);
+  vMame.Config.Panel.Advance.Trackbar[3].Name:= 'Mame_Advanced_Trackbar_SecondsToRun';
+  vMame.Config.Panel.Advance.Trackbar[3].Parent:= vMame.Config.Panel.Advance.Groupbox[4];
+  vMame.Config.Panel.Advance.Trackbar[3].SetBounds(5,35,(vMame.Config.Panel.Advance.Groupbox[4].Width- 45),25);
+  vMame.Config.Panel.Advance.Trackbar[3].Min:= 0;
+  vMame.Config.Panel.Advance.Trackbar[3].Max:= 60;
+  vMame.Config.Panel.Advance.Trackbar[3].Frequency:= 1;
+  vMame.Config.Panel.Advance.Trackbar[3].Value:= mame.Emu.Ini.CORE_PERFORMANCE_seconds_to_run;
+  vMame.Config.Panel.Advance.Trackbar[3].OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Advance.Trackbar[3].Visible:= True;
+
+  vMame.Config.Panel.Advance.Labels[5]:= TLabel.Create(vMame.Config.Panel.Advance.Groupbox[4]);
+  vMame.Config.Panel.Advance.Labels[5].Name:= 'Mame_Advanced_Label_SecondsToRun';
+  vMame.Config.Panel.Advance.Labels[5].Parent:= vMame.Config.Panel.Advance.Groupbox[4];
+  vMame.Config.Panel.Advance.Labels[5].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Advance.Labels[5].Text:= '1';
+  vMame.Config.Panel.Advance.Labels[5].Text:= FloatToStr(mame.Emu.Ini.CORE_PERFORMANCE_seconds_to_run);
+  vMame.Config.Panel.Advance.Labels[5].Position.X:= 125;
+  vMame.Config.Panel.Advance.Labels[5].Position.Y:= 35;
+  vMame.Config.Panel.Advance.Labels[5].Visible:= True;
+
+  //bottom
+  vMame.Config.Panel.Advance.Groupbox[5]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Groupbox[5].Name:= 'Mame_Advanced_Groupbox_EmulationSpeed';
+  vMame.Config.Panel.Advance.Groupbox[5].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Groupbox[5].SetBounds(10,340,(vMame.Config.Scene.Right_Panels[2].Width- 20),70);
+  vMame.Config.Panel.Advance.Groupbox[5].Text:= 'Emulation speed';
+  vMame.Config.Panel.Advance.Groupbox[5].Visible:= True;
+
+  vMame.Config.Panel.Advance.Trackbar[4]:= TTrackBar.Create(vMame.Config.Panel.Advance.Groupbox[5]);
+  vMame.Config.Panel.Advance.Trackbar[4].Name:= 'Mame_Advanced_Trackbar_EmulationSpeed';
+  vMame.Config.Panel.Advance.Trackbar[4].Parent:= vMame.Config.Panel.Advance.Groupbox[5];
+  vMame.Config.Panel.Advance.Trackbar[4].SetBounds(5,35,(vMame.Config.Panel.Advance.Groupbox[5].Width- 45),25);
+  vMame.Config.Panel.Advance.Trackbar[4].Min:= 0;
+  vMame.Config.Panel.Advance.Trackbar[4].Max:= 100;
+  vMame.Config.Panel.Advance.Trackbar[4].Frequency:= 0.1;
+  vMame.Config.Panel.Advance.Trackbar[4].Value:= StrToFloat(mame.Emu.Ini.CORE_PERFORMANCE_speed);
+  vMame.Config.Panel.Advance.Trackbar[4].OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Advance.Trackbar[4].Visible:= True;
+
+  vMame.Config.Panel.Advance.Labels[6]:= TLabel.Create(vMame.Config.Panel.Advance.Groupbox[5]);
+  vMame.Config.Panel.Advance.Labels[6].Name:= 'Mame_Advanced_Label_EmulationSpeed';
+  vMame.Config.Panel.Advance.Labels[6].Parent:= vMame.Config.Panel.Advance.Groupbox[5];
+  vMame.Config.Panel.Advance.Labels[6].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Advance.Labels[6].Text:= '1.0';
+  vMame.Config.Panel.Advance.Labels[6].Text:= mame.Emu.Ini.CORE_PERFORMANCE_speed;
+  vMame.Config.Panel.Advance.Labels[6].Position.X:= 396;
+  vMame.Config.Panel.Advance.Labels[6].Position.Y:= 35;
+  vMame.Config.Panel.Advance.Labels[6].Visible:= True;
+
+  vMame.Config.Panel.Advance.Groupbox[6]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[2]);
+  vMame.Config.Panel.Advance.Groupbox[6].Name:= 'Mame_Advanced_Groupbox_Effect';
+  vMame.Config.Panel.Advance.Groupbox[6].Parent:= vMame.Config.Scene.Right_Panels[2];
+  vMame.Config.Panel.Advance.Groupbox[6].SetBounds(10,415,(vMame.Config.Scene.Right_Panels[2].Width- 20),100);
+  vMame.Config.Panel.Advance.Groupbox[6].Text:= 'Effect';
+  vMame.Config.Panel.Advance.Groupbox[6].Visible:= True;
+
+  vMame.Config.Panel.Advance.Edit:= TEdit.Create(vMame.Config.Panel.Advance.Groupbox[6]);
+  vMame.Config.Panel.Advance.Edit.Name:= 'Mame_Advanced_Edit_Effect';
+  vMame.Config.Panel.Advance.Edit.Parent:= vMame.Config.Panel.Advance.Groupbox[6];
+  vMame.Config.Panel.Advance.Edit.SetBounds(10,35,(vMame.Config.Panel.Advance.Groupbox[6].Width- 20),20);
+  if mame.Emu.Ini.CORE_SCREEN_effect= 'none' then
+    vMame.Config.Panel.Advance.Edit.Text:= 'None'
+  else
+    vMame.Config.Panel.Advance.Edit.Text:= mame.Emu.Ini.CORE_SCREEN_effect;
+  vMame.Config.Panel.Advance.Edit.Visible:= True;
+
+  vMame.Config.Panel.Advance.Button[0]:= TButton.Create(vMame.Config.Panel.Advance.Groupbox[6]);
+  vMame.Config.Panel.Advance.Button[0].Name:= 'Mame_Advaced_Button_SelectEffect';
+  vMame.Config.Panel.Advance.Button[0].Parent:= vMame.Config.Panel.Advance.Groupbox[6];
+  vMame.Config.Panel.Advance.Button[0].SetBounds(10,70,100,20);
+  vMame.Config.Panel.Advance.Button[0].Text:= 'Select effect';
+  vMame.Config.Panel.Advance.Button[0].OnClick:= mame.Config.Input.Mouse.Button.onMouseClick;
+  vMame.Config.Panel.Advance.Button[0].Visible:= True;
+
+  vMame.Config.Panel.Advance.Button[1]:= TButton.Create(vMame.Config.Panel.Advance.Groupbox[6]);
+  vMame.Config.Panel.Advance.Button[1].Name:= 'Mame_Advaced_Button_ResetEffect';
+  vMame.Config.Panel.Advance.Button[1].Parent:= vMame.Config.Panel.Advance.Groupbox[6];
+  vMame.Config.Panel.Advance.Button[1].SetBounds((vMame.Config.Panel.Advance.Groupbox[6].Width- 110),70,100,20);
+  vMame.Config.Panel.Advance.Button[1].Text:= 'Reset effect';
+  vMame.Config.Panel.Advance.Button[1].OnClick:= mame.Config.Input.Mouse.Button.onMouseClick;
+  vMame.Config.Panel.Advance.Button[1].Visible:= True;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Config_Advanced_CheckboxClick(vName: String);
+begin
+  if vName= 'Mame_Advanced_Checkbox_TripleBuffering' then
+    mame.Emu.Ini.FULLSCREEN_triplebuffer:= vMame.Config.Panel.Advance.Checkbox[0].IsChecked
+  else if vName= 'Mame_Advanced_Checkbox_SyncToMonitorRefresh' then
+    begin
+      if (mame.Emu.Name= 'mame.exe') or (mame.Emu.Name= 'mame64.exe') then
+        mame.Emu.Ini.OSD_VIDEO_syncrefresh:= vMame.Config.Panel.Advance.Checkbox[1].IsChecked
+      else if (mame.Emu.Name= 'arcade32.exe') or (mame.Emu.Name= 'arcade64.exe') then
+        mame.Emu.Ini.CORE_PERFORMANCE_syncrefresh:= vMame.Config.Panel.Advance.Checkbox[1].IsChecked
+    end
+  else if vName= 'Mame_Advanced_Checkbox_WaitForVerticalSync' then
+    mame.Emu.Ini.OSD_VIDEO_waitvsync:= vMame.Config.Panel.Advance.Checkbox[2].IsChecked
+  else if vName= 'Mame_Advanced_Checkbox_RefreshSpeed' then
+    mame.Emu.Ini.CORE_PERFORMANCE_refreshspeed:= vMame.Config.Panel.Advance.Checkbox[3].IsChecked
+  else if vName= 'Mame_Advanced_Checkbox_EnableHLSL' then
+    mame.Emu.Ini.DIRECT3D_hlsl_enable:= vMame.Config.Panel.Advance.Checkbox[4].IsChecked
+  else if vName= 'Mame_Advanced_Checkbox_Automatic' then
+    mame.Emu.Ini.CORE_PERFORMANCE_autoframeskip:= vMame.Config.Panel.Advance.Checkbox[5].IsChecked;
+end;
+
+
+procedure uEmu_Arcade_Mame_Config_Advanced_ComboboxChange(vName: String);
+begin
+  if vName= 'Mame_Display_Combobox_VideoMode' then
+    mame.Emu.Ini.CORE_PERFORMANCE_frameskip:= vMame.Config.Panel.Advance.Combobox.ItemIndex;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Advanced_TrackbarChange(vName: String);
+begin
+  if vName= 'Mame_Advanced_Trackbar_FullscreenGamma' then
+    begin
+      mame.Emu.Ini.FULLSCREEN_full_screen_gamma:= FloatToStrF(vMame.Config.Panel.Advance.Trackbar[0].Value, ffGeneral, 3, 2);
+      if Length(mame.Emu.Ini.FULLSCREEN_full_screen_gamma)= 1 then
+        mame.Emu.Ini.FULLSCREEN_full_screen_gamma:= mame.Emu.Ini.FULLSCREEN_full_screen_gamma+ '.00'
+      else if Length(mame.Emu.Ini.FULLSCREEN_full_screen_gamma)= 3 then
+        mame.Emu.Ini.FULLSCREEN_full_screen_gamma:= mame.Emu.Ini.FULLSCREEN_full_screen_gamma+ '0';
+      vMame.Config.Panel.Advance.Labels[2].Text:= mame.Emu.Ini.FULLSCREEN_full_screen_gamma;
+    end
+  else if vName= 'Mame_Advanced_Trackbar_FullscreenBrightness' then
+    begin
+      mame.Emu.Ini.FULLSCREEN_full_screen_brightness:= FloatToStrF(vMame.Config.Panel.Advance.Trackbar[1].Value, ffGeneral, 3, 2);
+      if Length(mame.Emu.Ini.FULLSCREEN_full_screen_brightness)= 1 then
+        mame.Emu.Ini.FULLSCREEN_full_screen_brightness:= mame.Emu.Ini.FULLSCREEN_full_screen_brightness+ '.00'
+      else if Length(mame.Emu.Ini.FULLSCREEN_full_screen_brightness)= 3 then
+        mame.Emu.Ini.FULLSCREEN_full_screen_brightness:= mame.Emu.Ini.FULLSCREEN_full_screen_brightness+ '0';
+      vMame.Config.Panel.Advance.Labels[3].Text:= mame.Emu.Ini.FULLSCREEN_full_screen_brightness;
+    end
+  else if vName= 'Mame_Advanced_Trackbar_FullscreenContrast' then
+    begin
+      mame.Emu.Ini.FULLSCREEN_full_screen_contrast:= FloatToStrF(vMame.Config.Panel.Advance.Trackbar[2].Value, ffGeneral, 3, 2);
+      if Length(mame.Emu.Ini.FULLSCREEN_full_screen_contrast)= 1 then
+        mame.Emu.Ini.FULLSCREEN_full_screen_contrast:= mame.Emu.Ini.FULLSCREEN_full_screen_contrast+ '.00'
+      else if Length(mame.Emu.Ini.FULLSCREEN_full_screen_contrast)= 3 then
+        mame.Emu.Ini.FULLSCREEN_full_screen_contrast:= mame.Emu.Ini.FULLSCREEN_full_screen_contrast+ '0';
+      vMame.Config.Panel.Advance.Labels[4].Text:= mame.Emu.Ini.FULLSCREEN_full_screen_contrast;
+    end
+  else if vName= 'Mame_Advanced_Trackbar_SecondsToRun' then
+    begin
+      mame.Emu.Ini.CORE_PERFORMANCE_seconds_to_run:=  vMame.Config.Panel.Advance.Trackbar[3].Value;
+      vMame.Config.Panel.Advance.Labels[5].Text:= FloatToStr(mame.Emu.Ini.CORE_PERFORMANCE_seconds_to_run);
+    end
+  else if vName= 'Mame_Advanced_Trackbar_EmulationSpeed' then
+    begin
+      mame.Emu.Ini.CORE_PERFORMANCE_speed:= FloatToStrF(vMame.Config.Panel.Advance.Trackbar[4].Value, ffGeneral, 3, 1);
+      if Length(mame.Emu.Ini.CORE_PERFORMANCE_speed)= 1 then
+        mame.Emu.Ini.CORE_PERFORMANCE_speed:= mame.Emu.Ini.CORE_PERFORMANCE_speed+ '.0'
+      else if (Length(mame.Emu.Ini.CORE_PERFORMANCE_speed)= 2) and (StrToFloat(mame.Emu.Ini.CORE_PERFORMANCE_speed)> 9.9) then
+        mame.Emu.Ini.CORE_PERFORMANCE_speed:= mame.Emu.Ini.CORE_PERFORMANCE_speed+ '.0';
+      vMame.Config.Panel.Advance.Labels[6].Text:= mame.Emu.Ini.CORE_PERFORMANCE_speed;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Advanced_ButtonClick(vName: String);
+begin
+  if vName= 'Mame_Advaced_Button_SelectEffect' then
+    begin
+      mame.
+      vMame.Config.Panel.Advance.FileDialog_Result:= 'SelectEffect';
+      vMame.Config.Panel.Advance.FileDialog.Execute;
+    end
+  else if vName= 'Mame_Advaced_Button_ResetEffect' then
+    begin
+      vMame.Config.Panel.Advance.Edit.Text:= 'None';
+      mame.Emu.Ini.CORE_SCREEN_effect:= 'none';
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Advanced_OpenDialogOnClose;
+begin
+  if vMame.Config.Panel.Advance.FileDialog_Result= 'SelectEffect' then
+    begin
+      mame.Emu.Ini.CORE_SCREEN_effect:= vMame.Config.Panel.Advance.FileDialog.FileName;
+      vMame.Config.Panel.Advance.Edit.Text:= mame.Emu.Ini.CORE_SCREEN_effect;
+    end;
+end;
+
+end.

@@ -1,0 +1,343 @@
+unit uEmu_Arcade_Mame_Config_Controllers;
+
+interface
+uses
+  System.Classes,
+  System.UITypes,
+  System.SysUtils,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Edit,
+  FMX.Listbox,
+  FMX.Dialogs;
+
+  procedure uEmu_Arcade_Mame_Config_Create_Controllers_Panel;
+
+  function uEmu_Arcade_Mame_Config_Controllers_LoadInputLayout(vLayout: String): integer;
+
+  procedure uEmu_Arcade_Mame_Config_Controllers_SetInputLayout(vItemIndex: integer);
+
+  procedure uEmu_Arcade_Mame_Config_Controllers_ButtonClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Controllers_CheckboxClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Controllers_TrackbarOnChange(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Controllers_ComboboxOnChange(vName: String);
+
+implementation
+uses
+//  uTText,
+//  uWindows,
+//  uEmu_Arcade_Mame_Config,
+//  uEmu_Arcade_Mame_SetAll,
+//  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_AllTypes;
+
+procedure uEmu_Arcade_Mame_Config_Create_Controllers_Panel;
+begin
+  vMame.Config.Panel.Controls.Labels[0]:= TLabel.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Labels[0].Name:= 'Mame_Controllers_InfoLabel_1';
+  vMame.Config.Panel.Controls.Labels[0].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Labels[0].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Controls.Labels[0].Text:= 'Global Options';
+  vMame.Config.Panel.Controls.Labels[0].Position.Y:= 5;
+  vMame.Config.Panel.Controls.Labels[0].Position.X:= vMame.Config.Scene.Right_Panels[8].Width- vMame.Config.Panel.Controls.Labels[0].Width- 10;
+  vMame.Config.Panel.Controls.Labels[0].Visible:= True;
+
+  vMame.Config.Panel.Controls.Labels[1]:= TLabel.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Labels[1].Name:= 'Mame_Controllers_InfoLabel_2';
+  vMame.Config.Panel.Controls.Labels[1].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Labels[1].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Controls.Labels[1].Text:= 'Default options used by all games';
+  vMame.Config.Panel.Controls.Labels[1].Width:= 180;
+  vMame.Config.Panel.Controls.Labels[1].Position.Y:= 22;
+  vMame.Config.Panel.Controls.Labels[1].Position.X:= vMame.Config.Scene.Right_Panels[8].Width- vMame.Config.Panel.Controls.Labels[1].Width- 10;
+  vMame.Config.Panel.Controls.Labels[1].Visible:= True;
+
+  //left
+  vMame.Config.Panel.Controls.Checkbox[0]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Checkbox[0].Name:= 'Mame_Controllers_Checkbox_EnableMouseInput';
+  vMame.Config.Panel.Controls.Checkbox[0].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Checkbox[0].SetBounds(10,40,180,19);
+  vMame.Config.Panel.Controls.Checkbox[0].Text:= 'Enable mouse input';
+  vMame.Config.Panel.Controls.Checkbox[0].Font.Style:= vMame.Config.Panel.Controls.Checkbox[0].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[0].IsChecked:= mame.Emu.Ini.CORE_INPUT_mouse;
+  vMame.Config.Panel.Controls.Checkbox[0].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[0].Visible:= True;
+
+  vMame.Config.Panel.Controls.Checkbox[1]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Checkbox[1].Name:= 'Mame_Controllers_Checkbox_EnableSteadyKeySupport';
+  vMame.Config.Panel.Controls.Checkbox[1].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Checkbox[1].SetBounds(10,60,180,19);
+  vMame.Config.Panel.Controls.Checkbox[1].Text:= 'Enable steadykey support';
+  vMame.Config.Panel.Controls.Checkbox[1].Font.Style:= vMame.Config.Panel.Controls.Checkbox[1].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[1].IsChecked:= mame.Emu.Ini.CORE_INPUT_steadykey;
+  vMame.Config.Panel.Controls.Checkbox[1].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[1].Visible:= True;
+
+
+  vMame.Config.Panel.Controls.Groupbox[0]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Groupbox[0].Name:= 'Mame_Controllers_Groupbox_Joystick';
+  vMame.Config.Panel.Controls.Groupbox[0].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Groupbox[0].SetBounds(10,85,((vMame.Config.Scene.Right_Panels[8].Width/ 2)- 15),200);
+  vMame.Config.Panel.Controls.Groupbox[0].Text:= 'Joystick';
+  vMame.Config.Panel.Controls.Groupbox[0].Visible:= True;
+
+  vMame.Config.Panel.Controls.Checkbox[2]:= TCheckBox.Create(vMame.Config.Panel.Controls.Groupbox[0]);
+  vMame.Config.Panel.Controls.Checkbox[2].Name:= 'Mame_Controllers_Checkbox_EnableJoystickInput';
+  vMame.Config.Panel.Controls.Checkbox[2].Parent:= vMame.Config.Panel.Controls.Groupbox[0];
+  vMame.Config.Panel.Controls.Checkbox[2].SetBounds(5,20,180,19);
+  vMame.Config.Panel.Controls.Checkbox[2].Text:= 'Enable joystick input';
+  vMame.Config.Panel.Controls.Checkbox[2].Font.Style:= vMame.Config.Panel.Controls.Checkbox[2].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[2].IsChecked:= mame.Emu.Ini.CORE_INPUT_joystick;
+  vMame.Config.Panel.Controls.Checkbox[2].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[2].Visible:= True;
+
+  vMame.Config.Panel.Controls.Groupbox[1]:= TGroupBox.Create(vMame.Config.Panel.Controls.Groupbox[0]);
+  vMame.Config.Panel.Controls.Groupbox[1].Name:= 'Mame_Controllers_Groupbox_JoystickDeadzone';
+  vMame.Config.Panel.Controls.Groupbox[1].Parent:= vMame.Config.Panel.Controls.Groupbox[0];
+  vMame.Config.Panel.Controls.Groupbox[1].SetBounds(5,45,((vMame.Config.Panel.Controls.Groupbox[0].Width)- 10),70);
+  vMame.Config.Panel.Controls.Groupbox[1].Text:= 'Joystick deadzone';
+  vMame.Config.Panel.Controls.Groupbox[1].Visible:= True;
+
+  vMame.Config.Panel.Controls.Trackbar[0]:= TTrackBar.Create(vMame.Config.Panel.Controls.Groupbox[1]);
+  vMame.Config.Panel.Controls.Trackbar[0].Name:= 'Mame_Display_Trackbar_JoystickDeadzone';
+  vMame.Config.Panel.Controls.Trackbar[0].Parent:= vMame.Config.Panel.Controls.Groupbox[1];
+  vMame.Config.Panel.Controls.Trackbar[0].SetBounds(5,35,(vMame.Config.Panel.Controls.Groupbox[1].Width- 45),25);
+  vMame.Config.Panel.Controls.Trackbar[0].Min:= 0;
+  vMame.Config.Panel.Controls.Trackbar[0].Max:= 1;
+  vMame.Config.Panel.Controls.Trackbar[0].Frequency:= 0.01;
+  if Length(mame.Emu.Ini.CORE_INPUT_joystick_deadzone)= 1 then
+    mame.Emu.Ini.CORE_INPUT_joystick_deadzone:= mame.Emu.Ini.CORE_INPUT_joystick_deadzone+ '.00'
+  else if Length(mame.Emu.Ini.CORE_INPUT_joystick_deadzone)= 3 then
+    mame.Emu.Ini.CORE_INPUT_joystick_deadzone:= mame.Emu.Ini.CORE_INPUT_joystick_deadzone+ '0';
+  vMame.Config.Panel.Controls.Trackbar[0].Value:= StrToFloat(mame.Emu.Ini.CORE_INPUT_joystick_deadzone);
+  vMame.Config.Panel.Controls.Trackbar[0].OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Controls.Trackbar[0].Visible:= True;
+
+  vMame.Config.Panel.Controls.Labels[2]:= TLabel.Create(vMame.Config.Panel.Controls.Groupbox[1]);
+  vMame.Config.Panel.Controls.Labels[2].Name:= 'Mame_Display_Label_JoystickDeadzone';
+  vMame.Config.Panel.Controls.Labels[2].Parent:= vMame.Config.Panel.Controls.Groupbox[1];
+  vMame.Config.Panel.Controls.Labels[2].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Controls.Labels[2].Text:= mame.Emu.Ini.CORE_INPUT_joystick_deadzone;
+  vMame.Config.Panel.Controls.Labels[2].Position.X:= 125;
+  vMame.Config.Panel.Controls.Labels[2].Position.Y:= 35;
+  vMame.Config.Panel.Controls.Labels[2].Visible:= True;
+
+  vMame.Config.Panel.Controls.Groupbox[2]:= TGroupBox.Create(vMame.Config.Panel.Controls.Groupbox[0]);
+  vMame.Config.Panel.Controls.Groupbox[2].Name:= 'Mame_Controllers_Groupbox_JoystickSaturation';
+  vMame.Config.Panel.Controls.Groupbox[2].Parent:= vMame.Config.Panel.Controls.Groupbox[0];
+  vMame.Config.Panel.Controls.Groupbox[2].SetBounds(5,115,((vMame.Config.Panel.Controls.Groupbox[0].Width)- 10),70);
+  vMame.Config.Panel.Controls.Groupbox[2].Text:= 'Joystick saturation';
+  vMame.Config.Panel.Controls.Groupbox[2].Visible:= True;
+
+  vMame.Config.Panel.Controls.Trackbar[1]:= TTrackBar.Create(vMame.Config.Panel.Controls.Groupbox[2]);
+  vMame.Config.Panel.Controls.Trackbar[1].Name:= 'Mame_Display_Trackbar_JoystickSaturation';
+  vMame.Config.Panel.Controls.Trackbar[1].Parent:= vMame.Config.Panel.Controls.Groupbox[2];
+  vMame.Config.Panel.Controls.Trackbar[1].SetBounds(5,35,(vMame.Config.Panel.Controls.Groupbox[2].Width- 45),25);
+  vMame.Config.Panel.Controls.Trackbar[1].Min:= 0;
+  vMame.Config.Panel.Controls.Trackbar[1].Max:= 1;
+  vMame.Config.Panel.Controls.Trackbar[1].Frequency:= 0.01;
+  if Length(mame.Emu.Ini.CORE_INPUT_joystick_saturation)= 1 then
+    mame.Emu.Ini.CORE_INPUT_joystick_saturation:= mame.Emu.Ini.CORE_INPUT_joystick_saturation+ '.00'
+  else if Length(mame.Emu.Ini.CORE_INPUT_joystick_saturation)= 3 then
+    mame.Emu.Ini.CORE_INPUT_joystick_saturation:= mame.Emu.Ini.CORE_INPUT_joystick_saturation+ '0';
+  vMame.Config.Panel.Controls.Trackbar[1].Value:= StrToFloat(mame.Emu.Ini.CORE_INPUT_joystick_saturation);
+  vMame.Config.Panel.Controls.Trackbar[1].OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Controls.Trackbar[1].Visible:= True;
+
+  vMame.Config.Panel.Controls.Labels[3]:= TLabel.Create(vMame.Config.Panel.Controls.Groupbox[2]);
+  vMame.Config.Panel.Controls.Labels[3].Name:= 'Mame_Display_Label_JoystickSaturation';
+  vMame.Config.Panel.Controls.Labels[3].Parent:= vMame.Config.Panel.Controls.Groupbox[2];
+  vMame.Config.Panel.Controls.Labels[3].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Controls.Labels[3].Text:= mame.Emu.Ini.CORE_INPUT_joystick_saturation;
+  vMame.Config.Panel.Controls.Labels[3].Position.X:= 125;
+  vMame.Config.Panel.Controls.Labels[3].Position.Y:= 35;
+  vMame.Config.Panel.Controls.Labels[3].Visible:= True;
+
+  //right
+  vMame.Config.Panel.Controls.Groupbox[3]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Groupbox[3].Name:= 'Mame_Controllers_Groupbox_DefaultInputLayout';
+  vMame.Config.Panel.Controls.Groupbox[3].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Groupbox[3].SetBounds(((vMame.Config.Scene.Right_Panels[8].Width/ 2)+ 5),40,((vMame.Config.Scene.Right_Panels[8].Width/ 2)- 15),70);
+  vMame.Config.Panel.Controls.Groupbox[3].Text:= 'Deafault input layout';
+  vMame.Config.Panel.Controls.Groupbox[3].Visible:= True;
+
+  vMame.Config.Panel.Controls.Combobox:= TComboBox.Create(vMame.Config.Panel.Controls.Groupbox[3]);
+  vMame.Config.Panel.Controls.Combobox.Name:= 'Mame_Display_Combobox_DefaultInputLayout';
+  vMame.Config.Panel.Controls.Combobox.Parent:= vMame.Config.Panel.Controls.Groupbox[3];
+  vMame.Config.Panel.Controls.Combobox.SetBounds(5,25,(vMame.Config.Panel.Controls.Groupbox[3].Width- 10),25);
+  vMame.Config.Panel.Controls.Combobox.Items.Add('Default');
+  vMame.Config.Panel.Controls.Combobox.Items.Add('hotrod');
+  vMame.Config.Panel.Controls.Combobox.Items.Add('hotrodse');
+  vMame.Config.Panel.Controls.Combobox.Items.Add('scorpionxg');
+  vMame.Config.Panel.Controls.Combobox.Items.Add('slikstik');
+  vMame.Config.Panel.Controls.Combobox.Items.Add('xarcade');
+  vMame.Config.Panel.Controls.Combobox.ItemIndex:= uEmu_Arcade_Mame_Config_Controllers_LoadInputLayout(mame.Emu.Ini.CORE_INPUT_ctrlr);
+  vMame.Config.Panel.Controls.Combobox.OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Controls.Combobox.Visible:= True;
+
+  vMame.Config.Panel.Controls.Checkbox[3]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Checkbox[3].Name:= 'Mame_Controllers_Checkbox_EnableLightgunInput';
+  vMame.Config.Panel.Controls.Checkbox[3].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Checkbox[3].SetBounds(((vMame.Config.Scene.Right_Panels[8].Width/ 2)+ 5),120,180,19);
+  vMame.Config.Panel.Controls.Checkbox[3].Text:= 'Enable lightgun input';
+  vMame.Config.Panel.Controls.Checkbox[3].Font.Style:= vMame.Config.Panel.Controls.Checkbox[3].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[3].IsChecked:= mame.Emu.Ini.CORE_INPUT_lightgun;
+  vMame.Config.Panel.Controls.Checkbox[3].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[3].Visible:= True;
+
+  vMame.Config.Panel.Controls.Checkbox[4]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Checkbox[4].Name:= 'Mame_Controllers_Checkbox_OffscreenShotsReload';
+  vMame.Config.Panel.Controls.Checkbox[4].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Checkbox[4].SetBounds(((vMame.Config.Scene.Right_Panels[8].Width/ 2)+ 5),140,180,19);
+  vMame.Config.Panel.Controls.Checkbox[4].Text:= 'Offscreen shots reload';
+  vMame.Config.Panel.Controls.Checkbox[4].Font.Style:= vMame.Config.Panel.Controls.Checkbox[4].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[4].IsChecked:= mame.Emu.Ini.CORE_INPUT_offscreen_reload;
+  vMame.Config.Panel.Controls.Checkbox[4].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[4].Visible:= True;
+
+  vMame.Config.Panel.Controls.Checkbox[5]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Checkbox[5].Name:= 'Mame_Controllers_Checkbox_DualLightguns';
+  vMame.Config.Panel.Controls.Checkbox[5].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Checkbox[5].SetBounds(((vMame.Config.Scene.Right_Panels[8].Width/ 2)+ 5),160,180,19);
+  vMame.Config.Panel.Controls.Checkbox[5].Text:= 'Dual lightguns';
+  vMame.Config.Panel.Controls.Checkbox[5].Font.Style:= vMame.Config.Panel.Controls.Checkbox[5].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[5].IsChecked:= mame.Emu.Ini.INPUT_DEVICE_dual_lightgun;
+  vMame.Config.Panel.Controls.Checkbox[5].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[5].Visible:= True;
+
+  vMame.Config.Panel.Controls.Checkbox[6]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Checkbox[6].Name:= 'Mame_Controllers_Checkbox_MultipleKeyboards';
+  vMame.Config.Panel.Controls.Checkbox[6].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Checkbox[6].SetBounds(((vMame.Config.Scene.Right_Panels[8].Width/ 2)+ 5),180,180,19);
+  vMame.Config.Panel.Controls.Checkbox[6].Text:= 'Multiple keyboards';
+  vMame.Config.Panel.Controls.Checkbox[6].Font.Style:= vMame.Config.Panel.Controls.Checkbox[6].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[6].IsChecked:= mame.Emu.Ini.CORE_INPUT_multikeyboard;
+  vMame.Config.Panel.Controls.Checkbox[6].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[6].Visible:= True;
+
+  vMame.Config.Panel.Controls.Checkbox[7]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Checkbox[7].Name:= 'Mame_Controllers_Checkbox_MultipleMice';
+  vMame.Config.Panel.Controls.Checkbox[7].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Checkbox[7].SetBounds(((vMame.Config.Scene.Right_Panels[8].Width/ 2)+ 5),200,180,19);
+  vMame.Config.Panel.Controls.Checkbox[7].Text:= 'Multiple mice';
+  vMame.Config.Panel.Controls.Checkbox[7].Font.Style:= vMame.Config.Panel.Controls.Checkbox[7].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Controls.Checkbox[7].IsChecked:= mame.Emu.Ini.CORE_INPUT_multimouse;
+  vMame.Config.Panel.Controls.Checkbox[7].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Controls.Checkbox[7].Visible:= True;
+
+  vMame.Config.Panel.Controls.Groupbox[4]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[8]);
+  vMame.Config.Panel.Controls.Groupbox[4].Name:= 'Mame_Controllers_Groupbox_JoystickMap';
+  vMame.Config.Panel.Controls.Groupbox[4].Parent:= vMame.Config.Scene.Right_Panels[8];
+  vMame.Config.Panel.Controls.Groupbox[4].SetBounds(10,290,(vMame.Config.Scene.Right_Panels[8].Width- 20),100);
+  vMame.Config.Panel.Controls.Groupbox[4].Text:= 'Joystck map';
+  vMame.Config.Panel.Controls.Groupbox[4].Visible:= True;
+
+  vMame.Config.Panel.Controls.Edit:= TEdit.Create(vMame.Config.Panel.Controls.Groupbox[4]);
+  vMame.Config.Panel.Controls.Edit.Name:= 'Mame_Controllers_Edit_JoystickMap';
+  vMame.Config.Panel.Controls.Edit.Parent:= vMame.Config.Panel.Controls.Groupbox[4];
+  vMame.Config.Panel.Controls.Edit.Width:= vMame.Config.Panel.Controls.Groupbox[4].Width- 20;
+  vMame.Config.Panel.Controls.Edit.Height:= 20;
+  vMame.Config.Panel.Controls.Edit.Position.X:= 10;
+  vMame.Config.Panel.Controls.Edit.Position.Y:= 35;
+  vMame.Config.Panel.Controls.Edit.Text:= mame.Emu.Ini.CORE_INPUT_joystick_map;
+  vMame.Config.Panel.Controls.Edit.Visible:= True;
+
+  vMame.Config.Panel.Controls.Button:= TButton.Create(vMame.Config.Panel.Controls.Groupbox[4]);
+  vMame.Config.Panel.Controls.Button.Name:= 'Mame_Controllers_Button_ResetJoystickMap';
+  vMame.Config.Panel.Controls.Button.Parent:= vMame.Config.Panel.Controls.Groupbox[4];
+  vMame.Config.Panel.Controls.Button.Width:= 140;
+  vMame.Config.Panel.Controls.Button.Height:= 20;
+  vMame.Config.Panel.Controls.Button.Text:= 'Reset joystick map';
+  vMame.Config.Panel.Controls.Button.Position.X:= (vMame.Config.Panel.Controls.Groupbox[4].Width/ 2)- 70;
+  vMame.Config.Panel.Controls.Button.Position.Y:= 70;
+  vMame.Config.Panel.Controls.Button.OnClick:= mame.Config.Input.Mouse.Button.onMouseClick;
+  vMame.Config.Panel.Controls.Button.Visible:= True;
+end;
+
+function uEmu_Arcade_Mame_Config_Controllers_LoadInputLayout(vLayout: String): integer;
+begin
+  if vLayout= '' then
+    Result:= 0
+  else if vLayout= 'hotrod' then
+    Result:= 1
+  else if vLayout= 'hotrodse' then
+    Result:= 2
+  else if vLayout= 'scorpionxg' then
+    Result:= 3
+  else if vLayout= 'slikstik' then
+    Result:= 4
+  else if vLayout= 'xarcade' then
+    Result:= 5
+end;
+
+procedure uEmu_Arcade_Mame_Config_Controllers_SetInputLayout(vItemIndex: integer);
+begin
+  case vItemIndex of
+    0 : mame.Emu.Ini.CORE_INPUT_ctrlr:= '';
+    1 : mame.Emu.Ini.CORE_INPUT_ctrlr:= 'hotrod';
+    2 : mame.Emu.Ini.CORE_INPUT_ctrlr:= 'hotrodse';
+    3 : mame.Emu.Ini.CORE_INPUT_ctrlr:= 'scorpionxg';
+    4 : mame.Emu.Ini.CORE_INPUT_ctrlr:= 'slikstik';
+    5 : mame.Emu.Ini.CORE_INPUT_ctrlr:= 'xarcade';
+  end;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Config_Controllers_CheckboxClick(vName: String);
+begin
+  if vName= 'Mame_Controllers_Checkbox_EnableMouseInput' then
+    mame.Emu.Ini.CORE_INPUT_mouse:= vMame.Config.Panel.Controls.Checkbox[0].IsChecked
+  else if vName= 'Mame_Controllers_Checkbox_EnableSteadyKeySupport' then
+    mame.Emu.Ini.CORE_INPUT_steadykey:= vMame.Config.Panel.Controls.Checkbox[1].IsChecked
+  else if vName= 'Mame_Controllers_Checkbox_EnableJoystickInput' then
+    mame.Emu.Ini.CORE_INPUT_joystick:= vMame.Config.Panel.Controls.Checkbox[2].IsChecked
+  else if vName= 'Mame_Controllers_Checkbox_EnableLightgunInput' then
+    mame.Emu.Ini.CORE_INPUT_lightgun:= vMame.Config.Panel.Controls.Checkbox[3].IsChecked
+  else if vName= 'Mame_Controllers_Checkbox_OffscreenShotsReload' then
+    mame.Emu.Ini.CORE_INPUT_offscreen_reload:= vMame.Config.Panel.Controls.Checkbox[4].IsChecked
+  else if vName= 'Mame_Controllers_Checkbox_DualLightguns' then
+    mame.Emu.Ini.INPUT_DEVICE_dual_lightgun:= vMame.Config.Panel.Controls.Checkbox[5].IsChecked
+  else if vName= 'Mame_Controllers_Checkbox_MultipleKeyboards' then
+    mame.Emu.Ini.CORE_INPUT_multikeyboard:= vMame.Config.Panel.Controls.Checkbox[6].IsChecked
+  else if vName= 'Mame_Controllers_Checkbox_MultipleMice' then
+    mame.Emu.Ini.CORE_INPUT_multimouse:= vMame.Config.Panel.Controls.Checkbox[7].IsChecked;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Controllers_TrackbarOnChange(vName: String);
+begin
+  if vName= 'Mame_Display_Trackbar_JoystickDeadzone' then
+    begin
+      mame.Emu.Ini.CORE_INPUT_joystick_deadzone:= FloatToStrF(vMame.Config.Panel.Controls.Trackbar[0].Value, ffGeneral, 3, 2);
+      if Length(mame.Emu.Ini.CORE_INPUT_joystick_deadzone)= 1 then
+        mame.Emu.Ini.CORE_INPUT_joystick_deadzone:= mame.Emu.Ini.CORE_INPUT_joystick_deadzone+ '.00'
+      else if Length(mame.Emu.Ini.CORE_INPUT_joystick_deadzone)= 3 then
+        mame.Emu.Ini.CORE_INPUT_joystick_deadzone:= mame.Emu.Ini.CORE_INPUT_joystick_deadzone+ '0';
+      vMame.Config.Panel.Controls.Labels[2].Text:= mame.Emu.Ini.CORE_INPUT_joystick_deadzone;
+    end
+  else if vName= 'Mame_Display_Trackbar_JoystickSaturation' then
+    begin
+      mame.Emu.Ini.CORE_INPUT_joystick_saturation:= FloatToStrF(vMame.Config.Panel.Controls.Trackbar[0].Value, ffGeneral, 3, 2);
+      if Length(mame.Emu.Ini.CORE_INPUT_joystick_saturation)= 1 then
+        mame.Emu.Ini.CORE_INPUT_joystick_saturation:= mame.Emu.Ini.CORE_INPUT_joystick_saturation+ '.00'
+      else if Length(mame.Emu.Ini.CORE_INPUT_joystick_saturation)= 3 then
+        mame.Emu.Ini.CORE_INPUT_joystick_saturation:= mame.Emu.Ini.CORE_INPUT_joystick_saturation+ '0';
+      vMame.Config.Panel.Controls.Labels[3].Text:= mame.Emu.Ini.CORE_INPUT_joystick_saturation;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Controllers_ButtonClick(vName: String);
+begin
+  if vName= 'Mame_Controllers_Button_ResetJoystickMap' then
+    begin
+      mame.Emu.Ini.CORE_INPUT_joystick_map:= 'auto';
+      vMame.Config.Panel.Controls.Edit.Text:= mame.Emu.Ini.CORE_INPUT_joystick_map;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Controllers_ComboboxOnChange(vName: String);
+begin
+  if vName= 'Mame_Display_Combobox_DefaultInputLayout' then
+    uEmu_Arcade_Mame_Config_Controllers_SetInputLayout(vMame.Config.Panel.Controls.Combobox.ItemIndex);
+end;
+
+end.

@@ -1,0 +1,13 @@
+unit uMain_Load_Emulators;
+
+interface
+uses
+  System.Classes;
+
+  procedure uEmulators_Arcade_ShowHide;
+
+implementation
+
+procedure uEmulators_Arcade_ShowHide;
+
+end.

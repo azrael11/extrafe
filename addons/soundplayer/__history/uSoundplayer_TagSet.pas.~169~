@@ -1,0 +1,687 @@
+unit uSoundplayer_TagSet;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UITypes,
+  FMX.Objects,
+  FMX.Dialogs,
+  FMX.Grid,
+  FMX.Effects,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Ani,
+  FMX.Filter.Effects,
+  FMX.TabControl,
+  FMX.Edit,
+  FMX.ComboEdit,
+  FMX.Memo;
+
+
+  procedure uSoundplayer_Tag_Free;
+
+  procedure uSoundplayer_TagSet_Mp3;
+  procedure uSoundplayer_TagSet_Mp3_Free;
+
+  procedure uSoundplayer_TagSet_Ape;
+  procedure uSoundplayer_TagSet_Ape_Free;
+
+  procedure uSoundplayer_TagSet_Flac;
+  procedure uSoundplayer_TagSet_Flac_Free;
+
+  procedure uSoundplayer_TagSet_Mp4;
+  procedure uSoundplayer_TagSet_Mp4_Free;
+
+  procedure uSoundplayer_TagSet_Ogg;
+  procedure uSoundplayer_TagSet_Ogg_Free;
+
+  procedure uSoundplayer_TagSet_Wma;
+  procedure uSoundplayer_TagSet_Wma_Free;
+
+
+implementation
+uses
+  uLoad,
+  uTText,
+  uLoad_AllTypes,
+  uMain_SetAll,
+  uSoundplayer_SetAll,
+  uSoundplayer_AllTypes,
+  uSoundplayer_Player_Actions,
+  uSoundplayer_Mouse;
+
+procedure uSoundplayer_TagSet_Mp3;
+var
+  vi: Integer;
+begin
+  extrafe.prog.State:= 'addon_soundplayer_tag_mp3';
+
+  vSoundplayer.tag.mp3.Back:= TPanel.Create(vSoundplayer.scene.Soundplayer);
+  vSoundplayer.tag.mp3.Back.Name:= 'A_SP_Tag_Mp3';
+  vSoundplayer.tag.mp3.Back.Parent:= vSoundplayer.scene.Soundplayer;
+  vSoundplayer.tag.mp3.Back.Width:= 1000;
+  vSoundplayer.tag.mp3.Back.Height:= 500;
+  vSoundplayer.tag.mp3.Back.Position.X:= (vSoundplayer.scene.Back.Width/ 2)- 500;
+  vSoundplayer.tag.mp3.Back.Position.Y:= (vSoundplayer.scene.Back.Height/ 2)- 250;
+  vSoundplayer.tag.mp3.Back.Visible:= True;
+
+  vSoundplayer.tag.mp3.Logo:= TImage.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Logo.Name:= 'A_SP_Tag_Mp3_Logo';
+  vSoundplayer.tag.mp3.Logo.Parent:= vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Logo.Width:= 50;
+  vSoundplayer.tag.mp3.Logo.Height:= 50;
+  vSoundplayer.tag.mp3.Logo.Position.X:= vSoundplayer.tag.mp3.Back.Width- 60;
+  vSoundplayer.tag.mp3.Logo.Position.Y:= 10;
+  vSoundplayer.tag.mp3.Logo.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_tag_mp3.png');
+  vSoundplayer.tag.mp3.Logo.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.Logo.Visible:= True;
+
+  vSoundplayer.tag.mp3.TabControl:= TTabControl.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.TabControl.Name:= 'A_SP_Tag_Mp3_TabControl';
+  vSoundplayer.tag.mp3.TabControl.Parent:= vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.TabControl.Width:= vSoundplayer.tag.mp3.Back.Width- 20;
+  vSoundplayer.tag.mp3.TabControl.Height:= vSoundplayer.tag.mp3.Back.Height- 100;
+  vSoundplayer.tag.mp3.TabControl.Position.X:= 10;
+  vSoundplayer.tag.mp3.TabControl.Position.Y:= 60;
+  vSoundplayer.tag.mp3.TabControl.Visible:= True;
+
+  for vi:= 0 to 1 do
+    begin
+      vSoundplayer.tag.mp3.TabItem[vi]:= TTabItem.Create(vSoundplayer.tag.mp3.TabControl);
+      vSoundplayer.tag.mp3.TabItem[vi].Name:= 'A_SP_Tag_Mp3_TabItem_'+ IntToStr(vi);
+      vSoundplayer.tag.mp3.TabItem[vi].Parent:= vSoundplayer.tag.mp3.TabControl;
+      vSoundplayer.tag.mp3.TabItem[vi].Text:= 'ID3v'+ IntToStr(vi+ 1);
+      vSoundplayer.tag.mp3.TabItem[vi].Width:= vSoundplayer.tag.mp3.TabControl.Width;
+      vSoundplayer.tag.mp3.TabItem[vi].Height:= vSoundplayer.tag.mp3.TabControl.Height;
+      vSoundplayer.tag.mp3.TabItem[vi].Visible:= True;
+    end;
+     //ID3v1
+  vSoundplayer.tag.mp3.ID3v1_Title:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Title.Name:= 'A_SP_Tag_Mp3_ID3v1_Title';
+  vSoundplayer.tag.mp3.ID3v1_Title.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Title.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Title.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Title.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Title.Position.Y:= 30;
+  vSoundplayer.tag.mp3.ID3v1_Title.Text:= 'Song Name : ';
+  vSoundplayer.tag.mp3.ID3v1_Title.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Title.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Title.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Title_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Name:= 'A_SP_Tag_Mp3_ID3v1_Title_V';
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Position.Y:= 30;
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Artist:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Artist.Name:= 'A_SP_Tag_Mp3_ID3v1_Artist';
+  vSoundplayer.tag.mp3.ID3v1_Artist.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Artist.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Artist.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Artist.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Artist.Position.Y:= 60;
+  vSoundplayer.tag.mp3.ID3v1_Artist.Text:= 'Artist Name : ';
+  vSoundplayer.tag.mp3.ID3v1_Artist.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Artist.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Artist.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Artist_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Name:= 'A_SP_Tag_Mp3_ID3v1_Artist_V';
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Position.Y:= 60;
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Album:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Album.Name:= 'A_SP_Tag_Mp3_ID3v1_Album';
+  vSoundplayer.tag.mp3.ID3v1_Album.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Album.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Album.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Album.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Album.Position.Y:= 90;
+  vSoundplayer.tag.mp3.ID3v1_Album.Text:= 'Album Title : ';
+  vSoundplayer.tag.mp3.ID3v1_Album.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Album.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Album.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Album_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Name:= 'A_SP_Tag_Mp3_ID3v1_Album_V';
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Position.Y:= 90;
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Year:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Year.Name:= 'A_SP_Tag_Mp3_ID3v1_Year';
+  vSoundplayer.tag.mp3.ID3v1_Year.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Year.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Year.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Year.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Year.Position.Y:= 120;
+  vSoundplayer.tag.mp3.ID3v1_Year.Text:= 'Year Published : ';
+  vSoundplayer.tag.mp3.ID3v1_Year.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Year.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Year.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Year_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Name:= 'A_SP_Tag_Mp3_ID3v1_Year_V';
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Position.Y:= 120;
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Genre:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Genre.Name:= 'A_SP_Tag_Mp3_ID3v1_Gerne';
+  vSoundplayer.tag.mp3.ID3v1_Genre.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Genre.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Genre.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Genre.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Genre.Position.Y:= 150;
+  vSoundplayer.tag.mp3.ID3v1_Genre.Text:= 'Genre Type : ';
+  vSoundplayer.tag.mp3.ID3v1_Genre.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Genre.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Genre.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Genre_V:= TComboEdit.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Name:= 'A_SP_Tag_Mp3_ID3v1_Gerne_V';
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Position.Y:= 150;
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Items.LoadFromFile(addons.soundplayer.Path.Files+ 'sp_genre_tags.txt');
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Track:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Track.Name:= 'A_SP_Tag_Mp3_ID3v1_Track';
+  vSoundplayer.tag.mp3.ID3v1_Track.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Track.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Track.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Track.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Track.Position.Y:= 180;
+  vSoundplayer.tag.mp3.ID3v1_Track.Text:= 'Track Number : ';
+  vSoundplayer.tag.mp3.ID3v1_Track.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Track.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Track.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Track_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Name:= 'A_SP_Tag_Mp3_ID3v1_Track_V';
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Position.Y:= 180;
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Comment:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Comment.Name:= 'A_SP_Tag_Mp3_ID3v1_Comments';
+  vSoundplayer.tag.mp3.ID3v1_Comment.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Comment.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Comment.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Comment.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Comment.Position.Y:= 210;
+  vSoundplayer.tag.mp3.ID3v1_Comment.Text:= 'Comments : ';
+  vSoundplayer.tag.mp3.ID3v1_Comment.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Comment.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Comment.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Comment_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Name:= 'A_SP_Tag_Mp3_ID3v1_TComments_V';
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Position.Y:= 210;
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v1_Transfer:= TText.Create(vSoundplayer.tag.mp3.TabItem[0]);
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Name:= 'A_SP_Tag_Mp3_ID3v1_Transfer';
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Parent:= vSoundplayer.tag.mp3.TabItem[0];
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Width:= 160;
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Position.Y:= vSoundplayer.tag.mp3.TabControl.Height- 64;
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Text:= 'Tranfer data to ID3v2';
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Font.Style:= vSoundplayer.tag.mp3.ID3v1_Transfer.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v1_Transfer.TextSettings.FontColor:= TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.ID3v1_Transfer.OnClick:= addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v1_Transfer
+  vSoundplayer.tag.mp3.ID3v1_Transfer
+  vSoundplayer.tag.mp3.ID3v1_Transfer.Visible:= True;
+    //ID3v2
+  vSoundplayer.tag.mp3.ID3v2_Title:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Title.Name:= 'A_SP_Tag_Mp3_ID3v2_Title';
+  vSoundplayer.tag.mp3.ID3v2_Title.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Title.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Title.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Title.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Title.Position.Y:= 30;
+  vSoundplayer.tag.mp3.ID3v2_Title.Text:= 'Song Name : ';
+  vSoundplayer.tag.mp3.ID3v2_Title.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Title.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Title.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Title_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Name:= 'A_SP_Tag_Mp3_ID3v2_Title_V';
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Position.Y:= 30;
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Artist:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Artist.Name:= 'A_SP_Tag_Mp3_ID3v2_Artist';
+  vSoundplayer.tag.mp3.ID3v2_Artist.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Artist.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Artist.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Artist.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Artist.Position.Y:= 60;
+  vSoundplayer.tag.mp3.ID3v2_Artist.Text:= 'Artist Name : ';
+  vSoundplayer.tag.mp3.ID3v2_Artist.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Artist.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Artist.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Artist_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Name:= 'A_SP_Tag_Mp3_ID3v2_Artist_V';
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Position.Y:= 60;
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Album:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Album.Name:= 'A_SP_Tag_Mp3_ID3v2_Album';
+  vSoundplayer.tag.mp3.ID3v2_Album.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Album.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Album.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Album.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Album.Position.Y:= 90;
+  vSoundplayer.tag.mp3.ID3v2_Album.Text:= 'Album Title : ';
+  vSoundplayer.tag.mp3.ID3v2_Album.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Album.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Album.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Album_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Name:= 'A_SP_Tag_Mp3_ID3v2_Album_V';
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Position.Y:= 90;
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Year:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Year.Name:= 'A_SP_Tag_Mp3_ID3v2_Year';
+  vSoundplayer.tag.mp3.ID3v2_Year.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Year.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Year.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Year.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Year.Position.Y:= 120;
+  vSoundplayer.tag.mp3.ID3v2_Year.Text:= 'Year Published : ';
+  vSoundplayer.tag.mp3.ID3v2_Year.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Year.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Year.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Year_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Name:= 'A_SP_Tag_Mp3_ID3v2_Year_V';
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Position.Y:= 120;
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Genre:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Genre.Name:= 'A_SP_Tag_Mp3_ID3v2_Gerne';
+  vSoundplayer.tag.mp3.ID3v2_Genre.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Genre.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Genre.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Genre.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Genre.Position.Y:= 150;
+  vSoundplayer.tag.mp3.ID3v2_Genre.Text:= 'Genre Type : ';
+  vSoundplayer.tag.mp3.ID3v2_Genre.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Genre.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Genre.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Genre_V:= TComboEdit.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Name:= 'A_SP_Tag_Mp3_ID3v2_Gerne_V';
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Position.Y:= 150;
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Items.LoadFromFile(addons.soundplayer.Path.Files+ 'sp_genre_tags.txt');
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Track:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Track.Name:= 'A_SP_Tag_Mp3_ID3v2_Track';
+  vSoundplayer.tag.mp3.ID3v2_Track.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Track.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Track.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Track.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Track.Position.Y:= 180;
+  vSoundplayer.tag.mp3.ID3v2_Track.Text:= 'Track Number : ';
+  vSoundplayer.tag.mp3.ID3v2_Track.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Track.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Track.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Track_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Name:= 'A_SP_Tag_Mp3_ID3v2_Track_V';
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Position.Y:= 180;
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Comment:= TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Comment.Name:= 'A_SP_Tag_Mp3_ID3v2_Comments';
+  vSoundplayer.tag.mp3.ID3v2_Comment.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Comment.Width:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Comment.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Comment.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Comment.Position.Y:= 210;
+  vSoundplayer.tag.mp3.ID3v2_Comment.Text:= 'Comments : ';
+  vSoundplayer.tag.mp3.ID3v2_Comment.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Comment.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Comment.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Comment_V:= TEdit.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Name:= 'A_SP_Tag_Mp3_ID3v2_TComments_V';
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Position.X:= 100;
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Position.Y:= 210;
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Text:= '';
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Transfer:= TText.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Name:= 'A_SP_Tag_Mp3_ID3v2_Transfer';
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Width:= 160;
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Height:= 24;
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Position.Y:= vSoundplayer.tag.mp3.TabControl.Height- 64;
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Text:= 'Tranfer data to ID3v1';
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Font.Style:= vSoundplayer.tag.mp3.ID3v2_Transfer.Font.Style+ [TFontStyle.fsBold];
+  vSoundplayer.tag.mp3.ID3v2_Transfer.TextSettings.FontColor:= TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.ID3v2_Transfer.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Covers:= TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Covers.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_Groupbox';
+  vSoundplayer.tag.mp3.ID3v2_Covers.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Covers.Width:= 280;
+  vSoundplayer.tag.mp3.ID3v2_Covers.Height:= vSoundplayer.tag.mp3.TabControl.Height- 50;
+  vSoundplayer.tag.mp3.ID3v2_Covers.Position.X:= 380;
+  vSoundplayer.tag.mp3.ID3v2_Covers.Position.Y:= 20;
+  vSoundplayer.tag.mp3.ID3v2_Covers.Text:= 'Covers';
+  vSoundplayer.tag.mp3.ID3v2_Covers.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Cover:= TImage.Create(vSoundplayer.tag.mp3.ID3v2_Covers);
+  vSoundplayer.tag.mp3.ID3v2_Cover.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_Cover';
+  vSoundplayer.tag.mp3.ID3v2_Cover.Parent:= vSoundplayer.tag.mp3.ID3v2_Covers;
+  vSoundplayer.tag.mp3.ID3v2_Cover.Width:= 260;
+  vSoundplayer.tag.mp3.ID3v2_Cover.Height:= 220;
+  vSoundplayer.tag.mp3.ID3v2_Cover.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Cover.Position.Y:= 30;
+  vSoundplayer.tag.mp3.ID3v2_Cover.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_nocover.png');
+  vSoundplayer.tag.mp3.ID3v2_Cover.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.ID3v2_Cover.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer:= TImage.Create(vSoundplayer.tag.mp3.ID3v2_Covers);
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer';
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Parent:= vSoundplayer.tag.mp3.ID3v2_Covers;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Width:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Height:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Position.Y:= vSoundplayer.tag.mp3.ID3v2_Covers.Height- 42;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_computer.png');
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.OnClick:= addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.OnMouseEnter:= addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.OnMouseLeave:= addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer_Glow:= TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer);
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer_Glow.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer_Glow';
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer_Glow.Parent:= vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer_Glow.Softness:= 0.4;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer_Glow.Opacity:= 0.9;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Computer_Glow.Enabled:= False;
+
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet:= TImage.Create(vSoundplayer.tag.mp3.ID3v2_Covers);
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_AddInternet';
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Parent:= vSoundplayer.tag.mp3.ID3v2_Covers;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Width:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Height:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Position.X:= 60;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Position.Y:= vSoundplayer.tag.mp3.ID3v2_Covers.Height- 42;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_internet.png');
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.OnClick:= addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.OnMouseEnter:= addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.OnMouseLeave:= addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet_Glow:= TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet);
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet_Glow.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_AddInternet_Glow';
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet_Glow.Parent:= vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet_Glow.Softness:= 0.4;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet_Glow.Opacity:= 0.9;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Add_Internet_Glow.Enabled:= False;
+
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove:= TImage.Create(vSoundplayer.tag.mp3.ID3v2_Covers);
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_Remove';
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Parent:= vSoundplayer.tag.mp3.ID3v2_Covers;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Width:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Height:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Position.X:= vSoundplayer.tag.mp3.ID3v2_Covers.Width- 42;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Position.Y:= vSoundplayer.tag.mp3.ID3v2_Covers.Height- 42;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_delete.png');
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.OnClick:= addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.OnMouseEnter:= addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.OnMouseLeave:= addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove_Glow:= TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2_Cover_Remove);
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove_Glow.Name:= 'A_SP_Tag_Mp3_ID3v2_Covers_Remove_Glow';
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove_Glow.Parent:= vSoundplayer.tag.mp3.ID3v2_Cover_Remove;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove_Glow.Softness:= 0.4;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove_Glow.Opacity:= 0.9;
+  vSoundplayer.tag.mp3.ID3v2_Cover_Remove_Glow.Enabled:= False;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics:= TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[1]);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics_Groupbox';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Parent:= vSoundplayer.tag.mp3.TabItem[1];
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Width:= 280;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Height:= vSoundplayer.tag.mp3.TabControl.Height- 50;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Position.X:= 680;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Position.Y:= 20;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Text:= 'Lyrics';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo:= TMemo.Create(vSoundplayer.tag.mp3.ID3v2_Lyrics);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Parent:= vSoundplayer.tag.mp3.ID3v2_Lyrics;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Width:= vSoundplayer.tag.mp3.ID3v2_Lyrics.Width- 20;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Height:= vSoundplayer.tag.mp3.ID3v2_Lyrics.Height- 70;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Position.Y:= 20;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer:= TImage.Create(vSoundplayer.tag.mp3.ID3v2_Lyrics);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Parent:= vSoundplayer.tag.mp3.ID3v2_Lyrics;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Width:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Height:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Position.X:= 10;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Position.Y:= vSoundplayer.tag.mp3.ID3v2_Lyrics.Height- 42;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_computer.png');
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.OnClick:= addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.OnMouseEnter:= addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.OnMouseLeave:= addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer_Glow:= TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer_Glow.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer_Glow';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer_Glow.Parent:= vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer_Glow.Softness:= 0.4;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer_Glow.Opacity:= 0.9;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Computer_Glow.Enabled:= False;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet:= TImage.Create(vSoundplayer.tag.mp3.ID3v2_Lyrics);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddInternet';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Parent:= vSoundplayer.tag.mp3.ID3v2_Lyrics;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Width:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Height:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Position.X:= 60;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Position.Y:= vSoundplayer.tag.mp3.ID3v2_Lyrics.Height- 42;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_internet.png');
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.OnClick:= addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.OnMouseEnter:= addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.OnMouseLeave:= addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet_Glow:= TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet_Glow.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddInternet_Glow';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet_Glow.Parent:= vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet_Glow.Softness:= 0.4;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet_Glow.Opacity:= 0.9;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Add_Internet_Glow.Enabled:= False;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove:= TImage.Create(vSoundplayer.tag.mp3.ID3v2_Lyrics);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Parent:= vSoundplayer.tag.mp3.ID3v2_Lyrics;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Width:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Height:= 28;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Position.X:= vSoundplayer.tag.mp3.ID3v2_Lyrics.Width- 42;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Position.Y:= vSoundplayer.tag.mp3.ID3v2_Lyrics.Height- 42;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_delete.png');
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.OnClick:= addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.OnMouseEnter:= addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.OnMouseLeave:= addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove.Visible:= True;
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove_Glow:= TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove);
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove_Glow.Name:= 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove_Glow';
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove_Glow.Parent:= vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove_Glow.Softness:= 0.4;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove_Glow.Opacity:= 0.9;
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Remove_Glow.Enabled:= False;
+
+  vSoundplayer.tag.mp3.Button_Save:= TButton.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Button_Save.Name:= 'A_SP_Tag_Mp3_Save';
+  vSoundplayer.tag.mp3.Button_Save.Parent:= vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Button_Save.Width:= 100;
+  vSoundplayer.tag.mp3.Button_Save.Height:= 24;
+  vSoundplayer.tag.mp3.Button_Save.Position.X:= 100;
+  vSoundplayer.tag.mp3.Button_Save.Position.Y:= vSoundplayer.tag.mp3.Back.Height- 34;
+  vSoundplayer.tag.mp3.Button_Save.Text:= 'Save changes';
+  vSoundplayer.tag.mp3.Button_Save.OnClick:= addons.Soundplayer.Input.mouse.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Button_Save.Visible:= True;
+
+  vSoundplayer.tag.mp3.Button_Cancel:= TButton.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Button_Cancel.Name:= 'A_SP_Tag_Mp3_Cancel';
+  vSoundplayer.tag.mp3.Button_Cancel.Parent:= vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Button_Cancel.Width:= 100;
+  vSoundplayer.tag.mp3.Button_Cancel.Height:= 24;
+  vSoundplayer.tag.mp3.Button_Cancel.Position.X:= vSoundplayer.tag.mp3.Back.Width- 200;
+  vSoundplayer.tag.mp3.Button_Cancel.Position.Y:= vSoundplayer.tag.mp3.Back.Height- 34;
+  vSoundplayer.tag.mp3.Button_Cancel.Text:= 'Cancel';
+  vSoundplayer.tag.mp3.Button_Cancel.OnClick:= addons.Soundplayer.Input.mouse.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Button_Cancel.Visible:= True;
+end;
+
+procedure uSoundplayer_TagSet_Mp3_Free;
+begin
+  FreeAndNil(vSoundplayer.tag.mp3.Back);
+  extrafe.prog.State:= 'addon_soundplayer';
+end;
+////////////////////////////////////////////////////////////////////////////////
+procedure uSoundplayer_TagSet_Ape;
+begin
+
+end;
+
+procedure uSoundplayer_TagSet_Ape_Free;
+begin
+
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uSoundplayer_TagSet_Flac;
+begin
+
+end;
+
+procedure uSoundplayer_TagSet_Flac_Free;
+begin
+
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uSoundplayer_TagSet_Mp4;
+begin
+
+end;
+
+procedure uSoundplayer_TagSet_Mp4_Free;
+begin
+
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uSoundplayer_TagSet_Ogg;
+begin
+
+end;
+
+procedure uSoundplayer_TagSet_Ogg_Free;
+begin
+
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uSoundplayer_TagSet_Wma;
+begin
+
+end;
+
+procedure uSoundplayer_TagSet_Wma_Free;
+begin
+
+end;
+////////////////////////////////////////////////////////////////////////////////
+procedure uSoundplayer_Tag_Free;
+begin
+  if Assigned(vSoundplayer.tag.mp3.Back) then
+    uSoundplayer_TagSet_Mp3_Free;
+  vSoundplayer.scene.Back_Blur.Enabled:= False;
+  uSoundPlayer_Player_Actions_OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
+  extrafe.prog.State:= 'addon_soundplayer';
+end;
+
+end.

@@ -1,0 +1,16 @@
+unit uMain_Load_Emulators;
+
+interface
+uses
+  System.Classes;
+
+  procedure uEmulators_Show_Emulation_Panel(mPanel: string);
+
+implementation
+
+procedure uEmulators_Show_Emulation_Panel(mPanel: string);
+begin
+
+end;
+
+end.

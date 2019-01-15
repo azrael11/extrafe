@@ -1,0 +1,399 @@
+unit uEmu_Arcade_Mame_Config_Miscellaneous;
+
+interface
+uses
+  System.Classes,
+  System.UITypes,
+  System.SysUtils,
+  FMX.Forms,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Edit,
+  FMX.Listbox,
+  FMX.Objects,
+  FMX.Dialogs;
+
+  procedure uEmu_Arcade_Mame_Config_Create_Miscellaneous_Panel;
+
+  procedure uEmu_Arcade_Mame_Config_Misc_CheckboxClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Misc_TrackbarOnChange(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Misc_ButtonClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Misc_ComboboxOnChange(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Misc_OpenDialog;
+
+implementation
+uses
+  uTText,
+  uWindows,
+  uEmu_Arcade_Mame_Config,
+  uEmu_Arcade_Mame_SetAll,
+  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Config_Mouse;
+
+procedure uEmu_Arcade_Mame_Config_Create_Miscellaneous_Panel;
+var
+  vString: String;
+begin
+  vMame.Config.Panel.Misc.OpenDialog:= TOpenDialog.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.OpenDialog.Name:= 'Mame_Misc_Cheat_OpenDialog';
+  vMame.Config.Panel.Misc.OpenDialog.Filter:= 'Cheats (*.zip)|*.zip';
+  vMame.Config.Panel.Misc.OpenDialog.OnClose:= mame.Config.Input.Mouse.OpenDialog.OnClose;
+
+  vMame.Config.Panel.Misc.Labels[0]:= TLabel.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Labels[0].Name:= 'Mame_Misc_InfoLabel_1';
+  vMame.Config.Panel.Misc.Labels[0].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Labels[0].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Misc.Labels[0].Text:= 'Global Options';
+  vMame.Config.Panel.Misc.Labels[0].Position.Y:= 5;
+  vMame.Config.Panel.Misc.Labels[0].Position.X:= vMame.Config.Scene.Right_Panels[10].Width- vMame.Config.Panel.Misc.Labels[0].Width- 10;
+  vMame.Config.Panel.Misc.Labels[0].Visible:= True;
+
+  vMame.Config.Panel.Misc.Labels[1]:= TLabel.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Labels[1].Name:= 'Mame_Misc_InfoLabel_2';
+  vMame.Config.Panel.Misc.Labels[1].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Labels[1].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Misc.Labels[1].Text:= 'Default options used by all games';
+  vMame.Config.Panel.Misc.Labels[1].Width:= 180;
+  vMame.Config.Panel.Misc.Labels[1].Position.Y:= 22;
+  vMame.Config.Panel.Misc.Labels[1].Position.X:= vMame.Config.Scene.Right_Panels[10].Width- vMame.Config.Panel.Misc.Labels[1].Width- 10;
+  vMame.Config.Panel.Misc.Labels[1].Visible:= True;
+
+  //left
+  vMame.Config.Panel.Misc.Checkbox[0]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[0].Name:= 'Mame_Misc_Checkbox_EnableCheats';
+  vMame.Config.Panel.Misc.Checkbox[0].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[0].SetBounds(10,40,180,19);
+  vMame.Config.Panel.Misc.Checkbox[0].Text:= 'Enable cheats';
+  vMame.Config.Panel.Misc.Checkbox[0].Font.Style:= vMame.Config.Panel.Misc.Checkbox[0].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[0].IsChecked:= mame.Emu.Ini.CORE_MISC_cheat;
+  vMame.Config.Panel.Misc.Checkbox[0].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[0].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[1]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[1].Name:= 'Mame_Misc_Checkbox_EnableInternalDebugger';
+  vMame.Config.Panel.Misc.Checkbox[1].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[1].SetBounds(10,60,180,19);
+  vMame.Config.Panel.Misc.Checkbox[1].Text:= 'Enable internal debugger';
+  vMame.Config.Panel.Misc.Checkbox[1].Font.Style:= vMame.Config.Panel.Misc.Checkbox[1].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[1].IsChecked:= mame.Emu.Ini.CORE_DEBUGGING_debug;
+  vMame.Config.Panel.Misc.Checkbox[1].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[1].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[2]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[2].Name:= 'Mame_Misc_Checkbox_SleepWhenPossible';
+  vMame.Config.Panel.Misc.Checkbox[2].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[2].SetBounds(10,80,180,19);
+  vMame.Config.Panel.Misc.Checkbox[2].Text:= 'Sleep when possible';
+  vMame.Config.Panel.Misc.Checkbox[2].Font.Style:= vMame.Config.Panel.Misc.Checkbox[2].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[2].IsChecked:= mame.Emu.Ini.CORE_PERFORMANCE_sleep;
+  vMame.Config.Panel.Misc.Checkbox[2].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[2].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[3]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[3].Name:= 'Mame_Misc_Checkbox_SaveGameStateOnExit';
+  vMame.Config.Panel.Misc.Checkbox[3].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[3].SetBounds(10,100,180,19);
+  vMame.Config.Panel.Misc.Checkbox[3].Text:= 'Save game state on exit';
+  vMame.Config.Panel.Misc.Checkbox[3].Font.Style:= vMame.Config.Panel.Misc.Checkbox[3].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[3].IsChecked:= mame.Emu.Ini.CORE_STATE_autosave;
+  vMame.Config.Panel.Misc.Checkbox[3].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[3].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[4]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[4].Name:= 'Mame_Misc_Checkbox_CoinLockout';
+  vMame.Config.Panel.Misc.Checkbox[4].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[4].SetBounds(10,120,180,19);
+  vMame.Config.Panel.Misc.Checkbox[4].Text:= 'Coin lockout';
+  vMame.Config.Panel.Misc.Checkbox[4].Font.Style:= vMame.Config.Panel.Misc.Checkbox[4].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[4].IsChecked:= mame.Emu.Ini.CORE_INPUT_coin_lockout;
+  vMame.Config.Panel.Misc.Checkbox[4].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[4].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[5]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[5].Name:= 'Mame_Misc_Checkbox_EnableErrorLogFile';
+  vMame.Config.Panel.Misc.Checkbox[5].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[5].SetBounds(10,140,180,19);
+  vMame.Config.Panel.Misc.Checkbox[5].Text:= 'Enable error .log file';
+  vMame.Config.Panel.Misc.Checkbox[5].Font.Style:= vMame.Config.Panel.Misc.Checkbox[5].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[5].IsChecked:= mame.Emu.Ini.CORE_DEBUGGING_log;
+  vMame.Config.Panel.Misc.Checkbox[5].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[5].Visible:= True;
+
+  vMame.Config.Panel.Misc.Groupbox[0]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Groupbox[0].Name:= 'Mame_Misc_Groupbox_ThreadPriority';
+  vMame.Config.Panel.Misc.Groupbox[0].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Groupbox[0].SetBounds(10,170,((vMame.Config.Scene.Right_Panels[10].Width/ 2)- 15),100);
+  vMame.Config.Panel.Misc.Groupbox[0].Text:= 'Thread priority';
+  vMame.Config.Panel.Misc.Groupbox[0].Visible:= True;
+
+  vMame.Config.Panel.Misc.Trackbar:= TTrackBar.Create(vMame.Config.Panel.Misc.Groupbox[0]);
+  vMame.Config.Panel.Misc.Trackbar.Name:= 'Mame_Misc_Trackbar_ThreadPriority';
+  vMame.Config.Panel.Misc.Trackbar.Parent:= vMame.Config.Panel.Misc.Groupbox[0];
+  vMame.Config.Panel.Misc.Trackbar.SetBounds(5,35,(vMame.Config.Panel.Misc.Groupbox[0].Width- 45),25);
+  vMame.Config.Panel.Misc.Trackbar.Min:= -15;
+  vMame.Config.Panel.Misc.Trackbar.Max:= 1;
+  vMame.Config.Panel.Misc.Trackbar.Frequency:= 1;
+  vMame.Config.Panel.Misc.Trackbar.Value:= StrToFloat(mame.Emu.Ini.WINDOWS_PERFORMANCE_priority);
+  vMame.Config.Panel.Misc.Trackbar.OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Misc.Trackbar.Visible:= True;
+
+  vMame.Config.Panel.Misc.Labels[2]:= TLabel.Create(vMame.Config.Panel.Misc.Groupbox[0]);
+  vMame.Config.Panel.Misc.Labels[2].Name:= 'Mame_Misc_Label_ThreadPriority';
+  vMame.Config.Panel.Misc.Labels[2].Parent:= vMame.Config.Panel.Misc.Groupbox[0];
+  vMame.Config.Panel.Misc.Labels[2].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Misc.Labels[2].Text:= mame.Emu.Ini.WINDOWS_PERFORMANCE_priority;
+  vMame.Config.Panel.Misc.Labels[2].Position.X:= 125;
+  vMame.Config.Panel.Misc.Labels[2].Position.Y:= 35;
+  vMame.Config.Panel.Misc.Labels[2].Visible:= True;
+
+  vMame.Config.Panel.Misc.Labels[3]:= TLabel.Create(vMame.Config.Panel.Misc.Groupbox[0]);
+  vMame.Config.Panel.Misc.Labels[3].Name:= 'Mame_Misc_Label_ThreadPriority_Idle';
+  vMame.Config.Panel.Misc.Labels[3].Parent:= vMame.Config.Panel.Misc.Groupbox[0];
+  vMame.Config.Panel.Misc.Labels[3].TextSettings.HorzAlign:= TTextAlign.Leading;
+  vMame.Config.Panel.Misc.Labels[3].Text:= 'Idle';
+  vMame.Config.Panel.Misc.Labels[3].Position.X:= 10;
+  vMame.Config.Panel.Misc.Labels[3].Position.Y:= 55;
+  vMame.Config.Panel.Misc.Labels[3].Visible:= True;
+
+  vMame.Config.Panel.Misc.Labels[4]:= TLabel.Create(vMame.Config.Panel.Misc.Groupbox[0]);
+  vMame.Config.Panel.Misc.Labels[4].Name:= 'Mame_Misc_Label_ThreadPriority_RealTime';
+  vMame.Config.Panel.Misc.Labels[4].Parent:= vMame.Config.Panel.Misc.Groupbox[0];
+  vMame.Config.Panel.Misc.Labels[4].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Misc.Labels[4].Text:= 'Real time';
+  vMame.Config.Panel.Misc.Labels[4].Position.X:= 94;
+  vMame.Config.Panel.Misc.Labels[4].Position.Y:= 55;
+  vMame.Config.Panel.Misc.Labels[4].Visible:= True;
+
+  //right
+  vMame.Config.Panel.Misc.Groupbox[1]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Groupbox[1].Name:= 'Mame_Misc_Groupbox_ArtworkOptions';
+  vMame.Config.Panel.Misc.Groupbox[1].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Groupbox[1].SetBounds(((vMame.Config.Scene.Right_Panels[10].Width/ 2)+ 5),40,((vMame.Config.Scene.Right_Panels[10].Width/ 2)- 15),160);
+  vMame.Config.Panel.Misc.Groupbox[1].Text:= 'Artwork options';
+  vMame.Config.Panel.Misc.Groupbox[1].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[6]:= TCheckBox.Create(vMame.Config.Panel.Misc.Groupbox[1]);
+  vMame.Config.Panel.Misc.Checkbox[6].Name:= 'Mame_Misc_Checkbox_Backdrops';
+  vMame.Config.Panel.Misc.Checkbox[6].Parent:= vMame.Config.Panel.Misc.Groupbox[1];
+  vMame.Config.Panel.Misc.Checkbox[6].SetBounds(5,20,180,19);
+  vMame.Config.Panel.Misc.Checkbox[6].Text:= 'Backdrops';
+  vMame.Config.Panel.Misc.Checkbox[6].Font.Style:= vMame.Config.Panel.Misc.Checkbox[6].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[6].IsChecked:= mame.Emu.Ini.CORE_ARTWORK_use_backdrops;
+  vMame.Config.Panel.Misc.Checkbox[6].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[6].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[7]:= TCheckBox.Create(vMame.Config.Panel.Misc.Groupbox[1]);
+  vMame.Config.Panel.Misc.Checkbox[7].Name:= 'Mame_Misc_Checkbox_Bezels';
+  vMame.Config.Panel.Misc.Checkbox[7].Parent:= vMame.Config.Panel.Misc.Groupbox[1];
+  vMame.Config.Panel.Misc.Checkbox[7].SetBounds(5,40,180,19);
+  vMame.Config.Panel.Misc.Checkbox[7].Text:= 'Bezels';
+  vMame.Config.Panel.Misc.Checkbox[7].Font.Style:= vMame.Config.Panel.Misc.Checkbox[7].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[7].IsChecked:= mame.Emu.Ini.CORE_ARTWORK_use_bezels;
+  vMame.Config.Panel.Misc.Checkbox[7].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[7].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[8]:= TCheckBox.Create(vMame.Config.Panel.Misc.Groupbox[1]);
+  vMame.Config.Panel.Misc.Checkbox[8].Name:= 'Mame_Misc_Checkbox_Overlays';
+  vMame.Config.Panel.Misc.Checkbox[8].Parent:= vMame.Config.Panel.Misc.Groupbox[1];
+  vMame.Config.Panel.Misc.Checkbox[8].SetBounds(5,60,180,19);
+  vMame.Config.Panel.Misc.Checkbox[8].Text:= 'Overlays';
+  vMame.Config.Panel.Misc.Checkbox[8].Font.Style:= vMame.Config.Panel.Misc.Checkbox[8].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[8].IsChecked:= mame.Emu.Ini.CORE_ARTWORK_use_overlays;
+  vMame.Config.Panel.Misc.Checkbox[8].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[8].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[9]:= TCheckBox.Create(vMame.Config.Panel.Misc.Groupbox[1]);
+  vMame.Config.Panel.Misc.Checkbox[9].Name:= 'Mame_Misc_Checkbox_ControlPanels';
+  vMame.Config.Panel.Misc.Checkbox[9].Parent:= vMame.Config.Panel.Misc.Groupbox[1];
+  vMame.Config.Panel.Misc.Checkbox[9].SetBounds(5,80,180,19);
+  vMame.Config.Panel.Misc.Checkbox[9].Text:= 'Control panels';
+  vMame.Config.Panel.Misc.Checkbox[9].Font.Style:= vMame.Config.Panel.Misc.Checkbox[9].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[9].IsChecked:= mame.Emu.Ini.CORE_ARTWORK_use_cpanels;
+  vMame.Config.Panel.Misc.Checkbox[9].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[9].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[10]:= TCheckBox.Create(vMame.Config.Panel.Misc.Groupbox[1]);
+  vMame.Config.Panel.Misc.Checkbox[10].Name:= 'Mame_Misc_Checkbox_Marquees';
+  vMame.Config.Panel.Misc.Checkbox[10].Parent:= vMame.Config.Panel.Misc.Groupbox[1];
+  vMame.Config.Panel.Misc.Checkbox[10].SetBounds(5,100,180,19);
+  vMame.Config.Panel.Misc.Checkbox[10].Text:= 'Marquees';
+  vMame.Config.Panel.Misc.Checkbox[10].Font.Style:= vMame.Config.Panel.Misc.Checkbox[10].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[10].IsChecked:= mame.Emu.Ini.CORE_ARTWORK_use_marquees;
+  vMame.Config.Panel.Misc.Checkbox[10].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[10].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[11]:= TCheckBox.Create(vMame.Config.Panel.Misc.Groupbox[1]);
+  vMame.Config.Panel.Misc.Checkbox[11].Name:= 'Mame_Misc_Checkbox_CropArtwork';
+  vMame.Config.Panel.Misc.Checkbox[11].Parent:= vMame.Config.Panel.Misc.Groupbox[1];
+  vMame.Config.Panel.Misc.Checkbox[11].SetBounds(5,120,180,19);
+  vMame.Config.Panel.Misc.Checkbox[11].Text:= 'Crop artwork';
+  vMame.Config.Panel.Misc.Checkbox[11].Font.Style:= vMame.Config.Panel.Misc.Checkbox[11].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[11].IsChecked:= mame.Emu.Ini.CORE_ARTWORK_artwork_crop;
+  vMame.Config.Panel.Misc.Checkbox[11].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[11].Visible:= True;
+
+  //middle
+  vMame.Config.Panel.Misc.Groupbox[2]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Groupbox[2].Name:= 'Mame_Misc_Groupbox_BiosSelection';
+  vMame.Config.Panel.Misc.Groupbox[2].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Groupbox[2].SetBounds(10,275,(vMame.Config.Scene.Right_Panels[10].Width- 20),70);
+  vMame.Config.Panel.Misc.Groupbox[2].Text:= 'Artwork options';
+  vMame.Config.Panel.Misc.Groupbox[2].Visible:= True;
+
+  vMame.Config.Panel.Misc.Combobox:= TComboBox.Create(vMame.Config.Panel.Misc.Groupbox[2]);
+  vMame.Config.Panel.Misc.Combobox.Name:= 'Mame_Misc_Combobox_BiosSelection';
+  vMame.Config.Panel.Misc.Combobox.Parent:= vMame.Config.Panel.Misc.Groupbox[2];
+  vMame.Config.Panel.Misc.Combobox.SetBounds(5,30,(vMame.Config.Panel.Misc.Groupbox[2].Width- 10),25);
+  vMame.Config.Panel.Misc.Combobox.Items.Add('none');
+  if mame.Emu.Ini.CORE_MISC_bios= '' then
+    vMame.Config.Panel.Misc.Combobox.ItemIndex:= 0;
+  vMame.Config.Panel.Misc.Combobox.OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Misc.Combobox.Visible:= True;
+
+  vMame.Config.Panel.Misc.Groupbox[3]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Groupbox[3].Name:= 'Mame_Misc_Groupbox_CheatFile';
+  vMame.Config.Panel.Misc.Groupbox[3].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Groupbox[3].SetBounds(10,350,(vMame.Config.Scene.Right_Panels[10].Width- 20),90);
+  vMame.Config.Panel.Misc.Groupbox[3].Text:= 'Cheat file';
+  vMame.Config.Panel.Misc.Groupbox[3].Visible:= True;
+
+  vMame.Config.Panel.Misc.Edit:= TEdit.Create(vMame.Config.Panel.Misc.Groupbox[3]);
+  vMame.Config.Panel.Misc.Edit.Name:= 'Mame_Misc_Edit_CheatFile';
+  vMame.Config.Panel.Misc.Edit.Parent:= vMame.Config.Panel.Misc.Groupbox[3];
+  vMame.Config.Panel.Misc.Edit.SetBounds(5,30,(vMame.Config.Panel.Misc.Groupbox[3].Width- 10),20);
+  if mame.Emu.Ini.CORE_SEARCH_cheatpath= 'cheat' then
+    vMame.Config.Panel.Misc.Edit.Text:= 'Default'
+  else
+    begin
+      vString:= ExtractFileName(mame.Emu.Ini.CORE_SEARCH_cheatpath);
+      vMame.Config.Panel.Misc.Edit.Text:= vString;
+    end;
+  vMame.Config.Panel.Misc.Edit.Visible:= True;
+
+  vMame.Config.Panel.Misc.Button[0]:= TButton.Create(vMame.Config.Panel.Misc.Groupbox[3]);
+  vMame.Config.Panel.Misc.Button[0].Name:= 'Mame_Misc_Button_SelectCheatFile';
+  vMame.Config.Panel.Misc.Button[0].Parent:= vMame.Config.Panel.Misc.Groupbox[3];
+  vMame.Config.Panel.Misc.Button[0].SetBounds(10,60,100,20);
+  vMame.Config.Panel.Misc.Button[0].Text:= 'Select cheat file';
+  vMame.Config.Panel.Misc.Button[0].OnClick:= mame.Config.Input.Mouse.Button.onMouseClick;
+  vMame.Config.Panel.Misc.Button[0].Visible:= True;
+
+  vMame.Config.Panel.Misc.Button[1]:= TButton.Create(vMame.Config.Panel.Misc.Groupbox[3]);
+  vMame.Config.Panel.Misc.Button[1].Name:= 'Mame_Misc_Button_ResetCheatFile';
+  vMame.Config.Panel.Misc.Button[1].Parent:= vMame.Config.Panel.Misc.Groupbox[3];
+  vMame.Config.Panel.Misc.Button[1].SetBounds((vMame.Config.Panel.Misc.Groupbox[3].Width- 110),60,100,20);
+  vMame.Config.Panel.Misc.Button[1].Text:= 'Reset cheat file';
+  vMame.Config.Panel.Misc.Button[1].OnClick:= mame.Config.Input.Mouse.Button.onMouseClick;
+  vMame.Config.Panel.Misc.Button[1].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[12]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[12].Name:= 'Mame_Misc_Checkbox_SkipGameInformation';
+  vMame.Config.Panel.Misc.Checkbox[12].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[12].SetBounds(10,450,280,19);
+  vMame.Config.Panel.Misc.Checkbox[12].Text:= 'Skip game informations screen at startup';
+  vMame.Config.Panel.Misc.Checkbox[12].Font.Style:= vMame.Config.Panel.Misc.Checkbox[12].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[12].IsChecked:= mame.Emu.Ini.CORE_MISC_skip_gameinfo;
+  vMame.Config.Panel.Misc.Checkbox[12].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[12].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[13]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[13].Name:= 'Mame_Misc_Checkbox_QuitGameConfirmation';
+  vMame.Config.Panel.Misc.Checkbox[13].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[13].SetBounds(10,470,280,19);
+  vMame.Config.Panel.Misc.Checkbox[13].Text:= 'Quit game confirmation screen on exit';
+  vMame.Config.Panel.Misc.Checkbox[13].Font.Style:= vMame.Config.Panel.Misc.Checkbox[13].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[13].IsChecked:= mame.Emu.Ini.CORE_MISC_confirm_quit;
+  vMame.Config.Panel.Misc.Checkbox[13].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[13].Visible:= True;
+
+  vMame.Config.Panel.Misc.Checkbox[14]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[10]);
+  vMame.Config.Panel.Misc.Checkbox[14].Name:= 'Mame_Misc_Checkbox_DisplayMouseCursor';
+  vMame.Config.Panel.Misc.Checkbox[14].Parent:= vMame.Config.Scene.Right_Panels[10];
+  vMame.Config.Panel.Misc.Checkbox[14].SetBounds(10,490,280,19);
+  vMame.Config.Panel.Misc.Checkbox[14].Text:= 'Display mouse cursor in internal interface';
+  vMame.Config.Panel.Misc.Checkbox[14].Font.Style:= vMame.Config.Panel.Misc.Checkbox[14].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Misc.Checkbox[14].IsChecked:= mame.Emu.Ini.CORE_MISC_ui_mouse;
+  vMame.Config.Panel.Misc.Checkbox[14].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Misc.Checkbox[14].Visible:= True;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Config_Misc_CheckboxClick(vName: String);
+begin
+  if vName= 'Mame_Misc_Checkbox_EnableCheats' then
+    mame.Emu.Ini.CORE_MISC_cheat:= vMame.Config.Panel.Misc.Checkbox[0].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_EnableInternalDebugger' then
+    mame.Emu.Ini.CORE_DEBUGGING_debug:= vMame.Config.Panel.Misc.Checkbox[1].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_SleepWhenPossible' then
+    mame.Emu.Ini.CORE_PERFORMANCE_sleep:= vMame.Config.Panel.Misc.Checkbox[2].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_SaveGameStateOnExit' then
+    mame.Emu.Ini.CORE_STATE_autosave:= vMame.Config.Panel.Misc.Checkbox[3].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_CoinLockout' then
+    mame.Emu.Ini.CORE_INPUT_coin_lockout:= vMame.Config.Panel.Misc.Checkbox[4].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_EnableErrorLogFile' then
+    mame.Emu.Ini.CORE_DEBUGGING_log:= vMame.Config.Panel.Misc.Checkbox[5].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_Backdrops' then
+    mame.Emu.Ini.CORE_ARTWORK_use_backdrops:= vMame.Config.Panel.Misc.Checkbox[6].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_Bezels' then
+    mame.Emu.Ini.CORE_ARTWORK_use_bezels:= vMame.Config.Panel.Misc.Checkbox[7].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_Overlays' then
+    mame.Emu.Ini.CORE_ARTWORK_use_overlays:= vMame.Config.Panel.Misc.Checkbox[8].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_ControlPanels' then
+    mame.Emu.Ini.CORE_ARTWORK_use_cpanels:= vMame.Config.Panel.Misc.Checkbox[9].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_Marquees' then
+    mame.Emu.Ini.CORE_ARTWORK_use_marquees:= vMame.Config.Panel.Misc.Checkbox[10].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_CropArtwork' then
+    mame.Emu.Ini.CORE_ARTWORK_artwork_crop:= vMame.Config.Panel.Misc.Checkbox[11].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_SkipGameInformation' then
+    mame.Emu.Ini.CORE_MISC_skip_gameinfo:= vMame.Config.Panel.Misc.Checkbox[12].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_QuitGameConfirmation' then
+    mame.Emu.Ini.CORE_MISC_confirm_quit:= vMame.Config.Panel.Misc.Checkbox[13].IsChecked
+  else if vName= 'Mame_Misc_Checkbox_DisplayMouseCursor' then
+    mame.Emu.Ini.CORE_MISC_ui_mouse:= vMame.Config.Panel.Misc.Checkbox[14].IsChecked;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Misc_TrackbarOnChange(vName: String);
+begin
+  if vName= 'Mame_Misc_Trackbar_ThreadPriority' then
+    begin
+      mame.Emu.Ini.WINDOWS_PERFORMANCE_priority:= FloatToStr(vMame.Config.Panel.Misc.Trackbar.Value);
+      vMame.Config.Panel.Misc.Labels[2].Text:= mame.Emu.Ini.WINDOWS_PERFORMANCE_priority;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Misc_ButtonClick(vName: String);
+begin
+  if vName= 'Mame_Misc_Button_SelectCheatFile' then
+    begin
+      mame.Config.Panel.Misc.OpenDialog_Result:= 'cheat_file';
+      vMame.Config.Panel.Misc.OpenDialog.Execute;
+    end
+  else if vName= 'Mame_Misc_Button_ResetCheatFile' then
+    begin
+      mame.Emu.Ini.CORE_SEARCH_cheatpath:= 'cheat';
+      vMame.Config.Panel.Misc.Edit.Text:= 'Default';
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Misc_ComboboxOnChange(vName: String);
+begin
+  if vName= 'Mame_Misc_Combobox_BiosSelection' then
+  //TODO 5 -oNikos Kordas -cuEmu_Arcade_Mame_Config_Miscellaneous: I must find what this is do and make it usefull
+end;
+
+procedure uEmu_Arcade_Mame_Config_Misc_OpenDialog;
+var
+  vString: String;
+begin
+  if vMame.Config.Panel.Misc.OpenDialog_Result= 'cheat_file' then
+    begin
+      vString:= vMame.Config.Panel.Misc.OpenDialog.FileName;
+      vString:= Trim(Copy(vString, 0, length(vString) - 4));
+      mame.Emu.Ini.CORE_SEARCH_cheatpath:= vString;
+      vString:= ExtractFileName(mame.Emu.Ini.CORE_SEARCH_cheatpath);
+      vMame.Config.Panel.Misc.Edit.Text:= vString;
+    end;
+end;
+
+end.

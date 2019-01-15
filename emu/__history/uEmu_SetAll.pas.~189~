@@ -1,0 +1,41 @@
+unit uEmu_SetAll;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UITypes,
+  FMX.StdCtrls,
+  FMX.Objects,
+  FMX.Effects,
+  FMX.Graphics,
+  FMX.Types;
+
+
+  const
+    cEmu_Arcade_Path= 'emu\arcade\';
+    cEmu_Computers_Path= 'emu\computers\';
+    cEmu_Consoles_Path= 'emu\consoles\';
+    cEmu_Handhelds_Path= 'emu\handhelds\';
+    cEmu_Pinballs_Path= 'emu\Pinballs\';
+
+
+  procedure uEmu_SetComponentsToRightPlace;
+
+
+implementation
+uses
+  uLoad,
+  emu,
+  main;
+
+procedure uEmu_SetComponentsToRightPlace;
+begin
+  Emu_Form.Width:= extrafe.res.Width;
+  Emu_Form.Height:= extrafe.res.Heigth;
+
+  Emu_Form.Emu_Stylebook.loadFromFile(extrafe.styles_path+ extrafe.style_name+ '.style');
+  Emu_Form.StyleBook:= Emu_Form.Emu_Stylebook;
+end;
+
+end.

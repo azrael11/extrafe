@@ -1,0 +1,359 @@
+unit uWeather_Config_Options;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  FMX.StdCtrls,
+  FMX.Types;
+
+procedure uWeather_Config_Options_Show;
+procedure uWeather_Config_Options_Free;
+
+function uWeather_Config_Options_CalcDegree(vIsCelcius: Boolean; vCurrent: String): String;
+procedure uWeather_Config_Options_UseDegree(vDegreeType: String);
+
+procedure uWeather_Config_Options_Refresh(vOnce: Boolean);
+
+implementation
+
+uses
+  uLoad,
+  uLoad_AllTypes,
+  uSnippet_Text,
+  uWeather_Actions,
+  uWeather_AllTypes,
+  uWeather_SetAll;
+
+procedure uWeather_Config_Options_Show;
+begin
+  vWeather.Config.Main.Right.Panels[2] := TPanel.Create(vWeather.Config.Main.Right.Panel);
+  vWeather.Config.Main.Right.Panels[2].Name := 'Weather_Config_Panels_2';
+  vWeather.Config.Main.Right.Panels[2].Parent := vWeather.Config.Main.Right.Panel;
+  vWeather.Config.Main.Right.Panels[2].Align := TAlignLayout.Client;
+  vWeather.Config.Main.Right.Panels[2].Visible := True;
+
+  vWeather.Config.Main.Right.Options.Degree := TGroupBox.Create(vWeather.Config.Main.Right.Panels[2]);
+  vWeather.Config.Main.Right.Options.Degree.Name := 'Weather_Config_Options_Degree_Groupbox';
+  vWeather.Config.Main.Right.Options.Degree.Parent := vWeather.Config.Main.Right.Panels[2];
+  vWeather.Config.Main.Right.Options.Degree.Width := vWeather.Config.Main.Right.Panels[2].Width - 20;
+  vWeather.Config.Main.Right.Options.Degree.Height := 100;
+  vWeather.Config.Main.Right.Options.Degree.Position.X := 10;
+  vWeather.Config.Main.Right.Options.Degree.Position.Y := 10;
+  vWeather.Config.Main.Right.Options.Degree.Text := 'Temperature unit';
+  vWeather.Config.Main.Right.Options.Degree.Visible := True;
+
+  vWeather.Config.Main.Right.Options.Degree_C := TCheckBox.Create(vWeather.Config.Main.Right.Options.Degree);
+  vWeather.Config.Main.Right.Options.Degree_C.Name := 'Weather_Config_Options_Degree_Celcius_Checkbox';
+  vWeather.Config.Main.Right.Options.Degree_C.Parent := vWeather.Config.Main.Right.Options.Degree;
+  vWeather.Config.Main.Right.Options.Degree_C.Width := 200;
+  vWeather.Config.Main.Right.Options.Degree_C.Height := 20;
+  vWeather.Config.Main.Right.Options.Degree_C.Position.X := 10;
+  vWeather.Config.Main.Right.Options.Degree_C.Position.Y := 40;
+  vWeather.Config.Main.Right.Options.Degree_C.Text := 'Celcius';
+  vWeather.Config.Main.Right.Options.Degree_C.Font.Style :=
+    vWeather.Config.Main.Right.Options.Degree_C.Font.Style + [TFontStyle.fsBold];
+  vWeather.Config.Main.Right.Options.Degree_C.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
+  vWeather.Config.Main.Right.Options.Degree_C.OnMouseEnter :=
+    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+  vWeather.Config.Main.Right.Options.Degree_C.OnMouseLeave :=
+    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+  vWeather.Config.Main.Right.Options.Degree_C.Visible := True;
+
+  vWeather.Config.Main.Right.Options.Degree_F := TCheckBox.Create(vWeather.Config.Main.Right.Options.Degree);
+  vWeather.Config.Main.Right.Options.Degree_F.Name := 'Weather_Config_Options_Degree_Fahrenheit_Checkbox';
+  vWeather.Config.Main.Right.Options.Degree_F.Parent := vWeather.Config.Main.Right.Options.Degree;
+  vWeather.Config.Main.Right.Options.Degree_F.Width := 200;
+  vWeather.Config.Main.Right.Options.Degree_F.Height := 20;
+  vWeather.Config.Main.Right.Options.Degree_F.Position.X :=
+    vWeather.Config.Main.Right.Options.Degree.Width - 210;
+  vWeather.Config.Main.Right.Options.Degree_F.Position.Y := 40;
+  vWeather.Config.Main.Right.Options.Degree_F.Text := 'Fahrenheit';
+  vWeather.Config.Main.Right.Options.Degree_F.Font.Style :=
+    vWeather.Config.Main.Right.Options.Degree_F.Font.Style + [TFontStyle.fsBold];
+  vWeather.Config.Main.Right.Options.Degree_F.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
+  vWeather.Config.Main.Right.Options.Degree_F.OnMouseEnter :=
+    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+  vWeather.Config.Main.Right.Options.Degree_F.OnMouseLeave :=
+    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+  vWeather.Config.Main.Right.Options.Degree_F.Visible := True;
+
+  vWeather.Config.Main.Right.Options.Refresh := TGroupBox.Create(vWeather.Config.Main.Right.Panels[2]);
+  vWeather.Config.Main.Right.Options.Refresh.Name := 'Weather_Config_Options_Refresh_Groupbox';
+  vWeather.Config.Main.Right.Options.Refresh.Parent := vWeather.Config.Main.Right.Panels[2];
+  vWeather.Config.Main.Right.Options.Refresh.Width := vWeather.Config.Main.Right.Panels[2].Width - 20;
+  vWeather.Config.Main.Right.Options.Refresh.Height := 100;
+  vWeather.Config.Main.Right.Options.Refresh.Position.X := 10;
+  vWeather.Config.Main.Right.Options.Refresh.Position.Y := 130;
+  vWeather.Config.Main.Right.Options.Refresh.Text := 'Refresh Options';
+  vWeather.Config.Main.Right.Options.Refresh.Visible := True;
+
+  vWeather.Config.Main.Right.Options.Refresh_Every :=
+    TCheckBox.Create(vWeather.Config.Main.Right.Options.Refresh);
+  vWeather.Config.Main.Right.Options.Refresh_Every.Name := 'Weather_Config_Options_Refresh_Every_Checkbox';
+  vWeather.Config.Main.Right.Options.Refresh_Every.Parent := vWeather.Config.Main.Right.Options.Refresh;
+  vWeather.Config.Main.Right.Options.Refresh_Every.Width := 250;
+  vWeather.Config.Main.Right.Options.Refresh_Every.Height := 20;
+  vWeather.Config.Main.Right.Options.Refresh_Every.Position.X := 10;
+  vWeather.Config.Main.Right.Options.Refresh_Every.Position.Y := 40;
+  vWeather.Config.Main.Right.Options.Refresh_Every.Text := 'Every time open the weather addon';
+  vWeather.Config.Main.Right.Options.Refresh_Every.Font.Style :=
+    vWeather.Config.Main.Right.Options.Refresh_Every.Font.Style + [TFontStyle.fsBold];
+  vWeather.Config.Main.Right.Options.Refresh_Every.OnClick :=
+    addons.weather.Input.mouse.Checkbox.OnMouseClick;
+  vWeather.Config.Main.Right.Options.Refresh_Every.OnMouseEnter :=
+    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+  vWeather.Config.Main.Right.Options.Refresh_Every.OnMouseLeave :=
+    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+  vWeather.Config.Main.Right.Options.Refresh_Every.Visible := True;
+
+  vWeather.Config.Main.Right.Options.Refresh_Once :=
+    TCheckBox.Create(vWeather.Config.Main.Right.Options.Refresh);
+  vWeather.Config.Main.Right.Options.Refresh_Once.Name := 'Weather_Config_Options_Refresh_Once_Checkbox';
+  vWeather.Config.Main.Right.Options.Refresh_Once.Parent := vWeather.Config.Main.Right.Options.Refresh;
+  vWeather.Config.Main.Right.Options.Refresh_Once.Width := 200;
+  vWeather.Config.Main.Right.Options.Refresh_Once.Height := 20;
+  vWeather.Config.Main.Right.Options.Refresh_Once.Position.X :=
+    vWeather.Config.Main.Right.Options.Refresh.Width - 210;
+  vWeather.Config.Main.Right.Options.Refresh_Once.Position.Y := 40;
+  vWeather.Config.Main.Right.Options.Refresh_Once.Text := 'Once when run ExtraFE';
+  vWeather.Config.Main.Right.Options.Refresh_Once.Font.Style :=
+    vWeather.Config.Main.Right.Options.Refresh_Once.Font.Style + [TFontStyle.fsBold];
+  vWeather.Config.Main.Right.Options.Refresh_Once.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
+  vWeather.Config.Main.Right.Options.Refresh_Once.OnMouseEnter :=
+    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+  vWeather.Config.Main.Right.Options.Refresh_Once.OnMouseLeave :=
+    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+  vWeather.Config.Main.Right.Options.Refresh_Once.Visible := True;
+
+  if addons.weather.Action.Degree = 'Celcius' then
+    vWeather.Config.Main.Right.Options.Degree_C.IsChecked := True
+  else if addons.weather.Action.Degree = 'Fahrenheit' then
+    vWeather.Config.Main.Right.Options.Degree_F.IsChecked := True;
+
+  if addons.weather.Config.Refresh_Once = False then
+    vWeather.Config.Main.Right.Options.Refresh_Every.IsChecked := True
+  else
+    vWeather.Config.Main.Right.Options.Refresh_Once.IsChecked := True;
+end;
+
+procedure uWeather_Config_Options_Free;
+begin
+  FreeAndNil(vWeather.Config.Main.Right.Panels[2]);
+end;
+
+function uWeather_Config_Options_CalcDegree(vIsCelcius: Boolean; vCurrent: String): String;
+var
+  vi: Single;
+begin
+  vi := StrToFloat(vCurrent);
+  if vIsCelcius then
+    Result := FormatFloat('0', ((vi - 32) * 5) / 9)
+  else
+    Result := FormatFloat('0', ((vi * 9) / 5) + 32);
+end;
+
+procedure uWeather_Config_Options_UseDegree(vDegreeType: String);
+var
+  vi: integer;
+  vCelcius: Boolean;
+  vTempUnit: String;
+begin
+  if vDegreeType <> addons.weather.Action.Degree then
+  begin
+    if vDegreeType = 'Celcius' then
+    begin
+      vCelcius := True;
+      vTempUnit := 'C';
+      vWeather.Config.Main.Right.Options.Degree_F.IsChecked := False
+    end
+    else if vDegreeType = 'Fahrenheit' then
+    begin
+      vCelcius := False;
+      vTempUnit := 'F';
+      vWeather.Config.Main.Right.Options.Degree_C.IsChecked := False
+    end;
+
+    addons.weather.Action.Degree := vDegreeType;
+
+    for vi := 0 to addons.weather.Action.Active_Total do
+    begin
+      vWeather.Scene.Tab[vi].General.Temprature.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].General.Temprature.Text);
+      vWeather.Scene.Tab[vi].General.Temprature.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].General.Temprature);
+      vWeather.Scene.Tab[vi].General.Temprature_Unit.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].General.Temprature_Unit.Position.X := vWeather.Scene.Tab[vi]
+        .General.Temprature.Position.X + vWeather.Scene.Tab[vi].General.Temprature.Width + 10;
+
+      vWeather.Scene.Tab[vi].Forcast.Current.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Current.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Current.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Current.Low);
+      vWeather.Scene.Tab[vi].Forcast.Current.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Current.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Current.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Current.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Current.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Current.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Current.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Current.High);
+      vWeather.Scene.Tab[vi].Forcast.Current.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Current.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Current.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Current.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_1.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_1.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_1.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_1.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_1.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_1.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_1.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_1.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_1.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_1.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_1.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_1.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_2.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_2.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_2.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_2.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_2.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_2.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_2.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_2.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_2.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_2.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_2.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_2.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_3.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_3.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_3.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_3.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_3.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_3.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_3.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_3.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_3.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_3.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_3.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_3.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_4.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_4.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_4.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_4.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_4.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_4.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_4.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_4.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_4.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_4.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_4.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_4.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_5.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_5.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_5.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_5.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_5.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_5.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_5.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_5.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_5.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_5.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_5.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_5.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_6.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_6.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_6.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_6.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_6.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_6.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_6.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_6.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_6.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_6.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_6.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_6.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_7.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_7.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_7.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_7.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_7.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_7.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_7.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_7.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_7.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_7.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_7.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_7.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_8.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_8.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_8.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_8.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_8.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_8.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_8.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_8.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_8.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_8.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_8.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_8.High.Width + 4;
+
+      vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_9.Low);
+      vWeather.Scene.Tab[vi].Forcast.Day_9.Low_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_9.Low_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_9.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Width + 4;
+      vWeather.Scene.Tab[vi].Forcast.Day_9.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
+        vWeather.Scene.Tab[vi].Forcast.Day_9.High.Text);
+      vWeather.Scene.Tab[vi].Forcast.Day_9.High.Width :=
+        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_9.High);
+      vWeather.Scene.Tab[vi].Forcast.Day_9.High_TU.Text := vTempUnit;
+      vWeather.Scene.Tab[vi].Forcast.Day_9.High_TU.Position.X := vWeather.Scene.Tab[vi]
+        .Forcast.Day_9.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_9.High.Width + 4;
+    end;
+    addons.weather.Ini.Ini.WriteString('Options', 'Degree', addons.weather.Action.Degree);
+  end
+  else
+  begin
+    if vDegreeType = 'Celcius' then
+      vWeather.Config.Main.Right.Options.Degree_C.IsChecked :=
+        not vWeather.Config.Main.Right.Options.Degree_C.IsChecked
+    else if vDegreeType = 'Fahrenheit' then
+      vWeather.Config.Main.Right.Options.Degree_F.IsChecked :=
+        not vWeather.Config.Main.Right.Options.Degree_F.IsChecked;
+  end;
+end;
+
+procedure uWeather_Config_Options_Refresh(vOnce: Boolean);
+begin
+
+end;
+
+end.

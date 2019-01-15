@@ -1,0 +1,61 @@
+unit uEmu_SetAll;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UITypes,
+  FMX.StdCtrls,
+  FMX.Objects,
+  FMX.Effects,
+  FMX.Graphics,
+  FMX.Types;
+
+
+  const
+    cEmu_Arcade_Path= 'emu\arcade\';
+    cEmu_Computers_Path= 'emu\computers\';
+    cEmu_Consoles_Path= 'emu\consoles\';
+    cEmu_Handhelds_Path= 'emu\handhelds\';
+    cEmu_Pinballs_Path= 'emu\Pinballs\';
+
+
+  procedure uEmu_SetComponentsToRightPlace;
+
+
+implementation
+uses
+  uLoad,
+  emu,
+  main;
+
+procedure uEmu_SetComponentsToRightPlace;
+begin
+  Emu_Form.Width:= extrafe.fullscreen_width;
+  Emu_Form.Height:= extrafe.fullscreen_height;
+
+  Emu_Form.Emu_Main.Width:= extrafe.fullscreen_width;
+  Emu_Form.Emu_Main.Height:= extrafe.fullscreen_height;
+  Emu_Form.Emu_Main.Position.X:= 0;
+  Emu_Form.Emu_Main.Position.Y:= 0;
+  Emu_Form.Visible:= True;
+
+  Emu_Form.Emu_Main_Left.Width:= extrafe.fullscreen_width/ 2;
+  Emu_Form.Emu_Main_Left.Height:= extrafe.fullscreen_height;
+  Emu_Form.Emu_Main_Left.Position.X:= 0;
+  Emu_Form.Emu_Main_Left.Position.Y:= 0;
+  Emu_Form.Emu_Main_Left.WrapMode:= TImageWrapMode.Original;
+  Emu_Form.Emu_Main_Left.Visible:= True;
+
+  Emu_Form.Emu_Main_Right.Width:= extrafe.fullscreen_width/ 2;
+  Emu_Form.Emu_Main_Right.Height:= extrafe.fullscreen_height;
+  Emu_Form.Emu_Main_Right.Position.X:= Emu_Form.Emu_Main_Left.Width;
+  Emu_Form.Emu_Main_Right.Position.Y:= 0;
+  Emu_Form.Emu_Main_Right.WrapMode:= TImageWrapMode.Original;
+  Emu_Form.Emu_Main_Right.Visible:= True;
+
+  Emu_Form.Emu_Stylebook.loadFromFile(extrafe.styles_path+ extrafe.style_name+ '.style');
+  Emu_Form.StyleBook:= Emu_Form.Emu_Stylebook;
+end;
+
+end.

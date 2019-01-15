@@ -1,0 +1,19 @@
+unit uCalendar_SetAll;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  FMX.Objects,
+  FMX.StdCtrls;
+
+  procedure uCalendar_SetComponentsToRightPlace;
+
+implementation
+
+procedure uCalendar_SetComponentsToRightPlace;
+begin
+
+end;
+
+end.

@@ -1,0 +1,50 @@
+unit uSoundplayer_Settings_SetAll;
+
+interface
+
+uses
+  System.Classes,
+  FMX.StdCtrls;
+
+procedure uSoundplayer_Settings_Set;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uSoundplayer_AllTypes;
+
+procedure uSoundplayer_Settings_Set;
+begin
+  extrafe.prog.State := 'addon_soundplayer_settings';
+
+  vSoundplayer.scene.Back_Blur.Enabled := True;
+
+  vSoundplayer.config.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
+  vSoundplayer.config.Panel.Name:= 'A_SP_Settings';
+  vSoundplayer.config.Panel.Parent:=  vSoundplayer.scene.soundplayer;
+  vSoundplayer.config.Panel.SetBounds(extrafe.res.Half_Width- 400, extrafe.res.Half_Height- 450, 800, 800);
+  vSoundplayer.config.Panel.Visible:= True;
+
+  uLoad_SetAll_CreateHeader();
+
+  vSoundplayer.config.Header.Panel := TPanel.Create(vSoundplayer.config.Panel);
+  vSoundplayer.config.Header.Panel.Name:= 'A_SP_Settings_Header';
+  vSoundplayer.config.Header.Panel.Parent:=  vSoundplayer.config.Panel;
+  vSoundplayer.config.Header.Panel.Width:= vSoundplayer.config.Panel.Width;
+  vSoundplayer.config.Header.Panel.Height:= 30;
+  vSoundplayer.config.Header.Panel.Position.X:= 0;
+  vSoundplayer.config.Header.Panel.Position.Y:= 0;
+  vSoundplayer.config.Header.Panel.Visible:= True;
+
+  vSoundplayer.config.Main.Panel := TPanel.Create(vSoundplayer.config.Panel);
+  vSoundplayer.config.Main.Panel.Name:= 'A_SP_Settings_Main';
+  vSoundplayer.config.Main.Panel.Parent:=  vSoundplayer.config.Panel;
+  vSoundplayer.config.Main.Panel.Width:= vSoundplayer.config.Panel.Width;
+  vSoundplayer.config.Main.Panel.Height:= vSoundplayer.config.Panel.Height- 30;
+  vSoundplayer.config.Main.Panel.Position.X:= 0;
+  vSoundplayer.config.Main.Panel.Position.Y:= 30;
+  vSoundplayer.config.Main.Panel.Visible:= True;
+end;
+
+end.

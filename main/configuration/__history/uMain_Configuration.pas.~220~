@@ -1,0 +1,81 @@
+unit uMain_Configuration;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UIConsts,
+  FMX.Objects,
+  Winapi.Winsock,
+  scktComp;
+
+  procedure uMConfig_SelectPanel(mPanel: Byte);
+
+  procedure uMConfig_ShowProfile;
+  procedure uMConfig_ShowInfo;
+
+implementation
+uses
+  main,
+  uLoad,
+  uAllTypes,
+  uUser_Account,
+  uWindows,
+  uMain_SetAll,
+  uMain_Config_Info;
+
+procedure uMConfig_SelectPanel(mPanel: Byte);
+begin
+  Main_Form.Main_Config_A_Profile.Visible:= False;
+
+  Case mPanel of
+    1 : uMConfig_ShowProfile;
+    7 : uMConfig_ShowInfo;
+  End;
+end;
+
+procedure uMConfig_ShowProfile;
+const
+  cFont_Black= claBlack;
+  cFont_White= claWhite;
+begin
+  Main_Form.Main_Config_A_Profile.Visible:= True;
+  Main_Form.Profile_Main_Panel.Visible:= True;
+  Main_Form.Profile_TabControl.Visible:= True;
+  Main_Form.Profile_User_Tab.Visible:= True;
+  Main_Form.Profile_User_Statistics.Visible:= True;
+  Main_Form.Profile_User_Machine_Tab.Visible:= True;
+  Main_Form.Profile_TabControl.TabIndex:= 0;
+
+  //Statistics
+  //Machine
+  Main_Form.Profile_Machine_OsInfo.Text:= TOSVersion.ToString;
+  Main_Form.Profile_Machine_Architecture.Text:= Main_Form.Profile_Machine_Architecture.Text+ uWindows_OsArchitectureToStr(TOSVersion.Architecture);
+  Main_Form.Profile_Machine_Platform.Text:= Main_Form.Profile_Machine_Platform.Text+ uWindows_OsPlatformToStr(TOSVersion.Platform)+' '+ IntToStr(uWindoes_OsPlatformPointerToInt)+ 'bit';
+  Main_Form.Profile_Machine_OS.Text:= Main_Form.Profile_Machine_OS.Text+ TOSVersion.Name;
+  Main_Form.Profile_Machine_OsMajor.Text:= Main_Form.Profile_Machine_OsMajor.Text+ IntToStr(TOSVersion.Major);
+  Main_Form.Profile_Machine_OsMinor.Text:= Main_Form.Profile_Machine_OsMinor.Text+ IntToStr(TOSVersion.Minor);
+  Main_Form.Profile_Machine_OsBuild.Text:= Main_Form.Profile_Machine_OsBuild.Text+ IntToStr(TOSVersion.Build);
+  if uWindows_IsConected_ToInternet then
+    Main_Form.Profile_Machine_Internet_Label.Text:= 'Internet : Connected'
+  else
+    Main_Form.Profile_Machine_Internet_Label.Text:= 'Internet : Not Connected';
+  Main_Form.Profile_Machine_IP_Address_Label.Text:= uWindows_GetIPAddress;
+  Main_Form.Profile_Machine_DNS_Address_Label.Text:= 'DNS Address : '
+
+end;
+
+procedure uMConfig_ShowInfo;
+begin
+  //Info ExtraFE
+  Config_Info_Read_Build(mainScene.Config.R.Info.Ex_Stable_V.Text, mainScene.Config.R.Info.Ex_LastBuild_V.Text);
+  vConfig_Info_Major:= StrToInt(extrafe.prog.Version.Major);
+  vConfig_Info_Minor:= StrToInt(extrafe.prog.Version.Minor);
+  vConfig_Info_Realeash:= StrToInt(extrafe.prog.Version.Realeash);
+  vConfig_Info_Build:= StrToInt(extrafe.prog.Version.Build);
+  vConfig_Info_MaxNumber_Build:= StrToInt(extrafe.prog.Version.Build);
+  //Info Emulators
+//  Main_Form.Info_Emulators_Mame.Bitmap:= Main_Form.Main_IL.Source[2].MultiResBitmap.Items[0].Bitmap;
+end;
+
+end.

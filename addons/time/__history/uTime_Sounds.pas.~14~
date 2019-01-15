@@ -1,0 +1,27 @@
+unit uTime_Sounds;
+
+interface
+uses
+  System.Classes,
+  BASS;
+
+procedure uTime_Sounds_Load;
+procedure uTime_Sounds_Free;
+
+implementation
+uses
+  uLoad_AllTypes;
+
+procedure uTime_Sounds_Load;
+begin
+   addons.time.Sound.Clock[0]:= BASS_StreamCreateFile(False,
+    PChar(addons.time.Path.Sounds+ 'a_w_rain_light.mp3'), 0, 0, 0 {$IFDEF UNICODE} or BASS_UNICODE
+{$ENDIF});
+end;
+
+procedure uTime_Sounds_Free;
+begin
+
+end;
+
+end.

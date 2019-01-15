@@ -1,0 +1,18 @@
+unit uSounplayer_Player_Actions;
+
+interface
+uses
+  Classes;
+
+  procedure uSoundPlayer_PAcation_AddNewSongs;
+
+implementation
+uses
+  main;
+
+procedure uSoundPlayer_PAcation_AddNewSongs;
+begin
+
+end;
+
+end.

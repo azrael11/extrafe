@@ -1,0 +1,218 @@
+unit uUser_Account;
+
+interface
+uses
+  System.Classes,
+  FMX.Dialogs;
+
+  type TUSER_ACCOUNT_REGISTER= record
+    Username: WideString;
+    Password: WideString;
+    Name: WideString;
+    Surname: WideString;
+    Gender: WideString;
+    Avatar: Integer;
+    EMail: WideString;
+    Captcha: WideString;
+  end;
+
+  type TUSER_ACOUNT_DATABASE= record
+    Name: WideString;
+    Surname: WideString;
+    Email: WideString;
+    Last_Date_Visit: TDate;
+    Last_Time_Visit: TTime;
+    Country: WideString;
+    Country_Code: WideString;
+    Genre: WideString;
+    Last_Game_Play: WideString;
+    Last_Emulator: WideString;
+    Total_Time_Play: TTime;
+  end;
+
+  type TUSER_ACOUNT= record
+    data: TUSER_ACOUNT_DATABASE;
+    regist: TUSER_ACCOUNT_REGISTER;
+  end;
+
+  //Register
+  procedure uUser_Account_CreateRegisteredUser;
+  procedure uUser_Account_ShowRegisterErrorMessage(vError: Byte);
+  function uUser_Account_CheckRegisterData: Boolean;
+
+  var
+    user: TUSER_ACOUNT;
+
+implementation
+uses
+  loading;
+
+////////////////////////////////////////////////////////////////////////////////
+//Register user to server procedures and functions
+procedure uUser_Account_CreateRegisteredUser;
+begin
+  user.regist.Username:= Loading_Form.Loading_Register_Username_Edit.Text;
+  user.regist.Password:= Loading_Form.Loading_Register_Password_Edit.Text;
+  user.regist.Name:= Loading_Form.Loading_Register_Name_Edit.Text;
+  user.regist.Surname:= Loading_Form.Loading_Register_Surname_Edit.Text;
+  if Loading_Form.Loading_Register_Male_Radio.IsChecked then
+    user.regist.Gender:= 'Male'
+  else
+    user.regist.Gender:= 'Female';
+  user.regist.Avatar:= vAvatarNum;
+end;
+
+procedure uUser_Account_ShowRegisterErrorMessage(vError: Byte);
+begin
+//errors
+//0 : Username is smaller that 8 characters
+//1 : Username doesn't contain number
+//2 : Username doesn't contain symbol
+//3 : Username doesn't contain capital letter
+//4 : Password is empty
+//5 : Retype Password is empty
+//6 : Passwords don't match
+//7 : Name is empty
+//8 : Surname is empty
+//9 : Gender is not checked
+//10 : Terms is not checked
+  case vError of
+    0: ShowMessage('Username is smaller that 8 characters');
+    1: ShowMessage('Username doesn''t contain number');
+    2: ShowMessage('Username doesn''t contain symbol');
+    3: ShowMessage('Username doesn''t contain captial letter');
+    4: ShowMessage('Password is empty please type something');
+    5: ShowMessage('Retype is empty you forgot to retype your password');
+    6: ShowMessage('Passwords don''t match please checkt it up');
+    7: ShowMessage('Name is empty please add your name');
+    8: ShowMessage('Surname is empty please add your surname');
+    9: ShowMessage('Please check what you are. Male or Female');
+    10: ShowMessage('Terms checkbox is not checked. You must read and accept the terms of my program');
+  end;
+end;
+
+function uUser_Account_CheckRegisterData: Boolean;
+const
+  cNumbers= ['0'..'9'];
+  cSymbols= ['!','@','#','%','^','&','*','(',')','-','_','+','=','{','}','[',']',':',';','"','|','\','/'];
+  cCapitals= ['A'..'Z'];
+var
+  vi: Integer;
+  vString, vString1: String;
+begin
+  Result:= False;
+  //Username
+  vString:= Loading_Form.Loading_Register_Username_Edit.Text;
+  if Length(vString)> 7 then
+    begin
+      for vi:= 1 to Length(vString) do
+        begin
+          if vString[vi] in cNumbers then
+            begin
+              Result:= True;
+              Break
+            end;
+        end;
+      if Result= False then
+        uUser_Account_ShowRegisterErrorMessage(1);
+      if Result= True then
+        begin
+          Result:= False;
+          for vi:= 1 to Length(vString) do
+            begin
+              if vString[vi] in cSymbols then
+                begin
+                  Result:= True;
+                  Break
+                end;
+            end;
+        end;
+      if Result= False then
+        uUser_Account_ShowRegisterErrorMessage(2);
+      if Result= True then
+        begin
+          Result:= False;
+          for vi:= 1 to Length(vString) do
+            begin
+              if vString[vi] in cCapitals then
+                begin
+                  Result:= True;
+                  Break
+                end;
+            end;
+        end;
+      if Result= False then
+        uUser_Account_ShowRegisterErrorMessage(3);
+    end
+  else
+    uUser_Account_ShowRegisterErrorMessage(0);
+  //Passwords
+  if Result= True then
+    begin
+      Result:= False;
+      vString:= Loading_Form.Loading_Register_Password_Edit.Text;
+      vString1:= Loading_Form.Loading_Register_RetypePassword_Edit.Text;
+      if (vString<> '') and (vString1<> '') then
+        begin
+          if vString<> vString1 then
+            uUser_Account_ShowRegisterErrorMessage(6)
+          else
+            Result:= True;
+        end
+      else
+        begin
+          if vString= '' then
+            uUser_Account_ShowRegisterErrorMessage(4)
+          else if vString1= '' then
+            uUser_Account_ShowRegisterErrorMessage(5);
+        end;
+    end;
+  //Name SureName
+  if Result= True then
+    begin
+      Result:= False;
+      vString:= Loading_Form.Loading_Register_Name_Edit.Text;
+      vString1:= Loading_Form.Loading_Register_Surname_Edit.Text;
+      if (vString<> '') and (vString1<> '') then
+        Result:= True
+      else
+        begin
+          if vString= '' then
+            uUser_Account_ShowRegisterErrorMessage(7)
+          else if vString1= '' then
+            uUser_Account_ShowRegisterErrorMessage(8);
+        end;
+    end;
+  //Gender
+  if Result= True then
+    begin
+      Result:= False;
+      if (Loading_Form.Loading_Register_Male_Radio.IsChecked= False) and (Loading_Form.Loading_Register_Female_Radio.IsChecked= False) then
+        uUser_Account_ShowRegisterErrorMessage(9)
+      else
+        Result:= True;
+    end;
+  //Avatar
+  if Result= True then
+    begin
+
+    end;
+  //Check terms
+  if Result= True then
+    begin
+      Result:= False;
+      if Loading_Form.Loading_Register_Terms_Checkbox.IsChecked= False then
+        uUser_Account_ShowRegisterErrorMessage(10)
+      else
+        Result:= True;
+    end;
+  //Captcha
+  if Result= True then
+    begin
+
+    end;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+
+end.

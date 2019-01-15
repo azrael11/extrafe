@@ -1,0 +1,9 @@
+unit uMain_Load_Emulators;
+
+interface
+uses
+  System.Classes;
+
+implementation
+
+end.

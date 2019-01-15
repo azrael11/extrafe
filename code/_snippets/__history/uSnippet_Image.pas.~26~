@@ -1,0 +1,13 @@
+unit uSnippet_Image;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  FMX.Graphics,
+  FMX.Objects,
+  FMX.Imglist;
+
+implementation
+
+end.

@@ -1,0 +1,24 @@
+unit uTLabel;
+
+interface
+uses
+  System.Classes;
+
+
+  //HyperLink Mouse events
+  procedure uTLabel_HyperLink_OnMouseEnter(Sender: TObject);
+  procedure uTLabel_HyperLink_OnMouseLeave(Sender: TObject);
+
+implementation
+
+procedure uTLabel_HyperLink_OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure uTLabel_HyperLink_OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+end.

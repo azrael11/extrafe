@@ -1,0 +1,20 @@
+unit emu_main;
+
+interface
+uses
+  System.Classes;
+
+  procedure uEmu_Main_Initialization;
+
+implementation
+uses
+  emu,
+  uWindows;
+
+procedure uEmu_Main_Initialization;
+begin
+
+end;
+
+
+end.

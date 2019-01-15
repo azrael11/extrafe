@@ -1,0 +1,52 @@
+unit Emu_Arcade_Install_Mame;
+
+interface
+uses
+  FMX.Forms,
+  System.Classes,
+  System.Inifiles,
+  System.SysUtils,
+  FMX.Dialogs,
+  WinAPI.ShellAPI,
+  Windows;
+
+  procedure Emu_Install_Mame;
+implementation
+uses
+  main,
+  uLoad,
+  uWindows,
+  Emu_Arcade_Mame,
+  uMain_Actions,
+  uEmu_Commands;
+
+procedure Emu_Install_Mame;
+begin
+// TODO 1 -oNikos Kordas -cEmu_Install_Mame: Create the procudure to install mame in ExtraFE
+  mame.Gamelist.All:= TStringList.Create;
+  Main_Form.Emulators_Installation.Visible:= True;
+  Main_Form.Emulators_Installation_Progress_Label.Text:= 'Installation start...';
+  Main_Form.Emulators_Arcade_Mame_Mame_Path.Text:= Main_Form.Emulators_OpenDialog.FileName;
+  mame.Emu_Name:= ExtractFileName(Main_Form.Emulators_Arcade_Mame_Mame_Path.Text);
+  mame.Emu_Path:= ExtractFilePath(Main_Form.Emulators_Arcade_Mame_Mame_Path.Text);
+  //Create mame ini if dont exist
+  if not FileExists(mame.Emu_Path+ 'mame.ini') then
+    ShellExecute(0, nil, 'cmd.exe',PChar('/C '+ mame.Emu_Path+ mame.Emu_Name +' -createconfig'), PChar(mame.Emu_Path), SW_HIDE);
+  mame.Emu_Ini_Path:= mame.Emu_Path;
+  mame.Emu_Ini:= TIniFile.Create(mame.Emu_Path+ 'mame.ini');
+  if mame.Prog_Path= '' then
+    uEmu_Arcade_Mame_CreateIni;
+  ShellExecute(0, nil, 'cmd.exe',PChar('/C '+ mame.Emu_Path+ mame.Emu_Name +' -listfull > '+ mame.Prog_Data_Path+ mame.Prog_Data_Name),nil, SW_HIDE);
+  Application.ProcessMessages;
+  mame.Gamelist.All.LoadFromFile(mame.Prog_Data_Path+ mame.Prog_Data_Name);
+  uEmu_Arcade_Mame_ConvertFirstList(mame.Gamelist.All);
+  if uWindows_CountFilesOrFolders(mame.Roms[0], True, '.zip')<> 0 then
+    uEmu_Arcade_Mame_CreateGameList(mame.Gamelist.All, mame.Roms[0]);
+  if mame.Gamelist.Available.Count- 1> 0 then
+    uMain_Actions_Create_Emulator_Tab(0);
+
+end;
+
+
+end.
+

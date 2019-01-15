@@ -1,0 +1,280 @@
+unit Emu_Arcade_Mame;
+
+interface
+uses
+  System.Classes,
+  System.Inifiles,
+  System.SysUtils;
+
+  type TEMU_MAME_MEDIA= record
+    Artworks: WideString;
+    Snapshots: WideString;
+    Cabinets: WideString;
+    Marquees: WideString;
+    Flyers: WideString;
+    Videos: WideString;
+    Control_Panels: WideString;
+    Pcbs: WideString;
+    Covers: WideString;
+    Devices: WideString;
+    Icons: WideString;
+    Manuals: WideString;
+    Titles: WideString;
+    Artwork_Preview: WideString;
+    Bosses: WideString;
+    Ends: WideString;
+    Game_Over: WideString;
+    How_To: WideString;
+    Logos: WideString;
+    Scores: WideString;
+    Selects: WideString;
+    Versus: WideString;
+    Warnings: WideString;
+    Soundtracks: WideString;
+    Support_Files: WideString;
+  end;
+
+  type TEMU_GAMELISTS= record
+    All: TstringList;
+    RomNames: TStringList;
+    GameNames: TStringList;
+    Available: TstringList;
+    Unavailable: TstringList;
+    Working: TstringList;
+    Not_Working: TstringList;
+    Mechanical: TstringList;
+    Not_Mechanical: TstringList;
+    Category: TstringList;
+    Bios: TstringList;
+    Not_Biso: TstringList;
+    Parent: TstringList;
+    Clones: TstringList;
+    Manufucturer: TstringList;
+    Year: TstringList;
+    Support_Save: TstringList;
+    Not_Support_Save: TstringList;
+    Chd: TstringList;
+    Not_Chd: TstringList;
+    Vertical: TstringList;
+    Horizontal: TstringList;
+  end;
+
+  type TEMU_MAME= record
+    Prog_Path: WideString;
+    Prog_Ini: TIniFile;
+    Prog_Ini_Name: WideString;
+    Prog_Ini_Path: WideString;
+    Prog_Data_Name: WideString;
+    Prog_Data_Path: WideString;
+    Emu_Name: WideString;
+    Emu_Path: WideString;
+    Emu_Ini: TInifile;
+    Emu_Ini_Path: WideString;
+    Emu_Media: TEMU_MAME_MEDIA;
+    Roms: array [0..100] of WideString;
+    Samples: WideString;
+    Gamelist: TEMU_GAMELISTS;
+  end;
+
+  procedure uEmu_Arcade_Mame_CreateIni;
+
+  procedure uEmu_Arcade_Mame_ConvertFirstList(vList: Tstringlist);
+
+  procedure uEmu_Arcade_Mame_CreateGameList(vList: Tstringlist; vRomPath: WideString);
+
+  procedure uEmu_Arcade_Mame_GetMediaPaths;
+
+
+
+
+  var
+    mame: TEMU_MAME;
+
+implementation
+uses
+  uload;
+
+procedure uEmu_Arcade_Mame_CreateIni;
+begin
+//Mame Defaults
+  mame.Prog_Path:= extrafe.program_path+ 'emu\arcade\mame\';
+  mame.Prog_Ini_Path:= mame.Prog_Path+ 'config\';
+  mame.Prog_Ini:= TIniFile.Create(mame.Prog_Ini_Path+ 'prog_mame.ini');
+  mame.Prog_Ini.WriteString('PROG', 'Path', mame.Prog_Path);
+  mame.Prog_Ini.WriteString('PROG', 'Ini_Name', 'prog_mame.ini');
+  mame.Prog_Ini.WriteString('PROG', 'Ini_Path', mame.Prog_Ini_Path);
+  mame.Prog_Ini.WriteString('PROG', 'Data_Name', 'prog_data_mame.txt');
+  mame.Prog_Data_Name:= 'prog_data_mame.txt';
+  mame.Prog_Ini.WriteString('PROG', 'Data_Path', mame.Prog_Path+ 'database\');
+  mame.Prog_Data_Path:= mame.Prog_Path+ 'database\';
+
+//Set Mame Extra Dirs thar mame dont have an save it to mame_prog.ini
+  CreateDir(mame.Emu_Path+ 'Artworks');
+  mame.Emu_Media.Artworks:= mame.Emu_Path+ 'Artworks\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Artworks_Path', mame.Emu_Media.Artworks);
+
+  CreateDir(mame.Emu_Path+ 'Cabinets');
+  mame.Emu_Media.Cabinets:= mame.Emu_Path+ 'Cabinets\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Cabinets_Path', mame.Emu_Media.Cabinets);
+
+  CreateDir(mame.Emu_Path+ 'Control Panels');
+  mame.Emu_Media.Control_Panels:= mame.Emu_Path+ 'Control Panels\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Control_Panels_Path', mame.Emu_Media.Control_Panels);
+
+  CreateDir(mame.Emu_Path+ 'Covers');
+  mame.Emu_Media.Covers:= mame.Emu_Path+ 'Covers\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Covers_Path', mame.Emu_Media.Covers);
+
+  CreateDir(mame.Emu_Path+ 'Flyers');
+  mame.Emu_Media.Flyers:= mame.Emu_Path+ 'Flyers\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Flyers_Path', mame.Emu_Media.Flyers);
+
+  CreateDir(mame.Emu_Path+ 'Icons');
+  mame.Emu_Media.Icons:= mame.Emu_Path+ 'Icons\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Icons_Path', mame.Emu_Media.Icons);
+
+  CreateDir(mame.Emu_Path+ 'Manuals');
+  mame.Emu_Media.Manuals:= mame.Emu_Path+ 'Manuals\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Manuals_Path', mame.Emu_Media.Manuals);
+
+  CreateDir(mame.Emu_Path+ 'Marquees');
+  mame.Emu_Media.Marquees:= mame.Emu_Path+ 'Marquees\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Marquees_Path', mame.Emu_Media.Marquees);
+
+  CreateDir(mame.Emu_Path+ 'Pcbs');
+  mame.Emu_Media.Pcbs:= mame.Emu_Path+ 'Pcbs\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Pcbs_Path', mame.Emu_Media.Pcbs);
+
+  CreateDir(mame.Emu_Path+ 'Snap');
+  mame.Emu_Media.Snapshots:= mame.Emu_Path+ 'Snap\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Snapshots_Path', mame.Emu_Media.Snapshots);
+
+  CreateDir(mame.Emu_Path+ 'Titles');
+  mame.Emu_Media.Titles:= mame.Emu_Path+ 'Titles\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Titles_Path', mame.Emu_Media.Titles);
+
+  CreateDir(mame.Emu_Path+ 'Artwork Preview');
+  mame.Emu_Media.Artwork_Preview:= mame.Emu_Path+ 'Artwork Preview\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Artwork_Preview_Path', mame.Emu_Media.Artwork_Preview);
+
+  CreateDir(mame.Emu_Path+ 'Bosses');
+  mame.Emu_Media.Bosses:= mame.Emu_Path+ 'Bosses\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Bosses_Path', mame.Emu_Media.Bosses);
+
+  CreateDir(mame.Emu_Path+ 'Ends');
+  mame.Emu_Media.Ends:= mame.Emu_Path+ 'Ends\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Ends_Path', mame.Emu_Media.Ends);
+
+  CreateDir(mame.Emu_Path+ 'How To');
+  mame.Emu_Media.How_To:= mame.Emu_Path+ 'How To\';
+  mame.Prog_Ini.WriteString('MEDIA', 'How_To_Path', mame.Emu_Media.How_To);
+
+  CreateDir(mame.Emu_Path+ 'Logos');
+  mame.Emu_Media.Logos:= mame.Emu_Path+ 'Logos\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Logos_Path', mame.Emu_Media.Logos);
+
+  CreateDir(mame.Emu_Path+ 'Scores');
+  mame.Emu_Media.Scores:= mame.Emu_Path+ 'Scores\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Scores_Path', mame.Emu_Media.Scores);
+
+  CreateDir(mame.Emu_Path+ 'Selects');
+  mame.Emu_Media.Selects:= mame.Emu_Path+ 'Selects\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Selects_Path', mame.Emu_Media.Selects);
+
+  CreateDir(mame.Emu_Path+ 'Versus');
+  mame.Emu_Media.Versus:= mame.Emu_Path+ 'Versus\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Versus_Path', mame.Emu_Media.Versus);
+
+  CreateDir(mame.Emu_Path+ 'Warnings');
+  mame.Emu_Media.Warnings:= mame.Emu_Path+ 'Warnings\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Warnings_Path', mame.Emu_Media.Warnings);
+
+  CreateDir(mame.Emu_Path+ 'Soundtracks');
+  mame.Emu_Media.Soundtracks:= mame.Emu_Path+ 'Soundtracks\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Soundtracks_Path', mame.Emu_Media.Soundtracks);
+
+  CreateDir(mame.Emu_Path+ 'Support Files');
+  mame.Emu_Media.Support_Files:= mame.Emu_Path+ 'Support Files\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Support_Files_Path', mame.Emu_Media.Support_Files);
+
+  CreateDir(mame.Emu_Path+ 'Videos');
+  mame.Emu_Media.Videos:= mame.Emu_Path+ 'Videos\';
+  mame.Prog_Ini.WriteString('MEDIA', 'Videos_Path', mame.Emu_Media.Videos);
+
+  mame.Roms[0]:= mame.Emu_Path+ 'roms\';
+  mame.Prog_Ini.WriteString('ROMS', 'Rom_Path_0', mame.Roms[0]);
+
+  mame.Samples:= mame.Emu_Path+ 'samples\';
+  mame.Prog_Ini.WriteString('SAMPLES', 'Samples_Path', mame.Samples);
+
+//DONE 1 -oNikos Kordas -cEmu_Arcade_Mame: Create Emu Mame Values
+//DONE 1 -oNikos Kordas -cEmu_Arcade_Mame: Create Emu Mame Media and Info Values
+end;
+
+procedure uEmu_Arcade_Mame_ConvertFirstList(vList: Tstringlist);
+var
+  vi: Integer;
+  vPos: Integer;
+  vLine: String;
+  vRomName: String;
+  vGameName: String;
+begin
+  mame.Gamelist.RomNames:= TStringList.Create;
+  mame.Gamelist.GameNames:= TStringList.Create;
+
+
+  for vi := 1 to vList.Count- 1 do
+    begin
+      vLine:= vList.Strings[vi];
+      vPos:= Pos(' ', vLine);
+      vRomName:= Trim(Copy(vLine, 0 , vPos+ 1));
+      mame.Gamelist.RomNames.Add(vRomName);
+      vGameName:= Trim(Copy(vLine, vPos+ 1, length(vLine)- (vpos- 1)));
+      Delete(vGameName, 1, 1);
+      Delete(vGameName, length(vGameName), 1);
+      mame.Gamelist.GameNames.Add(vGameName);
+    end;
+
+  mame.Gamelist.Available:= TStringList.Create;
+  mame.Gamelist.Unavailable:= TStringList.Create;
+end;
+
+procedure uEmu_Arcade_Mame_CreateGameList(vList: Tstringlist; vRomPath: WideString);
+var
+	Rec : TSearchRec;
+  vi: integer;
+  vRom_ext: String;
+  vRom: String;
+begin
+  mame.Gamelist.Unavailable:= mame.Gamelist.RomNames;
+
+  if FindFirst(vRomPath +'*.zip', faAnyFile, Rec)= 0 then
+    repeat
+      if ((Rec.Attr and faDirectory) <> faDirectory) then
+        begin
+          for vi:= 0 to mame.Gamelist.RomNames.Count -1 do
+            begin
+              vRom_ext:= ExtractFileExt(rec.Name);
+              vRom:= Trim(Copy(rec.Name, 0, length(rec.Name)- length(vRom_ext)));
+              if mame.Gamelist.RomNames.Strings[vi]=  Rec.Name then
+                begin
+                  mame.Gamelist.Available.Add(rec.Name);
+                  mame.Gamelist.Unavailable.Delete(vi);
+                end;
+            end;
+        end;
+    until FindNext(Rec) { *Converted from FindNext* } <> 0;
+  System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
+
+//TODO 1 -oNikos Kordas -cEmu_Arcade_Mame: Complete the create game list procedure
+
+
+end;
+
+procedure uEmu_Arcade_Mame_GetMediaPaths;
+begin
+
+end;
+
+
+end.

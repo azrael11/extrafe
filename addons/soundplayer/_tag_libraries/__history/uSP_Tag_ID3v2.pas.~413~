@@ -1,0 +1,283 @@
+unit uSP_Tag_ID3v2;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  ID3v1Library,
+  ID3v2Library;
+
+  type TTAG_ID3v1= record
+    Title: WideString;
+    Artist: WideString;
+    Album: WideString;
+    Year: WideString;
+    Genre: WideString;
+    Track: WideString;
+    Comment: WideString;
+  end;
+
+  type TTAG_ID3v2= record
+    Title: WideString;
+    Artist: WideString;
+    Album: WideString;
+    Year: WideString;
+    Genre: WideString;
+    Track: WideString;
+    Comment: WideString;
+    Lyrics: TStringList;
+  end;
+
+  type TTAG_MP3= record
+    ID3v1: TTAG_ID3v1;
+    ID3v2: TTAG_ID3v2;
+  end;
+
+  procedure uSP_Tag_ID3v2_Load(mPath: string);
+
+  function uTag_ID3v1_GetTags(mPath: string): TTAG_ID3v1;
+  function uTag_ID3v2_GetTags(mPath: string): TTAG_ID3v2;
+  procedure uTag_ID3v2_GetPicture(mNext: Boolean);
+  function uTag_ID3v2_GetPic(mNum: byte): Boolean;
+
+  procedure uSP_Tag_ID3v1_Results(mTags_ID3v1: TTAG_ID3v1);
+  procedure uSP_Tag_ID3v2_Results(mTags_ID3v2: TTAG_ID3v2);
+
+  procedure uSP_Tag_ID3v2_Cover_Up;
+  procedure uSP_Tag_Id3v2_Cover_Down;
+
+  var
+    vTag_1: TID3v1Tag;
+    vTag_2: TID3v2Tag;
+    vTag_MP3: TTAG_MP3;
+    CurrentAPICIndex: Integer;
+    Cover_Images_Num: array [0..2] of Integer;
+
+implementation
+uses
+  uSoundplayer_SetAll,
+  uSoundplayer_AllTypes;
+
+function uTag_ID3v1_GetTags(mPath: string): TTAG_ID3v1;
+var
+  vTagError: Integer;
+begin
+  vTag_1:= TID3v1Tag.Create;
+
+  vTagError:= vTag_1.LoadFromFile(mPath);
+  if vTagError<> ID3V1LIBRARY_SUCCESS then
+  //Show a messge error
+  // Get major and minor version num of mp3
+
+  vTag_1.Loaded:= True;
+
+  Result.Title:= vTag_1.Title;
+  Result.Artist:= vTag_1.Artist;
+  Result.Album:= vTag_1.Album;
+  Result.Year:= vTag_1.Year;
+  Result.Genre:= vTag_1.Genre;
+  Result.Track:= IntToStr(vTag_1.Track);
+  Result.Comment:= vTag_1.Comment;
+end;
+
+function uTag_ID3v2_GetTags(mPath: string): TTAG_ID3v2;
+var
+  vTagError: Integer;
+  vLanguageID: TLanguageID;
+  vDescription: string;
+  vi: Integer;
+begin
+  vTag_2:= TID3v2Tag.Create;
+
+  vTagError:= vTag_2.LoadFromFile(mPath);
+  if vTagError<> ID3V2LIBRARY_SUCCESS then
+  // Show an error message
+  // Get major and minor version num of mp3
+  vTag_2.Unsynchronised:= True;
+  vTag_2.RemoveUnsynchronisationOnAllFrames;
+  vTag_2.ExtendedHeader:= True;
+  vTag_2.ExtendedHeader3.CRCPresent:= True;
+
+  vTag_2.Loaded:= True;
+
+  CurrentAPICIndex:= -1;
+
+  Result.Title:= vTag_2.GetUnicodeText('TIT2');
+  Result.Artist:= vTag_2.GetUnicodeText('TPE1');
+  Result.Album:= vTag_2.GetUnicodeText('TALB');
+  Result.Year:= vTag_2.GetUnicodeText('TYER');
+  Result.Track:= vTag_2.GetUnicodeText('TRCK');
+  Result.Genre:= vTag_2.GetUnicodeText('TCON');
+
+  Result.Lyrics:= TStringList.Create;
+  Result.Lyrics.Add(vTag_2.GetUnicodeLyrics('USLT', vLanguageID, vDescription));
+
+  vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Lines.Clear;
+
+  for vi:= 0 to Result.Lyrics.Count -1 do
+    vSoundplayer.tag.mp3.ID3v2_Lyrics_Memo.Lines.Add(Result.Lyrics.Strings[vi]);
+
+  for vi:= 0 to 2 do
+    Cover_Images_Num[vi]:= -1;
+
+  for vi:= 0 to 2 do
+    begin
+      uTag_ID3v2_GetPicture(True);
+      if vi= 0 then
+        begin
+          if CurrentAPICIndex<> -1 then
+            Cover_Images_Num[vi]:= CurrentAPICIndex
+        end
+      else if vi= 1 then
+        begin
+          if CurrentAPICIndex<> Cover_Images_Num[0] then
+            Cover_Images_Num[vi]:= CurrentAPICIndex
+        end
+      else if vi= 2 then
+        begin
+          if (CurrentAPICIndex<> Cover_Images_Num[0]) and (CurrentAPICIndex<> Cover_Images_Num[1]) then
+            Cover_Images_Num[vi]:= CurrentAPICIndex
+        end;
+    end;
+  if Cover_Images_Num[0]<> -1 then
+    uTag_ID3v2_GetPic(Cover_Images_Num[0]);
+end;
+
+procedure uTag_ID3v2_GetPicture(mNext: Boolean);
+var
+  vi: Integer;
+begin
+  if mNext= True then
+    begin
+      for vi:= 0 to vTag_2.FrameCount- 1 do
+        begin
+          if IsSameFrameID(vTag_2.Frames[vi].ID, 'APIC') then
+            begin
+              if vi > CurrentAPICIndex then
+                begin
+                  uTag_ID3v2_GetPic(vi);
+                  Break;
+                end;
+            end;
+        end;
+    end
+end;
+
+function uTag_ID3v2_GetPic(mNum: byte): Boolean;
+var
+  PictureType: Integer;
+  PictureStream: TStream;
+  Success: Boolean;
+  MIMEType: String;
+  Description: String;
+begin
+  Result := False;
+    try
+      PictureStream := TMemoryStream.Create;
+        try
+          Success := vTag_2.GetUnicodeCoverPictureStream(mNum, PictureStream, MIMEType, Description, PictureType);
+
+          if (PictureStream.Size = 0) or (not Success) then
+            Exit;
+
+          CurrentAPICIndex := mNum;
+
+          vSoundplayer.tag.mp3.ID3v2_Cover.Bitmap.LoadFromStream(PictureStream);
+          Result := True;
+        finally
+          PictureStream.Free;
+        end;
+    except
+        //*
+    end;
+end;
+
+procedure uSP_Tag_ID3v1_Results(mTags_ID3v1: TTAG_ID3v1);
+begin
+  vSoundplayer.tag.mp3.ID3v1_Title_V.Text:= mTags_ID3v1.Title;
+  vSoundplayer.tag.mp3.ID3v1_Artist_V.Text:= mTags_ID3v1.Artist;
+  vSoundplayer.tag.mp3.ID3v1_Album_V.Text:= mTags_ID3v1.Album;
+  vSoundplayer.tag.mp3.ID3v1_Year_V.Text:= mTags_ID3v1.Year;
+  vSoundplayer.tag.mp3.ID3v1_Genre_V.Text:= mTags_ID3v1.Genre;
+  vSoundplayer.tag.mp3.ID3v1_Track_V.Text:= mTags_ID3v1.Track;
+  vSoundplayer.tag.mp3.ID3v1_Comment_V.Text:= mTags_ID3v1.Comment;
+end;
+
+procedure uSP_Tag_ID3v2_Results(mTags_ID3v2: TTAG_ID3v2);
+begin
+  vSoundplayer.tag.mp3.ID3v2_Title_V.Text:= mTags_ID3v2.Title;
+  vSoundplayer.tag.mp3.ID3v2_Artist_V.Text:= mTags_ID3v2.Artist;
+  vSoundplayer.tag.mp3.ID3v2_Album_V.Text:= mTags_ID3v2.Album;
+  vSoundplayer.tag.mp3.ID3v2_Year_V.Text:= mTags_ID3v2.Year;
+  vSoundplayer.tag.mp3.ID3v2_Genre_V.Text:= mTags_ID3v2.Genre;
+  vSoundplayer.tag.mp3.ID3v2_Track_V.Text:= mTags_ID3v2.Track;
+  vSoundplayer.tag.mp3.ID3v2_Comment_V.Text:= mTags_ID3v2.Comment;
+end;
+
+procedure uSP_Tag_ID3v2_Load(mPath: string);
+begin
+  vTag_MP3.ID3v1:= uTag_ID3v1_GetTags(mPath);
+  vTag_MP3.ID3v2:= uTag_ID3v2_GetTags(mPath);
+
+  uSP_Tag_ID3v1_Results(vTag_MP3.ID3v1);
+  uSP_Tag_ID3v2_Results(vTag_MP3.ID3v2);
+end;
+
+procedure uSP_Tag_ID3v2_Cover_Up;
+var
+  vCoverNum: Byte;
+begin
+{  vCoverNum:= StrToInt(Main_Form.A_SP_Tag_Tab_ID3v2_Covers_ImageNum.Text);
+  Inc(vCoverNum, 1);
+  if vCoverNum<4 then
+    begin
+      case vCoverNum of
+        2 : begin
+              if Cover_Images_Num[1]<> -1 then
+                uTag_ID3v2_GetPic(Cover_Images_Num[1])
+              else
+                Main_Form.A_SP_Tag_Tab_ID3v2_Covers_Image.Bitmap:= Main_Form.AddOn_SoundPlayer_IL.Source.Items[2].MultiResBitmap.Items[0].Bitmap;
+            end;
+        3 : begin
+              if Cover_Images_Num[2]<> -1 then
+                uTag_ID3v2_GetPic(Cover_Images_Num[2])
+              else
+                Main_Form.A_SP_Tag_Tab_ID3v2_Covers_Image.Bitmap:= Main_Form.AddOn_SoundPlayer_IL.Source.Items[2].MultiResBitmap.Items[0].Bitmap;
+            end;
+      end;
+    end
+  else
+    Dec(vCoverNum, 1);
+  Main_Form.A_SP_Tag_Tab_ID3v2_Covers_ImageNum.Text:= IntToStr(vCoverNum);}
+end;
+
+procedure uSP_Tag_Id3v2_Cover_Down;
+var
+  vCoverNum: Byte;
+begin
+{  vCoverNum:= StrToInt(Main_Form.A_SP_Tag_Tab_ID3v2_Covers_ImageNum.Text);
+  Dec(vCoverNum, 1);
+  if vCoverNum> 0 then
+    begin
+      case vCoverNum of
+        1 : begin
+              if Cover_Images_Num[0]<> -1 then
+                uTag_ID3v2_GetPic(Cover_Images_Num[0])
+              else
+                Main_Form.A_SP_Tag_Tab_ID3v2_Covers_Image.Bitmap:= Main_Form.AddOn_SoundPlayer_IL.Source.Items[2].MultiResBitmap.Items[0].Bitmap;
+            end;
+        2 : begin
+              if Cover_Images_Num[1]<> -1 then
+                uTag_ID3v2_GetPic(Cover_Images_Num[1])
+              else
+                Main_Form.A_SP_Tag_Tab_ID3v2_Covers_Image.Bitmap:= Main_Form.AddOn_SoundPlayer_IL.Source.Items[2].MultiResBitmap.Items[0].Bitmap;
+            end;
+      end;
+    end
+  else
+    Inc(vCoverNum, 1);
+  Main_Form.A_SP_Tag_Tab_ID3v2_Covers_ImageNum.Text:= IntToStr(vCoverNum); }
+end;
+
+
+end.

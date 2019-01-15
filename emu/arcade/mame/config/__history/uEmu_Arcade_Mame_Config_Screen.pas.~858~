@@ -1,0 +1,733 @@
+unit uEmu_Arcade_Mame_Config_Screen;
+
+interface
+uses
+  System.Classes,
+//  System.UITypes,
+  System.SysUtils,
+  FMX.Forms,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Edit,
+  FMX.Listbox,
+  FMX.Objects,
+  FMX.Dialogs;
+
+  procedure uEmu_Arcade_Mame_Config_Create_Screen_Panel;
+
+  procedure uEmu_Arcade_Mame_Config_Screen_SetNumberOfScreens(vNum: String);
+  procedure uEmu_Arcade_Mame_Config_Screen_SetScreen(vNum: Integer);
+  procedure uEmu_Arcade_Mame_Config_Screen_SetAspectRatio(vChecked: Boolean; vScreen: Integer);
+  procedure uEmu_Arcade_Mame_Config_Screen_SetVideoMode(vNum: Integer; vValue: String);
+  procedure uEmu_Arcade_Mame_Config_Screen_SetScreenNumber(vNum: Integer);
+  procedure uEmu_Arcade_Mame_Config_Screen_SetResoluton(vResolution: String);
+  procedure uEmu_Arcade_Mame_Config_Screen_SetRefresh(vRefresh: String);
+
+  procedure uEmu_Arcade_Mame_Config_Screen_LoadNumOfScreens(vNum: Single);
+  function uEmu_Arcade_Mame_Config_Screen_LoadScreenSelection(vScreenType: String): Byte;
+  function uEmu_Arcade_Mame_Config_Screen_LoadVideoMode(vVideoMode: String): Byte;
+  function uEmu_Arcade_Mame_Config_Screen_LoadResolution(vResolution: String): Byte;
+  function uEmu_Arcade_Mame_Config_Screen_LoadRefresh(vRefresh: String): Byte;
+  procedure uEmu_Arcade_Mame_Config_Screen_LoadScreenStatus(vScreens_Num: Single);
+
+  procedure uEmu_Arcade_Mame_Config_Screen_CheckboxClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Screen_TrackbarOnChange(vName: String);
+  procedure uEmu_Arcade_Mame_Config_Screen_ComboboxOnChange(vName: String);
+
+implementation
+uses
+  uTText,
+  uWindows,
+  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_SetAll,
+  uEmu_Arcade_Mame_Config,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Config_Mouse;
+
+procedure uEmu_Arcade_Mame_Config_Create_Screen_Panel;
+begin
+  mame.Config.Panel.Screen.Start:= False;
+  mame.Monitor.Monitor_1_Resolutions:= TStringList.Create;
+  mame.Monitor.Monitor_1_Refreshs:= TStringList.Create;
+  mame.Monitor.Monitor_2_Resolutions:= TStringList.Create;
+  mame.Monitor.Monitor_2_Refreshs:= TStringList.Create;
+  mame.Monitor.Monitor_3_Resolutions:= TStringList.Create;
+  mame.Monitor.Monitor_3_Refreshs:= TStringList.Create;
+  mame.Monitor.Monitor_4_Resolutions:= TStringList.Create;
+  mame.Monitor.Monitor_4_Refreshs:= TStringList.Create;
+
+  vMame.Config.Panel.Screen.Labels[0]:= TLabel.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Labels[0].Name:= 'Mame_Screen_InfoLabel_1';
+  vMame.Config.Panel.Screen.Labels[0].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Labels[0].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Screen.Labels[0].Text:= 'Global Options';
+  vMame.Config.Panel.Screen.Labels[0].Position.Y:= 5;
+  vMame.Config.Panel.Screen.Labels[0].Position.X:= vMame.Config.Scene.Right_Panels[3].Width- vMame.Config.Panel.Screen.Labels[0].Width- 10;
+  vMame.Config.Panel.Screen.Labels[0].Visible:= True;
+
+  vMame.Config.Panel.Screen.Labels[1]:= TLabel.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Labels[1].Name:= 'Mame_Screen_InfoLabel_2';
+  vMame.Config.Panel.Screen.Labels[1].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Labels[1].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Screen.Labels[1].Text:= 'Default options used by all games';
+  vMame.Config.Panel.Screen.Labels[1].Width:= 180;
+  vMame.Config.Panel.Screen.Labels[1].Position.Y:= 22;
+  vMame.Config.Panel.Screen.Labels[1].Position.X:= vMame.Config.Scene.Right_Panels[3].Width- vMame.Config.Panel.Screen.Labels[1].Width- 10;
+  vMame.Config.Panel.Screen.Labels[1].Visible:= True;
+
+  //left
+  vMame.Config.Panel.Screen.Groupbox[0]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Groupbox[0].Name:= 'Mame_Screen_Groupbox_NumberOfScreens';
+  vMame.Config.Panel.Screen.Groupbox[0].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Groupbox[0].SetBounds(10,40,((vMame.Config.Scene.Right_Panels[3].Width/ 2)- 15),70);
+  vMame.Config.Panel.Screen.Groupbox[0].Text:= 'Number of screens';
+  vMame.Config.Panel.Screen.Groupbox[0].Visible:= True;
+
+  vMame.Config.Panel.Screen.Trackbar:= TTrackBar.Create(vMame.Config.Panel.Screen.Groupbox[0]);
+  vMame.Config.Panel.Screen.Trackbar.Name:= 'Mame_Screen_Trackbar_NumberOfScreens';
+  vMame.Config.Panel.Screen.Trackbar.Parent:= vMame.Config.Panel.Screen.Groupbox[0];
+  vMame.Config.Panel.Screen.Trackbar.SetBounds(5,35,(vMame.Config.Panel.Screen.Groupbox[0].Width- 45),25);
+  vMame.Config.Panel.Screen.Trackbar.Min:= 1;
+  vMame.Config.Panel.Screen.Trackbar.Max:= 4;
+  vMame.Config.Panel.Screen.Trackbar.Frequency:= 1;
+  vMame.Config.Panel.Screen.Trackbar.Value:= mame.Emu.Ini.OSD_VIDEO_numscreens;
+  vMame.Config.Panel.Screen.Trackbar.OnChange:= mame.Config.Input.Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Screen.Trackbar.Visible:= True;
+
+  vMame.Config.Panel.Screen.Labels[2]:= TLabel.Create(vMame.Config.Panel.Screen.Groupbox[0]);
+  vMame.Config.Panel.Screen.Labels[2].Name:= 'Mame_Screen_Label_NumberOfScreens';
+  vMame.Config.Panel.Screen.Labels[2].Parent:= vMame.Config.Panel.Screen.Groupbox[0];
+  vMame.Config.Panel.Screen.Labels[2].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Screen.Labels[2].Text:= IntToStr(mame.Emu.Ini.OSD_VIDEO_numscreens);
+  vMame.Config.Panel.Screen.Labels[2].Position.X:= 125;
+  vMame.Config.Panel.Screen.Labels[2].Position.Y:= 35;
+  vMame.Config.Panel.Screen.Labels[2].Visible:= True;
+
+  vMame.Config.Panel.Screen.Groupbox[1]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Groupbox[1].Name:= 'Mame_Screen_Groupbox_Screen';
+  vMame.Config.Panel.Screen.Groupbox[1].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Groupbox[1].SetBounds(10,115,((vMame.Config.Scene.Right_Panels[3].Width/ 2)- 15),70);
+  vMame.Config.Panel.Screen.Groupbox[1].Text:= 'Screen';
+  vMame.Config.Panel.Screen.Groupbox[1].Visible:= True;
+
+  vMame.Config.Panel.Screen.Combobox[0]:= TComboBox.Create(vMame.Config.Panel.Screen.Groupbox[1]);
+  vMame.Config.Panel.Screen.Combobox[0].Name:= 'Mame_Screen_Combobox_Screen';
+  vMame.Config.Panel.Screen.Combobox[0].Parent:= vMame.Config.Panel.Screen.Groupbox[1];
+  vMame.Config.Panel.Screen.Combobox[0].SetBounds(5,25,(vMame.Config.Panel.Screen.Groupbox[1].Width- 10),25);
+  vMame.Config.Panel.Screen.Combobox[0].Items.Add('Auto');
+  vMame.Config.Panel.Screen.Combobox[0].Items.Add('\\. \DISPLAY1');
+  vMame.Config.Panel.Screen.Combobox[0].Items.Add('\\. \DISPLAY2');
+  vMame.Config.Panel.Screen.Combobox[0].Items.Add('\\. \DISPLAY3');
+  vMame.Config.Panel.Screen.Combobox[0].Items.Add('\\. \DISPLAY4');
+  vMame.Config.Panel.Screen.Combobox[0].OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Screen.Combobox[0].Visible:= True;
+
+  vMame.Config.Panel.Screen.Groupbox[2]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Groupbox[2].Name:= 'Mame_Screen_Groupbox_AspectRatio';
+  vMame.Config.Panel.Screen.Groupbox[2].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Groupbox[2].SetBounds(10,190,((vMame.Config.Scene.Right_Panels[3].Width/ 2)- 15),100);
+  vMame.Config.Panel.Screen.Groupbox[2].Text:= 'Aspect ratio';
+  vMame.Config.Panel.Screen.Groupbox[2].Visible:= True;
+
+  vMame.Config.Panel.Screen.Checkbox[0]:= TCheckBox.Create(vMame.Config.Panel.Screen.Groupbox[2]);
+  vMame.Config.Panel.Screen.Checkbox[0].Name:= 'Mame_Screen_Checkbox_AspectRatio';
+  vMame.Config.Panel.Screen.Checkbox[0].Parent:= vMame.Config.Panel.Screen.Groupbox[2];
+  vMame.Config.Panel.Screen.Checkbox[0].SetBounds(10,20,180,19);
+  vMame.Config.Panel.Screen.Checkbox[0].Text:= 'Auto select aspect ratio';
+  vMame.Config.Panel.Screen.Checkbox[0].Font.Style:= vMame.Config.Panel.Screen.Checkbox[0].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Screen.Checkbox[0].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Screen.Checkbox[0].Visible:= True;
+
+  vMame.Config.Panel.Screen.Labels[3]:= TLabel.Create(vMame.Config.Panel.Screen.Groupbox[2]);
+  vMame.Config.Panel.Screen.Labels[3].Name:= 'Mame_Screen_Label_AspectRatioSet';
+  vMame.Config.Panel.Screen.Labels[3].Parent:= vMame.Config.Panel.Screen.Groupbox[2];
+  vMame.Config.Panel.Screen.Labels[3].Text:= 'Aspect ratio : ';
+  vMame.Config.Panel.Screen.Labels[3].Position.X:= 10;
+  vMame.Config.Panel.Screen.Labels[3].Position.Y:= 55;
+  vMame.Config.Panel.Screen.Labels[3].Visible:= True;
+
+  vMame.Config.Panel.Screen.Edit[0]:= TEdit.Create(vMame.Config.Panel.Screen.Groupbox[2]);
+  vMame.Config.Panel.Screen.Edit[0].Name:= 'Mame_Screen_Edit_AspectRatio_X';
+  vMame.Config.Panel.Screen.Edit[0].Parent:= vMame.Config.Panel.Screen.Groupbox[2];
+  vMame.Config.Panel.Screen.Edit[0].SetBounds(100,55,20,20);
+  vMame.Config.Panel.Screen.Edit[0].Text:= '4';
+  vMame.Config.Panel.Screen.Edit[0].TextSettings.HorzAlign:= TTextAlign.Center;
+  vMame.Config.Panel.Screen.Edit[0].MaxLength:= 2;
+  vMame.Config.Panel.Screen.Edit[0].Visible:= True;
+
+  vMame.Config.Panel.Screen.Labels[4]:= TLabel.Create(vMame.Config.Panel.Screen.Groupbox[2]);
+  vMame.Config.Panel.Screen.Labels[4].Name:= 'Mame_Screen_Label_AspectRatioSet_1';
+  vMame.Config.Panel.Screen.Labels[4].Parent:= vMame.Config.Panel.Screen.Groupbox[2];
+  vMame.Config.Panel.Screen.Labels[4].Text:= ':';
+  vMame.Config.Panel.Screen.Labels[4].Position.X:= 130;
+  vMame.Config.Panel.Screen.Labels[4].Position.Y:= 55;
+  vMame.Config.Panel.Screen.Labels[4].Visible:= True;
+
+  vMame.Config.Panel.Screen.Edit[1]:= TEdit.Create(vMame.Config.Panel.Screen.Groupbox[2]);
+  vMame.Config.Panel.Screen.Edit[1].Name:= 'Mame_Screen_Edit_AspectRatio_Y';
+  vMame.Config.Panel.Screen.Edit[1].Parent:= vMame.Config.Panel.Screen.Groupbox[2];
+  vMame.Config.Panel.Screen.Edit[1].SetBounds(140,55,20,20);
+  vMame.Config.Panel.Screen.Edit[1].Text:= '3';
+  vMame.Config.Panel.Screen.Edit[1].TextSettings.HorzAlign:= TTextAlign.Center;
+  vMame.Config.Panel.Screen.Edit[1].MaxLength:= 2;
+  vMame.Config.Panel.Screen.Edit[1].Visible:= True;
+
+  vMame.Config.Panel.Screen.Groupbox[3]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Groupbox[3].Name:= 'Mame_Screen_Groupbox_ViewMode';
+  vMame.Config.Panel.Screen.Groupbox[3].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Groupbox[3].SetBounds(10,295,((vMame.Config.Scene.Right_Panels[3].Width/ 2)- 15),70);
+  vMame.Config.Panel.Screen.Groupbox[3].Text:= 'Video mode';
+  vMame.Config.Panel.Screen.Groupbox[3].Visible:= True;
+
+  vMame.Config.Panel.Screen.Combobox[1]:= TComboBox.Create(vMame.Config.Panel.Screen.Groupbox[3]);
+  vMame.Config.Panel.Screen.Combobox[1].Name:= 'Mame_Screen_Combobox_ViewMode';
+  vMame.Config.Panel.Screen.Combobox[1].Parent:= vMame.Config.Panel.Screen.Groupbox[3];
+  vMame.Config.Panel.Screen.Combobox[1].SetBounds(5,25,(vMame.Config.Panel.Screen.Groupbox[3].Width- 10),25);
+  vMame.Config.Panel.Screen.Combobox[1].Items.Add('Auto');
+  vMame.Config.Panel.Screen.Combobox[1].Items.Add('Standard');
+  vMame.Config.Panel.Screen.Combobox[1].Items.Add('Pixel aspect');
+  vMame.Config.Panel.Screen.Combobox[1].Items.Add('Cocktail');
+  vMame.Config.Panel.Screen.Combobox[1].OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Screen.Combobox[1].Visible:= True;
+
+  //right
+  vMame.Config.Panel.Screen.Groupbox[4]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Groupbox[4].Name:= 'Mame_Screen_Groupbox_ScreenNumber';
+  vMame.Config.Panel.Screen.Groupbox[4].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Groupbox[4].SetBounds(((vMame.Config.Scene.Right_Panels[3].Width/ 2)+ 5),40,((vMame.Config.Scene.Right_Panels[3].Width/ 2)- 15),70);
+  vMame.Config.Panel.Screen.Groupbox[4].Text:= 'Screen Number';
+  vMame.Config.Panel.Screen.Groupbox[3].Visible:= True;
+
+  vMame.Config.Panel.Screen.Combobox[2]:= TComboBox.Create(vMame.Config.Panel.Screen.Groupbox[4]);
+  vMame.Config.Panel.Screen.Combobox[2].Name:= 'Mame_Screen_Combobox_ScreenNumber';
+  vMame.Config.Panel.Screen.Combobox[2].Parent:= vMame.Config.Panel.Screen.Groupbox[4];
+  vMame.Config.Panel.Screen.Combobox[2].SetBounds(5,25,(vMame.Config.Panel.Screen.Groupbox[4].Width- 10),25);
+  vMame.Config.Panel.Screen.Combobox[2].OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Screen.Combobox[2].Visible:= True;
+
+  vMame.Config.Panel.Screen.Groupbox[5]:= TGroupBox.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Groupbox[5].Name:= 'Mame_Screen_Groupbox_Resolution';
+  vMame.Config.Panel.Screen.Groupbox[5].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Groupbox[5].SetBounds(((vMame.Config.Scene.Right_Panels[3].Width/ 2)+ 5),115,((vMame.Config.Scene.Right_Panels[3].Width/ 2)- 15),200);
+  vMame.Config.Panel.Screen.Groupbox[5].Text:= 'Resolution';
+  vMame.Config.Panel.Screen.Groupbox[5].Visible:= True;
+
+  vMame.Config.Panel.Screen.Groupbox[6]:= TGroupBox.Create(vMame.Config.Panel.Screen.Groupbox[5]);
+  vMame.Config.Panel.Screen.Groupbox[6].Name:= 'Mame_Screen_Groupbox_ResolutionSize';
+  vMame.Config.Panel.Screen.Groupbox[6].Parent:= vMame.Config.Panel.Screen.Groupbox[5];
+  vMame.Config.Panel.Screen.Groupbox[6].SetBounds(5,25,(vMame.Config.Panel.Screen.Groupbox[5].Width- 10),70);
+  vMame.Config.Panel.Screen.Groupbox[6].Text:= 'Size';
+  vMame.Config.Panel.Screen.Groupbox[6].Visible:= True;
+
+  vMame.Config.Panel.Screen.Combobox[3]:= TComboBox.Create(vMame.Config.Panel.Screen.Groupbox[6]);
+  vMame.Config.Panel.Screen.Combobox[3].Name:= 'Mame_Screen_Combobox_ResolutionSize';
+  vMame.Config.Panel.Screen.Combobox[3].Parent:= vMame.Config.Panel.Screen.Groupbox[6];
+  vMame.Config.Panel.Screen.Combobox[3].SetBounds(5,25,(vMame.Config.Panel.Screen.Groupbox[6].Width- 10),25);
+  vMame.Config.Panel.Screen.Combobox[3].OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Screen.Combobox[3].Visible:= True;
+
+  vMame.Config.Panel.Screen.Groupbox[7]:= TGroupBox.Create(vMame.Config.Panel.Screen.Groupbox[5]);
+  vMame.Config.Panel.Screen.Groupbox[7].Name:= 'Mame_Screen_Groupbox_ResolutionRefresh';
+  vMame.Config.Panel.Screen.Groupbox[7].Parent:= vMame.Config.Panel.Screen.Groupbox[5];
+  vMame.Config.Panel.Screen.Groupbox[7].SetBounds(5,100,(vMame.Config.Panel.Screen.Groupbox[5].Width- 10),70);
+  vMame.Config.Panel.Screen.Groupbox[7].Text:= 'Refresh';
+  vMame.Config.Panel.Screen.Groupbox[7].Visible:= True;
+
+  vMame.Config.Panel.Screen.Combobox[4]:= TComboBox.Create(vMame.Config.Panel.Screen.Groupbox[7]);
+  vMame.Config.Panel.Screen.Combobox[4].Name:= 'Mame_Screen_Combobox_ResolutionRefresh';
+  vMame.Config.Panel.Screen.Combobox[4].Parent:= vMame.Config.Panel.Screen.Groupbox[7];
+  vMame.Config.Panel.Screen.Combobox[4].SetBounds(5,25,(vMame.Config.Panel.Screen.Groupbox[7].Width- 10),25);
+  vMame.Config.Panel.Screen.Combobox[4].OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
+  vMame.Config.Panel.Screen.Combobox[4].Visible:= True;
+
+  vMame.Config.Panel.Screen.Checkbox[1]:= TCheckBox.Create(vMame.Config.Scene.Right_Panels[3]);
+  vMame.Config.Panel.Screen.Checkbox[1].Name:= 'Mame_Screen_Checkbox_SwitchResolutionsToFit';
+  vMame.Config.Panel.Screen.Checkbox[1].Parent:= vMame.Config.Scene.Right_Panels[3];
+  vMame.Config.Panel.Screen.Checkbox[1].SetBounds(((vMame.Config.Scene.Right_Panels[3].Width/ 2)+ 5),325,180,19);
+  vMame.Config.Panel.Screen.Checkbox[1].Text:= 'Switch resolutions to fit';
+  vMame.Config.Panel.Screen.Checkbox[1].Font.Style:= vMame.Config.Panel.Screen.Checkbox[1].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.Panel.Screen.Checkbox[1].IsChecked:= mame.Emu.Ini.OSD_FULLSCREEN_switchres;
+  vMame.Config.Panel.Screen.Checkbox[1].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
+  vMame.Config.Panel.Screen.Checkbox[1].Visible:= True;
+
+  uEmu_Arcade_Mame_Config_Screen_LoadScreenStatus(vMame.Config.Panel.Screen.Trackbar.Value);
+  mame.Config.Panel.Screen.Start:= True;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_LoadNumOfScreens(vNum: Single);
+begin
+  vMame.Config.Panel.Screen.Combobox[2].Items.Clear;
+  if vNum= 1 then
+    vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0')
+  else if vNum= 2 then
+    begin
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0');
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 1');
+    end
+  else if vNum= 3 then
+    begin
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0');
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 1');
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 2');
+    end
+  else if vNum= 4 then
+    begin
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0');
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 1');
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 2');
+      vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 3');
+    end;
+  vMame.Config.Panel.Screen.Combobox[2].ItemIndex:= 0;
+end;
+
+function uEmu_Arcade_Mame_Config_Screen_LoadScreenSelection(vScreenType: String): Byte;
+begin
+  if vScreenType= 'auto' then
+    Result:= 0
+  else if vScreenType= '\\. \DISPLAY1' then
+    Result:= 1
+  else if vScreenType= '\\. \DISPLAY2' then
+    Result:= 2
+  else if vScreenType= '\\. \DISPLAY3' then
+    Result:= 3
+  else if vScreenType= '\\. \DISPLAY4' then
+    Result:= 4
+end;
+
+function uEmu_Arcade_Mame_Config_Screen_LoadVideoMode(vVideoMode: String): Byte;
+begin
+  if vVideoMode= 'auto' then
+    Result:= 0
+  else if vVideoMode= 'standard' then
+    Result:= 1
+  else if vVideoMode= 'pixel' then
+    Result:= 2
+  else if vVideoMode= 'cocktail' then
+    Result:= 3
+end;
+
+function uEmu_Arcade_Mame_Config_Screen_LoadResolution(vResolution: String): Byte;
+var
+  vi: integer;
+begin
+  for vi:= 0 to vMame.Config.Panel.Screen.Combobox[3].Items.Count- 1 do
+    if vMame.Config.Panel.Screen.Combobox[3].Items.Strings[vi]= vResolution then
+      begin
+        Result:= vi;
+        Break
+      end;
+end;
+
+function uEmu_Arcade_Mame_Config_Screen_LoadRefresh(vRefresh: String): Byte;
+var
+  vi: integer;
+begin
+  for vi:= 0 to vMame.Config.Panel.Screen.Combobox[4].Items.Count- 1 do
+    if vMame.Config.Panel.Screen.Combobox[4].Items.Strings[vi]= vRefresh then
+      begin
+        Result:= vi;
+        Break
+      end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_LoadScreenStatus(vScreens_Num: Single);
+var
+  viPos: Integer;
+  vi: Integer;
+  vT, vT1: String;
+begin
+//Num of screens //Screen Number
+  uEmu_Arcade_Mame_Config_Screen_LoadNumOfScreens(vScreens_Num);
+//Screen
+  vMame.Config.Panel.Screen.Combobox[0].ItemIndex:= uEmu_Arcade_Mame_Config_Screen_LoadScreenSelection(mame.Emu.Ini.OSD_PER_WINDOW_screen0);
+//Aspect Ratio
+  if mame.Emu.Ini.OSD_PER_WINDOW_aspect0= 'auto' then
+    begin
+      vMame.Config.Panel.Screen.Checkbox[0].IsChecked:= True;
+      vMame.Config.Panel.Screen.Edit[0].Enabled:= False;
+      vMame.Config.Panel.Screen.Edit[1].Enabled:= False;
+    end
+  else
+    begin
+      vMame.Config.Panel.Screen.Checkbox[0].IsChecked:= False;
+      vMame.Config.Panel.Screen.Edit[0].Enabled:= True;
+      vMame.Config.Panel.Screen.Edit[1].Enabled:= True;
+      viPos:= Pos(':', mame.Emu.Ini.OSD_PER_WINDOW_aspect0);
+      vT:= Trim(Copy(mame.Emu.Ini.OSD_PER_WINDOW_aspect0, 0, viPos- 1));
+      vT1:= Trim(Copy(mame.Emu.Ini.OSD_PER_WINDOW_aspect0, viPos+ 1, Length(mame.Emu.Ini.OSD_PER_WINDOW_aspect0)- viPos+ 1));
+      vMame.Config.Panel.Screen.Edit[0].Text:= vT;
+      vMame.Config.Panel.Screen.Edit[1].Text:= vT1;
+    end;
+//View Mode
+    vMame.Config.Panel.Screen.Combobox[1].ItemIndex:= uEmu_Arcade_Mame_Config_Screen_LoadVideoMode(mame.Emu.Ini.OSD_PER_WINDOW_view0);
+//Resolution Size
+    if mame.Emu.Ini.OSD_PER_WINDOW_resolution0= 'auto' then
+      begin
+        vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
+        vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
+        vMame.Config.Panel.Screen.Combobox[3].Items.Add('Auto');
+        vMame.Config.Panel.Screen.Combobox[4].Items.Add('Auto');
+        vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0;
+        vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0;
+      end
+    else
+      begin
+        vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
+        vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
+        mame.Monitor.Monitor_1_Resolutions:= uWindows_GetMonitor_Available_Resolutions;
+        vMame.Config.Panel.Screen.Combobox[3].Items:= mame.Monitor.Monitor_1_Resolutions;
+        mame.Monitor.Monitor_1_Refreshs:= uWindows_GetMOnitor_Available_Refreshs;
+        vMame.Config.Panel.Screen.Combobox[4].Items:= mame.Monitor.Monitor_1_Refreshs;
+        vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0;
+        vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0;
+      end;
+end;
+////////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Config_Screen_SetNumberOfScreens(vNum: String);
+begin
+  mame.Config.Panel.Screen.JustChangeTheScreens:= True;
+  case StrToInt(vNum) of
+    1 : begin
+          vMame.Config.Panel.Screen.Combobox[2].Items.Clear;
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0');
+        end;
+    2 : begin
+          vMame.Config.Panel.Screen.Combobox[2].Items.Clear;
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0');
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 1');
+        end;
+    3 : begin
+          vMame.Config.Panel.Screen.Combobox[2].Items.Clear;
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0');
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 1');
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 2');
+        end;
+    4 : begin
+          vMame.Config.Panel.Screen.Combobox[2].Items.Clear;
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 0');
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 1');
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 2');
+          vMame.Config.Panel.Screen.Combobox[2].Items.Add('Screen 3');
+        end;
+  end;
+  vMame.Config.Panel.Screen.Labels[2].Text:= vNum;
+  mame.Emu.Ini.OSD_VIDEO_numscreens:= StrToInt(vNum);
+  vMame.Config.Panel.Screen.Combobox[2].ItemIndex:= 0;
+  mame.Config.Panel.Screen.JustChangeTheScreens:= False;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_SetScreen(vNum: Integer);
+begin
+  vMame.Config.Panel.Screen.Combobox[2].ItemIndex:= 0;
+  if vNum= 0  then
+    begin
+      vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[3].Items.Add('Auto');
+      vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[4].Items.Add('Auto');
+      vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0;
+      vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0;
+    end
+  else
+    begin
+      vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[3].Items.Add('Auto');
+      vMame.Config.Panel.Screen.Combobox[3].Items.AddStrings(uWindows_GetMonitor_Available_Resolutions);
+      vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[4].Items.Add('Auto');
+      vMame.Config.Panel.Screen.Combobox[4].Items.AddStrings(uWindows_GetMOnitor_Available_Refreshs);
+      vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0;
+      vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_SetAspectRatio(vChecked: Boolean; vScreen: Integer);
+begin
+  if vChecked= True then
+    begin
+      vMame.Config.Panel.Screen.Edit[0].Enabled:= False;
+      vMame.Config.Panel.Screen.Edit[1].Enabled:= False;
+      case vScreen of
+        0: mame.Emu.Ini.OSD_PER_WINDOW_aspect0:= 'auto';
+        1: mame.Emu.Ini.OSD_PER_WINDOW_aspect1:= 'auto';
+        2: mame.Emu.Ini.OSD_PER_WINDOW_aspect2:= 'auto';
+        3: mame.Emu.Ini.OSD_PER_WINDOW_aspect3:= 'auto';
+      end;
+    end
+  else
+    begin
+      vMame.Config.Panel.Screen.Edit[0].Enabled:= True;
+      vMame.Config.Panel.Screen.Edit[1].Enabled:= True;
+      case vScreen of
+        0 : mame.Emu.Ini.OSD_PER_WINDOW_aspect0:= vMame.Config.Panel.Screen.Edit[0].Text+ ':'+ vMame.Config.Panel.Screen.Edit[1].Text;
+        1 : mame.Emu.Ini.OSD_PER_WINDOW_aspect1:= vMame.Config.Panel.Screen.Edit[0].Text+ ':'+ vMame.Config.Panel.Screen.Edit[1].Text;
+        2 : mame.Emu.Ini.OSD_PER_WINDOW_aspect2:= vMame.Config.Panel.Screen.Edit[0].Text+ ':'+ vMame.Config.Panel.Screen.Edit[1].Text;
+        3 : mame.Emu.Ini.OSD_PER_WINDOW_aspect3:= vMame.Config.Panel.Screen.Edit[0].Text+ ':'+ vMame.Config.Panel.Screen.Edit[1].Text;
+      end;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_SetVideoMode(vNum: Integer; vValue: String);
+var
+  vString: String;
+begin
+  if vValue= 'Auto' then
+    vString:= 'auto'
+  else if vValue= 'Standard' then
+    vString:= 'standard'
+  else if vValue= 'Pixel aspect' then
+    vString:= 'pixel'
+  else if vValue= 'Cocktail' then
+    vString:= 'cocktail';
+
+  case vNum of
+    0 : mame.Emu.Ini.OSD_PER_WINDOW_view0:= vString;
+    1 : mame.Emu.Ini.OSD_PER_WINDOW_view1:= vString;
+    2 : mame.Emu.Ini.OSD_PER_WINDOW_view2:= vString;
+    3 : mame.Emu.Ini.OSD_PER_WINDOW_view3:= vString;
+  end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_SetScreenNumber(vNum: Integer);
+var
+  vScreen: WideString;
+  vVideoMode: WideString;
+  vAspectRatio: WideString;
+  vCurrentResolution: WideString;
+  vResolution: WideString;
+  vRefresh: WideString;
+  viPos: Integer;
+begin
+  if mame.Config.Panel.Screen.JustChangeTheScreens= False then
+    begin
+  case vNum of
+    0 : begin
+          vScreen:= mame.Emu.Ini.OSD_PER_WINDOW_screen0;
+          vAspectRatio:= mame.Emu.Ini.OSD_PER_WINDOW_aspect0;
+          vVideoMode:= mame.Emu.Ini.OSD_PER_WINDOW_view0;
+          vCurrentResolution:= mame.Emu.Ini.OSD_PER_WINDOW_resolution0;
+          viPos:= Pos('@',vCurrentResolution);
+            if viPos<> 0 then
+              begin
+                vResolution:= Trim(Copy(vCurrentResolution, 0, viPos- 1));
+                vRefresh:= Trim(Copy(vCurrentResolution, viPos+ 1, length(vCurrentResolution)- viPos+ 1));
+              end;
+        end;
+    1 : begin
+          vScreen:= mame.Emu.Ini.OSD_PER_WINDOW_screen1;
+          vAspectRatio:= mame.Emu.Ini.OSD_PER_WINDOW_aspect1;
+          vVideoMode:= mame.Emu.Ini.OSD_PER_WINDOW_view1;
+          vCurrentResolution:= mame.Emu.Ini.OSD_PER_WINDOW_resolution1;
+          viPos:= Pos('@',vCurrentResolution);
+          if viPos<> 0 then
+              begin
+                vResolution:= Trim(Copy(vCurrentResolution, 0, viPos- 1));
+                vRefresh:= Trim(Copy(vCurrentResolution, viPos+ 1, length(vCurrentResolution)- viPos+ 1));
+              end;
+        end;
+    2 : begin
+          vScreen:= mame.Emu.Ini.OSD_PER_WINDOW_screen2;
+          vAspectRatio:= mame.Emu.Ini.OSD_PER_WINDOW_aspect2;
+          vVideoMode:= mame.Emu.Ini.OSD_PER_WINDOW_view2;
+          vCurrentResolution:= mame.Emu.Ini.OSD_PER_WINDOW_resolution2;
+          viPos:= Pos('@',vCurrentResolution);
+          if viPos<> 0 then
+              begin
+                vResolution:= Trim(Copy(vCurrentResolution, 0, viPos- 1));
+                vRefresh:= Trim(Copy(vCurrentResolution, viPos+ 1, length(vCurrentResolution)- viPos+ 1));
+              end;
+        end;
+    3 : begin
+          vScreen:= mame.Emu.Ini.OSD_PER_WINDOW_screen3;
+          vAspectRatio:= mame.Emu.Ini.OSD_PER_WINDOW_aspect3;
+          vVideoMode:= mame.Emu.Ini.OSD_PER_WINDOW_view3;
+          vCurrentResolution:= mame.Emu.Ini.OSD_PER_WINDOW_resolution3;
+          viPos:= Pos('@',vCurrentResolution);
+            if viPos<> 0 then
+              begin
+                vResolution:= Trim(Copy(vCurrentResolution, 0, viPos- 1));
+                vRefresh:= Trim(Copy(vCurrentResolution, viPos+ 1, length(vCurrentResolution)- viPos+ 1));
+              end;
+        end;
+  end;
+  if vRefresh= '0' then
+    vRefresh:= 'auto'
+  else
+    vRefresh:= vRefresh+ ' Hz';
+  vMame.Config.Panel.Screen.Combobox[0].ItemIndex:= uEmu_Arcade_Mame_Config_Screen_LoadScreenSelection(vScreen);
+  if vAspectRatio= 'auto' then
+    vMame.Config.Panel.Screen.Checkbox[0].IsChecked:= True
+  else
+    vMame.Config.Panel.Screen.Checkbox[0].IsChecked:= False;
+  if vCurrentResolution= 'auto' then
+    begin
+      vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[3].Items.Add('Auto');
+      vMame.Config.Panel.Screen.Combobox[4].Items.Add('Auto');
+      vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0;
+      vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0;
+    end
+  else
+    begin
+      vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
+      vMame.Config.Panel.Screen.Combobox[3].Items.Add('Auto');
+      vMame.Config.Panel.Screen.Combobox[4].Items.Add('Auto');
+      if vResolution= '0' then
+        vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0
+      else
+        begin
+          vMame.Config.Panel.Screen.Combobox[3].Items.AddStrings(uWindows_GetMonitor_Available_Resolutions);
+          vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= uEmu_Arcade_Mame_Config_Screen_LoadResolution(vResolution);
+        end;
+      if vRefresh= '0' then
+        vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0
+      else
+        begin
+          vMame.Config.Panel.Screen.Combobox[4].Items.AddStrings(uWindows_GetMOnitor_Available_Refreshs);
+          vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= uEmu_Arcade_Mame_Config_Screen_LoadRefresh(vRefresh);
+        end;
+    end;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_SetResoluton(vResolution: String);
+var
+  vRefresh: WideString;
+begin
+  if vResolution= 'Auto' then
+    begin
+      if vMame.Config.Panel.Screen.Combobox[4].Items.Strings[0]= 'Auto' then
+        begin
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= 'auto';
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= 'auto';
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= 'auto';
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= 'auto';
+          end;
+        end
+      else
+        begin
+          vRefresh:= vMame.Config.Panel.Screen.Combobox[4].Items.Strings[0];
+          vRefresh:= Trim(Copy(vRefresh, 0, Length(vRefresh)- 2));
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= '0@'+ vRefresh;
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= '0@'+ vRefresh;
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= '0@'+ vRefresh;
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= '0@'+ vRefresh;
+          end;
+        end;
+    end
+  else
+    begin
+      if vMame.Config.Panel.Screen.Combobox[4].Items.Strings[0]= 'Auto' then
+        begin
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= vResolution+ '@0';
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= vResolution+ '@0';
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= vResolution+ '@0';
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= vResolution+ '@0';
+          end;
+        end
+      else
+        begin
+          vRefresh:= vMame.Config.Panel.Screen.Combobox[4].Items.Strings[0];
+          vRefresh:= Trim(Copy(vRefresh, 0, Length(vRefresh)- 2));
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= vResolution+ '@' + vRefresh;
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= vResolution+ '@' + vRefresh;
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= vResolution+ '@' + vRefresh;
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= vResolution+ '@' + vRefresh;
+          end;
+        end;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_SetRefresh(vRefresh: String);
+var
+  vResolution: WideString;
+begin
+  if vRefresh= 'Auto' then
+    begin
+      if vMame.Config.Panel.Screen.Combobox[3].Items.Strings[0]= 'Auto' then
+        begin
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= 'auto';
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= 'auto';
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= 'auto';
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= 'auto';
+          end;
+        end
+      else
+        begin
+          vResolution:= vMame.Config.Panel.Screen.Combobox[4].Items.Strings[0];
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= vResolution+ '@0';
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= vResolution+ '@0';
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= vResolution+ '@0';
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= vResolution+ '@0';
+          end;
+        end;
+    end
+  else
+    begin
+      vRefresh:= Trim(Copy(vRefresh, 0, Length(vRefresh)- 2));
+      if vMame.Config.Panel.Screen.Combobox[3].Items.Strings[0]= 'Auto' then
+        begin
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= '0@'+ vRefresh;
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= '0@'+ vRefresh;
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= '0@'+ vRefresh;
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= '0@'+ vRefresh;
+          end;
+        end
+      else
+        begin
+          case vMame.Config.Panel.Screen.Combobox[2].ItemIndex of
+            0 : mame.Emu.Ini.OSD_PER_WINDOW_resolution0:= vResolution+ '@' + vRefresh;
+            1 : mame.Emu.Ini.OSD_PER_WINDOW_resolution1:= vResolution+ '@' + vRefresh;
+            2 : mame.Emu.Ini.OSD_PER_WINDOW_resolution2:= vResolution+ '@' + vRefresh;
+            3 : mame.Emu.Ini.OSD_PER_WINDOW_resolution3:= vResolution+ '@' + vRefresh;
+          end;
+        end;
+    end;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Config_Screen_CheckboxClick(vName: String);
+begin
+  if mame.Config.Panel.Screen.Start= True then
+    begin
+      if vName= 'Mame_Screen_Checkbox_AspectRatio' then
+        uEmu_Arcade_Mame_Config_Screen_SetAspectRatio(vMame.Config.Panel.Screen.Checkbox[0].IsChecked, vMame.Config.Panel.Screen.Combobox[2].ItemIndex)
+      else if vName= 'Mame_Screen_Checkbox_SwitchResolutionsToFit' then
+        mame.Emu.Ini.OSD_FULLSCREEN_switchres:= vMame.Config.Panel.Screen.Checkbox[1].IsChecked;
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_TrackbarOnChange(vName: String);
+begin
+  if mame.Config.Panel.Screen.Start= True then
+    begin
+      if vName= 'Mame_Screen_Trackbar_NumberOfScreens' then
+        uEmu_Arcade_Mame_Config_Screen_SetNumberOfScreens(FloatToStr(vMame.Config.Panel.Screen.Trackbar.Value));
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_Screen_ComboboxOnChange(vName: String);
+begin
+  if vName= 'Mame_Screen_Combobox_Screen' then
+    uEmu_Arcade_Mame_Config_Screen_SetScreen(vMame.Config.Panel.Screen.Combobox[0].ItemIndex)
+  else if vName= 'Mame_Screen_Combobox_ViewMode' then
+    uEmu_Arcade_Mame_Config_Screen_SetVideoMode(vMame.Config.Panel.Screen.Combobox[2].ItemIndex, vMame.Config.Panel.Screen.Combobox[0].Items.Strings[vMame.Config.Panel.Screen.Combobox[0].ItemIndex])
+  else if vName= 'Mame_Screen_Combobox_ScreenNumber' then
+    if mame.Config.Panel.Screen.Start= True then
+      uEmu_Arcade_Mame_Config_Screen_SetScreenNumber(vMame.Config.Panel.Screen.Combobox[0].ItemIndex)
+  else if vName= 'Mame_Screen_Combobox_ResolutionSize' then
+    uEmu_Arcade_Mame_Config_Screen_SetResoluton(vMame.Config.Panel.Screen.Combobox[0].Items.Text)
+  else if vName= 'Mame_Screen_Combobox_ResolutionRefresh' then
+    uEmu_Arcade_Mame_Config_Screen_SetRefresh(vMame.Config.Panel.Screen.Combobox[0].Items.Text);
+end;
+
+end.

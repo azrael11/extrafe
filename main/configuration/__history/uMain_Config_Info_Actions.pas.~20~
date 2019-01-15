@@ -1,0 +1,157 @@
+unit uMain_Config_Info_Actions;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils;
+
+  //ExtraFE
+  procedure Config_Info_Read_Build(mStable, mBuild: string);
+  procedure Config_Info_Previous_Stable;
+  procedure Config_Info_Next_Stable;
+  procedure Config_Info_Previous_Build;
+  procedure Config_Info_Next_Build;
+  function Config_Info_GetMaxNumberBuild(mPath: string): Integer;
+
+   var
+    vConfig_Info_Major: Integer;
+    vConfig_Info_Minor: Integer;
+    vConfig_Info_Realeash: Integer;
+    vConfig_Info_Build: Integer;
+    vConfig_Info_MaxNumber_Build: Integer;
+
+  //Credits
+
+implementation
+uses
+  uLoad_AllTypes,
+  uMain_SetAll,
+  uMain_AllTypes;
+
+
+procedure Config_Info_Read_Build(mStable, mBuild: string);
+var
+  vFullPath: string;
+  vTextFile: TextFile;
+  vStr1: string;
+  vStr_1: string;
+  iPos: SmallInt;
+begin
+  mainScene.Config.Main.R.Info.Extrafe.History_Info.Lines.Clear;
+  vStr_1:= 'nothing';
+  vFullPath:= StringReplace(mStable, '.', '_', [rfReplaceAll, rfIgnoreCase]);
+  vFullPath:= extrafe.prog.Paths.History+ 'history_'+ vFullPath+ '.txt';
+  AssignFile(vTextFile, vFullPath);
+  Reset(vTextFile);
+  while not Eof(vTextFile) do
+    begin
+      Readln(vTextFile, vStr1);
+      iPos:= Pos('$', vStr1);
+      if iPos<> 0 then
+        begin
+          vStr_1:= vStr1;
+          Delete(vStr_1,1,1);
+        end;
+      if vStr_1= mBuild then
+        mainScene.Config.Main.R.Info.Extrafe.History_Info.Lines.Add(vStr1);
+    end;
+  CloseFile(vTextFile);
+end;
+
+function Config_Info_GetMaxNumberBuild(mPath: string): Integer;
+var
+  vFullPath: string;
+  vTextFile: TextFile;
+  vStr1: string;
+  vStr_1: string;
+  iPos: SmallInt;
+begin
+  vStr_1:= 'nothing';
+  vFullPath:= StringReplace(mPath, '.', '_', [rfReplaceAll, rfIgnoreCase]);
+  vFullPath:= extrafe.prog.Paths.History+ 'history_'+ vFullPath+ '.txt';
+  AssignFile(vTextFile, vFullPath);
+  Reset(vTextFile);
+  while not Eof(vTextFile) do
+    begin
+      Readln(vTextFile, vStr1);
+      iPos:= Pos('$', vStr1);
+      if iPos<> 0 then
+        begin
+          vStr_1:= vStr1;
+          Delete(vStr_1,1,1);
+          Result:= StrToInt(vStr_1);
+          Break
+        end;
+    end;
+  CloseFile(vTextFile);
+end;
+
+procedure Config_Info_Previous_Stable;
+var
+  vPath: string;
+  vFullPath: string;
+begin
+  Dec(vConfig_Info_Realeash, 1);
+  vPath:= extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash);
+  vFullPath:= StringReplace(vPath, '.', '_', [rfReplaceAll, rfIgnoreCase]);
+  vFullPath:= extrafe.prog.History_Path+ 'history_'+ vFullPath+ '.txt';
+  if FileExists(vFullPath, True) then
+    begin
+      if vConfig_Info_Realeash> -1 then
+        begin
+          vConfig_Info_MaxNumber_Build:= Config_Info_GetMaxNumberBuild(extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash));
+          mainScene.Config.Main.R.Info.Extrafe.Stable_History_Num.Text:= IntToStr(vConfig_Info_Major)+ '.'+ IntToStr(vConfig_Info_Minor)+ '.'+ IntToStr(vConfig_Info_Realeash);
+          mainScene.Config.Main.R.Info.Extrafe.Build_History_Num.Text:= IntToStr(vConfig_Info_MaxNumber_Build);
+          vConfig_Info_Build:= vConfig_Info_MaxNumber_Build;
+          Config_Info_Read_Build(extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash), IntToStr(vConfig_Info_MaxNumber_Build));
+        end;
+    end
+  else
+    Inc(vConfig_Info_Realeash, 1);
+end;
+
+procedure Config_Info_Next_Stable;
+var
+  mPath: string;
+begin
+  Inc(vConfig_Info_Realeash, 1);
+  mPath:= extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash);
+  mPath:= StringReplace(mPath, '.', '_', [rfReplaceAll, rfIgnoreCase]);
+  mPath:= extrafe.prog.History_Path+ 'history_'+ mPath+ '.txt';
+  if FileExists(mPath, False) then
+    begin
+      if vConfig_Info_Realeash<= StrToInt(extrafe.prog.Version.Realeash) then
+        begin
+          vConfig_Info_MaxNumber_Build:= Config_Info_GetMaxNumberBuild(extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash));
+          mainScene.Config.Main.R.Info.Extrafe.Stable_History_Num.Text:= IntToStr(vConfig_Info_Major)+ '.'+ IntToStr(vConfig_Info_Minor)+ '.'+ IntToStr(vConfig_Info_Realeash);
+          mainScene.Config.Main.R.Info.Extrafe.Build_History_Num.Text:= IntToStr(vConfig_Info_MaxNumber_Build);
+          vConfig_Info_Build:= vConfig_Info_MaxNumber_Build;
+          Config_Info_Read_Build(extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash), IntToStr(vConfig_Info_MaxNumber_Build));
+        end;
+    end
+  else
+    Dec(vConfig_Info_Realeash, 1);
+end;
+
+procedure Config_Info_Previous_Build;
+begin
+  Dec(vConfig_Info_Build, 1);
+  if vConfig_Info_Build>-1 then
+    begin
+      mainScene.Config.Main.R.Info.Extrafe.Build_History_Num.Text:= IntToStr(vConfig_Info_Build);
+      Config_Info_Read_Build(extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash), IntToStr(vConfig_Info_Build));
+    end;
+end;
+
+procedure Config_Info_Next_Build;
+begin
+  Inc(vConfig_Info_Build, 1);
+  if vConfig_Info_Build<= vConfig_Info_MaxNumber_Build then
+    begin
+      mainScene.Config.Main.R.Info.Extrafe.Build_History_Num.Text:= IntToStr(vConfig_Info_Build);
+      Config_Info_Read_Build(extrafe.prog.Version.Major+ '.'+ extrafe.prog.Version.Minor+ '.'+ IntToStr(vConfig_Info_Realeash), IntToStr(vConfig_Info_Build));
+    end
+  else
+    vConfig_Info_Build:= vConfig_Info_MaxNumber_Build;
+end;
+end.

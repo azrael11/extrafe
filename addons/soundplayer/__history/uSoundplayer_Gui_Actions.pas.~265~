@@ -1,0 +1,227 @@
+unit uSoundplayer_gui_actions;
+
+interface
+uses
+  Classes,
+  FMX.Graphics,
+  FMX.Objects,
+  FMX.StdCtrls,
+  FMX.Dialogs,
+  FMX.Types,
+  FMX.Edit,
+  FMX.Platform,
+  FMX.Grid,
+  System.UITypes,
+  System.UIConsts,
+  System.SysUtils;
+
+  //Image Mouse Actions
+  procedure uSoundPlayer_Image_OnMouseEnter(Sender: TObject);
+  procedure uSoundPlayer_Image_OnMouseLeave(Sender: TObject);
+  procedure uSoundPlayer_Image_OnMouseClick(Sender: TObject);
+  procedure uSoundPlayer_Image_OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+
+  //Button Mouse Actions
+  procedure uSoundPlayer_Button_OnMouseClick(Sender: TObject);
+
+  //File Dialog Actions
+  procedure uSoundPlayer_FileDialog_OnClose(Sender: TObject);
+
+  //Timer Actions
+  procedure uSoundPlayer_Timer_OnTimer(Sender: TObject);
+
+  //Trackbar Actions
+  procedure uSoundPlayer_Trackbar_OnChange(Sender: TObject);
+  procedure uSoundPlayer_Trackbar_OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+  procedure uSoundPlayer_Trackbar_OnMouseMove(Sender: TObject;Shift: TShiftState; X, Y: Single);
+
+  //Text Actions
+  procedure uSoundPlayer_Text_OnMouseEnter(Sender: TObject);
+  procedure uSoundPlayer_Text_OnMouseLeave(Sender: TObject);
+  procedure uSoundPlayer_Text_OnMouseClick(Sender: TObject);
+
+  //Stringgrid Actions
+  procedure uSoundPlayer_Stringgrid_On_SelectCell(Sender: TObject; const ACol,ARow: Integer; var CanSelect: Boolean);
+  procedure uSoundPlayer_Stringgrid_OnDbClick(const Column: TColumn;const Row: Integer);
+
+  //Speedbutton Actions
+  procedure uSoundPlayer_Speedbutton_OnMouseClick(Sender: TObject);
+  procedure uSoundPlayer_Speedbutton_OnMouseEnter(Sender: TObject);
+  procedure uSoundPlayer_Speedbutton_OnMouseLeave(Sender: TObject);
+
+  //Edit Actiions
+  procedure uSoundPlayer_Edit_OnKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+
+implementation
+uses
+  main,
+  uTText,
+  uSoundplayer_Actions,
+  uSoundplayer_Player_Actions,
+  uSoundplayer_Playlist_Actions,
+  uSP_Tag_ID3v2;
+
+//Image
+procedure uSoundPlayer_Image_OnMouseEnter(Sender: TObject);
+begin
+  if Main_Form.A_SP_Blur.Enabled= False then
+    begin
+      //
+    end;
+end;
+
+procedure uSoundPlayer_Image_OnMouseLeave(Sender: TObject);
+begin
+//
+end;
+
+procedure uSoundPlayer_Image_OnMouseClick(Sender: TObject);
+begin
+  if Main_Form.A_SP_Blur.Enabled= False then
+    begin
+      if TImage(Sender).Name= 'A_SP_CreatePlaylist' then
+        uSoundPlayer_Show_CreatePlaylist(True)
+    end;
+end;
+
+procedure uSoundPlayer_Image_OnMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+begin
+//
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Button
+procedure uSoundPlayer_Button_OnMouseClick(Sender: TObject);
+begin
+  if TButton(Sender).Name= 'A_SP_CreateNPL_Create' then
+    uSoundPlayer_Create_NewPlaylist(Main_Form.A_SP_CreateNPL_Name.Text, Main_Form.A_SP_CreateNPL_PLType.Selected.Text)
+  else if TButton(Sender).Name= 'A_SP_CreateNPL_Cancel' then
+    uSoundPlayer_Show_CreatePlaylist(False)
+  else if TButton(Sender).Name= 'A_SP_TrackEject' then
+    uSoundPlayer_Show_AddSongs_Panel
+  else if TButton(Sender).Name= 'A_SP_Tag_ID3v2_Cancel' then
+    uSoundPlayer_Tag_Show_ID3v2(False);
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//File Dialog Actions
+procedure uSoundPlayer_FileDialog_OnClose(Sender: TObject);
+begin
+  if TOpenDialog(Sender).Name= 'A_SP_OpenDialog' then
+    uSoundPlayer_Close_And_AddSongs;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Timer Actions
+procedure uSoundPlayer_Timer_OnTimer(Sender: TObject);
+begin
+  if TTimer(Sender).Name= 'A_SP_Timer' then
+    uSoundPlayer_Refresh_SoundPlayer;
+end;
+
+
+////////////////////////////////////////////////////////////////////////////////
+//Trackbar Actions
+procedure uSoundPlayer_Trackbar_OnChange(Sender: TObject);
+begin
+  if TTrackBar(Sender).Name= 'A_SP_Volume_Trackbar' then
+    uSoundPlayer_Update_Volume(TTrackBar(Sender).Value)
+  else if TTrackBar(Sender).Name= 'A_SP_SongTrackbar' then
+    uSoundPlayer_Update_SongPosition(Sender, TTrackBar(Sender).Value);
+end;
+
+procedure uSoundPlayer_Trackbar_OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+begin
+  if TTrackBar(Sender).Name= 'A_SP_SongTrackbar' then
+    uSoundPlayer_MouseDown_SongPosition(Sender, x);
+end;
+
+procedure uSoundPlayer_Trackbar_OnMouseMove(Sender: TObject;Shift: TShiftState; X, Y: Single);
+begin
+  if TTrackBar(Sender).Name= 'A_SP_SongTrackbar' then
+    uSoundPlayer_MouseMove_SongPosition(Sender, X);
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Text Actions
+procedure uSoundPlayer_Text_OnMouseEnter(Sender: TObject);
+begin
+  if TText(Sender).Name= 'A_SP_TrackTime' then
+    uText_ChangeColor_OnMouseEnter(Sender, claDeepskyblue);
+end;
+
+procedure uSoundPlayer_Text_OnMouseLeave(Sender: TObject);
+begin
+  if TText(Sender).Name= 'A_SP_TrackTime' then
+    uText_ChangeColor_OnMouseLeave(Sender, claWhiteSmoke);
+end;
+
+procedure uSoundPlayer_Text_OnMouseClick(Sender: TObject);
+begin
+  if TText(Sender).Name= 'A_SP_TrackTime' then
+    soundplayer_player.Time_Negative:= not soundplayer_player.Time_Negative;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Stringgrid Actions
+procedure uSoundPlayer_Stringgrid_On_SelectCell(Sender: TObject; const ACol,ARow: Integer; var CanSelect: Boolean);
+begin
+  if TStringGrid(Sender).Name= 'A_SP_Playlist' then
+    uSoundPlayer_PLAction_OnSelectCell(Sender, ACol, ARow, CanSelect);
+end;
+
+procedure uSoundPlayer_Stringgrid_OnDbClick(const Column: TColumn;const Row: Integer);
+begin
+  if soundplayer_player.Playing_Now<> row then
+    uSoundPlayer_PLAction_OnDoubleClick(Column, Row);
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+/// Speedbutton Actions
+
+procedure uSoundPlayer_Speedbutton_OnMouseClick(Sender: TObject);
+begin
+  if TSpeedButton(Sender).Name= 'A_SP_TrackEject' then
+    uSoundPlayer_Show_AddSongs_Panel
+  else if TSpeedButton(Sender).Name= 'A_SP_TrackPlayPause' then
+    uSoundPlayer_StartPause_Song
+  else if TSpeedButton(Sender).Name= 'A_SP_TrackStop' then
+    uSoundPlayer_Stop_Song
+  else if TSpeedButton(Sender).Name= 'A_SP_TrackPrevious' then
+    uSoundPlayer_Previous_Song
+  else if TSpeedButton(Sender).Name= 'A_SP_TrackNext' then
+    uSoundPlayer_Next_Song
+  else if TSpeedButton(Sender).Name= 'A_SP_TrackMute' then
+    uSoundPlayer_PAction_Mute_Song
+  else if TSpeedButton(Sender).Name= 'A_SP_CreatePlaylist' then
+    uSoundPlayer_Show_CreatePlaylist(True)
+  else if TSpeedButton(Sender).Name= 'A_SP_Tag' then
+    uSoundPlayer_Tag_Show_ID3v2(True)
+  else if TSpeedButton(Sender).Name= 'A_SP_Tag_Tab_ID3v2_Covers_Up' then
+    uSP_Tag_ID3v2_Cover_Up
+  else if TSpeedButton(Sender).Name= 'A_SP_Tag_Tab_ID3v2_Covers_Down' then
+    uSP_Tag_ID3v2_Cover_Down;
+end;
+
+procedure uSoundPlayer_Speedbutton_OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure uSoundPlayer_Speedbutton_OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Edit Actiions
+
+procedure uSoundPlayer_Edit_OnKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if TEdit(Sender).Name= 'A_SP_CreateNPL_Name' then
+    uSoundPlayer_CheckEditText(TEdit(Sender).Text);
+
+end;
+
+end.

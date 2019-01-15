@@ -1,0 +1,25 @@
+unit uEmu_Gui_Actions;
+
+interface
+uses
+  System.Classes,
+  FMX.Ani,
+  FMX.Objects;
+
+  //Animation
+  procedure uEmu_Animation_OnFinish(Sender: TObject);
+
+implementation
+uses
+  emu,
+  uEmu_Actions;
+
+
+////////////////////////////////////////////////////////////////////////////////
+//Animation
+procedure uEmu_Animation_OnFinish(Sender: TObject);
+begin
+  TFloatAnimation(Sender).Enabled:= False;
+end;
+
+end.

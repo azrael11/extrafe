@@ -1,0 +1,12 @@
+unit emu_main;
+
+interface
+uses
+  System.Classes;
+
+//  procedure uEmu_Main_Intiti
+
+implementation
+
+
+end.

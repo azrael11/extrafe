@@ -1,0 +1,44 @@
+unit uMain_Keyboard;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  FMX.Objects;
+
+  procedure uMain_Keyboard_SetKey(vKey: String);
+
+implementation
+uses
+  main,
+  uLoad,
+  uLoad_AllTypes,
+  uMain_Actions,
+  uMain_Config,
+  uMain_Emulation;
+
+procedure uMain_Keyboard_SetKey(vKey: String);
+begin
+  if UpperCase(vKey)= 'Right' then
+    uMain_Emulation_Slide_Right
+  else if UpperCase(vKey)= 'Key_ArrowLeft' then
+    uMain_Emulation_Slide_Left
+  else if UpperCase(vKey)= 'Key_Enter' then
+    begin
+      if extrafe.prog.State= 'main' then
+        uMain_Emulation_Trigger_Click(emulation.Selection.TabIndex, False)
+    end
+  else if UpperCase(vKey)= 'Key_Backspace' then
+    begin
+      if extrafe.prog.State= 'main' then
+        uMain_Emulation_Trigger_Click(0, True)
+    end
+  else if UpperCase(vKey) = 'S' then
+    uMain_Config_ShowHide(extrafe.prog.State)
+  else if UpperCase(vKey)= 'Key_1' then
+    uMain_Actions_ShowHide_Addons(1000)
+  else if UpperCase(vKey)= 'Key_2' then
+    uMain_Actions_ShowHide_Addons(1001)
+end;
+
+end.

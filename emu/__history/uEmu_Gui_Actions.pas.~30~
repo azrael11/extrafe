@@ -1,0 +1,57 @@
+unit uEmu_Gui_Actions;
+
+interface
+uses
+  System.Classes,
+  FMX.Ani,
+  FMX.Objects;
+
+  //Image
+  procedure uEmu_Image_OnMouseClick(Sender: TObject);
+  procedure uEmu_Image_OnMouseEnter(Sender: TObject);
+  procedure uEmu_Image_OnMouseLeave(Sender: TObject);
+
+  //Animation
+  procedure uEmu_Animation_OnFinish(Sender: TObject);
+
+implementation
+uses
+  emu,
+  uEmu_Actions;
+
+
+//Image
+procedure uEmu_Image_OnMouseClick(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Emu_Exit' then
+    uEmu_Actions_Exit(Emulation.Number);
+  else if TImage(Sender).Name= 'Emu_Settings' then
+    uEmu_Actions_EmuSettings(Emulation.Number);
+
+end;
+
+procedure uEmu_Image_OnMouseEnter(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Emu_Exit' then
+    Emu_Form.Emu_Exit_Glow.Enabled:= True
+  else if TImage(Sender).Name= 'Emu_Settings' then
+    Emu_Form.Emu_Setings_GlowEffect.Enabled:= True;
+       
+end;
+
+procedure uEmu_Image_OnMouseLeave(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Emu_Exit' then
+    Emu_Form.Emu_Exit_Glow.Enabled:= False
+  else if TImage(Sender).Name= 'Emu_Settings' then
+    Emu_Form.Emu_Setings_GlowEffect.Enabled:= False;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Animation
+procedure uEmu_Animation_OnFinish(Sender: TObject);
+begin
+  TFloatAnimation(Sender).Enabled:= False;
+end;
+
+end.

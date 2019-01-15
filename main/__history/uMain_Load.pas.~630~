@@ -1,0 +1,300 @@
+unit uMain_Load;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  FMX.Controls,
+  uWindows,
+  windows,
+  uLoad;
+
+type TMAIN_WIDGET= record
+  position_x: Single;
+  position_y: Single;
+  width: Integer;
+  height: Integer;
+  blocks_getin_x: Integer;
+  blocks_getin_y: Integer;
+  blocks_start_block_x: Integer;
+  blocks_start_block_y: Integer;
+  name: string;
+  place: Integer;
+end;
+
+type TMAIN_WIDGETS= record
+  widget: TMAIN_WIDGET;
+  Active: Byte;
+  Total_Num: Byte;
+  Active_Num: Byte;
+end;
+
+{type TEMULATOR_FAVORITES= record
+  Categories: array [0..255] of TStringList;
+  Categories_Name: array of string;
+  Categories_Num: Byte;
+  Active_Category: string;
+end;
+
+type TEMULATOR_INFO= record
+  Active: Boolean;
+  ID: SmallInt;
+  Name: string;
+  Path: string;
+  Category: string;
+  Supported_ext: array of string;
+  Supported_Games: Integer;
+  Found_Games: Integer;
+  Last_Played: string;
+  Total_Time_Played: string;
+  Favorites: TEMULATOR_FAVORITES;
+end;
+
+type TEMULATORS= record
+  Active: Boolean;
+  Installed: Boolean;
+  Emu: TEMULATOR_INFO;
+  Config_Ini: TIniFile;
+  Config_Ini_Path: string;
+  Config_Ini_Name: string;
+end;
+
+type TEMULATORS_TAB= record
+  IsMainActive: Boolean;
+  Tab: TALTabItem;
+  Logo: TImage;
+  Logo_Glow: TGlowEffect;
+  Story: TText;
+  Long_Icons: TImage;
+end;
+
+type TEMULATOR= record
+  Emulators: array [0..255] of TEMULATORS;
+  Emu_Selection_Control: TALTabControl;
+  Emu_Tab: array[0..255] of TEMULATORS_TAB;
+  Active: Boolean;
+  Active_Num: Integer;
+  Total_Num: Integer;
+  Show_Header_Tree: Boolean;
+  Level: Integer;
+  Category: Integer;
+  ShowInMenu: array [0..255] of Boolean; }
+end;
+
+
+type TMAIN_SETTINGS= record
+  addons: TADDON;
+  widgets: TMAIN_WIDGETS;
+  emulators: TEMULATOR;
+  show_addon: Boolean;
+  active_addon: string;
+  Header_Position_X: Single;
+  Header_Position_Y: Single;
+  MainSelection_Position_X: Single;
+  MainSelection_Position_Y: Single;
+  Footer_Position_X: Single;
+  Footer_Position_Y: Single;
+  Config_Position_X: Single;
+  Config_Position_Y: Single;
+end;
+
+  procedure CreateMainScene;
+  procedure Create_Main_Settings;
+
+  //Create Emulators
+  procedure Create_Emulators_Settings(mNameEmulator: String);
+
+  //Create Addons
+  procedure Create_Addons_Settings(mNameAddon: string);
+
+var
+  main_settings: TMAIN_SETTINGS;
+  main_widget: array of TMAIN_WIDGET;
+
+implementation
+uses
+  main,
+  loading,
+  uEmu_SetAll,
+  emu,
+  uMain_SetAll,
+  uMain_Actions,
+  uMain_Config_Info,
+  uMain_Load_Addons,
+  uMain_Load_Emulators,
+  uMain_Config_Themes,
+  uMain_COnfig_Profile;
+
+procedure CreateMainScene;
+begin
+  Main_Form.Width:= extrafe.res.Width;
+  Main_Form.Height:= extrafe.res.Heigth;
+  Main_Form.FullScreen:= True;
+  Create_Main_Settings;
+  uMain_SetAll_Set;
+  extrafe.prog.State:= 'mainmenu';
+  main_menu.IsAnyAddon_Active:= False;
+end;
+
+procedure Create_Main_Settings;
+var
+  vRec: TSearchRec;
+  vName: string;
+begin
+//Database connection
+  Main_Form.Main_Database_Connect.Connected:= Loading_Form.Loading_Database_Connect.Connected;
+
+//Main form
+  //Header
+  Main_Form.Main_Header.Visible:= True;
+  Main_Form.Main_Header.Width:= extrafe.res.Width;
+  Main_Form.Main_Header.Height:= 130;
+  main_settings.Header_Position_X:= 0;
+  main_settings.Header_Position_Y:= 0;
+  Main_Form.Header_Exit.Position.X:= extrafe.res.Width- 29;
+  Main_Form.Header_Exit.Position.Y:= 4;
+  Main_Form.Header_Avatar.Position.X:= extrafe.res.Width- 139;
+  Main_Form.Header_Avatar.Position.Y:= 130- Main_Form.Header_Avatar.Height- 4;
+  Main_Form.Header_Avatar.Bitmap.LoadFromFile(extrafe.main_avatar_path+ user.Avatar+ '.png');
+  Main_Form.Header_Addon_Icon_1.Position.Y:= 130- Main_Form.Header_Addon_Icon_1.Height- 4;
+  Main_Form.Header_Addon_Icon_2.Position.Y:= 130- Main_Form.Header_Addon_Icon_2.Height- 4;
+  Main_Form.Header_Addon_Icon_3.Position.Y:= 130- Main_Form.Header_Addon_Icon_3.Height- 4;
+  Main_Form.Header_Addon_Icon_4.Position.Y:= 130- Main_Form.Header_Addon_Icon_4.Height- 4;
+  Main_Form.Header_Addon_Icon_5.Position.Y:= 130- Main_Form.Header_Addon_Icon_5.Height- 4;
+  Main_Form.Header_Addon_Icon_6.Position.Y:= 130- Main_Form.Header_Addon_Icon_6.Height- 4;
+  Main_Form.Header_Addon_Icon_7.Position.Y:= 130- Main_Form.Header_Addon_Icon_7.Height- 4;
+  Main_Form.Header_Addon_Icon_8.Position.Y:= 130- Main_Form.Header_Addon_Icon_8.Height- 4;
+  Main_Form.Header_Addon_Icon_9.Position.Y:= 130- Main_Form.Header_Addon_Icon_9.Height- 4;
+
+  //Selection
+  Main_Form.Main_Selection.Width:= extrafe.res.Width;
+  Main_Form.Main_Selection.Height:= 724;
+  Main_Form.Main_Selection.Position.Y:= 130;
+  main_settings.MainSelection_Position_X:= 0;
+  main_settings.MainSelection_Position_y:= Main_Form.Main_Selection.Position.Y;
+  Main_Form.Main_Selection.Visible:= True;
+
+  {emulator.ShowInMenu[0]:= true;
+
+  for vi:= 0 to 255 do
+    begin
+      if emulator.ShowInMenu[vi]= True then
+        uMain_Actions_Create_Emulator_Tab(vi);
+    end;}
+
+  Main_Form.Main_Config_Show.StartValue:= -1000;
+  Main_Form.Main_Config_Show.StopValue:= (extrafe.res.Width div 2)- 404;
+  Main_Form.Main_Config_Hide.StartValue:= (extrafe.res.Width div 2)- 404;
+  Main_Form.Main_Config_Hide.StopValue:= -1000;
+  //Footer
+  Main_Form.Main_Footer.Visible:= True;
+  Main_Form.Main_Footer.Width:= extrafe.res.Width;
+  Main_Form.Main_Footer.Height:= 226;
+  Main_Form.Main_Footer.Position.Y:= extrafe.res.Heigth- 226;
+  main_settings.Footer_Position_X:= 0;
+  main_settings.Footer_Position_Y:= Main_Form.Main_Footer.Position.Y;
+
+//Config Defaults
+  //Config global
+  Main_Form.Main_Config.Position.X:= extrafe.res.Width- extrafe.res.Width- (Main_Form.Main_Config.Width)- 100;
+  Main_Form.Main_Config.Position.Y:= (extrafe.res.Heigth/ 2)- (Main_Form.Main_Config.Height/ 2);
+  main_settings.Config_Position_X:= Main_Form.Main_Config.Position.X;
+  main_settings.Config_Position_Y:= Main_Form.Main_Config.Position.Y;
+  Main_Form.Main_Config.Visible:= True;
+  //Config profile
+  Main_Form.Main_Config_A_Profile.Visible:= False;
+  Main_Form.Profile_Password_Panel.Position.X:= -1500;
+  Main_Form.Profile_Password_Panel.Visible:= True;
+  Main_Form.Profile_Avatar_Panel.Position.X:= -1500;
+  Main_Form.Profile_Avatar_Panel.Visible:= True;
+  //Config General
+  Main_Form.Main_Config_A_General.Visible:= False;
+  //Config Emulators
+  Main_Form.Main_Config_A_Emulators.Visible:= False;
+  Main_Form.Emulators_Arcade.TagString:= 'Arcade';
+  Main_Form.Emulators_Computers.TagString:= 'Computers';
+  Main_Form.Emulators_Consoles.TagString:= 'Consoles';
+  Main_Form.Emulators_Handhelds.TagString:= 'Handhelds';
+  Main_Form.Emulators_Pinball.TagString:= 'Pinball';
+  Main_Form.Emulators_Arcade_Box.Visible:= False;
+  Main_Form.Emulators_Computers_Box.Visible:= False;
+  Main_Form.Emulators_Consoles_Box.Visible:= False;
+  Main_Form.Emulators_Handhelds_Box.Visible:= False;
+  Main_Form.Emulators_Pinball_Box.Visible:= False;
+  //Config PC Games
+
+  //Config Addons
+  Main_Form.Main_Config_A_Addons.Visible:= False;
+  Main_Form.Addons_Info_Box.Visible:= False;
+  if addons.weather.Active then
+    begin
+      Main_Form.Addons_Addon_Weather_Check.Visible:= True;
+      Main_Form.Addons_Addon_Weather_Glow_Checked.Enabled:= True;
+    end;
+  if addons.soundplayer.Active then
+    begin
+      Main_Form.Addons_Addon_SoundPlayer_Check.Visible:= True;
+      Main_Form.Addons_Addon_SoundPlayer_Glow_Checked.Enabled:= True;
+    end;
+  //Config Themes
+  uMain_Config_Themes_LoadThemes_Names;
+  Main_Form.Main_Config_A_Themes.Visible:= False;
+  extrafe.style.Names:= TStringList.Create;
+  if FindFirst(extrafe.style.Path+ '*.style', faDirectory- faAnyFile, vRec)= 0 then
+    try
+      repeat
+        vName:= vRec.Name;
+        Delete(vName, Length(vName)- 5, 6);
+        extrafe.style.Names.Add(vName);
+      until FindNext(vRec)<> 0;
+    finally
+      system.SysUtils.FindClose(vRec);
+    end;
+  Main_Form.Themes_Change_Theme.Items.Add('Default');
+  Main_Form.Themes_Change_Theme.Items.AddStrings(extrafe.style.Names);
+  //Config Info
+  Main_Form.Main_Config_A_Info.Visible:= False;
+
+
+//Main Style
+  extrafe.style.Name:= extrafe.ini.Ini.ReadString('Themes','Name', extrafe.style.Name);
+  if extrafe.style.Name<> '' then
+    begin
+      Main_Form.StyleName:= extrafe.style.Name;
+      uMain_Config_Themes_ApplyTheme(extrafe.style.Name);
+      Main_Form.Themes_Change_Theme.ItemIndex:= extrafe.style.Names.IndexOf(extrafe.style.Name)+ 1;
+      Main_Form.Themes_Active_Theme.Text:= 'Active Theme : '+ extrafe.style.Name;
+    end;
+//Emulators Default
+  uEmu_SetComponentsToRightPlace;
+
+
+//Addons Default
+  main_settings.addons:= addons;
+
+//Load Active Emulators
+
+//Load Active Addons
+  if addons.Active then
+    begin
+      if addons.weather.Active then
+        Create_Addons_Settings('weather');
+      if addons.soundplayer.Active then
+        Create_Addons_Settings('soundplayer');
+    end;
+end;
+
+procedure Create_Emulators_Settings(mNameEmulator: String);
+begin
+
+end;
+
+procedure Create_Addons_Settings(mNameAddon: string);
+begin
+  if mNameAddon= 'weather' then
+    uMain_Load_Addons_Weather
+  else if mNameAddon= 'soundplayer' then
+    uMain_Load_Addons_SoundPlayer;
+end;
+
+end.

@@ -1,0 +1,38 @@
+object Main_Form: TMain_Form
+  Left = 0
+  Top = 0
+  Caption = 'ExtraFE Theme Creator'
+  ClientHeight = 480
+  ClientWidth = 640
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object MenuBar1: TMenuBar
+    Size.Width = 640.000000000000000000
+    Size.Height = 24.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Menu_File: TMenuItem
+      Text = 'File'
+      object Menu_Create_New: TMenuItem
+        Locked = True
+        Text = 'Create new theme'
+        object Menu_New_HD_1920X1080: TMenuItem
+          Locked = True
+          Text = '1920x1080'
+          OnClick = Menu_New_HD_1920X1080Click
+        end
+      end
+      object MenuItem2: TMenuItem
+        Locked = True
+        Text = '----------------'
+      end
+      object Menu_Exit: TMenuItem
+        Locked = True
+        Text = 'Menu_Exit'
+        OnClick = Menu_ExitClick
+      end
+    end
+  end
+end

@@ -1,0 +1,28 @@
+unit uTLabel;
+
+interface
+uses
+  System.Classes,
+  FMX.StdCtrls;
+
+
+  //HyperLink Mouse events
+  procedure uTLabel_HyperLink_OnMouseEnter(Sender: TObject);
+  procedure uTLabel_HyperLink_OnMouseLeave(Sender: TObject);
+
+implementation
+
+procedure uTLabel_HyperLink_OnMouseEnter(Sender: TObject);
+begin
+
+  TLabel(Sender).TextSettings.Font.Style:= TLabel(Sender).TextSettings.Font.Style+ [TFontStyle.fsUnderline];
+  TLabel(Sender).TextSettings.FontColor:= claDeepskyblue;
+  TLabel(Sender).Cursor:= crHandPoint;
+end;
+
+procedure uTLabel_HyperLink_OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+end.

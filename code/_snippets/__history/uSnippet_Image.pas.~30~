@@ -1,0 +1,56 @@
+unit uSnippet_Image;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  FMX.Graphics,
+  FMX.Objects,
+  FMX.Imglist,
+  FMX.Graphics;
+
+type
+  TImageListHelper = class Helper for TImageList
+    function Add(const ABitmap: TBitmap): integer;
+  end;
+
+implementation
+
+function TImageListHelper.Add(const ABitmap: TBitmap): integer;
+const
+  Scale = 1;
+var
+  vSource: TCustomSourceItem;
+  vBitmapItem: TCustomBitmapItem;
+  vDest: TCustomDestinationItem;
+  vLayer: TLayer;
+begin
+  Result := -1;
+  if (ABitmap.Width = 0) or (ABitmap.Height = 0) then
+    exit;
+  // add source bitmap
+  vSource := Source.Add;
+  vSource.MultiResBitmap.TransparentColor := TColorRec.Fuchsia;
+  vSource.MultiResBitmap.SizeKind := TSizeKind.Source;
+  vSource.MultiResBitmap.Width := Round(ABitmap.Width / Scale);
+  vSource.MultiResBitmap.Height := Round(ABitmap.Height / Scale);
+  vBitmapItem := vSource.MultiResBitmap.ItemByScale(Scale, True, True);
+  if vBitmapItem = nil then
+  begin
+    vBitmapItem := vSource.MultiResBitmap.Add;
+    vBitmapItem.Scale := Scale;
+  end;
+  vBitmapItem.Bitmap.Assign(ABitmap);
+
+  vDest := Destination.Add;
+  vLayer := vDest.Layers.Add;
+  vLayer.SourceRect.Rect := TRectF.Create(TPoint.Zero, vSource.MultiResBitmap.Width,
+    vSource.MultiResBitmap.Height);
+  vLayer.Name := vSource.Name;
+  Result := vDest.Index;
+end;
+
+implementation
+
+end.

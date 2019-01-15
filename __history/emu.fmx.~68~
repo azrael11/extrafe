@@ -1,0 +1,22 @@
+object Emu_Form: TEmu_Form
+  Left = 0
+  Top = 0
+  BorderIcons = []
+  BorderStyle = None
+  Caption = 'Form1'
+  ClientHeight = 685
+  ClientWidth = 1124
+  WindowState = wsMinimized
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object Emu_Stylebook: TStyleBook
+    Styles = <
+      item
+      end>
+    Left = 56
+    Top = 16
+  end
+end

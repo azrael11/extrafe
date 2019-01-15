@@ -1,0 +1,33 @@
+unit main;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Menus;
+
+type
+  TForm2 = class(TForm)
+    MenuBar1: TMenuBar;
+    Menu_File: TMenuItem;
+    Menu_Exit: TMenuItem;
+    procedure Menu_ExitClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+{$R *.fmx}
+
+procedure TForm2.Menu_ExitClick(Sender: TObject);
+begin
+  Close;
+end;
+
+end.

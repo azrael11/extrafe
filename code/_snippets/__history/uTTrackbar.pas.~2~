@@ -1,0 +1,11 @@
+unit uTTrackbar;
+
+interface
+uses
+  System.Classes;
+
+
+
+implementation
+
+end.

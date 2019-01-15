@@ -1,0 +1,44 @@
+unit uMain_Load_Addons;
+
+interface
+uses
+  uWindows,
+  System.Classes,
+  System.SysUtils,
+  BASS;
+
+////////////////////////////////////////////////////////////////////////////////
+///  Addon SoundPlayer
+  procedure uMain_Load_Addons_SoundPlayer;
+
+////////////////////////////////////////////////////////////////////////////////
+///  Addon Weather
+  procedure uMain_Load_Addons_Weather;
+
+////////////////////////////////////////////////////////////////////////////////
+///  No Addon is starting so clear the stage
+  procedure uMain_Load_Addons_Clear;
+
+
+implementation
+uses
+  Main,
+  uSoundplayer_SetAll,
+  uWeather_SetAll;
+
+procedure uMain_Load_Addons_SoundPlayer;
+begin
+   uSoundPlayer_SetComponentsToRightPlace;
+end;
+
+procedure uMain_Load_Addons_Weather;
+begin
+  uWeather_SetComponentsToRightPlace;
+end;
+
+procedure uMain_Load_Addons_Clear;
+begin
+
+end;
+
+end.

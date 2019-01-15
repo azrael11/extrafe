@@ -1,0 +1,42 @@
+unit uMain_Load_Addons;
+
+interface
+uses
+  uWindows,
+  System.Classes,
+  System.SysUtils,
+  FMX.Object;
+
+////////////////////////////////////////////////////////////////////////////////
+///  Addon SoundPlayer
+  procedure uMain_Load_Addons_SoundPlayer(mResolution: TMONITOR_RESOLUTION; mSpl_1,mSpl_2,mSpl_3: Integer);
+
+////////////////////////////////////////////////////////////////////////////////
+///  Addon Weather
+  procedure uMain_Load_Addons_Weather(mResolution: TMONITOR_RESOLUTION; mSpl_1,mSpl_2,mSpl_3: Integer);
+
+implementation
+uses
+  Main,
+  uLoad,
+  uMain_Load,
+  uSoundplayer_gui_actions,
+  uSoundplayer_Player_Actions,
+  uSoundplayer_Playlist_Actions,
+  uSoundplayer_SetAll,
+  uWeather_SetAll,
+  uWeather_Config_Towns;
+
+procedure uMain_Load_Addons_SoundPlayer(mResolution: TMONITOR_RESOLUTION; mSpl_1,mSpl_2,mSpl_3: Integer);
+begin
+   uSoundPlayer_SetComponentsToRightPlace;
+end;
+
+procedure uMain_Load_Addons_Weather(mResolution: TMONITOR_RESOLUTION; mSpl_1,mSpl_2,mSpl_3: Integer);
+begin
+  uWeather_SetComponentsToRightPlace;
+end;
+
+
+
+end.

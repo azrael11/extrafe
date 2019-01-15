@@ -1,0 +1,195 @@
+unit uLoad_Actions;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  IdExplicitTLSClientServerBase,
+  IdSMTP,
+  IdSSLOpenSSL,
+  IdMessage,
+  IdGlobal;
+
+procedure uLoad_Actions_DatabaseInternet_Active;
+
+procedure uLoad_Actions_Login;
+procedure uLoad_Actions_Return_Login(vState: String);
+
+function uLoad_Actions_CheckEMail(vEMail: String): Boolean;
+procedure uLoad_Actions_SendEmail;
+
+
+implementation
+
+uses
+  loading,
+  uWindows,
+  uLoad,
+  uLoad_AllTypes,
+  uLoad_SetAll,
+  uDatabase,
+  uDatabase_SqlCommands,
+  uDatabase_ActiveUser;
+
+procedure uLoad_Actions_DatabaseInternet_Active;
+begin
+  if uWindows_IsConected_ToInternet then
+  begin
+    ex_load.Login.Int_Icon.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'internet_active.png');
+    ex_load.Login.Internet.Text := 'Connected';
+    Loading_Form.Loading_Database_Connect.Connected := True;
+    if uDatabase_Connect then
+
+//    if Loading_Form.Loading_Database_Connect.Connected = True then
+    begin
+      ex_load.Login.Data_Icon.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'server_active.png');
+      ex_load.Login.Database.Text := 'Connected';
+      extrafe.database_is_connected := True;
+    end
+    else
+    begin
+      ex_load.Login.Data_Icon.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'server_inactive.png');
+      ex_load.Login.Database.Text := 'Not Connected';
+      extrafe.database_is_connected := False;
+    end;
+  end
+  else
+  begin
+    ex_load.Login.Int_Icon.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'internet_inactive.png');
+    ex_load.Login.Internet.Text := 'Not Connected';
+    ex_load.Login.Data_Icon.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'server_inactive.png');
+    ex_load.Login.Database.Text := 'Not Connected';
+  end;
+end;
+
+procedure uLoad_Actions_Login;
+begin
+  if uDatabase_Connect then
+
+//  if extrafe.database_is_connected = True then
+  begin
+    if ex_load.Login.User_V.Text <> '' then
+    begin
+      if uDatabase_Is_User_Exists(ex_load.Login.User_V.Text) = True then
+      begin
+        if uDatabase_Is_Password_Correct_For_User(ex_load.Login.User_V.Text, ex_load.Login.Pass_V.Text) = True
+        then
+        begin
+          uDatabase_Active_User_Collect_Info_From_Database;
+          ex_load.Login.Panel_Login_Correct.Start;
+          uLoad_Start_ExtraFE;
+        end
+        else
+        begin
+          ex_load.Login.Warning.Visible := True;
+          ex_load.Login.Warning.Text := 'Wrong Password for ' + ex_load.Login.Pass_V.Text;
+          ex_load.Login.Panel_Login_Error.StartValue := extrafe.res.Half_Width -
+            ((ex_load.Login.Panel.Width / 2) - 10);
+          ex_load.Login.Panel_Login_Error.StopValue := extrafe.res.Half_Width -
+            (ex_load.Login.Panel.Width / 2);
+          ex_load.Login.Panel_Login_Error.Start;
+          ex_load.Login.Forget_Pass.Visible := True;
+        end;
+      end
+      else
+      begin
+        ex_load.Login.Warning.Visible := True;
+        ex_load.Login.Warning.Text := ex_load.Login.User_V.Text + ' doesn''t exist in database!!!';
+        ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
+        ex_load.Login.Panel_Login_Error.StartValue := extrafe.res.Half_Width -
+          ((ex_load.Login.Panel.Width / 2) - 10);
+        ex_load.Login.Panel_Login_Error.StopValue := extrafe.res.Half_Width - (ex_load.Login.Panel.Width / 2);
+        ex_load.Login.Panel_Login_Error.Start;
+      end;
+    end;
+  end;
+end;
+
+procedure uLoad_Actions_Return_Login(vState: String);
+begin
+  if vState= 'FPass' then
+  begin
+    FreeAndNil(ex_load.F_Pass.Panel);
+    uLoad_SetAll_Login;
+    ex_load.Login.Pass_V.Text:= '';
+  end
+  else if vState= 'Register' then
+  begin
+    uLoad_SetAll_Login;
+//    ex_load.Login.User_V.Text:= ex_load.Reg.Main.User_V.Text;
+    FreeAndNil(ex_load.Reg.Panel);
+  end;
+end;
+
+function uLoad_Actions_CheckEMail(vEMail: String): Boolean;
+var
+  vEmailMessage: TIdMessage;
+  vSMPTClient: TIdSMTP;
+  vIOHandlerSSL: TIdSSLIOHandlerSocketOpenSSL;
+begin
+  Result := False;
+  if StrScan(PChar(vEMail), '@') <> nil then
+  begin
+    if StrScan(PChar(vEMail), '.') <> nil then
+    begin
+      vIOHandlerSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Loading_Form);
+      vSMPTClient := TIdSMTP.Create(Loading_Form);
+      vEmailMessage := TIdMessage.Create(Loading_Form);
+      // Set the ssl io
+      with vIOHandlerSSL do
+      begin
+        Destination := 'smtp-mail.outlook.com:587';
+        Host := 'smtp-mail.outlook.com';
+        MaxLineAction := maException;
+        Port := 587;
+        SSLOptions.Method := sslvTLSv1;
+        SSLOptions.Mode := sslmUnassigned;
+        SSLOptions.VerifyMode := [];
+        SSLOptions.VerifyDepth := 0;
+      end;
+      // Set the smtp
+      with vSMPTClient do
+      begin
+        Host := 'smtp-mail.outlook.com';
+        Port := 587;
+        Username := 'spoooky11@hotmail.gr';
+        Password := '11spoooky';
+        IOHandler := vIOHandlerSSL;
+        AuthType := satDefault;
+        UseTLS := utUseExplicitTLS;
+      end;
+      // Set the message
+      vEmailMessage.Clear;
+      with vEmailMessage.Recipients.Add do
+      begin
+        Name := 'Tr';
+        Address := vEMail;
+      end;
+      vEmailMessage.From.Name := 'Nikos Kordas';
+      vEmailMessage.From.Address := 'spoooky11@hotmail.gr';
+      vEmailMessage.Subject := 'Forgat your password';
+      vEmailMessage.Body.Add('Your password is 11azrael');
+      vEmailMessage.Priority := mpHigh;
+      try
+        vSMPTClient.Connect;
+        vSMPTClient.Send(vEmailMessage);
+        Result := True;
+        vSMPTClient.Disconnect;
+      finally
+        vEmailMessage.Free;
+      end;
+      Result:= True
+    end
+  end;
+end;
+
+procedure uLoad_Actions_SendEmail;
+begin
+  if uLoad_Actions_CheckEMail(ex_load.F_Pass.Main.Email_V.Text) then
+    uLoad_Actions_Return_Login('FPass')
+  else
+    ex_load.F_Pass.Main.Warning.Visible:= True;
+end;
+
+end.

@@ -1,0 +1,11 @@
+unit uThemes_Resolutions;
+
+interface
+uses
+  System.Classes;
+
+implementation
+uses
+  main;
+
+end.

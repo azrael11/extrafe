@@ -1,0 +1,318 @@
+unit uSoundplayer_GetTag;
+
+interface
+
+uses
+  Classes,
+  System.SysUtils,
+  FMX.Graphics,
+  FMX.Objects,
+  ID3v1Library,
+  ID3v2Library,
+  uSoundplayer_Playlist_Actions,
+  uWindows,
+  BASS;
+
+procedure uSoundPlayer_GetTag_Details(mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
+
+// Get tags bases of types
+procedure GetTags_MP3(mSongPath, mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
+procedure GetTags_OGG(mSongPath, mSongName: string);
+procedure GetTags_MP4(mSongPath, mSongName: string);
+procedure GetTags_FLAC(mSongPath, mSongName: string);
+procedure GetTags_APE(mSongPath, mSongName: string);
+procedure GetTags_WAV(mSongPath, mSongName: string);
+procedure GetTags_WMA(mSongPath, mSongName: string);
+
+// Get the cover image
+procedure GetTags_GetCover_Image(mSong: string);
+function GetTags_LoadAPic(mNum: Integer): Boolean;
+
+var
+  vCurrentAPICIndex: Integer = -1;
+  A_SP_Cover: TImage;
+
+implementation
+
+uses
+  main,
+  uload,
+  uLoad_AllTypes,
+  uSoundplayer_AllTypes,
+  uSoundplayer_SetAll,
+  uSoundplayer_Player_Actions;
+
+// Get Tags
+procedure GetTags_MP3(mSongPath, mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
+var
+  myTag: TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG;
+begin
+  addons.soundplayer.Player.Tag.mp3.ID3v1 := TID3v1Tag.Create;
+  addons.soundplayer.Player.Tag.mp3.ID3v2 := TID3v2Tag.Create;
+
+  // Get Id3v1 First
+  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v1.LoadFromFile
+    (mSongPath + mSongName);
+  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V1LIBRARY_SUCCESS then
+  begin
+
+  end;
+
+  // Get Id3v2 Second
+  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v2.LoadFromFile
+    (mSongPath + mSongName);
+  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V2LIBRARY_SUCCESS then
+  begin
+
+  end
+  else
+  begin
+    addons.soundplayer.Player.Tag.mp3.ID3v2.Unsynchronised := True;
+    addons.soundplayer.Player.Tag.mp3.ID3v2.RemoveUnsynchronisationOnAllFrames;
+    addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader := True;
+    addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader3.CRCPresent := True;
+    addons.soundplayer.Player.Tag.mp3.ID3v2.Loaded := True;
+  end;
+
+  SetLength(addons.soundplayer.Playlist.List.Song_Info, mSongNum + 1);
+
+  myTag.Title := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
+  myTag.Artist := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
+  myTag.Album:= addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TALB');
+  myTag.Year := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TYER');
+  myTag.Track:= addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TRCK');
+  myTag.Genre:=  addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TCON');
+
+  // Title
+  if TrimLeft(myTag.Title) <> '' then
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title :=
+      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2')
+  else
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title :=
+      addons.soundplayer.Player.Tag.mp3.ID3v1.Title;
+
+  // Artist
+  if TrimLeft(myTag.Artist) <> '' then
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist :=
+      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1')
+  else
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist :=
+      addons.soundplayer.Player.Tag.mp3.ID3v1.Artist;
+
+  // Album
+  if TrimLeft(myTag.Album) <> '' then
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Album :=
+      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TALB')
+  else
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Album :=
+      addons.soundplayer.Player.Tag.mp3.ID3v1.Album;
+
+  // Year
+  if TrimLeft(myTag.Year) <> '' then
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Year :=
+      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TYER')
+  else
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Year := addons.soundplayer.Player.Tag.mp3.ID3v1.Year;
+
+  // Track
+  if TrimLeft(myTag.Track) <> '' then
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Track :=
+      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TRCK')
+  else
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Track :=
+      addons.soundplayer.Player.Tag.mp3.ID3v1.Track.ToString;
+
+  // Genre
+  if TrimLeft(myTag.Genre) <> '' then
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre :=
+      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TCON')
+  else
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre :=
+      addons.soundplayer.Player.Tag.mp3.ID3v1.Genre;
+
+  addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
+  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
+
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Track_Seconds := mSongTime;
+end;
+
+procedure GetTags_OGG(mSongPath, mSongName: string);
+begin
+
+end;
+
+procedure GetTags_MP4(mSongPath, mSongName: string);
+begin
+
+end;
+
+procedure GetTags_FLAC(mSongPath, mSongName: string);
+begin
+
+end;
+
+procedure GetTags_APE(mSongPath, mSongName: string);
+begin
+
+end;
+
+procedure GetTags_WAV(mSongPath, mSongName: string);
+begin
+
+end;
+
+procedure GetTags_WMA(mSongPath, mSongName: string);
+begin
+
+end;
+
+procedure uSoundPlayer_GetTag_Details(mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
+var
+  vSongPath: string;
+  vSongName: string;
+  vSongExt: string;
+begin
+  vSongPath := ExtractFilePath(mSongName);
+  vSongName := ExtractFileName(mSongName);
+  vSongExt := ExtractFileExt(mSongName);
+  vSongExt := UpperCase(vSongExt);
+  if vSongExt = '.MP3' then
+    GetTags_MP3(vSongPath, vSongName, mPlaylistNum, mSongNum, mSongTime)
+  else if vSongExt = '.APE' then
+    GetTags_APE(vSongPath, vSongName)
+  else if vSongExt = '.FLAC' then
+    GetTags_FLAC(vSongPath, vSongName)
+  else if vSongExt = '.MP4' then
+    GetTags_MP4(vSongPath, vSongName)
+  else if vSongExt = '.OGG' then
+    GetTags_OGG(vSongPath, vSongName)
+  else if vSongExt = '.WAV' then
+    GetTags_WAV(vSongPath, vSongName)
+  else if vSongExt = '.WMA' then
+    GetTags_WMA(vSongPath, vSongName);
+end;
+
+/// /////////////////////////////////////////////////////////////////////////////
+/// Get the cover image
+procedure GetTags_GetCover_Image(mSong: string);
+var
+  vTagError: Integer;
+begin
+  vMP3_Tag := TID3v2Tag.Create;
+
+  vTagError := vMP3_Tag.LoadFromFile(mSong);
+  if vTagError <> ID3V2LIBRARY_SUCCESS then
+    // Show an error message
+    if vTagError <> ID3V2LIBRARY_SUCCESS then
+      // Get major and minor version num of mp3
+
+      vMP3_Tag.Unsynchronised := True;
+  vMP3_Tag.RemoveUnsynchronisationOnAllFrames;
+  vMP3_Tag.ExtendedHeader := True;
+  vMP3_Tag.ExtendedHeader3.CRCPresent := True;
+
+  vMP3_Tag.Loaded := True;
+
+  GetTags_LoadAPic(0);
+  vMP3_Tag.Free;
+end;
+
+function GetTags_LoadAPic(mNum: Integer): Boolean;
+var
+  PictureType: Integer;
+  PictureStream: TStream;
+  Success: Boolean;
+  MIMEType: String;
+  Description: String;
+  i: Integer;
+begin
+  Result := False;
+  try
+    PictureStream := TMemoryStream.Create;
+    try
+    {  if mNum = 0 then
+      begin
+        mNum := vMP3_Tag.FrameExists('APIC');
+      end;
+      if mNum < 0 then
+      begin
+        vSoundplayer.info.Cover.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_nocover.png');
+        Exit;
+      end;}
+      PictureType := $03;
+      Success := vMP3_Tag.GetUnicodeCoverPictureStream(vMP3_Tag.FrameExists('APIC'), PictureStream, MIMEType, Description,
+        PictureType);
+      // * No APIC picture found, exit
+      if (PictureStream.Size = 0) OR (NOT Success) then
+      begin
+        vSoundplayer.info.Cover.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_nocover.png');
+        Exit;
+      end;
+
+      // * Get first APIC index
+      if mNum = 0 then
+      begin
+        for i := 0 to vMP3_Tag.FrameCount - 1 do
+        begin
+          if IsSameFrameID(vMP3_Tag.Frames[i].ID, 'APIC') then
+          begin
+            vCurrentAPICIndex := i;
+            Break;
+          end;
+        end;
+        // * Store the current APIC index as Index is frame index
+      end
+      else
+      begin
+        vCurrentAPICIndex := mNum;
+      end;
+
+      // * Display description
+      // Edit21.Text := Description;
+      // * Display type
+      // Label24.Text := APICType2Str(PictureType);
+      // * Do what you want with PictureStream here
+      // * We load the APIC picture into a TImageControl
+      // * If JPG
+      {
+        if (MIMEType = 'image/jpeg')
+        OR (MIMEType = 'image/jpg')
+        then begin
+      }
+      {
+        PictureStream.Seek(0, soFromBeginning);
+        TempBitmap := TBitmap.Create(0, 0);
+        Filter := DefaultBitmapCodecClass.Create;
+        try
+        Filter.LoadFromStream(PictureStream, TempBitmap);
+        ImageControl1.Bitmap.Assign(TempBitmap);
+        finally
+        Filter.Free;
+        TempBitmap.Free;
+        end;
+      }
+
+  {    vSoundplayer.info.Cover.Bitmap.LoadFromStream(PictureStream);
+      // A_SP_Cover.Bitmap.LoadFromStream(PictureStream);
+
+      { end; }
+
+      // * The APIC stream format can be decided from MIMEType for example:
+      // * If BMP
+      {
+        if MIMEType = 'image/bmp' then begin
+        PictureStream.Seek(0, soFromBeginning);
+        ImageControl1.Bitmap.LoadFromStream(PictureStream);
+        end;
+      }
+      // * To load other formats a third party component is needed, for example GraphicEx or Free Image Library (for Windows)
+ {     Result := True;
+    finally
+      PictureStream.Free;
+    end;
+  except
+    // *
+  end;}
+end;
+
+end.

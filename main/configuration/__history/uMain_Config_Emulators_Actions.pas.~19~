@@ -1,0 +1,24 @@
+unit uMain_Config_Emulators_Actions;
+
+interface
+uses
+  System.Classes;
+
+  procedure uMain_Config_Emulators_Actions_OpenDialogToInstall_FromComputer(vEmulator: String);
+
+implementation
+uses
+  uLoad_AllTypes,
+  uMain_SetAll,
+  uMain_AllTypes;
+
+procedure uMain_Config_Emulators_Actions_OpenDialogToInstall_FromComputer(vEmulator: String);
+begin
+  if vEmulator= 'mame' then
+    mainScene.Config.Main.R.Emulators.Dialog.Filter:= 'Mame64|mame64.exe|Mame32|mame.exe|Mame64, Mame32|mame64.exe; mame.exe';
+
+  mainScene.Config.Main.R.Emulators.Emu_Installed:= vEmulator;
+  mainScene.Config.Main.R.Emulators.Dialog.Execute;
+end;
+
+end.

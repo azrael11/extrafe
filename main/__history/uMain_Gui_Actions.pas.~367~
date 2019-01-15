@@ -1,0 +1,414 @@
+unit uMain_Gui_Actions;
+
+interface
+uses
+  System.Classes,
+  System.UITypes,
+  FMX.Ani,
+  FMX.Forms,
+  FMX.Objects,
+  FMX.StdCtrls,
+  FMX.ListBox,
+  FMX.Dialogs,
+  FMX.Edit,
+  Winapi.Windows;
+
+  type TMAIN_IMAGE= class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+  //Image
+  procedure uMain_Image_OnMouseEnter(Sender: TObject);
+  procedure uMain_Image_OnMouseLeave(Sender: TObject);
+  procedure uMain_Image_OnMouseClick(Sender: TObject);
+  //Text
+  procedure uMain_Gui_Text_onMouseClick(Sender: TObject);
+  //Edit
+  procedure uMain_Gui_Edit_onChange(Sender: TObject);
+  procedure uMain_Gui_Edit_onTyping(Sender: TObject);
+  //Button
+  procedure uMain_Gui_Button_onMouseClick(Sender: TObject);
+  procedure uMain_Gui_Button_onKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+  procedure uMain_Gui_Button_onMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+  //Combobox
+  procedure uMain_Gui_Combobox_onChange(Sender: TObject);
+  //Speedbutton
+  procedure uMain_Gui_Speedbutton_OnClick(Sender: TObject);
+  //FileDialog
+  procedure uMain_Gui_FileDialog_OnClose(Sender: TObject);
+  //Animation
+  procedure uMain_Gui_Animation_OnFinish(Sender: TObject);
+  //Checkbox
+  procedure uMain_Gui_Checkbox_OnChange(Sender: TObject);
+
+
+  var
+    vMain_Image: TMAIN_IMAGE;
+
+implementation
+uses
+  main,
+  uLoad,
+  uWindows,
+  uMain_Load,
+  uMain_Actions,
+  uMain_Configuration,
+  uMain_Config_Addons,
+  uMain_Config_Profile,
+  uMain_Config_Emulators,
+  uMain_Config_Themes,
+  uMain_Config_Info,
+  uWeather_Actions,
+  uSoundPlayer_Actions;
+
+//Image
+procedure uMain_Image_OnMouseEnter(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Header_Addon_Icon_1' then
+    begin
+      if Main_Form.Header_Blur.Enabled= False then
+        if Main_Form.Addon_Icon_1_Blur.Enabled= False then
+          Main_Form.Addon_Icon_1_Glow.Enabled:= True
+    end
+  else if TImage(Sender).Name= 'Header_Addon_Icon_2' then
+    begin
+      if Main_Form.Header_Blur.Enabled= False then
+        if Main_Form.Addon_Icon_2_Blur.Enabled= False then
+          Main_Form.Addon_Icon_2_Glow.Enabled:= True
+    end
+  else if TImage(Sender).Name= 'Header_Exit' then
+    begin
+      if Main_Form.Header_Blur.Enabled= False then
+        Main_Form.Header_Exit_Glow.Enabled:= True
+    end
+  else if TImage(Sender).Name= 'Footer_Settings' then
+    Main_Form.Setings_GlowEffect.Enabled:= True
+  else if TImage(Sender).Name= 'Emulators_Arcade' then
+    begin
+      if Main_Form.Emulators_Arcade_Box.Visible= False then
+        Main_Form.Emulators_Arcade_InnerGlow.Enabled:= True
+      else
+        Main_Form.Emulators_Arcade_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Computers' then
+    begin
+      if Main_Form.Emulators_Computers_Box.Visible= False then
+        Main_Form.Emulators_Computers_InnerGlow.Enabled:= True
+      else
+        Main_Form.Emulators_Computers_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Consoles' then
+    begin
+      if Main_Form.Emulators_Consoles_Box.Visible= False then
+        Main_Form.Emulators_Consoles_InnerGlow.Enabled:= True
+      else
+        Main_Form.Emulators_Consoles_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Handhelds' then
+    begin
+      if Main_Form.Emulators_Handhelds_Box.Visible= False then
+        Main_Form.Emulators_Handhelds_InnerGlow.Enabled:= True
+      else
+        Main_Form.Emulators_Handhelds_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Pinball' then
+    begin
+      if Main_Form.Emulators_Pinball_Box.Visible= False then
+        Main_Form.Emulators_Pinball_InnerGlow.Enabled:= True
+      else
+        Main_Form.Emulators_Pinball_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Info_Emulators_Mame' then
+    Main_Form.Info_Emulators_Mame_Glow.Enabled:= True
+  else if TImage(Sender).Name = 'Addons_Addon_Weather' then
+    begin
+      Main_Form.Addons_Addon_Weather_Glow_NotChecked.Enabled:= True;
+    end
+  else if TImage(Sender).Name = 'Addons_Addon_SoundPlayer' then
+    begin
+      Main_Form.Addons_Addon_SoundPlayer_Glow_NotChecked.Enabled:= True;
+    end;
+
+end;
+
+procedure uMain_Image_OnMouseLeave(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Header_Addon_Icon_1' then
+    Main_Form.Addon_Icon_1_Glow.Enabled:= False
+  else if TImage(Sender).Name= 'Header_Addon_Icon_2' then
+    Main_Form.Addon_Icon_2_Glow.Enabled:= False
+  else if TImage(Sender).Name= 'Header_Exit' then
+    Main_Form.Header_Exit_Glow.Enabled:= False
+  else if TImage(Sender).Name= 'Footer_Settings' then
+    Main_Form.Setings_GlowEffect.Enabled:= False
+  else if TImage(Sender).Name= 'Emulators_Arcade' then
+    begin
+      if Main_Form.Emulators_Arcade_Box.Visible= False then
+        Main_Form.Emulators_Arcade_InnerGlow.Enabled:= False
+      else
+        Main_Form.Emulators_Arcade_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Computers' then
+    begin
+      if Main_Form.Emulators_Computers_Box.Visible= False then
+        Main_Form.Emulators_Computers_InnerGlow.Enabled:= False
+      else
+        Main_Form.Emulators_Computers_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Consoles' then
+    begin
+      if Main_Form.Emulators_Consoles_Box.Visible= False then
+        Main_Form.Emulators_Consoles_InnerGlow.Enabled:= False
+      else
+        Main_Form.Emulators_Consoles_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Handhelds' then
+    begin
+      if Main_Form.Emulators_Handhelds_Box.Visible= False then
+        Main_Form.Emulators_Handhelds_InnerGlow.Enabled:= False
+      else
+        Main_Form.Emulators_Handhelds_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Emulators_Pinball' then
+    begin
+      if Main_Form.Emulators_Pinball_Box.Visible= False then
+        Main_Form.Emulators_Pinball_InnerGlow.Enabled:= False
+      else
+        Main_Form.Emulators_Pinball_Glow.Enabled:= True;
+    end
+  else if TImage(Sender).Name= 'Info_Emulators_Mame' then
+    Main_Form.Info_Emulators_Mame_Glow.Enabled:= False
+  else if TImage(Sender).Name = 'Addons_Addon_Weather'  then
+    begin
+      Main_Form.Addons_Addon_Weather_Glow_NotChecked.Enabled:= False;
+    end
+  else if TImage(Sender).Name = 'Addons_Addon_SoundPlayer' then
+    begin
+      Main_Form.Addons_Addon_SoundPlayer_Glow_NotChecked.Enabled:= False;
+    end;
+end;
+
+procedure uMain_Image_OnMouseClick(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Header_Addon_Icon_1' then
+    uMain_Actions_ShowHide_Addons(TImage(Sender).Tag)
+  else if TImage(Sender).Name= 'Header_Addon_Icon_2' then
+    uMain_Actions_ShowHide_Addons(TImage(Sender).Tag)
+  else if TImage(Sender).Name= 'Header_Exit' then
+    begin
+      if Main_Form.Header_Blur.Enabled= False then
+        begin
+          UnHookWindowsHookEx(KBHook);
+          Application.Terminate;
+        end;
+    end
+  else if TImage(Sender).Name= 'Footer_Settings' then
+      uMain_Actions_ShowHide_MainSettings
+  else if TImage(Sender).Name= 'Emulators_Arcade' then
+    uEmulators_Show_Emulation_Panel(TImage(Sender).TagString)
+  else if TImage(Sender).Name= 'Emulators_Computers' then
+    uEmulators_Show_Emulation_Panel(TImage(Sender).TagString)
+  else if TImage(Sender).Name= 'Emulators_Consoles' then
+    uEmulators_Show_Emulation_Panel(TImage(Sender).TagString)
+  else if TImage(Sender).Name= 'Emulators_Handhelds' then
+    uEmulators_Show_Emulation_Panel(TImage(Sender).TagString)
+  else if TImage(Sender).Name= 'Emulators_Pinball' then
+    uEmulators_Show_Emulation_Panel(TImage(Sender).TagString)
+  else if TImage(Sender).Name= 'Emulators_PcGames' then
+    uEmulators_Show_Emulation_Panel(Timage(Sender).TagString)
+  else if TImage(Sender).Name= 'Info_Emulators_Mame' then
+    Config_Info_Emulator_Mame_ShowHistory
+  else if TImage(Sender).Name= 'Addons_Addon_Weather' then
+    uConfig_Addons_TriggerInfoPanel('Weather')
+  else if TImage(Sender).Name= 'Addons_Addon_SoundPlayer' then
+    uConfig_Addons_TriggerInfoPanel('SoundPlayer');
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Text
+procedure uMain_Gui_Text_onMouseClick(Sender: TObject);
+begin
+  if TText(Sender).Name= 'Profile_ChangePassword' then
+    Config_Profile_ChangePassword_Panel(True,False)
+  else if TText(Sender).Name= 'Profile_ChangeAvatar' then
+    Config_Profile_Avatar_Panel(True, False);
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Edit
+procedure uMain_Gui_Edit_onChange(Sender: TObject);
+begin
+//
+end;
+
+procedure uMain_Gui_Edit_onTyping(Sender: TObject);
+begin
+  if TEdit(Sender).Name= 'Password_Panel_CurrentPassword' then
+    Config_Profile_Password_Remove_Warnings(True, False)
+  else if TEdit(Sender).Name= 'Password_Panel_NewPassword' then
+    Config_Profile_Password_Remove_Warnings(False, True)
+  else if TEdit(Sender).Name= 'Password_Panel_RetypeNewPassword' then
+    Config_Profile_Password_Remove_Warnings(False, True);
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+//Button
+procedure uMain_Gui_Button_onMouseClick(Sender: TObject);
+begin
+  if TButton(Sender).Name= 'Password_Panel_Cancel' then
+    Config_Profile_ChangePassword_Panel(False,False)
+  else if TButton(Sender).Name= 'Password_Panel_ChangePassword' then
+    Config_Profile_ChangePassword_Panel(False,True)
+  else if TButton(Sender).Name= 'Avatar_Panel_Cancel' then
+    Config_Profile_Avatar_Panel(False, False)
+  else if TButton(Sender).Name= 'Avatar_Panel_Change' then
+    Config_Profile_Avatar_Panel(False, True)
+  else if TButton(Sender).Name= 'Main_Config_Profile' then
+    uMConfig_SelectPanel(1)
+  else if TButton(Sender).Name= 'Main_Config_General' then
+    uMConfig_SelectPanel(2)
+  else if TButton(Sender).Name= 'Main_Config_Emulators' then
+    uMConfig_SelectPanel(3)
+  else if TButton(Sender).Name= 'Main_Config_PcGames' then
+    uMConfig_SelectPanel(4)
+  else if TButton(Sender).Name= 'Main_Config_Addons' then
+    uMConfig_SelectPanel(5)
+  else if TButton(Sender).Name= 'Main_Config_Themes' then
+    uMConfig_SelectPanel(6)
+  else if TButton(Sender).Name= 'Main_Config_Info' then
+    uMConfig_SelectPanel(7)
+  else if TButton(Sender).Name= 'Themes_Apply_NewTheme' then
+    uMain_Config_Themes_ApplyTheme(Main_Form.Themes_Change_Theme.Items.Strings[Main_Form.Themes_Change_Theme.ItemIndex])
+  else if TButton(Sender).Name= 'Addons_Action' then
+    uConfig_Addons_ActivateAddon;
+end;
+
+procedure uMain_Gui_Button_onKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+//
+end;
+
+procedure uMain_Gui_Button_onMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+begin
+//
+end;
+////////////////////////////////////////////////////////////////////////////////
+//Combobox
+procedure uMain_Gui_Combobox_onChange(Sender: TObject);
+begin
+
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+///Speedbutton
+procedure uMain_Gui_Speedbutton_OnClick(Sender: TObject);
+begin
+  if TSpeedButton(Sender).Name= 'Emulators_Arcade_Mame_Search' then
+    uEmulators_OpenDialog('Mame')
+  else if TSpeedButton(Sender).Name= 'Info_ExtraFE_Next_Stable'then
+    Config_Info_Next_Stable
+  else if TSpeedButton(Sender).Name= 'Info_ExtraFE_Next_Build' then
+    Config_Info_Next_Build
+  else if TSpeedButton(Sender).Name= 'Info_ExtraFE_Previous_Stable' then
+    Config_Info_Previous_Stable
+  else if TSpeedButton(Sender).Name= 'Info_ExtraFE_Previous_Build' then
+    Config_Info_Previous_Build
+  else if TSpeedButton(Sender).Name= 'Avatar_Panel_NextPage' then
+    Config_Profile_Avatar_ChangePage(True)
+  else if TSpeedButton(Sender).Name= 'Avatar_Panel_PreviusPage' then
+    Config_Profile_Avatar_ChangePage(False);
+
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+///FileDialog
+procedure uMain_Gui_FileDialog_OnClose(Sender: TObject);
+begin
+  if TOpenDialog(Sender).Name= 'Emulators_OpenDialog' then
+    begin
+      if TOpenDialog(Sender).TagString= 'mame' then
+        uEmulators_Aracade_Install_Mame;
+    end;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+///Animation
+procedure uMain_Gui_Animation_OnFinish(Sender: TObject);
+var
+  vAnim: TFloatAnimation;
+begin
+  TFloatAnimation(Sender).Enabled:= False;
+  if TFloatAnimation(Sender).Name= 'Selection_Animation' then
+    begin
+      vAnim:= TFloatAnimation(Sender);
+      if vAnim.Enabled= False then
+        begin
+          if main_settings.show_addon= False then
+            begin
+              if main_settings.active_addon= 'weather' then
+                begin
+                  uWeather_Actions_Free;
+                  Main_Form.M_A_Weather.Position.X:= -2000;
+                end
+              else if main_settings.active_addon= 'soundplayer' then
+                begin
+                  uSoundPlayer_Actions_Free;
+                  Main_Form.M_A_SoundPlayer.Position.X:= -2000;
+                end;
+              main_settings.active_addon:= '';
+            end
+          else
+            begin
+              if main_settings.active_addon= 'weather' then
+                begin
+                  uWeather_Actions_Load;
+                end
+              else if main_settings.active_addon= 'soundplayer' then
+                begin
+                  uSoundPlayer_Actions_Load;
+                end;
+            end;
+        end;
+
+    end;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+///Checkbox
+procedure uMain_Gui_Checkbox_OnChange(Sender: TObject);
+begin
+  if TCheckBox(Sender).Name= 'Emulators_ShowHeader' then
+    uEmulators_ShowHeader;
+end;
+
+{ TMAIN_IMAGE }
+
+procedure TMAIN_IMAGE.OnMouseClick(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Footer_Settings' then
+    uMain_Actions_ShowHide_MainSettings
+end;
+
+procedure TMAIN_IMAGE.OnMouseEnter(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Footer_Settings' then
+    Main_Form.Setings_GlowEffect.Enabled:= True;
+end;
+
+procedure TMAIN_IMAGE.OnMouseLeave(Sender: TObject);
+begin
+  if TImage(Sender).Name= 'Footer_Settings' then
+    Main_Form.Setings_GlowEffect.Enabled:= False;
+end;
+
+initialization
+
+vMain_Image:= TMAIN_IMAGE.Create;
+
+finalization
+
+vMain_Image.Free;
+
+end.

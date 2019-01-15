@@ -1,0 +1,110 @@
+unit uEmu_Arcade_Mame_Create_Emu_Scene;
+
+interface
+uses
+  System.Classes;
+
+  procedure uEmu_Arcade_Mame_SetAll;
+  procedure uEmu_Arcade_Mame_ShowConfigutation;
+
+implementation
+uses
+  emu,
+  uLoad,
+  uEmu_Arcade_Mame,
+  uEmu_Arcade_Mame_SetAll,
+  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_Config,
+  uEmu_Arcade_Mame_Support_Files,
+  uEmu_Arcade_Mame_Config_Directories,
+  uEmu_Arcade_Mame_Config_Display,
+  uEmu_Arcade_Mame_Config_Advanced,
+  uEmu_Arcade_Mame_Config_Screen,
+  uEmu_Arcade_Mame_Config_OpenGL_BGFX,
+  uEmu_Arcade_Mame_Config_OpenGLShaders,
+  uEmu_Arcade_Mame_Config_Vector,
+  uEmu_Arcade_Mame_Config_Sound,
+  uEmu_Arcade_Mame_Config_Controllers,
+  uEmu_Arcade_Mame_Config_Controller_Mapping,
+  uEmu_Arcade_Mame_Config_Miscellaneous,
+  uEmu_Arcade_Mame_Config_MiscellaneousII,
+  uEmu_Arcade_Mame_Config_Snap_Movie_Playback;
+
+Procedure uEmu_Arcade_Mame_SetAll;
+begin
+//TODO 1 -oNikos Kordas -cuEmu_Arcade_Mame: Set the emu scene for mame
+  Emulation.Show_Settings:= False;
+  uEmu_Arcade_Mame_Load;
+  uEmu_Arcade_Mame_Support_Files_NPlayers_Load;
+  uEmu_Arcade_Mame_Support_Files_Catver_Load;
+  uEmu_Arcade_Mame_SetAll_Set;
+  uEmu_Arcade_Mame_Display_Main;
+  //Config buttons
+  uEmu_Arcade_Mame_Config_Create_Buttons;
+  //Config Actions
+  uEmu_Arcade_Mame_Config_Create_Actions_Panel;
+  uEmu_Arcade_Mame_Config_Create_Directories_Panel;
+  uEmu_Arcade_Mame_Config_Create_Display_Panel;
+  uEmu_Arcade_Mame_Config_Create_Advanced_Panel;
+  uEmu_Arcade_Mame_Config_Create_Screen_Panel;
+  uEmu_Arcade_Mame_Config_Create_OpenGL_BGFX_Panel;
+  uEmu_Arcade_Mame_Config_Create_OpenGL_Shaders_Panel;
+  uEmu_Arcade_Mame_Config_Create_Vector_Panel;
+  uEmu_Arcade_Mame_Config_Create_Sound_Panel;
+  uEmu_Arcade_Mame_Config_Create_Controllers_Panel;
+  uEmu_Arcade_Mame_Config_Create_ControllerMapping_Panel;
+  uEmu_Arcade_Mame_Config_Create_Miscellaneous_Panel;
+  uEmu_Arcade_Mame_Config_Create_MiscellaneousII_Panel;
+  uEmu_Arcade_Mame_Config_Create_Snap_Movie_Playback_Panel;
+  //Create Main Scene
+  //Create Key Events
+end;
+
+procedure uEmu_Arcade_Mame_ShowConfigutation;
+begin
+  if Emulation.Show_Settings= False then
+    begin
+      Emu_Form.Emu_Main_Left_Anim.StartValue:= 0;
+      Emu_Form.Emu_Main_Left_Anim.StopValue:= -460;
+
+      Emu_Form.Emu_Main_Right_Anim.StartValue:= 960;
+      Emu_Form.Emu_Main_Right_Anim.StopValue:= 1460;
+
+      Emu_Form.Emu_Main_Left_Anim.Enabled:= True;
+      Emu_Form.Emu_Main_Right_Anim.Enabled:= True;
+
+      mameScene.Blur_Left.Enabled:= True;
+      mameScene.Blur_Right.Enabled:= True;
+
+      if mame.Main.SnapCategory= 'Video Snaps' then
+        if mameSnap.Video.IsPlay then
+          mameSnap.Video.Pause;
+
+      Emulation.Show_Settings:= True;
+    end
+  else
+    begin
+      Emu_Form.Emu_Main_Left_Anim.StartValue:= -460;
+      Emu_Form.Emu_Main_Left_Anim.StopValue:= 0;
+
+      Emu_Form.Emu_Main_Right_Anim.StartValue:= 1460;
+      Emu_Form.Emu_Main_Right_Anim.StopValue:= 960;
+
+      Emu_Form.Emu_Main_Left_Anim.Enabled:= True;
+      Emu_Form.Emu_Main_Right_Anim.Enabled:= True;
+
+      uEmu_Arcade_Mame_Ini_Save;
+      uEmu_Arcade_Mame_Ini_SaveMediaPaths;
+
+      mameScene.Blur_Left.Enabled:= False;
+      mameScene.Blur_Right.Enabled:= False;
+
+      if mame.Main.SnapCategory= 'Video Snaps' then
+        if mameSnap.Video.IsPause then
+          mameSnap.Video.Resume;
+
+      Emulation.Show_Settings:= False;
+    end;
+end;
+
+end.

@@ -1,0 +1,55 @@
+unit uActive_User;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils;
+
+  procedure uActive_User_Collect_Info_From_Database;
+
+implementation
+uses
+  loading,
+  uLoad,
+  main;
+
+procedure uActive_User_Collect_Info_From_Database;
+var
+  vUser_Name: WideString;
+  VUser_Surname: WideString;
+  vUser_Email: WideString;
+  VUser_Last_Date_Visit: TDate;
+  vUser_Last_Time_Visit: TTime;
+  vUser_Country: WideString;
+  vUser_Country_Code: WideString;
+  vUser_Genre: WideString;
+  vUser_Last_Game_Play: WideString;
+  vUser_Last_Emulator: WideString;
+  vUser_Total_Time_Play: TTime;
+begin
+  vUser_Name:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT NAME FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.Name:= vUser_Name;
+  VUser_Surname:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT SURNAME FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.Surname:= VUser_Surname;
+  vUser_Email:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT SURNAME FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.Surname:= VUser_Surname;
+
+  VUser_Last_Date_Visit:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT LAST_DATE_VISIT FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.LastDate_Visit:= VUser_Last_Date_Visit;
+  vUser_Last_Time_Visit:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT LAST_TIME_VISIT FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.LastTime_Visit:= vUser_Last_Time_Visit;
+  vUser_Country:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT COUNTRY FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.Country:= vUser_Country;
+  vUser_Country_Code:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT COUNTRY_CODE FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.Country_Code:= vUser_Country_Code;
+  vUser_Genre:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT GENRE FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.Genre:= vUser_Genre;
+  vUser_Last_Game_Play:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT LAST_GAME_PLAY FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.LastGame_Play:= vUser_Last_Game_Play;
+  vUser_Last_Emulator:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT LAST_EMULATOR FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.LastEmulator:= vUser_Last_Emulator;
+  vUser_Total_Time_Play:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT TOTAL_PLAY_TIME FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  user.TotalTime_Play:= vUser_Total_Time_Play;
+end;
+
+end.

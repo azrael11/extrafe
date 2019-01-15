@@ -1,0 +1,222 @@
+unit uEmu_Arcade_Mame_Config_OpenGL_BGFX;
+
+interface
+uses
+  System.Classes,
+  System.UITypes,
+  System.SysUtils,
+  FMX.Forms,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Edit,
+  FMX.Listbox,
+  FMX.Objects,
+  FMX.Dialogs;
+
+  procedure uEmu_Arcade_Mame_Config_Create_OpenGL_BGFX_Panel;
+
+  procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_CheckboxClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_ButtonClick(vName: String);
+  procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_ComboboxOnChange(vName: String);
+  procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_OpenDialogOnClose;
+
+
+implementation
+uses
+  uTText,
+  uWindows,
+  uEmu_Arcade_Mame_Config,
+  uEmu_Arcade_Mame_SetAll,
+  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Config_Mouse;
+
+procedure uEmu_Arcade_Mame_Config_Create_OpenGL_BGFX_Panel;
+begin
+  vMame.Config.OGL_BGFX.OpenDialog:= TOpenDialog.Create(vMame.Scene.Config.Right_Panels[4]);
+  vMame.Config.OGL_BGFX.OpenDialog.Name:= 'Mame_OpenGL_Chains_OpenDialog';
+  vMame.Config.OGL_BGFX.OpenDialog.Filter:= 'Chains (*.json)|*.json';
+  vMame.Config.OGL_BGFX.OpenDialog.OnClose:= vMame_Config_Mouse.OpenDialog.OnClose;
+
+  vMame.Config.OGL_BGFX.Labels[0]:= TLabel.Create(vMame.Scene.Config.Right_Panels[4]);
+  vMame.Config.OGL_BGFX.Labels[0].Name:= 'Mame_OpenGL_InfoLabel_1';
+  vMame.Config.OGL_BGFX.Labels[0].Parent:= vMame.Scene.Config.Right_Panels[4];
+  vMame.Config.OGL_BGFX.Labels[0].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.OGL_BGFX.Labels[0].Text:= 'Global Options';
+  vMame.Config.OGL_BGFX.Labels[0].Position.Y:= 5;
+  vMame.Config.OGL_BGFX.Labels[0].Position.X:= vMame.Scene.Config.Right_Panels[4].Width- vMame.Config.OGL_BGFX.Labels[0].Width- 10;
+  vMame.Config.OGL_BGFX.Labels[0].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Labels[1]:= TLabel.Create(vMame.Scene.Config.Right_Panels[4]);
+  vMame.Config.OGL_BGFX.Labels[1].Name:= 'Mame_OpenGL_InfoLabel_2';
+  vMame.Config.OGL_BGFX.Labels[1].Parent:= vMame.Scene.Config.Right_Panels[4];
+  vMame.Config.OGL_BGFX.Labels[1].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.OGL_BGFX.Labels[1].Text:= 'Default options used by all games';
+  vMame.Config.OGL_BGFX.Labels[1].Width:= 180;
+  vMame.Config.OGL_BGFX.Labels[1].Position.Y:= 22;
+  vMame.Config.OGL_BGFX.Labels[1].Position.X:= vMame.Scene.Config.Right_Panels[4].Width- vMame.Config.OGL_BGFX.Labels[1].Width- 10;
+  vMame.Config.OGL_BGFX.Labels[1].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Groupbox[0]:= TGroupBox.Create(vMame.Scene.Config.Right_Panels[4]);
+  vMame.Config.OGL_BGFX.Groupbox[0].Name:= 'Mame_OpenGL_Groupbox_OpenGLSettings';
+  vMame.Config.OGL_BGFX.Groupbox[0].Parent:= vMame.Scene.Config.Right_Panels[4];
+  vMame.Config.OGL_BGFX.Groupbox[0].SetBounds(10,40,(vMame.Scene.Config.Right_Panels[4].Width- 20),240);
+  vMame.Config.OGL_BGFX.Groupbox[0].Text:= 'OpenGL settings';
+  vMame.Config.OGL_BGFX.Groupbox[0].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Groupbox[1]:= TGroupBox.Create(vMame.Config.OGL_BGFX.Groupbox[0]);
+  vMame.Config.OGL_BGFX.Groupbox[1].Name:= 'Mame_OpenGL_Groupbox_GLSLFilter';
+  vMame.Config.OGL_BGFX.Groupbox[1].Parent:= vMame.Config.OGL_BGFX.Groupbox[0];
+  vMame.Config.OGL_BGFX.Groupbox[1].SetBounds(5,25,(vMame.Config.OGL_BGFX.Groupbox[0].Width/ 2),70);
+  vMame.Config.OGL_BGFX.Groupbox[1].Text:= 'GLSL filter';
+  vMame.Config.OGL_BGFX.Groupbox[1].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Combobox:= TComboBox.Create(vMame.Config.OGL_BGFX.Groupbox[1]);
+  vMame.Config.OGL_BGFX.Combobox.Name:= 'Mame_OpenGL_Combobox_GLSLFilter';
+  vMame.Config.OGL_BGFX.Combobox.Parent:= vMame.Config.OGL_BGFX.Groupbox[1];
+  vMame.Config.OGL_BGFX.Combobox.SetBounds(5,25,(vMame.Config.OGL_BGFX.Groupbox[1].Width- 10),25);
+  vMame.Config.OGL_BGFX.Combobox.Items.Add('Plain');
+  vMame.Config.OGL_BGFX.Combobox.Items.Add('Bilinear');
+  vMame.Config.OGL_BGFX.Combobox.Items.Add('Bicubic');
+  vMame.Config.OGL_BGFX.Combobox.ItemIndex:= mame.Emu.Ini.OpenGL_gl_glsl_filter;
+  vMame.Config.OGL_BGFX.Combobox.OnChange:= vMame_Config_Mouse.Combobox.OnChange;
+  vMame.Config.OGL_BGFX.Combobox.Visible:= True;
+
+  vMame.Config.OGL_BGFX.Checkbox[0]:= TCheckBox.Create(vMame.Config.OGL_BGFX.Groupbox[0]);
+  vMame.Config.OGL_BGFX.Checkbox[0].Name:= 'Mame_OpenGL_Checkbox_EnableGLSL';
+  vMame.Config.OGL_BGFX.Checkbox[0].Parent:= vMame.Config.OGL_BGFX.Groupbox[0];
+  vMame.Config.OGL_BGFX.Checkbox[0].SetBounds(10,100,180,19);
+  vMame.Config.OGL_BGFX.Checkbox[0].Text:= 'Enable GLSL';
+  vMame.Config.OGL_BGFX.Checkbox[0].Font.Style:= vMame.Config.OGL_BGFX.Checkbox[0].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.OGL_BGFX.Checkbox[0].IsChecked:= mame.Emu.Ini.OpenGL_gl_glsl;
+  vMame.Config.OGL_BGFX.Checkbox[0].OnClick:= vMame_Config_Mouse.Checkbox.onMouseClick;
+  vMame.Config.OGL_BGFX.Checkbox[0].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Checkbox[1]:= TCheckBox.Create(vMame.Config.OGL_BGFX.Groupbox[0]);
+  vMame.Config.OGL_BGFX.Checkbox[1].Name:= 'Mame_OpenGL_Checkbox_ForcePowerOfTwoTextures';
+  vMame.Config.OGL_BGFX.Checkbox[1].Parent:= vMame.Config.OGL_BGFX.Groupbox[0];
+  vMame.Config.OGL_BGFX.Checkbox[1].SetBounds(10,120,180,19);
+  vMame.Config.OGL_BGFX.Checkbox[1].Text:= 'Force powere of two textures';
+  vMame.Config.OGL_BGFX.Checkbox[1].Font.Style:= vMame.Config.OGL_BGFX.Checkbox[1].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.OGL_BGFX.Checkbox[1].IsChecked:= mame.Emu.Ini.OpenGL_gl_forcepow2texture;
+  vMame.Config.OGL_BGFX.Checkbox[1].OnClick:= vMame_Config_Mouse.Checkbox.onMouseClick;
+  vMame.Config.OGL_BGFX.Checkbox[1].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Checkbox[2]:= TCheckBox.Create(vMame.Config.OGL_BGFX.Groupbox[0]);
+  vMame.Config.OGL_BGFX.Checkbox[2].Name:= 'Mame_OpenGL_Checkbox_DontUseGL_ARB_texture_rectangle';
+  vMame.Config.OGL_BGFX.Checkbox[2].Parent:= vMame.Config.OGL_BGFX.Groupbox[0];
+  vMame.Config.OGL_BGFX.Checkbox[2].SetBounds(10,140,180,19);
+  vMame.Config.OGL_BGFX.Checkbox[2].Text:= 'Don''t use GL_ARB_texture_rectangle';
+  vMame.Config.OGL_BGFX.Checkbox[2].Font.Style:= vMame.Config.OGL_BGFX.Checkbox[2].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.OGL_BGFX.Checkbox[2].IsChecked:= mame.Emu.Ini.OpenGL_gl_notexturerect;
+  vMame.Config.OGL_BGFX.Checkbox[2].OnClick:= vMame_Config_Mouse.Checkbox.onMouseClick;
+  vMame.Config.OGL_BGFX.Checkbox[2].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Checkbox[3]:= TCheckBox.Create(vMame.Config.OGL_BGFX.Groupbox[0]);
+  vMame.Config.OGL_BGFX.Checkbox[3].Name:= 'Mame_OpenGL_Checkbox_EnableVBO';
+  vMame.Config.OGL_BGFX.Checkbox[3].Parent:= vMame.Config.OGL_BGFX.Groupbox[0];
+  vMame.Config.OGL_BGFX.Checkbox[3].SetBounds(10,160,180,19);
+  vMame.Config.OGL_BGFX.Checkbox[3].Text:= 'Enable VBO';
+  vMame.Config.OGL_BGFX.Checkbox[3].Font.Style:= vMame.Config.OGL_BGFX.Checkbox[3].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.OGL_BGFX.Checkbox[3].IsChecked:= mame.Emu.Ini.OpenGL_gl_vbo;
+  vMame.Config.OGL_BGFX.Checkbox[3].OnClick:= vMame_Config_Mouse.Checkbox.onMouseClick;
+  vMame.Config.OGL_BGFX.Checkbox[3].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Checkbox[4]:= TCheckBox.Create(vMame.Config.OGL_BGFX.Groupbox[0]);
+  vMame.Config.OGL_BGFX.Checkbox[4].Name:= 'Mame_OpenGL_Checkbox_EnablePBO';
+  vMame.Config.OGL_BGFX.Checkbox[4].Parent:= vMame.Config.OGL_BGFX.Groupbox[0];
+  vMame.Config.OGL_BGFX.Checkbox[4].SetBounds(10,180,180,19);
+  vMame.Config.OGL_BGFX.Checkbox[4].Text:= 'Enable PBO';
+  vMame.Config.OGL_BGFX.Checkbox[4].Font.Style:= vMame.Config.OGL_BGFX.Checkbox[4].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.OGL_BGFX.Checkbox[4].IsChecked:= mame.Emu.Ini.OpenGL_gl_pbo;
+  vMame.Config.OGL_BGFX.Checkbox[4].OnClick:= vMame_Config_Mouse.Checkbox.onMouseClick;
+  vMame.Config.OGL_BGFX.Checkbox[4].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Checkbox[5]:= TCheckBox.Create(vMame.Config.OGL_BGFX.Groupbox[0]);
+  vMame.Config.OGL_BGFX.Checkbox[5].Name:= 'Mame_OpenGL_Checkbox_ForceSynchronyBetweenCPUAndGPU';
+  vMame.Config.OGL_BGFX.Checkbox[5].Parent:= vMame.Config.OGL_BGFX.Groupbox[0];
+  vMame.Config.OGL_BGFX.Checkbox[5].SetBounds(10,200,380,19);
+  vMame.Config.OGL_BGFX.Checkbox[5].Text:= 'Force synchrony between CPU and GPU (your own risk)';
+  vMame.Config.OGL_BGFX.Checkbox[5].Font.Style:= vMame.Config.OGL_BGFX.Checkbox[5].Font.Style+ [TFontStyle.fsBold];
+  vMame.Config.OGL_BGFX.Checkbox[5].IsChecked:= mame.Emu.Ini.OpenGL_gl_glsl_sync;
+  vMame.Config.OGL_BGFX.Checkbox[5].OnClick:= vMame_Config_Mouse.Checkbox.onMouseClick;
+  vMame.Config.OGL_BGFX.Checkbox[5].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Groupbox[2]:= TGroupBox.Create(vMame.Scene.Config.Right_Panels[4]);
+  vMame.Config.OGL_BGFX.Groupbox[2].Name:= 'Mame_OpenGL_Groupbox_BGFXScreenChains';
+  vMame.Config.OGL_BGFX.Groupbox[2].Parent:= vMame.Scene.Config.Right_Panels[4];
+  vMame.Config.OGL_BGFX.Groupbox[2].SetBounds(10,285,(vMame.Scene.Config.Right_Panels[4].Width- 20),120);
+  vMame.Config.OGL_BGFX.Groupbox[2].Text:= 'BGFX screen chains';
+  vMame.Config.OGL_BGFX.Groupbox[2].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Edit:= TEdit.Create(vMame.Config.OGL_BGFX.Groupbox[2]);
+  vMame.Config.OGL_BGFX.Edit.Name:= 'Mame_OpenGL_Edit_BGFXScreenChains';
+  vMame.Config.OGL_BGFX.Edit.Parent:= vMame.Config.OGL_BGFX.Groupbox[2];
+  vMame.Config.OGL_BGFX.Edit.SetBounds(10,40,(vMame.Config.OGL_BGFX.Groupbox[2].Width - 20),20);
+  vMame.Config.OGL_BGFX.Edit.Text:= mame.Emu.Ini.BGFX_bgfx_screen_chains;
+  vMame.Config.OGL_BGFX.Edit.Visible:= True;
+
+  vMame.Config.OGL_BGFX.Button[0]:= TButton.Create(vMame.Config.OGL_BGFX.Groupbox[2]);
+  vMame.Config.OGL_BGFX.Button[0].Name:= 'Mame_OpenGL_Button_SelectChain';
+  vMame.Config.OGL_BGFX.Button[0].Parent:= vMame.Config.OGL_BGFX.Groupbox[2];
+  vMame.Config.OGL_BGFX.Button[0].SetBounds(10,80,100,20);
+  vMame.Config.OGL_BGFX.Button[0].Text:= 'Select chain';
+  vMame.Config.OGL_BGFX.Button[0].OnClick:= vMame_Config_Mouse.Button.onMouseClick;
+  vMame.Config.OGL_BGFX.Button[0].Visible:= True;
+
+  vMame.Config.OGL_BGFX.Button[1]:= TButton.Create(vMame.Config.OGL_BGFX.Groupbox[2]);
+  vMame.Config.OGL_BGFX.Button[1].Name:= 'Mame_OpenGL_Button_ResetChain';
+  vMame.Config.OGL_BGFX.Button[1].Parent:= vMame.Config.OGL_BGFX.Groupbox[2];
+  vMame.Config.OGL_BGFX.Button[1].SetBounds((vMame.Config.OGL_BGFX.Groupbox[2].Width- 110),80,100,20);
+  vMame.Config.OGL_BGFX.Button[1].Text:= 'Reset chain';
+  vMame.Config.OGL_BGFX.Button[1].OnClick:= vMame_Config_Mouse.Button.onMouseClick;
+  vMame.Config.OGL_BGFX.Button[1].Visible:= True;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_CheckboxClick(vName: String);
+begin
+  if vName= 'Mame_OpenGL_Checkbox_EnableGLSL' then
+    mame.Emu.Ini.OpenGL_gl_glsl:= vMame.Config.OGL_BGFX.Checkbox[0].IsChecked
+  else if vName= 'Mame_OpenGL_Checkbox_ForcePowerOfTwoTextures' then
+    mame.Emu.Ini.OpenGL_gl_forcepow2texture:= vMame.Config.OGL_BGFX.Checkbox[1].IsChecked
+  else if vName= 'Mame_OpenGL_Checkbox_DontUseGL_ARB_texture_rectangle' then
+    mame.Emu.Ini.OpenGL_gl_notexturerect:= vMame.Config.OGL_BGFX.Checkbox[2].IsChecked
+  else if vName= 'Mame_OpenGL_Checkbox_EnableVBO' then
+    mame.Emu.Ini.OpenGL_gl_vbo:= vMame.Config.OGL_BGFX.Checkbox[3].IsChecked
+  else if vName= 'Mame_OpenGL_Checkbox_EnablePBO' then
+    mame.Emu.Ini.OpenGL_gl_pbo:= vMame.Config.OGL_BGFX.Checkbox[4].IsChecked
+  else if vName= 'Mame_OpenGL_Checkbox_ForceSynchronyBetweenCPUAndGPU' then
+    mame.Emu.Ini.OpenGL_gl_glsl_sync:= vMame.Config.OGL_BGFX.Checkbox[5].IsChecked
+end;
+
+procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_ButtonClick(vName: String);
+begin
+  if vName= 'Mame_OpenGL_Button_SelectChain' then
+    begin
+      vMame.Config.OGL_BGFX.OpenDialog_Result:= 'Select_Chain';
+      vMame.Config.OGL_BGFX.OpenDialog.Execute;
+    end
+  else if vName= 'Mame_OpenGL_Button_ResetChain' then
+    begin
+      vMame.Config.OGL_BGFX.Edit.Text:= 'default';
+      mame.Emu.Ini.BGFX_bgfx_screen_chains:= 'default';
+    end;
+end;
+
+procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_ComboboxOnChange(vName: String);
+begin
+  if vName= 'Mame_OpenGL_Combobox_GLSLFilter' then
+    mame.Emu.Ini.OpenGL_gl_glsl_filter:= vMame.Config.OGL_BGFX.Combobox.ItemIndex;
+end;
+
+procedure uEmu_Arcade_Mame_Config_OpenGL_BGFX_OpenDialogOnClose;
+begin
+  if vMame.Config.OGL_BGFX.OpenDialog_Result= 'Select_Chain' then
+    begin
+      vMame.Config.OGL_BGFX.Edit.Text:= ExtractFileName(vMame.Config.OGL_BGFX.OpenDialog.FileName);
+      mame.Emu.Ini.BGFX_bgfx_screen_chains:= vMame.Config.OGL_BGFX.Edit.Text;
+    end;
+end;
+
+end.

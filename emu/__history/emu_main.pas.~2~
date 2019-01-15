@@ -1,0 +1,9 @@
+unit emu_main;
+
+interface
+uses
+  System.Classes;
+
+implementation
+
+end.

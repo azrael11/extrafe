@@ -1,0 +1,207 @@
+unit uEmu_Arcade_Mame_Config_Vector;
+
+interface
+uses
+  System.Classes,
+  System.UITypes,
+  System.SysUtils,
+  FMX.Forms,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Edit,
+  FMX.Listbox,
+  FMX.Objects,
+  FMX.Dialogs;
+
+  procedure uEmu_Arcade_Mame_Config_Create_Vector_Panel;
+
+  procedure uEmu_Arcade_Mame_Config_Vector_TrackbarChange(vName: String);
+
+implementation
+uses
+  uTText,
+  uWindows,
+  uEmu_Arcade_Mame_Config,
+  uEmu_Arcade_Mame_SetAll,
+  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Config_Mouse;
+
+procedure uEmu_Arcade_Mame_Config_Create_Vector_Panel;
+begin
+  vMame.Config.Panel.Vector.Labels[0]:= TLabel.Create(vMame.Scene.Config.Right_Panels[6]);
+  vMame.Config.Panel.Vector.Labels[0].Name:= 'Mame_Vector_InfoLabel_1';
+  vMame.Config.Panel.Vector.Labels[0].Parent:= vMame.Scene.Config.Right_Panels[6];
+  vMame.Config.Panel.Vector.Labels[0].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Vector.Labels[0].Text:= 'Global Options';
+  vMame.Config.Panel.Vector.Labels[0].Position.Y:= 5;
+  vMame.Config.Panel.Vector.Labels[0].Position.X:= vMame.Scene.Config.Right_Panels[6].Width- vMame.Config.Panel.Vector.Labels[0].Width- 10;
+  vMame.Config.Panel.Vector.Labels[0].Visible:= True;
+
+  vMame.Config.Panel.Vector.Labels[1]:= TLabel.Create(vMame.Scene.Config.Right_Panels[6]);
+  vMame.Config.Panel.Vector.Labels[1].Name:= 'Mame_Vector_InfoLabel_2';
+  vMame.Config.Panel.Vector.Labels[1].Parent:= vMame.Scene.Config.Right_Panels[6];
+  vMame.Config.Panel.Vector.Labels[1].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Vector.Labels[1].Text:= 'Default options used by all games';
+  vMame.Config.Panel.Vector.Labels[1].Width:= 180;
+  vMame.Config.Panel.Vector.Labels[1].Position.Y:= 22;
+  vMame.Config.Panel.Vector.Labels[1].Position.X:= vMame.Scene.Config.Right_Panels[6].Width- vMame.Config.Panel.Vector.Labels[1].Width- 10;
+  vMame.Config.Panel.Vector.Labels[1].Visible:= True;
+
+  vMame.Config.Panel.Vector.Groupbox[0]:= TGroupBox.Create(vMame.Scene.Config.Right_Panels[6]);
+  vMame.Config.Panel.Vector.Groupbox[0].Name:= 'Mame_Vector_Groupbox_BeamWidthMinimum';
+  vMame.Config.Panel.Vector.Groupbox[0].Parent:= vMame.Scene.Config.Right_Panels[6];
+  vMame.Config.Panel.Vector.Groupbox[0].SetBounds(10,40,(vMame.Scene.Config.Right_Panels[6].Width- 20),70);
+  vMame.Config.Panel.Vector.Groupbox[0].Text:= 'Beam width minimum';
+  vMame.Config.Panel.Vector.Groupbox[0].Visible:= True;
+
+  vMame.Config.Panel.Vector.Trackbar[0]:= TTrackBar.Create(vMame.Config.Panel.Vector.Groupbox[0]);
+  vMame.Config.Panel.Vector.Trackbar[0].Name:= 'Mame_Vector_Trackbar_BeamWidthMinimum';
+  vMame.Config.Panel.Vector.Trackbar[0].Parent:= vMame.Config.Panel.Vector.Groupbox[0];
+  vMame.Config.Panel.Vector.Trackbar[0].SetBounds(5,35,(vMame.Config.Panel.Vector.Groupbox[0].Width- 45),25);
+  vMame.Config.Panel.Vector.Trackbar[0].Min:= 0;
+  vMame.Config.Panel.Vector.Trackbar[0].Max:= 1;
+  vMame.Config.Panel.Vector.Trackbar[0].Frequency:= 0.01;
+  vMame.Config.Panel.Vector.Trackbar[0].Value:= StrToFloat(mame.Emu.Ini.CORE_VECTOR_beam_width_min);
+  vMame.Config.Panel.Vector.Trackbar[0].OnChange:= vMame_Config_Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Vector.Trackbar[0].Visible:= True;
+
+  vMame.Config.Panel.Vector.Labels[2]:= TLabel.Create(vMame.Config.Panel.Vector.Groupbox[0]);
+  vMame.Config.Panel.Vector.Labels[2].Name:= 'Mame_Vector_Label_BeamWidthMinimum';
+  vMame.Config.Panel.Vector.Labels[2].Parent:= vMame.Config.Panel.Vector.Groupbox[0];
+  vMame.Config.Panel.Vector.Labels[2].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Vector.Labels[2].Text:= mame.Emu.Ini.CORE_VECTOR_beam_width_min;
+  vMame.Config.Panel.Vector.Labels[2].Position.X:= 400;
+  vMame.Config.Panel.Vector.Labels[2].Position.Y:= 35;
+  vMame.Config.Panel.Vector.Labels[2].Visible:= True;
+
+  vMame.Config.Panel.Vector.Groupbox[1]:= TGroupBox.Create(vMame.Scene.Config.Right_Panels[6]);
+  vMame.Config.Panel.Vector.Groupbox[1].Name:= 'Mame_Vector_Groupbox_BeamWidthMaximum';
+  vMame.Config.Panel.Vector.Groupbox[1].Parent:= vMame.Scene.Config.Right_Panels[6];
+  vMame.Config.Panel.Vector.Groupbox[1].SetBounds(10,115,(vMame.Scene.Config.Right_Panels[6].Width- 20),70);
+  vMame.Config.Panel.Vector.Groupbox[1].Text:= 'Beam width maximum';
+  vMame.Config.Panel.Vector.Groupbox[1].Visible:= True;
+
+  vMame.Config.Panel.Vector.Trackbar[1]:= TTrackBar.Create(vMame.Config.Panel.Vector.Groupbox[1]);
+  vMame.Config.Panel.Vector.Trackbar[1].Name:= 'Mame_Vector_Trackbar_BeamWidthMaximum';
+  vMame.Config.Panel.Vector.Trackbar[1].Parent:= vMame.Config.Panel.Vector.Groupbox[1];
+  vMame.Config.Panel.Vector.Trackbar[1].SetBounds(5,35,(vMame.Config.Panel.Vector.Groupbox[1].Width- 45),25);
+  vMame.Config.Panel.Vector.Trackbar[1].Min:= 1;
+  vMame.Config.Panel.Vector.Trackbar[1].Max:= 10;
+  vMame.Config.Panel.Vector.Trackbar[1].Frequency:= 0.01;
+  vMame.Config.Panel.Vector.Trackbar[1].Value:= StrToFloat(mame.Emu.Ini.CORE_VECTOR_beam_width_max);
+  vMame.Config.Panel.Vector.Trackbar[1].OnChange:= vMame_Config_Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Vector.Trackbar[1].Visible:= True;
+
+  vMame.Config.Panel.Vector.Labels[3]:= TLabel.Create(vMame.Config.Panel.Vector.Groupbox[1]);
+  vMame.Config.Panel.Vector.Labels[3].Name:= 'Mame_Vector_Label_BeamWidthMaximum';
+  vMame.Config.Panel.Vector.Labels[3].Parent:= vMame.Config.Panel.Vector.Groupbox[1];
+  vMame.Config.Panel.Vector.Labels[3].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  vMame.Config.Panel.Vector.Labels[3].Text:= mame.Emu.Ini.CORE_VECTOR_beam_width_max;
+  vMame.Config.Panel.Vector.Labels[3].Position.X:= 400;
+  vMame.Config.Panel.Vector.Labels[3].Position.Y:= 35;
+  vMame.Config.Panel.Vector.Labels[3].Visible:= True;
+
+  vMame.Config.Panel.Vector.Groupbox[2]:= TGroupBox.Create(vMame.Scene.Config.Right_Panels[6]);
+  vMame.Config.Panel.Vector.Groupbox[2].Name:= 'Mame_Vector_Groupbox_BeamIntensityWeight';
+  vMame.Config.Panel.Vector.Groupbox[2].Parent:= vMame.Scene.Config.Right_Panels[6];
+  vMame.Config.Panel.Vector.Groupbox[2].SetBounds(10,190,(vMame.Scene.Config.Right_Panels[6].Width- 20),70);
+  vMame.Config.Panel.Vector.Groupbox[2].Text:= 'Beam intensity weight';
+  vMame.Config.Panel.Vector.Groupbox[2].Visible:= True;
+
+  vMame.Config.Panel.Vector.Trackbar[2]:= TTrackBar.Create(vMame.Config.Panel.Vector.Groupbox[2]);
+  vMame.Config.Panel.Vector.Trackbar[2].Name:= 'Mame_Vector_Trackbar_BeamIntensityWeight';
+  vMame.Config.Panel.Vector.Trackbar[2].Parent:= vMame.Config.Panel.Vector.Groupbox[2];
+  vMame.Config.Panel.Vector.Trackbar[2].SetBounds(5,35,(vMame.Config.Panel.Vector.Groupbox[2].Width- 45),25);
+  vMame.Config.Panel.Vector.Trackbar[2].Min:= -10;
+  vMame.Config.Panel.Vector.Trackbar[2].Max:= 10;
+  vMame.Config.Panel.Vector.Trackbar[2].Frequency:= 0.01;
+  vMame.Config.Panel.Vector.Trackbar[2].Value:= StrToFloat(mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight);
+  vMame.Config.Panel.Vector.Trackbar[2].OnChange:= vMame_Config_Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Vector.Trackbar[2].Visible:= True;
+
+  vMame.Config.Panel.Vector.Labels[4]:= TLabel.Create(vMame.Config.Panel.Vector.Groupbox[2]);
+  vMame.Config.Panel.Vector.Labels[4].Name:= 'Mame_Vector_Label_BeamIntensityWeight';
+  vMame.Config.Panel.Vector.Labels[4].Parent:= vMame.Config.Panel.Vector.Groupbox[2];
+  vMame.Config.Panel.Vector.Labels[4].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  if mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight= '0' then
+    mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight:= '0.00';
+  vMame.Config.Panel.Vector.Labels[4].Text:= mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight;
+  vMame.Config.Panel.Vector.Labels[4].Position.X:= 400;
+  vMame.Config.Panel.Vector.Labels[4].Position.Y:= 35;
+  vMame.Config.Panel.Vector.Labels[4].Visible:= True;
+
+  vMame.Config.Panel.Vector.Groupbox[3]:= TGroupBox.Create(vMame.Scene.Config.Right_Panels[6]);
+  vMame.Config.Panel.Vector.Groupbox[3].Name:= 'Mame_Vector_Groupbox_FlickerEffect';
+  vMame.Config.Panel.Vector.Groupbox[3].Parent:= vMame.Scene.Config.Right_Panels[6];
+  vMame.Config.Panel.Vector.Groupbox[3].SetBounds(10,265,(vMame.Scene.Config.Right_Panels[6].Width- 20),70);
+  vMame.Config.Panel.Vector.Groupbox[3].Text:= 'Flicker effect';
+  vMame.Config.Panel.Vector.Groupbox[3].Visible:= True;
+
+  vMame.Config.Panel.Vector.Trackbar[3]:= TTrackBar.Create(vMame.Config.Panel.Vector.Groupbox[3]);
+  vMame.Config.Panel.Vector.Trackbar[3].Name:= 'Mame_Vector_Trackbar_FlickerEffect';
+  vMame.Config.Panel.Vector.Trackbar[3].Parent:= vMame.Config.Panel.Vector.Groupbox[3];
+  vMame.Config.Panel.Vector.Trackbar[3].SetBounds(5,35,(vMame.Config.Panel.Vector.Groupbox[3].Width- 45),25);
+  vMame.Config.Panel.Vector.Trackbar[3].Min:= 0;
+  vMame.Config.Panel.Vector.Trackbar[3].Max:= 1;
+  vMame.Config.Panel.Vector.Trackbar[3].Frequency:= 0.01;
+  vMame.Config.Panel.Vector.Trackbar[3].Value:= StrToFloat(mame.Emu.Ini.CORE_VECTOR_flicker);
+  vMame.Config.Panel.Vector.Trackbar[3].OnChange:= vMame_Config_Mouse.Trackbar.OnChange;
+  vMame.Config.Panel.Vector.Trackbar[3].Visible:= True;
+
+  vMame.Config.Panel.Vector.Labels[5]:= TLabel.Create(vMame.Config.Panel.Vector.Groupbox[3]);
+  vMame.Config.Panel.Vector.Labels[5].Name:= 'Mame_Vector_Label_FlickerEffect';
+  vMame.Config.Panel.Vector.Labels[5].Parent:= vMame.Config.Panel.Vector.Groupbox[3];
+  vMame.Config.Panel.Vector.Labels[5].TextSettings.HorzAlign:= TTextAlign.Trailing;
+  if mame.Emu.Ini.CORE_VECTOR_flicker= '0' then
+    mame.Emu.Ini.CORE_VECTOR_flicker:= '0.00';
+  vMame.Config.Panel.Vector.Labels[5].Text:= mame.Emu.Ini.CORE_VECTOR_flicker;
+  vMame.Config.Panel.Vector.Labels[5].Position.X:= 400;
+  vMame.Config.Panel.Vector.Labels[5].Position.Y:= 35;
+  vMame.Config.Panel.Vector.Labels[5].Visible:= True;
+end;
+
+
+procedure uEmu_Arcade_Mame_Config_Vector_TrackbarChange(vName: String);
+begin
+  if vName= 'Mame_Vector_Trackbar_BeamWidthMinimum' then
+    begin
+      mame.Emu.Ini.CORE_VECTOR_beam_width_min:= FloatToStrF(vMame.Config.Panel.Vector.Trackbar[0].Value, ffGeneral, 2, 2);
+      if Length(mame.Emu.Ini.CORE_VECTOR_beam_width_min)= 1 then
+        mame.Emu.Ini.CORE_VECTOR_beam_width_min:= mame.Emu.Ini.CORE_VECTOR_beam_width_min+ '.00'
+      else if Length(mame.Emu.Ini.CORE_VECTOR_beam_width_min)= 3 then
+        mame.Emu.Ini.CORE_VECTOR_beam_width_min:= mame.Emu.Ini.CORE_VECTOR_beam_width_min+ '0';
+      vMame.Config.Panel.Vector.Labels[2].Text:= mame.Emu.Ini.CORE_VECTOR_beam_width_min;
+    end
+  else if vName= 'Mame_Vector_Trackbar_BeamWidthMaximum' then
+    begin
+      mame.Emu.Ini.CORE_VECTOR_beam_width_max:= FloatToStrF(vMame.Config.Panel.Vector.Trackbar[1].Value, ffGeneral, 2, 2);
+      if (Length(mame.Emu.Ini.CORE_VECTOR_beam_width_max)= 1) or (Length(mame.Emu.Ini.CORE_VECTOR_beam_width_max)= 2) then
+        mame.Emu.Ini.CORE_VECTOR_beam_width_max:= mame.Emu.Ini.CORE_VECTOR_beam_width_max+ '.00'
+      else if Length(mame.Emu.Ini.CORE_VECTOR_beam_width_max)= 3 then
+        mame.Emu.Ini.CORE_VECTOR_beam_width_max:= mame.Emu.Ini.CORE_VECTOR_beam_width_max+ '0';
+      vMame.Config.Panel.Vector.Labels[3].Text:= mame.Emu.Ini.CORE_VECTOR_beam_width_max;
+    end
+  else if vName= 'Mame_Vector_Trackbar_BeamIntensityWeight' then
+    begin
+      mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight:= FloatToStrF(vMame.Config.Panel.Vector.Trackbar[2].Value, ffGeneral, 2, 2);
+      if StrToFloat(mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight)= -10 then
+        mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight:= mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight+ '.00'
+      else if (Length(mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight)= 1) or (Length(mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight)= 2) then
+        mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight:= mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight+ '.00'
+      else if (Length(mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight)= 3) or ((Length(mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight)= 4) and (StrToFloat(mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight)< 0)) then
+        mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight:= mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight+ '0';
+      vMame.Config.Panel.Vector.Labels[4].Text:= mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight;
+    end
+  else if vName= 'Mame_Vector_Trackbar_FlickerEffect' then
+    begin
+      mame.Emu.Ini.CORE_VECTOR_flicker:= FloatToStrF(vMame.Config.Panel.Vector.Trackbar[3].Value, ffGeneral, 3, 2);
+      if Length(mame.Emu.Ini.CORE_VECTOR_flicker)= 1 then
+        mame.Emu.Ini.CORE_VECTOR_flicker:= mame.Emu.Ini.CORE_VECTOR_flicker+ '.00'
+      else if Length(mame.Emu.Ini.CORE_VECTOR_flicker)= 3 then
+        mame.Emu.Ini.CORE_VECTOR_flicker:= mame.Emu.Ini.CORE_VECTOR_flicker+ '0';
+      vMame.Config.Panel.Vector.Labels[5].Text:= mame.Emu.Ini.CORE_VECTOR_flicker;
+    end
+end;
+
+end.

@@ -1,0 +1,70 @@
+unit uSql_Commands;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils;
+
+  function uDatabase_Is_User_Exists(vUser: string): Boolean;
+  function uDatabase_Is_Password_Correct_For_User(vUser, vPassword: string): Boolean;
+  procedure uDatabase_Change_Avatar(mNum: Integer);
+  procedure uDatabase_Change_Password(vPassword: WideString);
+
+implementation
+uses
+  loading,
+  uload,
+  main;
+
+function uDatabase_Is_User_Exists(vUser: string): Boolean;
+var
+  vRows: Integer;
+  vCUser: String;
+  vCUser_Avatar: String;
+  I: Integer;
+begin
+  Result:= False;
+  vRows:= -1;
+  vRows:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT COUNT(*) FROM USER');
+  if vRows<> -1 then
+    for I := 0 to vRows- 1 do
+      begin
+        vCUser:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT NICKNAME FROM USER WHERE ''A/A''='+ IntToStr(I));
+        if vUser= vCUser then
+          begin
+            Result:= True;
+            user.Database_Num:= I;
+            user.Username:= vCUser;
+            vCUser_Avatar:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT AVATAR FROM USER WHERE ''A/A''='+ IntToStr(I));
+            user.Avatar:= vCUser_Avatar;
+            Loading_Form.Loading_Login_Avatar.Bitmap.LoadFromFile(extrafe.main_avatar_path+ vCUser_Avatar+ '.png');
+            Loading_Form.Loading_FPassword_Avatar.Bitmap.LoadFromFile(extrafe.avatar_path+ vCUser_Avatar+ '.png');
+            Break
+          end;
+      end;
+end;
+
+function uDatabase_Is_Password_Correct_For_User(vUser, vPassword: string): Boolean;
+var
+  vCPassword: String;
+begin
+  Result:= False;
+  vCPassword:= Loading_Form.Loading_Database_Connect.ExecSQLScalar('SELECT PASSWORD FROM USER WHERE ''A/A''='+ IntToStr(user.Database_Num));
+  if vCPassword= vPassword then
+    begin
+      user.Password:= vCPassword;
+      Result:= True;
+    end
+end;
+
+procedure uDatabase_Change_Avatar(mNum: Integer);
+begin
+  Main_Form.Main_Database_Connect.ExecSQL('UPDATE USER SET AVATAR='+ IntToStr(mNum)+' WHERE ''A/A''='+ IntToStr(user.Database_Num));
+end;
+
+procedure uDatabase_Change_Password(vPassword: WideString);
+begin
+  Main_Form.Main_Database_Connect.ExecSQL('UPDATE USER SET PASSWORD='''+ vPassword+ ''' WHERE ''A/A''='+ IntToStr(user.Database_Num));
+end;
+
+end.

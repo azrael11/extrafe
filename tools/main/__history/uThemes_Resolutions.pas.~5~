@@ -1,0 +1,17 @@
+unit uThemes_Resolutions;
+
+interface
+uses
+  System.Classes;
+
+  procedure uThemes_Resolutions_SetThemeWindow(vWidth, vHeight: integer);
+
+implementation
+uses
+  main;
+
+procedure uThemes_Resolutions_SetThemeWindow(vWidth, vHeight: integer);
+  begin
+
+  end;
+end.

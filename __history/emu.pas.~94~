@@ -1,0 +1,47 @@
+unit emu;
+
+interface
+
+uses
+  System.Classes,
+  FMX.Forms,
+  FMX.Controls,
+  FMX.Types;
+
+
+type
+  TEmu_Form = class(TForm)
+    Emu_Stylebook: TStyleBook;
+
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Emu_Form: TEmu_Form;
+
+
+implementation
+
+{$R *.fmx}
+
+uses
+  uKeyboard;
+
+//Image
+procedure TEmu_Form.FormCreate(Sender: TObject);
+begin
+  uKeyboard_HookKeyboard(Emu_Form);
+end;
+
+procedure TEmu_Form.FormDestroy(Sender: TObject);
+begin
+  uKeyboard_UnHookKeyboard;
+end;
+
+end.

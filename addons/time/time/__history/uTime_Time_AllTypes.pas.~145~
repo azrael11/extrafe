@@ -1,0 +1,123 @@
+unit uTime_Time_AllTypes;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  FMX.StdCtrls,
+  FMX.Objects,
+  FMX.Effects,
+  FMX.Ani,
+  FMX.Types,
+  FMX.Edit,
+  FMX.TabControl,
+  FMX.Listbox,
+  FMX.Colors,
+  Radiant.Shapes;
+
+type
+  TTIME_PANEL_TIME_CONFIG_TAB_1 = record
+    ShowType_L: Tlabel;
+    ShowType: TComboBox;
+    ShowBothType_L: TLabel;
+    ShowBothType: TComboBox;
+  end;
+
+type
+  TTIME_PANEL_TIME_CONFIG_TAB_2 = record
+    Options: TGroupBox;
+    Options_ShowQuarters: TCheckBox;
+    Options_ShowHours: TCheckBox;
+    Options_ShowMinutes: TCheckBox;
+    Options_ShowSecondsIndicator: TCheckBox;
+    Analog: TGroupBox;
+    Analog_Circle_Label: TLabel;
+    Analog_Circle: TEdit;
+    Analog_Circle_Search: TButton;
+    Analog_Hour_Label: TLabel;
+    Analog_Hour: TEdit;
+    Analog_Hour_Search: TButton;
+    Analog_Minutes_Label: TLabel;
+    Analog_Minutes: TEdit;
+    Analog_Minutes_Search: TButton;
+    Analog_Seconds_Label: TLabel;
+    Analog_Seconds: TEdit;
+    Analog_Seconds_Search: TButton;
+    Analog_Hour_Image_Label: TLabel;
+    Analog_Hour_Image: TEdit;
+    Analog_Hour_Image_Search: TButton;
+    Analog_Minutes_Image_Label: TLabel;
+    Analog_Minutes_Image: TEdit;
+    Analog_Minutes_Image_Search: TButton;
+  end;
+
+type
+  TTIME_PANEL_TIME_CONFIG_TAB_3 = record
+    Font_Label: TLabel;
+    Font_Combo: TComboBox;
+    Color_Label: TLabel;
+    Color_Combo: TColorComboBox;
+    Color_Back_Label: TLabel;
+    Color_Back_Combo: TColorComboBox;
+    Color_Back_Stroke_Label: TLabel;
+    Color_Back_Stroke_Combo: TColorComboBox;
+    Image_Label: TLabel;
+    Image: TEdit;
+    Image_Search: TButton;
+    Matrix_Label: TLabel;
+    Matrix: TEdit;
+    Matrix_Search: TButton;
+  end;
+
+type
+  TTIME_PANEL_TIME_CONFIG = record
+    Panel: TPanel;
+    Panel_Ani: TFloatAnimation;
+    Control: TTabControl;
+    Tab: array [0 .. 2] of TTabItem;
+    // Header: TGLOBAL_HEADER;
+    Tab_1: TTIME_PANEL_TIME_CONFIG_TAB_1;
+    Tab_2: TTIME_PANEL_TIME_CONFIG_TAB_2;
+    Tab_3: TTIME_PANEL_TIME_CONFIG_TAB_3;
+  end;
+
+type
+  TTIME_PANEL_TIME_ANALOG = record
+    Back: Timage;
+    Circle: TRadiantRing;
+    Hour: TRadiantRectangle;
+    Minutes: TRadiantRectangle;
+    Seconds: TRadiantRectangle;
+    Quarters: array [0 .. 3] of TRadiantRectangle;
+    Hours: array [0 .. 7] of TRadiantRectangle;
+  end;
+
+type
+  TTIME_PANEL_TIME_DIGITAL = record
+    Back: Timage;
+    Rect: TRadiantRectangle;
+    Hour: TText;
+    Seconds: TText;
+    Minutes: TText;
+  end;
+
+type
+  TTIME_PANEL_TIME = record
+    Back: Timage;
+    Settings: Timage;
+    Settings_Glow: TGlowEffect;
+    Settings_Ani: TFloatAnimation;
+    Timer: TTimer;
+    Analog: TTIME_PANEL_TIME_ANALOG;
+    Digital: TTIME_PANEL_TIME_DIGITAL;
+    Config: TTIME_PANEL_TIME_CONFIG;
+
+    Config_Digital_Matrix: TEdit;
+    Config_Digital_Matrix_Search: TButton;
+  end;
+
+implementation
+
+end.

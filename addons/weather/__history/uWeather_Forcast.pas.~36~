@@ -1,0 +1,375 @@
+unit uWeather_Forcast;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  uWeather_AllTypes,
+  uWeather_Config_Towns_Add,
+  OXmlPDOM;
+
+function uWeather_Forcast_Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
+var
+  vNTXML: IXMLDocument;
+  vNTRoot: PXMLNode;
+  vNTNode: PXMLNode;
+  vNTNode_1: PXMLNode;
+  vNTNode_2: PXMLNode;
+  vNTNode_3: PXMLNode;
+  vNTAttribute: PXMLNode;
+  vAni: TWEATHER_CONFIG_TOWNS_ADD_FLOATANIMATION;
+  vAni_End: Boolean;
+  vStayToADD: Boolean;
+
+implementation
+uses
+  main,
+  uLoad_AllTypes,
+  uWeather_Convert;
+
+function uWeather_Forcast_Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
+const
+  cTemp_Towns = 'data\addons\weather\temp\Towns.xml';
+  cTemp_Forcast = 'data\addons\weather\temp\ChoosenTown.xml';
+var
+  vForcast_Resutls: Tstringlist;
+  vDay: byte;
+begin
+  vForcast_Resutls := TStringList.Create;
+
+  vForcast_Resutls.Add(Main_Form.Main_IdHttp.Get
+    ('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D' +
+    vWoeid + '%20and%20u%3D%27c%27&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys%20HTTP/1.1')
+    );
+  vForcast_Resutls.SaveToFile(extrafe.prog.Path + cTemp_Forcast);
+
+  vNTXML := CreateXMLDoc;
+  vNTXML.LoadFromFile(extrafe.prog.Path + cTemp_Forcast);
+  vNTRoot := vNTXML.DocumentElement;
+
+  SetLength(addons.Weather.Action.Choosen, vNum + 1);
+
+  addons.Weather.Action.Choosen[vNum].Provider := addons.Weather.Action.Provider;
+  addons.Weather.Action.Choosen[vNum].woeid := vWoeid;
+  addons.Weather.Action.Choosen[vNum].Country_FlagCode := LowerCase(vCountry_Code);
+  vDay := 0;
+
+  vNTNode := nil;
+
+  while vNTRoot.GetNextChild(vNTNode) do
+    while vNTNode.GetNextChild(vNTNode_1) do
+      while vNTNode_1.GetNextChild(vNTNode_2) do
+      begin
+        vNTAttribute := nil;
+        if vNTNode_2.NodeName = 'yweather:location' then
+        begin
+          vNTNode_2.FindAttribute('city', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].City := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('country', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].country := vNTAttribute.NodeValue;
+        end
+        else if vNTNode_2.NodeName = 'lastBuildDate' then
+        begin
+          addons.Weather.Action.Choosen[vNum].LastUpdate := vNTNode_2.Text;
+        end
+        else if vNTNode_2.NodeName = 'yweather:units' then
+        begin
+          vNTNode_2.FindAttribute('temperature', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].UnitV.Temperature := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('speed', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].UnitV.Speed := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('pressure', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].UnitV.Pressure := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('distance', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].UnitV.Distance := vNTAttribute.NodeValue;
+        end
+        else if vNTNode_2.NodeName = 'yweather:wind' then
+        begin
+          vNTNode_2.FindAttribute('speed', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Wind.Speed := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('direction', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Wind.Direction := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('chill', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Wind.Chill := vNTAttribute.NodeValue;
+        end
+        else if vNTNode_2.NodeName = 'yweather:atmosphere' then
+        begin
+          vNTNode_2.FindAttribute('pressure', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Atmosphere.Pressure := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('visibility', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Atmosphere.Visibility := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('rising', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Atmosphere.Rising := vNTAttribute.NodeValue;
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('humidity', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Atmosphere.Humidity := vNTAttribute.NodeValue;
+        end
+        else if vNTNode_2.NodeName = 'yweather:astronomy' then
+        begin
+          vNTNode_2.FindAttribute('sunset', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Astronomy.Sunset :=
+            uWeather_Convert_FixAstronomy(vNTAttribute.NodeValue);
+          vNTAttribute := nil;
+          vNTNode_2.FindAttribute('sunrise', vNTAttribute);
+          addons.Weather.Action.Choosen[vNum].Astronomy.Sunrise :=
+            uWeather_Convert_FixAstronomy(vNTAttribute.NodeValue);
+        end
+        else if vNTNode_2.NodeName = 'item' then
+        begin
+          while vNTNode_2.GetNextChild(vNTNode_3) do
+          begin
+            vNTAttribute := nil;
+            if vNTNode_3.NodeName = 'yweather:condition' then
+            begin
+              vNTNode_3.FindAttribute('temp', vNTAttribute);
+              addons.Weather.Action.Choosen[vNum].Temp_Condition := vNTAttribute.NodeValue;
+              vNTAttribute := nil;
+              vNTNode_3.FindAttribute('date', vNTAttribute);
+              addons.Weather.Action.Choosen[vNum].LastChecked := vNTAttribute.NodeValue;
+              vNTAttribute := nil;
+              vNTNode_3.FindAttribute('code', vNTAttribute);
+              addons.Weather.Action.Choosen[vNum].Code := vNTAttribute.NodeValue;
+              vNTAttribute := nil;
+              vNTNode_3.FindAttribute('text', vNTAttribute);
+              addons.Weather.Action.Choosen[vNum].Text_Condtition := vNTAttribute.NodeValue;
+            end
+            else if vNTNode_3.NodeName = 'yweather:forecast' then
+            begin
+              case vDay of
+                0:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Current.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Current.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Current.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Current.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Current.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Current.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                1:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_1.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_1.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_1.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_1.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_1.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_1.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                2:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_2.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_2.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_2.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_2.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_2.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_2.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                3:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_3.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_3.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_3.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_3.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_3.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_3.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                4:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_4.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_4.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_4.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_4.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_4.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_4.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                5:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_5.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_5.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_5.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_5.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_5.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_5.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                6:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_6.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_6.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_6.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_6.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_6.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_6.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                7:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_7.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_7.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_7.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_7.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_7.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_7.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                8:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_8.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_8.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_8.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_8.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_8.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_8.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+                9:
+                  begin
+                    vNTNode_3.FindAttribute('day', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_9.Text := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('date', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_9.Date := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('text', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_9.Forcast := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('code', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_9.Code := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('low', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_9.Low := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    vNTNode_3.FindAttribute('high', vNTAttribute);
+                    addons.Weather.Action.Choosen[vNum].Day_9.High := vNTAttribute.NodeValue;
+                    vNTAttribute := nil;
+                    inc(vDay, 1);
+                  end;
+              end;
+            end;
+          end;
+        end;
+      end;
+end;
+
+end.

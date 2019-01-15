@@ -1,0 +1,23 @@
+unit uMain_Config_Emulators_Actions;
+
+interface
+uses
+  System.Classes;
+
+  procedure uMain_Config_Emulators_Actions_OpenDialogToInstall_FromComputer(vEmulator: String);
+
+implementation
+uses
+  uLoad_AllTypes,
+  uMain_SetAll;
+
+procedure uMain_Config_Emulators_Actions_OpenDialogToInstall_FromComputer(vEmulator: String);
+begin
+  if vEmulator= 'mame' then
+    mainScene.Config.R.Emulators.Emu_Dialog.Filter:= '
+
+  mainScene.Config.R.Emulators.Emu_Installed:= vEmulator;
+  mainScene.Config.R.Emulators.Emu_Dialog.Execute;
+end;
+
+end.

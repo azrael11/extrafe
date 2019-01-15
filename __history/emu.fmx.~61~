@@ -1,0 +1,53 @@
+object Emu_Form: TEmu_Form
+  Left = 0
+  Top = 0
+  BorderIcons = []
+  BorderStyle = None
+  Caption = 'Form1'
+  ClientHeight = 685
+  ClientWidth = 1124
+  WindowState = wsMinimized
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object Emu_Main: TImage
+    MultiResBitmap = <
+      item
+      end>
+    Position.X = 312.000000000000000000
+    Position.Y = 168.000000000000000000
+    object Emu_Main_Right: TImage
+      MultiResBitmap = <
+        item
+        end>
+      Position.X = 160.000000000000000000
+      Position.Y = -144.000000000000000000
+      Size.Width = 545.000000000000000000
+      Size.Height = 681.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Tile
+    end
+    object Emu_Main_Left: TImage
+      MultiResBitmap = <
+        item
+        end>
+      Locked = True
+      Position.X = -416.000000000000000000
+      Position.Y = -152.000000000000000000
+      Size.Width = 577.000000000000000000
+      Size.Height = 697.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Tile
+    end
+  end
+  object Emu_Stylebook: TStyleBook
+    Styles = <
+      item
+      end>
+    Left = 72
+    Top = 48
+  end
+end

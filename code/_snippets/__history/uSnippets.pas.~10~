@@ -1,0 +1,12 @@
+unit uSnippets;
+
+interface
+uses
+  System.Classes;
+
+  //Arrays
+  procedure uSnippets_Array_Delete_Item(var vArray: array; const Index: Cardinal);
+
+implementation
+
+end.

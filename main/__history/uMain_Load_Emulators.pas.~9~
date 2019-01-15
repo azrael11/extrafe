@@ -1,0 +1,32 @@
+unit uMain_Load_Emulators;
+
+interface
+uses
+  System.Classes;
+
+  procedure uEmulators_Show_Emulation_Panel(mPanel: string);
+
+implementation
+uses
+  main;
+
+procedure uEmulators_Show_Emulation_Panel(mPanel: string);
+begin
+  Main_Form.Emulators_Arcade_Box.Visible:= False;
+  Main_Form.Emulators_Computers_Box.Visible:= False;
+  Main_Form.Emulators_Consoles_Box.Visible:= False;
+  Main_Form.Emulators_Handhelds_Box.Visible:= False;
+  Main_Form.Emulators_Pinball_Box.Visible:= False;
+  if mPanel= 'Arcade' then
+    Main_Form.Emulators_Arcade_Box.Visible:= True
+  else if mPanel= 'Computers' then
+    Main_Form.Emulators_Computers_Box.Visible:= True
+  else if mPanel= 'Consoles' then
+    Main_Form.Emulators_Consoles_Box.Visible:= True
+  else if mPanel= 'Handhelds' then
+    Main_Form.Emulators_Handhelds_Box.Visible:= True
+  else if mPanel= 'Pinball' then
+    Main_Form.Emulators_Pinball_Box.Visible:= False;
+end;
+
+end.

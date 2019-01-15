@@ -1,0 +1,432 @@
+unit uEmu_Arcade_Mame_Install;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  FMX.Forms,
+  FMX.Dialogs,
+  FMX.Objects,
+  FMX.StdCtrls,
+  FMX.Types,
+  WinAPI.ShellAPI,
+  WinAPI.Windows;
+
+  procedure uEmu_Arcade_Mame_Install_FromComputer_Install(vPhase: Integer);
+
+  procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Wizard;
+  procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_1;
+  procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_2;
+  procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_3;
+  procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_4;
+
+
+  procedure uEmu_Arcade_Mame_Install_Create_FromServer_Wizard;
+
+
+implementation
+uses
+  uLoad_AllTypes,
+  uMain_SetAll,
+  uMain_AllTypes,
+  uEmu_Arcade_Mame_Ini,
+  uEmu_Arcade_Mame_AllTypes;
+
+procedure uEmu_Arcade_Mame_Install_FromComputer_Install(vPhase: Integer);
+var
+  vi: Integer;
+  vNum: Integer;
+begin
+  case vPhase of
+    0 : begin
+          mame.Gamelist.All:= TStringList.Create;
+          mame.Emu.Name:= ExtractFileName(mainScene.Config.Main.R.Emulators.Emu_Arcade[0].Tab_0_Path.Text);
+          mame.Emu.Path:= ExtractFilePath(mainScene.Config.Main.R.Emulators.Emu_Arcade[0].Tab_0_Path.Text);
+          //Create mame ini if dont exist
+          if not FileExists(mame.Emu.Path+ 'mame.ini') then
+            ShellExecute(0, nil, 'cmd.exe',PChar('/C '+ mame.Emu.Path+ mame.Emu.Name +' -createconfig'), PChar(mame.Emu.Path), SW_HIDE);
+          mame.Emu.Ini_Path:= mame.Emu.Path;
+          if mame.Prog.Path= '' then
+            uEmu_Arcade_Mame_Ini_Install_Create;
+          mame.Prog.Ini.WriteString('MAME', 'mame_path', mame.Emu.Path);
+          mame.Prog.Ini.WriteString('MAME', 'mame_name', mame.Emu.Name);
+          mame.Prog.Ini.WriteString('MAME', 'mame_ini_path', mame.Emu.Ini_Path);
+          mame.Prog.Ini.WriteString('MAME', 'mame_version', '');
+          ShellExecute(0, nil, 'cmd.exe',PChar('/C '+ mame.Emu.Path+ mame.Emu.Name +' -listfull > '+ mame.Prog.Data_Path+ mame.Prog.Games_List),nil, SW_HIDE);
+          ShellExecute(0, nil, 'cmd.exe',PChar('/C '+ mame.Emu.Path+ mame.Emu.Name +' -h > '+ mame.Prog.Data_Path+ 'version.txt'), nil, SW_HIDE);
+          Application.ProcessMessages;
+
+          inc(emulation.Unique_Num, 1);
+          extrafe.ini.Ini.WriteInteger('Emulation', 'Unique_Num', emulation.Unique_Num);
+
+          for vi:= 0 to 254 do
+            if emulation.Emu[0, vi]= 'nil' then
+              begin
+                emulation.Emu[0, vi]:= 'mame';
+                vNum:= vi;
+                Break
+              end;
+
+          emulation.Arcade[0].Active:= True;
+          mame.Prog.Ini.WriteBool('Mame', 'Active', True);
+          emulation.Arcade[0].Active_Place:= vNum;
+          mame.Prog.Ini.WriteInteger('Mame', 'Place_Num', vNum);
+          emulation.Arcade[0].Name:= 'Mame';
+          mame.Prog.Ini.WriteString('Mame', 'Emu_Name', 'mame');
+          emulation.Arcade[0].Menu_Image_Path:= emulation.Category[0].Menu_Image_Path+ 'mame\';
+          mame.Prog.Ini.WriteString('Mame', 'Image_Path', emulation.Category[0].Menu_Image_Path+ 'mame\');
+          emulation.Arcade[0].Menu_Image:= 'mame.png';
+          mame.Prog.Ini.WriteString('Mame', 'Menu_Image', 'mame.png');
+          emulation.Arcade[0].Second_Level:= 0;
+          emulation.Arcade[0].Unique_Num:= emulation.Unique_Num;
+          mame.Prog.Ini.WriteInteger('Mame', 'Unique_Num', emulation.Unique_Num);
+          mame.Prog.Ini.WriteBool('Mame', 'Installed', True);
+
+          inc(emulation.Active_Num, 1);
+          extrafe.ini.Ini.WriteInteger('Emulation', 'Active_Num', emulation.Active_Num);
+          FreeAndNil(vMame.install.Computer.Step_1);
+          uEmu_Arcade_Mame_Install_Create_FromComputer_Step_2;
+
+        end;
+    1 : begin
+          ShellExecute(0, nil, 'cmd.exe',PChar('/C '+ mame.Emu.Path+ mame.Emu.Name +' -listxml > '+ mame.Prog.Data_Path+ mame.Prog.Games_XML),nil, SW_HIDE);
+          FreeAndNil(vMame.install.Computer.Step_2);
+          uEmu_Arcade_Mame_Install_Create_FromComputer_Step_3;
+        end;
+    2 : begin
+          emulation.Arcade[0].Installed:= True;
+          if emulation.Level= 0 then
+            emulation.Selection_Tab[0].Logo_Gray.Enabled:= False;
+          inc(emulation.Category[0].Second_Level, 1);
+
+          uEmu_Arcade_Mame_Install_Create_FromComputer_Step_4;
+        end;
+    3 : begin
+          mainScene.Config.Left_Blur.Enabled:= False;
+          mainScene.Config.Main.R.Emulators.Panel_Blur.Enabled:= False;
+          mainScene.Config.Main.R.Emulators.Emu_Arcade[0].Logo_Gray.Enabled:= False;
+          FreeAndNil(vMame.install.Computer.Panel);
+        end;
+  end;
+end;
+
+////////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_1;
+begin
+  vMame.install.Computer.Header_Info.Text:= '(Step 1 of 4) Welcome to wizard.';
+
+  vMame.install.Computer.Step_1:= TPanel.Create(vMame.install.Computer.Main);
+  vMame.install.Computer.Step_1.Name:= 'Emu_Arcade_Mame_Install_Computer_Step1';
+  vMame.install.Computer.Step_1.Parent:= vMame.install.Computer.Main;
+  vMame.install.Computer.Step_1.Align:= TAlignLayout.Client;
+  vMame.install.Computer.Step_1.Visible:= True;
+
+  vMame.install.Computer.Step_1_Welcome:= TText.Create(vMame.install.Computer.Step_1);
+  vMame.install.Computer.Step_1_Welcome.Name:= 'Emu_Arcade_Mame_Install_Computer_Step1_Welcome';
+  vMame.install.Computer.Step_1_Welcome.Parent:= vMame.install.Computer.Step_1;
+  vMame.install.Computer.Step_1_Welcome.Width:= vMame.install.Computer.Step_1.Width- 20;
+  vMame.install.Computer.Step_1_Welcome.Height:= 30;
+  vMame.install.Computer.Step_1_Welcome.Position.X:= 10;
+  vMame.install.Computer.Step_1_Welcome.Position.Y:= 30;
+  vMame.install.Computer.Step_1_Welcome.Text:= 'Welcome to ExtraFE "mame" installation.';
+  vMame.install.Computer.Step_1_Welcome.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vMame.install.Computer.Step_1_Welcome.TextSettings.Font.Size:= 24;
+  vMame.install.Computer.Step_1_Welcome.TextSettings.HorzAlign:= TTextAlign.Center;
+  vMame.install.Computer.Step_1_Welcome.Visible:= True;
+
+  vMame.install.Computer.Step_1_Info_Line_1:= TLabel.Create(vMame.install.Computer.Step_1);
+  vMame.install.Computer.Step_1_Info_Line_1.Name:= 'Emu_Arcade_Mame_Install_Computer_Step1_Line1';
+  vMame.install.Computer.Step_1_Info_Line_1.Parent:= vMame.install.Computer.Step_1;
+  vMame.install.Computer.Step_1_Info_Line_1.Width:= vMame.install.Computer.Step_1.Width- 20;
+  vMame.install.Computer.Step_1_Info_Line_1.Height:= 28;
+  vMame.install.Computer.Step_1_Info_Line_1.Position.X:= 10;
+  vMame.install.Computer.Step_1_Info_Line_1.Position.Y:= 70;
+  vMame.install.Computer.Step_1_Info_Line_1.Text:= 'This wizard will install all necessary files and dirictories';
+  vMame.install.Computer.Step_1_Info_Line_1.StyledSettings:= vMame.install.Computer.Step_1_Info_Line_1.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_1_Info_Line_1.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_1_Info_Line_1.TextSettings.Font.Style:= vMame.install.Computer.Step_1_Info_Line_1.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_1_Info_Line_1.Visible:= True;
+
+  vMame.install.Computer.Step_1_Info_Line_2:= TLabel.Create(vMame.install.Computer.Step_1);
+  vMame.install.Computer.Step_1_Info_Line_2.Name:= 'Emu_Arcade_Mame_Install_Computer_Step1_Line2';
+  vMame.install.Computer.Step_1_Info_Line_2.Parent:= vMame.install.Computer.Step_1;
+  vMame.install.Computer.Step_1_Info_Line_2.Width:= vMame.install.Computer.Step_1.Width- 20;
+  vMame.install.Computer.Step_1_Info_Line_2.Height:= 28;
+  vMame.install.Computer.Step_1_Info_Line_2.Position.X:= 20;
+  vMame.install.Computer.Step_1_Info_Line_2.Position.Y:= 90;
+  vMame.install.Computer.Step_1_Info_Line_2.Text:= 'for the best experience for mame use.';
+  vMame.install.Computer.Step_1_Info_Line_2.StyledSettings:= vMame.install.Computer.Step_1_Info_Line_2.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_1_Info_Line_2.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_1_Info_Line_2.TextSettings.Font.Style:= vMame.install.Computer.Step_1_Info_Line_2.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_1_Info_Line_2.Visible:= True;
+
+  vMame.install.Computer.Step_1_Info_Line_3:= TLabel.Create(vMame.install.Computer.Step_1);
+  vMame.install.Computer.Step_1_Info_Line_3.Name:= 'Emu_Arcade_Mame_Install_Computer_Step1_Line3';
+  vMame.install.Computer.Step_1_Info_Line_3.Parent:= vMame.install.Computer.Step_1;
+  vMame.install.Computer.Step_1_Info_Line_3.Width:= vMame.install.Computer.Step_1.Width- 20;
+  vMame.install.Computer.Step_1_Info_Line_3.Height:= 28;
+  vMame.install.Computer.Step_1_Info_Line_3.Position.X:= 10;
+  vMame.install.Computer.Step_1_Info_Line_3.Position.Y:= 130;
+  vMame.install.Computer.Step_1_Info_Line_3.Text:= 'Click next to begin installation.';
+  vMame.install.Computer.Step_1_Info_Line_3.StyledSettings:= vMame.install.Computer.Step_1_Info_Line_3.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_1_Info_Line_3.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_1_Info_Line_3.TextSettings.Font.Style:= vMame.install.Computer.Step_1_Info_Line_3.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_1_Info_Line_3.Visible:= True;
+
+  vMame.install.Computer.Step_1_Next:= TButton.Create(vMame.install.Computer.Step_1);
+  vMame.install.Computer.Step_1_Next.Name:= 'Emu_Arcade_Mame_Install_Computer_Step1_Next';
+  vMame.install.Computer.Step_1_Next.Parent:= vMame.install.Computer.Step_1;
+  vMame.install.Computer.Step_1_Next.Width:= 100;
+  vMame.install.Computer.Step_1_Next.Height:= 30;
+  vMame.install.Computer.Step_1_Next.Position.X:= vMame.install.Computer.Step_1.Width- 120;
+  vMame.install.Computer.Step_1_Next.Position.Y:= vMame.install.Computer.Step_1.Height- 50;
+  vMame.install.Computer.Step_1_Next.Text:= 'Next';
+  vMame.install.Computer.Step_1_Next.OnClick:= mame.Input.Mouse.Button.OnMouseClick;
+  vMame.install.Computer.Step_1_Next.Visible:= True;
+end;
+
+procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_2;
+begin
+  vMame.install.Computer.Header_Info.Text:= '(Step 2 of 4) Necessary files created.';
+
+  vMame.install.Computer.Step_2:= TPanel.Create(vMame.install.Computer.Main);
+  vMame.install.Computer.Step_2.Name:= 'Emu_Arcade_Mame_Install_Computer_Step2';
+  vMame.install.Computer.Step_2.Parent:= vMame.install.Computer.Main;
+  vMame.install.Computer.Step_2.Align:= TAlignLayout.Client;
+  vMame.install.Computer.Step_2.Visible:= True;
+
+  vMame.install.Computer.Step_2_Info:= TText.Create(vMame.install.Computer.Step_2);
+  vMame.install.Computer.Step_2_Info.Name:= 'Emu_Arcade_Mame_Install_Computer_Step2_Info';
+  vMame.install.Computer.Step_2_Info.Parent:= vMame.install.Computer.Step_2;
+  vMame.install.Computer.Step_2_Info.Width:= vMame.install.Computer.Step_2.Width- 20;
+  vMame.install.Computer.Step_2_Info.Height:= 30;
+  vMame.install.Computer.Step_2_Info.Position.X:= 10;
+  vMame.install.Computer.Step_2_Info.Position.Y:= 30;
+  vMame.install.Computer.Step_2_Info.Text:= 'Necessary files created ssuccessfully.';
+  vMame.install.Computer.Step_2_Info.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vMame.install.Computer.Step_2_Info.TextSettings.Font.Size:= 24;
+  vMame.install.Computer.Step_2_Info.TextSettings.HorzAlign:= TTextAlign.Center;
+  vMame.install.Computer.Step_2_Info.Visible:= True;
+
+  vMame.install.Computer.Step_2_Info_Line_1:= TLabel.Create(vMame.install.Computer.Step_2);
+  vMame.install.Computer.Step_2_Info_Line_1.Name:= 'Emu_Arcade_Mame_Install_Computer_Step2_Line1';
+  vMame.install.Computer.Step_2_Info_Line_1.Parent:= vMame.install.Computer.Step_2;
+  vMame.install.Computer.Step_2_Info_Line_1.Width:= vMame.install.Computer.Step_2.Width- 20;
+  vMame.install.Computer.Step_2_Info_Line_1.Height:= 28;
+  vMame.install.Computer.Step_2_Info_Line_1.Position.X:= 10;
+  vMame.install.Computer.Step_2_Info_Line_1.Position.Y:= 70;
+  vMame.install.Computer.Step_2_Info_Line_1.Text:= 'Now must create the xml file from mame.';
+  vMame.install.Computer.Step_2_Info_Line_1.StyledSettings:= vMame.install.Computer.Step_2_Info_Line_1.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_2_Info_Line_1.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_2_Info_Line_1.TextSettings.Font.Style:= vMame.install.Computer.Step_2_Info_Line_1.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_2_Info_Line_1.Visible:= True;
+
+  vMame.install.Computer.Step_2_Info_Line_2:= TLabel.Create(vMame.install.Computer.Step_2);
+  vMame.install.Computer.Step_2_Info_Line_2.Name:= 'Emu_Arcade_Mame_Install_Computer_Step2_Line2';
+  vMame.install.Computer.Step_2_Info_Line_2.Parent:= vMame.install.Computer.Step_2;
+  vMame.install.Computer.Step_2_Info_Line_2.Width:= vMame.install.Computer.Step_2.Width- 20;
+  vMame.install.Computer.Step_2_Info_Line_2.Height:= 28;
+  vMame.install.Computer.Step_2_Info_Line_2.Position.X:= 10;
+  vMame.install.Computer.Step_2_Info_Line_2.Position.Y:= 130;
+  vMame.install.Computer.Step_2_Info_Line_2.Text:= 'Click next to start. Please wait this might take some time.';
+  vMame.install.Computer.Step_2_Info_Line_2.StyledSettings:= vMame.install.Computer.Step_2_Info_Line_2.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_2_Info_Line_2.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_2_Info_Line_2.TextSettings.Font.Style:= vMame.install.Computer.Step_2_Info_Line_2.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_2_Info_Line_2.Visible:= True;
+
+  vMame.install.Computer.Step_2_Next:= TButton.Create(vMame.install.Computer.Step_2);
+  vMame.install.Computer.Step_2_Next.Name:= 'Emu_Arcade_Mame_Install_Computer_Step2_Next';
+  vMame.install.Computer.Step_2_Next.Parent:= vMame.install.Computer.Step_2;
+  vMame.install.Computer.Step_2_Next.Width:= 100;
+  vMame.install.Computer.Step_2_Next.Height:= 30;
+  vMame.install.Computer.Step_2_Next.Position.X:= vMame.install.Computer.Step_2.Width- 120;
+  vMame.install.Computer.Step_2_Next.Position.Y:= vMame.install.Computer.Step_2.Height- 50;
+  vMame.install.Computer.Step_2_Next.Text:= 'Next';
+  vMame.install.Computer.Step_2_Next.OnClick:= mame.Input.Mouse.Button.OnMouseClick;
+  vMame.install.Computer.Step_2_Next.Visible:= True;
+
+end;
+
+procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_3;
+begin
+  vMame.install.Computer.Header_Info.Text:= '(Step 3 of 4) MAME XML file is ready.';
+
+  vMame.install.Computer.Step_3:= TPanel.Create(vMame.install.Computer.Main);
+  vMame.install.Computer.Step_3.Name:= 'Emu_Arcade_Mame_Install_Computer_Step3';
+  vMame.install.Computer.Step_3.Parent:= vMame.install.Computer.Main;
+  vMame.install.Computer.Step_3.Align:= TAlignLayout.Client;
+  vMame.install.Computer.Step_3.Visible:= True;
+
+  vMame.install.Computer.Step_3_Info:= TText.Create(vMame.install.Computer.Step_3);
+  vMame.install.Computer.Step_3_Info.Name:= 'Emu_Arcade_Mame_Install_Computer_Step3_Info';
+  vMame.install.Computer.Step_3_Info.Parent:= vMame.install.Computer.Step_3;
+  vMame.install.Computer.Step_3_Info.Width:= vMame.install.Computer.Step_3.Width- 20;
+  vMame.install.Computer.Step_3_Info.Height:= 30;
+  vMame.install.Computer.Step_3_Info.Position.X:= 10;
+  vMame.install.Computer.Step_3_Info.Position.Y:= 30;
+  vMame.install.Computer.Step_3_Info.Text:= 'XML file created successfully.';
+  vMame.install.Computer.Step_3_Info.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vMame.install.Computer.Step_3_Info.TextSettings.Font.Size:= 24;
+  vMame.install.Computer.Step_3_Info.TextSettings.HorzAlign:= TTextAlign.Center;
+  vMame.install.Computer.Step_3_Info.Visible:= True;
+
+  vMame.install.Computer.Step_3_Info_Line_1:= TLabel.Create(vMame.install.Computer.Step_3);
+  vMame.install.Computer.Step_3_Info_Line_1.Name:= 'Emu_Arcade_Mame_Install_Computer_Step3_Line1';
+  vMame.install.Computer.Step_3_Info_Line_1.Parent:= vMame.install.Computer.Step_3;
+  vMame.install.Computer.Step_3_Info_Line_1.Width:= vMame.install.Computer.Step_3.Width- 20;
+  vMame.install.Computer.Step_3_Info_Line_1.Height:= 28;
+  vMame.install.Computer.Step_3_Info_Line_1.Position.X:= 10;
+  vMame.install.Computer.Step_3_Info_Line_1.Position.Y:= 70;
+  vMame.install.Computer.Step_3_Info_Line_1.Text:= 'Now must load all the files and create the mame actions.';
+  vMame.install.Computer.Step_3_Info_Line_1.StyledSettings:= vMame.install.Computer.Step_3_Info_Line_1.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_3_Info_Line_1.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_3_Info_Line_1.TextSettings.Font.Style:= vMame.install.Computer.Step_3_Info_Line_1.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_3_Info_Line_1.Visible:= True;
+
+  vMame.install.Computer.Step_3_Info_Line_2:= TLabel.Create(vMame.install.Computer.Step_3);
+  vMame.install.Computer.Step_3_Info_Line_2.Name:= 'Emu_Arcade_Mame_Install_Computer_Step3_Line2';
+  vMame.install.Computer.Step_3_Info_Line_2.Parent:= vMame.install.Computer.Step_3;
+  vMame.install.Computer.Step_3_Info_Line_2.Width:= vMame.install.Computer.Step_3.Width- 20;
+  vMame.install.Computer.Step_3_Info_Line_2.Height:= 28;
+  vMame.install.Computer.Step_3_Info_Line_2.Position.X:= 10;
+  vMame.install.Computer.Step_3_Info_Line_2.Position.Y:= 130;
+  vMame.install.Computer.Step_3_Info_Line_2.Text:= 'Click next to start. Please wait this might take some time.';
+  vMame.install.Computer.Step_3_Info_Line_2.StyledSettings:= vMame.install.Computer.Step_3_Info_Line_2.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_3_Info_Line_2.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_3_Info_Line_2.TextSettings.Font.Style:= vMame.install.Computer.Step_3_Info_Line_2.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_3_Info_Line_2.Visible:= True;
+
+  vMame.install.Computer.Step_3_Next:= TButton.Create(vMame.install.Computer.Step_3);
+  vMame.install.Computer.Step_3_Next.Name:= 'Emu_Arcade_Mame_Install_Computer_Step3_Next';
+  vMame.install.Computer.Step_3_Next.Parent:= vMame.install.Computer.Step_3;
+  vMame.install.Computer.Step_3_Next.Width:= 100;
+  vMame.install.Computer.Step_3_Next.Height:= 30;
+  vMame.install.Computer.Step_3_Next.Position.X:= vMame.install.Computer.Step_3.Width- 120;
+  vMame.install.Computer.Step_3_Next.Position.Y:= vMame.install.Computer.Step_3.Height- 50;
+  vMame.install.Computer.Step_3_Next.Text:= 'Next';
+  vMame.install.Computer.Step_3_Next.OnClick:= mame.Input.Mouse.Button.OnMouseClick;
+  vMame.install.Computer.Step_3_Next.Visible:= True;
+end;
+
+procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Step_4;
+begin
+  vMame.install.Computer.Header_Info.Text:= '(Step 4 of 4) Everything is Done.';
+
+  vMame.install.Computer.Step_4:= TPanel.Create(vMame.install.Computer.Main);
+  vMame.install.Computer.Step_4.Name:= 'Emu_Arcade_Mame_Install_Computer_Step4';
+  vMame.install.Computer.Step_4.Parent:= vMame.install.Computer.Main;
+  vMame.install.Computer.Step_4.Align:= TAlignLayout.Client;
+  vMame.install.Computer.Step_4.Visible:= True;
+
+  vMame.install.Computer.Step_4_Info:= TText.Create(vMame.install.Computer.Step_4);
+  vMame.install.Computer.Step_4_Info.Name:= 'Emu_Arcade_Mame_Install_Computer_Step4_Info';
+  vMame.install.Computer.Step_4_Info.Parent:= vMame.install.Computer.Step_4;
+  vMame.install.Computer.Step_4_Info.Width:= vMame.install.Computer.Step_4.Width- 20;
+  vMame.install.Computer.Step_4_Info.Height:= 30;
+  vMame.install.Computer.Step_4_Info.Position.X:= 10;
+  vMame.install.Computer.Step_4_Info.Position.Y:= 30;
+  vMame.install.Computer.Step_4_Info.Text:= 'Installation is DONE.';
+  vMame.install.Computer.Step_4_Info.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vMame.install.Computer.Step_4_Info.TextSettings.Font.Size:= 24;
+  vMame.install.Computer.Step_4_Info.TextSettings.HorzAlign:= TTextAlign.Center;
+  vMame.install.Computer.Step_4_Info.Visible:= True;
+
+  vMame.install.Computer.Step_4_Info_Line_1:= TLabel.Create(vMame.install.Computer.Step_4);
+  vMame.install.Computer.Step_4_Info_Line_1.Name:= 'Emu_Arcade_Mame_Install_Computer_Step4_Line1';
+  vMame.install.Computer.Step_4_Info_Line_1.Parent:= vMame.install.Computer.Step_4;
+  vMame.install.Computer.Step_4_Info_Line_1.Width:= vMame.install.Computer.Step_4.Width- 20;
+  vMame.install.Computer.Step_4_Info_Line_1.Height:= 28;
+  vMame.install.Computer.Step_4_Info_Line_1.Position.X:= 10;
+  vMame.install.Computer.Step_4_Info_Line_1.Position.Y:= 70;
+  vMame.install.Computer.Step_4_Info_Line_1.Text:= 'Now you can enjoy the mame in every aspect.';
+  vMame.install.Computer.Step_4_Info_Line_1.StyledSettings:= vMame.install.Computer.Step_4_Info_Line_1.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_4_Info_Line_1.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_4_Info_Line_1.TextSettings.Font.Style:= vMame.install.Computer.Step_4_Info_Line_1.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_4_Info_Line_1.Visible:= True;
+
+  vMame.install.Computer.Step_4_Info_Line_2:= TLabel.Create(vMame.install.Computer.Step_4);
+  vMame.install.Computer.Step_4_Info_Line_2.Name:= 'Emu_Arcade_Mame_Install_Computer_Step4_Line2';
+  vMame.install.Computer.Step_4_Info_Line_2.Parent:= vMame.install.Computer.Step_4;
+  vMame.install.Computer.Step_4_Info_Line_2.Width:= vMame.install.Computer.Step_4.Width- 20;
+  vMame.install.Computer.Step_4_Info_Line_2.Height:= 28;
+  vMame.install.Computer.Step_4_Info_Line_2.Position.X:= 10;
+  vMame.install.Computer.Step_4_Info_Line_2.Position.Y:= 130;
+  vMame.install.Computer.Step_4_Info_Line_2.Text:= 'Click done and return to main screen and choose mame.';
+  vMame.install.Computer.Step_4_Info_Line_2.StyledSettings:= vMame.install.Computer.Step_4_Info_Line_2.StyledSettings -[TStyledSetting.Size, TStyledSetting.Style];
+  vMame.install.Computer.Step_4_Info_Line_2.TextSettings.Font.Size:= 15;
+  vMame.install.Computer.Step_4_Info_Line_2.TextSettings.Font.Style:= vMame.install.Computer.Step_4_Info_Line_2.Font.Style + [TFontStyle.fsBold];
+  vMame.install.Computer.Step_4_Info_Line_2.Visible:= True;
+
+  vMame.install.Computer.Step_4_Done:= TButton.Create(vMame.install.Computer.Step_4);
+  vMame.install.Computer.Step_4_Done.Name:= 'Emu_Arcade_Mame_Install_Computer_Step4_Done';
+  vMame.install.Computer.Step_4_Done.Parent:= vMame.install.Computer.Step_4;
+  vMame.install.Computer.Step_4_Done.Width:= 100;
+  vMame.install.Computer.Step_4_Done.Height:= 30;
+  vMame.install.Computer.Step_4_Done.Position.X:= vMame.install.Computer.Step_4.Width- 120;
+  vMame.install.Computer.Step_4_Done.Position.Y:= vMame.install.Computer.Step_4.Height- 50;
+  vMame.install.Computer.Step_4_Done.Text:= 'Done';
+  vMame.install.Computer.Step_4_Done.OnClick:= mame.Input.Mouse.Button.OnMouseClick;
+  vMame.install.Computer.Step_4_Done.Visible:= True;
+end;
+
+
+procedure uEmu_Arcade_Mame_Install_Create_FromComputer_Wizard;
+begin
+  if mainScene.Config.Main.R.Emulators.Emu_Arcade[0].Tab_0_Path.Text<> '' then
+    begin
+      mainScene.Config.Left_Blur.Enabled:= True;
+      mainScene.Config.Main.R.Emulators.Panel_Blur.Enabled:= True;
+
+      vMame.install.Computer.Panel:= TPanel.Create(mainScene.Config.Main.R.Panel[2]);
+      vMame.install.Computer.Panel.Name:= 'Emu_Arcade_Mame_Install_Computer_Panel';
+      vMame.install.Computer.Panel.Parent:= mainScene.Config.Main.R.Panel[2];
+      vMame.install.Computer.Panel.Width:= 500;
+      vMame.install.Computer.Panel.Height:= 300;
+      vMame.install.Computer.Panel.Position.X:= (mainScene.Config.Main.R.Panel[2].Width/ 2)- 250;
+      vMame.install.Computer.Panel.Position.Y:= (mainScene.Config.Main.R.Panel[2].Height/ 2)- 150;
+      vMame.install.Computer.Panel.Visible:= True;
+
+      vMame.install.Computer.Header:= TPanel.Create(vMame.install.Computer.Panel);
+      vMame.install.Computer.Header.Name:= 'Emu_Arcade_Mame_Install_Computer_Panel_Header';
+      vMame.install.Computer.Header.Parent:= vMame.install.Computer.Panel;
+      vMame.install.Computer.Header.Width:= vMame.install.Computer.Panel.Width;
+      vMame.install.Computer.Header.Height:= 30;
+      vMame.install.Computer.Header.Position.X:= 0;
+      vMame.install.Computer.Header.Position.Y:= 0;
+      vMame.install.Computer.Header.Visible:= True;
+
+      vMame.install.Computer.Header_Info:= TLabel.Create(vMame.install.Computer.Header);
+      vMame.install.Computer.Header_Info.Name:= 'Emu_Arcade_Mame_Install_Computer_Panel_Header_Info';
+      vMame.install.Computer.Header_Info.Parent:= vMame.install.Computer.Header;
+      vMame.install.Computer.Header_Info.Width:= vMame.install.Computer.Header.Width- 14;
+      vMame.install.Computer.Header_Info.Height:= 28;
+      vMame.install.Computer.Header_Info.Position.X:= 10;
+      vMame.install.Computer.Header_Info.Position.Y:= 2;
+      vMame.install.Computer.Header_Info.Text:= '';
+      vMame.install.Computer.Header_Info.Visible:= True;
+
+      vMame.install.Computer.Main:= TPanel.Create(vMame.install.Computer.Panel);
+      vMame.install.Computer.Main.Name:= 'Emu_Arcade_Mame_Install_Computer_Panel_Main';
+      vMame.install.Computer.Main.Parent:= vMame.install.Computer.Panel;
+      vMame.install.Computer.Main.Width:= vMame.install.Computer.Panel.Width;
+      vMame.install.Computer.Main.Height:=vMame.install.Computer.Panel.Height- 30;
+      vMame.install.Computer.Main.Position.X:= 0;
+      vMame.install.Computer.Main.Position.Y:= 30;
+      vMame.install.Computer.Main.Visible:= True;
+
+      uEmu_Arcade_Mame_Install_Create_FromComputer_Step_1;
+    end
+  else
+    ShowMessage('Please find mame.exe first and then click install');
+
+end;
+
+procedure uEmu_Arcade_Mame_Install_Create_FromServer_Wizard;
+begin
+
+end;
+
+
+end.
+
