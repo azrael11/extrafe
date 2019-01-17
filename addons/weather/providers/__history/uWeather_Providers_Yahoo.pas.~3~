@@ -1,0 +1,11 @@
+unit uWeather_Providers_Yahoo;
+
+interface
+uses
+  System.Classes;
+
+  function uWeather_Provider_Yahoo_GerForcast(
+
+implementation
+
+end.
