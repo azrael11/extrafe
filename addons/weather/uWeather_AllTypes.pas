@@ -329,11 +329,18 @@ type
     Country_Flag: TImage;
   end;
 
+type TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV= record
+  Panel: TPanel;
+  Check: TCheckbox;
+  Icon: TImage;
+  Desc: TALText;
+end;
+
 type
   TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER = record
     Choose: TLabel;
-    Yahoo_Icon: TImage;
-    Yahoo_Check: TCheckBox;
+    Box: TVertScrollBox;
+    Prov: array [0..1] of TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV;
     Text: TLabel;
   end;
 

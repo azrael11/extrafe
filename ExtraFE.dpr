@@ -136,7 +136,9 @@ uses
   uAzHung_Mouse in 'addons\play\azhung\uAzHung_Mouse.pas',
   uTime_Sounds in 'addons\time\uTime_Sounds.pas',
   uDatabase in 'code\_database\uDatabase.pas',
-  uAzHung_Sound in 'addons\play\azhung\uAzHung_Sound.pas';
+  uAzHung_Sound in 'addons\play\azhung\uAzHung_Sound.pas',
+  uWeather_Providers_OpenWeatherMap in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas',
+  uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas';
 
 {$R *.res}
 

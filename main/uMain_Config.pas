@@ -34,7 +34,8 @@ uses
   uMain_Config_Emulators,
   uMain_Config_Addons,
   uMain_Config_Themes,
-  uMain_Config_Info;
+  uMain_Config_Info,
+  uMain_Config_Info_Credits;
 
 procedure uMain_Config_Load;
 const
@@ -43,6 +44,9 @@ const
 var
   vi: Integer;
 begin
+  if Assigned(mainScene.Config.Panel) then
+    FreeAndNil(mainScene.Config.Panel);
+
   mainScene.Config.Panel := TPanel.Create(Main_Form);
   mainScene.Config.Panel.Name := 'Main_Config_Panel';
   mainScene.Config.Panel.Parent := Main_Form;
@@ -152,7 +156,7 @@ begin
 
   ex_main.Settings.Config_Pos.X := mainScene.Config.Panel.Position.X;
   ex_main.Settings.Config_Pos.Y := mainScene.Config.Panel.Position.Y;
-  ex_main.Config.Active_Panel := 100;
+  ex_main.Config.Active_Panel := -1;
 end;
 
 procedure uMain_COnfig_Free;
@@ -212,7 +216,10 @@ begin
     5:
       FreeAndNil(mainScene.Config.main.R.Themes.Panel);
     6:
-      FreeAndNil(mainScene.Config.main.R.Info.Panel);
+      begin
+        uMain_Config_Info_Credits_ClearBrands;
+        FreeAndNil(mainScene.Config.main.R.Info.Panel);
+      end;
   end;
 end;
 
@@ -221,28 +228,30 @@ var
   vi: Integer;
 begin
   if ex_main.Config.Active_Panel <> vPanel then
+  begin
     uMain_Config_FreePanel(vPanel);
-  for vi := 0 to 6 do
-    mainScene.Config.main.R.Panel[vi].Visible := False;
-  mainScene.Config.main.R.Panel[vPanel].Visible := True;
+    for vi := 0 to 6 do
+      mainScene.Config.main.R.Panel[vi].Visible := False;
+    mainScene.Config.main.R.Panel[vPanel].Visible := True;
 
-  case vPanel of
-    0:
-      uMain_Config_Profile_Create;
-    1:
-      ;
-    2:
-      uMain_Config_Emulators_Create;
-    3:
-      ;
-    4:
-      uMain_Config_Addons_Create;
-    5:
-      uMain_Config_Themes_Create;
-    6:
-      uMain_Config_Info_Create;
+    case vPanel of
+      0:
+        uMain_Config_Profile_Create;
+      1:
+        ;
+      2:
+        uMain_Config_Emulators_Create;
+      3:
+        ;
+      4:
+        uMain_Config_Addons_Create;
+      5:
+        uMain_Config_Themes_Create;
+      6:
+        uMain_Config_Info_Create;
+    end;
+    ex_main.Config.Active_Panel := vPanel;
   end;
-  ex_main.Config.Active_Panel := vPanel;
 end;
 
 end.

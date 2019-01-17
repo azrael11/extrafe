@@ -5,6 +5,7 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  System.StrUtils,
   System.UiTypes,
   FMX.StdCtrls,
   FMX.Objects,
@@ -67,7 +68,8 @@ uses
   uMain_Config_Addons_Actions,
   uMain_Config_Themes,
   uMain_Config_Info,
-  uMain_Config_Info_Actions;
+  uMain_Config_Info_Actions,
+  uMain_Config_Info_Credits;
 
 { TMAIN_CONFIG_IMAGE }
 
@@ -91,6 +93,11 @@ begin
       Config_Info_Previous_Build
     else if TImage(Sender).Name = 'Main_Config_Info_ExtraFE_LastBuild_Right' then
       Config_Info_Next_Build
+    else if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
+    begin
+      if ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag then
+        uMain_Config_Info_Credits_ShowBrand(TImage(Sender).Tag);
+    end;
   end
   else if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
@@ -135,6 +142,11 @@ begin
       mainScene.Config.Main.R.Info.extrafe.Build_Left_Glow.Enabled := True
     else if TImage(Sender).Name = 'Main_Config_Info_ExtraFE_LastBuild_Right' then
       mainScene.Config.Main.R.Info.extrafe.Build_Right_Glow.Enabled := True
+    else if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
+    begin
+      if ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag then
+        mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[TImage(Sender).Tag].Enabled := True;
+    end;
   end
   else if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
@@ -183,6 +195,11 @@ begin
       mainScene.Config.Main.R.Info.extrafe.Build_Left_Glow.Enabled := False
     else if TImage(Sender).Name = 'Main_Config_Info_ExtraFE_LastBuild_Right' then
       mainScene.Config.Main.R.Info.extrafe.Build_Right_Glow.Enabled := False
+    else if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
+    begin
+      if ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag then
+        mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[TImage(Sender).Tag].Enabled := False;
+    end;
   end
   else if extrafe.prog.State = 'main_config_profile_avatar' then
   begin

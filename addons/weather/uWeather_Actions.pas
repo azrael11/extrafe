@@ -55,7 +55,8 @@ uses
   uWeather_Convert,
   uWeather_MenuActions,
   uWeather_Sounds,
-  uWeather_Forcast;
+  uWeather_Forcast,
+  uWeather_Providers_OpenWeatherMap;
 
 procedure uWeather_Actions_Load;
 var
@@ -71,7 +72,10 @@ begin
 
   uWeather_Sounds_Load;
 
-  if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
+  uWeather_Providers_OpenWeatherMap_GetForcast;
+  uWeather_Actions_ShowFirstTimeScene(True);
+
+ { if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
   begin
     vAniText := TText.Create(vWeather.Scene.weather);
     vAniText.Name := 'Weather_Progress_Text';
@@ -142,7 +146,7 @@ begin
     end
   end
   else
-    uWeather_Actions_ShowFirstTimeScene(addons.weather.Action.First);
+    uWeather_Actions_ShowFirstTimeScene(addons.weather.Action.First);}
 end;
 
 procedure uWeather_Actions_ShowTheForcast;

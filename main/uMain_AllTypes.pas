@@ -54,6 +54,7 @@ type
     Addons_Active_Tab: Integer;
     Addons_Tab_First: Integer;
     Addons_Tab_Last: Integer;
+    Info_Credits_Selected: Integer;
   end;
 
 type
@@ -416,11 +417,13 @@ type
 
 type
   TMAIN_CONFIG_INFO_CREDITS = record
+    Panel: TPanel;
     Groupbox: TGroupBox;
     Text: TALText;
     Groupbox_Other: TGroupBox;
     Left_Box: TVertScrollBox;
     Comps_Image: array [0 .. 10] of TImage;
+    Comps_Image_Glow: array [0 .. 10] of TGlowEffect;
     Right_Box: array [0 .. 10] of TVertScrollBox;
     Paragraphs: array [0 .. 100] of TALText;
   end;

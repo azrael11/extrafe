@@ -514,6 +514,8 @@
         <DCCReference Include="addons\time\uTime_Sounds.pas"/>
         <DCCReference Include="code\_database\uDatabase.pas"/>
         <DCCReference Include="addons\play\azhung\uAzHung_Sound.pas"/>
+        <DCCReference Include="addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas"/>
+        <DCCReference Include="addons\weather\providers\uWeather_Providers_Yahoo.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

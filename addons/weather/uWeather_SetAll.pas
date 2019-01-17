@@ -220,7 +220,7 @@ begin
   vWeather.Config.main.Right.Panel := Tpanel.Create(vWeather.Config.main.Panel);
   vWeather.Config.main.Right.Panel.Name := 'Weather_Config_Right_Panel';
   vWeather.Config.main.Right.Panel.Parent := vWeather.Config.main.Panel;
-  vWeather.Config.main.Right.Panel.SetBounds(0, 210, vWeather.Config.main.Panel.Width - 210,
+  vWeather.Config.main.Right.Panel.SetBounds(210, 0, vWeather.Config.main.Panel.Width - 210,
     vWeather.Config.main.Panel.Height);
   vWeather.Config.main.Right.Panel.Visible := True;
 

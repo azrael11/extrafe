@@ -18,7 +18,6 @@ uses
 procedure uMain_Config_Info_Create;
 
 procedure uMain_Config_Info_ExtraFE;
-procedure uMain_Config_Info_Credits;
 
 // Info Emulators
 procedure Config_Info_Emulator_Mame_ShowHistory;
@@ -32,7 +31,8 @@ uses
   uMain_SetAll,
   uMain_AllTypes,
   uMain_Mouse,
-  uMain_Config_Info_Actions;
+  uMain_Config_Info_Actions,
+  uMain_Config_Info_Credits;
 
 procedure uMain_Config_Info_Create;
 const
@@ -64,7 +64,7 @@ begin
   end;
 
   uMain_Config_Info_ExtraFE;
-  uMain_Config_Info_Credits;
+  uMain_Config_Info_Credits_Show;
 end;
 
 procedure uMain_Config_Info_ExtraFE;
@@ -286,189 +286,6 @@ begin
   vConfig_Info_Minor := StrToInt(extrafe.prog.Version.Minor);
   vConfig_Info_Realeash := StrToInt(extrafe.prog.Version.Realeash);
   vConfig_Info_Build := StrToInt(extrafe.prog.Version.Build);
-end;
-
-procedure uMain_Config_Info_Credits;
-begin
-  mainScene.Config.Main.R.Info.Credits.Groupbox := TGroupBox.Create(mainScene.Config.Main.R.Info.TabItem[4]);
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Name := 'Main_Config_Info_Credits_Groupbox';
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Parent := mainScene.Config.Main.R.Info.TabItem[4];
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Width := mainScene.Config.Main.R.Info.TabControl.Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Height := 80;
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Position.Y := 10;
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Text := '-------------------------';
-  mainScene.Config.Main.R.Info.Credits.Groupbox.Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Text := TALText.Create(mainScene.Config.Main.R.Info.Credits.Groupbox);
-  mainScene.Config.Main.R.Info.Credits.Text.Name := 'Main_Config_Info_Credits_Text';
-  mainScene.Config.Main.R.Info.Credits.Text.Parent := mainScene.Config.Main.R.Info.Credits.Groupbox;
-  mainScene.Config.Main.R.Info.Credits.Text.Width := mainScene.Config.Main.R.Info.Credits.Groupbox.Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Text.Height := 60;
-  mainScene.Config.Main.R.Info.Credits.Text.Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Text.Position.Y := 20;
-  mainScene.Config.Main.R.Info.Credits.Text.WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Text.TextIsHtml := True;
-  mainScene.Config.Main.R.Info.Credits.Text.TextSettings.FontColor := TAlphaColorRec.White;
-  mainScene.Config.Main.R.Info.Credits.Text.TextSettings.Font.Size := 14;
-  mainScene.Config.Main.R.Info.Credits.Text.TextSettings.VertAlign := TTextAlign.Leading;
-  mainScene.Config.Main.R.Info.Credits.Text.Text :=
-    ' First i want to thank for my heart my Son "<font color="#ff63cbfc">Vaggelis Kordas</font>" and my Wife "<font color="#ff63cbfc">Vouli Mpakatsi</font>" for the all time support and my missing dog "<font color="#ff63cbfc">Sokrates</font>"'
-    + ' when he comes to my house then i start develop the <b>ExtraFE</b>.';
-  mainScene.Config.Main.R.Info.Credits.Text.Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Left_Box := TVertScrollBox.Create(mainScene.Config.Main.R.Info.TabItem[4]);
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Name := 'Main_Config_Info_Credits_LeftBox';
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Parent := mainScene.Config.Main.R.Info.TabItem[4];
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Width := 100;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Height := mainScene.Config.Main.R.Info.TabControl.Height - 110;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.Y := 100;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other := TGroupBox.Create(mainScene.Config.Main.R.Info.TabItem[4]);
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Name := 'Main_Config_Info_Credits_Groupbox_Others';
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Parent := mainScene.Config.Main.R.Info.TabItem[4];
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width := mainScene.Config.Main.R.Info.TabControl.Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height :=
-    mainScene.Config.Main.R.Info.TabControl.Height - 120;
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Position.Y := 90;
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Text := '-------------------------';
-  mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Left_Box :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Name := 'Main_Config_Info_Credits_VBox_Left';
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Parent := mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Width := 100;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Height := mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.X := 0;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.Y := 0;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0] := TImage.Create(mainScene.Config.Main.R.Info.Credits.Left_Box);
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Name := 'Main_Config_Info_Credits_Image_0';
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Parent := mainScene.Config.Main.R.Info.Credits.Left_Box;
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Width := 80;
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Height := 40;
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Position.Y := 10;
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Bitmap.LoadFromFile(ex_main.Paths.Config_Images +
-    'config_emb.png');
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.Main.R.Info.Credits.Comps_Image[0].Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0] :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Name := 'Main_Config_Info_Credits_VBox_Right';
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Parent := mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Width :=
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width - 100;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Height :=
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Position.X := 100;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Position.Y := 0;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Name := 'Main_Config_Info_Credits_Parag_0';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Parent := mainScene.Config.Main.R.Info.Credits.Right_Box[0];
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Width := mainScene.Config.Main.R.Info.Credits.Right_Box[0]
-    .Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Height:= 100;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Position.Y := 10;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.FontColor:= TAlphaColorRec.White;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.Font.Size := 14;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextIsHtml:= True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text :=
-    '   <b><font color="#ff63cbfc">ExtraFE</font></b> created, builded with <font color="#f21212">"Delphi Community Edition"</font> from <b>Embracedero</b> company.'
-    + 'This IDE tool for pascal language with many new features and new style pascal is free with a restricted lincesce.'
-    + 'Go to <b>Embarcadero''s</b> web site and dowloading for <b><font color="#ff63cbfc">free</font></b> and create fabulus applications.';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Name := 'Main_Config_Info_Credits_Parag_1';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Parent := mainScene.Config.Main.R.Info.Credits.Right_Box[0];
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Width := mainScene.Config.Main.R.Info.Credits.Right_Box[0]
-    .Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Height:= 140;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Position.Y := 110;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.FontColor:= TAlphaColorRec.White;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.Font.Size := 14;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.VertAlign := TTextAlign.Leading;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Text :=
-    '   Embarcadero tools are built for elite developers who build and maintain the world’s most critical applications.'
-    + ' Our customers choose Embarcadero because we are the champion of developers, and we help them build more secure and '
-    + 'scalable enterprise applications faster than any other tools on the market. In fact, ninety of the Fortune 100 and an'
-    + ' active community of more than three million users worldwide have relied on Embarcadero'' s award-winning products for'
-    + ' over 30 years.';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Name := 'Main_Config_Info_Credits_Parag_2';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Parent := mainScene.Config.Main.R.Info.Credits.Right_Box[0];
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Width := mainScene.Config.Main.R.Info.Credits.Right_Box[0]
-    .Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Height:= 120;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Position.Y := 250;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.FontColor:= TAlphaColorRec.White;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.Font.Size := 14;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.VertAlign := TTextAlign.Leading;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Text :=
-    '   If you’re trying to build a business-critical application in a demanding vertical, Embarcadero is for'
-    + ' you. If you’re looking to write steadfast code quickly that will pass stringent code reviews faster than any other,'
-    + ' Embarcadero is for you. We’re here to support elite developers who understand the scalability and stability of C++'
-    + ' and Delphi and depend on the decades of innovation those languages bring to development.';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Name := 'Main_Config_Info_Credits_Parag_3';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Parent := mainScene.Config.Main.R.Info.Credits.Right_Box[0];
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Width := mainScene.Config.Main.R.Info.Credits.Right_Box[0]
-    .Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Height:= 30;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Position.Y := 370;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].TextSettings.FontColor:= TAlphaColorRec.White;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].TextSettings.Font.Size := 14;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].TextSettings.VertAlign := TTextAlign.Leading;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Text :=
-    '   We invite you to try our products for free and see for yourself.';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Visible := True;
-
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Name := 'Main_Config_Info_Credits_Parag_4';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Parent := mainScene.Config.Main.R.Info.Credits.Right_Box[0];
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Width := mainScene.Config.Main.R.Info.Credits.Right_Box[0]
-    .Width - 20;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Height:= 200;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Position.Y := 400;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].TextSettings.FontColor:= TAlphaColorRec.White;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].TextSettings.Font.Size := 14;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].TextSettings.VertAlign := TTextAlign.Leading;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Text :=
-    '   Embarcadero is an Idera, Inc. company. Idera, Inc. is the parent company of'
-    + ' global B2B software productivity brands whose solutions enable technical users to do more with less, faster. Idera, '
-    + 'Inc. brands span three divisions – Database Tools, Developer Tools, and Test Management Tools – with products that are'
-    + ' evangelized by millions of community members and more than 50,000 customers worldwide, including some of the world’s largest'
-    + ' healthcare, financial services, retail, and technology companies.';
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Visible := True;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////

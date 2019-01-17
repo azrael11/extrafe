@@ -6,7 +6,7 @@ uses
   System.UITypes,
   System.Classes,
   FMX.Forms,
-  FMX.Types, FMX.Ani;
+  FMX.Types;
 type
   TLoading_Form = class(TForm)
     procedure FormCreate(Sender: TObject);
