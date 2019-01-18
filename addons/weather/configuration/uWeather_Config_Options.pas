@@ -29,114 +29,139 @@ uses
 
 procedure uWeather_Config_Options_Show;
 begin
-  vWeather.Config.Main.Right.Panels[2] := TPanel.Create(vWeather.Config.Main.Right.Panel);
-  vWeather.Config.Main.Right.Panels[2].Name := 'Weather_Config_Panels_2';
-  vWeather.Config.Main.Right.Panels[2].Parent := vWeather.Config.Main.Right.Panel;
-  vWeather.Config.Main.Right.Panels[2].Align := TAlignLayout.Client;
-  vWeather.Config.Main.Right.Panels[2].Visible := True;
+  if addons.weather.Action.Provider <> '' then
+  begin
+    vWeather.Config.Main.Right.Panels[2] := TPanel.Create(vWeather.Config.Main.Right.Panel);
+    vWeather.Config.Main.Right.Panels[2].Name := 'Weather_Config_Panels_2';
+    vWeather.Config.Main.Right.Panels[2].Parent := vWeather.Config.Main.Right.Panel;
+    vWeather.Config.Main.Right.Panels[2].Align := TAlignLayout.Client;
+    vWeather.Config.Main.Right.Panels[2].Visible := True;
 
-  vWeather.Config.Main.Right.Options.Degree := TGroupBox.Create(vWeather.Config.Main.Right.Panels[2]);
-  vWeather.Config.Main.Right.Options.Degree.Name := 'Weather_Config_Options_Degree_Groupbox';
-  vWeather.Config.Main.Right.Options.Degree.Parent := vWeather.Config.Main.Right.Panels[2];
-  vWeather.Config.Main.Right.Options.Degree.Width := vWeather.Config.Main.Right.Panels[2].Width - 20;
-  vWeather.Config.Main.Right.Options.Degree.Height := 100;
-  vWeather.Config.Main.Right.Options.Degree.Position.X := 10;
-  vWeather.Config.Main.Right.Options.Degree.Position.Y := 10;
-  vWeather.Config.Main.Right.Options.Degree.Text := 'Temperature unit';
-  vWeather.Config.Main.Right.Options.Degree.Visible := True;
+    vWeather.Config.Main.Right.Options.Degree := TGroupBox.Create(vWeather.Config.Main.Right.Panels[2]);
+    vWeather.Config.Main.Right.Options.Degree.Name := 'Weather_Config_Options_Degree_Groupbox';
+    vWeather.Config.Main.Right.Options.Degree.Parent := vWeather.Config.Main.Right.Panels[2];
+    vWeather.Config.Main.Right.Options.Degree.SetBounds(10, 10, vWeather.Config.Main.Right.Panels[2].Width
+      - 20, 100);
+    vWeather.Config.Main.Right.Options.Degree.Text := 'Temperature unit';
+    vWeather.Config.Main.Right.Options.Degree.Visible := True;
 
-  vWeather.Config.Main.Right.Options.Degree_C := TCheckBox.Create(vWeather.Config.Main.Right.Options.Degree);
-  vWeather.Config.Main.Right.Options.Degree_C.Name := 'Weather_Config_Options_Degree_Celcius_Checkbox';
-  vWeather.Config.Main.Right.Options.Degree_C.Parent := vWeather.Config.Main.Right.Options.Degree;
-  vWeather.Config.Main.Right.Options.Degree_C.Width := 200;
-  vWeather.Config.Main.Right.Options.Degree_C.Height := 20;
-  vWeather.Config.Main.Right.Options.Degree_C.Position.X := 10;
-  vWeather.Config.Main.Right.Options.Degree_C.Position.Y := 40;
-  vWeather.Config.Main.Right.Options.Degree_C.Text := 'Celcius';
-  vWeather.Config.Main.Right.Options.Degree_C.Font.Style :=
-    vWeather.Config.Main.Right.Options.Degree_C.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.Main.Right.Options.Degree_C.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
-  vWeather.Config.Main.Right.Options.Degree_C.OnMouseEnter :=
-    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
-  vWeather.Config.Main.Right.Options.Degree_C.OnMouseLeave :=
-    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
-  vWeather.Config.Main.Right.Options.Degree_C.Visible := True;
+    vWeather.Config.Main.Right.Options.Degree_C :=
+      TCheckBox.Create(vWeather.Config.Main.Right.Options.Degree);
+    vWeather.Config.Main.Right.Options.Degree_C.Name := 'Weather_Config_Options_Degree_Celcius_Checkbox';
+    vWeather.Config.Main.Right.Options.Degree_C.Parent := vWeather.Config.Main.Right.Options.Degree;
+    if addons.weather.Action.Provider = 'yahoo' then
+      vWeather.Config.Main.Right.Options.Degree_C.SetBounds(10, 40, 200, 20)
+    else if addons.weather.Action.Provider = 'openweathermap' then
+      vWeather.Config.Main.Right.Options.Degree_C.SetBounds(10, 40, 100, 20);
+    vWeather.Config.Main.Right.Options.Degree_C.Text := 'Celcius';
+    vWeather.Config.Main.Right.Options.Degree_C.Font.Style :=
+      vWeather.Config.Main.Right.Options.Degree_C.Font.Style + [TFontStyle.fsBold];
+    vWeather.Config.Main.Right.Options.Degree_C.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
+    vWeather.Config.Main.Right.Options.Degree_C.OnMouseEnter :=
+      addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+    vWeather.Config.Main.Right.Options.Degree_C.OnMouseLeave :=
+      addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+    vWeather.Config.Main.Right.Options.Degree_C.Visible := True;
 
-  vWeather.Config.Main.Right.Options.Degree_F := TCheckBox.Create(vWeather.Config.Main.Right.Options.Degree);
-  vWeather.Config.Main.Right.Options.Degree_F.Name := 'Weather_Config_Options_Degree_Fahrenheit_Checkbox';
-  vWeather.Config.Main.Right.Options.Degree_F.Parent := vWeather.Config.Main.Right.Options.Degree;
-  vWeather.Config.Main.Right.Options.Degree_F.Width := 200;
-  vWeather.Config.Main.Right.Options.Degree_F.Height := 20;
-  vWeather.Config.Main.Right.Options.Degree_F.Position.X :=
-    vWeather.Config.Main.Right.Options.Degree.Width - 210;
-  vWeather.Config.Main.Right.Options.Degree_F.Position.Y := 40;
-  vWeather.Config.Main.Right.Options.Degree_F.Text := 'Fahrenheit';
-  vWeather.Config.Main.Right.Options.Degree_F.Font.Style :=
-    vWeather.Config.Main.Right.Options.Degree_F.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.Main.Right.Options.Degree_F.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
-  vWeather.Config.Main.Right.Options.Degree_F.OnMouseEnter :=
-    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
-  vWeather.Config.Main.Right.Options.Degree_F.OnMouseLeave :=
-    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
-  vWeather.Config.Main.Right.Options.Degree_F.Visible := True;
+    vWeather.Config.Main.Right.Options.Degree_F :=
+      TCheckBox.Create(vWeather.Config.Main.Right.Options.Degree);
+    vWeather.Config.Main.Right.Options.Degree_F.Name := 'Weather_Config_Options_Degree_Fahrenheit_Checkbox';
+    vWeather.Config.Main.Right.Options.Degree_F.Parent := vWeather.Config.Main.Right.Options.Degree;
+    if addons.weather.Action.Provider = 'yahoo' then
+      vWeather.Config.Main.Right.Options.Degree_F.SetBounds(vWeather.Config.Main.Right.Options.Degree.Width -
+        210, 40, 200, 20)
+    else if addons.weather.Action.Provider = 'openweathermap' then
+      vWeather.Config.Main.Right.Options.Degree_F.SetBounds
+        ((vWeather.Config.Main.Right.Options.Degree.Width / 2) - 50, 40, 100, 20);
+    vWeather.Config.Main.Right.Options.Degree_F.Text := 'Fahrenheit';
+    vWeather.Config.Main.Right.Options.Degree_F.Font.Style :=
+      vWeather.Config.Main.Right.Options.Degree_F.Font.Style + [TFontStyle.fsBold];
+    vWeather.Config.Main.Right.Options.Degree_F.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
+    vWeather.Config.Main.Right.Options.Degree_F.OnMouseEnter :=
+      addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+    vWeather.Config.Main.Right.Options.Degree_F.OnMouseLeave :=
+      addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+    vWeather.Config.Main.Right.Options.Degree_F.Visible := True;
 
-  vWeather.Config.Main.Right.Options.Refresh := TGroupBox.Create(vWeather.Config.Main.Right.Panels[2]);
-  vWeather.Config.Main.Right.Options.Refresh.Name := 'Weather_Config_Options_Refresh_Groupbox';
-  vWeather.Config.Main.Right.Options.Refresh.Parent := vWeather.Config.Main.Right.Panels[2];
-  vWeather.Config.Main.Right.Options.Refresh.Width := vWeather.Config.Main.Right.Panels[2].Width - 20;
-  vWeather.Config.Main.Right.Options.Refresh.Height := 100;
-  vWeather.Config.Main.Right.Options.Refresh.Position.X := 10;
-  vWeather.Config.Main.Right.Options.Refresh.Position.Y := 130;
-  vWeather.Config.Main.Right.Options.Refresh.Text := 'Refresh Options';
-  vWeather.Config.Main.Right.Options.Refresh.Visible := True;
+    if addons.weather.Action.Provider = 'openweathermap' then
+    begin
+      vWeather.Config.Main.Right.Options.Degree_K :=
+        TCheckBox.Create(vWeather.Config.Main.Right.Options.Degree);
+      vWeather.Config.Main.Right.Options.Degree_K.Name := 'Weather_Config_Options_Degree_Kelvin_Checkbox';
+      vWeather.Config.Main.Right.Options.Degree_K.Parent := vWeather.Config.Main.Right.Options.Degree;
+      vWeather.Config.Main.Right.Options.Degree_K.SetBounds(vWeather.Config.Main.Right.Options.Degree.Width -
+        160, 40, 100, 20);
+      vWeather.Config.Main.Right.Options.Degree_K.Text := 'Kelvin';
+      vWeather.Config.Main.Right.Options.Degree_K.Align:= TAlignLayout.Right;
+      vWeather.Config.Main.Right.Options.Degree_K.Font.Style :=
+        vWeather.Config.Main.Right.Options.Degree_F.Font.Style + [TFontStyle.fsBold];
+      vWeather.Config.Main.Right.Options.Degree_K.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
+      vWeather.Config.Main.Right.Options.Degree_K.OnMouseEnter :=
+        addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+      vWeather.Config.Main.Right.Options.Degree_K.OnMouseLeave :=
+        addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+      vWeather.Config.Main.Right.Options.Degree_K.Visible := True;
+    end;
 
-  vWeather.Config.Main.Right.Options.Refresh_Every :=
-    TCheckBox.Create(vWeather.Config.Main.Right.Options.Refresh);
-  vWeather.Config.Main.Right.Options.Refresh_Every.Name := 'Weather_Config_Options_Refresh_Every_Checkbox';
-  vWeather.Config.Main.Right.Options.Refresh_Every.Parent := vWeather.Config.Main.Right.Options.Refresh;
-  vWeather.Config.Main.Right.Options.Refresh_Every.Width := 250;
-  vWeather.Config.Main.Right.Options.Refresh_Every.Height := 20;
-  vWeather.Config.Main.Right.Options.Refresh_Every.Position.X := 10;
-  vWeather.Config.Main.Right.Options.Refresh_Every.Position.Y := 40;
-  vWeather.Config.Main.Right.Options.Refresh_Every.Text := 'Every time open the weather addon';
-  vWeather.Config.Main.Right.Options.Refresh_Every.Font.Style :=
-    vWeather.Config.Main.Right.Options.Refresh_Every.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.Main.Right.Options.Refresh_Every.OnClick :=
-    addons.weather.Input.mouse.Checkbox.OnMouseClick;
-  vWeather.Config.Main.Right.Options.Refresh_Every.OnMouseEnter :=
-    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
-  vWeather.Config.Main.Right.Options.Refresh_Every.OnMouseLeave :=
-    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
-  vWeather.Config.Main.Right.Options.Refresh_Every.Visible := True;
+    vWeather.Config.Main.Right.Options.Refresh := TGroupBox.Create(vWeather.Config.Main.Right.Panels[2]);
+    vWeather.Config.Main.Right.Options.Refresh.Name := 'Weather_Config_Options_Refresh_Groupbox';
+    vWeather.Config.Main.Right.Options.Refresh.Parent := vWeather.Config.Main.Right.Panels[2];
+    vWeather.Config.Main.Right.Options.Refresh.Width := vWeather.Config.Main.Right.Panels[2].Width - 20;
+    vWeather.Config.Main.Right.Options.Refresh.Height := 100;
+    vWeather.Config.Main.Right.Options.Refresh.Position.X := 10;
+    vWeather.Config.Main.Right.Options.Refresh.Position.Y := 130;
+    vWeather.Config.Main.Right.Options.Refresh.Text := 'Refresh Options';
+    vWeather.Config.Main.Right.Options.Refresh.Visible := True;
 
-  vWeather.Config.Main.Right.Options.Refresh_Once :=
-    TCheckBox.Create(vWeather.Config.Main.Right.Options.Refresh);
-  vWeather.Config.Main.Right.Options.Refresh_Once.Name := 'Weather_Config_Options_Refresh_Once_Checkbox';
-  vWeather.Config.Main.Right.Options.Refresh_Once.Parent := vWeather.Config.Main.Right.Options.Refresh;
-  vWeather.Config.Main.Right.Options.Refresh_Once.Width := 200;
-  vWeather.Config.Main.Right.Options.Refresh_Once.Height := 20;
-  vWeather.Config.Main.Right.Options.Refresh_Once.Position.X :=
-    vWeather.Config.Main.Right.Options.Refresh.Width - 210;
-  vWeather.Config.Main.Right.Options.Refresh_Once.Position.Y := 40;
-  vWeather.Config.Main.Right.Options.Refresh_Once.Text := 'Once when run ExtraFE';
-  vWeather.Config.Main.Right.Options.Refresh_Once.Font.Style :=
-    vWeather.Config.Main.Right.Options.Refresh_Once.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.Main.Right.Options.Refresh_Once.OnClick := addons.weather.Input.mouse.Checkbox.OnMouseClick;
-  vWeather.Config.Main.Right.Options.Refresh_Once.OnMouseEnter :=
-    addons.weather.Input.mouse.Checkbox.OnMouseEnter;
-  vWeather.Config.Main.Right.Options.Refresh_Once.OnMouseLeave :=
-    addons.weather.Input.mouse.Checkbox.OnMouseLeave;
-  vWeather.Config.Main.Right.Options.Refresh_Once.Visible := True;
+    vWeather.Config.Main.Right.Options.Refresh_Every :=
+      TCheckBox.Create(vWeather.Config.Main.Right.Options.Refresh);
+    vWeather.Config.Main.Right.Options.Refresh_Every.Name := 'Weather_Config_Options_Refresh_Every_Checkbox';
+    vWeather.Config.Main.Right.Options.Refresh_Every.Parent := vWeather.Config.Main.Right.Options.Refresh;
+    vWeather.Config.Main.Right.Options.Refresh_Every.Width := 250;
+    vWeather.Config.Main.Right.Options.Refresh_Every.Height := 20;
+    vWeather.Config.Main.Right.Options.Refresh_Every.Position.X := 10;
+    vWeather.Config.Main.Right.Options.Refresh_Every.Position.Y := 40;
+    vWeather.Config.Main.Right.Options.Refresh_Every.Text := 'Every time open the weather addon';
+    vWeather.Config.Main.Right.Options.Refresh_Every.Font.Style :=
+      vWeather.Config.Main.Right.Options.Refresh_Every.Font.Style + [TFontStyle.fsBold];
+    vWeather.Config.Main.Right.Options.Refresh_Every.OnClick :=
+      addons.weather.Input.mouse.Checkbox.OnMouseClick;
+    vWeather.Config.Main.Right.Options.Refresh_Every.OnMouseEnter :=
+      addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+    vWeather.Config.Main.Right.Options.Refresh_Every.OnMouseLeave :=
+      addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+    vWeather.Config.Main.Right.Options.Refresh_Every.Visible := True;
 
-  if addons.weather.Action.Degree = 'Celcius' then
-    vWeather.Config.Main.Right.Options.Degree_C.IsChecked := True
-  else if addons.weather.Action.Degree = 'Fahrenheit' then
-    vWeather.Config.Main.Right.Options.Degree_F.IsChecked := True;
+    vWeather.Config.Main.Right.Options.Refresh_Once :=
+      TCheckBox.Create(vWeather.Config.Main.Right.Options.Refresh);
+    vWeather.Config.Main.Right.Options.Refresh_Once.Name := 'Weather_Config_Options_Refresh_Once_Checkbox';
+    vWeather.Config.Main.Right.Options.Refresh_Once.Parent := vWeather.Config.Main.Right.Options.Refresh;
+    vWeather.Config.Main.Right.Options.Refresh_Once.Width := 200;
+    vWeather.Config.Main.Right.Options.Refresh_Once.Height := 20;
+    vWeather.Config.Main.Right.Options.Refresh_Once.Position.X :=
+      vWeather.Config.Main.Right.Options.Refresh.Width - 210;
+    vWeather.Config.Main.Right.Options.Refresh_Once.Position.Y := 40;
+    vWeather.Config.Main.Right.Options.Refresh_Once.Text := 'Once when run ExtraFE';
+    vWeather.Config.Main.Right.Options.Refresh_Once.Font.Style :=
+      vWeather.Config.Main.Right.Options.Refresh_Once.Font.Style + [TFontStyle.fsBold];
+    vWeather.Config.Main.Right.Options.Refresh_Once.OnClick :=
+      addons.weather.Input.mouse.Checkbox.OnMouseClick;
+    vWeather.Config.Main.Right.Options.Refresh_Once.OnMouseEnter :=
+      addons.weather.Input.mouse.Checkbox.OnMouseEnter;
+    vWeather.Config.Main.Right.Options.Refresh_Once.OnMouseLeave :=
+      addons.weather.Input.mouse.Checkbox.OnMouseLeave;
+    vWeather.Config.Main.Right.Options.Refresh_Once.Visible := True;
 
-  if addons.weather.Config.Refresh_Once = False then
-    vWeather.Config.Main.Right.Options.Refresh_Every.IsChecked := True
-  else
-    vWeather.Config.Main.Right.Options.Refresh_Once.IsChecked := True;
+    if addons.weather.Action.Degree = 'Celcius' then
+      vWeather.Config.Main.Right.Options.Degree_C.IsChecked := True
+    else if addons.weather.Action.Degree = 'Fahrenheit' then
+      vWeather.Config.Main.Right.Options.Degree_F.IsChecked := True;
+
+    if addons.weather.Config.Refresh_Once = False then
+      vWeather.Config.Main.Right.Options.Refresh_Every.IsChecked := True
+    else
+      vWeather.Config.Main.Right.Options.Refresh_Once.IsChecked := True;
+  end;
 end;
 
 procedure uWeather_Config_Options_Free;

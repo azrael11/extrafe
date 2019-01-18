@@ -21,7 +21,8 @@ uses
   uWeather_AllTypes,
   uWeather_SetAll,
   uWeather_Config_Towns,
-  uWeather_Sounds;
+  uWeather_Sounds,
+  uWeather_Providers_Yahoo;
 
 procedure uWeather_Config_Towns_Delete_Town(vNum: Integer);
 var
@@ -56,7 +57,7 @@ begin
 
   uWeather_SetAll_Create_Control;
   for vi := 0 to addons.weather.Action.Active_Total do
-    uWeather_SetAll_CreateWeather_Tab(addons.weather.Action.Choosen[vi], vi);
+    uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[vi], vi);
 
   vWeather.Scene.Blur.Enabled := False;
   vWeather.Scene.Control.TabIndex := 0;

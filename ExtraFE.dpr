@@ -138,7 +138,8 @@ uses
   uDatabase in 'code\_database\uDatabase.pas',
   uAzHung_Sound in 'addons\play\azhung\uAzHung_Sound.pas',
   uWeather_Providers_OpenWeatherMap in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas',
-  uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas';
+  uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas',
+  uMain_Config_Info_Credits in 'main\configuration\uMain_Config_Info_Credits.pas';
 
 {$R *.res}
 

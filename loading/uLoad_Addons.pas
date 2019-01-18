@@ -291,6 +291,7 @@ begin
   CreateDir(extrafe.prog.Path + 'data\addons\weather\icons');
   CreateDir(extrafe.prog.Path + 'data\addons\weather\images');
   CreateDir(extrafe.prog.Path + 'data\addons\weather\sounds');
+  CreateDir(extrafe.prog.Path + 'data\addons\weather\temp');
 
   addons.weather.ini.Path := extrafe.prog.Path + 'data\addons\weather\';
   addons.weather.ini.Name := 'weather.ini';
@@ -298,6 +299,7 @@ begin
   addons.weather.Path.Icon := addons.weather.ini.Path + 'icon\';
   addons.weather.Path.Images := addons.weather.ini.Path + 'images\';
   addons.weather.Path.Iconsets := addons.weather.ini.Path + 'icons\';
+  addons.weather.Path.Temp := addons.weather.ini.Path+ 'temp\';
 
   addons.weather.ini.ini.WriteString('WEATHER', 'Addon_Name', 'weather');
   addons.weather.ini.ini.WriteBool('WEATHER', 'Active', False);
@@ -327,6 +329,7 @@ begin
   addons.weather.Path.Images := addons.weather.ini.Path + 'images\';
   addons.weather.Path.Iconsets := addons.weather.ini.Path + 'icons\';
   addons.weather.Path.Sounds := addons.weather.ini.Path + 'sounds\';
+  addons.weather.Path.Temp := addons.weather.Ini.Path+ 'temp\';
 
   addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First',
     addons.weather.Action.First);

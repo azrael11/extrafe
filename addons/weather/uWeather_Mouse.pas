@@ -449,8 +449,10 @@ end;
 
 procedure TWEATHER_ADDON_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
-  if TCheckBox(Sender).Name = 'Weather_Config_Provider_Yahoo_CheckBox' then
+  if TCheckBox(Sender).Name = 'Weather_Config_Provider_yahoo_CheckBox' then
     uWeather_Config_Provider_YahooCheck
+  else if TCheckBox(Sender).Name= 'Weather_Config_Provider_openweathermap_CheckBox'  then
+    uWeather_Config_Provider_OpenWeatherMapCheck
   else if TCheckBox(Sender).Name = 'Weather_Config_Options_Degree_Celcius_Checkbox' then
     uWeather_Config_Options_UseDegree(vWeather.Config.main.Right.Options.Degree_C.Text)
   else if TCheckBox(Sender).Name = 'Weather_Config_Options_Degree_Fahrenheit_Checkbox' then

@@ -33,6 +33,7 @@ type
     Images: String;
     Iconsets: String;
     Sounds: String;
+    Temp: String;
   end;
 
 type
@@ -136,6 +137,7 @@ type
     Selected_Town: Integer;
     Refresh_Once: Boolean;
     Iconset: TADDON_WEATHER_ICONSETS;
+    Active_Panel: Integer;
   end;
 
 type
@@ -427,8 +429,9 @@ type
 type
   TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS = record
     Degree: TGroupBox;
-    Degree_C: TCheckBox;
-    Degree_F: TCheckBox;
+    Degree_C: TCheckBox;  //Yahoo, OpenWeatherMap
+    Degree_F: TCheckBox;  //Yahoo, OpenWeatherMap
+    Degree_K: TCheckBox;  //OpenWeatherMap
     Refresh: TGroupBox;
     Refresh_Every: TCheckBox;
     Refresh_Once: TCheckBox;
@@ -468,6 +471,7 @@ type
     Towns: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS;
     Options: TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS;
     Iconsets: TWEATHER_CONFIG_PANEL_RIGHT_ICONSETS;
+    NoProvider_Selected: TText;
   end;
 
 type

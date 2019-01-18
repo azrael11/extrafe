@@ -1,3 +1,83 @@
+{$A8,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N-,O+,P+,Q-,R-,S-,T-,U-,V+,W-,X+,Y+,Z1}
+{$MINSTACKSIZE $00004000}
+{$MAXSTACKSIZE $00100000}
+{$IMAGEBASE $00400000}
+{$APPTYPE GUI}
+{$WARN SYMBOL_DEPRECATED ON}
+{$WARN SYMBOL_LIBRARY ON}
+{$WARN SYMBOL_PLATFORM ON}
+{$WARN SYMBOL_EXPERIMENTAL ON}
+{$WARN UNIT_LIBRARY ON}
+{$WARN UNIT_PLATFORM ON}
+{$WARN UNIT_DEPRECATED ON}
+{$WARN UNIT_EXPERIMENTAL ON}
+{$WARN HRESULT_COMPAT ON}
+{$WARN HIDING_MEMBER ON}
+{$WARN HIDDEN_VIRTUAL ON}
+{$WARN GARBAGE ON}
+{$WARN BOUNDS_ERROR ON}
+{$WARN ZERO_NIL_COMPAT ON}
+{$WARN STRING_CONST_TRUNCED ON}
+{$WARN FOR_LOOP_VAR_VARPAR ON}
+{$WARN TYPED_CONST_VARPAR ON}
+{$WARN ASG_TO_TYPED_CONST ON}
+{$WARN CASE_LABEL_RANGE ON}
+{$WARN FOR_VARIABLE ON}
+{$WARN CONSTRUCTING_ABSTRACT ON}
+{$WARN COMPARISON_FALSE ON}
+{$WARN COMPARISON_TRUE ON}
+{$WARN COMPARING_SIGNED_UNSIGNED ON}
+{$WARN COMBINING_SIGNED_UNSIGNED ON}
+{$WARN UNSUPPORTED_CONSTRUCT ON}
+{$WARN FILE_OPEN ON}
+{$WARN FILE_OPEN_UNITSRC ON}
+{$WARN BAD_GLOBAL_SYMBOL ON}
+{$WARN DUPLICATE_CTOR_DTOR ON}
+{$WARN INVALID_DIRECTIVE ON}
+{$WARN PACKAGE_NO_LINK ON}
+{$WARN PACKAGED_THREADVAR ON}
+{$WARN IMPLICIT_IMPORT ON}
+{$WARN HPPEMIT_IGNORED ON}
+{$WARN NO_RETVAL ON}
+{$WARN USE_BEFORE_DEF ON}
+{$WARN FOR_LOOP_VAR_UNDEF ON}
+{$WARN UNIT_NAME_MISMATCH ON}
+{$WARN NO_CFG_FILE_FOUND ON}
+{$WARN IMPLICIT_VARIANTS ON}
+{$WARN UNICODE_TO_LOCALE ON}
+{$WARN LOCALE_TO_UNICODE ON}
+{$WARN IMAGEBASE_MULTIPLE ON}
+{$WARN SUSPICIOUS_TYPECAST ON}
+{$WARN PRIVATE_PROPACCESSOR ON}
+{$WARN UNSAFE_TYPE OFF}
+{$WARN UNSAFE_CODE OFF}
+{$WARN UNSAFE_CAST OFF}
+{$WARN OPTION_TRUNCATED ON}
+{$WARN WIDECHAR_REDUCED ON}
+{$WARN DUPLICATES_IGNORED ON}
+{$WARN UNIT_INIT_SEQ ON}
+{$WARN LOCAL_PINVOKE ON}
+{$WARN MESSAGE_DIRECTIVE ON}
+{$WARN TYPEINFO_IMPLICITLY_ADDED ON}
+{$WARN RLINK_WARNING ON}
+{$WARN IMPLICIT_STRING_CAST ON}
+{$WARN IMPLICIT_STRING_CAST_LOSS ON}
+{$WARN EXPLICIT_STRING_CAST OFF}
+{$WARN EXPLICIT_STRING_CAST_LOSS OFF}
+{$WARN CVT_WCHAR_TO_ACHAR ON}
+{$WARN CVT_NARROWING_STRING_LOST ON}
+{$WARN CVT_ACHAR_TO_WCHAR ON}
+{$WARN CVT_WIDENING_STRING_LOST ON}
+{$WARN NON_PORTABLE_TYPECAST ON}
+{$WARN XML_WHITESPACE_NOT_ALLOWED ON}
+{$WARN XML_UNKNOWN_ENTITY ON}
+{$WARN XML_INVALID_NAME_START ON}
+{$WARN XML_INVALID_NAME ON}
+{$WARN XML_EXPECTED_CHARACTER ON}
+{$WARN XML_CREF_NO_RESOLVE ON}
+{$WARN XML_NO_PARM ON}
+{$WARN XML_NO_MATCHING_PARM ON}
+{$WARN IMMUTABLE_STRINGS OFF}
 unit uWeather_Config_Towns_Add;
 
 interface
@@ -6,6 +86,7 @@ uses
   System.Classes,
   System.UiTypes,
   System.SysUtils,
+  System.JSON,
   FMX.Types,
   FMX.Objects,
   FMX.Edit,
@@ -15,6 +96,11 @@ uses
   FMX.Dialogs,
   FMX.ImgList,
   FMX.Ani,
+  IPPeerClient,
+  REST.Client,
+  REST.Types,
+  Data.Bind.Components,
+  Data.Bind.ObjectScope,
   OXmlPDOM;
 
 type
@@ -54,12 +140,12 @@ uses
   uWeather_Actions,
   uWeather_Convert,
   uWeather_Config_Towns,
+  uWeather_Providers_Yahoo,
   uWeather_Forcast,
   uSnippet_Image,
   uSnippet_StringGrid;
 
 var
-  vCTTempResults: array [0 .. 100] of TWEATHER_CONFIG_TOWNS_ADD_SEARCHTOWN_RESULTS;
   vCodes: TStringList;
   vTown_HasData: Boolean;
 
@@ -338,92 +424,65 @@ end;
 
 procedure uWeather_Config_Towns_Add_FindTown(mTown: string);
 var
-  vTownAnwsers: TStringList;
-  vCorrectedTown: string;
   vCodeFlag: Integer;
   vi: Integer;
-  vi_1: Integer;
-
-  function vvv_Weather_Correct_Town(mTown: string): string;
-  var
-    viPos: Integer;
-    vText: string;
-    vText1, vText2: string;
-  begin
-    vText := mTown;
-    repeat
-      viPos := Pos(' ', vText);
-      if viPos <> 0 then
-      begin
-        vText1 := Trim(Copy(vText, 0, viPos));
-        vText2 := Trim(Copy(vText2, viPos, length(vText) - viPos));
-        vText := vText1 + '%20' + vText2;
-      end;
-    until viPos = 0;
-    Result := vText;
-  end;
-
+  vCount: String;
+  vID: String;
+  vName, vCountry, vCode, vState: String;
+  vRESTClient: TRESTClient;
+  vRESTRequest: TRESTRequest;
+  vRESTResponse: TRESTResponse;
+  vJSONValue: TJSONValue;
 begin
   vWeather.Config.main.Right.Towns.Add.main.Add.Enabled := False;
   vWeather.Config.main.Right.Towns.Add.main.Add_Stay.Enabled := False;
   if mTown <> '' then
   begin
-    for vi := 0 to 100 do
+    vJSONValue := TJSONValue.Create;
+
+    vRESTClient := TRESTClient.Create('');
+    vRESTClient.name := 'OpenWeatherMap_RestClient';
+    vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
+    vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
+    vRESTClient.BaseURL := 'http://api.geonames.org/searchJSON?name_equals=' + mTown + '&username=azrael11';
+    vRESTClient.FallbackCharsetEncoding := 'UTF-8';
+
+    vRESTResponse := TRESTResponse.Create(vRESTClient);
+    vRESTResponse.name := 'OpenWeatherMap_Response';
+
+    vRESTRequest := TRESTRequest.Create(vRESTClient);
+    vRESTRequest.name := 'OpenWeatherMap_Request';
+    vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
+    vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
+    vRESTRequest.Client := vRESTClient;
+    vRESTRequest.Method := TRESTRequestMethod.rmGET;
+    vRESTRequest.Response := vRESTResponse;
+    vRESTRequest.Timeout := 30000;
+
+    vRESTRequest.Execute;
+    vJSONValue := vRESTResponse.JSONValue;
+
+    vCount := vJSONValue.GetValue<String>('totalResultsCount');
+
+    for vi := 0 to vCount.ToInteger - 1 do
     begin
-      vCTTempResults[vi].woeid := '';
-      vCTTempResults[vi].name := '';
-      vCTTempResults[vi].state_1 := '';
-      vCTTempResults[vi].country := '';
-    end;
-    vCorrectedTown := vvv_Weather_Correct_Town(mTown);
-    vTownAnwsers := TStringList.Create;
-    vTownAnwsers.Add(Main_Form.Main_IdHttp.Get
-      ('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.places%20where%20text%3D%22' +
-      vCorrectedTown + '%22&diagnostics=true'));
-    vTownAnwsers.SaveToFile(extrafe.prog.Path + cTemp_Towns);
-
-    vNTXML := CreateXMLDoc;
-    vNTXML.LoadFromFile(extrafe.prog.Path + cTemp_Towns);
-    vNTRoot := vNTXML.DocumentElement;
-
-    vi := -1;
-    while vNTRoot.GetNextChild(vNTNode) do
-      while vNTNode.GetNextChild(vNTNode_1) do
-        if vNTNode_1.NodeName = 'place' then
-        begin
-          inc(vi, 1);
-          while vNTNode_1.GetNextChild(vNTNode_2) do
-          begin
-            vNTAttribute := nil;
-            if vNTNode_2.NodeName = 'woeid' then
-              vCTTempResults[vi].woeid := vNTNode_2.Text;
-            if vNTNode_2.NodeName = 'name' then
-              vCTTempResults[vi].name := vNTNode_2.Text;
-            if vNTNode_2.NodeName = 'admin1' then
-              vCTTempResults[vi].state_1 := vNTNode_2.Text;
-            if vNTNode_2.NodeName = 'country' then
-            begin
-              vCTTempResults[vi].country := vNTNode_2.Text;
-              vNTNode_2.FindAttribute('code', vNTAttribute);
-              vCTTempResults[vi].country_code := vNTAttribute.NodeValue;
-            end;
-          end;
-        end;
-    vWeather.Config.main.Right.Towns.Add.main.Grid.RowCount := vi + 1;
-
-    for vi_1 := 0 to vi do
-    begin
-      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[0, vi_1] := IntToStr(vi_1 + 1);
-      vCodeFlag := vCodes.IndexOf(vCTTempResults[vi_1].country_code + '.png');
-      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[1, vi_1] := vCodeFlag.ToString;
-      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[2, vi_1] := vCTTempResults[vi_1].name;
-      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[3, vi_1] := vCTTempResults[vi_1].state_1;
-      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[4, vi_1] := vCTTempResults[vi_1].country;
+      vName := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].name');
+      vCountry := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].countryName');
+      vCode := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].countryCode');
+      vState := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].adminName1');
+      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[0, vi] := IntToStr(vi + 1);
+      vCodeFlag := vCodes.IndexOf(vCode + '.png');
+      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[1, vi] := vCodeFlag.ToString;
+      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[2, vi] := vName;
+      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[3, vi] := vState;
+      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[4, vi] := vCountry;
     end;
     vWeather.Config.main.Right.Towns.Add.main.Grid.Selected := 0;
     DeleteFile(extrafe.prog.Path + cTemp_Towns);
     vWeather.Config.main.Right.Towns.Add.main.Add.Enabled := True;
     vWeather.Config.main.Right.Towns.Add.main.Add_Stay.Enabled := True;
+    FreeAndNil(vJSONValue);
+    FreeAndNil(vRESTRequest);
   end
   else
     ShowMessage('Please write a town fist');
@@ -444,7 +503,7 @@ begin
     // Create new town panel in config towns
     uWeather_Config_Towns_CreateTown_Panel(vNum, addons.weather.Action.Choosen[vNum]);
     // Create new town in main selection
-    uWeather_SetAll_CreateWeather_Tab(addons.weather.Action.Choosen[vNum], vNum);
+    uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[vNum], vNum);
     vWeather.Scene.Control.TabIndex := 0;
     vTown_HasData := True;
   end
@@ -457,9 +516,9 @@ var
   vi: Integer;
 begin
   // Set the new town if data is not nil
-  uWeather_Config_Towns_Add_AddSelectedTown(addons.weather.Action.Active_Total + 1,
-    vCTTempResults[vWeather.Config.main.Right.Towns.Add.main.Grid.Selected].woeid,
-    vCTTempResults[vWeather.Config.main.Right.Towns.Add.main.Grid.Selected].country_code);
+  // uWeather_Config_Towns_Add_AddSelectedTown(addons.weather.Action.Active_Total + 1,
+  // vCTTempResults[vWeather.Config.main.Right.Towns.Add.main.Grid.Selected].woeid,
+  // vCTTempResults[vWeather.Config.main.Right.Towns.Add.main.Grid.Selected].country_code);
   // Set and start the ani panel
   vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := True;
   vStayToADD := vStay;

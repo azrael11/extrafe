@@ -56,6 +56,7 @@ uses
   uWeather_MenuActions,
   uWeather_Sounds,
   uWeather_Forcast,
+  uWeather_Providers_Yahoo,
   uWeather_Providers_OpenWeatherMap;
 
 procedure uWeather_Actions_Load;
@@ -72,10 +73,7 @@ begin
 
   uWeather_Sounds_Load;
 
-  uWeather_Providers_OpenWeatherMap_GetForcast;
-  uWeather_Actions_ShowFirstTimeScene(True);
-
- { if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
+ if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
   begin
     vAniText := TText.Create(vWeather.Scene.weather);
     vAniText.Name := 'Weather_Progress_Text';
@@ -113,7 +111,11 @@ begin
       vWeather.Config.Panel.Visible := False;
       vLoading_Integer := -1;
 
-      vTask := TTask.Run(
+//      if addons.weather.Action.Provider= 'yahoo' then
+//      else if addons.weather.Action.Provider= 'openweathermap' then
+
+
+    {  vTask := TTask.Run(
         procedure
         begin
           TThread.Synchronize(nil,
@@ -142,11 +144,11 @@ begin
                 addons.weather.Action.Choosen[vi] := uWeather_Forcast_Get(vi, vString, vString1);
               end;
             end);
-        end);
+        end);}
     end
   end
   else
-    uWeather_Actions_ShowFirstTimeScene(addons.weather.Action.First);}
+    uWeather_Actions_ShowFirstTimeScene(addons.weather.Action.First);
 end;
 
 procedure uWeather_Actions_ShowTheForcast;
@@ -156,7 +158,7 @@ begin
   FreeAndNil(vTaskTimer);
   for ki := 0 to addons.weather.Action.Active_Total do
   begin
-    uWeather_SetAll_CreateWeather_Tab(addons.weather.Action.Choosen[ki], ki);
+    uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[ki], ki);
     vWeather.Scene.Tab[ki].Tab.Visible := True;
     // Application.ProcessMessages;
   end;

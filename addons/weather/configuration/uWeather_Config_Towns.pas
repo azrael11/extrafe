@@ -65,7 +65,6 @@ var
   vSelected_Panel: TImage;
   vSelectedTown: Integer;
   vLoading_Integer: Integer;
-  vCTTempResults: array [0 .. 100] of TSEARCHTOWN_RESULTS;
   vNTXML: IXMLDocument;
   vNTRoot: PXMLNode;
   vNTNode: PXMLNode;
@@ -84,191 +83,207 @@ uses
   uWeather_SetAll,
   uWeather_Mouse,
   uWeather_Sounds,
+  uWeather_Providers_Yahoo,
   main;
 
 procedure uWeather_Config_Towns_Show;
 var
   vi: Integer;
 begin
-  vWeather.Config.main.Right.Panels[1] := TPanel.Create(vWeather.Config.main.Right.Panel);
-  vWeather.Config.main.Right.Panels[1].name := 'A_W_Config_Panels_1';
-  vWeather.Config.main.Right.Panels[1].Parent := vWeather.Config.main.Right.Panel;
-  vWeather.Config.main.Right.Panels[1].Align := TAlignLayout.Client;
-  vWeather.Config.main.Right.Panels[1].Visible := True;
+  if addons.weather.Action.Provider <> '' then
+  begin
+    vWeather.Config.main.Right.Panels[1] := TPanel.Create(vWeather.Config.main.Right.Panel);
+    vWeather.Config.main.Right.Panels[1].name := 'A_W_Config_Panels_1';
+    vWeather.Config.main.Right.Panels[1].Parent := vWeather.Config.main.Right.Panel;
+    vWeather.Config.main.Right.Panels[1].Align := TAlignLayout.Client;
+    vWeather.Config.main.Right.Panels[1].Visible := True;
 
-  vWeather.Config.main.Right.Towns.CityList := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.CityList.name := 'A_W_Config_Towns_CityList_VerticalBox';
-  vWeather.Config.main.Right.Towns.CityList.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.CityList.Width := vWeather.Config.main.Right.Panels[1].Width - 60;
-  vWeather.Config.main.Right.Towns.CityList.Height := vWeather.Config.main.Right.Panels[1].Height - 20;
-  vWeather.Config.main.Right.Towns.CityList.Position.X := 10;
-  vWeather.Config.main.Right.Towns.CityList.Position.Y := 10;
-  vWeather.Config.main.Right.Towns.CityList.Visible := True;
+    vWeather.Config.main.Right.Towns.CityList := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.CityList.name := 'A_W_Config_Towns_CityList_VerticalBox';
+    vWeather.Config.main.Right.Towns.CityList.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.CityList.Width := vWeather.Config.main.Right.Panels[1].Width - 60;
+    vWeather.Config.main.Right.Towns.CityList.Height := vWeather.Config.main.Right.Panels[1].Height - 20;
+    vWeather.Config.main.Right.Towns.CityList.Position.X := 10;
+    vWeather.Config.main.Right.Towns.CityList.Position.Y := 10;
+    vWeather.Config.main.Right.Towns.CityList.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Add_Town := TImage.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.Add_Town.name := 'A_W_Config_Towns_Add';
-  vWeather.Config.main.Right.Towns.Add_Town.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.Add_Town.Width := 34;
-  vWeather.Config.main.Right.Towns.Add_Town.Height := 34;
-  vWeather.Config.main.Right.Towns.Add_Town.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
-  vWeather.Config.main.Right.Towns.Add_Town.Position.Y := 30;
-  vWeather.Config.main.Right.Towns.Add_Town.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_add.png');
-  vWeather.Config.main.Right.Towns.Add_Town.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Add_Town.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Add_Town.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.Add_Town.Visible := True;
+    vWeather.Config.main.Right.Towns.Add_Town := TImage.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.Add_Town.name := 'A_W_Config_Towns_Add';
+    vWeather.Config.main.Right.Towns.Add_Town.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.Add_Town.Width := 34;
+    vWeather.Config.main.Right.Towns.Add_Town.Height := 34;
+    vWeather.Config.main.Right.Towns.Add_Town.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
+    vWeather.Config.main.Right.Towns.Add_Town.Position.Y := 30;
+    vWeather.Config.main.Right.Towns.Add_Town.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_add.png');
+    vWeather.Config.main.Right.Towns.Add_Town.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
+    vWeather.Config.main.Right.Towns.Add_Town.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.Add_Town.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.Add_Town.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Add_Town_Glow :=
-    TGlowEffect.Create(vWeather.Config.main.Right.Towns.Add_Town);
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.name := 'A_W_Config_Towns_Add_Glow';
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Parent := vWeather.Config.main.Right.Towns.Add_Town;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow :=
+      TGlowEffect.Create(vWeather.Config.main.Right.Towns.Add_Town);
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.name := 'A_W_Config_Towns_Add_Glow';
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Parent := vWeather.Config.main.Right.Towns.Add_Town;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.Add_Town_Grey :=
-    TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.Add_Town);
-  vWeather.Config.main.Right.Towns.Add_Town_Grey.name := 'A_W_Config_Towns_Add_Grey';
-  vWeather.Config.main.Right.Towns.Add_Town_Grey.Parent := vWeather.Config.main.Right.Towns.Add_Town;
-  vWeather.Config.main.Right.Towns.Add_Town_Grey.Enabled := False;
+    vWeather.Config.main.Right.Towns.Add_Town_Grey :=
+      TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.Add_Town);
+    vWeather.Config.main.Right.Towns.Add_Town_Grey.name := 'A_W_Config_Towns_Add_Grey';
+    vWeather.Config.main.Right.Towns.Add_Town_Grey.Parent := vWeather.Config.main.Right.Towns.Add_Town;
+    vWeather.Config.main.Right.Towns.Add_Town_Grey.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.EditLock := TImage.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.EditLock.name := 'A_W_Config_Towns_Lock';
-  vWeather.Config.main.Right.Towns.EditLock.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.EditLock.Width := 40;
-  vWeather.Config.main.Right.Towns.EditLock.Height := 40;
-  vWeather.Config.main.Right.Towns.EditLock.Position.X := vWeather.Config.main.Right.Panels[1].Width - 46;
-  vWeather.Config.main.Right.Towns.EditLock.Position.Y := vWeather.Config.main.Right.Panels[1].Height - 280;
-  vWeather.Config.main.Right.Towns.EditLock.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_lock.png');
-  vWeather.Config.main.Right.Towns.EditLock.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Config.main.Right.Towns.EditLock.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.EditLock.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.EditLock.Visible := True;
+    vWeather.Config.main.Right.Towns.EditLock := TImage.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.EditLock.name := 'A_W_Config_Towns_Lock';
+    vWeather.Config.main.Right.Towns.EditLock.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.EditLock.Width := 40;
+    vWeather.Config.main.Right.Towns.EditLock.Height := 40;
+    vWeather.Config.main.Right.Towns.EditLock.Position.X := vWeather.Config.main.Right.Panels[1].Width - 46;
+    vWeather.Config.main.Right.Towns.EditLock.Position.Y := vWeather.Config.main.Right.Panels[1].Height - 280;
+    vWeather.Config.main.Right.Towns.EditLock.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_lock.png');
+    vWeather.Config.main.Right.Towns.EditLock.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
+    vWeather.Config.main.Right.Towns.EditLock.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.EditLock.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.EditLock.Visible := True;
 
-  vWeather.Config.main.Right.Towns.EditLock_Glow :=
-    TGlowEffect.Create(vWeather.Config.main.Right.Towns.EditLock);
-  vWeather.Config.main.Right.Towns.EditLock_Glow.name := 'A_W_Config_Towns_Lock_Glow';
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Parent := vWeather.Config.main.Right.Towns.EditLock;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.EditLock_Glow :=
+      TGlowEffect.Create(vWeather.Config.main.Right.Towns.EditLock);
+    vWeather.Config.main.Right.Towns.EditLock_Glow.name := 'A_W_Config_Towns_Lock_Glow';
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Parent := vWeather.Config.main.Right.Towns.EditLock;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.GoUp := TImage.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.GoUp.name := 'A_W_Config_Towns_PosUp';
-  vWeather.Config.main.Right.Towns.GoUp.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.GoUp.Width := 34;
-  vWeather.Config.main.Right.Towns.GoUp.Height := 34;
-  vWeather.Config.main.Right.Towns.GoUp.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
-  vWeather.Config.main.Right.Towns.GoUp.Position.Y := vWeather.Config.main.Right.Panels[1].Height - 220;
-  vWeather.Config.main.Right.Towns.GoUp.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_up.png');
-  vWeather.Config.main.Right.Towns.GoUp.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Config.main.Right.Towns.GoUp.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.GoUp.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.GoUp.Visible := True;
+    vWeather.Config.main.Right.Towns.GoUp := TImage.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.GoUp.name := 'A_W_Config_Towns_PosUp';
+    vWeather.Config.main.Right.Towns.GoUp.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.GoUp.Width := 34;
+    vWeather.Config.main.Right.Towns.GoUp.Height := 34;
+    vWeather.Config.main.Right.Towns.GoUp.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
+    vWeather.Config.main.Right.Towns.GoUp.Position.Y := vWeather.Config.main.Right.Panels[1].Height - 220;
+    vWeather.Config.main.Right.Towns.GoUp.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_up.png');
+    vWeather.Config.main.Right.Towns.GoUp.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
+    vWeather.Config.main.Right.Towns.GoUp.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.GoUp.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.GoUp.Visible := True;
 
-  vWeather.Config.main.Right.Towns.GoUp_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoUp);
-  vWeather.Config.main.Right.Towns.GoUp_Glow.name := 'A_W_Config_Towns_PosUp_Glow';
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Parent := vWeather.Config.main.Right.Towns.GoUp;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.GoUp_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoUp);
+    vWeather.Config.main.Right.Towns.GoUp_Glow.name := 'A_W_Config_Towns_PosUp_Glow';
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Parent := vWeather.Config.main.Right.Towns.GoUp;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.GoUp_Grey :=
-    TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.GoUp);
-  vWeather.Config.main.Right.Towns.GoUp_Grey.name := 'A_W_Config_Towns_PosUp_Grey';
-  vWeather.Config.main.Right.Towns.GoUp_Grey.Parent := vWeather.Config.main.Right.Towns.GoUp;
-  vWeather.Config.main.Right.Towns.GoUp_Grey.Enabled := True;
+    vWeather.Config.main.Right.Towns.GoUp_Grey :=
+      TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.GoUp);
+    vWeather.Config.main.Right.Towns.GoUp_Grey.name := 'A_W_Config_Towns_PosUp_Grey';
+    vWeather.Config.main.Right.Towns.GoUp_Grey.Parent := vWeather.Config.main.Right.Towns.GoUp;
+    vWeather.Config.main.Right.Towns.GoUp_Grey.Enabled := True;
 
-  vWeather.Config.main.Right.Towns.GoDown := TImage.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.GoDown.name := 'A_W_Config_Towns_PosDown';
-  vWeather.Config.main.Right.Towns.GoDown.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.GoDown.Width := 34;
-  vWeather.Config.main.Right.Towns.GoDown.Height := 34;
-  vWeather.Config.main.Right.Towns.GoDown.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
-  vWeather.Config.main.Right.Towns.GoDown.Position.Y := vWeather.Config.main.Right.Panels[1].Height - 190;
-  vWeather.Config.main.Right.Towns.GoDown.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_down.png');
-  vWeather.Config.main.Right.Towns.GoDown.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Config.main.Right.Towns.GoDown.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.GoDown.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.GoDown.Visible := True;
+    vWeather.Config.main.Right.Towns.GoDown := TImage.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.GoDown.name := 'A_W_Config_Towns_PosDown';
+    vWeather.Config.main.Right.Towns.GoDown.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.GoDown.Width := 34;
+    vWeather.Config.main.Right.Towns.GoDown.Height := 34;
+    vWeather.Config.main.Right.Towns.GoDown.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
+    vWeather.Config.main.Right.Towns.GoDown.Position.Y := vWeather.Config.main.Right.Panels[1].Height - 190;
+    vWeather.Config.main.Right.Towns.GoDown.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_down.png');
+    vWeather.Config.main.Right.Towns.GoDown.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
+    vWeather.Config.main.Right.Towns.GoDown.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.GoDown.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.GoDown.Visible := True;
 
-  vWeather.Config.main.Right.Towns.GoDown_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoDown);
-  vWeather.Config.main.Right.Towns.GoDown_Glow.name := 'A_W_Config_Towns_PosDown_Glow';
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Parent := vWeather.Config.main.Right.Towns.GoDown;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.GoDown_Glow :=
+      TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoDown);
+    vWeather.Config.main.Right.Towns.GoDown_Glow.name := 'A_W_Config_Towns_PosDown_Glow';
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Parent := vWeather.Config.main.Right.Towns.GoDown;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.GoDown_Grey :=
-    TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.GoDown);
-  vWeather.Config.main.Right.Towns.GoDown_Grey.name := 'A_W_Config_Towns_PosDown_Grey';
-  vWeather.Config.main.Right.Towns.GoDown_Grey.Parent := vWeather.Config.main.Right.Towns.GoDown;
-  vWeather.Config.main.Right.Towns.GoDown_Grey.Enabled := True;
+    vWeather.Config.main.Right.Towns.GoDown_Grey :=
+      TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.GoDown);
+    vWeather.Config.main.Right.Towns.GoDown_Grey.name := 'A_W_Config_Towns_PosDown_Grey';
+    vWeather.Config.main.Right.Towns.GoDown_Grey.Parent := vWeather.Config.main.Right.Towns.GoDown;
+    vWeather.Config.main.Right.Towns.GoDown_Grey.Enabled := True;
 
-  vWeather.Config.main.Right.Towns.Refresh_Icon := TImage.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.Refresh_Icon.name := 'A_W_Config_Towns_Refresh';
-  vWeather.Config.main.Right.Towns.Refresh_Icon.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.Refresh_Icon.Width := 34;
-  vWeather.Config.main.Right.Towns.Refresh_Icon.Height := 34;
-  vWeather.Config.main.Right.Towns.Refresh_Icon.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
-  vWeather.Config.main.Right.Towns.Refresh_Icon.Position.Y := vWeather.Config.main.Right.Panels[1]
-    .Height - 120;
-  vWeather.Config.main.Right.Towns.Refresh_Icon.Bitmap.LoadFromFile(addons.weather.Path.Images +
-    'w_refresh.png');
-  vWeather.Config.main.Right.Towns.Refresh_Icon.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Refresh_Icon.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Refresh_Icon.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.Refresh_Icon.Visible := True;
+    vWeather.Config.main.Right.Towns.Refresh_Icon := TImage.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.Refresh_Icon.name := 'A_W_Config_Towns_Refresh';
+    vWeather.Config.main.Right.Towns.Refresh_Icon.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.Refresh_Icon.Width := 34;
+    vWeather.Config.main.Right.Towns.Refresh_Icon.Height := 34;
+    vWeather.Config.main.Right.Towns.Refresh_Icon.Position.X := vWeather.Config.main.Right.Panels[1]
+      .Width - 43;
+    vWeather.Config.main.Right.Towns.Refresh_Icon.Position.Y := vWeather.Config.main.Right.Panels[1]
+      .Height - 120;
+    vWeather.Config.main.Right.Towns.Refresh_Icon.Bitmap.LoadFromFile
+      (addons.weather.Path.Images + 'w_refresh.png');
+    vWeather.Config.main.Right.Towns.Refresh_Icon.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
+    vWeather.Config.main.Right.Towns.Refresh_Icon.OnMouseEnter :=
+      addons.weather.Input.mouse.Image.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.Refresh_Icon.OnMouseLeave :=
+      addons.weather.Input.mouse.Image.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.Refresh_Icon.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Refresh_Glow :=
-    TGlowEffect.Create(vWeather.Config.main.Right.Towns.Refresh_Icon);
-  vWeather.Config.main.Right.Towns.Refresh_Glow.name := 'A_W_Config_Towns_Refresh_Glow';
-  vWeather.Config.main.Right.Towns.Refresh_Glow.Parent := vWeather.Config.main.Right.Towns.Refresh_Icon;
-  vWeather.Config.main.Right.Towns.Refresh_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.Refresh_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.Refresh_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.Refresh_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.Refresh_Glow :=
+      TGlowEffect.Create(vWeather.Config.main.Right.Towns.Refresh_Icon);
+    vWeather.Config.main.Right.Towns.Refresh_Glow.name := 'A_W_Config_Towns_Refresh_Glow';
+    vWeather.Config.main.Right.Towns.Refresh_Glow.Parent := vWeather.Config.main.Right.Towns.Refresh_Icon;
+    vWeather.Config.main.Right.Towns.Refresh_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.Refresh_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.Refresh_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.Refresh_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.Refresh_Grey :=
-    TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.Refresh_Icon);
-  vWeather.Config.main.Right.Towns.Refresh_Grey.name := 'A_W_Config_Towns_Refresh_Grey';
-  vWeather.Config.main.Right.Towns.Refresh_Grey.Parent := vWeather.Config.main.Right.Towns.Refresh_Icon;
-  vWeather.Config.main.Right.Towns.Refresh_Grey.Enabled := True;
+    vWeather.Config.main.Right.Towns.Refresh_Grey :=
+      TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.Refresh_Icon);
+    vWeather.Config.main.Right.Towns.Refresh_Grey.name := 'A_W_Config_Towns_Refresh_Grey';
+    vWeather.Config.main.Right.Towns.Refresh_Grey.Parent := vWeather.Config.main.Right.Towns.Refresh_Icon;
+    vWeather.Config.main.Right.Towns.Refresh_Grey.Enabled := True;
 
-  vWeather.Config.main.Right.Towns.Delete_Icon := TImage.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.Delete_Icon.name := 'A_W_Config_Towns_Delete';
-  vWeather.Config.main.Right.Towns.Delete_Icon.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.Delete_Icon.Width := 34;
-  vWeather.Config.main.Right.Towns.Delete_Icon.Height := 35;
-  vWeather.Config.main.Right.Towns.Delete_Icon.Position.X := vWeather.Config.main.Right.Panels[1].Width - 43;
-  vWeather.Config.main.Right.Towns.Delete_Icon.Position.Y := vWeather.Config.main.Right.Panels[1].Height - 60;
-  vWeather.Config.main.Right.Towns.Delete_Icon.Bitmap.LoadFromFile(addons.weather.Path.Images +
-    'w_delete.png');
-  vWeather.Config.main.Right.Towns.Delete_Icon.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.Delete_Icon.Visible := True;
+    vWeather.Config.main.Right.Towns.Delete_Icon := TImage.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.Delete_Icon.name := 'A_W_Config_Towns_Delete';
+    vWeather.Config.main.Right.Towns.Delete_Icon.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.Delete_Icon.Width := 34;
+    vWeather.Config.main.Right.Towns.Delete_Icon.Height := 35;
+    vWeather.Config.main.Right.Towns.Delete_Icon.Position.X := vWeather.Config.main.Right.Panels[1]
+      .Width - 43;
+    vWeather.Config.main.Right.Towns.Delete_Icon.Position.Y := vWeather.Config.main.Right.Panels[1]
+      .Height - 60;
+    vWeather.Config.main.Right.Towns.Delete_Icon.Bitmap.LoadFromFile
+      (addons.weather.Path.Images + 'w_delete.png');
+    vWeather.Config.main.Right.Towns.Delete_Icon.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
+    vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseEnter :=
+      addons.weather.Input.mouse.Image.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseLeave :=
+      addons.weather.Input.mouse.Image.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.Delete_Icon.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Delete_Glow :=
-    TGlowEffect.Create(vWeather.Config.main.Right.Towns.Delete_Icon);
-  vWeather.Config.main.Right.Towns.Delete_Glow.name := 'A_W_Config_Towns_Delete_Glow';
-  vWeather.Config.main.Right.Towns.Delete_Glow.Parent := vWeather.Config.main.Right.Towns.Delete_Icon;
-  vWeather.Config.main.Right.Towns.Delete_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.Delete_Glow.GlowColor := TAlphaColorRec.Red;
-  vWeather.Config.main.Right.Towns.Delete_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.Delete_Glow :=
+      TGlowEffect.Create(vWeather.Config.main.Right.Towns.Delete_Icon);
+    vWeather.Config.main.Right.Towns.Delete_Glow.name := 'A_W_Config_Towns_Delete_Glow';
+    vWeather.Config.main.Right.Towns.Delete_Glow.Parent := vWeather.Config.main.Right.Towns.Delete_Icon;
+    vWeather.Config.main.Right.Towns.Delete_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.Delete_Glow.GlowColor := TAlphaColorRec.Red;
+    vWeather.Config.main.Right.Towns.Delete_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.Delete_Grey :=
-    TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.Delete_Icon);
-  vWeather.Config.main.Right.Towns.Delete_Grey.name := 'A_W_Config_Towns_Delete_Grey';
-  vWeather.Config.main.Right.Towns.Delete_Grey.Parent := vWeather.Config.main.Right.Towns.Delete_Icon;
-  vWeather.Config.main.Right.Towns.Delete_Grey.Enabled := True;
+    vWeather.Config.main.Right.Towns.Delete_Grey :=
+      TMonochromeEffect.Create(vWeather.Config.main.Right.Towns.Delete_Icon);
+    vWeather.Config.main.Right.Towns.Delete_Grey.name := 'A_W_Config_Towns_Delete_Grey';
+    vWeather.Config.main.Right.Towns.Delete_Grey.Parent := vWeather.Config.main.Right.Towns.Delete_Icon;
+    vWeather.Config.main.Right.Towns.Delete_Grey.Enabled := True;
 
-  uWeather_Config_Towns_Load;
+    uWeather_Config_Towns_Load;
+  end
+  else
+  begin
+
+  end;
 end;
 
 procedure uWeather_Config_Towns_Free;
@@ -286,8 +301,8 @@ end;
 
 procedure uWeather_Config_Towns_AddNewTown_Panel;
 begin
-  uWeather_Config_Towns_AddNewTown(addons.weather.Action.Active_Total + 1,
-    vCTTempResults[vSelectedTown].woeid, vCTTempResults[vSelectedTown].country_code);
+//  uWeather_Config_Towns_AddNewTown(addons.weather.Action.Active_Total + 1,
+//    vCTTempResults[vSelectedTown].woeid, vCTTempResults[vSelectedTown].country_code);
 end;
 /// /////////////////////////////////////////////////////////////////////////////
 // Add New town Panel Actions
@@ -644,7 +659,7 @@ begin
     addons.weather.Action.Active_Total.ToString + '_WoeID', addons.weather.Action.Choosen[vNum].woeid + '{' +
     addons.weather.Action.Choosen[vNum].Country_FlagCode + '}');
   uWeather_Config_Towns_CreateTown_Panel(vNum, addons.weather.Action.Choosen[vNum]);
-  uWeather_SetAll_CreateWeather_Tab(addons.weather.Action.Choosen[vNum], vNum);
+  uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[vNum], vNum);
   DeleteFile(extrafe.prog.Path + cTemp_Forcast);
 end;
 
@@ -863,7 +878,7 @@ begin
 
   uWeather_SetAll_Create_Control;
   for vi := 0 to addons.weather.Action.Active_Total do
-    uWeather_SetAll_CreateWeather_Tab(addons.weather.Action.Choosen[vi], vi);
+    uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[vi], vi);
 
   for vi := 0 to addons.weather.Action.Active_Total do
     vWeather.Scene.Tab[vi].Tab.Visible := True;
@@ -924,7 +939,7 @@ begin
 
   uWeather_SetAll_Create_Control;
   for vi := 0 to addons.weather.Action.Active_Total do
-    uWeather_SetAll_CreateWeather_Tab(addons.weather.Action.Choosen[vi], vi);
+    uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[vi], vi);
 
   for vi := 0 to addons.weather.Action.Active_Total do
     vWeather.Scene.Tab[vi].Tab.Visible := True;

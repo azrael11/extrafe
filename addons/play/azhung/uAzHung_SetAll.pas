@@ -54,7 +54,7 @@ begin
   vAzHung.Load.Back.Name := 'AzHung_Back';
   vAzHung.Load.Back.Parent := vAzHung.Main;
   vAzHung.Load.Back.SetBounds(0, 10, vAzHung.Main.Width, vAzHung.Main.Height);
-  vAzHung.Load.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_start_back.png');
+//  vAzHung.Load.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_start_back.png');
   vAzHung.Load.Back.WrapMode := TImageWrapMode.Stretch;
   vAzHung.Load.Back.Visible := True;
 
@@ -155,7 +155,7 @@ begin
   vAzHung.Load.Start.Select.Back.Name := 'AzHung_Start_Back';
   vAzHung.Load.Start.Select.Back.Parent := vAzHung.Main;
   vAzHung.Load.Start.Select.Back.SetBounds(0, 10, vAzHung.Main.Width, vAzHung.Main.Height);
-  vAzHung.Load.Start.Select.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_start_back.png');
+//  vAzHung.Load.Start.Select.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_start_back.png');
   vAzHung.Load.Start.Select.Back.WrapMode := TImageWrapMode.Stretch;
   vAzHung.Load.Start.Select.Back.Visible := True;
 

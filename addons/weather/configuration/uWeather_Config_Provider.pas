@@ -17,6 +17,7 @@ procedure uWeather_Config_Provider_Create(vName: String; vNum: Integer);
 procedure uWeather_Config_Provider_Free;
 
 procedure uWeather_Config_Provider_YahooCheck;
+procedure uWeather_Config_Provider_OpenWeatherMapCheck;
 
 implementation
 
@@ -65,19 +66,22 @@ begin
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc :=
     TALText.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Name := 'Weather_Config_Provider_' + vName + 'Desc';
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Parent :=
-    vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.SetBounds(180, 5, vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Width- 180, 80);
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.TextIsHtml:= True;
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.WordWrap:= True;
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Color:= TAlphaColorRec.White;
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.TextSettings.HorzAlign:= TTextAlign.Leading;
-  if vName= 'yahoo' then  
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text:= 'Yahoo Weather! provides up to 255 towns and a 10 days forecast. '+ #13#10 +
-   'Provides Units, wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.'
-  else if vName= 'openweathermap' then
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text:= 'OpenWeatherMap provides up to 255 towns and a 5 days/3 Hours forecast. '+ #13#10 +
-   'Provides Units + (kelvin), wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Parent := vWeather.Config.main.Right.Provider.Prov
+    [vNum].Panel;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.SetBounds(180, 5,
+    vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Width - 180, 80);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.TextIsHtml := True;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.WordWrap := True;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Color := TAlphaColorRec.White;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.TextSettings.HorzAlign := TTextAlign.Leading;
+  if vName = 'yahoo' then
+    vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text :=
+      'Yahoo Weather! provides up to 255 towns and a 10 days forecast. ' + #13#10 +
+      'Provides Units, wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.'
+  else if vName = 'openweathermap' then
+    vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text :=
+      'OpenWeatherMap provides up to 255 towns and a 5 days/3 Hours forecast. ' + #13#10 +
+      'Provides Units + (kelvin), wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.';
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Visible := True;
 end;
 
@@ -120,13 +124,16 @@ begin
   vWeather.Config.main.Right.Provider.Text.Parent := vWeather.Config.main.Right.Panels[0];
   vWeather.Config.main.Right.Provider.Text.SetBounds(10, vWeather.Config.main.Right.Panels[0].Height -
     30, 300, 20);
-  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + addons.weather.Action.Provider;
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' +
+    UpperCase(addons.weather.Action.Provider);
   vWeather.Config.main.Right.Provider.Text.Font.Style := vWeather.Config.main.Right.Provider.Text.Font.Style +
     [TFontStyle.fsBold];
   vWeather.Config.main.Right.Provider.Text.Visible := True;
 
-  { if addons.Weather.Action.Provider = 'Yahoo' then
-    vWeather.Config.Main.Right.Provider.Yahoo_Check.IsChecked := True; }
+  if addons.weather.Action.Provider = 'yahoo' then
+    vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked := True
+  else if addons.weather.Action.Provider = 'openweathermap' then
+    vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := True;
 end;
 
 procedure uWeather_Config_Provider_Free;
@@ -136,16 +143,42 @@ end;
 
 procedure uWeather_Config_Provider_YahooCheck;
 begin
-  { if vWeather.Config.main.Right.Provider.Yahoo_Check.IsChecked = False then
-    begin
-    addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'Yahoo');
-    addons.weather.Action.Provider := 'Yahoo';
+  if vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked = False then
+  begin
+    if vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked then
+      vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := False;
+    addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'yahoo');
+    addons.weather.Action.Provider := 'yahoo';
     vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' +
-    addons.weather.Action.Provider;
-    end
-    else
-    vWeather.Config.main.Right.Provider.Yahoo_Check.IsChecked :=
-    not vWeather.Config.main.Right.Provider.Yahoo_Check.IsChecked; }
+      UpperCase(addons.weather.Action.Provider);
+  end
+  else
+  begin
+    addons.weather.Ini.Ini.WriteString('Provider', 'Name', '');
+    addons.weather.Action.Provider := '';
+    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' +
+      UpperCase(addons.weather.Action.Provider);
+  end;
+end;
+
+procedure uWeather_Config_Provider_OpenWeatherMapCheck;
+begin
+  if vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked = False then
+  begin
+    if vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked then
+      vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked := False;
+    addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'openweathermap');
+    addons.weather.Action.Provider := 'openweathermap';
+    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' +
+      UpperCase(addons.weather.Action.Provider);
+  end
+  else
+  begin
+    addons.weather.Ini.Ini.WriteString('Provider', 'Name', '');
+    addons.weather.Action.Provider := '';
+    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' +
+      UpperCase(addons.weather.Action.Provider);
+  end;
 end;
 
 end.

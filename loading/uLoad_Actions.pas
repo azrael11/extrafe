@@ -5,6 +5,9 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  System.UiTypes,
+  FMX.Forms,
+  FMX.Types,
   IdExplicitTLSClientServerBase,
   IdSMTP,
   IdSSLOpenSSL,

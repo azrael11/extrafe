@@ -22,9 +22,9 @@ uses
 procedure uWeather_Config_ShowHide(mShow: Boolean);
 begin
   if mShow then
-    extrafe.prog.State:= 'addon_weather_config'
+    extrafe.prog.State := 'addon_weather_config'
   else
-    extrafe.prog.State:= 'addon_weather';
+    extrafe.prog.State := 'addon_weather';
   vWeather.Scene.Blur.Enabled := mShow;
   vWeather.Config.Panel.Visible := mShow;
   if mShow = False then
@@ -45,16 +45,20 @@ end;
 
 procedure uWeather_Config_ShowPanel(mPanel: Byte);
 begin
-  uWeather_COnfig_ClearConfig;
-  case mPanel of
-    0:
-      uWeather_Config_Provider_Show;
-    1:
-      uWeather_Config_Towns_Show;
-    2:
-      uWeather_Config_Options_Show;
-    3:
-      uWeather_Config_Iconsets_Show;
+  if addons.weather.Config.Active_Panel <> mPanel then
+  begin
+    uWeather_COnfig_ClearConfig;
+    case mPanel of
+      0:
+        uWeather_Config_Provider_Show;
+      1:
+        uWeather_Config_Towns_Show;
+      2:
+        uWeather_Config_Options_Show;
+      3:
+        uWeather_Config_Iconsets_Show;
+    end;
+    addons.weather.Config.Active_Panel := mPanel;
   end;
 end;
 

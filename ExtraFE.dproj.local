@@ -2,12 +2,12 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2018/02/04 11:31:31.000.224,=C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.pas</Transaction>
     <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.fmx</Transaction>
+    <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.pas</Transaction>
     <Transaction>2018/02/04 11:32:22.000.957,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\ExtraFE.dproj</Transaction>
     <Transaction>2018/02/04 11:32:53.000.005,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas</Transaction>
-    <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.fmx</Transaction>
     <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.pas</Transaction>
+    <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.fmx</Transaction>
     <Transaction>2018/02/04 11:40:43.000.031,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading\uLoad.pas</Transaction>
     <Transaction>2018/02/04 11:43:35.000.575,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_effects\uText.pas</Transaction>
     <Transaction>2018/02/04 11:45:22.000.059,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_os\uWindows.pas</Transaction>
@@ -56,8 +56,8 @@
     <Transaction>2018/02/18 09:43:23.000.493,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Options.pas</Transaction>
     <Transaction>2018/02/18 09:43:23.000.473,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Iconsets.pas</Transaction>
     <Transaction>2018/02/24 12:13:26.000.442,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
-    <Transaction>2018/02/24 12:13:43.000.555,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/24 12:13:43.000.555,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.fmx</Transaction>
+    <Transaction>2018/02/24 12:13:43.000.555,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/24 12:21:54.000.626,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/24 12:22:26.000.930,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu\uEmu_SetAll.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/28 09:05:04.000.818,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
@@ -313,8 +313,10 @@
     <Transaction>2018/12/29 10:04:27.000.395,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\code\_database\uDatabase.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:38.000.709,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:51.000.456,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\play\azhung\uAzHung_Sound.pas</Transaction>
-    <Transaction>2019/01/16 10:35:54.583,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas</Transaction>
-    <Transaction>2019/01/16 10:35:54.622,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo.pas</Transaction>
+    <Transaction>2019/01/16 10:35:54.000.583,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas</Transaction>
+    <Transaction>2019/01/16 10:35:54.000.622,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo.pas</Transaction>
+    <Transaction>2019/01/17 08:34:10.000.679,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/01/17 08:34:33.000.963,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\main\configuration\uMain_Config_Info_Credits.pas</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android=""/>
@@ -486,6 +488,7 @@
     <File Path="main\configuration\uMain_Config_Info.pas"/>
     <File Path="main\configuration\uMain_Config_Info_Actions.pas"/>
     <File Path="main\configuration\uMain_Config_Mouse.pas"/>
+    <File Path="main\configuration\uMain_Config_Info_Credits.pas"/>
     <File Path="main\uMain.pas"/>
     <File Path="main\uMain_Actions.pas"/>
     <File Path="main\uMain_AllTypes.pas"/>
