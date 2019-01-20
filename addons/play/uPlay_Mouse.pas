@@ -52,24 +52,27 @@ end;
 procedure TADDON_PLAY_INPUT_IMAGE.OnMouseEnter(Sender: TObject);
 begin
   if TImage(Sender).Name = 'A_P_Icon_' + (TImage(Sender).Tag).ToString then
-    vPlay.Img_Img_Glow[TImage(Sender).Tag].Enabled:= True
-  else if TImage(Sender).Name = 'A_P_Info_Img_'+ (TImage(Sender).Tag).ToString then
-    vPlay.Info_Img_Glow[TImage(Sender).Tag].Enabled:= True;
+    vPlay.Img_Img_Glow[TImage(Sender).Tag].Enabled := True
+  else if not Assigned(vOverImage) then
+  begin
+    if TImage(Sender).Name = 'A_P_Info_Img_' + (TImage(Sender).Tag).ToString then
+      uPlay_Actions_OnMouseOver_Image(TImage(Sender));
+  end;
 end;
 
 procedure TADDON_PLAY_INPUT_IMAGE.OnMouseLeave(Sender: TObject);
 begin
   if TImage(Sender).Name = 'A_P_Icon_' + (TImage(Sender).Tag).ToString then
-    vPlay.Img_Img_Glow[TImage(Sender).Tag].Enabled:= False
-  else if TImage(Sender).Name = 'A_P_Info_Img_'+ (TImage(Sender).Tag).ToString then
-    vPlay.Info_Img_Glow[TImage(Sender).Tag].Enabled:= False;
+    vPlay.Img_Img_Glow[TImage(Sender).Tag].Enabled := False
+  else if TImage(Sender).Name = 'A_P_Info_Img_Full_'+ (TImage(Sender).Tag).ToString  then
+    uPlay_Actions_OnMouseLeave_Image(TImage(Sender));
 end;
 
 { TADDON_PLAY_INPUT_BUTTON }
 
 procedure TADDON_PLAY_INPUT_BUTTON.OnMouseClick(Sender: TObject);
 begin
-  if TButton(Sender).Name= 'AzHung'  then
+  if TButton(Sender).Name = 'AzHung' then
     uPlay_Actions_LoadGame('AzHung');
 end;
 
@@ -85,7 +88,7 @@ end;
 
 initialization
 
-addons.play.Input.mouse.Button:= TADDON_PLAY_INPUT_BUTTON.Create;
+addons.play.Input.mouse.Button := TADDON_PLAY_INPUT_BUTTON.Create;
 addons.play.Input.mouse.Image := TADDON_PLAY_INPUT_IMAGE.Create;
 
 finalization

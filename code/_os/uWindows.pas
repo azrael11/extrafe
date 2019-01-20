@@ -47,7 +47,7 @@ function uWindows_ConvertSecondsFromTime(mTime: Real): TDateTime;
 // Files and folders
 function uWindows_CountFilesOrFolders(vDir: String; vKind: Boolean; vType: String): Integer;
 function uWindows_GetFolderNames(vDir: String): TStringlist;
-function uWindows_GetFileNames(vDir: String): TStringlist;
+function uWindows_GetFileNames(vDir: String; vFileType: String): TStringlist;
 procedure uWindows_DeleteDirectory(const DirName: string; vFileMask: String; vDelSubDirs: Boolean);
 
 // function GetFileInUseInfo(const FileName : WideString) : IFileIsInUse;
@@ -200,13 +200,13 @@ begin
   System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
 end;
 
-function uWindows_GetFileNames(vDir: String): TStringlist;
+function uWindows_GetFileNames(vDir: String; vFileType: String): TStringlist;
 var
   Rec: TSearchRec;
 //  nFileCount: Integer;
 begin
   Result := TStringlist.Create;
-  if FindFirst(vDir + '\*.*', faDirectory, Rec) { *Converted from FindFirst* } = 0 then
+  if FindFirst(vDir + '\'+ vFileType, faDirectory, Rec) { *Converted from FindFirst* } = 0 then
     repeat
       if ((Rec.Attr and faAnyFile) <> 16) then
         if (Rec.Name <> '.') and (Rec.Name <> '..') then

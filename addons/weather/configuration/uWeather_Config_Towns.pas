@@ -59,7 +59,8 @@ procedure uWeather_Config_Towns_AddNewTown_Panel;
 
 procedure uWeather_Config_Towns_AddNewTown(vNum: Integer; mWoeid, country_code: string);
 
-procedure uWeather_Config_Towns_CreateTown_Panel(mNum: Integer; mTownResults: TADDON_WEATHER_CHOOSENTOWN);
+procedure uWeather_Config_Towns_CreateTown_Panel(mNum: Integer;
+  mTownResults: TADDON_WEATHER_CONFIG_CREATE_PANEL);
 
 var
   vSelected_Panel: TImage;
@@ -295,14 +296,14 @@ procedure uWeather_Config_Towns_Load;
 var
   vi: Integer;
 begin
-  for vi := 0 to addons.weather.Action.Active_Total do
-    uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
+  // for vi := 0 to addons.weather.Action.Active_Total do
+  // uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
 end;
 
 procedure uWeather_Config_Towns_AddNewTown_Panel;
 begin
-//  uWeather_Config_Towns_AddNewTown(addons.weather.Action.Active_Total + 1,
-//    vCTTempResults[vSelectedTown].woeid, vCTTempResults[vSelectedTown].country_code);
+  // uWeather_Config_Towns_AddNewTown(addons.weather.Action.Active_Total + 1,
+  // vCTTempResults[vSelectedTown].woeid, vCTTempResults[vSelectedTown].country_code);
 end;
 /// /////////////////////////////////////////////////////////////////////////////
 // Add New town Panel Actions
@@ -658,12 +659,13 @@ begin
   addons.weather.Ini.Ini.WriteString(addons.weather.Action.Provider,
     addons.weather.Action.Active_Total.ToString + '_WoeID', addons.weather.Action.Choosen[vNum].woeid + '{' +
     addons.weather.Action.Choosen[vNum].Country_FlagCode + '}');
-  uWeather_Config_Towns_CreateTown_Panel(vNum, addons.weather.Action.Choosen[vNum]);
+  // uWeather_Config_Towns_CreateTown_Panel(vNum, addons.weather.Action.Choosen[vNum]);
   uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[vNum], vNum);
   DeleteFile(extrafe.prog.Path + cTemp_Forcast);
 end;
 
-procedure uWeather_Config_Towns_CreateTown_Panel(mNum: Integer; mTownResults: TADDON_WEATHER_CHOOSENTOWN);
+procedure uWeather_Config_Towns_CreateTown_Panel(mNum: Integer;
+  mTownResults: TADDON_WEATHER_CONFIG_CREATE_PANEL);
 begin
   SetLength(vWeather.Config.main.Right.Towns.Town, mNum + 1);
 
@@ -671,11 +673,8 @@ begin
     TPanel.Create(vWeather.Config.main.Right.Towns.CityList);
   vWeather.Config.main.Right.Towns.Town[mNum].Panel.name := 'Weather_Config_Towns_CityNum_' + IntToStr(mNum);
   vWeather.Config.main.Right.Towns.Town[mNum].Panel.Parent := vWeather.Config.main.Right.Towns.CityList;
-  vWeather.Config.main.Right.Towns.Town[mNum].Panel.Width :=
-    vWeather.Config.main.Right.Towns.CityList.Width - 24;
-  vWeather.Config.main.Right.Towns.Town[mNum].Panel.Height := 80;
-  vWeather.Config.main.Right.Towns.Town[mNum].Panel.Position.X := 6;
-  vWeather.Config.main.Right.Towns.Town[mNum].Panel.Position.Y := 6 + (mNum * 86);
+  vWeather.Config.main.Right.Towns.Town[mNum].Panel.SetBounds(6, 6 + (mNum * 86),
+    vWeather.Config.main.Right.Towns.CityList.Width - 24, 80);
   vWeather.Config.main.Right.Towns.Town[mNum].Panel.OnClick := addons.weather.Input.mouse.Panel.OnMouseClick;
   vWeather.Config.main.Right.Towns.Town[mNum].Panel.OnMouseEnter :=
     addons.weather.Input.mouse.Panel.OnMouseEnter;
@@ -703,12 +702,10 @@ begin
     + '_Date';
   vWeather.Config.main.Right.Towns.Town[mNum].Date.Parent := vWeather.Config.main.Right.Towns.Town
     [mNum].Panel;
-  vWeather.Config.main.Right.Towns.Town[mNum].Date.Position.X := 6;
-  vWeather.Config.main.Right.Towns.Town[mNum].Date.Position.Y := 3;
-  vWeather.Config.main.Right.Towns.Town[mNum].Date.Width := 240;
-  vWeather.Config.main.Right.Towns.Town[mNum].Date.Height := 17;
-  vWeather.Config.main.Right.Towns.Town[mNum].Date.Text := mTownResults.LastChecked;
-  vWeather.Config.main.Right.Towns.Town[mNum].Date.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[mNum].Date.SetBounds
+    ((vWeather.Config.main.Right.Towns.Town[mNum].Panel.Width / 2) - 120, 3, 240, 17);
+  vWeather.Config.main.Right.Towns.Town[mNum].Date.Text := mTownResults.Last_Checked;
+  vWeather.Config.main.Right.Towns.Town[mNum].Date.TextSettings.HorzAlign := TTextAlign.Center;
   vWeather.Config.main.Right.Towns.Town[mNum].Date.OnMouseEnter :=
     addons.weather.Input.mouse.VLabel.OnMouseEnter;
   vWeather.Config.main.Right.Towns.Town[mNum].Date.OnMouseLeave :=
@@ -724,12 +721,9 @@ begin
     + '_Image';
   vWeather.Config.main.Right.Towns.Town[mNum].Image.Parent := vWeather.Config.main.Right.Towns.Town
     [mNum].Panel;
-  vWeather.Config.main.Right.Towns.Town[mNum].Image.Width := 60;
-  vWeather.Config.main.Right.Towns.Town[mNum].Image.Height := 60;
-  vWeather.Config.main.Right.Towns.Town[mNum].Image.Position.X := 6;
-  vWeather.Config.main.Right.Towns.Town[mNum].Image.Position.Y := 20;
+  vWeather.Config.main.Right.Towns.Town[mNum].Image.SetBounds(6,6, 60, 60);
   vWeather.Config.main.Right.Towns.Town[mNum].Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets +
-    addons.weather.Config.Iconset.name + '\w_w_' + mTownResults.Code + '.png');
+    addons.weather.Config.Iconset.name + '\w_w_' + mTownResults.Temp_Icon + '.png');
   vWeather.Config.main.Right.Towns.Town[mNum].Image.OnMouseEnter :=
     addons.weather.Input.mouse.Image.OnMouseEnter;
   vWeather.Config.main.Right.Towns.Town[mNum].Image.OnMouseLeave :=
@@ -745,13 +739,9 @@ begin
     + '_Temp';
   vWeather.Config.main.Right.Towns.Town[mNum].Temp.Parent := vWeather.Config.main.Right.Towns.Town
     [mNum].Panel;
+  vWeather.Config.main.Right.Towns.Town[mNum].Temp.SetBounds(80, 32, 150, 17);
   vWeather.Config.main.Right.Towns.Town[mNum].Temp.Font.Size := 24;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp.Width := 150;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp.Position.X := 100;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp.Position.Y :=
-    40 - (vWeather.Config.main.Right.Towns.Town[mNum].Temp.Height / 2);
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp.Text := mTownResults.Temp_Condition + ' ͦ ' +
-    mTownResults.UnitV.Temperature;
+  vWeather.Config.main.Right.Towns.Town[mNum].Temp.Text := mTownResults.Temp + ' ͦ ' + mTownResults.Temp_Unit;
   vWeather.Config.main.Right.Towns.Town[mNum].Temp.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Config.main.Right.Towns.Town[mNum].Temp.OnMouseEnter :=
     addons.weather.Input.mouse.VLabel.OnMouseEnter;
@@ -768,11 +758,8 @@ begin
     IntToStr(mNum) + '_Temp_Comment';
   vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.Parent := vWeather.Config.main.Right.Towns.Town
     [mNum].Panel;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.Position.X := 100;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.Position.Y := 60;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.Width := 360;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.Height := 17;
-  vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.Text := mTownResults.Text_Condtition;
+  vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.SetBounds(6, 60, 300, 17);
+  vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.Text := mTownResults.Temp_Description;
   vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Config.main.Right.Towns.Town[mNum].Temp_Comment.OnMouseEnter :=
     addons.weather.Input.mouse.VLabel.OnMouseEnter;
@@ -790,11 +777,8 @@ begin
     IntToStr(mNum) + '_CityName';
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Parent := vWeather.Config.main.Right.Towns.Town
     [mNum].Panel;
-  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Position.X := 220;
-  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Position.Y := 6;
-  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Width := 130;
-  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Height := 17;
-  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Text := mTownResults.City;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.SetBounds(140, 32, 200, 17);
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Text := 'City Name : ';
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.OnMouseEnter :=
     addons.weather.Input.mouse.VLabel.OnMouseEnter;
@@ -806,17 +790,33 @@ begin
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.TagFloat := 1000;
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Visible := True;
 
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V :=
+    TLabel.Create(vWeather.Config.main.Right.Towns.Town[mNum].Panel);
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.name := 'Weather_Config_Towns_CityNum_V_' +
+    IntToStr(mNum) + '_CityName';
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.Parent := vWeather.Config.main.Right.Towns.Town
+    [mNum].Panel;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.SetBounds(210, 32, 200, 17);
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.Text := mTownResults.City_Name;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.OnMouseEnter :=
+    addons.weather.Input.mouse.VLabel.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.OnMouseLeave :=
+    addons.weather.Input.mouse.VLabel.OnMouseLeave;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.OnClick :=
+    addons.weather.Input.mouse.VLabel.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.Tag := mNum;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.TagFloat := 1000;
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name_V.Visible := True;
+
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name :=
     TLabel.Create(vWeather.Config.main.Right.Towns.Town[mNum].Panel);
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.name := 'Weather_Config_Towns_CityNum_' +
     IntToStr(mNum) + '_CCountryName';
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Parent := vWeather.Config.main.Right.Towns.Town
     [mNum].Panel;
-  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Position.X := 220;
-  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Position.Y := 25;
-  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Width := 130;
-  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Height := 17;
-  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Text := mTownResults.country;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.SetBounds(140, 60, 300, 17);
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Text := 'Country Name : ';
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.OnMouseEnter :=
     addons.weather.Input.mouse.VLabel.OnMouseEnter;
@@ -827,6 +827,25 @@ begin
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Tag := mNum;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.TagFloat := 1000;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V :=
+    TLabel.Create(vWeather.Config.main.Right.Towns.Town[mNum].Panel);
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.name := 'Weather_Config_Towns_CityNum_V_' +
+    IntToStr(mNum) + '_CCountryName';
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.Parent := vWeather.Config.main.Right.Towns.Town
+    [mNum].Panel;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.SetBounds(240, 60, 300, 17);
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.Text := mTownResults.Country_Name;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.OnMouseEnter :=
+    addons.weather.Input.mouse.VLabel.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.OnMouseLeave :=
+    addons.weather.Input.mouse.VLabel.OnMouseLeave;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.OnClick :=
+    addons.weather.Input.mouse.VLabel.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.Tag := mNum;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.TagFloat := 1000;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name_V.Visible := True;
 
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Flag :=
     TImage.Create(vWeather.Config.main.Right.Towns.Town[mNum].Panel);
@@ -839,7 +858,7 @@ begin
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Flag.Position.X := 350;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Flag.Position.Y := 20;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Flag.Bitmap.LoadFromFile
-    (ex_main.Paths.Flags_Images + mTownResults.Country_FlagCode + '.png');
+    (ex_main.Paths.Flags_Images + mTownResults.Country_Flag + '.png');
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Flag.OnMouseEnter :=
     addons.weather.Input.mouse.Image.OnMouseEnter;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Flag.OnMouseLeave :=
@@ -870,8 +889,8 @@ begin
   for vi := 0 to addons.weather.Action.Active_Total do
     FreeAndNil(vWeather.Config.main.Right.Towns.Town[vi]);
 
-  for vi := 0 to addons.weather.Action.Active_Total do
-    uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
+  // for vi := 0 to addons.weather.Action.Active_Total do
+  // uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
 
   // Change the main
   FreeAndNil(vWeather.Scene.Control);
@@ -931,8 +950,8 @@ begin
   for vi := 0 to addons.weather.Action.Active_Total do
     FreeAndNil(vWeather.Config.main.Right.Towns.Town[vi]);
 
-  for vi := 0 to addons.weather.Action.Active_Total do
-    uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
+  // for vi := 0 to addons.weather.Action.Active_Total do
+  // uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
 
   // Change the main
   FreeAndNil(vWeather.Scene.Control);

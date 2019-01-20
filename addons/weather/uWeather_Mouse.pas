@@ -299,9 +299,9 @@ begin
   else if extrafe.prog.state = 'addon_weather_config_towns_add' then
   begin
     if TButton(Sender).Name = 'A_W_Config_Towns_Add_Add' then
-      uWeather_Config_Towns_Add_AddTown(False)
+      uWeather_Config_Towns_Add_AddTown(vWeather.Config.Main.Right.Towns.Add.Main.Grid.Selected, False)
     else if TButton(Sender).Name = 'A_W_Config_Towns_Add_AddStay' then
-      uWeather_Config_Towns_Add_AddTown(True)
+//      uWeather_Config_Towns_Add_AddTown(True)
     else if TButton(Sender).Name = 'A_W_Config_Towns_Add_Cancel' then
       uWeather_Config_Towns_Add_Free;
   end

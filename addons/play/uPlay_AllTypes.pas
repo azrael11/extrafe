@@ -72,6 +72,8 @@ type
     Info_Ani: TFloatAnimation;
     Info_Text: array [0 .. 20] of TALText;
     Info_Img: array [1 .. 10] of TImage;
+    Info_Img_Full: array [1..10] of TImage;
+    Info_Img_Full_Icon: array [1..10] of TImage;
     Info_Img_Glow: array [0 .. 10] of TGlowEffect;
     Info_Video: TFmxPasLibVlcPlayer;
     Info_Start: TButton;

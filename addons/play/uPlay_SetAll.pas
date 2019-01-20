@@ -67,7 +67,7 @@ begin
   vPlay.Img_Box_Ani.OnFinish := vPlay.Play_Ani.OnFinish;
   vPlay.Img_Box_Ani.Enabled := False;
 
-  for vi := 0 to 10 do
+  for vi := 0 to 4 do
   begin
     vPlay.Img_Img[vi] := TImage.Create(vPlay.Img_Box);
     vPlay.Img_Img[vi].Name := 'A_P_Icon_' + vi.ToString;
@@ -228,9 +228,9 @@ begin
     vPlay.Info_Img[vi].Name := 'A_P_Info_Img_' + vi.ToString;
     vPlay.Info_Img[vi].Parent := vPlay.Info;
     if vi > 3 then
-      vPlay.Info_Img[vi].SetBounds(60 + (vk * 140), 500, 120, 120)
+      vPlay.Info_Img[vi].SetBounds(60 + (vk * 145), 580, 120, 120)
     else
-      vPlay.Info_Img[vi].SetBounds(60 + (vk * 140), 400, 120, 120);
+      vPlay.Info_Img[vi].SetBounds(60 + (vk * 145), 420, 120, 120);
     vPlay.Info_Img[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + cMedia_Images[vi]);
     vPlay.Info_Img[vi].WrapMode := TImageWrapMode.Fit;
     vPlay.Info_Img[vi].OnClick := addons.play.Input.mouse.Image.OnMouseClick;
@@ -239,6 +239,25 @@ begin
     vPlay.Info_Img[vi].Tag := vi;
     vPlay.Info_Img[vi].Visible := True;
     Inc(vk, 1);
+
+    vPlay.Info_Img_Full[vi] := TImage.Create(vPlay.Info_Img[vi]);
+    vPlay.Info_Img_Full[vi].Name := 'A_P_Info_Img_Full_'+ vi.ToString;
+    vPlay.Info_Img_Full[vi].Parent := vPlay.Info_Img[vi];
+    vPlay.Info_Img_Full[vi].Align := TAlignLayout.Client;
+    vPlay.Info_Img_Full[vi].Bitmap.LoadFromFile(addons.play.Path.Images + 'azplay_back.png');
+    vPlay.Info_Img_Full[vi].WrapMode := TImageWrapMode.Stretch;
+    vPlay.Info_Img_Full[vi].OnMouseLeave := addons.play.Input.mouse.Image.OnMouseLeave;
+    vPlay.Info_Img_Full[vi].Tag:= vi;
+    vPlay.Info_Img_Full[vi].Visible := False;
+
+    vPlay.Info_Img_Full_Icon[vi] := TImage.Create(vPlay.Info_Img_Full[vi]);
+    vPlay.Info_Img_Full_Icon[vi].Name := 'A_P_Info_Img_Full_Icon_'+ vi.ToString;
+    vPlay.Info_Img_Full_Icon[vi].Parent := vPlay.Info_Img_Full[vi];
+    vPlay.Info_Img_Full_Icon[vi].SetBounds(vPlay.Info_Img_Full[vi].Width - 26, 4, 22, 22);
+    vPlay.Info_Img_Full_Icon[vi].Bitmap.LoadFromFile(addons.play.Path.Images + 'azplay_full.png');
+    vPlay.Info_Img_Full_Icon[vi].WrapMode := TImageWrapMode.Fit;
+    vPlay.Info_Img_Full_Icon[vi].Opacity := 0.4;
+    vPlay.Info_Img_Full_Icon[vi].Visible := True;
 
     vPlay.Info_Img_Glow[vi] := TGlowEffect.Create(vPlay.Info_Img[vi]);
     vPlay.Info_Img_Glow[vi].Name := 'A_P_Info_Img_Glow_' + vi.ToString;

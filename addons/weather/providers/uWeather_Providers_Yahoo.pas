@@ -19,6 +19,8 @@ function uWeather_Provider_Yahoo_GerForcast(vNum: Integer; vWoeid, vCountry_Code
 
 procedure uWeather_Provider_Yahoo_CreateTab(vTown: TADDON_WEATHER_CHOOSENTOWN; vTabNum: Integer);
 
+//procedure uWeather_Providers_Yahoo_GetForecast(vTown: String);
+
 implementation
 uses
   uLoad_AllTypes,

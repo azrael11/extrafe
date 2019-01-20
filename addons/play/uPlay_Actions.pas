@@ -4,12 +4,26 @@ interface
 
 uses
   System.Classes,
-  System.SysUtils;
+  System.SysUtils,
+  FMX.Types,
+  FMX.Objects;
 
 procedure uPlay_Actions_ReturnToMain(vIconsNum: Integer);
 procedure uPlay_Actions_Free;
 
 procedure uPlay_Actions_LoadGame(vGame: String);
+
+procedure uPlay_Actions_ResizeImage(vFull: Boolean; vImage: TImage);
+procedure uPlay_Actions_ResizeVideo(vFull: Boolean; vVideo: TImage);
+
+procedure uPlay_Actions_OnMouseOver_Image(vImage: TImage);
+procedure uPlay_Actions_OnMouseLeave_Image(vImage: TImage);
+procedure uPlay_Actions_OnMouseOver_Video(vImage: TImage);
+procedure uPlay_Actions_OnMouseLeave_Video(vImage: TImage);
+
+var
+  vOverImage: Timage;
+  vOverImage_Icon: Timage;
 
 implementation
 
@@ -49,6 +63,38 @@ begin
   vPlay.Img_Box_Ani.Start;
   vPlay.Info_Ani.Start;
   addons.play.Actions.Game:= vGame;
+end;
+
+procedure uPlay_Actions_ResizeImage(vFull: Boolean; vImage: TImage);
+begin
+
+end;
+
+procedure uPlay_Actions_ResizeVideo(vFull: Boolean; vVideo: TImage);
+begin
+
+end;
+
+procedure uPlay_Actions_OnMouseOver_Image(vImage: TImage);
+begin
+  vPlay.Info_Img_Glow[vImage.Tag].Enabled:= True;
+  vPlay.Info_Img_Full[vImage.Tag].Visible:= True;
+end;
+
+procedure uPlay_Actions_OnMouseLeave_Image(vImage: TImage);
+begin
+  vPlay.Info_Img_Glow[vImage.Tag].Enabled:= False;
+  vPlay.Info_Img_Full[vImage.Tag].Visible:= False;
+end;
+
+procedure uPlay_Actions_OnMouseOver_Video(vImage: TImage);
+begin
+
+end;
+
+procedure uPlay_Actions_OnMouseLeave_Video(vImage: TImage);
+begin
+
 end;
 
 end.

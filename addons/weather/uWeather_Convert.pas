@@ -7,6 +7,7 @@ uses
   System.DateUtils,
   System.SysUtils,
   System.Types,
+  System.IniFiles,
   FMX.Graphics;
 
 function uWeather_Convert_Day(vDay: WideString): WideString;
@@ -19,6 +20,8 @@ function uWeather_Convert_WindSpeed(vWindSpeed: Single): Single;
 
 function uWeather_Convert_FixAstronomy(vValue: WideString): WideString;
 function uWeather_Convert_SunSpot(vSunrise, vSunset: String): TPathData;
+
+function uWeather_Convert_CodeToCountryName(vCode: String): String;
 
 implementation
 uses
@@ -64,29 +67,29 @@ end;
 
 function uWeather_Convert_Month(vMonth: WideString): WideString;
 begin
-  if vMonth = 'Jan' then
+  if (vMonth = 'Jan') or (vMonth = '01') then
     Result := 'January'
-  else if vMonth = 'Feb' then
+  else if (vMonth = 'Feb') or (vMonth = '01') then
     Result := 'February'
-  else if vMonth = 'Mar' then
+  else if (vMonth = 'Mar') or (vMonth = '02') then
     Result := 'March'
-  else if vMonth = 'Apr' then
+  else if (vMonth = 'Apr') or (vMonth = '03') then
     Result := 'April'
-  else if vMonth = 'May' then
+  else if (vMonth = 'May') or (vMonth = '04') then
     Result := 'May'
-  else if vMonth = 'Jun' then
+  else if (vMonth = 'Jun') or (vMonth = '05') then
     Result := 'June'
-  else if vMonth = 'Jul' then
+  else if (vMonth = 'Jul') or (vMonth = '06') then
     Result := 'Jul'
-  else if vMonth = 'Aug' then
+  else if (vMonth = 'Aug') or (vMonth = '07')  then
     Result := 'August'
-  else if vMonth = 'Sep' then
+  else if (vMonth = 'Sep') or (vMonth = '08') then
     Result := 'Septemper'
-  else if vMonth = 'Okt' then
+  else if (vMonth = 'Okt') or (vMonth = '09') then
     Result := 'Oktober'
-  else if vMonth = 'Nov' then
+  else if (vMonth = 'Nov') or (vMonth = '10') then
     Result := 'November'
-  else if vMonth = 'Dec' then
+  else if (vMonth = 'Dec') or (vMonth = '11') then
     Result := 'December'
   else
     Result := 'error...!!!';
@@ -231,6 +234,15 @@ begin
     Result.MoveTo(PointF(-1000, 0));
     addons.weather.Action.PathAni_Show:= False;
   end;
+end;
+
+function uWeather_Convert_CodeToCountryName(vCode: String): String;
+var
+  vTempIni: TIniFile;
+begin
+  vTempIni:= TIniFile.Create(ex_main.Paths.Flags_Images+ 'en.ini');
+  Result:= vTempIni.ReadString('COUNTRY', vCode, Result);
+  FreeAndNil(vTempIni);
 end;
 
 end.

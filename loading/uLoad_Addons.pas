@@ -195,7 +195,7 @@ begin
   addons.time.Path.Icon := addons.time.ini.Path + 'icon\';
   addons.time.Path.Images := addons.time.ini.Path + 'images\';
   addons.time.Path.Clock := addons.time.ini.Path + 'clock\';
-  addons.time.Path.Sounds:= addons.time.Ini.Path + 'sounds\';
+  addons.time.Path.Sounds := addons.time.ini.Path + 'sounds\';
 
   // P_Local Time
   addons.time.P_Time.Clock_Type := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Visible_Type',
@@ -299,20 +299,21 @@ begin
   addons.weather.Path.Icon := addons.weather.ini.Path + 'icon\';
   addons.weather.Path.Images := addons.weather.ini.Path + 'images\';
   addons.weather.Path.Iconsets := addons.weather.ini.Path + 'icons\';
-  addons.weather.Path.Temp := addons.weather.ini.Path+ 'temp\';
+  addons.weather.Path.Temp := addons.weather.ini.Path + 'temp\';
 
   addons.weather.ini.ini.WriteString('WEATHER', 'Addon_Name', 'weather');
   addons.weather.ini.ini.WriteBool('WEATHER', 'Active', False);
   addons.weather.ini.ini.WriteInteger('WEATHER', 'Menu_Position', -1);
 
   addons.weather.ini.ini.WriteBool('General', 'First', False);
-  addons.weather.ini.ini.WriteInteger('Active', 'Active_Weoid', -1);
+  addons.weather.ini.ini.WriteInteger('Active', 'Active_Woeid', -1);
   addons.weather.ini.ini.WriteInteger('Active', 'Active_Total', -1);
   addons.weather.ini.ini.WriteString('Options', 'Degree', 'Celcius');
   addons.weather.ini.ini.WriteInteger('Options', 'Refresh', 0);
   addons.weather.ini.ini.WriteInteger('Iconset', 'Count', 2);
   addons.weather.ini.ini.WriteString('Iconset', 'Name', 'pengui');
   addons.weather.ini.ini.WriteString('Provider', 'Name', '');
+  addons.weather.ini.ini.WriteInteger('Provider', 'Total', -1);
 end;
 
 procedure uLoad_Addons_Weather_Load;
@@ -329,13 +330,15 @@ begin
   addons.weather.Path.Images := addons.weather.ini.Path + 'images\';
   addons.weather.Path.Iconsets := addons.weather.ini.Path + 'icons\';
   addons.weather.Path.Sounds := addons.weather.ini.Path + 'sounds\';
-  addons.weather.Path.Temp := addons.weather.Ini.Path+ 'temp\';
+  addons.weather.Path.Temp := addons.weather.ini.Path + 'temp\';
 
   addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First',
     addons.weather.Action.First);
   addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name',
     addons.weather.Action.Provider);
-  addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Weoid',
+  addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger('Provider', 'Total',
+    addons.weather.Action.Provider_Total);
+  addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid',
     addons.weather.Action.Active_WEOID);
   addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total',
     addons.weather.Action.Active_Total);
@@ -450,21 +453,21 @@ begin
   addons.play.ini.ini.WriteBool('PLAY', 'Active', False);
   addons.play.ini.ini.WriteInteger('PLAY', 'Menu_Position', -1);
 
-  //Game AzHung
-  gAzHung.Path.Game:= addons.play.Ini.Path+ 'azhung\';
-  gAzHung.Path.Icon:= gAzHung.Path.Game+ 'icon\';
-  gAzHung.Path.Sounds:= gAzHung.Path.Game+ 'sounds\';
-  gAzHung.Path.Images:= gAzHung.Path.Game+ 'images\';
-  gAzHung.Path.Score:= gAzHung.Path.Game+ 'score\';
-  gAzHung.Path.Words:= gAzHung.Path.Game+ 'words\';
+  // Game AzHung
+  gAzHung.Path.Game := addons.play.ini.Path + 'azhung\';
+  gAzHung.Path.Icon := gAzHung.Path.Game + 'icon\';
+  gAzHung.Path.Sounds := gAzHung.Path.Game + 'sounds\';
+  gAzHung.Path.Images := gAzHung.Path.Game + 'images\';
+  gAzHung.Path.Score := gAzHung.Path.Game + 'score\';
+  gAzHung.Path.Words := gAzHung.Path.Game + 'words\';
 
-  gAzHung.Ini.Name:= 'azhung.ini';
-  gAzHung.Ini.Path:= gAzHung.Path.Game;
-  gAzHung.Ini.Ini:= TIniFile.Create(gAzHung.Ini.Path+ gAzHung.Ini.Name);
+  gAzHung.ini.Name := 'azhung.ini';
+  gAzHung.ini.Path := gAzHung.Path.Game;
+  gAzHung.ini.ini := TIniFile.Create(gAzHung.ini.Path + gAzHung.ini.Name);
 
-  gAzHung.Ini.Ini.WriteBool('AZHUNG', 'Active', False);
-  gAzHung.Ini.Ini.WriteBool('AZHUNG', 'Pause', False);
-  gAzHung.Ini.Ini.WriteString('AZHUNG', 'Words', 'words.ini');
+  gAzHung.ini.ini.WriteBool('AZHUNG', 'Active', False);
+  gAzHung.ini.ini.WriteBool('AZHUNG', 'Pause', False);
+  gAzHung.ini.ini.WriteString('AZHUNG', 'Words', 'words.ini');
 
 end;
 
@@ -481,21 +484,21 @@ begin
   addons.play.Path.Icon := addons.play.ini.Path + 'icon\';
   addons.play.Path.Images := addons.play.ini.Path + 'images\';
 
-  //Game AzHung
-  gAzHung.Path.Game:= addons.play.Ini.Path+ 'azhung\';
-  gAzHung.Path.Icon:= gAzHung.Path.Game+ 'icon\';
-  gAzHung.Path.Sounds:= gAzHung.Path.Game+ 'sounds\';
-  gAzHung.Path.Images:= gAzHung.Path.Game+ 'images\';
-  gAzHung.Path.Score:= gAzHung.Path.Game+ 'score\';
-  gAzHung.Path.Words:= gAzHung.Path.Game+ 'words\';
+  // Game AzHung
+  gAzHung.Path.Game := addons.play.ini.Path + 'azhung\';
+  gAzHung.Path.Icon := gAzHung.Path.Game + 'icon\';
+  gAzHung.Path.Sounds := gAzHung.Path.Game + 'sounds\';
+  gAzHung.Path.Images := gAzHung.Path.Game + 'images\';
+  gAzHung.Path.Score := gAzHung.Path.Game + 'score\';
+  gAzHung.Path.Words := gAzHung.Path.Game + 'words\';
 
-  gAzHung.Ini.Name:= 'azhung.ini';
-  gAzHung.Ini.Path:= gAzHung.Path.Game;
-  gAzHung.Ini.Ini:= TIniFile.Create(gAzHung.Ini.Path+ gAzHung.Ini.Name);
+  gAzHung.ini.Name := 'azhung.ini';
+  gAzHung.ini.Path := gAzHung.Path.Game;
+  gAzHung.ini.ini := TIniFile.Create(gAzHung.ini.Path + gAzHung.ini.Name);
 
-  gAzHung.Actions.Active:= gAzHung.Ini.Ini.ReadBool('AZHUNG', 'Active', gAzHung.Actions.Active);
-  gAzHung.Actions.Paused:= gAzHung.Ini.Ini.ReadBool('AZHUNG', 'Pause', gAzHung.Actions.Paused);
-  gAzHung.Actions.Words:= gAzHung.Ini.Ini.ReadString('AZHUNG', 'Words', gAzHung.Actions.Words);
+  gAzHung.Actions.Active := gAzHung.ini.ini.ReadBool('AZHUNG', 'Active', gAzHung.Actions.Active);
+  gAzHung.Actions.Paused := gAzHung.ini.ini.ReadBool('AZHUNG', 'Pause', gAzHung.Actions.Paused);
+  gAzHung.Actions.Words := gAzHung.ini.ini.ReadString('AZHUNG', 'Words', gAzHung.Actions.Words);
 end;
 
 end.

@@ -47,8 +47,8 @@ begin
   Dec(addons.weather.Action.Active_Total, 1);
   addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
 
-  for vi := 0 to addons.weather.Action.Active_Total do
-    uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
+//  for vi := 0 to addons.weather.Action.Active_Total do
+//    uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
 
   for vi := 0 to addons.weather.Action.Active_Total do
     addons.weather.Ini.Ini.WriteString(addons.weather.Action.Provider, vi.ToString + '_WoeID',

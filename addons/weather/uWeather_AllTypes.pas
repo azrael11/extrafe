@@ -89,6 +89,82 @@ type
     High: WideString;
   end;
 
+type TADDON_WEATHER_CONFIG_CREATE_PANEL= record
+  Temp: String;
+  Temp_Unit: String;
+  Temp_Icon: String;
+  Temp_Description: String;
+  City_Name: String;
+  Country_Name: String;
+  Country_Flag: String;
+  Last_Checked: String;
+end;
+
+type
+  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS_HOUR= record
+    Time: String;
+    Temp: String;
+    Temp_Min: String;
+    Temp_Max: String;
+    Pressure: String;
+    Pressure_Sea: String;
+    Pressure_Ground: String;
+    Humidity: String;
+    Weather_ID: String;
+    Weather_Main: String;
+    Weather_Desc: String;
+    Wetaher_Icon: String;
+    Clouds: String;
+    Wind_Speed: String;
+    Wind_Direction: String;
+    Rain_3H: String;
+    Snow_3H: String;
+    Last_Checked: String;
+  end;
+
+type
+  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS= record
+    City_ID: String;
+    City_Name: String;
+    Longitude: String;
+    Latitude: String;
+    Country: String;
+    Count: String;
+    Hour: array of TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS_HOUR;
+  end;
+
+type
+  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP = record
+    Provider: WideString;
+    WoeID: WideString;
+    Longitude: String;
+    Latitude: String;
+    Weather_ID: String;
+    Weather_Main: String;
+    Weather_Desc: String;
+    Weather_Icon: String;
+    Temp: String;
+    Pressure: String;
+    Pressure_Sea: String;
+    Pressure_Ground: String;
+    Humidity: String;
+    Now_Temp_Max: String;
+    Now_Temp_Min: String;
+    Visibility: String;
+    Wind_Speed: String;
+    Wind_Direction: String;
+    Clounds: String;
+    Rain_1H: String;
+    Rain_3H: String;
+    Snow_1H: String;
+    Snow_3H: String;
+    Last_Checked: String;
+    Sunrise: String;
+    Sunset: String;
+    City: WideString;
+    Country_FlagCode: string;
+  end;
+
 type
   TADDON_WEATHER_CHOOSENTOWN = record
     Provider: WideString;
@@ -120,6 +196,7 @@ type
 type
   TADDON_WEATHER_ACTIONS = record
     Provider: String;
+    Provider_Total: Integer;
     Active_WEOID: Integer;
     Active_Total: Integer;
     PathAni_Data: TPathData;
@@ -278,7 +355,7 @@ type
 
 type
   TWEATHER_SCENE_FIRST_MAIN = record
-    Panel: Tpanel;
+    Panel: TPanel;
     Line_1: TALText;
     Line_2: TALText;
     Line_3: TALText;
@@ -327,22 +404,25 @@ type
     Temp: TLabel;
     Temp_Comment: TLabel;
     City_Name: TLabel;
+    City_Name_V: TLabel;
     Country_Name: TLabel;
+    Country_Name_V: TLabel;
     Country_Flag: TImage;
   end;
 
-type TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV= record
-  Panel: TPanel;
-  Check: TCheckbox;
-  Icon: TImage;
-  Desc: TALText;
-end;
+type
+  TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV = record
+    Panel: TPanel;
+    Check: TCheckBox;
+    Icon: TImage;
+    Desc: TALText;
+  end;
 
 type
   TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER = record
     Choose: TLabel;
     Box: TVertScrollBox;
-    Prov: array [0..1] of TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV;
+    Prov: array [0 .. 1] of TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV;
     Text: TLabel;
   end;
 
@@ -429,9 +509,9 @@ type
 type
   TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS = record
     Degree: TGroupBox;
-    Degree_C: TCheckBox;  //Yahoo, OpenWeatherMap
-    Degree_F: TCheckBox;  //Yahoo, OpenWeatherMap
-    Degree_K: TCheckBox;  //OpenWeatherMap
+    Degree_C: TCheckBox; // Yahoo, OpenWeatherMap
+    Degree_F: TCheckBox; // Yahoo, OpenWeatherMap
+    Degree_K: TCheckBox; // OpenWeatherMap
     Refresh: TGroupBox;
     Refresh_Every: TCheckBox;
     Refresh_Once: TCheckBox;
