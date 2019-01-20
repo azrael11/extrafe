@@ -73,6 +73,8 @@ begin
 
   uWeather_Sounds_Load;
 
+  //What
+
  if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
   begin
     vAniText := TText.Create(vWeather.Scene.weather);
