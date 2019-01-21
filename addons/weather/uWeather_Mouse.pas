@@ -209,7 +209,17 @@ begin
     else if TImage(Sender).TagFloat = 101 then
       uWeather_Config_Iconsets_GlowPreview(TImage(Sender).Tag, True)
     else if TImage(Sender).Name = 'A_W_Config_Iconsets_Back' then
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := True;
+      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := True
+    else if TImage(Sender).TagFloat = 1000 then
+    begin
+      if addons.weather.Config.Edit_Lock then
+      begin
+        if TImage(Sender).Tag <> addons.weather.Config.Selected_Town then
+          vWeather.Config.main.Right.Towns.Town[TImage(Sender).Tag].Glow_Panel.Enabled := True
+      end
+      else
+        vWeather.Config.main.Right.Towns.Town[TImage(Sender).Tag].Glow_Panel.Enabled := True
+    end;
   end
   else if extrafe.prog.state = 'addon_weather_config_towns_add' then
   begin
@@ -267,7 +277,17 @@ begin
     else if TImage(Sender).TagFloat = 101 then
       uWeather_Config_Iconsets_GlowPreview(TImage(Sender).Tag, False)
     else if TImage(Sender).Name = 'A_W_Config_Iconsets_Back' then
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := False;
+      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := False
+    else if TImage(Sender).TagFloat = 1000 then
+    begin
+      if addons.weather.Config.Edit_Lock then
+      begin
+        if TImage(Sender).Tag <> addons.weather.Config.Selected_Town then
+          vWeather.Config.main.Right.Towns.Town[TImage(Sender).Tag].Glow_Panel.Enabled := False
+      end
+      else
+        vWeather.Config.main.Right.Towns.Town[TImage(Sender).Tag].Glow_Panel.Enabled := False
+    end
   end
   else if extrafe.prog.state = 'addon_weather_config_towns_add' then
   begin
@@ -299,9 +319,9 @@ begin
   else if extrafe.prog.state = 'addon_weather_config_towns_add' then
   begin
     if TButton(Sender).Name = 'A_W_Config_Towns_Add_Add' then
-      uWeather_Config_Towns_Add_AddTown(vWeather.Config.Main.Right.Towns.Add.Main.Grid.Selected, False)
+      uWeather_Config_Towns_Add_AddTown(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, False)
     else if TButton(Sender).Name = 'A_W_Config_Towns_Add_AddStay' then
-//      uWeather_Config_Towns_Add_AddTown(True)
+      // uWeather_Config_Towns_Add_AddTown(True)
     else if TButton(Sender).Name = 'A_W_Config_Towns_Add_Cancel' then
       uWeather_Config_Towns_Add_Free;
   end
@@ -451,7 +471,7 @@ procedure TWEATHER_ADDON_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
   if TCheckBox(Sender).Name = 'Weather_Config_Provider_yahoo_CheckBox' then
     uWeather_Config_Provider_YahooCheck
-  else if TCheckBox(Sender).Name= 'Weather_Config_Provider_openweathermap_CheckBox'  then
+  else if TCheckBox(Sender).Name = 'Weather_Config_Provider_openweathermap_CheckBox' then
     uWeather_Config_Provider_OpenWeatherMapCheck
   else if TCheckBox(Sender).Name = 'Weather_Config_Options_Degree_Celcius_Checkbox' then
     uWeather_Config_Options_UseDegree(vWeather.Config.main.Right.Options.Degree_C.Text)

@@ -85,6 +85,7 @@ uses
   uWeather_Mouse,
   uWeather_Sounds,
   uWeather_Providers_Yahoo,
+  uWeather_Providers_OpenWeatherMap,
   main;
 
 procedure uWeather_Config_Towns_Show;
@@ -296,8 +297,10 @@ procedure uWeather_Config_Towns_Load;
 var
   vi: Integer;
 begin
-  // for vi := 0 to addons.weather.Action.Active_Total do
-  // uWeather_Config_Towns_CreateTown_Panel(vi, addons.weather.Action.Choosen[vi]);
+  if addons.weather.Action.Provider= 'yahoo' then
+    uWeather_Providers_Yahoo_Load_Config
+  else
+    uWeather_Providers_OpenWeatherMap_Load_Config;
 end;
 
 procedure uWeather_Config_Towns_AddNewTown_Panel;
@@ -721,7 +724,7 @@ begin
     + '_Image';
   vWeather.Config.main.Right.Towns.Town[mNum].Image.Parent := vWeather.Config.main.Right.Towns.Town
     [mNum].Panel;
-  vWeather.Config.main.Right.Towns.Town[mNum].Image.SetBounds(6,6, 60, 60);
+  vWeather.Config.main.Right.Towns.Town[mNum].Image.SetBounds(6, 6, 60, 60);
   vWeather.Config.main.Right.Towns.Town[mNum].Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets +
     addons.weather.Config.Iconset.name + '\w_w_' + mTownResults.Temp_Icon + '.png');
   vWeather.Config.main.Right.Towns.Town[mNum].Image.OnMouseEnter :=
@@ -779,6 +782,9 @@ begin
     [mNum].Panel;
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.SetBounds(140, 32, 200, 17);
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.Text := 'City Name : ';
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.StyledSettings :=
+    vWeather.Config.main.Right.Towns.Town[mNum].City_Name.StyledSettings - [TStyledSetting.FontColor];
+  vWeather.Config.main.Right.Towns.Town[mNum].City_Name.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Config.main.Right.Towns.Town[mNum].City_Name.OnMouseEnter :=
     addons.weather.Input.mouse.VLabel.OnMouseEnter;
@@ -818,6 +824,10 @@ begin
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.SetBounds(140, 60, 300, 17);
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.Text := 'Country Name : ';
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.StyledSettings :=
+    vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.StyledSettings - [TStyledSetting.FontColor];
+  vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.TextSettings.FontColor :=
+    TAlphaColorRec.Deepskyblue;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.OnMouseEnter :=
     addons.weather.Input.mouse.VLabel.OnMouseEnter;
   vWeather.Config.main.Right.Towns.Town[mNum].Country_Name.OnMouseLeave :=

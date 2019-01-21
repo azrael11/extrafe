@@ -428,8 +428,9 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := True;
   vStayToADD := vStay;
   vWeather.Config.main.Right.Towns.Add.main.Ani.Start;
+
 {  if vTown_HasData then
-  begin
+  begin}
     vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text :=
       '" ' + vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
       [2, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "  from " ' +
@@ -438,7 +439,7 @@ begin
     for vi := 0 to vWeather.Config.main.Right.Towns.Add.main.Grid.RowCount - 1 do
       TStringGrid(vWeather.Config.main.Right.Towns.Add.main.Grid).myDeleteRow(vi);
     vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text := '';
-  end
+  {end
   else
     vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text := 'Can''t get forcast data for " ' +
       vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
@@ -452,9 +453,9 @@ end;
 procedure TWEATHER_CONFIG_TOWNS_ADD_FLOATANIMATION.OnFinish(Sender: TObject);
 begin
   vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := False;
- { if vTown_HasData then
+ { if vTown_HasData then}
     if vStayToADD = False then
-      uWeather_Config_Towns_Add_Free;}
+      uWeather_Config_Towns_Add_Free;
 end;
 
 initialization

@@ -143,7 +143,9 @@ type
     Weather_Main: String;
     Weather_Desc: String;
     Weather_Icon: String;
+    Weather_Build_Icon: String;
     Temp: String;
+    Temp_Unit: String;
     Pressure: String;
     Pressure_Sea: String;
     Pressure_Ground: String;
@@ -163,6 +165,7 @@ type
     Sunset: String;
     City: WideString;
     Country_FlagCode: string;
+    Country: String;
   end;
 
 type

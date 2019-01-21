@@ -14,6 +14,9 @@ uses
   ALFmxTabControl,
   uWeather_AllTypes;
 
+procedure uWeather_Providers_Yahoo_Load;
+procedure uWeather_Providers_Yahoo_Load_Config;
+
 function uWeather_Provider_Yahoo_GerForcast(vNum: Integer; vWoeid, vCountry_Code: String)
   : TADDON_WEATHER_CHOOSENTOWN;
 
@@ -27,6 +30,17 @@ uses
   uSnippet_Text,
   uWeather_Convert,
   uWeather_MenuActions;
+
+
+procedure uWeather_Providers_Yahoo_Load;
+begin
+
+end;
+
+procedure uWeather_Providers_Yahoo_Load_Config;
+begin
+
+end;
 
 function uWeather_Provider_Yahoo_GerForcast(vNum: Integer; vWoeid, vCountry_Code: String)
   : TADDON_WEATHER_CHOOSENTOWN;

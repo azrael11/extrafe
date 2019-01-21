@@ -29,6 +29,7 @@ begin
   vWeather.Config.Panel.Visible := mShow;
   if mShow = False then
     uWeather_COnfig_ClearConfig;
+  addons.weather.Config.Active_Panel:= -1;
 end;
 
 procedure uWeather_COnfig_ClearConfig;

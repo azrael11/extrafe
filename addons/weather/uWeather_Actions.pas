@@ -73,9 +73,9 @@ begin
 
   uWeather_Sounds_Load;
 
-  //What
+  // What
 
- if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
+  if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
   begin
     vAniText := TText.Create(vWeather.Scene.weather);
     vAniText.Name := 'Weather_Progress_Text';
@@ -92,61 +92,67 @@ begin
 
     if uWindows_IsConected_ToInternet then
     begin
-      vTaskTimer := TTimer.Create(Main_Form);
-      vTaskTimer.Enabled := False;
-      vTaskTimer.Interval := 300;
-      vTaskTimer.OnTimer := addons.weather.Input.mouse.Timer.OnTimer;
+      if addons.weather.Action.Provider = 'yahoo' then
+        uWeather_Providers_Yahoo_Load
+      else if addons.weather.Action.Provider = 'openweathermap' then
+        uWeather_Providers_OpenWeatherMap_Load;
+      if addons.weather.Action.Active_Total <> -1 then
+        uWeather_Actions_ShowTheForcast;
+      { vTaskTimer := TTimer.Create(Main_Form);
+        vTaskTimer.Enabled := False;
+        vTaskTimer.Interval := 300;
+        vTaskTimer.OnTimer := addons.weather.Input.mouse.Timer.OnTimer;
 
-      vAniAnimation := TAniIndicator.Create(vWeather.Scene.weather);
-      vAniAnimation.Name := 'Weather_Progress';
-      vAniAnimation.Parent := (vWeather.Scene.weather);
-      vAniAnimation.Width := 100;
-      vAniAnimation.Height := 100;
-      vAniAnimation.Position.X := (vWeather.Scene.weather.Width / 2) - 50;
-      vAniAnimation.Position.Y := (vWeather.Scene.weather.Height / 2) - 50;
-      vAniAnimation.Enabled := True;
-      vAniAnimation.Visible := True;
+        vAniAnimation := TAniIndicator.Create(vWeather.Scene.weather);
+        vAniAnimation.Name := 'Weather_Progress';
+        vAniAnimation.Parent := (vWeather.Scene.weather);
+        vAniAnimation.Width := 100;
+        vAniAnimation.Height := 100;
+        vAniAnimation.Position.X := (vWeather.Scene.weather.Width / 2) - 50;
+        vAniAnimation.Position.Y := (vWeather.Scene.weather.Height / 2) - 50;
+        vAniAnimation.Enabled := True;
+        vAniAnimation.Visible := True;
 
-      // Application.ProcessMessages;
-      vAniText.Text := 'Retriving weather data from "' + addons.weather.Action.Provider + '" provider';
+        // Application.ProcessMessages;
+        vAniText.Text := 'Retriving weather data from "' + addons.weather.Action.Provider + '" provider';
 
-      vWeather.Config.Panel.Visible := False;
-      vLoading_Integer := -1;
+        vWeather.Config.Panel.Visible := False;
+        vLoading_Integer := -1;
 
-//      if addons.weather.Action.Provider= 'yahoo' then
-//      else if addons.weather.Action.Provider= 'openweathermap' then
+        //      if addons.weather.Action.Provider= 'yahoo' then
+        //      else if addons.weather.Action.Provider= 'openweathermap' then
 
 
-    {  vTask := TTask.Run(
+        {  vTask := TTask.Run(
         procedure
         begin
-          TThread.Synchronize(nil,
-            procedure
-            var
-              vi: Integer;
-              vString: String;
-              vString1: String;
-              viPos: Integer;
-              vNTXML: IXMLDocument;
-              vNTRoot: PXMLNode;
-              vNTNode: PXMLNode;
-              vNTNode_1: PXMLNode;
-              vNTNode_2: PXMLNode;
-              vNTNode_3: PXMLNode;
-              vNTAttribute: PXMLNode;
-            begin
-              vTaskTimer.Enabled := True;
-              for vi := 0 to addons.weather.Action.Active_Total do
-              begin
-                vString := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider,
-                  IntToStr(vi) + '_WoeID', vString);
-                viPos := Pos('{', vString);
-                vString1 := Trim(Copy(vString, viPos + 1, 2));
-                vString := Trim(Copy(vString, 0, viPos - 1));
-                addons.weather.Action.Choosen[vi] := uWeather_Forcast_Get(vi, vString, vString1);
-              end;
-            end);
-        end);}
+        TThread.Synchronize(nil,
+        procedure
+        var
+        vi: Integer;
+        vString: String;
+        vString1: String;
+        viPos: Integer;
+        vNTXML: IXMLDocument;
+        vNTRoot: PXMLNode;
+        vNTNode: PXMLNode;
+        vNTNode_1: PXMLNode;
+        vNTNode_2: PXMLNode;
+        vNTNode_3: PXMLNode;
+        vNTAttribute: PXMLNode;
+        begin
+        vTaskTimer.Enabled := True;
+        for vi := 0 to addons.weather.Action.Active_Total do
+        begin
+        vString := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider,
+        IntToStr(vi) + '_WoeID', vString);
+        viPos := Pos('{', vString);
+        vString1 := Trim(Copy(vString, viPos + 1, 2));
+        vString := Trim(Copy(vString, 0, viPos - 1));
+        addons.weather.Action.Choosen[vi] := uWeather_Forcast_Get(vi, vString, vString1);
+        end;
+        end);
+        end); }
     end
   end
   else
@@ -157,13 +163,13 @@ procedure uWeather_Actions_ShowTheForcast;
 var
   ki: Integer;
 begin
-  FreeAndNil(vTaskTimer);
-  for ki := 0 to addons.weather.Action.Active_Total do
-  begin
+  { FreeAndNil(vTaskTimer);
+    for ki := 0 to addons.weather.Action.Active_Total do
+    begin
     uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[ki], ki);
     vWeather.Scene.Tab[ki].Tab.Visible := True;
     // Application.ProcessMessages;
-  end;
+    end; }
 
   if (addons.weather.Action.Active_Total = 0) or (addons.weather.Action.Active_Total = -1) then
     vWeather.Scene.Arrow_Right.Visible := False
@@ -177,8 +183,8 @@ begin
 
   addons.weather.Config.Edit_Lock := False;
 
-  FreeAndNil(vAniAnimation);
-  FreeAndNil(vAniText);
+  { FreeAndNil(vAniAnimation);
+    FreeAndNil(vAniText); }
 
   addons.weather.Loaded := True;
 
@@ -218,15 +224,15 @@ begin
   vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X :=
     vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Sunrise.Width + 120;
   vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.Y := 670;
-  vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Path :=
+  { vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Path :=
     uWeather_Convert_SunSpot(addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunrise,
     addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunset);
-  vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := False;
-  if addons.weather.Action.PathAni_Show then
-  begin
+    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := False;
+    if addons.weather.Action.PathAni_Show then
+    begin
     vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := True;
     vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Start;
-  end;
+    end; }
 end;
 
 procedure uWeather_Actions_ShowFirstTimeScene(vFirst: Boolean);
