@@ -1,6 +1,7 @@
 unit uEmu_Arcade_Mame_AllTypes;
 
 interface
+
 uses
   System.Classes,
   FMX.TabControl,
@@ -20,205 +21,239 @@ uses
   uEmu_Arcade_Mame_Mouse,
   uEmu_Arcade_Mame_Config_Mouse;
 
-////////////////////////////////////////////////////////////////////////////////
+/// /////////////////////////////////////////////////////////////////////////////
 ///
 /// mame construction set called vmame
 ///
-////////////////////////////////////////////////////////////////////////////////
+/// /////////////////////////////////////////////////////////////////////////////
 
-///Configuration Panel
-type TMAME_CONFIG_DIRECTORIES= record
-  TabControl: TTabControl;
-  Roms: TTabItem;
-  Media: TTabItem;
+/// Configuration Panel
 
-  Roms_Find: TSpeedButton;
-  Roms_VertScrollBox: TVertScrollBox;
-  Roms_Edit: array [0..100] of TEdit;
-  Roms_Del: array [0..100] of TSpeedButton;
+type
+  TMAME_CONFIG_DIRECTORIES_MEDIA_CHECK = record
+    Panel: TPanel;
+    Main: TPanel;
+    Info: TLabel;
+    ProgressBar: TProgressBar;
+    Update: TButton;
+    Cancel: TButton;
+  end;
 
-  Media_VertScrollBox: TVertScrollBox;
-  Media_Labels: array [0..25] of TLabel;
-  Media_CheckAndDownload: array [0..25] of TText;
-  Media_Edit: array [0..25] of TEdit;
-  Media_Change: array [0..25] of TSpeedButton;
+type
+  TMAME_CONFIG_DIRECTORIES_MEDIA = record
+    Box: TVertScrollBox;
+    Labels: array [0 .. 25] of TText;
+    Found: array [0 .. 25] of TText;
+    CheckAndDownload: array [0 .. 25] of TText;
+    Edit: array [0 .. 25] of TEdit;
+    Change: array [0 .. 25] of TSpeedButton;
+    Check: TMAME_CONFIG_DIRECTORIES_MEDIA_CHECK;
+  end;
 
-  Check: TPanel;
-  Check_Header: TPanel;
-  Check_Header_Label: TLabel;
-  Check_Main: TPanel;
-  Check_Main_Label: TLabel;
-  Check_Main_ProgressBar: TProgressBar;
-  Check_Cancel: TButton;
-end;
+type
+  TMAME_CONFIG_DIRECTORIES_ROMS = record
+    Find: TSpeedButton;
+    Box: TVertScrollBox;
+    Edit: array [0 .. 100] of TEdit;
+    Del: array [0 .. 100] of TSpeedButton;
+  end;
 
-type TMAME_CONFIG_DISPLAY= record
-  Checkbox: array [0..12] of TCheckBox;
-  Groupbox: array [0..9] of TGroupBox;
-  Trackbar: array [0..6] of TTrackBar;
-  Labels: array [0..8] of TLabel;
-  Combobox: array [0..1] of TComboBox;
-end;
+type
+  TMAME_CONFIG_DIRECTORIES = record
+    TabControl: TTabControl;
+    Roms_Tab: TTabItem;
+    Media_Tab: TTabItem;
 
-type TMAME_CONFIG_ADVANCE= record
-  Labels: array [0..6] of TLabel;
-  Checkbox: array [0..5] of TCheckBox;
-  Groupbox: array [0..6] of TGroupBox;
-  Combobox: TComboBox;
-  Edit: TEdit;
-  Trackbar: array [0..4] of TTrackBar;
-  Button: array [0..1] of TButton;
-  OpenDialog: TOpenDialog;
-end;
+    Roms: TMAME_CONFIG_DIRECTORIES_ROMS;
+    Media: TMAME_CONFIG_DIRECTORIES_MEDIA;
+  end;
 
-type TMAME_CONFIG_SCREEN= record
-  Labels: array [0..4] of TLabel;
-  Checkbox: array [0..1] of TCheckBox;
-  Groupbox: array [0..7] of TGroupBox;
-  Combobox: array [0..4] of TComboBox;
-  Edit: array [0..1] of TEdit;
-  Trackbar: TTrackBar;
-end;
+type
+  TMAME_CONFIG_DISPLAY = record
+    Checkbox: array [0 .. 12] of TCheckBox;
+    Groupbox: array [0 .. 9] of TGroupBox;
+    Trackbar: array [0 .. 6] of TTrackBar;
+    Labels: array [0 .. 8] of TLabel;
+    Combobox: array [0 .. 1] of TComboBox;
+  end;
 
-type TMAME_CONFIG_OPENGL_BGFX= record
-  Labels: array [0..1] of TLabel;
-  Checkbox: array [0..5] of TCheckBox;
-  Groupbox: array [0..2] of TGroupBox;
-  Combobox: TComboBox;
-  Edit: TEdit;
-  Button: array [0..1] of TButton;
-  OpenDialog: TOpenDialog;
-end;
+type
+  TMAME_CONFIG_ADVANCE = record
+    Labels: array [0 .. 6] of TLabel;
+    Checkbox: array [0 .. 5] of TCheckBox;
+    Groupbox: array [0 .. 6] of TGroupBox;
+    Combobox: TComboBox;
+    Edit: TEdit;
+    Trackbar: array [0 .. 4] of TTrackBar;
+    Button: array [0 .. 1] of TButton;
+    OpenDialog: TOpenDialog;
+  end;
 
-type TMAME_CONFIG_OPENGL_SHANDERS= record
-  Labels: array [0..1] of TLabel;
-  Groupbox: array [0..7] of TGroupBox;
-  Edit: array [0..7] of TEdit;
-  Button: array [0..15] of TButton;
-  OpenDialog: TOpenDialog;
-end;
+type
+  TMAME_CONFIG_SCREEN = record
+    Labels: array [0 .. 4] of TLabel;
+    Checkbox: array [0 .. 1] of TCheckBox;
+    Groupbox: array [0 .. 7] of TGroupBox;
+    Combobox: array [0 .. 4] of TComboBox;
+    Edit: array [0 .. 1] of TEdit;
+    Trackbar: TTrackBar;
+  end;
 
-type TMAME_CONFIG_VECTOR= record
-  Labels: array [0..5] of TLabel;
-  Groupbox: array [0..3] of TGroupBox;
-  Trackbar: array [0..3] of TTrackBar;
-end;
+type
+  TMAME_CONFIG_OPENGL_BGFX = record
+    Labels: array [0 .. 1] of TLabel;
+    Checkbox: array [0 .. 5] of TCheckBox;
+    Groupbox: array [0 .. 2] of TGroupBox;
+    Combobox: TComboBox;
+    Edit: TEdit;
+    Button: array [0 .. 1] of TButton;
+    OpenDialog: TOpenDialog;
+  end;
 
-type TMAME_CONFIG_SOUND= record
-  Labels: array [0..3] of TLabel;
-  Groupbox: array [0..3] of TGroupBox;
-  Trackbar: array [0..1] of TTrackBar;
-  Combobox: array [0..1] of TComboBox;
-  Checkbox: TCheckBox;
-end;
+type
+  TMAME_CONFIG_OPENGL_SHANDERS = record
+    Labels: array [0 .. 1] of TLabel;
+    Groupbox: array [0 .. 7] of TGroupBox;
+    Edit: array [0 .. 7] of TEdit;
+    Button: array [0 .. 15] of TButton;
+    OpenDialog: TOpenDialog;
+  end;
 
-type TMAME_CONFIG_CONTROLLERS= record
-  Labels: array [0..3] of TLabel;
-  Checkbox: array [0..7] of TCheckBox;
-  Groupbox: array [0..4] of TGroupBox;
-  Trackbar: array [0..1] of TTrackBar;
-  Combobox: TComboBox;
-  Edit: TEdit;
-  Button: TButton;
-end;
+type
+  TMAME_CONFIG_VECTOR = record
+    Labels: array [0 .. 5] of TLabel;
+    Groupbox: array [0 .. 3] of TGroupBox;
+    Trackbar: array [0 .. 3] of TTrackBar;
+  end;
 
-type TMAME_CONFIG_CONTROLLERS_MAPPING= record
-  Labels: array [0..1] of TLabel;
-  Groupbox: array [0..7] of TGroupBox;
-  Combobox: array [0..7] of TComboBox;
-end;
+type
+  TMAME_CONFIG_SOUND = record
+    Labels: array [0 .. 3] of TLabel;
+    Groupbox: array [0 .. 3] of TGroupBox;
+    Trackbar: array [0 .. 1] of TTrackBar;
+    Combobox: array [0 .. 1] of TComboBox;
+    Checkbox: TCheckBox;
+  end;
 
-type TMAME_CONFIG_MISCELLANEOUS= record
-  Labels: array [0..4] of TLabel;
-  Checkbox: array [0..14] of TCheckBox;
-  Groupbox: array [0..3] of TGroupBox;
-  Combobox: TComboBox;
-  Edit: TEdit;
-  Trackbar: TTrackBar;
-  Button: array [0..1] of TButton;
-  OpenDialog: TOpenDialog;
-end;
+type
+  TMAME_CONFIG_CONTROLLERS = record
+    Labels: array [0 .. 3] of TLabel;
+    Checkbox: array [0 .. 7] of TCheckBox;
+    Groupbox: array [0 .. 4] of TGroupBox;
+    Trackbar: array [0 .. 1] of TTrackBar;
+    Combobox: TComboBox;
+    Edit: TEdit;
+    Button: TButton;
+  end;
 
-type TMAME_CONFIG_MISCELLANEOUS_II= record
-  Labels: array [0..2] of TLabel;
-  Checkbox: array [0..2] of TCheckBox;
-  Groupbox: array [0..3] of TGroupBox;
-  Combobox: array [0..1] of TComboBox;
-  Edit: array [0..1] of TEdit;
-  Trackbar: TTrackBar;
-  Button: array [0..2] of TButton;
-  OpenDialog: TOpenDialog;
-end;
+type
+  TMAME_CONFIG_CONTROLLERS_MAPPING = record
+    Labels: array [0 .. 1] of TLabel;
+    Groupbox: array [0 .. 7] of TGroupBox;
+    Combobox: array [0 .. 7] of TComboBox;
+  end;
 
-type TMAME_CONFIG_SNAP_MOVIE_PLAYBACK= record
-  Labels: array [0..3] of TLabel;
-  Checkbox: array [0..3] of TCheckBox;
-  Groupbox: array [0..2] of TGroupBox;
-  Combobox: array [0..1] of TComboBox;
-  Edit: array [0..1] of TEdit;
-end;
+type
+  TMAME_CONFIG_MISCELLANEOUS = record
+    Labels: array [0 .. 4] of TLabel;
+    Checkbox: array [0 .. 14] of TCheckBox;
+    Groupbox: array [0 .. 3] of TGroupBox;
+    Combobox: TComboBox;
+    Edit: TEdit;
+    Trackbar: TTrackBar;
+    Button: array [0 .. 1] of TButton;
+    OpenDialog: TOpenDialog;
+  end;
 
-type TEMU_MAME_CONFIG_PANEL= record
-  Dirs: TMAME_CONFIG_DIRECTORIES;
-  Display: TMAME_CONFIG_DISPLAY;
-  Advance: TMAME_CONFIG_ADVANCE;
-  Screen: TMAME_CONFIG_SCREEN;
-  OGL_BGFX: TMAME_CONFIG_OPENGL_BGFX;
-  OGL_Shaders: TMAME_CONFIG_OPENGL_SHANDERS;
-  Vector: TMAME_CONFIG_VECTOR;
-  Sound: TMAME_CONFIG_SOUND;
-  Controls: TMAME_CONFIG_CONTROLLERS;
-  Controls_Map: TMAME_CONFIG_CONTROLLERS_MAPPING;
-  Misc: TMAME_CONFIG_MISCELLANEOUS;
-  Misc_II: TMAME_CONFIG_MISCELLANEOUS_II;
-  S_M_P: TMAME_CONFIG_SNAP_MOVIE_PLAYBACK;
-end;
+type
+  TMAME_CONFIG_MISCELLANEOUS_II = record
+    Labels: array [0 .. 2] of TLabel;
+    Checkbox: array [0 .. 2] of TCheckBox;
+    Groupbox: array [0 .. 3] of TGroupBox;
+    Combobox: array [0 .. 1] of TComboBox;
+    Edit: array [0 .. 1] of TEdit;
+    Trackbar: TTrackBar;
+    Button: array [0 .. 2] of TButton;
+    OpenDialog: TOpenDialog;
+  end;
 
-type TEMU_MAME_CONFIG_SCENE= record
-  Main: TPanel;
-  Main_Blur: TGaussianBlurEffect;
-  Header: TPanel;
-  Header_Icon: TImage;
-  Header_Label: TLabel;
-  Left: TPanel;
-  Left_Buttons: array [0..12] of TButton;
-  Right: TPanel;
-  Right_Panels: array [0..12] of TPanel;
-  Shadow: TShadowEffect;
-end;
+type
+  TMAME_CONFIG_SNAP_MOVIE_PLAYBACK = record
+    Labels: array [0 .. 3] of TLabel;
+    Checkbox: array [0 .. 3] of TCheckBox;
+    Groupbox: array [0 .. 2] of TGroupBox;
+    Combobox: array [0 .. 1] of TComboBox;
+    Edit: array [0 .. 1] of TEdit;
+  end;
 
-type TEMU_MAME_CONFIGURATION= record
-  Scene: TEMU_MAME_CONFIG_SCENE;
-  Panel: TEMU_MAME_CONFIG_PANEL;
-end;
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-  type TEMU_MAME_GAMELIST_LINE= record
+type
+  TEMU_MAME_CONFIG_PANEL = record
+    Dirs: TMAME_CONFIG_DIRECTORIES;
+    Display: TMAME_CONFIG_DISPLAY;
+    Advance: TMAME_CONFIG_ADVANCE;
+    Screen: TMAME_CONFIG_SCREEN;
+    OGL_BGFX: TMAME_CONFIG_OPENGL_BGFX;
+    OGL_Shaders: TMAME_CONFIG_OPENGL_SHANDERS;
+    Vector: TMAME_CONFIG_VECTOR;
+    Sound: TMAME_CONFIG_SOUND;
+    Controls: TMAME_CONFIG_CONTROLLERS;
+    Controls_Map: TMAME_CONFIG_CONTROLLERS_MAPPING;
+    Misc: TMAME_CONFIG_MISCELLANEOUS;
+    Misc_II: TMAME_CONFIG_MISCELLANEOUS_II;
+    S_M_P: TMAME_CONFIG_SNAP_MOVIE_PLAYBACK;
+  end;
+
+type
+  TEMU_MAME_CONFIG_SCENE = record
+    Main: TPanel;
+    Main_Blur: TGaussianBlurEffect;
+    Header: TPanel;
+    Header_Icon: TImage;
+    Header_Label: TLabel;
+    Left: TPanel;
+    Left_Buttons: array [0 .. 12] of TButton;
+    Right: TPanel;
+    Right_Panels: array [0 .. 12] of TPanel;
+    Shadow: TShadowEffect;
+  end;
+
+type
+  TEMU_MAME_CONFIGURATION = record
+    Scene: TEMU_MAME_CONFIG_SCENE;
+    Panel: TEMU_MAME_CONFIG_PANEL;
+  end;
+
+  /// /////////////////////////////////////////////////////////////////////////////
+  /// /////////////////////////////////////////////////////////////////////////////
+type
+  TEMU_MAME_GAMELIST_LINE = record
     Back: TImage;
     Icon: TImage;
     Text: TText;
   end;
 
-  type TEMU_MAME_SCENE_GAMELIST_INFO= record
+type
+  TEMU_MAME_SCENE_GAMELIST_INFO = record
     List: TImage;
     Listbox: TVertScrollBox;
-    List_Line: array [0..20] of TEMU_MAME_GAMELIST_LINE;
+    List_Line: array [0 .. 20] of TEMU_MAME_GAMELIST_LINE;
     List_Selection_Glow: TGlowEffect;
     T_Games_Count_Info: TText;
     T_MameVersion: TText;
     Up_Back_Image: TImage;
     T_GamePlayers: TText;
     T_GameCategory: TText;
-    Down_Back_Image: Timage;
-    Filters: Timage;
+    Down_Back_Image: TImage;
+    Filters: TImage;
     Filters_Glow: TGlowEffect;
-    Filters_Back_Image: Timage;
+    Filters_Back_Image: TImage;
     T_Filters: TText;
     Search: TImage;
     Search_Glow: TGlowEffect;
   end;
 
-  type TEMU_MAME_SCENE_SNAPSHOT_GROUP= record
+type
+  TEMU_MAME_SCENE_SNAPSHOT_GROUP = record
     SnapInfo: TText;
     Type_Arcade: TImage;
     Type_Arcade_Reflection: TReflectionEffect;
@@ -234,7 +269,8 @@ end;
     Video_Reflaction: TReflectionEffect;
   end;
 
-  type TEMU_MAME_SCENE= record
+type
+  TEMU_MAME_SCENE = record
     Main: TImage;
     Left: TImage;
     Left_Anim: TFloatAnimation;
@@ -250,21 +286,23 @@ end;
     Settings: TImage;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
-    Exit_Mame: Timage;
+    Exit_Mame: TImage;
     Exit_Mame_Glow: TGlowEffect;
   end;
-////////////////////////////////////////////////////////////////////////////////
-  type TEMU_MAME_INSTALLATION_FROMCOMPUTER= record
+
+  /// /////////////////////////////////////////////////////////////////////////////
+type
+  TEMU_MAME_INSTALLATION_FROMCOMPUTER = record
     Panel: TPanel;
     Header: TPanel;
     Main: TPanel;
-    Header_Info: Tlabel;
+    Header_Info: TLabel;
     Step_1: TPanel;
     Step_1_Welcome: TText;
     Step_1_Info_Line_1: TLabel;
     Step_1_Info_Line_2: TLabel;
     Step_1_Info_Line_3: TLabel;
-    Step_1_Next: Tbutton;
+    Step_1_Next: TButton;
     Step_2: TPanel;
     Step_2_Info: TText;
     Step_2_Info_Line_1: TLabel;
@@ -282,30 +320,34 @@ end;
     Step_4_Done: TButton;
   end;
 
-  type TEMU_MAME_INSTALLATION= record
+type
+  TEMU_MAME_INSTALLATION = record
     Computer: TEMU_MAME_INSTALLATION_FROMCOMPUTER;
   end;
-////////////////////////////////////////////////////////////////////////////////
-  type TEMU_MAME_CONSTRUCT= record
+
+  /// /////////////////////////////////////////////////////////////////////////////
+type
+  TEMU_MAME_CONSTRUCT = record
     Install: TEMU_MAME_INSTALLATION;
     Scene: TEMU_MAME_SCENE;
     Config: TEMU_MAME_CONFIGURATION;
   end;
-////////////////////////////////////////////////////////////////////////////////
+  /// /////////////////////////////////////////////////////////////////////////////
 
-  var
-    vMame: TEMU_MAME_CONSTRUCT;
-////////////////////////////////////////////////////////////////////////////////
-///
-/// Mame variables called mame
-///
-////////////////////////////////////////////////////////////////////////////////
+var
+  vMame: TEMU_MAME_CONSTRUCT;
+  /// /////////////////////////////////////////////////////////////////////////////
+  ///
+  /// Mame variables called mame
+  ///
+  /// /////////////////////////////////////////////////////////////////////////////
 
-  type TEMU_MAME_INI= record
-    //Core Configuration options
+type
+  TEMU_MAME_INI = record
+    // Core Configuration options
     CORE_CONFIGURATION_readconfig: Boolean;
     CORE_CONFIGURATION_writeconfig: Boolean;
-    //Core Search path options
+    // Core Search path options
     CORE_SEARCH_homepath: WideString;
     CORE_SEARCH_rompath: TStringList;
     CORE_SEARCH_hashpath: WideString;
@@ -319,7 +361,7 @@ end;
     CORE_SEARCH_pluginspath: WideString;
     CORE_SEARCH_languagepath: WideString;
     CORE_SEARCH_swpath: WideString;
-    //Core Output directory optiions
+    // Core Output directory optiions
     CORE_OUTPUT_cfg_directory: WideString;
     CORE_OUTPUT_nvram_directory: WideString;
     CORE_OUTPUT_input_directory: WideString;
@@ -327,7 +369,7 @@ end;
     CORE_OUTPUT_snapshot_directory: WideString;
     CORE_OUTPUT_diff_directory: WideString;
     CORE_OUTPUT_comment_directory: WideString;
-    //Core State/Playback options
+    // Core State/Playback options
     CORE_STATE_state: WideString;
     CORE_STATE_autosave: Boolean;
     CORE_STATE_rewind: Boolean;
@@ -345,7 +387,7 @@ end;
     CORE_STATE_snapbilinear: Boolean;
     CORE_STATE_statename: WideString;
     CORE_STATE_burnin: Boolean;
-    //Core Prerformance options
+    // Core Prerformance options
     CORE_PERFORMANCE_autoframeskip: Boolean;
     CORE_PERFORMANCE_frameskip: Byte;
     CORE_PERFORMANCE_seconds_to_run: Single;
@@ -353,9 +395,9 @@ end;
     CORE_PERFORMANCE_sleep: Boolean;
     CORE_PERFORMANCE_speed: WideString;
     CORE_PERFORMANCE_refreshspeed: Boolean;
-    //Arcade 64
+    // Arcade 64
     CORE_PERFORMANCE_syncrefresh: Boolean;
-    //Core Render options
+    // Core Render options
     CORE_RENDER_keepaspect: Boolean;
     CORE_RENDER_unevenstretch: Boolean;
     CORE_RENDER_unevenstretchx: Boolean;
@@ -364,7 +406,7 @@ end;
     CORE_RENDER_intoverscan: Boolean;
     CORE_RENDER_intscalex: Single;
     CORE_RENDER_intscaley: Single;
-    //Core Rotation options
+    // Core Rotation options
     CORE_ROTATION_rotate: Boolean;
     CORE_ROTATION_ror: Boolean;
     CORE_ROTATION_rol: Boolean;
@@ -372,7 +414,7 @@ end;
     CORE_ROTATION_autorol: Boolean;
     CORE_ROTATION_flipx: Boolean;
     CORE_ROTATION_flipy: Boolean;
-    //Core Artwork options
+    // Core Artwork options
     CORE_ARTWORK_artwork_crop: Boolean;
     CORE_ARTWORK_use_backdrops: Boolean;
     CORE_ARTWORK_use_overlays: Boolean;
@@ -381,25 +423,25 @@ end;
     CORE_ARTWORK_use_marquees: Boolean;
     CORE_ARTWORK_fallback_artwork: WideString;
     CORE_ARTWORK_override_artwork: WideString;
-    //Core Screen options
+    // Core Screen options
     CORE_SCREEN_brightness: WideString;
     CORE_SCREEN_contrast: WideString;
     CORE_SCREEN_gamma: WideString;
     CORE_SCREEN_pause_brightness: WideString;
     CORE_SCREEN_effect: WideString;
-    //Arcade 64 only **
+    // Arcade 64 only **
     CORE_SCREEN_widestretch: Boolean;
-    //**
-    //Core Vector options
+    // **
+    // Core Vector options
     CORE_VECTOR_beam_width_min: WideString;
     CORE_VECTOR_beam_width_max: WideString;
     CORE_VECTOR_beam_intensity_weight: WideString;
     CORE_VECTOR_flicker: WideString;
-    //Core Sound options
+    // Core Sound options
     CORE_SOUND_samplerate: WideString;
     CORE_SOUND_samples: Boolean;
     CORE_SOUND_volume: WideString;
-    //Core Input options
+    // Core Input options
     CORE_INPUT_coin_lockout: Boolean;
     CORE_INPUT_ctrlr: WideString;
     CORE_INPUT_mouse: Boolean;
@@ -416,7 +458,7 @@ end;
     CORE_INPUT_natural: Boolean;
     CORE_INPUT_joystick_contradictory: Boolean;
     CORE_INPUT_coin_impulse: Boolean;
-    //Core Input Automatic Enable options
+    // Core Input Automatic Enable options
     CORE_INPUT_AUTOMATIC_paddle_device: WideString;
     CORE_INPUT_AUTOMATIC_adstick_device: WideString;
     CORE_INPUT_AUTOMATIC_pedal_device: WideString;
@@ -425,19 +467,19 @@ end;
     CORE_INPUT_AUTOMATIC_lightgun_device: WideString;
     CORE_INPUT_AUTOMATIC_positional_device: WideString;
     CORE_INPUT_AUTOMATIC_mouse_device: WideString;
-    //Core Debugging options
+    // Core Debugging options
     CORE_DEBUGGING_verbose: Boolean;
     CORE_DEBUGGING_log: Boolean;
     CORE_DEBUGGING_oslog: Boolean;
     CORE_DEBUGGING_debug: Boolean;
     CORE_DEBUGGING_update_in_pause: Boolean;
     CORE_DEBUGGING_debugscript: WideString;
-    //Core Comm options
+    // Core Comm options
     CORE_COMM_comm_localhost: WideString;
     CORE_COMM_comm_localport: WideString;
     CORE_COMM_comm_remotehost: WideString;
     CORE_COMM_comm_remoteport: WideString;
-    //Core Misc options
+    // Core Misc options
     CORE_MISC_drc: Boolean;
     CORE_MISC_drc_use_c: Boolean;
     CORE_MISC_drc_log_uml: Boolean;
@@ -452,7 +494,7 @@ end;
     CORE_MISC_ui_mouse: Boolean;
     CORE_MISC_language: WideString;
     CORE_MISC_nvram_save: Boolean;
-    //Scripting options
+    // Scripting options
     SCRIPTING_autoboot_command: WideString;
     SCRIPTING_autoboot_delay: WideString;
     SCRIPTING_autoboot_script: WideString;
@@ -460,30 +502,30 @@ end;
     SCRIPTING_plugins: Boolean;
     SCRIPTING_plugin: WideString;
     SCRIPTING_noplugin: WideString;
-    //HTTP Server options
+    // HTTP Server options
     HTTP_http: WideString;
     HTTP_port: WideString;
     HTTP_root: WideString;
-    //Osd Keyboard mapping options
+    // Osd Keyboard mapping options
     OSD_KEYBOARD_uimodekey: WideString;
-    //Osd Font options
+    // Osd Font options
     OSD_FONT_uifontprovider: WideString;
-    //Osd Output options
+    // Osd Output options
     OSD_OUTPUT_output: WideString;
-    //Osd Input options
+    // Osd Input options
     OSD_INPUT_keyboardprovider: WideString;
     OSD_INPUT_mouseprovider: WideString;
     OSD_INPUT_lightgunprovider: WideString;
     OSD_INPUT_joystickprovider: WideString;
-    //Osd Debugging options
-    OSD_DEBUGGING_debugger: Widestring;
+    // Osd Debugging options
+    OSD_DEBUGGING_debugger: WideString;
     OSD_DEBUGGING_debugger_font: WideString;
     OSD_DEBUGGING_debugger_font_size: Integer;
     OSD_DEBUGGING_watchdog: Boolean;
-    //Osd Performance options
+    // Osd Performance options
     OSD_PERFORMANCE_numprocessors: WideString;
     OSD_PERFORMANCE_bench: Boolean;
-    //Osd Video options
+    // Osd Video options
     OSD_VIDEO_video: WideString;
     OSD_VIDEO_numscreens: Byte;
     OSD_VIDEO_window: Boolean;
@@ -491,7 +533,7 @@ end;
     OSD_VIDEO_waitvsync: Boolean;
     OSD_VIDEO_syncrefresh: Boolean;
     OSD_VIDEO_monitorprovider: WideString;
-    //Osd Per_Window Video options
+    // Osd Per_Window Video options
     OSD_PER_WINDOW_screen: WideString;
     OSD_PER_WINDOW_aspect: WideString;
     OSD_PER_WINDOW_resolution: WideString;
@@ -512,20 +554,20 @@ end;
     OSD_PER_WINDOW_aspect3: WideString;
     OSD_PER_WINDOW_resolution3: WideString;
     OSD_PER_WINDOW_view3: WideString;
-    //Osd Fullscreen options
+    // Osd Fullscreen options
     OSD_FULLSCREEN_switchres: Boolean;
-    //Osd Accelerated Video options
+    // Osd Accelerated Video options
     OSD_ACCELERATED_filter: Boolean;
     OSD_ACCELERATED_prescale: Single;
-    //OpenGL specific options
+    // OpenGL specific options
     OpenGL_gl_forcepow2texture: Boolean;
     OpenGL_gl_notexturerect: Boolean;
     OpenGL_gl_vbo: Boolean;
     OpenGL_gl_pbo: Boolean;
     OpenGL_gl_glsl: Boolean;
-    //Arcade64 only ***
+    // Arcade64 only ***
     OpenGL_gl_glsl_sync: Boolean;
-    //**
+    // **
     OpenGL_gl_glsl_filter: Integer;
     OpenGL_glsl_shader_mame0: WideString;
     OpenGL_glsl_shader_mame1: WideString;
@@ -547,26 +589,26 @@ end;
     OpenGL_glsl_shader_screen7: WideString;
     OpenGL_glsl_shader_screen8: WideString;
     OpenGL_glsl_shader_screen9: WideString;
-    //Osd Sound options
+    // Osd Sound options
     OSD_SOUND_sound: WideString;
     OSD_SOUND_audio_latency: WideString;
-    //Portaudio options
+    // Portaudio options
     PORTAUDIO_pa_api: WideString;
     PORTAUDIO_pa_device: WideString;
     PORTAUDIO_pa_latency: WideString;
-    //Bgfx post_processing options
+    // Bgfx post_processing options
     BGFX_bgfx_path: WideString;
     BGFX_bgfx_backend: WideString;
     BGFX_bgfx_debug: Boolean;
     BGFX_bgfx_screen_chains: WideString;
     BGFX_bgfx_shadow_mask: WideString;
     BGFX_bgfx_avi_name: WideString;
-    //Windows performance options
+    // Windows performance options
     WINDOWS_PERFORMANCE_priority: WideString;
     WINDOWS_PERFORMANCE_profile: WideString;
-    //Windows Video options
+    // Windows Video options
     WINDOWS_VIDEO_menu: Boolean;
-    //Direct3d Post_processing options
+    // Direct3d Post_processing options
     DIRECT3D_hlslpath: WideString;
     DIRECT3D_hlsl_enable: Boolean;
     DIRECT3D_hlsl_oversampling: Boolean;
@@ -611,7 +653,7 @@ end;
     DIRECT3D_power: WideString;
     DIRECT3D_floor: WideString;
     DIRECT3D_phosphor_life: WideString;
-    //NTSC Post-processing options
+    // NTSC Post-processing options
     NTSC_yiq_enable: Boolean;
     NTSC_yiq_jitter: WideString;
     NTSC_yiq_cc: WideString;
@@ -625,11 +667,11 @@ end;
     NTSC_yiq_q: WideString;
     NTSC_yiq_scan_time: WideString;
     NTSC_yiq_phase_count: WideString;
-    //Vector Post_processing options
+    // Vector Post_processing options
     VECTOR_vector_beam_smooth: WideString;
     VECTOR_vector_length_scale: WideString;
     VECTOR_vector_length_ratio: WideString;
-    //Bloom Post_processing options
+    // Bloom Post_processing options
     BLOOM_bloom_blend_mode: WideString;
     BLOOM_bloom_scale: WideString;
     BLOOM_bloom_overdrive: WideString;
@@ -642,19 +684,20 @@ end;
     BLOOM_bloom_lvl6_weight: WideString;
     BLOOM_bloom_lvl7_weight: WideString;
     BLOOM_bloom_lvl8_weight: WideString;
-    //Fullscreen options
+    // Fullscreen options
     FULLSCREEN_triplebuffer: Boolean;
     FULLSCREEN_full_screen_brightness: WideString;
     FULLSCREEN_full_screen_contrast: WideString;
     FULLSCREEN_full_screen_gamma: WideString;
-    //Input Device options
+    // Input Device options
     INPUT_DEVICE_global_inputs: Byte;
     INPUT_DEVICE_dual_lightgun: Boolean;
-    //Frontend Command options
+    // Frontend Command options
     FRONTEND_COMMAND_dtd: Byte;
   end;
 
-  type TEMU_MAME_MEDIA= record
+type
+  TEMU_MAME_MEDIA = record
     Artworks: WideString;
     Snapshots: WideString;
     Cabinets: WideString;
@@ -684,14 +727,16 @@ end;
     Support_Files: WideString;
   end;
 
-  type TEMU_GAMELISTS_SET= record
+type
+  TEMU_GAMELISTS_SET = record
     Roms: TStringList;
     Names: TStringList;
   end;
 
-  type TEMU_GAMELISTS= record
-    //O : Master filter list
-    //1 : All_Unfiltered
+type
+  TEMU_GAMELISTS = record
+    // O : Master filter list
+    // 1 : All_Unfiltered
     Games: IXMLDocument;
     Games_Count: Integer;
     List: array of array of array of string;
@@ -700,7 +745,8 @@ end;
     Loading_Done: Boolean;
   end;
 
-  type TEMU_MAME_MONITOR= record
+type
+  TEMU_MAME_MONITOR = record
     Monitor_1_Resolutions: TStringList;
     Monitor_1_Refreshs: TStringList;
     Monitor_2_Resolutions: TStringList;
@@ -711,26 +757,30 @@ end;
     Monitor_4_Refreshs: TStringList;
   end;
 
-  type TEMU_MAME_SUPPORT= record
+type
+  TEMU_MAME_SUPPORT = record
     // 0 NPlayers.ini (State 0: Rom, 1:Player)
     // 1 Catver.ini   (State 0: Rom, 1:Names, 2: Added);
-    List: array [0..10] of array [0..50000] of array [0..10] of string;
-    List_Active: array [0..10] of Boolean;
+    List: array [0 .. 10] of array [0 .. 50000] of array [0 .. 10] of string;
+    List_Active: array [0 .. 10] of Boolean;
     GameInit: TStringList;
     procedure ClearSupport;
   end;
 
-  type TEMU_MAME_GAME= record
+type
+  TEMU_MAME_GAME = record
     Menu_Selected: Integer;
   end;
 
-  type TEMU_MAME_MAIN= record
+type
+  TEMU_MAME_MAIN = record
     SnapCategory: String;
     SnapCategory_Num: Integer;
     SnapMode: String;
   end;
 
-  type TEMU_MAME_PROG= record
+type
+  TEMU_MAME_PROG = record
     Path: WideString;
     Ini: TIniFile;
     Ini_Name: WideString;
@@ -744,7 +794,8 @@ end;
     Media_Path: WideString;
   end;
 
-  type TEMU_MAME_EMU= record
+type
+  TEMU_MAME_EMU = record
     Name: WideString;
     Path: WideString;
     Exe: WideString;
@@ -754,95 +805,112 @@ end;
     Media: TEMU_MAME_MEDIA;
   end;
 
-  type TEMU_MAME_INPUT= record
+type
+  TEMU_MAME_INPUT = record
     Mouse: TEMU_ARCADE_MAME_MOUSE;
-//    Keyboard: TEMU_ARCADE_MAME_KEYBOARD;
-//    Joystick: TEMU_ARCADE_MAME_JOYSTICK;
+    // Keyboard: TEMU_ARCADE_MAME_KEYBOARD;
+    // Joystick: TEMU_ARCADE_MAME_JOYSTICK;
   end;
 
-  type TEMU_ARCADE_MAME_CONFIG_INPUT= record
+type
+  TEMU_ARCADE_MAME_CONFIG_INPUT = record
     Mouse: TEMU_ARCADE_MAME_CONFIG_MOUSE;
-//    Keyboard:
-//    Joystick:
+    // Keyboard:
+    // Joystick:
   end;
 
-  type TMAME_CONFIG_DIRECTORIES_VARS= record
+type
+  TMAME_CONFIG_DIRECTORIES_VARS = record
     OpenDialog_Result: String;
   end;
 
-  type TMAME_CONFIG_ADVANCE_VARS= record
+type
+  TMAME_CONFIG_ADVANCE_VARS = record
     OpenDialog_Result: String;
   end;
 
-  type TMAME_CONFIG_SCREEN_VARS= record
-    Start: boolean;
+type
+  TMAME_CONFIG_SCREEN_VARS = record
+    Start: Boolean;
     JustChangeTheScreens: Boolean;
   end;
 
-  type TMAME_CONFIG_OPENGL_BGFX_VARS= record
+type
+  TMAME_CONFIG_OPENGL_BGFX_VARS = record
     OpenDialog_Result: String;
   end;
 
-  type TMAME_CONFIG_OPENGL_SHANDERS_VARS= record
+type
+  TMAME_CONFIG_OPENGL_SHANDERS_VARS = record
     OpenDialog_Result: String;
   end;
 
-  type TMAME_CONFIG_MISCELLANEOUS_VARS= record
+type
+  TMAME_CONFIG_MISCELLANEOUS_VARS = record
     OpenDialog_Result: String;
   end;
 
-  type TMAME_CONFIG_MISCELLANEOUS_II_VARS= record
+type
+  TMAME_CONFIG_MISCELLANEOUS_II_VARS = record
     OpenDialog_Result: String;
     ComboIsSet: Boolean;
   end;
 
-  type TEMU_ARCADE_MAME_CONFIG_PANEL_VARS= record
+type
+  TEMU_ARCADE_MAME_CONFIG_PANEL_VARS = record
     Dirs: TMAME_CONFIG_DIRECTORIES_VARS;
-//    Display: TMAME_CONFIG_DISPLAY_VARS;
+    // Display: TMAME_CONFIG_DISPLAY_VARS;
     Advance: TMAME_CONFIG_ADVANCE_VARS;
     Screen: TMAME_CONFIG_SCREEN_VARS;
     OGL_BGFX: TMAME_CONFIG_OPENGL_BGFX_VARS;
     OGL_Shaders: TMAME_CONFIG_OPENGL_SHANDERS_VARS;
-//    Vector: TMAME_CONFIG_VECTOR_VARS;
-//    Sound: TMAME_CONFIG_SOUND_VARS;
-//    Controls: TMAME_CONFIG_CONTROLLERS_VARS;
-//    Controls_Map: TMAME_CONFIG_CONTROLLERS_MAPPING_VARS;
+    // Vector: TMAME_CONFIG_VECTOR_VARS;
+    // Sound: TMAME_CONFIG_SOUND_VARS;
+    // Controls: TMAME_CONFIG_CONTROLLERS_VARS;
+    // Controls_Map: TMAME_CONFIG_CONTROLLERS_MAPPING_VARS;
     Misc: TMAME_CONFIG_MISCELLANEOUS_VARS;
     Misc_II: TMAME_CONFIG_MISCELLANEOUS_II_VARS;
-//    S_M_P: TMAME_CONFIG_SNAP_MOVIE_PLAYBACK_VARS;
+    // S_M_P: TMAME_CONFIG_SNAP_MOVIE_PLAYBACK_VARS;
   end;
 
-  type TEMU_MAME_CONFIG= record
+type
+  TEMU_MAME_CONFIG = record
     Panel: TEMU_ARCADE_MAME_CONFIG_PANEL_VARS;
     Input: TEMU_ARCADE_MAME_CONFIG_INPUT;
   end;
-////////////////////////////////////////////////////////////////////////////////
+  /// /////////////////////////////////////////////////////////////////////////////
 
-//TEMU MAME TIMERS
-  type TEMU_GAMELISTS_TIMER= class(TTimer)
+  // TEMU MAME TIMERS
+type
+  TEMU_GAMELISTS_TIMER = class(TTimer)
     procedure OnTimer(Sender: TObject);
   end;
 
-  type TEMU_VIDEO_TIMER= class(TTimer)
+type
+  TEMU_VIDEO_TIMER = class(TTimer)
     procedure OnTimer(Sender: TObject);
   end;
 
-  type TEMU_MAME_TIMERS= record
+type
+  TEMU_MAME_TIMERS = record
     Gamelist: TEMU_GAMELISTS_TIMER;
     Video: TEMU_VIDEO_TIMER;
   end;
-////////////////////////////////////////////////////////////////////////////////
-//TEMU MAME ANIMATATIONS
+  /// /////////////////////////////////////////////////////////////////////////////
+  // TEMU MAME ANIMATATIONS
 
-  type TEMU_GAMELISTS_ANIMATION= class(TOBject)
+type
+  TEMU_GAMELISTS_ANIMATION = class(TObject)
     procedure OnFinish(Sender: TObject);
   end;
 
-  type TEMU_MAME_ANIMATIONS= record
+type
+  TEMU_MAME_ANIMATIONS = record
     Gamelist: TEMU_GAMELISTS_ANIMATION;
   end;
 
-  type TEMU_MAME= record
+type
+  TEMU_MAME = record
     Prog: TEMU_MAME_PROG;
     Emu: TEMU_MAME_EMU;
     Samples: WideString;
@@ -858,9 +926,10 @@ end;
   end;
 
 var
-    mame: TEMU_MAME;
+  mame: TEMU_MAME;
 
 implementation
+
 uses
   uEmu_Arcade_Mame_Actions;
 
@@ -870,63 +939,64 @@ procedure TEMU_GAMELISTS_TIMER.OnTimer(Sender: TObject);
 begin
   if mame.Gamelist.Loading_Done then
     uEmu_Arcade_Mame_Actions_ShowData;
-  mame.Gamelist.Timer.Enabled:= False;
+  mame.Gamelist.Timer.Enabled := False;
 end;
 
 { TEMU_GAMELISTS_ANIMATION }
 
 procedure TEMU_GAMELISTS_ANIMATION.OnFinish(Sender: TObject);
 begin
-  vMame.Scene.Snap.Image.Bitmap:= vMame.Scene.Snap.Image_Fade.Target;
-  vMame.Scene.Snap.Image_Fade_Ani.Enabled:= False;
+  vMame.Scene.Snap.Image.Bitmap := vMame.Scene.Snap.Image_Fade.Target;
+  vMame.Scene.Snap.Image_Fade_Ani.Enabled := False;
 end;
 
 { TEMU_VIDEO_TIMER }
 
 procedure TEMU_VIDEO_TIMER.OnTimer(Sender: TObject);
 begin
-  vMame.Scene.Snap.Video.Play(mame.Emu.Media.Videos+ mame.Gamelist.List[0, mame.Gamelist.Selected, 0]+ '.mp4');
-  vMameVideoTimer.Enabled:= False;
-  vMame.Scene.Snap.Video.Visible:= True;
+  vMame.Scene.Snap.Video.Play(mame.Emu.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0]
+    + '.mp4');
+  vMameVideoTimer.Enabled := False;
+  vMame.Scene.Snap.Video.Visible := True;
 end;
-
 
 { TEMU_MAME_SUPPORT }
 
 procedure TEMU_MAME_SUPPORT.ClearSupport;
 begin
-  Self:= Default(TEMU_MAME_SUPPORT);
+  Self := Default (TEMU_MAME_SUPPORT);
 end;
 
 initialization
-//mouse main
-mame.Input.Mouse.Animation:= TEMU_ARCADE_MAME_ANIMATION.Create;
-mame.Input.Mouse.Image:= TEMU_ARCADE_MAME_IMAGE.Create;
-mame.Input.Mouse.Button:= TEMU_ARCADE_MAME_BUTTON.Create;
 
-//mouse config
-mame.Config.Input.Mouse.SpeedButton:= TEMU_ARCADE_MAME_CONFIG_SPEEDBUTTON.Create;
-mame.Config.Input.Mouse.Text:= TEMU_ARCADE_MAME_CONFIG_TEXT.Create;
-mame.Config.Input.Mouse.Trackbar:= TEMU_ARCADE_MAME_CONFIG_TRACKBAR.Create;
-mame.Config.Input.Mouse.Checkbox:= TEMU_ARCADE_MAME_CONFIG_CHECKBOX.Create;
-mame.Config.Input.Mouse.Combobox:= TEMU_ARCADE_MAME_CONFIG_COMBOBOX.Create;
-mame.Config.Input.Mouse.Button:= TEMU_ARCADE_MAME_CONFIG_BUTTON.Create;
-mame.Config.Input.Mouse.OpenDialog:= TEMU_ARCADE_MAME_CONFIG_OPENDIALOG.Create;
-mame.Config.Input.Mouse.TabItem:= TEMU_ARCADE_MAME_CONFIG_TABITEM.Create;
+// mouse main
+mame.Input.Mouse.Animation := TEMU_ARCADE_MAME_ANIMATION.Create;
+mame.Input.Mouse.Image := TEMU_ARCADE_MAME_IMAGE.Create;
+mame.Input.Mouse.Button := TEMU_ARCADE_MAME_BUTTON.Create;
+
+// mouse config
+mame.Config.Input.Mouse.SpeedButton := TEMU_ARCADE_MAME_CONFIG_SPEEDBUTTON.Create;
+mame.Config.Input.Mouse.Text := TEMU_ARCADE_MAME_CONFIG_TEXT.Create;
+mame.Config.Input.Mouse.Trackbar := TEMU_ARCADE_MAME_CONFIG_TRACKBAR.Create;
+mame.Config.Input.Mouse.Checkbox := TEMU_ARCADE_MAME_CONFIG_CHECKBOX.Create;
+mame.Config.Input.Mouse.Combobox := TEMU_ARCADE_MAME_CONFIG_COMBOBOX.Create;
+mame.Config.Input.Mouse.Button := TEMU_ARCADE_MAME_CONFIG_BUTTON.Create;
+mame.Config.Input.Mouse.OpenDialog := TEMU_ARCADE_MAME_CONFIG_OPENDIALOG.Create;
+mame.Config.Input.Mouse.TabItem := TEMU_ARCADE_MAME_CONFIG_TABITEM.Create;
 
 finalization
 
-//Gamelist
+// Gamelist
 mame.Gamelist.Timer.Free;
 mame.Timers.Gamelist.Free;
 mame.Ani.Gamelist.Free;
 
-//mouse main
+// mouse main
 mame.Input.Mouse.Animation.Free;
 mame.Input.Mouse.Image.Free;
 mame.Input.Mouse.Button.Free;
 
-//mouse config
+// mouse config
 mame.Config.Input.Mouse.SpeedButton.Free;
 mame.Config.Input.Mouse.Text.Free;
 mame.Config.Input.Mouse.Trackbar.Free;

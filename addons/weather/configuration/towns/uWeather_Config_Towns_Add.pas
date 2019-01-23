@@ -43,8 +43,8 @@ procedure uWeather_Config_Towns_Add_Free;
 procedure uWeather_Config_Towns_Add_CreateGrid;
 
 procedure uWeather_Config_Towns_Add_FindTown(mTown: string);
+function uWeather_Config_Towns_Add_IsTownAlReadyExists(vID: String): Boolean;
 procedure uWeather_Config_Towns_Add_AddTown(vSelectedTown: Integer; vStay: Boolean);
-procedure uWeather_Config_Towns_Add_AddSelectedTown(vNum: Integer; mWoeid, country_code: string);
 
 var
   vAni: TWEATHER_CONFIG_TOWNS_ADD_FLOATANIMATION;
@@ -124,6 +124,7 @@ begin
     vWeather.Config.main.Right.Towns.Add.main.FindTown_V.SetBounds(10, 38,
       vWeather.Config.main.Right.Towns.Add.main.Panel.Width - 60, 30);
     vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text := '';
+    vWeather.Config.main.Right.Towns.Add.main.FindTown_V.StyledSettings:= vWeather.Config.main.Right.Towns.Add.main.FindTown_V.StyledSettings - [TStyledSetting.Size];
     vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Caret.Color := TAlphaColorRec.Deepskyblue;
     vWeather.Config.main.Right.Towns.Add.main.FindTown_V.TextSettings.HorzAlign := TTextAlign.Center;
     vWeather.Config.main.Right.Towns.Add.main.FindTown_V.TextSettings.Font.Size := 16;
@@ -306,7 +307,7 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Grid.Columns[4].Width := 144;
 
   vWeather.Config.main.Right.Towns.Add.main.Grid.Images :=
-      vWeather.Config.main.Right.Towns.Add.main.ImageList;
+    vWeather.Config.main.Right.Towns.Add.main.ImageList;
 end;
 
 procedure uWeather_Config_Towns_Add_Free;
@@ -341,7 +342,7 @@ begin
     if Assigned(vID) then
       FreeAndNil(vID);
 
-    vID:= TStringList.Create;
+    vID := TStringList.Create;
 
     vJSONValue := TJSONValue.Create;
 
@@ -394,43 +395,22 @@ begin
     ShowMessage('Please write a town fist');
 end;
 
-procedure uWeather_Config_Towns_Add_AddSelectedTown(vNum: Integer; mWoeid, country_code: string);
-begin
-  if uWeather_Forcast_Get(vNum, mWoeid, country_code).City <> '' then
-  begin
-    // Add founded forcast to list
-    addons.weather.Action.Choosen[vNum] := uWeather_Forcast_Get(vNum, mWoeid, country_code);
-    // Add values to ini
-    addons.weather.Action.Active_Total := vNum;
-    addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
-    addons.weather.Ini.Ini.WriteString(addons.weather.Action.Provider,
-      addons.weather.Action.Active_Total.ToString + '_WoeID', addons.weather.Action.Choosen[vNum].woeid + '{'
-      + addons.weather.Action.Choosen[vNum].Country_FlagCode + '}');
-    // Create new town panel in config towns
-    // Create new town in main selection
-    uWeather_Provider_Yahoo_CreateTab(addons.weather.Action.Choosen[vNum], vNum);
-    vWeather.Scene.Control.TabIndex := 0;
-//    vTown_HasData := True;
-  end
-  else
-//    vTown_HasData := False;
-end;
-
 procedure uWeather_Config_Towns_Add_AddTown(vSelectedTown: Integer; vStay: Boolean);
 var
   vi: Integer;
 begin
-  if addons.weather.Action.Provider= 'yahoo' then
-//    uWeather_Providers_Yahoo_GetForecast(vSelectedTown)
-  else if addons.weather.Action.Provider= 'openweathermap' then
-    uWeather_Providers_OpenWeatherMap_AddTown(vID.Strings[vSelectedTown]);
+  if uWeather_Config_Towns_Add_IsTownAlReadyExists(vID.Strings[vSelectedTown]) = False then
+  begin
+    if addons.weather.Action.Provider = 'yahoo' then
+      // uWeather_Providers_Yahoo_GetForecast(vSelectedTown)
+    else if addons.weather.Action.Provider = 'openweathermap' then
+      uWeather_Providers_OpenWeatherMap_AddTown(vID.Strings[vSelectedTown]);
+    vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := True;
+    vStayToADD := vStay;
+    vWeather.Config.main.Right.Towns.Add.main.Ani.Start;
 
-  vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := True;
-  vStayToADD := vStay;
-  vWeather.Config.main.Right.Towns.Add.main.Ani.Start;
-
-{  if vTown_HasData then
-  begin}
+    { if vTown_HasData then
+      begin }
     vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text :=
       '" ' + vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
       [2, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "  from " ' +
@@ -439,13 +419,16 @@ begin
     for vi := 0 to vWeather.Config.main.Right.Towns.Add.main.Grid.RowCount - 1 do
       TStringGrid(vWeather.Config.main.Right.Towns.Add.main.Grid).myDeleteRow(vi);
     vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text := '';
-  {end
-  else
-    vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text := 'Can''t get forcast data for " ' +
+    { end
+      else
+      vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text := 'Can''t get forcast data for " ' +
       vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
       [2, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "  from " ' +
       vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
-      [4, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "';   }
+      [4, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "'; }
+  end
+  else
+    ShowMessage('This town already exists in your list');
 end;
 
 { TWEATHER_CONFIG_TOWNS_DELETE_FLOATANIMATION }
@@ -453,9 +436,26 @@ end;
 procedure TWEATHER_CONFIG_TOWNS_ADD_FLOATANIMATION.OnFinish(Sender: TObject);
 begin
   vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := False;
- { if vTown_HasData then}
-    if vStayToADD = False then
-      uWeather_Config_Towns_Add_Free;
+  { if vTown_HasData then }
+  if vStayToADD = False then
+    uWeather_Config_Towns_Add_Free;
+end;
+
+function uWeather_Config_Towns_Add_IsTownAlReadyExists(vID: String): Boolean;
+var
+  vi: Integer;
+  vID_S: String;
+begin
+  Result := False;
+  for vi := 0 to addons.weather.Action.Provider_Total do
+  begin
+    vID_S := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider, vi.ToString + '_WOEID', vID_S);
+    if vID_S = vID then
+    begin
+      Result := True;
+      Break;
+    end;
+  end;
 end;
 
 initialization

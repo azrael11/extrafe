@@ -112,7 +112,7 @@ begin
   begin
     if TSpeedButton(Sender).Name = 'Mame_Dir_Roms_Add_Button' then
       uEmu_Arcade_Mame_Config_Roms_Find
-    else if TSpeedButton(Sender).TagFloat= 10 then
+    else if TSpeedButton(Sender).TagFloat = 10 then
       uEmu_Arcade_Mame_Config_RomPath_Delete(TSpeedButton(Sender).Tag);
   end;
 end;
@@ -141,7 +141,12 @@ begin
   else if extrafe.prog.State = 'mame_config_misc' then
     uEmu_Arcade_Mame_Config_Misc_ButtonClick(TButton(Sender).Name)
   else if extrafe.prog.State = 'mame_config_miscII' then
-    uEmu_Arcade_Mame_Config_MiscII_ButtonClick(TButton(Sender).Name);
+    uEmu_Arcade_Mame_Config_MiscII_ButtonClick(TButton(Sender).Name)
+  else if extrafe.prog.State = 'mame_config_media' then
+  begin
+    if TButton(Sender).Name= 'Mame_Dir_Check_Cancel' then
+      uEmu_Arcade_Mame_Config_CheckAndDownload_Free;
+  end;
 end;
 
 procedure TEMU_ARCADE_MAME_CONFIG_BUTTON.onMouseEnter(Sender: TObject);
@@ -158,7 +163,7 @@ end;
 procedure TEMU_ARCADE_MAME_CONFIG_TEXT.onMouseClick(Sender: TObject);
 begin
   if extrafe.prog.State = 'mame_config_media' then
-    uEmu_Arcade_Mame_Config_CheckAndDowload(TText(Sender).Tag);
+    uEmu_Arcade_Mame_Config_CheckAndDownload(TText(Sender).Tag);
 end;
 
 procedure TEMU_ARCADE_MAME_CONFIG_TEXT.onMouseEnter(Sender: TObject);

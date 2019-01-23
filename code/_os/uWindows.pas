@@ -162,7 +162,7 @@ var
   nFileCount: Integer;
 begin
   nFileCount := 0;
-  if vKind = True then
+  if vKind = True then //Count Folders
   begin
     if FindFirst(vDir + '\*' + vType, faAnyFile, Rec) { *Converted from FindFirst* } = 0 then
       repeat
@@ -172,9 +172,9 @@ begin
       until FindNext(Rec) { *Converted from FindNext* } <> 0;
     System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
   end
-  else if vKind = False then
+  else if vKind = False then //Cound Files
   begin
-    if FindFirst(vDir + '\*.*', faDirectory, Rec) { *Converted from FindFirst* } = 0 then
+    if FindFirst(vDir + '\'+ vType, faDirectory, Rec) { *Converted from FindFirst* } = 0 then
       repeat
         if ((Rec.Attr and faDirectory) = faDirectory) then
           if (Rec.Name <> '.') and (Rec.Name <> '..') then

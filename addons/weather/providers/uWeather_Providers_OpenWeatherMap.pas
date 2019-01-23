@@ -334,7 +334,7 @@ begin
       Result := '18';
     761:
       Result := '19';
-    741:
+    701:
       Result := '20';
     721:
       Result := '21';

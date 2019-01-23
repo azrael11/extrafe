@@ -159,7 +159,10 @@ begin
   for vi := 0 to 3 do
   begin
     if Assigned(mainScene.Config.Main.R.Info.Credits.Right_Box[vi]) then
-      FreeAndNil(mainScene.Config.Main.R.Info.Credits.Right_Box[vi]);
+      begin
+        FreeAndNil(mainScene.Config.Main.R.Info.Credits.Right_Box[vi]);
+        mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi].Enabled:= False;
+      end;
   end;
 end;
 

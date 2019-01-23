@@ -291,9 +291,9 @@ begin
       uMain_Config_Emulators_Start_Emu_Wizard(TButton(Sender))
     else if TButton(Sender).Name = 'Main_Config_Button_' + IntToStr(TButton(Sender).Tag) then
       uMain_Config_ShowPanel(TButton(Sender).Tag)
-    else if TButton(Sender).Name = 'Main_Config_Themes_Apply' then
-      uMain_Config_Themes_ApplyTheme(mainScene.Config.Main.R.Themes.Box.Items.Strings
-        [mainScene.Config.Main.R.Themes.Box.ItemIndex])
+//    else if TButton(Sender).Name = 'Main_Config_Themes_Apply' then
+//      uMain_Config_Themes_ApplyTheme(mainScene.Config.Main.R.Themes.Box.Items.Strings
+//        [mainScene.Config.Main.R.Themes.Box.ItemIndex])
     else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Weather_Action' then
       uMain_Config_Addons_Actions_AddonActivation(2)
     else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Soundplayer_Action' then

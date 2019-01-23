@@ -313,7 +313,7 @@ begin
   addons.weather.ini.ini.WriteInteger('Iconset', 'Count', 2);
   addons.weather.ini.ini.WriteString('Iconset', 'Name', 'pengui');
   addons.weather.ini.ini.WriteString('Provider', 'Name', '');
-  addons.weather.ini.ini.WriteInteger('Provider', 'Total', -1);
+  addons.weather.ini.ini.WriteInteger('openweathermap', 'Total', -1);
 end;
 
 procedure uLoad_Addons_Weather_Load;
@@ -336,8 +336,8 @@ begin
     addons.weather.Action.First);
   addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name',
     addons.weather.Action.Provider);
-  addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger('Provider', 'Total',
-    addons.weather.Action.Provider_Total);
+  addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger(addons.weather.Action.Provider,
+    'Total', addons.weather.Action.Provider_Total);
   addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid',
     addons.weather.Action.Active_WEOID);
   addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total',

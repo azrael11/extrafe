@@ -374,9 +374,11 @@ type
 type
   TMAIN_CONFIG_THEMES = record
     Panel: TPanel;
-    Info: TLabel;
-    Box_Header: TLabel;
-    Box: TComboBox;
+    Box: TVertScrollBox;
+    Frame: array [0..10] of TPanel;
+    Check: array [0..10] of TCheckBox;
+    Info: array [0..10] of  TLabel;
+    Image: array [0..10] of Timage;
     Apply: TButton;
   end;
 

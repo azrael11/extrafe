@@ -130,13 +130,13 @@ begin
     vMame.Scene.Snap.Image.Visible := False;
     if FileExists(mame.Emu.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.mp4') then
     begin
-      vMame.Scene.Snap.Video.Visible := False;
-      vMame.Scene.Snap.Video.Stop;
-      vMame.Scene.Snap.Video.WrapMode := TImageWrapMode.Stretch;
-      vMameVideoTimer := TTimer.Create(vMame.Scene.Main);
-      vMameVideoTimer.Interval := 200;
-      vMameVideoTimer.OnTimer := mame.Timers.Video.OnTimer;
-      vMameVideoTimer.Enabled := True;
+//      vMame.Scene.Snap.Video.Visible := False;
+//      vMame.Scene.Snap.Video.Stop;
+//      vMame.Scene.Snap.Video.WrapMode := TImageWrapMode.Stretch;
+//      vMameVideoTimer := TTimer.Create(vMame.Scene.Main);
+//      vMameVideoTimer.Interval := 200;
+//      vMameVideoTimer.OnTimer := mame.Timers.Video.OnTimer;
+//      vMameVideoTimer.Enabled := True;
     end
     else
     begin

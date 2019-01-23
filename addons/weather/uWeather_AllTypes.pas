@@ -518,6 +518,11 @@ type
     Refresh: TGroupBox;
     Refresh_Every: TCheckBox;
     Refresh_Once: TCheckBox;
+    User_ID: TGroupBox;
+    Text: TLabel;
+    ID: TEdit;
+    Lock: TImage;
+    Desc: TALText;
   end;
 
 type
