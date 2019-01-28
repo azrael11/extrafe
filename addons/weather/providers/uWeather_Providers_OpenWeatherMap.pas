@@ -151,8 +151,6 @@ var
   vOutValue: String;
 begin
 
-  vJSONValue := TJSONValue.Create;
-
   vRESTClient := TRESTClient.Create('');
   vRESTClient.Name := 'OpenWeatherMap_RestClient';
   vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
@@ -451,7 +449,7 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Visible := True;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].General.Town_and_Country);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Town_and_Country);
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Position.X :=
     (vWeather.Scene.Tab[vTabNum].Tab.Width / 2) -
     (vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Width / 2);
@@ -470,7 +468,7 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Temprature.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Visible := True;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].General.Temprature);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Temprature);
 
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Name := 'A_W_WeatherTempratureUnit_' +
@@ -498,7 +496,7 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Condtition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Visible := True;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].General.Condtition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Condtition);
 
   vWeather.Scene.Tab[vTabNum].Wind.Text := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Wind.Text.Name := 'A_W_WeatherWind_' + IntToStr(vTabNum);
@@ -526,7 +524,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Speed.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Wind.Speed.Width := uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Wind.Speed);
+  vWeather.Scene.Tab[vTabNum].Wind.Speed.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Speed);
 
   vWeather.Scene.Tab[vTabNum].Wind.Direction := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Name := 'A_W_WeatherWindDiretion' + IntToStr(vTabNum);
@@ -540,7 +538,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Visible := True;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Wind.Direction);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Direction);
 
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Wind.Direction);
@@ -584,7 +582,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Chill.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Wind.Chill.Width := uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Wind.Chill);
+  vWeather.Scene.Tab[vTabNum].Wind.Chill.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Chill);
 
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Name := 'A_W_WeatherWindChillIcon' + IntToStr(vTabNum);
@@ -701,7 +699,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Name := 'A_W_WeatherAtmospherePresureIcon' +
@@ -732,7 +730,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Name := 'A_W_WeatherAtmosphereVisibilityIcon' +
@@ -760,7 +758,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Rising);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Rising);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Name := 'A_W_WeatherAtmosphereHumidity' + IntToStr(vTabNum);
@@ -774,7 +772,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Name := 'A_W_WeatherAtmosphereHumidityIcon_' +
@@ -816,7 +814,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Visible := True;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise);
 
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Name := 'A_W_WeatherAstronomySunriseImage_' +
@@ -844,7 +842,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Visible := True;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunset);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunset);
 
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Name := 'A_W_WeatherAstronomySunsetImage_' +
@@ -905,7 +903,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Visible := True;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Server.LastUpDate);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.LastUpDate);
 
   vWeather.Scene.Tab[vTabNum].Server.Powered_By := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Name := 'A_W_WeatherPoweredBy_' + IntToStr(vTabNum);
@@ -917,7 +915,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Visible := True;
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Server.Powered_By);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.Powered_By);
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Position.X := vWeather.Scene.Tab[vTabNum].Tab.Width -
     (vWeather.Scene.Tab[vTabNum].Server.Powered_By.Width + 70);
 

@@ -249,6 +249,9 @@ begin
         vSoundplayer.Player.Song_Pos.Value := 0;
         addons.soundplayer.Player.Play := False;
         addons.soundplayer.Player.Pause := False;
+        addons.soundplayer.Player.Stop := True;
+        vSoundplayer.Player.Stop_Color.Enabled := True;
+        uSoundPlayer_Player_Actions_OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
         vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '1';
       end;
   end;
@@ -482,9 +485,8 @@ end;
 // Song Position Trackbar
 procedure uSoundplayer_Player_Actions_UpdateSongPosition(Sender: TObject; mValue: single; vKeep: Boolean);
 var
-  vPer_Song: single;
   vCurrent_Position_Song: single;
-  sCT, sFT: Real;
+  sFT: Real;
 begin
   sFT := trunc(BASS_ChannelBytes2Seconds(sound.str_music[1], BASS_ChannelGetLength(sound.str_music[1],
     BASS_POS_BYTE)));
@@ -504,7 +506,6 @@ procedure AddSongs_In_m3u(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string
 var
   vss: string;
   vSongTime: string;
-  vTag: Tstringlist;
   song_seconds: Real;
 begin
   sound.str_music[2] := BASS_StreamCreateFile(False, PChar(mTrackPath + mTrackName), 0, 0, BASS_SAMPLE_FLOAT
@@ -686,7 +687,7 @@ var
 begin
   vSoundplayer.Player.Song_Title.Text := '"' + addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title +
     '" by "' + addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist + '"';
-  if uTText_TextToPixels(vSoundplayer.Player.Song_Title) < 990 then
+  if uSnippet_Text_ToPixels(vSoundplayer.Player.Song_Title) < 990 then
   begin
     vSoundplayer.Player.Song_Title_Ani.Stop;
     addons.soundplayer.Player.Title_Ani := False;
@@ -701,8 +702,8 @@ begin
     uSoundplayer_Player_Actions_Title_Animation;
   end;
   vSoundplayer.info.Song_Title.Text := addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title;
-  if uTText_TextToPixels(vSoundplayer.info.Song_Title) > 422 then
-    vSoundplayer.info.Song_Title.Text := uTText_SetTextInGivenPixels(422, vSoundplayer.info.Song_Title);
+  if uSnippet_Text_ToPixels(vSoundplayer.info.Song_Title) > 422 then
+    vSoundplayer.info.Song_Title.Text := uSnippet_Text_SetInGivenPixels(422, vSoundplayer.info.Song_Title);
   vSoundplayer.info.Artist_Name.Text := addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist;
   vSoundplayer.info.Year_Publish.Text := addons.soundplayer.Playlist.List.Song_Info[mSongNum].Year;
   vSoundplayer.info.Gerne_Kind.Text := addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre;
@@ -795,7 +796,16 @@ begin
 end;
 
 procedure uSoundPlayer_Player_Actions_OnLeave(vImage: TImage; vGlow: TGlowEffect);
+var
+  vAction: Boolean;
 begin
+  vAction := False;
+  if vImage.Name = 'A_SP_Player_Stop_Image' then
+  begin
+    if addons.soundplayer.Player.Stop = False then
+      vAction := True;
+  end;
+
   if vImage.Name = 'A_SP_Player_Play_Image' then
   begin
     if addons.soundplayer.Player.Play then
@@ -808,13 +818,17 @@ begin
         vSoundplayer.Player.Play.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
     end;
   end;
-  vImage.Scale.X := 1;
-  vImage.Scale.Y := 1;
-  vImage.Position.X := vImage.Position.X + ((vImage.Width * 0.1) / 2);
-  vImage.Position.Y := vImage.Position.Y + ((vImage.Height * 0.1) / 2);
-  vGlow.Enabled := False;
+  if vAction then
+  begin
+    vImage.Scale.X := 1;
+    vImage.Scale.Y := 1;
+    vImage.Position.X := vImage.Position.X + ((vImage.Width * 0.1) / 2);
+    vImage.Position.Y := vImage.Position.Y + ((vImage.Height * 0.1) / 2);
+    vGlow.Enabled := False;
+  end;
 end;
 
+/// ///////////////////////////////////////////////////////////////////////////////////////////
 procedure uSoundplayer_Player_Actions_UpdateLastPlayedSong(vNum: Integer);
 begin
   addons.soundplayer.Player.LastPlayed := vNum;
@@ -829,7 +843,7 @@ begin
     begin
       vSoundplayer.Player.Song_Title_Ani.StartValue := 465;
       vSoundplayer.Player.Song_Title_Ani.StopValue :=
-        465 - ((uTText_TextToPixels(vSoundplayer.Player.Song_Title) + 5) - 1000);
+        465 - ((uSnippet_Text_ToPixels(vSoundplayer.Player.Song_Title) + 5) - 1000);
     end
     else if addons.soundplayer.Player.Title_Ani_Left then
     begin

@@ -208,7 +208,7 @@ begin
     vMame.Config.Panel.Dirs.Media.Labels[vi].Text := cMame_Config_Media_dirs[vi];
     vMame.Config.Panel.Dirs.Media.Labels[vi].Visible := True;
     vMame.Config.Panel.Dirs.Media.Labels[vi].Width :=
-      uTText_TextToPixels(vMame.Config.Panel.Dirs.Media.Labels[vi]);
+      uSnippet_Text_ToPixels(vMame.Config.Panel.Dirs.Media.Labels[vi]);
 
     vMame.Config.Panel.Dirs.Media.Edit[vi] := TEdit.Create(vMame.Config.Panel.Dirs.Media.Box);
     vMame.Config.Panel.Dirs.Media.Edit[vi].Name := 'Mame_Dir_Media_Path_' + IntToStr(vi);
@@ -305,7 +305,7 @@ begin
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Height := 22;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Visible := True;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width :=
-      uTText_TextToPixels(vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi]);
+      uSnippet_Text_ToPixels(vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi]);
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Position.X := vMame.Config.Panel.Dirs.Media.Edit[vi]
       .Width - vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnMouseEnter :=
@@ -360,68 +360,74 @@ procedure uEmu_Arcade_Mame_Config_Media_Find(vNum: Integer);
 const
   m = 1000;
 var
-  dir: string;
+  vdir: string;
+  vType: String;
 begin
-  dir := vMame.Config.Panel.Dirs.Media.Edit[vNum].Text;
-  if SelectDirectory(dir, [sdAllowCreate, sdPerformCreate, sdPrompt], m) = True then
+  vdir := vMame.Config.Panel.Dirs.Media.Edit[vNum].Text;
+  if SelectDirectory(vdir, [sdAllowCreate, sdPerformCreate, sdPrompt], m) = True then
   begin
-    dir := dir + '\';
-    vMame.Config.Panel.Dirs.Media.Edit[vNum].Text := dir;
+    if vNum= 1 then
+      vType:= '*.zip'
+    else
+      vType:= '*.png';
+    vMame.Config.Panel.Dirs.Media.Found[vNum].Text:= '(Found : ' + uWindows_CountFilesOrFolders
+      (vdir, False, vType).ToString + ' files)';
+    vdir := vdir + '\';
+    vMame.Config.Panel.Dirs.Media.Edit[vNum].Text := vdir;
     case vNum of
       0:
-        mame.Emu.Media.Artworks := dir;
+        mame.Emu.Media.Artworks := vdir;
       1:
-        mame.Emu.Media.Cabinets := dir;
+        mame.Emu.Media.Cabinets := vdir;
       2:
-        mame.Emu.Media.Control_Panels := dir;
+        mame.Emu.Media.Control_Panels := vdir;
       3:
-        mame.Emu.Media.Covers := dir;
+        mame.Emu.Media.Covers := vdir;
       4:
-        mame.Emu.Media.Flyers := dir;
+        mame.Emu.Media.Flyers := vdir;
       5:
-        mame.Emu.Media.Fanart := dir;
+        mame.Emu.Media.Fanart := vdir;
       6:
-        mame.Emu.Media.Icons := dir;
+        mame.Emu.Media.Icons := vdir;
       7:
-        mame.Emu.Media.Manuals := dir;
+        mame.Emu.Media.Manuals := vdir;
       8:
-        mame.Emu.Media.Marquees := dir;
+        mame.Emu.Media.Marquees := vdir;
       9:
-        mame.Emu.Media.Pcbs := dir;
+        mame.Emu.Media.Pcbs := vdir;
       10:
-        mame.Emu.Media.Snapshots := dir;
+        mame.Emu.Media.Snapshots := vdir;
       11:
-        mame.Emu.Media.Titles := dir;
+        mame.Emu.Media.Titles := vdir;
       12:
-        mame.Emu.Media.Artwork_Preview := dir;
+        mame.Emu.Media.Artwork_Preview := vdir;
       13:
-        mame.Emu.Media.Bosses := dir;
+        mame.Emu.Media.Bosses := vdir;
       14:
-        mame.Emu.Media.Ends := dir;
+        mame.Emu.Media.Ends := vdir;
       15:
-        mame.Emu.Media.How_To := dir;
+        mame.Emu.Media.How_To := vdir;
       16:
-        mame.Emu.Media.Logos := dir;
+        mame.Emu.Media.Logos := vdir;
       17:
-        mame.Emu.Media.Scores := dir;
+        mame.Emu.Media.Scores := vdir;
       18:
-        mame.Emu.Media.Selects := dir;
+        mame.Emu.Media.Selects := vdir;
       19:
-        mame.Emu.Media.Versus := dir;
+        mame.Emu.Media.Versus := vdir;
       20:
-        mame.Emu.Media.Game_Over := dir;
+        mame.Emu.Media.Game_Over := vdir;
       21:
-        mame.Emu.Media.Warnings := dir;
+        mame.Emu.Media.Warnings := vdir;
       22:
-        mame.Emu.Media.Stamps := dir;
+        mame.Emu.Media.Stamps := vdir;
       23:
-        mame.Emu.Media.Soundtracks := dir;
+        mame.Emu.Media.Soundtracks := vdir;
       24:
-        mame.Emu.Media.Support_Files := dir;
+        mame.Emu.Media.Support_Files := vdir;
       25:
-        mame.Emu.Media.Videos := dir;
+        mame.Emu.Media.Videos := vdir;
     end;
-
   end;
 end;
 

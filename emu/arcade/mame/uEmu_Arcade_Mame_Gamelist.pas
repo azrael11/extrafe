@@ -77,8 +77,8 @@ begin
     begin
       vFound_Rom := False;
       vMame.Scene.Gamelist.List_Line[vi].Text.Text := mame.Gamelist.List[0,ri,1];
-      if uTText_TextToPixels(vMame.Scene.Gamelist.List_Line[vi].Text) > 640 then
-        vMame.Scene.Gamelist.List_Line[vi].Text.Text := uTText_SetTextInGivenPixels(640,
+      if uSnippet_Text_ToPixels(vMame.Scene.Gamelist.List_Line[vi].Text) > 640 then
+        vMame.Scene.Gamelist.List_Line[vi].Text.Text := uSnippet_Text_SetInGivenPixels(640,
           vMame.Scene.Gamelist.List_Line[vi].Text);
       for ki := 0 to mame.Emu.Ini.CORE_SEARCH_rompath.Count - 1 do
       begin

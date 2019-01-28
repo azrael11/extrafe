@@ -62,6 +62,8 @@ type
     Font_Combo: TComboBox;
     Color_Label: TLabel;
     Color_Combo: TColorComboBox;
+    Sep_Label: TLabel;
+    Sep_Combo: TComboBox;
     Color_Back_Label: TLabel;
     Color_Back_Combo: TColorComboBox;
     Color_Back_Stroke_Label: TLabel;
@@ -75,12 +77,21 @@ type
   end;
 
 type
+  TTIME_PANEL_TIME_CONFIG_MAIN= record
+    Panel: TPanel;
+    Control: TTabControl;
+    Tab: array [0 .. 2] of TTabItem;
+    General: TTIME_PANEL_TIME_CONFIG_TAB_1;
+    Analog: TTIME_PANEL_TIME_CONFIG_TAB_2;
+    Digital: TTIME_PANEL_TIME_CONFIG_TAB_3;
+  end;
+type
   TTIME_PANEL_TIME_CONFIG = record
     Panel: TPanel;
     Panel_Ani: TFloatAnimation;
+    Main: TTIME_PANEL_TIME_CONFIG_MAIN;
     Control: TTabControl;
     Tab: array [0 .. 2] of TTabItem;
-    // Header: TGLOBAL_HEADER;
     General: TTIME_PANEL_TIME_CONFIG_TAB_1;
     Analog: TTIME_PANEL_TIME_CONFIG_TAB_2;
     Digital: TTIME_PANEL_TIME_CONFIG_TAB_3;
@@ -102,7 +113,9 @@ type
     Back: Timage;
     Rect: TRadiantRectangle;
     Hour: TText;
+    Sep_1: TText;
     Seconds: TText;
+    Sep_2: TText;
     Minutes: TText;
   end;
 

@@ -205,7 +205,7 @@ begin
       else if extrafe.prog.State = 'addon_weather' then
         uWeather_SetComponentsToRightPlace
       else if extrafe.prog.State = 'addon_soundplayer' then
-        uSoundPlayer_SetComponentsToRightPlace
+        uSoundPlayer_SetAll_Set
       else if extrafe.prog.State = 'addon_play' then
         uPlay_SetAll_Set;
     end

@@ -73,12 +73,14 @@ end;
 
 procedure TTIME_ADDON_TIME_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-
+  if TImage(Sender).Name = 'A_T_P_Time_Settings' then
+    vTime.P_Time.Settings_Glow.Enabled := True;
 end;
 
 procedure TTIME_ADDON_TIME_IMAGE.OnMouseLeave(Sender: TObject);
 begin
-
+  if TImage(Sender).Name = 'A_T_P_Time_Settings' then
+    vTime.P_Time.Settings_Glow.Enabled := False;
 end;
 
 { TTIME_ADDON_TIME_TABITEM }
@@ -129,6 +131,8 @@ begin
     uTime_Time_Actions_ShowType(TComboBox(Sender).Items.Strings[TComboBox(Sender).ItemIndex])
   else if TComboBox(Sender).Name = 'A_T_P_Time_General_Both_Type' then
     uTime_Time_Actions_ShowBothType(TComboBox(Sender).Items.Strings[TComboBox(Sender).ItemIndex])
+  else if TComboBox(Sender).Name = 'A_T_P_Time_Digital_Sep_Symbol' then
+    uTime_Time_Actions_ChangeSep(TComboBox(Sender).Items.Strings[TComboBox(Sender).ItemIndex])
   else if TComboListBox(Sender).Name = 'A_T_P_Time_Digital_Font' then
     uTime_Time_Actions_Digital_SetFont(TComboBox(Sender).Items.Strings[TComboBox(Sender).ItemIndex]);
 end;

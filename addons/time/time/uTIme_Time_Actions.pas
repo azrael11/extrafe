@@ -34,11 +34,13 @@ procedure uTime_Time_Actions_Digital_SetFont(vFont_Family_Name: String);
 procedure uTime_Time_Actions_Digital_SetFontColor(vFont_Color: TAlphaColor);
 procedure uTime_Time_Actions_Digital_SetBackColor(vBack_Color: TAlphaColor);
 procedure uTime_Time_Actions_Digital_SetBackStrokeColor(vBack_Color: TAlphaColor);
+procedure uTime_Time_Actions_ChangeSep(vSep: String);
 
 implementation
 
 uses
   uLoad_AllTypes,
+  uSnippet_Text,
   uTime_SetAll,
   uTime_AllTypes;
 
@@ -57,11 +59,11 @@ begin
   vTime.P_Time.Analog.Minutes.RotationAngle := StrToInt(FormatFloat('0', (360 * vMinutes) / 60));
   if vTime.P_Time.Analog.Seconds.RotationAngle <> StrToInt(FormatFloat('0', (360 * vSeconds) / 60)) then
   begin
-//    if addons.time.P_Time.Sound_Tick then
-      BASS_ChannelPlay(addons.time.Sound.Clock[0], False)
-//    else
-//      BASS_ChannelPlay(addons.time.Sound.Clock[1], False);
-//    addons.time.P_Time.Sound_Tick:= not addons.time.P_Time.Sound_Tick;
+    // if addons.time.P_Time.Sound_Tick then
+    BASS_ChannelPlay(addons.time.Sound.Clock[0], False)
+    // else
+    // BASS_ChannelPlay(addons.time.Sound.Clock[1], False);
+    // addons.time.P_Time.Sound_Tick:= not addons.time.P_Time.Sound_Tick;
   end;
   vTime.P_Time.Analog.Seconds.RotationAngle := StrToInt(FormatFloat('0', (360 * vSeconds) / 60));
 end;
@@ -73,19 +75,45 @@ var
   vMinutes: Word;
   vSeconds: Word;
   vMilliseconds: Word;
+  vFirst, vSecond, vThird, vSep, vCalc: Single;
 begin
   vActuall_Time := now;
   DecodeTime(vActuall_Time, vHour, vMinutes, vSeconds, vMilliseconds);
 
-  vTime.P_Time.Digital.Hour.Text := FloatToStr(vHour) + ':';
-  if Length(vTime.P_Time.Digital.Hour.Text) < 3 then
-    vTime.P_Time.Digital.Hour.Text := '0' + FloatToStr(vHour) + ':';
-  vTime.P_Time.Digital.Minutes.Text := FloatToStr(vMinutes) + ':';
-  if Length(vTime.P_Time.Digital.Minutes.Text) < 3 then
-    vTime.P_Time.Digital.Minutes.Text := '0' + FloatToStr(vMinutes) + ':';
+  vTime.P_Time.Digital.Hour.Text := FloatToStr(vHour);
+  if Length(vTime.P_Time.Digital.Hour.Text) < 2 then
+    vTime.P_Time.Digital.Hour.Text := '0' + FloatToStr(vHour);
+  vTime.P_Time.Digital.Minutes.Text := FloatToStr(vMinutes);
+  if Length(vTime.P_Time.Digital.Minutes.Text) < 2 then
+    vTime.P_Time.Digital.Minutes.Text := '0' + FloatToStr(vMinutes);
   vTime.P_Time.Digital.Seconds.Text := FloatToStr(vSeconds);
   if Length(vTime.P_Time.Digital.Seconds.Text) < 2 then
     vTime.P_Time.Digital.Seconds.Text := '0' + FloatToStr(vSeconds);
+
+  vFirst := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Hour);
+  vSecond := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Minutes);
+  vThird := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Seconds);
+  vSep := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Sep_1);
+
+  vTime.P_Time.Digital.Hour.Width := vFirst;
+  vTime.P_Time.Digital.Minutes.Width := vSecond;
+  vTime.P_Time.Digital.Seconds.Width := vThird;
+  vTime.P_Time.Digital.Sep_1.Width := vSep;
+  vTime.P_Time.Digital.Sep_2.Width := vSep;
+
+  vTime.P_Time.Digital.Hour.Position.X := 20;
+  vTime.P_Time.Digital.Minutes.Position.X := (vTime.P_Time.Digital.Back.Width / 2) - (vSecond / 2);
+  vTime.P_Time.Digital.Seconds.Position.X := (vTime.P_Time.Digital.Back.Width - 20) - vThird;
+  vCalc := vTime.P_Time.Digital.Minutes.Position.X -
+    (vTime.P_Time.Digital.Hour.Position.X + vTime.P_Time.Digital.Hour.Width);
+  vCalc := (vTime.P_Time.Digital.Hour.Position.X + vTime.P_Time.Digital.Hour.Width) + (vCalc / 2) -
+    (vTime.P_Time.Digital.Sep_1.Width / 2);
+  vTime.P_Time.Digital.Sep_1.Position.X := vCalc;
+  vCalc := vTime.P_Time.Digital.Seconds.Position.X -
+    (vTime.P_Time.Digital.Minutes.Position.X + vTime.P_Time.Digital.Minutes.Width);
+  vCalc := (vTime.P_Time.Digital.Minutes.Position.X + vTime.P_Time.Digital.Minutes.Width) + (vCalc / 2) -
+    (vTime.P_Time.Digital.Sep_2.Width / 2);
+  vTime.P_Time.Digital.Sep_2.Position.X := vCalc;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -251,6 +279,8 @@ begin
     vTime.P_Time.Digital.Hour.Font.Family := vFont_Family_Name;
     vTime.P_Time.Digital.Minutes.Font.Family := vFont_Family_Name;
     vTime.P_Time.Digital.Seconds.Font.Family := vFont_Family_Name;
+    vTime.P_Time.Digital.Sep_1.Font.Family := vFont_Family_Name;
+    vTime.P_Time.Digital.Sep_2.Font.Family := vFont_Family_Name;
 
     addons.time.P_Time.Digital_Font := vFont_Family_Name;
     addons.time.Ini.Ini.WriteString('TIME_LOCAL', 'Digital_Font', vFont_Family_Name);
@@ -262,6 +292,9 @@ begin
   vTime.P_Time.Digital.Hour.TextSettings.FontColor := vFont_Color;
   vTime.P_Time.Digital.Minutes.TextSettings.FontColor := vFont_Color;
   vTime.P_Time.Digital.Seconds.TextSettings.FontColor := vFont_Color;
+  vTime.P_Time.Digital.Sep_1.TextSettings.FontColor := vFont_Color;
+  vTime.P_Time.Digital.Sep_2.TextSettings.FontColor := vFont_Color;
+
   addons.time.P_Time.Digital_Color := ColorToString(vFont_Color);
   addons.time.Ini.Ini.WriteString('TIME_LOCAL', 'Digital_Color', ColorToString(vFont_Color));
 end;
@@ -278,6 +311,15 @@ begin
   vTime.P_Time.Digital.Rect.Stroke.Color := vBack_Color;
   addons.time.P_Time.Digital_Color_Back_Stroke := ColorToString(vBack_Color);
   addons.time.Ini.Ini.WriteString('TIME_LOCAL', 'Digital_Color_Back_Stroke', ColorToString(vBack_Color));
+end;
+
+procedure uTime_Time_Actions_ChangeSep(vSep: String);
+begin
+  vTime.P_Time.Digital.Sep_1.Text:= vSep;
+  vTime.P_Time.Digital.Sep_2.Text:= vSep;
+
+  addons.time.P_Time.Digital_Sep:= vSep;
+  addons.time.Ini.Ini.WriteString('TIME_LOCAL', 'Digital_Sep', vSep);
 end;
 
 end.

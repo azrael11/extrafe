@@ -481,14 +481,14 @@ begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
     if TText(Sender).Name = 'A_SP_SongTime_Play' then
-      uTText_ChangeColor_OnMouseEnter(Sender, claDeepskyblue);
+      uSnippet_Text_ChangeColor_OnMouseEnter(Sender, claDeepskyblue);
   end
   else if extrafe.prog.State = 'addon_soundplayer_tag_mp3' then
   begin
     if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v1_Transfer' then
-      uTText_HyperLink_OnMouseEnter(Sender)
+      uSnippet_Text_HyperLink_OnMouseEnter(Sender)
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Transfer' then
-      uTText_HyperLink_OnMouseEnter(Sender);
+      uSnippet_Text_HyperLink_OnMouseEnter(Sender);
   end;
 end;
 
@@ -497,14 +497,14 @@ begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
     if TText(Sender).Name = 'A_SP_SongTime_Play' then
-      uTText_ChangeColor_OnMouseLeave(Sender, claWhiteSmoke);
+      uSnippet_Text_ChangeColor_OnMouseLeave(Sender, claWhiteSmoke);
   end
   else if extrafe.prog.State = 'addon_soundplayer_tag_mp3' then
   begin
     if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v1_Transfer' then
-      uTText_HyperLink_OnMouseLeave(Sender)
+      uSnippet_Text_HyperLink_OnMouseLeave(Sender)
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Transfer' then
-      uTText_HyperLink_OnMouseLeave(Sender);
+      uSnippet_Text_HyperLink_OnMouseLeave(Sender);
   end;
 end;
 

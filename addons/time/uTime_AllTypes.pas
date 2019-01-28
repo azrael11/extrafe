@@ -32,6 +32,7 @@ type
     Digital_Type: String;
     Digital_Font: String;
     Digital_Color: String;
+    Digital_Sep: String;
     Digital_Color_Back: String;
     Digital_Color_Back_Stroke: String;
     Digital_Img_Folder: String;

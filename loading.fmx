@@ -11,12 +11,4 @@ object Loading_Form: TLoading_Form
   OnCreate = FormCreate
   OnClose = FormClose
   DesignerMasterStyle = 0
-  object Label1: TLabel
-    StyledSettings = [Family, Size, Style]
-    Position.X = 432.000000000000000000
-    Position.Y = 256.000000000000000000
-    TextSettings.FontColor = claBlue
-    Text = 'Label1'
-    TabOrder = 1
-  end
 end

@@ -75,7 +75,7 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Visible := True;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].General.Town_and_Country);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Town_and_Country);
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Position.X :=
     (vWeather.Scene.Tab[vTabNum].Tab.Width / 2) -
     (vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Width / 2);
@@ -94,7 +94,7 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Temprature.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Visible := True;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].General.Temprature);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Temprature);
 
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Name := 'A_W_WeatherTempratureUnit_' +
@@ -122,7 +122,7 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Condtition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Visible := True;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].General.Condtition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Condtition);
 
   vWeather.Scene.Tab[vTabNum].Wind.Text := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Wind.Text.Name := 'A_W_WeatherWind_' + IntToStr(vTabNum);
@@ -150,7 +150,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Speed.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Wind.Speed.Width := uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Wind.Speed);
+  vWeather.Scene.Tab[vTabNum].Wind.Speed.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Speed);
 
   vWeather.Scene.Tab[vTabNum].Wind.Direction := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Name := 'A_W_WeatherWindDiretion' + IntToStr(vTabNum);
@@ -164,7 +164,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Visible := True;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Wind.Direction);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Direction);
 
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Wind.Direction);
@@ -208,7 +208,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Chill.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Wind.Chill.Width := uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Wind.Chill);
+  vWeather.Scene.Tab[vTabNum].Wind.Chill.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Chill);
 
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Name := 'A_W_WeatherWindChillIcon' + IntToStr(vTabNum);
@@ -325,7 +325,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Name := 'A_W_WeatherAtmospherePresureIcon' +
@@ -355,7 +355,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Name := 'A_W_WeatherAtmosphereVisibilityIcon' +
@@ -383,7 +383,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Rising);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Rising);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Name := 'A_W_WeatherAtmosphereHumidity' + IntToStr(vTabNum);
@@ -397,7 +397,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Visible := True;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity);
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Name := 'A_W_WeatherAtmosphereHumidityIcon_' +
@@ -439,7 +439,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Visible := True;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise);
 
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Name := 'A_W_WeatherAstronomySunriseImage_' +
@@ -467,7 +467,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Visible := True;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunset);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunset);
 
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Name := 'A_W_WeatherAstronomySunsetImage_' +
@@ -529,7 +529,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Visible := True;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Server.LastUpDate);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.LastUpDate);
 
   vWeather.Scene.Tab[vTabNum].Server.Powered_By := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Name := 'A_W_WeatherPoweredBy_' + IntToStr(vTabNum);
@@ -541,7 +541,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Visible := True;
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Server.Powered_By);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.Powered_By);
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Position.X := vWeather.Scene.Tab[vTabNum].Tab.Width -
     (vWeather.Scene.Tab[vTabNum].Server.Powered_By.Width + 70);
 
@@ -597,7 +597,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Current.Layout);
@@ -615,7 +615,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Current.Layout);
@@ -648,7 +648,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Current.Layout);
@@ -681,7 +681,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Current.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Current.Layout);
@@ -729,7 +729,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Current.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Current.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Current.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Current.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Current.Layout);
@@ -772,7 +772,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Layout);
@@ -788,7 +788,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Layout);
@@ -819,7 +819,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Layout);
@@ -850,7 +850,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Layout);
@@ -894,7 +894,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_1.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_1.Layout);
@@ -937,7 +937,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Layout);
@@ -953,7 +953,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Layout);
@@ -984,7 +984,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Layout);
@@ -1015,7 +1015,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Layout);
@@ -1059,7 +1059,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_2.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_2.Layout);
@@ -1102,7 +1102,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Layout);
@@ -1118,7 +1118,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Layout);
@@ -1149,7 +1149,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Layout);
@@ -1180,7 +1180,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Layout);
@@ -1224,7 +1224,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_3.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_3.Layout);
@@ -1267,7 +1267,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Layout);
@@ -1283,7 +1283,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Layout);
@@ -1314,7 +1314,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Layout);
@@ -1345,7 +1345,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Layout);
@@ -1389,7 +1389,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_4.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_4.Layout);
@@ -1432,7 +1432,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Layout);
@@ -1448,7 +1448,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Layout);
@@ -1479,7 +1479,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Layout);
@@ -1510,7 +1510,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Layout);
@@ -1554,7 +1554,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_5.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_5.Layout);
@@ -1597,7 +1597,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Layout);
@@ -1613,7 +1613,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Layout);
@@ -1644,7 +1644,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Layout);
@@ -1675,7 +1675,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Layout);
@@ -1719,7 +1719,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_6.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_6.Layout);
@@ -1762,7 +1762,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Layout);
@@ -1778,7 +1778,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Layout);
@@ -1809,7 +1809,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Layout);
@@ -1840,7 +1840,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Layout);
@@ -1884,7 +1884,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_7.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_7.Layout);
@@ -1927,7 +1927,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Layout);
@@ -1943,7 +1943,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Layout);
@@ -1974,7 +1974,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Layout);
@@ -2005,7 +2005,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Layout);
@@ -2049,7 +2049,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_8.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_8.Layout);
@@ -2092,7 +2092,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Text.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Text);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Text);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Date :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Layout);
@@ -2108,7 +2108,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Date.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Date.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Date.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Date);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Date);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Layout);
@@ -2139,7 +2139,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Condition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Condition.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Condition.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Condition);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Condition);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Low_Image :=
     TImage.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Layout);
@@ -2170,7 +2170,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Low.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Low.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Low.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Low);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Low);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Low_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Layout);
@@ -2214,7 +2214,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.High.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.High.Visible := True;
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.High.Width :=
-    uTText_TextToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.High);
+    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.High);
 
   vWeather.Scene.Tab[vTabNum].Forcast.Day_9.High_TU :=
     TText.Create(vWeather.Scene.Tab[vTabNum].Forcast.Day_9.Layout);

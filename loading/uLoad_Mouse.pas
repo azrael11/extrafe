@@ -153,21 +153,21 @@ end;
 procedure TLOADING_TEXT.OnMouseEnter(Sender: TObject);
 begin
   if TText(Sender).Name = 'Loading_Login_Register' then
-    uTText_HyperLink_OnMouseEnter(TText(Sender))
+    uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-    uTText_HyperLink_OnMouseEnter(TText(Sender))
+    uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
   else if TText(Sender).Name = 'Loading_Register_Terms' then
-    uTText_HyperLink_OnMouseEnter(TText(Sender))
+    uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
 end;
 
 procedure TLOADING_TEXT.OnMouseLeave(Sender: TObject);
 begin
   if TText(Sender).Name = 'Loading_Login_Register' then
-    uTText_HyperLink_OnMouseLeave(TText(Sender))
+    uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-    uTText_HyperLink_OnMouseLeave(TText(Sender))
+    uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
   else if TText(Sender).Name = 'Loading_Register_Terms' then
-    uTText_HyperLink_OnMouseLeave(TText(Sender))
+    uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
 end;
 
 initialization

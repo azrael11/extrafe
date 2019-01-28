@@ -234,9 +234,9 @@ begin
   if extrafe.prog.State = 'main_config' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uTText_HyperLink_OnMouseEnter(TImage(Sender))
+      uSnippet_Text_HyperLink_OnMouseEnter(TImage(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
-      uTText_HyperLink_OnMouseEnter(TImage(Sender))
+      uSnippet_Text_HyperLink_OnMouseEnter(TImage(Sender))
   end;
 end;
 
@@ -245,9 +245,9 @@ begin
   if extrafe.prog.State = 'main_config' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uTText_HyperLink_OnMouseLeave(TImage(Sender))
+      uSnippet_Text_HyperLink_OnMouseLeave(TImage(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
-      uTText_HyperLink_OnMouseLeave(TImage(Sender))
+      uSnippet_Text_HyperLink_OnMouseLeave(TImage(Sender))
   end;
 end;
 

@@ -113,8 +113,8 @@ var
   Hor: Integer;
   Ver: Integer;
   RR: Integer;
-//  DM: TDevMode;
-//  ModeNum: LongInt;
+  // DM: TDevMode;
+  // ModeNum: LongInt;
 begin
   DC := GetDC(FmxHandleToHWND(Loading_Form.Handle));
   Bits := GetDeviceCaps(DC, BITSPIXEL);
@@ -162,7 +162,7 @@ var
   nFileCount: Integer;
 begin
   nFileCount := 0;
-  if vKind = True then //Count Folders
+  if vKind = True then // Count Folders
   begin
     if FindFirst(vDir + '\*' + vType, faAnyFile, Rec) { *Converted from FindFirst* } = 0 then
       repeat
@@ -172,13 +172,12 @@ begin
       until FindNext(Rec) { *Converted from FindNext* } <> 0;
     System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
   end
-  else if vKind = False then //Cound Files
+  else if vKind = False then // Cound Files
   begin
-    if FindFirst(vDir + '\'+ vType, faDirectory, Rec) { *Converted from FindFirst* } = 0 then
+    if FindFirst(vDir + '\' + vType, faArchive, Rec) { *Converted from FindFirst* } = 0 then
       repeat
-        if ((Rec.Attr and faDirectory) = faDirectory) then
-          if (Rec.Name <> '.') and (Rec.Name <> '..') then
-            Inc(nFileCount);
+        if (Rec.Name <> '.') and (Rec.Name <> '..') then
+          Inc(nFileCount);
       until FindNext(Rec) { *Converted from FindNext* } <> 0;
     System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
   end;
@@ -188,7 +187,7 @@ end;
 function uWindows_GetFolderNames(vDir: String): TStringlist;
 var
   Rec: TSearchRec;
-//  nFileCount: Integer;
+  // nFileCount: Integer;
 begin
   Result := TStringlist.Create;
   if FindFirst(vDir + '\*.*', faDirectory, Rec) { *Converted from FindFirst* } = 0 then
@@ -203,10 +202,10 @@ end;
 function uWindows_GetFileNames(vDir: String; vFileType: String): TStringlist;
 var
   Rec: TSearchRec;
-//  nFileCount: Integer;
+  // nFileCount: Integer;
 begin
   Result := TStringlist.Create;
-  if FindFirst(vDir + '\'+ vFileType, faDirectory, Rec) { *Converted from FindFirst* } = 0 then
+  if FindFirst(vDir + '\' + vFileType, faDirectory, Rec) { *Converted from FindFirst* } = 0 then
     repeat
       if ((Rec.Attr and faAnyFile) <> 16) then
         if (Rec.Name <> '.') and (Rec.Name <> '..') then
@@ -484,7 +483,7 @@ var
   SourceLst: string;
   FOS: TSHFileOpStruct;
 begin
-  FillChar(FOS, SizeOf(FOS), 0);
+  FillChar(FOS, sizeof(FOS), 0);
   FOS.Wnd := FmxHandleToHWND(Main_Form.Handle);
   FOS.wFunc := FO_DELETE;
   SourceLst := DirName + '\' + vFileMask + #0;

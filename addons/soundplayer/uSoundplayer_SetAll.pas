@@ -29,7 +29,12 @@ uses
   ALFmxStdCtrls,
   main;
 
-procedure uSoundPlayer_SetComponentsToRightPlace;
+procedure uSoundPlayer_SetAll_Set;
+
+procedure uSoundplayer_SetAll_Player;
+procedure uSoundplayer_SetAll_Info;
+procedure uSoundplayer_SetAll_Playlist;
+procedure uSoundplayer_SetAll_Cover;
 
 procedure uSoundplayer_SetRemoveSongDialog;
 
@@ -48,20 +53,13 @@ uses
   uSoundplayer_Playlist_Actions,
   BASS;
 
-Procedure uSoundPlayer_SetComponentsToRightPlace;
+Procedure uSoundPlayer_SetAll_Set;
 const
   cImgList: array [0 .. 9] of string = ('sp_play.png', 'sp_stop.png', 'sp_pause.png', 'sp_note.png',
     'sp_edit.png', 'sp_up.png', 'sp_down.png', 'sp_delete.png', 'sp_tag_mp3.png', 'sp_tag_ogg.png');
-const
-  cPopupItems: array [0 .. 4] of string = ('Edit Tag', 'Move up', 'Move Down', '----------', 'Delete');
 var
-  vcomp: TComponent;
   vi: Integer;
-  vNewBitMap: TCustomSourceItem;
-  vRowNum: Integer;
-  vPopup_MenuItem: TMenuItem;
   vImage: Timage;
-
 begin
   vSoundplayer.scene.Imglist := TImageList.Create(Main_Form);
   vSoundplayer.scene.Imglist.Name := 'A_SP_Imagelist';
@@ -120,6 +118,96 @@ begin
   vSoundplayer.scene.UpLine.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.UpLine.Visible := True;
 
+  uSoundplayer_SetAll_Player;
+
+  // Middle Line
+  vSoundplayer.scene.MiddleLine := Timage.Create(vSoundplayer.scene.Back);
+  vSoundplayer.scene.MiddleLine.Name := 'A_SP_MiddleLine_Image';
+  vSoundplayer.scene.MiddleLine.Parent := vSoundplayer.scene.Back;
+  vSoundplayer.scene.MiddleLine.SetBounds(0, 210, vSoundplayer.scene.Back.Width, 10);
+  vSoundplayer.scene.MiddleLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
+  vSoundplayer.scene.MiddleLine.Visible := True;
+
+  uSoundplayer_SetAll_Info;
+
+  // Playlist line
+  vSoundplayer.scene.PlaylistLine := Timage.Create(vSoundplayer.scene.Back);
+  vSoundplayer.scene.PlaylistLine.Name := 'A_SP_PlaylistLine_Image';
+  vSoundplayer.scene.PlaylistLine.Parent := vSoundplayer.scene.Back;
+  vSoundplayer.scene.PlaylistLine.SetBounds(0, extrafe.res.Height - 410, vSoundplayer.scene.Back.Width, 10);
+  vSoundplayer.scene.PlaylistLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.scene.PlaylistLine.WrapMode := TImageWrapMode.Tile;
+  vSoundplayer.scene.PlaylistLine.Visible := True;
+
+  uSoundplayer_SetAll_Playlist;
+
+  vSoundplayer.scene.Settings := Timage.Create(vSoundplayer.scene.Back);
+  vSoundplayer.scene.Settings.Name := 'A_SP_Settings_Image';
+  vSoundplayer.scene.Settings.Parent := vSoundplayer.scene.Back;
+  vSoundplayer.scene.Settings.SetBounds(vSoundplayer.scene.Back.Width - 60, vSoundplayer.scene.Back.Height -
+    70, 50, 50);
+  vSoundplayer.scene.Settings.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_settings_blue.png');
+  vSoundplayer.scene.Settings.WrapMode := TImageWrapMode.Fit;
+  vSoundplayer.scene.Settings.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.scene.Settings.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.scene.Settings.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.scene.Settings.Visible := True;
+
+  vSoundplayer.scene.Settings_Ani := TFloatAnimation.Create(vSoundplayer.scene.Settings);
+  vSoundplayer.scene.Settings_Ani.Name := 'A_SP_Settings_Animation';
+  vSoundplayer.scene.Settings_Ani.Parent := vSoundplayer.scene.Settings;
+  vSoundplayer.scene.Settings_Ani.Duration := 4;
+  vSoundplayer.scene.Settings_Ani.Loop := True;
+  vSoundplayer.scene.Settings_Ani.PropertyName := 'RotationAngle';
+  vSoundplayer.scene.Settings_Ani.StartValue := 0;
+  vSoundplayer.scene.Settings_Ani.StopValue := 360;
+  vSoundplayer.scene.Settings_Ani.Enabled := True;
+
+  vSoundplayer.scene.Settings_Glow := TGlowEffect.Create(vSoundplayer.scene.Settings);
+  vSoundplayer.scene.Settings_Glow.Name := 'A_SP_Settings_Glow';
+  vSoundplayer.scene.Settings_Glow.Parent := vSoundplayer.scene.Settings;
+  vSoundplayer.scene.Settings_Glow.Softness := 0.4;
+  vSoundplayer.scene.Settings_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.scene.Settings_Glow.Opacity := 0.9;
+  vSoundplayer.scene.Settings_Glow.Enabled := False;
+
+  // Down Line
+  vSoundplayer.scene.DownLine := Timage.Create(vSoundplayer.scene.soundplayer);
+  vSoundplayer.scene.DownLine.Name := 'A_SP_DownLine_Image';
+  vSoundplayer.scene.DownLine.Parent := vSoundplayer.scene.soundplayer;
+  vSoundplayer.scene.DownLine.SetBounds(0, vSoundplayer.scene.soundplayer.Height - 10,
+    vSoundplayer.scene.soundplayer.Width, 10);
+  vSoundplayer.scene.DownLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.scene.DownLine.WrapMode := TImageWrapMode.Tile;
+  vSoundplayer.scene.DownLine.Visible := True;
+
+  // Last the cover for can do fullscreen
+  uSoundplayer_SetAll_Cover;
+
+
+  vSoundplayer.scene.OpenDialog := TOpenDialog.Create(vSoundplayer.scene.soundplayer);
+  vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_AddSongs';
+  vSoundplayer.scene.OpenDialog.Parent := vSoundplayer.scene.soundplayer;
+  vSoundplayer.scene.OpenDialog.Options := vSoundplayer.scene.OpenDialog.Options +
+    [TOpenOption.ofAllowMultiSelect, TOpenOption.ofPathMustExist, TOpenOption.ofFileMustExist];
+  vSoundplayer.scene.OpenDialog.OnClose := vSoundplayer.scene.Dialog.OnClose;
+  vSoundplayer.scene.OpenDialog.OnShow := vSoundplayer.scene.Dialog.OnShow;
+
+  vSoundplayer.timer.Song := TTimer.Create(vSoundplayer.scene.soundplayer);
+  vSoundplayer.timer.Song.Name := 'A_SP_Timer_Song';
+  vSoundplayer.timer.Song.Parent := vSoundplayer.scene.soundplayer;
+  vSoundplayer.timer.Song.Interval := 100;
+  vSoundplayer.timer.Song.OnTimer := vSoundplayer.timer.timer.OnTimer;
+  vSoundplayer.timer.Song.Enabled := False;
+
+  uSoundPlayer_Actions_Load;
+end;
+
+procedure uSoundplayer_SetAll_Player;
+var
+  vi: Integer;
+begin
   vSoundplayer.scene.Back_Player := Timage.Create(vSoundplayer.scene.Back);
   vSoundplayer.scene.Back_Player.Name := 'A_SP_BackPlayer_Image';
   vSoundplayer.scene.Back_Player.Parent := vSoundplayer.scene.Back;
@@ -173,6 +261,12 @@ begin
   vSoundplayer.player.Stop_Grey.Name := 'A_SP_Player_Stop_Grey';
   vSoundplayer.player.Stop_Grey.Parent := vSoundplayer.player.Stop;
   vSoundplayer.player.Stop_Grey.Enabled := False;
+
+  vSoundplayer.Player.Stop_Color:= TFillRGBEffect.Create(vSoundplayer.Player.Stop);
+  vSoundplayer.Player.Stop_Color.Name:= 'A_SP_Player_Stop_Color';
+  vSoundplayer.Player.Stop_Color.Parent:=  vSoundplayer.Player.Stop;
+  vSoundplayer.Player.Stop_Color.Color:= TAlphaColorRec.Red;
+  vSoundplayer.Player.Stop_Color.Enabled:= False;
 
   vSoundplayer.player.Previous := Timage.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Previous.Name := 'A_SP_Player_Previous_Image';
@@ -587,16 +681,10 @@ begin
   vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Softness := 0.4;
   vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Opacity := 0.9;
   vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Enabled := False;
+end;
 
-  // Middle Line
-  vSoundplayer.scene.MiddleLine := Timage.Create(vSoundplayer.scene.Back);
-  vSoundplayer.scene.MiddleLine.Name := 'A_SP_MiddleLine_Image';
-  vSoundplayer.scene.MiddleLine.Parent := vSoundplayer.scene.Back;
-  vSoundplayer.scene.MiddleLine.SetBounds(0, 210, vSoundplayer.scene.Back.Width, 10);
-  vSoundplayer.scene.MiddleLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
-  vSoundplayer.scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
-  vSoundplayer.scene.MiddleLine.Visible := True;
-
+procedure uSoundplayer_SetAll_Info;
+begin
   vSoundplayer.scene.Back_Info := Timage.Create(vSoundplayer.scene.Back);
   vSoundplayer.scene.Back_Info.Name := 'A_SP_BackInfo_Image';
   vSoundplayer.scene.Back_Info.Parent := vSoundplayer.scene.Back;
@@ -804,17 +892,15 @@ begin
   vSoundplayer.info.Time_Total.Text := '';
   vSoundplayer.info.Time_Total.TextSettings.HorzAlign := TTextAlign.Leading;
   vSoundplayer.info.Time_Total.Visible := True;
-  //
+end;
 
-  // Playlist line
-  vSoundplayer.scene.PlaylistLine := Timage.Create(vSoundplayer.scene.Back);
-  vSoundplayer.scene.PlaylistLine.Name := 'A_SP_PlaylistLine_Image';
-  vSoundplayer.scene.PlaylistLine.Parent := vSoundplayer.scene.Back;
-  vSoundplayer.scene.PlaylistLine.SetBounds(0, extrafe.res.Height - 410, vSoundplayer.scene.Back.Width, 10);
-  vSoundplayer.scene.PlaylistLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
-  vSoundplayer.scene.PlaylistLine.WrapMode := TImageWrapMode.Tile;
-  vSoundplayer.scene.PlaylistLine.Visible := True;
-
+procedure uSoundplayer_SetAll_Playlist;
+const
+  cPopupItems: array [0 .. 4] of string = ('Edit Tag', 'Move up', 'Move Down', '----------', 'Delete');
+var
+  vi: Integer;
+  vPopup_MenuItem: TMenuItem;
+begin
   vSoundplayer.scene.Back_Playlist := Timage.Create(vSoundplayer.scene.Back);
   vSoundplayer.scene.Back_Playlist.Name := 'A_SP_BackPlaylist_Image';
   vSoundplayer.scene.Back_Playlist.Parent := vSoundplayer.scene.Back;
@@ -1088,48 +1174,10 @@ begin
   vSoundplayer.Playlist.Remove_Icon_Grey.Name := 'A_SP_Playlist_Remove_Grey';
   vSoundplayer.Playlist.Remove_Icon_Grey.Parent := vSoundplayer.Playlist.Remove_Icon;
   vSoundplayer.Playlist.Remove_Icon_Grey.Enabled := False;
+end;
 
-  vSoundplayer.scene.Settings := Timage.Create(vSoundplayer.scene.Back);
-  vSoundplayer.scene.Settings.Name := 'A_SP_Settings_Image';
-  vSoundplayer.scene.Settings.Parent := vSoundplayer.scene.Back;
-  vSoundplayer.scene.Settings.SetBounds(vSoundplayer.scene.Back.Width - 60, vSoundplayer.scene.Back.Height -
-    70, 50, 50);
-  vSoundplayer.scene.Settings.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_settings_blue.png');
-  vSoundplayer.scene.Settings.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.scene.Settings.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.scene.Settings.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.scene.Settings.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
-  vSoundplayer.scene.Settings.Visible := True;
-
-  vSoundplayer.scene.Settings_Ani := TFloatAnimation.Create(vSoundplayer.scene.Settings);
-  vSoundplayer.scene.Settings_Ani.Name := 'A_SP_Settings_Animation';
-  vSoundplayer.scene.Settings_Ani.Parent := vSoundplayer.scene.Settings;
-  vSoundplayer.scene.Settings_Ani.Duration := 4;
-  vSoundplayer.scene.Settings_Ani.Loop := True;
-  vSoundplayer.scene.Settings_Ani.PropertyName := 'RotationAngle';
-  vSoundplayer.scene.Settings_Ani.StartValue := 0;
-  vSoundplayer.scene.Settings_Ani.StopValue := 360;
-  vSoundplayer.scene.Settings_Ani.Enabled := True;
-
-  vSoundplayer.scene.Settings_Glow := TGlowEffect.Create(vSoundplayer.scene.Settings);
-  vSoundplayer.scene.Settings_Glow.Name := 'A_SP_Settings_Glow';
-  vSoundplayer.scene.Settings_Glow.Parent := vSoundplayer.scene.Settings;
-  vSoundplayer.scene.Settings_Glow.Softness := 0.4;
-  vSoundplayer.scene.Settings_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vSoundplayer.scene.Settings_Glow.Opacity := 0.9;
-  vSoundplayer.scene.Settings_Glow.Enabled := False;
-
-  // Down Line
-  vSoundplayer.scene.DownLine := Timage.Create(vSoundplayer.scene.soundplayer);
-  vSoundplayer.scene.DownLine.Name := 'A_SP_DownLine_Image';
-  vSoundplayer.scene.DownLine.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.scene.DownLine.SetBounds(0, vSoundplayer.scene.soundplayer.Height - 10,
-    vSoundplayer.scene.soundplayer.Width, 10);
-  vSoundplayer.scene.DownLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
-  vSoundplayer.scene.DownLine.WrapMode := TImageWrapMode.Tile;
-  vSoundplayer.scene.DownLine.Visible := True;
-
-  // Last the cover for can do fullscreen
+procedure uSoundplayer_SetAll_Cover;
+begin
   vSoundplayer.info.Back_Right := Timage.Create(vSoundplayer.scene.Back);
   vSoundplayer.info.Back_Right.Name := 'A_SP_BackInfo_BackRight_Image';
   vSoundplayer.info.Back_Right.Parent := vSoundplayer.scene.Back;
@@ -1217,25 +1265,9 @@ begin
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.PropertyName := 'Height';
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.OnFinish := vSoundplayer.Ani.OnFinish;
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.Enabled := False;
-
-  vSoundplayer.scene.OpenDialog := TOpenDialog.Create(vSoundplayer.scene.soundplayer);
-  vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_AddSongs';
-  vSoundplayer.scene.OpenDialog.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.scene.OpenDialog.Options := vSoundplayer.scene.OpenDialog.Options +
-    [TOpenOption.ofAllowMultiSelect, TOpenOption.ofPathMustExist, TOpenOption.ofFileMustExist];
-  vSoundplayer.scene.OpenDialog.OnClose := vSoundplayer.scene.Dialog.OnClose;
-  vSoundplayer.scene.OpenDialog.OnShow := vSoundplayer.scene.Dialog.OnShow;
-
-  vSoundplayer.timer.Song := TTimer.Create(vSoundplayer.scene.soundplayer);
-  vSoundplayer.timer.Song.Name := 'A_SP_Timer_Song';
-  vSoundplayer.timer.Song.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.timer.Song.Interval := 100;
-  vSoundplayer.timer.Song.OnTimer := vSoundplayer.timer.timer.OnTimer;
-  vSoundplayer.timer.Song.Enabled := False;
-
-  uSoundPlayer_Actions_Load;
 end;
 
+///
 procedure uSoundplayer_SetRemoveSongDialog;
 begin
   vSoundplayer.Playlist.Remove_Song.Remove := TPanel.Create(vSoundplayer.scene.soundplayer);

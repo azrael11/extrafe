@@ -91,8 +91,6 @@ begin
     else if TImage(Sender).Name = 'A_T_Tab_Icon_' + IntToStr(TImage(Sender).Tag) then
       vTime.Tab[TImage(Sender).Tag].Back_Glow.Enabled := True;
   end;
-  if TImage(Sender).Name = 'A_T_P_Time_Settings' then
-    vTime.P_Time.Settings_Glow.Enabled := True;
 end;
 
 procedure TTIME_ADDON_IMAGE.OnMouseLeave(Sender: TObject);
@@ -104,8 +102,6 @@ begin
     else if TImage(Sender).Name = 'A_T_Tab_Icon_' + IntToStr(TImage(Sender).Tag) then
       vTime.Tab[TImage(Sender).Tag].Back_Glow.Enabled := False;
   end;
-  if TImage(Sender).Name = 'A_T_P_Time_Settings' then
-    vTime.P_Time.Settings_Glow.Enabled := False;
 end;
 
 { TTIME_ADDON_TEXT }

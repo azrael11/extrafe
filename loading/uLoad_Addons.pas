@@ -171,6 +171,7 @@ begin
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_Type', 'System');
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_Font', 'Tahoma');
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_Color', 'White');
+  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_Sep', ':');
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_Color_Back', 'Deepskyblue');
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_Color_Back_Stroke', 'White');
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_ImageFolder', addons.time.Path.Clock + 'default\');
@@ -230,6 +231,8 @@ begin
     addons.time.P_Time.Digital_Font);
   addons.time.P_Time.Digital_Color := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color',
     addons.time.P_Time.Digital_Color);
+  addons.time.P_Time.Digital_Sep := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Sep',
+    addons.time.P_Time.Digital_Sep);
   addons.time.P_Time.Digital_Color_Back := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color_Back',
     addons.time.P_Time.Digital_Color_Back);
   addons.time.P_Time.Digital_Color_Back_Stroke := addons.time.ini.ini.ReadString('TIME_LOCAL',

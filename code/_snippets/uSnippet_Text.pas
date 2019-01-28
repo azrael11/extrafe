@@ -12,19 +12,19 @@ uses
 
 
   //Counts Text string to pixels
-  function uTText_TextToPixels(vText: TText): single;
-  function uTText_SetTextInGivenPixels(vLength: Integer; vText: TText) : string;
+  function uSnippet_Text_ToPixels(vText: TText): single;
+  function uSnippet_Text_SetInGivenPixels(vLength: Integer; vText: TText) : string;
 
   //HyperLink Mouse events
-  procedure uTText_HyperLink_OnMouseEnter(Sender: TObject);
-  procedure uTText_HyperLink_OnMouseLeave(Sender: TObject);
+  procedure uSnippet_Text_HyperLink_OnMouseEnter(Sender: TObject);
+  procedure uSnippet_Text_HyperLink_OnMouseLeave(Sender: TObject);
 
   //Change Color events
-  procedure uTText_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
-  procedure uTText_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
+  procedure uSnippet_Text_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
+  procedure uSnippet_Text_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
 
-  function uTText_Occurrences(const Substring, Text: string): integer;
-  function uTText_Occurrences_Where(const Substring, Text: string): TStringList;
+  function uSnippet_Text_Occurrences_Char(const Substring, Text: string): integer;
+  function uSnippet_Text_Occurrences_Char_Where(const Substring, Text: string): TStringList;
 
 implementation
 uses
@@ -32,7 +32,7 @@ uses
   uload,
   uLoad_AllTypes;
 
-function uTText_Occurrences(const Substring, Text: string): integer;
+function uSnippet_Text_Occurrences_Char(const Substring, Text: string): integer;
 var
   offset: integer;
 begin
@@ -45,7 +45,7 @@ begin
   end;
 end;
 
-function uTText_Occurrences_Where(const Substring, Text: string): TStringList;
+function uSnippet_Text_Occurrences_Char_Where(const Substring, Text: string): TStringList;
 var
   offset: integer;
 begin
@@ -59,7 +59,7 @@ begin
   end;
 end;
 
-function uTText_TextToPixels(vText: TText): single;
+function uSnippet_Text_ToPixels(vText: TText): single;
 var
   vBitmap: TBitmap;
 begin
@@ -69,7 +69,7 @@ begin
   vBitmap.Free;
 end;
 
-function uTText_SetTextInGivenPixels(vLength: Integer; vText: TText) : string;
+function uSnippet_Text_SetInGivenPixels(vLength: Integer; vText: TText) : string;
 var
   aString: String;
   aText: TText;
@@ -81,7 +81,7 @@ begin
     begin
       Delete(aString,length(aString), 1);
       aText.Text:= aString;
-      if uTText_TextToPixels(aText) < (vLength- 6) then
+      if uSnippet_Text_ToPixels(aText) < (vLength- 6) then
         begin
           aText.Text:= aText.Text + '...';
           Result := aText.Text;
@@ -92,14 +92,14 @@ end;
 
 ////////////////////////////////////////////////////////////////////////////////
 //HyperLink Mouse events
-procedure uTText_HyperLink_OnMouseEnter(Sender: TObject);
+procedure uSnippet_Text_HyperLink_OnMouseEnter(Sender: TObject);
 begin
   TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style+ [TFontStyle.fsUnderline];
   TText(Sender).TextSettings.FontColor:= claDeepskyblue;
   TText(Sender).Cursor:= crHandPoint;
 end;
 
-procedure uTText_HyperLink_OnMouseLeave(Sender: TObject);
+procedure uSnippet_Text_HyperLink_OnMouseLeave(Sender: TObject);
 begin
   TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style- [TFontStyle.fsUnderline];
   if (extrafe.style.Name= 'Amakrits') or (extrafe.style.Name= 'Dark') or (extrafe.style.Name= 'Air') then
@@ -111,13 +111,13 @@ end;
 
 ////////////////////////////////////////////////////////////////////////////////
 //Change Color events
-procedure uTText_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
+procedure uSnippet_Text_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
 begin
   TText(Sender).TextSettings.FontColor:= mColor;
   TText(Sender).Cursor:= crHandPoint;
 end;
 
-procedure uTText_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
+procedure uSnippet_Text_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
 begin
   TText(Sender).TextSettings.FontColor:= mColor;
   TText(Sender).Cursor:= crDefault;

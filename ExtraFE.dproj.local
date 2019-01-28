@@ -364,12 +364,12 @@
     <File Path="addons\soundplayer\_tag_libraries\uSoundplayer_Tag_Mouse.pas"/>
     <File Path="addons\soundplayer\uSoundplayer_Actions.pas"/>
     <File Path="addons\soundplayer\uSoundplayer_AllTypes.pas"/>
+    <File Path="addons\soundplayer\uSoundplayer_SetAll.pas"/>
     <File Path="addons\soundplayer\uSoundplayer_Info_Actions.pas"/>
     <File Path="addons\soundplayer\uSoundplayer_Keyboard.pas"/>
     <File Path="addons\soundplayer\uSoundplayer_Mouse.pas"/>
     <File Path="addons\soundplayer\uSoundplayer_Player_Actions.pas"/>
     <File Path="addons\soundplayer\uSoundplayer_Playlist_Actions.pas"/>
-    <File Path="addons\soundplayer\uSoundplayer_SetAll.pas"/>
     <File Path="addons\time"/>
     <File Path="addons\time\time"/>
     <File Path="addons\time\time\uTime_Time_SetAll.pas"/>

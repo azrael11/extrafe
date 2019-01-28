@@ -260,6 +260,7 @@ type
     Stop: TImage;
     Stop_Glow: TGlowEffect;
     Stop_Grey: TMonochromeEffect;
+    Stop_Color: TFillRGBEffect;
     Previous: TImage;
     Previous_Glow: TGlowEffect;
     Previous_Grey: TMonochromeEffect;

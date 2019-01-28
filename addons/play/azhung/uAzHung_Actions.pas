@@ -184,8 +184,8 @@ var
 begin
   if ContainsStr(gAzHung.Actions.WordToFind, vLetter) then
   begin
-    vNumChars := uTText_Occurrences(vLetter, gAzHung.Actions.WordToFind);
-    vListChars := uTText_Occurrences_Where(vLetter, gAzHung.Actions.WordToFind);
+    vNumChars := uSnippet_Text_Occurrences_Char(vLetter, gAzHung.Actions.WordToFind);
+    vListChars := uSnippet_Text_Occurrences_Char_Where(vLetter, gAzHung.Actions.WordToFind);
     if vNumChars = 1 then
       uAzHung_Actions_SettleTheScore(100)
     else if vNumChars = 2 then

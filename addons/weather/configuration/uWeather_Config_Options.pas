@@ -226,7 +226,7 @@ begin
       vWeather.Scene.Tab[vi].General.Temprature.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].General.Temprature.Text);
       vWeather.Scene.Tab[vi].General.Temprature.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].General.Temprature);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].General.Temprature);
       vWeather.Scene.Tab[vi].General.Temprature_Unit.Text := vTempUnit;
       vWeather.Scene.Tab[vi].General.Temprature_Unit.Position.X := vWeather.Scene.Tab[vi]
         .General.Temprature.Position.X + vWeather.Scene.Tab[vi].General.Temprature.Width + 10;
@@ -234,14 +234,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Current.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Current.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Current.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Current.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Current.Low);
       vWeather.Scene.Tab[vi].Forcast.Current.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Current.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Current.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Current.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Current.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Current.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Current.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Current.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Current.High);
       vWeather.Scene.Tab[vi].Forcast.Current.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Current.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Current.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Current.High.Width + 4;
@@ -249,14 +249,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_1.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_1.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_1.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_1.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_1.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_1.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_1.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_1.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_1.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_1.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_1.High);
       vWeather.Scene.Tab[vi].Forcast.Day_1.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_1.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_1.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_1.High.Width + 4;
@@ -264,14 +264,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_2.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_2.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_2.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_2.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_2.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_2.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_2.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_2.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_2.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_2.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_2.High);
       vWeather.Scene.Tab[vi].Forcast.Day_2.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_2.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_2.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_2.High.Width + 4;
@@ -279,14 +279,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_3.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_3.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_3.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_3.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_3.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_3.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_3.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_3.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_3.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_3.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_3.High);
       vWeather.Scene.Tab[vi].Forcast.Day_3.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_3.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_3.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_3.High.Width + 4;
@@ -294,14 +294,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_4.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_4.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_4.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_4.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_4.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_4.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_4.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_4.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_4.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_4.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_4.High);
       vWeather.Scene.Tab[vi].Forcast.Day_4.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_4.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_4.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_4.High.Width + 4;
@@ -309,14 +309,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_5.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_5.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_5.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_5.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_5.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_5.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_5.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_5.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_5.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_5.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_5.High);
       vWeather.Scene.Tab[vi].Forcast.Day_5.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_5.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_5.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_5.High.Width + 4;
@@ -324,14 +324,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_6.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_6.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_6.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_6.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_6.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_6.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_6.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_6.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_6.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_6.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_6.High);
       vWeather.Scene.Tab[vi].Forcast.Day_6.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_6.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_6.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_6.High.Width + 4;
@@ -339,14 +339,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_7.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_7.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_7.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_7.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_7.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_7.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_7.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_7.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_7.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_7.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_7.High);
       vWeather.Scene.Tab[vi].Forcast.Day_7.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_7.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_7.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_7.High.Width + 4;
@@ -354,14 +354,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_8.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_8.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_8.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_8.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_8.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_8.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_8.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_8.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_8.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_8.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_8.High);
       vWeather.Scene.Tab[vi].Forcast.Day_8.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_8.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_8.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_8.High.Width + 4;
@@ -369,14 +369,14 @@ begin
       vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_9.Low);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_9.Low);
       vWeather.Scene.Tab[vi].Forcast.Day_9.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_9.Low_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_9.Low.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_9.Low.Width + 4;
       vWeather.Scene.Tab[vi].Forcast.Day_9.High.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Day_9.High.Text);
       vWeather.Scene.Tab[vi].Forcast.Day_9.High.Width :=
-        uTText_TextToPixels(vWeather.Scene.Tab[vi].Forcast.Day_9.High);
+        uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].Forcast.Day_9.High);
       vWeather.Scene.Tab[vi].Forcast.Day_9.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab[vi].Forcast.Day_9.High_TU.Position.X := vWeather.Scene.Tab[vi]
         .Forcast.Day_9.High.Position.X + vWeather.Scene.Tab[vi].Forcast.Day_9.High.Width + 4;

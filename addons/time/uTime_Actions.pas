@@ -1,17 +1,18 @@
 unit uTime_Actions;
 
 interface
+
 uses
   System.Classes,
   System.SysUtils;
 
+procedure uTime_Actions_Load;
+procedure uTime_Actions_Free;
 
-  procedure uTime_Actions_Load;
-  procedure uTime_Actions_Free;
-
-  procedure uTime_Actions_ShowTab(vTab: Integer);
+procedure uTime_Actions_ShowTab(vTab: Integer);
 
 implementation
+
 uses
   uLoad_AllTypes,
   uTime_Time_Actions,
@@ -30,17 +31,19 @@ procedure uTime_Actions_ShowTab(vTab: Integer);
 var
   vi: Integer;
 begin
-  for vi:= 0 to 4 do
-    begin
-      vTime.Tab[vi].Back_Glow.Enabled:= False;
-      if Assigned(vTime.P_Time.Back) then
-        uTime_Time_SetAll_Free;
-    end;
-  case vTab of
-    0 : uTime_Time_SetAll_Set;
+  for vi := 0 to 4 do
+  begin
+    vTime.Tab[vi].Back_Glow.Enabled := False;
+    if Assigned(vTime.P_Time.Back) then
+      uTime_Time_SetAll_Free;
   end;
-  vTime.Tab[vTab].Back_Glow.Enabled:= True;
-  vTime.Tab_Selected:= vTab;
+
+  case vTab of
+    0:
+      uTime_Time_SetAll_Set;
+  end;
+  vTime.Tab[vTab].Back_Glow.Enabled := True;
+  vTime.Tab_Selected := vTab;
 end;
 
 procedure uTime_Actions_Free;
@@ -53,7 +56,6 @@ begin
   FreeAndNil(vTime.Time);
 end;
 
-////////////////////////////////////////////////////////////////////////////////
-
+/// /////////////////////////////////////////////////////////////////////////////
 
 end.

@@ -16,8 +16,7 @@ uses
   FMX.Edit,
   FMX.Listbox,
   FMX.Colors,
-  Radiant.Shapes,
-  uLoad_AllTypes;
+  Radiant.Shapes;
 
 
 
@@ -30,6 +29,7 @@ implementation
 
 uses
   uWindows,
+  uLoad_AllTypes,
   uSnippets_Colors,
   uMain_SetAll,
   uMain_AllTypes,
