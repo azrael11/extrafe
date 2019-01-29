@@ -201,7 +201,7 @@ begin
   vSoundplayer.timer.Song.OnTimer := vSoundplayer.timer.timer.OnTimer;
   vSoundplayer.timer.Song.Enabled := False;
 
-  uSoundPlayer_Actions_Load;
+  uSoundPlayer_Actions.Load;
 end;
 
 procedure uSoundplayer_SetAll_Player;
@@ -238,6 +238,12 @@ begin
   vSoundplayer.player.Play_Grey.Parent := vSoundplayer.player.Play;
   vSoundplayer.player.Play_Grey.Enabled := False;
 
+  vSoundplayer.Player.Play_Color:= TFillRGBEffect.Create(vSoundplayer.Player.Play);
+  vSoundplayer.Player.Play_Color.Name:= 'A_SP_Player_Stop_Color';
+  vSoundplayer.Player.Play_Color.Parent:=  vSoundplayer.Player.Play;
+  vSoundplayer.Player.Play_Color.Color:= TAlphaColorRec.Aliceblue;
+  vSoundplayer.Player.Play_Color.Enabled:= False;
+
   vSoundplayer.player.Stop := Timage.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Stop.Name := 'A_SP_Player_Stop_Image';
   vSoundplayer.player.Stop.Parent := vSoundplayer.scene.Back_Player;
@@ -252,7 +258,7 @@ begin
   vSoundplayer.player.Stop_Glow := TGlowEffect.Create(vSoundplayer.player.Stop);
   vSoundplayer.player.Stop_Glow.Name := 'A_SP_Player_Stop_Glow';
   vSoundplayer.player.Stop_Glow.Parent := vSoundplayer.player.Stop;
-  vSoundplayer.player.Stop_Glow.GlowColor := TAlphaColorRec.Red;
+  vSoundplayer.player.Stop_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vSoundplayer.player.Stop_Glow.Softness := 0.4;
   vSoundplayer.player.Stop_Glow.Opacity := 0.9;
   vSoundplayer.player.Stop_Glow.Enabled := False;
@@ -401,6 +407,12 @@ begin
   vSoundplayer.player.Suffle_Grey.Name := 'A_SP_Player_Suffle_Grey';
   vSoundplayer.player.Suffle_Grey.Parent := vSoundplayer.player.Suffle;
   vSoundplayer.player.Suffle_Grey.Enabled := False;
+
+  vSoundplayer.Player.Suffle_Color:= TFillRGBEffect.Create(vSoundplayer.Player.Suffle);
+  vSoundplayer.Player.Suffle_Color.Name:= 'A_SP_Player_Suffle_Color';
+  vSoundplayer.Player.Suffle_Color.Parent:=  vSoundplayer.Player.Suffle;
+  vSoundplayer.Player.Suffle_Color.Color:= TAlphaColorRec.Aquamarine;
+  vSoundplayer.Player.Suffle_Color.Enabled:= False;
 
   vSoundplayer.player.Song_Title := TText.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Song_Title.Name := 'A_SP_Player_SongTitle';

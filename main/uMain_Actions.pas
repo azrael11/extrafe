@@ -173,7 +173,7 @@ procedure uMain_Actions_Update_All;
 begin
   if extrafe.prog.State <> 'addon_soundplayer' then
     if addons.soundplayer.Player.Play then
-      uSoundplayer_Player_Actions_Refresh;
+      uSoundplayer_Player_Actions.Refresh;
 end;
 
 procedure uMain_Actions_Load_Fonts;

@@ -855,7 +855,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.tag.mp3.Back);
-  uSoundPlayer_Player_Actions_OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
+  uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
 end;
 
 procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);

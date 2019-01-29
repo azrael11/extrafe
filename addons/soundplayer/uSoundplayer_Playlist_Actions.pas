@@ -171,6 +171,8 @@ begin
       vsTF := trunc(BASS_ChannelBytes2Seconds(sound.str_music[100],
         BASS_ChannelGetLength(sound.str_music[100], BASS_POS_BYTE)));
       vfsTF := vfsTF + vsTF;
+      addons.soundplayer.Playlist.List.Songs_Total_Time :=
+        FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(vfsTF));
       vSong_Time := FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(vsTF));
       uSoundPlayer_GetTag_Details(vString, mPL_Num, vk, vSong_Time);
       vSoundplayer.Playlist.List.Cells[0, vk] := IntToStr(vk + 1);
@@ -207,7 +209,7 @@ begin
   vSoundplayer.info.Playlist_name.Text := addons.soundplayer.Playlist.List.Name;
   vSoundplayer.Playlist.List.Selected := 0;
   vSoundplayer.info.Total_Songs.Text := '1/' + IntToStr(vk);
-  vSoundplayer.info.Time_Total.Text := FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(vfsTF));
+  vSoundplayer.info.Time_Total.Text := addons.soundplayer.Playlist.List.Songs_Total_Time;
 
   BASS_ChannelStop(sound.str_music[1]);
   sound.str_music[1] := BASS_StreamCreateFile(False,
@@ -381,6 +383,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Delete_Grey.Enabled := False;
     vSoundplayer.Playlist.Songs_Edit.Lock.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
       'sp_unlock.png');
+    BASS_ChannelPlay(addons.soundplayer.sound.Effects[1], False);
   end
   else
   begin
@@ -389,6 +392,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled := True;
     vSoundplayer.Playlist.Songs_Edit.Delete_Grey.Enabled := True;
     vSoundplayer.Playlist.Songs_Edit.Lock.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_lock.png');
+    BASS_ChannelPlay(addons.soundplayer.sound.Effects[0], False);
   end;
   addons.soundplayer.Playlist.Edit := vActive;
 end;
@@ -397,8 +401,7 @@ end;
 
 procedure uSoundplayer_Playlist_Actions_SortPlaylistIni;
 var
-  vi, ki: Integer;
-  PlSort: array of TADDON_SOUNDPLAYER_PLAYLIST_PLAYLISTS;
+  vi: Integer;
 begin
   if addons.soundplayer.Playlist.Total <> -1 then
   begin
@@ -524,7 +527,7 @@ begin
 
     if vSelected = addons.soundplayer.Player.Playing_Now then
     begin
-      if vSelected<> 0 then
+      if vSelected <> 0 then
         Dec(addons.soundplayer.Player.Playing_Now, 1);
       BASS_ChannelStop(sound.str_music[1]);
       BASS_StreamFree(sound.str_music[1]);
@@ -733,16 +736,16 @@ begin
   end
   else if vType = 'move_up' then
   begin
-    vSong1:= addons.soundplayer.Playlist.List.Song_Info[vSelected];
-    vSong2:= addons.soundplayer.Playlist.List.Song_Info[vSelected - 1];
+    vSong1 := addons.soundplayer.Playlist.List.Song_Info[vSelected];
+    vSong2 := addons.soundplayer.Playlist.List.Song_Info[vSelected - 1];
 
     addons.soundplayer.Playlist.List.Song_Info[vSelected - 1] := vSong1;
     addons.soundplayer.Playlist.List.Song_Info[vSelected] := vSong2;
   end
   else if vType = 'move_down' then
   begin
-    vSong1:= addons.soundplayer.Playlist.List.Song_Info[vSelected];
-    vSong2:= addons.soundplayer.Playlist.List.Song_Info[vSelected + 1];
+    vSong1 := addons.soundplayer.Playlist.List.Song_Info[vSelected];
+    vSong2 := addons.soundplayer.Playlist.List.Song_Info[vSelected + 1];
 
     addons.soundplayer.Playlist.List.Song_Info[vSelected + 1] := vSong1;
     addons.soundplayer.Playlist.List.Song_Info[vSelected] := vSong2;

@@ -217,7 +217,7 @@ begin
       uWeather_Actions_Free;
       if Assigned(vWeather.Scene.Weather_Ani) then
         vWeather.Scene.Weather_Ani.Enabled := False;
-      uSoundPlayer_Actions_Free;
+      uSoundPlayer_Actions.Free;
       if Assigned(vSoundplayer.Scene.Soundplayer_Ani) then
         vSoundplayer.Scene.Soundplayer_Ani.Enabled := False;
       uPlay_Actions_Free;

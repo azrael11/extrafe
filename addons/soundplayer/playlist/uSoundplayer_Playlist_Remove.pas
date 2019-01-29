@@ -192,7 +192,7 @@ begin
   addons.soundplayer.Player.Stop := True;
   addons.soundplayer.Player.Playing_Now := -1;
   // Set the main to no playlist first time
-  uSoundPlayer_Actions_SetSoundPlayer_FirstTime;
+  uSoundPlayer_Actions.Set_FirstTime;
   // Free the remove panel
   uSoundplayer_Playlist_Remove_Free;
 end;

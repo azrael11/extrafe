@@ -369,6 +369,7 @@ begin
   CreateDir(extrafe.prog.Path + 'data\addons\soundplayer\images');
   CreateDir(extrafe.prog.Path + 'data\addons\soundplayer\files');
   CreateDir(extrafe.prog.Path + 'data\addons\soundplayer\playlists');
+  CreateDir(extrafe.prog.Path + 'data\addons\soundplayer\sounds');
 
   addons.soundplayer.ini.Path := extrafe.prog.Path + 'data\addons\soundplayer\';
   addons.soundplayer.ini.Name := 'soundplayer.ini';
@@ -377,6 +378,7 @@ begin
   addons.soundplayer.Path.Images := addons.soundplayer.ini.Path + 'images\';
   addons.soundplayer.Path.Files := addons.soundplayer.ini.Path + 'files\';
   addons.soundplayer.Path.Playlists := addons.soundplayer.ini.Path + 'playlists\';
+  addons.soundplayer.Path.Sounds := addons.soundplayer.ini.Path + 'sounds\';
 
   addons.soundplayer.ini.ini.WriteString('SOUNDPLAYER', 'Addon_Name', 'soundplayer');
   addons.soundplayer.ini.ini.WriteBool('SOUNDPLAYER', 'Active', False);
@@ -410,6 +412,7 @@ begin
   addons.soundplayer.Path.Images := addons.soundplayer.ini.Path + 'images\';
   addons.soundplayer.Path.Files := addons.soundplayer.ini.Path + 'files\';
   addons.soundplayer.Path.Playlists := addons.soundplayer.ini.Path + 'playlists\';
+  addons.soundplayer.Path.Sounds := addons.soundplayer.ini.Path + 'sounds\';
 
   addons.soundplayer.Actions.First := addons.soundplayer.ini.ini.ReadBool('General', 'First',
     addons.soundplayer.Actions.First);

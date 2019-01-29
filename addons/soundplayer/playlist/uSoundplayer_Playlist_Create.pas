@@ -150,7 +150,7 @@ begin
       BASS_ChannelStop(sound.str_music[1]);
       vSoundplayer.Player.Song_Pos.Value := 0;
     end;
-    uSoundPlayer_Actions_SetSoundPlayer_FirstTime;
+    uSoundPlayer_Actions.Set_FirstTime;
     vSoundplayer.info.Playlist_name.Text := vPlaylistName;
     vSoundplayer.info.Playlist_Type_Kind.Text := vPlaylistType;
     vSoundplayer.info.Total_Songs.Text := '0';

@@ -40,7 +40,6 @@ uses
 procedure uSoundPlayer_Playlist_Manage_Panel;
 var
   vi: Integer;
-  vString: String;
 begin
   if vSoundplayer.Playlist.Manage_Icon_Grey.Enabled = False then
   begin
@@ -290,7 +289,7 @@ begin
     addons.soundplayer.Player.Playing_Now := 0;
     vSoundplayer.Player.Song_Pos.Value := 0;
     vSoundplayer.Player.Song_PlayTime.Text := '00:00:00';
-    uSoundPlayer_Actions_SetSoundPlayer_WithActivePlaylist(addons.soundplayer.Playlist.Active);
+    uSoundPlayer_Actions.Set_WithActivePlaylist(addons.soundplayer.Playlist.Active);
     vSoundplayer.info.Back_Left_Ani.Enabled := True;
     vSoundplayer.info.Back_Left.Position.X := 2;
     vSoundplayer.info.Back_Right_Ani.Enabled := True;
@@ -307,6 +306,7 @@ begin
   begin
     vSoundplayer.Playlist.Manage.main.Edit.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
       'sp_unlock.png');
+    BASS_ChannelPlay(addons.soundplayer.Sound.Effects[1], False);
     if vSoundplayer.Playlist.Manage.main.Grid.Selected <> 0 then
       vSoundplayer.Playlist.Manage.main.Up_Grey.Enabled := False;
     if vSoundplayer.Playlist.Manage.main.Grid.Selected <> vSoundplayer.Playlist.Manage.main.Grid.RowCount - 1
@@ -319,6 +319,7 @@ begin
   begin
     vSoundplayer.Playlist.Manage.main.Edit.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
       'sp_lock.png');
+    BASS_ChannelPlay(addons.soundplayer.Sound.Effects[0], False);
     vSoundplayer.Playlist.Manage.main.Up_Grey.Enabled := True;
     vSoundplayer.Playlist.Manage.main.Down_Grey.Enabled := True;
     vSoundplayer.Playlist.Manage.main.Merge_Grey.Enabled := True;
@@ -373,8 +374,6 @@ end;
 procedure uSoundplayer_Playlist_Manage_MoveUp(vSelected: Integer);
 var
   vPLSelected, vPLMove: TADDON_SOUNDPLAYER_PLAYLIST_PLAYLISTS;
-  vPlString: String;
-  vi: Integer;
 begin
   if addons.soundplayer.Playlist.Manage_Lock then
   begin
@@ -411,8 +410,6 @@ end;
 procedure uSoundplayer_Playlist_Manage_MoveDown(vSelected: Integer);
 var
   vPLSelected, vPLMove: TADDON_SOUNDPLAYER_PLAYLIST_PLAYLISTS;
-  vPlString: String;
-  vi: Integer;
 begin
   if addons.soundplayer.Playlist.Manage_Lock then
   begin

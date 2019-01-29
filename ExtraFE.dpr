@@ -139,7 +139,8 @@ uses
   uAzHung_Sound in 'addons\play\azhung\uAzHung_Sound.pas',
   uWeather_Providers_OpenWeatherMap in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas',
   uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas',
-  uMain_Config_Info_Credits in 'main\configuration\uMain_Config_Info_Credits.pas';
+  uMain_Config_Info_Credits in 'main\configuration\uMain_Config_Info_Credits.pas',
+  uSoundplayer_Sounds in 'addons\soundplayer\uSoundplayer_Sounds.pas';
 
 {$R *.res}
 

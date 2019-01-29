@@ -185,7 +185,6 @@ end;
 procedure uSoundplayer_Tag_Ogg_Cover_Delete;
 var
   vi: integer;
-  vIndex: Integer;
 begin
   vSoundplayer.Tag.Opus.Cover.Bitmap:= nil;
   for vi :=  0 to high(addons.soundplayer.Player.Tag.ogg.Opus.Frames) do

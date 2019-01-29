@@ -31,7 +31,8 @@ uses
   ALFmxObjects,
   OggVorbisAndOpusTagLibrary,
   uSoundplayer_Mouse,
-  uSoundplayer_Tag_Mouse;
+  uSoundplayer_Tag_Mouse,
+  Bass;
 
 type
   TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3 = record
@@ -135,6 +136,7 @@ type
     Songs: TStringList;
     Song_Info: array of TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG;
     Songs_Num: Integer;
+    Songs_Total_Time: String;
     Played: Integer;
     Last_Played: String;
   end;
@@ -167,6 +169,7 @@ type
     Images: String;
     Files: String;
     Playlists: string;
+    Sounds: String;
   end;
 
 type
@@ -183,6 +186,13 @@ type
   end;
 
 type
+  TADDON_SOUNDPLAYER_SOUND = record
+    Effects: array [0 .. 10] of HSAMPLE;
+    mouse: array [0 .. 10] of HSAMPLE;
+    warning: array [0 .. 2] of HSAMPLE;
+  end;
+
+type
   TADDON_SOUNDPLAYER = record
     Name: String;
     Active: Boolean;
@@ -195,6 +205,7 @@ type
     Path: TADDON_SOUNDPLAYER_PATHS;
     Input: TADDON_SOUNDPLAYER_INPUT;
     Ini: TADDON_SOUNDPLAYER_CONFIG;
+    Sound: TADDON_SOUNDPLAYER_SOUND;
   end;
 
   /// /////////////////////////////////////////////////////////////////////////////
@@ -257,6 +268,7 @@ type
     Play: TImage;
     Play_Glow: TGlowEffect;
     Play_Grey: TMonochromeEffect;
+    Play_Color: TFillRGBEffect;
     Stop: TImage;
     Stop_Glow: TGlowEffect;
     Stop_Grey: TMonochromeEffect;
@@ -289,6 +301,7 @@ type
     Suffle: TImage;
     Suffle_Glow: TGlowEffect;
     Suffle_Grey: TMonochromeEffect;
+    Suffle_Color: TFillRGBEffect;
     Speaker_Left: TImage;
     Speaker_Left_Hue: THueAdjustEffect;
     Speaker_Left_Percent: TText;
@@ -688,7 +701,7 @@ uses
 procedure TSOUNDPLAYER_ADDON_TIMER_ONTIMER.OnTimer(Sender: TObject);
 begin
   if TTimer(Sender).Name = 'A_SP_Timer_Song' then
-    uSoundplayer_Player_Actions_Refresh;
+    uSoundplayer_Player_Actions.Refresh;
 end;
 
 { TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG }
