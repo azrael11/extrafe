@@ -18,8 +18,6 @@ procedure uSoundPlayer_GetTag_Details(mSongName: string; mPlaylistNum, mSongNum:
 
 // Get tags bases of types
 procedure GetTags_MP3(mSongPath, mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
-procedure GetTags_MP3_Cover(vSongNum: SmallInt);
-procedure GetTags_MP3_Rate(vSongNum: SmallInt);
 
 procedure GetTags_OGG(mSongPath, mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
 procedure GetTags_OGG_Cover(vSongNum: SmallInt);
@@ -41,38 +39,16 @@ uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
   uSoundplayer_SetAll,
-  uSoundplayer_Player_Actions;
+  uSoundplayer_Player_Actions,
+  uSoundplayer_Tag_Mp3;
 
 // Get Tags
 procedure GetTags_MP3(mSongPath, mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
 var
   myTag: TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG;
 begin
-  addons.soundplayer.Player.Tag.mp3.ID3v1 := TID3v1Tag.Create;
-  addons.soundplayer.Player.Tag.mp3.ID3v2 := TID3v2Tag.Create;
-
-  // Get Id3v1 First
-  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v1.LoadFromFile
-    (mSongPath + mSongName);
-  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V1LIBRARY_SUCCESS then
-  begin
-
-  end;
-
-  // Get Id3v2 Second
-  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v2.LoadFromFile
-    (mSongPath + mSongName);
-  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V2LIBRARY_SUCCESS then
-  begin
-
-  end
-  else
-  begin
-    addons.soundplayer.Player.Tag.mp3.ID3v2.RemoveUnsynchronisationOnAllFrames;
-    addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader := True;
-    addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader3.CRCPresent := True;
-    addons.soundplayer.Player.Tag.mp3.ID3v2.Loaded := True;
-  end;
+  uSoundplayer_Tag_Mp3.Get_ID3v1(mSongPath+ mSongName);
+  uSoundplayer_Tag_Mp3.Get_ID3v2(mSongPath+ mSongName);
 
   myTag.Title := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
   myTag.Artist := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
@@ -130,7 +106,8 @@ begin
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre :=
       addons.soundplayer.Player.Tag.mp3.ID3v1.Genre;
 
-  GetTags_MP3_Rate(mSongNum);
+  //Get Rate
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate := uSoundplayer_Tag_Mp3.GetRate.ToString;
 
   addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
   addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
@@ -138,80 +115,6 @@ begin
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Disk_Type := '.mp3';
   vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_mp3.png');
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Track_Seconds := mSongTime;
-end;
-
-procedure GetTags_MP3_Cover(vSongNum: SmallInt);
-var
-  Success: Boolean;
-  PictureType: Integer;
-  PictureStream: TStream;
-  MIMEType: String;
-  Description: String;
-begin
-  addons.soundplayer.Player.Tag.mp3.ID3v2 := TID3v2Tag.Create;
-  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v2.LoadFromFile
-    (addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Path +
-    addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Name +
-    addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Type);
-  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V2LIBRARY_SUCCESS then
-  begin
-
-  end
-  else
-  begin
-    addons.soundplayer.Player.Tag.mp3.ID3v2.RemoveUnsynchronisationOnAllFrames;
-    addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader := True;
-    addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader3.CRCPresent := True;
-    addons.soundplayer.Player.Tag.mp3.ID3v2.Loaded := True;
-  end;
-
-  PictureStream := TMemoryStream.Create;
-  try
-    Success := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeCoverPictureStream
-      (addons.soundplayer.Player.Tag.mp3.ID3v2.FrameExists('APIC'), PictureStream, MIMEType, Description,
-      PictureType);
-    if (PictureStream.Size = 0) OR (NOT Success) then
-    begin
-      vSoundplayer.info.Cover.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_nocover.png');
-      Exit;
-    end;
-    vSoundplayer.info.Cover.Bitmap.LoadFromStream(PictureStream);
-  finally
-    FreeAndNil(PictureStream);
-  end;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
-end;
-
-procedure GetTags_MP3_Rate(vSongNum: SmallInt);
-var
-  vIndex: Integer;
-  vEmail: String;
-  vRating: Byte;
-  vCounter: Cardinal;
-  vi: Integer;
-  vFound: Boolean;
-begin
-  vFound := False;
-  for vIndex := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
-  begin
-    if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[vIndex].ID, 'POPM') then
-    begin
-      if addons.soundplayer.Player.Tag.mp3.ID3v2.GetPopularimeter(vIndex, vEmail, vRating, vCounter) = True
-      then
-      begin
-        if vRating <> 0 then
-        begin
-          vRating := (vRating div (255 div 5) - 1);
-          addons.soundplayer.Playlist.List.Song_Info[vSongNum].Rate := vRating.ToString;
-        end
-        else
-          addons.soundplayer.Playlist.List.Song_Info[vSongNum].Rate := '-1';
-      end;
-      vFound := True;
-    end;
-  end;
-  if vFound = False then
-    addons.soundplayer.Playlist.List.Song_Info[vSongNum].Rate := '-1';
 end;
 
 ///

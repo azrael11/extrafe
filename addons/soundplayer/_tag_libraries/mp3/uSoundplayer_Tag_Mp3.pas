@@ -16,15 +16,13 @@ uses
 // procedure uTag_ID3v2_GetPicture(mNext: Boolean);
 // function uTag_ID3v2_GetPic(mNum: byte): Boolean;
 
-procedure uSoundplayer_Tag_Mp3_GetMP3(vPath: String; vSongNum: Integer);
+procedure Get(vPath: String; vSongNum: Integer);
 
-procedure uSoundplayer_Tag_Mp3_Get_ID3v1(vPath: String);
-procedure uSoundplayer_Tag_Mp3_Get_ID3v2(vPath: String);
+procedure Get_ID3v1(vPath: String);
+procedure Set_Tag_ID3v1(vPath: String);
 
-procedure uSoundplayer_Tag_Mp3_Rate_ShowStars(vStar: Integer; vLeave: Boolean);
-procedure uSoundplayer_Tag_Mp3_Rate_SelectStars(vStarNum: Byte);
-procedure uSoundplayer_Tag_Mp3_Rate_RemoveAllStars;
-procedure uSoundplayer_Tag_Mp3_Rate_Save;
+procedure Get_ID3v2(vPath: String);
+procedure Set_Tag_ID3v2(vPath: String);
 
 procedure uSoundplayer_Tag_Mp3_Transfer(vInto: String);
 procedure uSoundplayer_Tag_Mp3_CheckDifference;
@@ -43,8 +41,15 @@ procedure uSoundplayer_Tag_Mp3_Lyrics_Delete;
 
 procedure uSoundplayer_Tag_Mp3_Save;
 
-function uSoundplayer_Tag_Mp3_LoadAPIC: Boolean;
-function uSoundplayer_Tag_Mp3_GetRate: Byte;
+function Get_Cover_Image(vFullPath: String; out vDesk: String; out vImage: TBitmap): Boolean;
+
+// Rating System
+procedure SetRate;
+procedure SaveRate;
+function GetRate: Byte;
+procedure Show_RateStars(vStar: Integer; vLeave: Boolean);
+procedure Rate_SelectStars(vStarNum: Byte);
+procedure Rate_RemoveAll;
 
 var
   vCurrentSongPath: String;
@@ -60,18 +65,19 @@ uses
   uLoad_AllTypes,
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
-  uSoundplayer_Tag_Mp3_SetAll;
+  uSoundplayer_Tag_Mp3_SetAll,
+  uSoundplayer_Player_Actions;
 
-procedure uSoundplayer_Tag_Mp3_GetMP3(vPath: String; vSongNum: Integer);
+procedure Get(vPath: String; vSongNum: Integer);
 begin
   vCurrentSongPath := vPath;
   vCurrentSongNum := vSongNum;
-  uSoundplayer_Tag_Mp3_Get_ID3v1(vPath);
-  uSoundplayer_Tag_Mp3_Get_ID3v2(vPath);
+  Set_Tag_ID3v1(vPath);
+  Set_Tag_ID3v2(vPath);
   uSoundplayer_Tag_Mp3_CheckDifference;
 end;
 
-procedure uSoundplayer_Tag_Mp3_Get_ID3v1(vPath: String);
+procedure Get_ID3v1(vPath: String);
 begin
   addons.soundplayer.Player.Tag.mp3.ID3v1 := TID3v1Tag.Create;
 
@@ -82,6 +88,11 @@ begin
     // Get major and minor version num of mp3
   end;
   addons.soundplayer.Player.Tag.mp3.ID3v1.Loaded := True;
+end;
+
+procedure Set_Tag_ID3v1(vPath: String);
+begin
+  Get_ID3v1(vPath);
 
   vSoundplayer.Tag.mp3.ID3v1.Title_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Title;
   vSoundplayer.Tag.mp3.ID3v1.Artist_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Artist;
@@ -90,11 +101,11 @@ begin
   vSoundplayer.Tag.mp3.ID3v1.Genre_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Genre;
   vSoundplayer.Tag.mp3.ID3v1.Track_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Track.ToString;
   vSoundplayer.Tag.mp3.ID3v1.Comment_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Comment;
+  
+  addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
 end;
 
-procedure uSoundplayer_Tag_Mp3_Get_ID3v2(vPath: String);
-var
-  vi: Integer;
+procedure Get_ID3v2(vPath: String);
 begin
   addons.soundplayer.Player.Tag.mp3.ID3v2 := TID3v2Tag.Create;
 
@@ -109,7 +120,15 @@ begin
   addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader3.CRCPresent := True;
 
   addons.soundplayer.Player.Tag.mp3.ID3v2.Loaded := True;
+end;
 
+procedure Set_Tag_ID3v2(vPath: String);
+var
+  vi: Integer;
+  vDescription: String;
+  vImage: TBitmap;
+begin
+  Get_ID3v2(vPath);
   vSoundplayer.Tag.mp3.ID3v2.Title_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
   vSoundplayer.Tag.mp3.ID3v2.Artist_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
   vSoundplayer.Tag.mp3.ID3v2.Album_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TALB');
@@ -151,20 +170,25 @@ begin
 
   APICIndex := 0;
 
-  uSoundplayer_Tag_Mp3_LoadAPIC;
-
-  uSoundplayer_Tag_Mp3_GetRate;
+  SetRate;
+  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
+  
+  if Get_Cover_Image(vPath, vDescription, vImage) then
+  begin
+    vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
+    vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
+  end;  
 end;
 
-function uSoundplayer_Tag_Mp3_LoadAPIC: Boolean;
+function Get_Cover_Image(vFullPath: String; out vDesk: String; out vImage: TBitmap): Boolean;
 var
   PictureType: Integer;
   PictureStream: TStream;
   Success: Boolean;
   MIMEType: String;
   Description: String;
-  vDescription: String;
 begin
+  Get_ID3v2(vFullPath);
   Result := False;
   try
     PictureStream := TMemoryStream.Create;
@@ -194,20 +218,20 @@ begin
       begin
         case PictureType of
           0:
-            vDescription := 'Other';
+            vDesk := 'Other';
           3:
-            vDescription := 'Front Cover';
+            vDesk := 'Front Cover';
           4:
-            vDescription := 'Back Cover';
+            vDesk := 'Back Cover';
           6:
-            vDescription := 'CD Cover';
+            vDesk := 'CD Cover';
           20:
-            vDescription := 'Company Logo';
+            vDesk := 'Company Logo';
         end;
       end;
-      vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
+      vImage := TBitmap.Create;
+      vImage.LoadFromStream(PictureStream);
 
-      vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap.LoadFromStream(PictureStream);
       Result := True;
       CurrentAPICIndex := APICIndex;
     finally
@@ -216,6 +240,7 @@ begin
   except
     // *
   end;
+  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
 end;
 
 procedure uSoundplayer_Tag_Mp3_Transfer(vInto: String);
@@ -318,6 +343,8 @@ end;
 procedure uSoundplayer_Tag_Mp3_Cover_Previous;
 var
   i: Integer;
+  vDescription: String;
+  vImage: TBitmap;
 begin
   for i := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
@@ -326,7 +353,11 @@ begin
       if i < CurrentAPICIndex then
       begin
         APICIndex := i;
-        uSoundplayer_Tag_Mp3_LoadAPIC;
+        if Get_Cover_Image(vCurrentSongPath, vDescription, vImage) then
+        begin
+          vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
+          vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
+        end;
         Break;
       end;
     end;
@@ -337,6 +368,8 @@ end;
 procedure uSoundplayer_Tag_Mp3_Cover_Next;
 var
   i: Integer;
+  vDescription: String;
+  vImage: TBitmap;
 begin
   for i := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
@@ -345,12 +378,15 @@ begin
       if i > CurrentAPICIndex then
       begin
         APICIndex := i;
-        uSoundplayer_Tag_Mp3_LoadAPIC;
+        if Get_Cover_Image(vCurrentSongPath, vDescription, vImage) then
+        begin
+          vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
+          vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
+        end;
         Break;
       end;
     end;
   end;
-
 end;
 
 procedure uSoundplayer_Tag_Mp3_Cover_Select;
@@ -466,6 +502,9 @@ begin
 end;
 
 procedure uSoundplayer_Tag_Mp3_Cover_Remove;
+var
+  vDescription: String;
+  vImage: TBitmap;
 begin
   vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := nil;
   addons.soundplayer.Player.Tag.mp3.ID3v2.DeleteFrame(CurrentAPICIndex);
@@ -481,7 +520,11 @@ begin
   else
   begin
     APICIndex := 0;
-    uSoundplayer_Tag_Mp3_LoadAPIC;
+    if Get_Cover_Image(vCurrentSongPath, vDescription, vImage) then
+    begin
+      vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
+      vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
+    end;
   end;
 end;
 
@@ -547,17 +590,19 @@ end;
 ///
 procedure uSoundplayer_Tag_Mp3_Save;
 var
-  vGetSongPosition: Word;
+  vGetSongPosition: Integer;
   vi: Integer;
 begin
   if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath
   then
   begin
-    vGetSongPosition := BASS_ChannelGetPosition(sound.str_music[1], 0);
+    vGetSongPosition:= BASS_ChannelGetPosition(sound.str_music[1], BASS_POS_BYTE);
     BASS_ChannelStop(sound.str_music[1]);
     BASS_StreamFree(sound.str_music[1]);
   end;
 
+  Get_ID3v1(vCurrentSongPath);
+  
   addons.soundplayer.Player.Tag.mp3.ID3v1.Title := vSoundplayer.Tag.mp3.ID3v1.Title_V.Text;
   addons.soundplayer.Player.Tag.mp3.ID3v1.Artist := vSoundplayer.Tag.mp3.ID3v1.Artist_V.Text;
   addons.soundplayer.Player.Tag.mp3.ID3v1.Album := vSoundplayer.Tag.mp3.ID3v1.Album_V.Text;
@@ -570,6 +615,8 @@ begin
 
   addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
 
+  Get_ID3v2(vCurrentSongPath);
+  
   addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TIT2', vSoundplayer.Tag.mp3.ID3v2.Title_V.Text);
   addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TPE1', vSoundplayer.Tag.mp3.ID3v2.Artist_V.Text);
   addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TALB', vSoundplayer.Tag.mp3.ID3v2.Album_V.Text);
@@ -583,7 +630,7 @@ begin
     vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text, addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID,
     addons.soundplayer.Player.Tag.mp3.Lyrics_Description);
 
-  uSoundplayer_Tag_Mp3_Rate_Save;
+  SaveRate;
 
   addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v2.SaveToFile
     (vCurrentSongPath);
@@ -595,8 +642,6 @@ begin
     Showmessage('Error saving ID3v2 tag, error code: ' + IntToStr(addons.soundplayer.Player.Tag.mp3.TagError)
       + #13#10 + ID3v2TagErrorCode2String(addons.soundplayer.Player.Tag.mp3.TagError));
   end;
-
-  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
 
   // Save it to songs info
   // Title
@@ -653,13 +698,13 @@ begin
   if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath
   then
   begin
-    if addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate <> '-1' then
+    if addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate > IntToStr(0) then
     begin
       for vi := 0 to 4 do
         vSoundplayer.Player.Rate[vi].Visible := True;
       for vi := 0 to 4 do
         vSoundplayer.Player.Rate_Gray[vi].Enabled := True;
-      for vi := 0 to addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate.ToInteger do
+      for vi := 0 to addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate.ToInteger - 1 do
         vSoundplayer.Player.Rate_Gray[vi].Enabled := False;
       vSoundplayer.Player.Rate_No.Visible := False;
     end
@@ -670,19 +715,20 @@ begin
       vSoundplayer.Player.Rate_No.Visible := True;
     end;
   end;
+  addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate:= GetRate.ToString;
+  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
+  
   if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath
   then
   begin
     sound.str_music[1] := BASS_StreamCreateFile(False,
       PChar(addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now]), 0, 0,
-      BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-    BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.soundplayer.Volume.Vol / 100);
+      BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});    
     if addons.soundplayer.Player.Play then
-    begin
-      BASS_ChannelPlay(sound.str_music[1], False);
-      BASS_ChannelPause(sound.str_music[1]);
-      BASS_ChannelSetPosition(sound.str_music[1], vGetSongPosition, 0);
-      BASS_ChannelPlay(sound.str_music[1], False);
+    begin            
+      BASS_ChannelPlay(sound.str_music[1], True);
+      BASS_ChannelSetPosition(sound.str_music[1], vGetSongPosition, BASS_POS_BYTE);
+      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.soundplayer.Volume.Vol / 100);
     end;
   end;
 
@@ -690,7 +736,7 @@ begin
 end;
 
 // rating system
-procedure uSoundplayer_Tag_Mp3_Rate_ShowStars(vStar: Integer; vLeave: Boolean);
+procedure Show_RateStars(vStar: Integer; vLeave: Boolean);
 var
   vi: Integer;
 begin
@@ -699,53 +745,40 @@ begin
     vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := True;
     vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
   end;
-  if vStar <> -1 then
+
+  if vLeave = False then
   begin
-    if vLeave = False then
+    for vi := 4 downto vStar + 1 do
+      vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
+    for vi := 0 to vStar do
     begin
-      for vi := 4 downto vStar + 1 do
-      begin
-        vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-      end;
-      for vi := 0 to vStar do
-      begin
-        vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
-        vSoundplayer.Tag.mp3.ID3v2.Rate_Glow[vi].Enabled := True;
-      end;
-    end
-    else
-    begin
-      if addons.soundplayer.Player.Tag.mp3.Rating = -1 then
-      begin
-        for vi := 0 to 4 do
-        begin
-          vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-          vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
-        end;
-      end
-      else
-      begin
-        for vi := 0 to 4 do
-          vSoundplayer.Tag.mp3.ID3v2.Rate_Glow[vi].Enabled := False;
-        for vi := 4 downto addons.soundplayer.Player.Tag.mp3.Rating + 1 do
-          vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-        for vi := 0 to addons.soundplayer.Player.Tag.mp3.Rating do
-          vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
-      end;
+      vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
+      vSoundplayer.Tag.mp3.ID3v2.Rate_Glow[vi].Enabled := True;
     end;
   end
   else
   begin
-    for vi := 0 to 4 do
+    if vStar = -1 then
     begin
-      vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-      vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
+      for vi := 0 to 4 do
+      begin
+        vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
+        vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
+      end;
+    end
+    else
+    begin
+      for vi := 0 to 4 do
+        vSoundplayer.Tag.mp3.ID3v2.Rate_Glow[vi].Enabled := False;
+      for vi := 4 downto addons.soundplayer.Player.Tag.mp3.Rating do
+        vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
+      for vi := 0 to addons.soundplayer.Player.Tag.mp3.Rating - 1 do
+        vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
     end;
-    addons.soundplayer.Player.Tag.mp3.Rating := -1;
   end;
 end;
 
-procedure uSoundplayer_Tag_Mp3_Rate_SelectStars(vStarNum: Byte);
+procedure Rate_SelectStars(vStarNum: Byte);
 var
   vi: Integer;
 begin
@@ -756,10 +789,10 @@ begin
   for vi := 0 to vStarNum do
     vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
 
-  addons.soundplayer.Player.Tag.mp3.Rating := vStarNum;
+  addons.soundplayer.Player.Tag.mp3.Rating := vStarNum + 1;
 end;
 
-procedure uSoundplayer_Tag_Mp3_Rate_RemoveAllStars;
+procedure Rate_RemoveAll;
 var
   vi: Integer;
 begin
@@ -771,17 +804,17 @@ begin
   addons.soundplayer.Player.Tag.mp3.Rating := 0;
 end;
 
-procedure uSoundplayer_Tag_Mp3_Rate_Save;
+procedure SaveRate;
 var
   vIndex: Integer;
   vFound: Boolean;
   vRating: Integer;
 begin
   vFound := False;
-  if addons.soundplayer.Player.Tag.mp3.Rating_Befor_Save <> addons.soundplayer.Player.Tag.mp3.Rating then
+  if addons.soundplayer.Player.Tag.mp3.Rating_Before_Save <> addons.soundplayer.Player.Tag.mp3.Rating then
   begin
-    if addons.soundplayer.Player.Tag.mp3.Rating <> -1 then
-      vRating := (addons.soundplayer.Player.Tag.mp3.Rating + 1) * 51
+    if addons.soundplayer.Player.Tag.mp3.Rating > 0 then
+      vRating := (addons.soundplayer.Player.Tag.mp3.Rating) * 51
     else
       vRating := 0;
     for vIndex := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
@@ -800,9 +833,40 @@ begin
   end;
 end;
 
-function uSoundplayer_Tag_Mp3_GetRate: Byte;
+procedure SetRate;
 var
-  vIndex: Integer;
+  vi: Integer;
+  vRating: Byte;
+begin
+  for vi := 0 to 4 do
+  begin
+    vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := True;
+    vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
+  end;
+
+  vRating := GetRate;
+
+  if vRating <> 0 then
+  begin
+    vRating := (vRating div 51);
+    for vi := 4 downto vRating do
+      vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
+    for vi := 0 to vRating - 1 do
+      vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
+    addons.soundplayer.Player.Tag.mp3.Rating := vRating;
+    addons.soundplayer.Player.Tag.mp3.Rating_Before_Save := vRating;
+  end
+  else
+  begin
+    for vi := 0 to 4 do
+      vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
+    addons.soundplayer.Player.Tag.mp3.Rating := -1;
+    addons.soundplayer.Player.Tag.mp3.Rating_Before_Save := -1;
+  end;
+end;
+
+function GetRate: Byte;
+var
   vEmail: String;
   vRating: Byte;
   vCounter: Cardinal;
@@ -810,47 +874,17 @@ var
   vFound: Boolean;
 begin
   vFound := False;
-  for vi := 0 to 4 do
+  for vi := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
-    vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := True;
-    vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
-  end;
-  for vIndex := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
-  begin
-    if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[vIndex].ID, 'POPM') then
+    if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[vi].ID, 'POPM') then
     begin
       vFound := True;
-      if addons.soundplayer.Player.Tag.mp3.ID3v2.GetPopularimeter(vIndex, vEmail, vRating, vCounter) = True
-      then
-      begin
-        if vRating <> 0 then
-        begin
-          vRating := (vRating div (255 div 5) - 1);
-          for vi := 4 downto vRating + 1 do
-            vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-          for vi := 0 to vRating do
-            vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
-          addons.soundplayer.Player.Tag.mp3.Rating := vRating;
-          addons.soundplayer.Player.Tag.mp3.Rating_Befor_Save := vRating;
-        end
-        else
-        begin
-          for vi := 0 to 4 do
-            vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-          addons.soundplayer.Player.Tag.mp3.Rating := -1;
-          addons.soundplayer.Player.Tag.mp3.Rating_Befor_Save := -1;
-        end;
-      end;
+      if addons.soundplayer.Player.Tag.mp3.ID3v2.GetPopularimeter(vi, vEmail, vRating, vCounter) = True then
+        Result := vRating;
     end
   end;
   if vFound = False then
-  begin
-    vRating := 0;
-    for vi := 0 to 4 do
-      vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-    addons.soundplayer.Player.Tag.mp3.Rating := -1;
-    addons.soundplayer.Player.Tag.mp3.Rating_Befor_Save := -1;
-  end;
+    Result := 0;
 end;
 
 end.

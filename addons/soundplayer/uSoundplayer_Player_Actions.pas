@@ -17,6 +17,7 @@ uses
   FMX.Objects,
   FMX.StdCtrls,
   FMX.Effects,
+  FMX.Graphics,
   bass;
 
 procedure Refresh;
@@ -89,12 +90,14 @@ var
   sCT, sFT: Real;
   vRand: Integer;
   viPos: Integer;
+  vW: Integer;
 begin
-
   if addons.soundplayer.Player.Play then
   begin
-    sCT := trunc(BASS_ChannelBytes2Seconds(sound.str_music[1], BASS_ChannelGetPosition(sound.str_music[1],
-      BASS_POS_BYTE)));
+    vW:= BASS_ChannelGetPosition(sound.str_music[1], BASS_POS_BYTE);
+//    sCT := trunc(BASS_ChannelBytes2Seconds(sound.str_music[1],  BASS_ChannelGetPosition(sound.str_music[1],
+//      BASS_POS_BYTE)));
+    sCT := trunc(BASS_ChannelBytes2Seconds(sound.str_music[1], vW));
     sFT := trunc(BASS_ChannelBytes2Seconds(sound.str_music[1], BASS_ChannelGetLength(sound.str_music[1],
       BASS_POS_BYTE)));
 
@@ -506,14 +509,14 @@ begin
   if addons.soundplayer.Player.Suffle then
   begin
     OnLeave(vSoundplayer.Player.Suffle, vSoundplayer.Player.Suffle_Glow);
-    vSoundplayer.Player.Suffle_Color.Enabled:= False;
-    vPressed_Already:= True;
+    vSoundplayer.Player.Suffle_Color.Enabled := False;
+    vPressed_Already := True;
   end
   else
   begin
     OnLeave(vSoundplayer.Player.Suffle, vSoundplayer.Player.Suffle_Glow);
-    vSoundplayer.Player.Suffle_Color.Enabled:= True;
-    vPressed_Already:= True;
+    vSoundplayer.Player.Suffle_Color.Enabled := True;
+    vPressed_Already := True;
   end;
   addons.soundplayer.Player.Suffle := not addons.soundplayer.Player.Suffle;
 end;
@@ -721,6 +724,9 @@ procedure uSoundPlayer_PAction_ShowTagDetails(mSongNum: SmallInt);
 var
   vSong: string;
   vi: Integer;
+  vDescription: String;
+  vImage: TBitmap;
+  vPath: String;
 begin
   vSoundplayer.Player.Song_Title.Text := '"' + addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title +
     '" by "' + addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist + '"';
@@ -755,13 +761,13 @@ begin
       vSoundplayer.Player.Rate_No.Visible := True;
     end;
     vSoundplayer.Player.Rate_No.Visible := True;
-    if addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate <> '-1' then
+    if addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate > IntToStr(0) then
     begin
       for vi := 0 to 4 do
         vSoundplayer.Player.Rate[vi].Visible := True;
       for vi := 0 to 4 do
         vSoundplayer.Player.Rate_Gray[vi].Enabled := True;
-      for vi := 0 to addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate.ToInteger do
+      for vi := 0 to ((addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate.ToInteger) div 51) - 1 do
         vSoundplayer.Player.Rate_Gray[vi].Enabled := False;
       vSoundplayer.Player.Rate_No.Visible := False;
     end
@@ -784,7 +790,13 @@ begin
   end;
 
   if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.mp3' then
-    GetTags_MP3_Cover(mSongNum)
+  begin
+    vPath := addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Path +
+      addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Name +
+      addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type;
+    uSoundplayer_Tag_Mp3.Get_Cover_Image(vPath, vDescription, vImage);
+    vSoundplayer.info.Cover.Bitmap := vImage;
+  end
   else if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.ogg'
   then
     GetTags_OGG_Cover(mSongNum);
@@ -805,7 +817,7 @@ begin
     if addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Type = '.mp3' then
     begin
       uSoundplayer_TagSet_Mp3;
-      uSoundplayer_Tag_Mp3_GetMP3(vSongName, vSongNum);
+      uSoundplayer_Tag_Mp3.Get(vSongName, vSongNum);
     end
     else if addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Type = '.ogg' then
     begin

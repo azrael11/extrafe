@@ -22,6 +22,8 @@ uses
   FMX.Graphics;
 
 procedure uSoundplayer_TagSet_Mp3;
+procedure Set_ID3v1_Frame;
+procedure Set_ID3v2_Frame;
 procedure uSoundplayer_TagSet_Mp3_SelectCover;
 procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);
 procedure uSoundplayer_TagSet_Mp3_ShowLyrics_AddDialog;
@@ -39,50 +41,8 @@ uses
   uSoundplayer_Player_Actions,
   uSoundplayer_Mouse;
 
-procedure uSoundplayer_TagSet_Mp3;
-var
-  vi: Integer;
+procedure Set_ID3v1_Frame;
 begin
-  extrafe.prog.State := 'addon_soundplayer_tag_mp3';
-
-  vSoundplayer.tag.mp3.Back := TPanel.Create(vSoundplayer.scene.Soundplayer);
-  vSoundplayer.tag.mp3.Back.Name := 'A_SP_Tag_Mp3';
-  vSoundplayer.tag.mp3.Back.Parent := vSoundplayer.scene.Soundplayer;
-  vSoundplayer.tag.mp3.Back.SetBounds((vSoundplayer.scene.Back.Width / 2) - 500,
-    (vSoundplayer.scene.Back.Height / 2) - 250, 1000, 500);
-  vSoundplayer.tag.mp3.Back.Visible := True;
-
-  vSoundplayer.tag.mp3.Back_Blur := TGaussianBlurEffect.Create(vSoundplayer.tag.mp3.Back);
-  vSoundplayer.tag.mp3.Back_Blur.Name := 'A_SP_Back_Blur';
-  vSoundplayer.tag.mp3.Back_Blur.Parent := vSoundplayer.tag.mp3.Back;
-  vSoundplayer.tag.mp3.Back_Blur.BlurAmount := 0.5;
-  vSoundplayer.tag.mp3.Back_Blur.Enabled := False;
-
-  vSoundplayer.tag.mp3.Logo := TImage.Create(vSoundplayer.tag.mp3.Back);
-  vSoundplayer.tag.mp3.Logo.Name := 'A_SP_Tag_Mp3_Logo';
-  vSoundplayer.tag.mp3.Logo.Parent := vSoundplayer.tag.mp3.Back;
-  vSoundplayer.tag.mp3.Logo.SetBounds(vSoundplayer.tag.mp3.Back.Width - 60, 10, 50, 50);
-  vSoundplayer.tag.mp3.Logo.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_tag_mp3.png');
-  vSoundplayer.tag.mp3.Logo.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.Logo.Visible := True;
-
-  vSoundplayer.tag.mp3.TabControl := TTabControl.Create(vSoundplayer.tag.mp3.Back);
-  vSoundplayer.tag.mp3.TabControl.Name := 'A_SP_Tag_Mp3_TabControl';
-  vSoundplayer.tag.mp3.TabControl.Parent := vSoundplayer.tag.mp3.Back;
-  vSoundplayer.tag.mp3.TabControl.SetBounds(10, 60, vSoundplayer.tag.mp3.Back.Width - 20,
-    vSoundplayer.tag.mp3.Back.Height - 100);
-  vSoundplayer.tag.mp3.TabControl.Visible := True;
-
-  for vi := 0 to 1 do
-  begin
-    vSoundplayer.tag.mp3.TabItem[vi] := TTabItem.Create(vSoundplayer.tag.mp3.TabControl);
-    vSoundplayer.tag.mp3.TabItem[vi].Name := 'A_SP_Tag_Mp3_TabItem_' + IntToStr(vi);
-    vSoundplayer.tag.mp3.TabItem[vi].Parent := vSoundplayer.tag.mp3.TabControl;
-    vSoundplayer.tag.mp3.TabItem[vi].Text := 'ID3v' + IntToStr(vi + 1);
-    vSoundplayer.tag.mp3.TabItem[vi].Width := vSoundplayer.tag.mp3.TabControl.Width;
-    vSoundplayer.tag.mp3.TabItem[vi].Height := vSoundplayer.tag.mp3.TabControl.Height;
-    vSoundplayer.tag.mp3.TabItem[vi].Visible := True;
-  end;
   // ID3v1
   vSoundplayer.tag.mp3.ID3v1.Title := TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Title.Name := 'A_SP_Tag_Mp3_ID3v1_Title';
@@ -273,6 +233,12 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Transfer.OnMouseEnter := addons.Soundplayer.Input.mouse.Text.OnMouseEnter;
   vSoundplayer.tag.mp3.ID3v1.Transfer.OnMouseLeave := addons.Soundplayer.Input.mouse.Text.OnMouseLeave;
   vSoundplayer.tag.mp3.ID3v1.Transfer.Visible := True;
+end;
+
+procedure Set_ID3v2_Frame;
+var
+  vi: Integer;
+begin
   // ID3v2
   vSoundplayer.tag.mp3.ID3v2.Title := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Title.Name := 'A_SP_Tag_Mp3_ID3v2_Title';
@@ -470,6 +436,7 @@ begin
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Image.OnMouseEnter;
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Image.OnMouseLeave;
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseDown := addons.Soundplayer.Input.mouse_tag.Image.OnMouseDown;
+    vSoundplayer.tag.mp3.ID3v2.Rate[vi].TagString := vi.ToString;
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].Visible := True;
 
     vSoundplayer.tag.mp3.ID3v2.Rate_Glow[vi] := TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2.Rate[vi]);
@@ -483,7 +450,7 @@ begin
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi] := TCircle.Create(vSoundplayer.tag.mp3.TabItem[1]);
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Name := 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_' + vi.ToString;
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Parent := vSoundplayer.tag.mp3.TabItem[1];
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].SetBounds(109 + (28 * vi), 249, 6, 6);
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].SetBounds(107 + (28 * vi), 247, 10, 10);
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Fill.Bitmap.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images +
       'sp_back.png');
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Fill.Kind := TBrushKind.Bitmap;
@@ -789,6 +756,56 @@ begin
   vSoundplayer.tag.mp3.Button_Cancel.Visible := True;
 end;
 
+procedure uSoundplayer_TagSet_Mp3;
+var
+  vi: Integer;
+begin
+  extrafe.prog.State := 'addon_soundplayer_tag_mp3';
+
+  vSoundplayer.tag.mp3.Back := TPanel.Create(vSoundplayer.scene.Soundplayer);
+  vSoundplayer.tag.mp3.Back.Name := 'A_SP_Tag_Mp3';
+  vSoundplayer.tag.mp3.Back.Parent := vSoundplayer.scene.Soundplayer;
+  vSoundplayer.tag.mp3.Back.SetBounds((vSoundplayer.scene.Back.Width / 2) - 500,
+    (vSoundplayer.scene.Back.Height / 2) - 250, 1000, 500);
+  vSoundplayer.tag.mp3.Back.Visible := True;
+
+  vSoundplayer.tag.mp3.Back_Blur := TGaussianBlurEffect.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Back_Blur.Name := 'A_SP_Back_Blur';
+  vSoundplayer.tag.mp3.Back_Blur.Parent := vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Back_Blur.BlurAmount := 0.5;
+  vSoundplayer.tag.mp3.Back_Blur.Enabled := False;
+
+  vSoundplayer.tag.mp3.Logo := TImage.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Logo.Name := 'A_SP_Tag_Mp3_Logo';
+  vSoundplayer.tag.mp3.Logo.Parent := vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Logo.SetBounds(vSoundplayer.tag.mp3.Back.Width - 60, 10, 50, 50);
+  vSoundplayer.tag.mp3.Logo.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_tag_mp3.png');
+  vSoundplayer.tag.mp3.Logo.WrapMode := TImageWrapMode.Fit;
+  vSoundplayer.tag.mp3.Logo.Visible := True;
+
+  vSoundplayer.tag.mp3.TabControl := TTabControl.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.TabControl.Name := 'A_SP_Tag_Mp3_TabControl';
+  vSoundplayer.tag.mp3.TabControl.Parent := vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.TabControl.SetBounds(10, 60, vSoundplayer.tag.mp3.Back.Width - 20,
+    vSoundplayer.tag.mp3.Back.Height - 100);
+  vSoundplayer.tag.mp3.TabControl.Visible := True;
+
+  for vi := 0 to 1 do
+  begin
+    vSoundplayer.tag.mp3.TabItem[vi] := TTabItem.Create(vSoundplayer.tag.mp3.TabControl);
+    vSoundplayer.tag.mp3.TabItem[vi].Name := 'A_SP_Tag_Mp3_TabItem_' + IntToStr(vi);
+    vSoundplayer.tag.mp3.TabItem[vi].Parent := vSoundplayer.tag.mp3.TabControl;
+    vSoundplayer.tag.mp3.TabItem[vi].Text := 'ID3v' + IntToStr(vi + 1);
+    vSoundplayer.tag.mp3.TabItem[vi].Width := vSoundplayer.tag.mp3.TabControl.Width;
+    vSoundplayer.tag.mp3.TabItem[vi].Height := vSoundplayer.tag.mp3.TabControl.Height;
+    vSoundplayer.tag.mp3.TabItem[vi].Visible := True;
+  end;
+
+  Set_ID3v1_Frame;
+  Set_ID3v2_Frame;
+
+end;
+
 procedure uSoundplayer_TagSet_Mp3_SelectCover;
 begin
   vSoundplayer.tag.mp3.Back_Blur.Enabled := True;
@@ -811,12 +828,10 @@ begin
     vSoundplayer.tag.mp3.Cover_Select.Panel.Height - 30);
   vSoundplayer.tag.mp3.Cover_Select.Main.Visible := True;
 
-  vSoundplayer.tag.mp3.Cover_Select.List :=
-    TListBox.Create(vSoundplayer.tag.mp3.Cover_Select.Main);
+  vSoundplayer.tag.mp3.Cover_Select.List := TListBox.Create(vSoundplayer.tag.mp3.Cover_Select.Main);
   vSoundplayer.tag.mp3.Cover_Select.List.Name := 'A_SP_Tag_Mp3_CoverSelet_Main_List';
   vSoundplayer.tag.mp3.Cover_Select.List.Parent := vSoundplayer.tag.mp3.Cover_Select.Main;
-  vSoundplayer.tag.mp3.Cover_Select.List.SetBounds(5, 5,
-    vSoundplayer.tag.mp3.Cover_Select.Main.Width - 10,
+  vSoundplayer.tag.mp3.Cover_Select.List.SetBounds(5, 5, vSoundplayer.tag.mp3.Cover_Select.Main.Width - 10,
     vSoundplayer.tag.mp3.Cover_Select.Main.Height - 60);
   vSoundplayer.tag.mp3.Cover_Select.List.Items.Add('Front Cover');
   vSoundplayer.tag.mp3.Cover_Select.List.Items.Add('Back Cover');
@@ -827,26 +842,22 @@ begin
   vSoundplayer.tag.mp3.Cover_Select.List.ItemHeight := 37;
   vSoundplayer.tag.mp3.Cover_Select.List.Visible := True;
 
-  vSoundplayer.tag.mp3.Cover_Select.Load :=
-    TButton.Create(vSoundplayer.tag.mp3.Cover_Select.Main);
+  vSoundplayer.tag.mp3.Cover_Select.Load := TButton.Create(vSoundplayer.tag.mp3.Cover_Select.Main);
   vSoundplayer.tag.mp3.Cover_Select.Load.Name := 'A_SP_Tag_Mp3_CoverSelet_Main_Load';
   vSoundplayer.tag.mp3.Cover_Select.Load.Parent := vSoundplayer.tag.mp3.Cover_Select.Main;
-  vSoundplayer.tag.mp3.Cover_Select.Load.SetBounds(20,
-    vSoundplayer.tag.mp3.Cover_Select.Main.Height - 40, 50, 30);
+  vSoundplayer.tag.mp3.Cover_Select.Load.SetBounds(20, vSoundplayer.tag.mp3.Cover_Select.Main.Height -
+    40, 50, 30);
   vSoundplayer.tag.mp3.Cover_Select.Load.Text := 'Load';
-  vSoundplayer.tag.mp3.Cover_Select.Load.OnClick :=
-    addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Cover_Select.Load.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
   vSoundplayer.tag.mp3.Cover_Select.Load.Visible := True;
 
-  vSoundplayer.tag.mp3.Cover_Select.Cancel :=
-    TButton.Create(vSoundplayer.tag.mp3.Cover_Select.Main);
+  vSoundplayer.tag.mp3.Cover_Select.Cancel := TButton.Create(vSoundplayer.tag.mp3.Cover_Select.Main);
   vSoundplayer.tag.mp3.Cover_Select.Cancel.Name := 'A_SP_Tag_Mp3_CoverSelet_Main_Cancel';
   vSoundplayer.tag.mp3.Cover_Select.Cancel.Parent := vSoundplayer.tag.mp3.Cover_Select.Main;
-  vSoundplayer.tag.mp3.Cover_Select.Cancel.SetBounds(vSoundplayer.tag.mp3.Cover_Select.Main.Width
-    - 70, vSoundplayer.tag.mp3.Cover_Select.Main.Height - 40, 50, 30);
+  vSoundplayer.tag.mp3.Cover_Select.Cancel.SetBounds(vSoundplayer.tag.mp3.Cover_Select.Main.Width - 70,
+    vSoundplayer.tag.mp3.Cover_Select.Main.Height - 40, 50, 30);
   vSoundplayer.tag.mp3.Cover_Select.Cancel.Text := 'Cancel';
-  vSoundplayer.tag.mp3.Cover_Select.Cancel.OnClick :=
-    addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Cover_Select.Cancel.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
   vSoundplayer.tag.mp3.Cover_Select.Cancel.Visible := True;
 end;
 
@@ -855,7 +866,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.tag.mp3.Back);
-  uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
+  uSoundplayer_Player_Actions.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
 end;
 
 procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);
@@ -885,8 +896,7 @@ begin
     vSoundplayer.tag.mp3.Lyrics_Add.Panel.Height - 30);
   vSoundplayer.tag.mp3.Lyrics_Add.Main.Visible := True;
 
-  vSoundplayer.tag.mp3.Lyrics_Add.Radio_Above :=
-    TRadioButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
+  vSoundplayer.tag.mp3.Lyrics_Add.Radio_Above := TRadioButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Above.Name := 'A_SP_Tag_Mp3_LyricsAdd_Main_Radio_Above';
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Above.Parent := vSoundplayer.tag.mp3.Lyrics_Add.Main;
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Above.SetBounds(10, 20, 280, 24);
@@ -895,39 +905,31 @@ begin
     addons.Soundplayer.Input.mouse_tag.Radio.OnMouseClick;
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Above.Visible := True;
 
-  vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear :=
-    TRadioButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
+  vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear := TRadioButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear.Name := 'A_SP_Tag_Mp3_LyricsAdd_Main_Radio_Clear';
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear.Parent := vSoundplayer.tag.mp3.Lyrics_Add.Main;
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear.SetBounds(10, 60, 280, 24);
-  vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear.Text :=
-    'Clear the current lyrics and add the new ones.';
+  vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear.Text := 'Clear the current lyrics and add the new ones.';
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear.OnClick :=
     addons.Soundplayer.Input.mouse_tag.Radio.OnMouseClick;
   vSoundplayer.tag.mp3.Lyrics_Add.Radio_Clear.Visible := True;
 
-  vSoundplayer.tag.mp3.Lyrics_Add.Add :=
-    TButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
+  vSoundplayer.tag.mp3.Lyrics_Add.Add := TButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
   vSoundplayer.tag.mp3.Lyrics_Add.Add.Name := 'A_SP_Tag_Mp3_LyricsAdd_Main_Add';
   vSoundplayer.tag.mp3.Lyrics_Add.Add.Parent := vSoundplayer.tag.mp3.Lyrics_Add.Main;
-  vSoundplayer.tag.mp3.Lyrics_Add.Add.SetBounds(20,
-    vSoundplayer.tag.mp3.Lyrics_Add.Main.Height - 40, 50, 30);
+  vSoundplayer.tag.mp3.Lyrics_Add.Add.SetBounds(20, vSoundplayer.tag.mp3.Lyrics_Add.Main.Height - 40, 50, 30);
   vSoundplayer.tag.mp3.Lyrics_Add.Add.Text := 'Add';
   vSoundplayer.tag.mp3.Lyrics_Add.Add.Enabled := False;
-  vSoundplayer.tag.mp3.Lyrics_Add.Add.OnClick :=
-    addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Lyrics_Add.Add.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
   vSoundplayer.tag.mp3.Lyrics_Add.Add.Visible := True;
 
-  vSoundplayer.tag.mp3.Lyrics_Add.Cancel :=
-    TButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
+  vSoundplayer.tag.mp3.Lyrics_Add.Cancel := TButton.Create(vSoundplayer.tag.mp3.Lyrics_Add.Main);
   vSoundplayer.tag.mp3.Lyrics_Add.Cancel.Name := 'A_SP_Tag_Mp3_LyricsAdd_Main_Cancel';
   vSoundplayer.tag.mp3.Lyrics_Add.Cancel.Parent := vSoundplayer.tag.mp3.Lyrics_Add.Main;
-  vSoundplayer.tag.mp3.Lyrics_Add.Cancel.SetBounds
-    (vSoundplayer.tag.mp3.Lyrics_Add.Main.Width - 70, vSoundplayer.tag.mp3.Lyrics_Add.Main.Height
-    - 40, 50, 30);
+  vSoundplayer.tag.mp3.Lyrics_Add.Cancel.SetBounds(vSoundplayer.tag.mp3.Lyrics_Add.Main.Width - 70,
+    vSoundplayer.tag.mp3.Lyrics_Add.Main.Height - 40, 50, 30);
   vSoundplayer.tag.mp3.Lyrics_Add.Cancel.Text := 'Cancel';
-  vSoundplayer.tag.mp3.Lyrics_Add.Cancel.OnClick :=
-    addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Lyrics_Add.Cancel.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
   vSoundplayer.tag.mp3.Lyrics_Add.Cancel.Visible := True;
 end;
 

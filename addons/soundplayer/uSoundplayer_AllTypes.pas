@@ -42,7 +42,7 @@ type
     Lyrics_LanguageID: TLanguageID;
     Lyrics_Description: String;
     TagError: Integer;
-    Rating_Befor_Save: Integer;
+    Rating_Before_Save: Integer;
     Rating: Integer;
   end;
 
