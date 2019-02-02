@@ -13,9 +13,8 @@ uses
   uWeather_Mouse in 'addons\weather\uWeather_Mouse.pas',
   uMain_Config_Info in 'main\configuration\uMain_Config_Info.pas',
   uMain_Actions in 'main\uMain_Actions.pas',
-  uSoundplayer_Player_Actions in 'addons\soundplayer\uSoundplayer_Player_Actions.pas',
   uSoundplayer_Playlist_Actions in 'addons\soundplayer\uSoundplayer_Playlist_Actions.pas',
-  uSoundplayer_Actions in 'addons\soundplayer\uSoundplayer_Actions.pas',
+  uSoundplayer in 'addons\soundplayer\uSoundplayer.pas',
   uSoundplayer_Tag_Mp3 in 'addons\soundplayer\_tag_libraries\mp3\uSoundplayer_Tag_Mp3.pas',
   uWeather_SetAll in 'addons\weather\uWeather_SetAll.pas',
   uWeather_Config_Towns in 'addons\weather\configuration\uWeather_Config_Towns.pas',
@@ -140,7 +139,8 @@ uses
   uWeather_Providers_OpenWeatherMap in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas',
   uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas',
   uMain_Config_Info_Credits in 'main\configuration\uMain_Config_Info_Credits.pas',
-  uSoundplayer_Sounds in 'addons\soundplayer\uSoundplayer_Sounds.pas';
+  uSoundplayer_Sounds in 'addons\soundplayer\uSoundplayer_Sounds.pas',
+  uSoundplayer_Player in 'addons\soundplayer\uSoundplayer_Player.pas';
 
 {$R *.res}
 

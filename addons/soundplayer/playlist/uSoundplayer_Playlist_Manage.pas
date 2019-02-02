@@ -19,7 +19,7 @@ procedure uSoundPlayer_Playlist_Manage_Free;
 
 procedure uSoundplayer_Playlist_Manage_AddPlaylistToGrid;
 
-procedure uSoundplayer_Playlist_Manage_LoadPlaylist(vPlaylistNum: Integer);
+procedure LoadPlaylist(vPlaylistNum: Integer);
 
 procedure uSoundplayer_Playlist_Manage_Lock(vActive: Boolean);
 
@@ -35,7 +35,8 @@ uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
   uSoundplayer_Playlist_Actions,
-  uSoundplayer_Actions;
+  uSoundplayer,
+  uSoundplayer_Player;
 
 procedure uSoundPlayer_Playlist_Manage_Panel;
 var
@@ -192,7 +193,8 @@ begin
     vSoundplayer.Playlist.Manage.main.Merge := TImage.Create(vSoundplayer.Playlist.Manage.main.Panel);
     vSoundplayer.Playlist.Manage.main.Merge.Name := 'A_SP_Playlist_Manage_Merge';
     vSoundplayer.Playlist.Manage.main.Merge.Parent := vSoundplayer.Playlist.Manage.main.Panel;
-    vSoundplayer.Playlist.Manage.main.Merge.SetBounds(vSoundplayer.Playlist.Manage.main.Panel.Width - 44, 160, 34, 34);
+    vSoundplayer.Playlist.Manage.main.Merge.SetBounds(vSoundplayer.Playlist.Manage.main.Panel.Width - 44,
+      160, 34, 34);
     vSoundplayer.Playlist.Manage.main.Merge.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
       'sp_merge.png');
     vSoundplayer.Playlist.Manage.main.Merge.WrapMode := TImageWrapMode.Fit;
@@ -219,7 +221,8 @@ begin
     vSoundplayer.Playlist.Manage.main.Split := TImage.Create(vSoundplayer.Playlist.Manage.main.Panel);
     vSoundplayer.Playlist.Manage.main.Split.Name := 'A_SP_Playlist_Manage_Split';
     vSoundplayer.Playlist.Manage.main.Split.Parent := vSoundplayer.Playlist.Manage.main.Panel;
-    vSoundplayer.Playlist.Manage.main.Split.SetBounds(vSoundplayer.Playlist.Manage.main.Panel.Width - 44, 200, 34, 34);
+    vSoundplayer.Playlist.Manage.main.Split.SetBounds(vSoundplayer.Playlist.Manage.main.Panel.Width - 44,
+      200, 34, 34);
     vSoundplayer.Playlist.Manage.main.Split.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
       'sp_split.png');
     vSoundplayer.Playlist.Manage.main.Split.WrapMode := TImageWrapMode.Fit;
@@ -250,7 +253,7 @@ procedure uSoundPlayer_Playlist_Manage_Free;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.Playlist.Manage.Panel);
-  uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Manage_Icon,
+  uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Manage_Icon,
     vSoundplayer.Playlist.Manage_Icon_Glow);
   extrafe.prog.State := 'addon_soundplayer';
 end;
@@ -274,14 +277,18 @@ begin
   end;
 end;
 
-procedure uSoundplayer_Playlist_Manage_LoadPlaylist(vPlaylistNum: Integer);
+procedure LoadPlaylist(vPlaylistNum: Integer);
 begin
   if vPlaylistNum <> addons.soundplayer.Playlist.Active then
   begin
     addons.soundplayer.Playlist.Active := vPlaylistNum;
     FreeAndNil(addons.soundplayer.Playlist.List.Playlist);
     FreeAndNil(addons.soundplayer.Playlist.List.Songs);
-    BASS_ChannelStop(sound.str_music[1]);
+    if sound.str_music[1] <> 0 then
+    begin
+      BASS_ChannelStop(sound.str_music[1]);
+      BASS_StreamFree(sound.str_music[1]);
+    end;
     addons.soundplayer.Ini.Ini.WriteString('Playlists', 'ActivePlaylistName',
       vSoundplayer.Playlist.Manage.main.Grid.Cells[1, vPlaylistNum]);
     addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'ActivePlaylist',
@@ -289,11 +296,15 @@ begin
     addons.soundplayer.Player.Playing_Now := 0;
     vSoundplayer.Player.Song_Pos.Value := 0;
     vSoundplayer.Player.Song_PlayTime.Text := '00:00:00';
-    uSoundPlayer_Actions.Set_WithActivePlaylist(addons.soundplayer.Playlist.Active);
-    vSoundplayer.info.Back_Left_Ani.Enabled := True;
-    vSoundplayer.info.Back_Left.Position.X := 2;
-    vSoundplayer.info.Back_Right_Ani.Enabled := True;
-    vSoundplayer.info.Back_Right.Position.X := vSoundplayer.scene.Back_Info.Width - 602;
+    vSoundplayer.Player.Song_Title.Text := '';
+    vSoundplayer.Player.Song_Time.Text := '00:00:00';
+    uSoundplayer.Set_WithActivePlaylist(addons.soundplayer.Playlist.Active);
+    if addons.soundplayer.Playlist.List.Songs_Num > 0 then
+      Load_Song(addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now], False,
+        addons.soundplayer.Volume.Vol / 100);
+    uSoundplayer_Player.State(False, False, False, False, False, '');
+    uSoundplayer_Player.Buttons_State(False, False, False, '');
+    uSoundplayer.Set_Animations;
     uSoundPlayer_Playlist_Manage_Free;
     if vSoundplayer.Playlist.Remove_Icon_Grey.Enabled then
       vSoundplayer.Playlist.Remove_Icon_Grey.Enabled := False
@@ -306,7 +317,7 @@ begin
   begin
     vSoundplayer.Playlist.Manage.main.Edit.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
       'sp_unlock.png');
-    BASS_ChannelPlay(addons.soundplayer.Sound.Effects[1], False);
+    BASS_ChannelPlay(addons.soundplayer.sound.Effects[1], False);
     if vSoundplayer.Playlist.Manage.main.Grid.Selected <> 0 then
       vSoundplayer.Playlist.Manage.main.Up_Grey.Enabled := False;
     if vSoundplayer.Playlist.Manage.main.Grid.Selected <> vSoundplayer.Playlist.Manage.main.Grid.RowCount - 1
@@ -319,7 +330,7 @@ begin
   begin
     vSoundplayer.Playlist.Manage.main.Edit.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
       'sp_lock.png');
-    BASS_ChannelPlay(addons.soundplayer.Sound.Effects[0], False);
+    BASS_ChannelPlay(addons.soundplayer.sound.Effects[0], False);
     vSoundplayer.Playlist.Manage.main.Up_Grey.Enabled := True;
     vSoundplayer.Playlist.Manage.main.Down_Grey.Enabled := True;
     vSoundplayer.Playlist.Manage.main.Merge_Grey.Enabled := True;

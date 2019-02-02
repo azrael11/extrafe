@@ -20,9 +20,6 @@ uses
   FMX.Menus,
   BASS;
 
-procedure uSoundPlayer_Playlist_Actions_OnOver(vImage: TImage; vGlow: TGlowEffect);
-procedure uSoundPlayer_Playlist_Actions_OnLeave(vImage: TImage; vGlow: TGlowEffect);
-
 procedure uSoundplayer_Playlist_Actions_SortPlaylistIni;
 
 procedure uSoundplayer_Playlist_Actions_EditPlaylist(vActive: Boolean);
@@ -76,11 +73,11 @@ uses
   uLoad,
   uLoad_AllTypes,
   uWindows,
-  uSoundplayer_Actions,
+  uSoundplayer,
   uSoundplayer_Mouse,
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
-  uSoundplayer_Player_Actions,
+  uSoundplayer_Player,
   uSoundplayer_Playlist_Create,
   uSoundplayer_Tag_Get;
 
@@ -191,8 +188,6 @@ begin
     end;
   end;
 
-  addons.soundplayer.Player.Playing_Now := 0;
-  addons.soundplayer.Player.LastPlayed := 0;
   vSoundplayer.Playlist.List.Selected := addons.soundplayer.Player.LastPlayed;
   if addons.soundplayer.Playlist.List.Songs.Count > 1 then
   begin
@@ -210,11 +205,6 @@ begin
   vSoundplayer.Playlist.List.Selected := 0;
   vSoundplayer.info.Total_Songs.Text := '1/' + IntToStr(vk);
   vSoundplayer.info.Time_Total.Text := addons.soundplayer.Playlist.List.Songs_Total_Time;
-
-  BASS_ChannelStop(sound.str_music[1]);
-  sound.str_music[1] := BASS_StreamCreateFile(False,
-    PChar(addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now]), 0, 0,
-    BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
 end;
 
 procedure AddSongs_pls(mPL_Num: SmallInt);
@@ -274,7 +264,7 @@ procedure uSoundPlayer_Playlist_Actions_OnDoubleClick(const Column: TColumn; con
 begin
   vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '3';
   addons.soundplayer.Player.Playing_Now := Row;
-  uSoundplayer_Player_Actions_UpdateLastPlayedSong(addons.soundplayer.Player.Playing_Now);
+  uSoundplayer_Player.Update_Last_Song(addons.soundplayer.Player.Playing_Now);
   BASS_ChannelStop(sound.str_music[1]);
   BASS_StreamFree(sound.str_music[1]);
   sound.str_music[1] := BASS_StreamCreateFile(False,
@@ -289,7 +279,7 @@ begin
     addons.soundplayer.Player.Play := True;
     addons.soundplayer.Player.Pause := False;
     vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
-    uSoundPlayer_PAction_ShowTagDetails(addons.soundplayer.Player.Playing_Now);
+    uSoundplayer_Player.Get_Tag(addons.soundplayer.Player.Playing_Now);
   end
   else if (addons.soundplayer.Player.Pause = True) or (addons.soundplayer.Player.Stop = True) or
     ((addons.soundplayer.Player.Play = False) and (addons.soundplayer.Player.Stop = False) and
@@ -300,7 +290,7 @@ begin
     addons.soundplayer.Player.Play := False;
     addons.soundplayer.Player.Pause := False;
     vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '1';
-    uSoundPlayer_PAction_ShowTagDetails(addons.soundplayer.Player.Playing_Now);
+    uSoundplayer_Player.Get_Tag(addons.soundplayer.Player.Playing_Now);
   end;
   if (addons.soundplayer.Playlist.List.Songs_Num - 1 <> Row) and (Row <> 0) then
   begin
@@ -344,28 +334,8 @@ begin
   vSoundplayer.info.Back_Right_Ani.Enabled := False;
   vSoundplayer.info.Back_Right.Position.X := vSoundplayer.scene.Back_Info.Width - 602;
   vSoundplayer.info.Back_Right_Ani.Enabled := True;
-  uSoundplayer_Tag_LoadIcon;
+  uSoundplayer_Tag_Get.Set_Icon;
 end;
-
-/// /////////////////////////////////////////////////////////////////////////////
-procedure uSoundPlayer_Playlist_Actions_OnOver(vImage: TImage; vGlow: TGlowEffect);
-begin
-  vImage.Scale.X := 1.1;
-  vImage.Scale.Y := 1.1;
-  vImage.Position.X := vImage.Position.X - ((vImage.Width * 0.1) / 2);
-  vImage.Position.Y := vImage.Position.Y - ((vImage.Height * 0.1) / 2);
-  vGlow.Enabled := True;
-end;
-
-procedure uSoundPlayer_Playlist_Actions_OnLeave(vImage: TImage; vGlow: TGlowEffect);
-begin
-  vImage.Scale.X := 1;
-  vImage.Scale.Y := 1;
-  vImage.Position.X := vImage.Position.X + ((vImage.Width * 0.1) / 2);
-  vImage.Position.Y := vImage.Position.Y + ((vImage.Height * 0.1) / 2);
-  vGlow.Enabled := False;
-end;
-
 ///
 procedure uSoundplayer_Playlist_Actions_EditPlaylist(vActive: Boolean);
 begin
@@ -535,7 +505,7 @@ begin
         PChar(addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now]), 0, 0,
         BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
       BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.soundplayer.Volume.Vol / 100);
-      uSoundPlayer_PAction_ShowTagDetails(addons.soundplayer.Player.Playing_Now);
+      uSoundplayer_Player.Get_Tag(addons.soundplayer.Player.Playing_Now);
       if (addons.soundplayer.Player.Play) then
       begin
         BASS_ChannelPlay(sound.str_music[1], False);
@@ -681,7 +651,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled := False;
   end;
 
-  uSoundplayer_Player_Actions_UpdateLastPlayedSong(addons.soundplayer.Player.Playing_Now);
+  uSoundplayer_Player.Update_Last_Song(addons.soundplayer.Player.Playing_Now);
 
 end;
 
@@ -715,7 +685,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled := False;
   end;
 
-  uSoundplayer_Player_Actions_UpdateLastPlayedSong(addons.soundplayer.Player.Playing_Now);
+  uSoundplayer_Player.Update_Last_Song(addons.soundplayer.Player.Playing_Now);
 
 end;
 
@@ -786,7 +756,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled := False;
   end;
 
-  uSoundplayer_Player_Actions_UpdateLastPlayedSong(addons.soundplayer.Player.Playing_Now);
+  uSoundplayer_Player.Update_Last_Song(addons.soundplayer.Player.Playing_Now);
 
   uSoundplayer_Playlist_Actions_Edit_Delete_Cancel;
 end;
@@ -794,7 +764,7 @@ end;
 procedure uSoundplayer_Playlist_Actions_Edit_Delete_Cancel;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := False;
-  uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Songs_Edit.Delete,
+  uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Songs_Edit.Delete,
     vSoundplayer.Playlist.Songs_Edit.Delete_Glow);
   extrafe.prog.State := 'addon_soundplayer';
   FreeAndNil(vSoundplayer.Playlist.Remove_Song.Remove);

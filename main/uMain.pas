@@ -37,7 +37,7 @@ uses
   uMain_Config_Info,
   uMain_Config_Themes,
   uMain_COnfig_Profile,
-  uSoundplayer_Actions;
+  uSoundplayer;
 
 procedure uMain_Load;
 begin

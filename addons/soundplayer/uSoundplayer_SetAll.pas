@@ -26,6 +26,7 @@ uses
   FMX.ExtCtrls,
   FMX.Layouts,
   uSnippet_Image,
+  ALFMXObjects,
   ALFmxStdCtrls,
   main;
 
@@ -35,6 +36,8 @@ procedure uSoundplayer_SetAll_Player;
 procedure uSoundplayer_SetAll_Info;
 procedure uSoundplayer_SetAll_Playlist;
 procedure uSoundplayer_SetAll_Cover;
+
+procedure Set_First;
 
 procedure uSoundplayer_SetRemoveSongDialog;
 
@@ -47,9 +50,9 @@ uses
   uMain_SetAll,
   uMain_AllTypes,
   uSoundplayer_AllTypes,
-  uSoundplayer_Actions,
+  uSoundplayer,
   uSoundplayer_Mouse,
-  uSoundplayer_Player_Actions,
+  uSoundplayer_Player,
   uSoundplayer_Playlist_Actions,
   BASS;
 
@@ -185,7 +188,6 @@ begin
   // Last the cover for can do fullscreen
   uSoundplayer_SetAll_Cover;
 
-
   vSoundplayer.scene.OpenDialog := TOpenDialog.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_AddSongs';
   vSoundplayer.scene.OpenDialog.Parent := vSoundplayer.scene.soundplayer;
@@ -201,7 +203,7 @@ begin
   vSoundplayer.timer.Song.OnTimer := vSoundplayer.timer.timer.OnTimer;
   vSoundplayer.timer.Song.Enabled := False;
 
-  uSoundPlayer_Actions.Load;
+  uSoundplayer.Load;
 end;
 
 procedure uSoundplayer_SetAll_Player;
@@ -225,24 +227,24 @@ begin
   vSoundplayer.player.Play.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
   vSoundplayer.player.Play.Visible := True;
 
-  vSoundplayer.player.Play_Glow := TGlowEffect.Create(vSoundplayer.player.Play);
-  vSoundplayer.player.Play_Glow.Name := 'A_SP_Player_Play_Glow';
-  vSoundplayer.player.Play_Glow.Parent := vSoundplayer.player.Play;
-  vSoundplayer.player.Play_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vSoundplayer.player.Play_Glow.Softness := 0.4;
-  vSoundplayer.player.Play_Glow.Opacity := 0.9;
-  vSoundplayer.player.Play_Glow.Enabled := False;
-
   vSoundplayer.player.Play_Grey := TMonochromeEffect.Create(vSoundplayer.player.Play);
   vSoundplayer.player.Play_Grey.Name := 'A_SP_Player_Play_Grey';
   vSoundplayer.player.Play_Grey.Parent := vSoundplayer.player.Play;
   vSoundplayer.player.Play_Grey.Enabled := False;
 
-  vSoundplayer.Player.Play_Color:= TFillRGBEffect.Create(vSoundplayer.Player.Play);
-  vSoundplayer.Player.Play_Color.Name:= 'A_SP_Player_Stop_Color';
-  vSoundplayer.Player.Play_Color.Parent:=  vSoundplayer.Player.Play;
-  vSoundplayer.Player.Play_Color.Color:= TAlphaColorRec.Aliceblue;
-  vSoundplayer.Player.Play_Color.Enabled:= False;
+  vSoundplayer.player.Play_Color := TFillRGBEffect.Create(vSoundplayer.player.Play);
+  vSoundplayer.player.Play_Color.Name := 'A_SP_Player_Stop_Color';
+  vSoundplayer.player.Play_Color.Parent := vSoundplayer.player.Play;
+  vSoundplayer.player.Play_Color.Color := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Play_Color.Enabled := False;
+
+  vSoundplayer.player.Play_Glow := TGlowEffect.Create(vSoundplayer.player.Play_Color);
+  vSoundplayer.player.Play_Glow.Name := 'A_SP_Player_Play_Glow';
+  vSoundplayer.player.Play_Glow.Parent := vSoundplayer.player.Play_Color;
+  vSoundplayer.player.Play_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Play_Glow.Softness := 0.4;
+  vSoundplayer.player.Play_Glow.Opacity := 0.9;
+  vSoundplayer.player.Play_Glow.Enabled := True;
 
   vSoundplayer.player.Stop := Timage.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Stop.Name := 'A_SP_Player_Stop_Image';
@@ -268,11 +270,11 @@ begin
   vSoundplayer.player.Stop_Grey.Parent := vSoundplayer.player.Stop;
   vSoundplayer.player.Stop_Grey.Enabled := False;
 
-  vSoundplayer.Player.Stop_Color:= TFillRGBEffect.Create(vSoundplayer.Player.Stop);
-  vSoundplayer.Player.Stop_Color.Name:= 'A_SP_Player_Stop_Color';
-  vSoundplayer.Player.Stop_Color.Parent:=  vSoundplayer.Player.Stop;
-  vSoundplayer.Player.Stop_Color.Color:= TAlphaColorRec.Red;
-  vSoundplayer.Player.Stop_Color.Enabled:= False;
+  vSoundplayer.player.Stop_Color := TFillRGBEffect.Create(vSoundplayer.player.Stop);
+  vSoundplayer.player.Stop_Color.Name := 'A_SP_Player_Stop_Color';
+  vSoundplayer.player.Stop_Color.Parent := vSoundplayer.player.Stop;
+  vSoundplayer.player.Stop_Color.Color := TAlphaColorRec.Red;
+  vSoundplayer.player.Stop_Color.Enabled := False;
 
   vSoundplayer.player.Previous := Timage.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Previous.Name := 'A_SP_Player_Previous_Image';
@@ -408,11 +410,11 @@ begin
   vSoundplayer.player.Suffle_Grey.Parent := vSoundplayer.player.Suffle;
   vSoundplayer.player.Suffle_Grey.Enabled := False;
 
-  vSoundplayer.Player.Suffle_Color:= TFillRGBEffect.Create(vSoundplayer.Player.Suffle);
-  vSoundplayer.Player.Suffle_Color.Name:= 'A_SP_Player_Suffle_Color';
-  vSoundplayer.Player.Suffle_Color.Parent:=  vSoundplayer.Player.Suffle;
-  vSoundplayer.Player.Suffle_Color.Color:= TAlphaColorRec.Aquamarine;
-  vSoundplayer.Player.Suffle_Color.Enabled:= False;
+  vSoundplayer.player.Suffle_Color := TFillRGBEffect.Create(vSoundplayer.player.Suffle);
+  vSoundplayer.player.Suffle_Color.Name := 'A_SP_Player_Suffle_Color';
+  vSoundplayer.player.Suffle_Color.Parent := vSoundplayer.player.Suffle;
+  vSoundplayer.player.Suffle_Color.Color := TAlphaColorRec.Aquamarine;
+  vSoundplayer.player.Suffle_Color.Enabled := False;
 
   vSoundplayer.player.Song_Title := TText.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Song_Title.Name := 'A_SP_Player_SongTitle';
@@ -544,7 +546,7 @@ begin
   vSoundplayer.player.Speaker_Left := Timage.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Speaker_Left.Name := 'A_SP_Player_Speaker_Left_Image';
   vSoundplayer.player.Speaker_Left.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.player.Speaker_Left.SetBounds(15, -25, 128, 250);
+  vSoundplayer.player.Speaker_Left.SetBounds(38, 15, 85, 150);
   vSoundplayer.player.Speaker_Left.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_speaker.png');
   vSoundplayer.player.Speaker_Left.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
   vSoundplayer.player.Speaker_Left.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
@@ -560,7 +562,7 @@ begin
   vSoundplayer.player.Speaker_Left_Percent := TText.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Speaker_Left_Percent.Name := 'A_SP_Player_Speaker_Left_Percent';
   vSoundplayer.player.Speaker_Left_Percent.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.player.Speaker_Left_Percent.SetBounds(29, 10, 100, 24);
+  vSoundplayer.player.Speaker_Left_Percent.SetBounds(29, -5, 100, 24);
   vSoundplayer.player.Speaker_Left_Percent.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vSoundplayer.player.Speaker_Left_Percent.Text := '';
   vSoundplayer.player.Speaker_Left_Percent.Visible := True;
@@ -585,41 +587,20 @@ begin
   vSoundplayer.player.Speaker_Left_Volume_Pos.Thumb.CornerType := TCornerType.Bevel;
   vSoundplayer.player.Speaker_Left_Volume_Pos.Thumb.Name := 'A_SP_Player_Speaker_Left_VolumePos_Thumb';
   vSoundplayer.player.Speaker_Left_Volume_Pos.OnChange := addons.soundplayer.Input.mouse.Trackbar.OnChange;
-  vSoundplayer.player.Speaker_Left_Volume_Pos.OnMouseUp := addons.soundplayer.Input.mouse.Trackbar.OnMouseUp;
-  vSoundplayer.player.Speaker_Left_Volume_Pos.OnMouseDown :=
-    addons.soundplayer.Input.mouse.Trackbar.OnMouseDown;
+  vSoundplayer.player.Speaker_Left_Volume_Pos.OnMouseUp :=
+    addons.soundplayer.Input.mouse.Trackbar_Thumb.OnMouseUp;
+  vSoundplayer.player.Speaker_Left_Volume_Pos.Thumb.OnMouseDown :=
+    addons.soundplayer.Input.mouse.Trackbar_Thumb.OnMouseDown;
   vSoundplayer.player.Speaker_Left_Volume_Pos.Thumb.OnMouseEnter :=
     addons.soundplayer.Input.mouse.Trackbar_Thumb.OnMouseEnter;
   vSoundplayer.player.Speaker_Left_Volume_Pos.Thumb.OnMouseLeave :=
     addons.soundplayer.Input.mouse.Trackbar_Thumb.OnMouseLeave;
   vSoundplayer.player.Speaker_Left_Volume_Pos.Visible := True;
 
-  vSoundplayer.player.Speaker_Left_Lock_Volume := Timage.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.player.Speaker_Left_Lock_Volume.Name := 'A_SP_Player_Speaker_Lock_Left_Volume';
-  vSoundplayer.player.Speaker_Left_Lock_Volume.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.player.Speaker_Left_Lock_Volume.SetBounds(10, 5, 32, 32);
-  vSoundplayer.player.Speaker_Left_Lock_Volume.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
-    'sp_lock.png');
-  vSoundplayer.player.Speaker_Left_Lock_Volume.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.player.Speaker_Left_Lock_Volume.OnMouseEnter :=
-    addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.player.Speaker_Left_Lock_Volume.OnMouseLeave :=
-    addons.soundplayer.Input.mouse.Image.OnMouseLeave;
-  vSoundplayer.player.Speaker_Left_Lock_Volume.Visible := True;
-
-  vSoundplayer.player.Speaker_Left_Lock_Volume_Glow :=
-    TGlowEffect.Create(vSoundplayer.player.Speaker_Left_Lock_Volume);
-  vSoundplayer.player.Speaker_Left_Lock_Volume_Glow.Name := 'A_SP_Player_Speaker_Lock_Left_Volume_Glow';
-  vSoundplayer.player.Speaker_Left_Lock_Volume_Glow.Parent := vSoundplayer.player.Speaker_Left_Lock_Volume;
-  vSoundplayer.player.Speaker_Left_Lock_Volume_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vSoundplayer.player.Speaker_Left_Lock_Volume_Glow.Softness := 0.4;
-  vSoundplayer.player.Speaker_Left_Lock_Volume_Glow.Opacity := 0.9;
-  vSoundplayer.player.Speaker_Left_Lock_Volume_Glow.Enabled := False;
-
   vSoundplayer.player.Speaker_Right := Timage.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Speaker_Right.Name := 'A_SP_Player_Speaker_Right_Image';
   vSoundplayer.player.Speaker_Right.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.player.Speaker_Right.SetBounds(vSoundplayer.scene.Back_Player.Width - 143, -25, 128, 250);
+  vSoundplayer.player.Speaker_Right.SetBounds(vSoundplayer.scene.Back_Player.Width - 123, 15, 85, 150);
   vSoundplayer.player.Speaker_Right.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_speaker.png');
   vSoundplayer.player.Speaker_Right.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
   vSoundplayer.player.Speaker_Right.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
@@ -635,7 +616,7 @@ begin
   vSoundplayer.player.Speaker_Right_Percent := TText.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.player.Speaker_Right_Percent.Name := 'A_SP_Player_Speaker_Right_Percent';
   vSoundplayer.player.Speaker_Right_Percent.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.player.Speaker_Right_Percent.SetBounds(vSoundplayer.scene.Back_Player.Width - 132, 10,
+  vSoundplayer.player.Speaker_Right_Percent.SetBounds(vSoundplayer.scene.Back_Player.Width - 132, -5,
     100, 24);
   vSoundplayer.player.Speaker_Right_Percent.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vSoundplayer.player.Speaker_Right_Percent.Text := '';
@@ -671,28 +652,24 @@ begin
     addons.soundplayer.Input.mouse.Trackbar_Thumb.OnMouseLeave;
   vSoundplayer.player.Speaker_Right_Volume_Pos.Visible := True;
 
-  vSoundplayer.player.Speaker_Right_Lock_Volume := Timage.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.player.Speaker_Right_Lock_Volume.Name := 'A_SP_Player_Speaker_Lock_Right_Volume';
-  vSoundplayer.player.Speaker_Right_Lock_Volume.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.player.Speaker_Right_Lock_Volume.SetBounds(vSoundplayer.scene.Back_Player.Width - 42,
-    5, 32, 32);
-  vSoundplayer.player.Speaker_Right_Lock_Volume.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
-    'sp_lock.png');
-  vSoundplayer.player.Speaker_Right_Lock_Volume.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.player.Speaker_Right_Lock_Volume.OnMouseEnter :=
-    addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.player.Speaker_Right_Lock_Volume.OnMouseLeave :=
-    addons.soundplayer.Input.mouse.Image.OnMouseLeave;
-  vSoundplayer.player.Speaker_Right_Lock_Volume.Visible := True;
+  vSoundplayer.player.Equalizer := Timage.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.player.Equalizer.Name := 'A_SP_Equalizer';
+  vSoundplayer.player.Equalizer.Parent := vSoundplayer.scene.Back_Player;
+  vSoundplayer.player.Equalizer.SetBounds(170, 137, 48, 48);
+  vSoundplayer.player.Equalizer.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_equalizer.png');
+  vSoundplayer.player.Equalizer.WrapMode := TImageWrapMode.Fit;
+  vSoundplayer.player.Equalizer.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
+  vSoundplayer.player.Equalizer.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
+  vSoundplayer.player.Equalizer.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.player.Equalizer.Visible := True;
 
-  vSoundplayer.player.Speaker_Right_Lock_Volume_Glow :=
-    TGlowEffect.Create(vSoundplayer.player.Speaker_Right_Lock_Volume);
-  vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Name := 'A_SP_Player_Speaker_Lock_Right_Volume_Glow';
-  vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Parent := vSoundplayer.player.Speaker_Right_Lock_Volume;
-  vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Softness := 0.4;
-  vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Opacity := 0.9;
-  vSoundplayer.player.Speaker_Right_Lock_Volume_Glow.Enabled := False;
+  vSoundplayer.player.Equalizer_Glow := TGlowEffect.Create(vSoundplayer.player.Equalizer);
+  vSoundplayer.player.Equalizer_Glow.Name := 'A_SP_Equalizer_Glow';
+  vSoundplayer.player.Equalizer_Glow.Parent := vSoundplayer.player.Equalizer;
+  vSoundplayer.player.Equalizer_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Equalizer_Glow.Opacity := 0.9;
+  vSoundplayer.player.Equalizer_Glow.Enabled := False;
+
 end;
 
 procedure uSoundplayer_SetAll_Info;
@@ -1218,6 +1195,17 @@ begin
   vSoundplayer.info.Cover.WrapMode := TImageWrapMode.Fit;
   vSoundplayer.info.Cover.Visible := True;
 
+  vSoundplayer.info.Cover_Label := TText.Create(vSoundplayer.info.Back_Right);
+  vSoundplayer.info.Cover_Label.Name := 'A_SP_Info_Cover_Label';
+  vSoundplayer.info.Cover_Label.Parent := vSoundplayer.info.Back_Right;
+  vSoundplayer.info.Cover_Label.SetBounds(0, vSoundplayer.info.Back_Right.Height - 30,
+    vSoundplayer.info.Back_Right.Width, 26);
+  vSoundplayer.info.Cover_Label.Color := TAlphaColorRec.White;
+  vSoundplayer.info.Cover_Label.Text := '';
+  vSoundplayer.info.Cover_Label.TextSettings.HorzAlign := TTextAlign.Center;
+  vSoundplayer.info.Cover_Label.TextSettings.Font.Size := 22;
+  vSoundplayer.info.Cover_Label.Visible := True;
+
   vSoundplayer.info.Cover_Fade_Ani := TFloatAnimation.Create(vSoundplayer.info.Cover);
   vSoundplayer.info.Cover_Fade_Ani.Name := 'A_SP_Info_Cover_Fade_Animation';
   vSoundplayer.info.Cover_Fade_Ani.Parent := vSoundplayer.info.Cover;
@@ -1277,6 +1265,127 @@ begin
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.PropertyName := 'Height';
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.OnFinish := vSoundplayer.Ani.OnFinish;
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.Enabled := False;
+end;
+
+///
+procedure Set_First;
+begin
+  vSoundplayer.scene.Back_Blur.Enabled := True;
+
+  vSoundplayer.scene.First.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
+  vSoundplayer.scene.First.Panel.Name := 'A_SP_First';
+  vSoundplayer.scene.First.Panel.Parent := vSoundplayer.scene.soundplayer;
+  vSoundplayer.scene.First.Panel.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Half_Height - 500,
+    800, 600);
+  vSoundplayer.scene.First.Panel.Visible := True;
+
+  vSoundplayer.scene.First.Panel_Shadow := TShadowEffect.Create(vSoundplayer.scene.First.Panel);
+  vSoundplayer.scene.First.Panel_Shadow.Name := 'A_SP_Fist_Shadow';
+  vSoundplayer.scene.First.Panel_Shadow.Parent := vSoundplayer.scene.First.Panel;
+  vSoundplayer.scene.First.Panel_Shadow.ShadowColor := TAlphaColorRec.Black;
+  vSoundplayer.scene.First.Panel_Shadow.Opacity := 0.9;
+  vSoundplayer.scene.First.Panel_Shadow.Distance := 2;
+  vSoundplayer.scene.First.Panel_Shadow.Direction := 90;
+  vSoundplayer.scene.First.Panel_Shadow.Enabled := True;
+
+  uLoad_SetAll_CreateHeader(vSoundplayer.scene.First.Panel, 'A_SP_First',
+    addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png', 'Welcome to "Soundplayer" addon.');
+
+  vSoundplayer.scene.First.main.Panel := TPanel.Create(vSoundplayer.scene.First.Panel);
+  vSoundplayer.scene.First.main.Panel.Name := 'A_SP_Firt_Main';
+  vSoundplayer.scene.First.main.Panel.Parent := vSoundplayer.scene.First.Panel;
+  vSoundplayer.scene.First.main.Panel.SetBounds(0, 30, vSoundplayer.scene.First.Panel.Width,
+    vSoundplayer.scene.First.Panel.Height - 30);
+  vSoundplayer.scene.First.main.Panel.Visible := True;
+
+  vSoundplayer.scene.First.main.Line_1 := TALText.Create(vSoundplayer.scene.First.main.Panel);
+  vSoundplayer.scene.First.main.Line_1.Name := 'A_SP_First_Main_Line_1';
+  vSoundplayer.scene.First.main.Line_1.Parent := vSoundplayer.scene.First.main.Panel;
+  vSoundplayer.scene.First.main.Line_1.Width := 700;
+  vSoundplayer.scene.First.main.Line_1.Height := 150;
+  vSoundplayer.scene.First.main.Line_1.Position.X := 50;
+  vSoundplayer.scene.First.main.Line_1.Position.Y := 30;
+  vSoundplayer.scene.First.main.Line_1.TextIsHtml := True;
+  vSoundplayer.scene.First.main.Line_1.TextSettings.Font.Size := 14;
+  vSoundplayer.scene.First.main.Line_1.TextSettings.VertAlign := TTextAlign.Leading;
+  vSoundplayer.scene.First.main.Line_1.WordWrap := True;
+  vSoundplayer.scene.First.main.Line_1.Text :=
+    'I assume this is your first time that open "<font color="#ff63cbfc">Soundplayer</font>" addon.';
+  vSoundplayer.scene.First.main.Line_1.Color := TAlphaColorRec.White;
+  vSoundplayer.scene.First.main.Line_1.Visible := True;
+
+  vSoundplayer.scene.First.main.Line_2 := TALText.Create(vSoundplayer.scene.First.main.Panel);
+  vSoundplayer.scene.First.main.Line_2.Name := 'A_SP_First_Main_Line_2';
+  vSoundplayer.scene.First.main.Line_2.Parent := vSoundplayer.scene.First.main.Panel;
+  vSoundplayer.scene.First.main.Line_2.Width := 700;
+  vSoundplayer.scene.First.main.Line_2.Height := 150;
+  vSoundplayer.scene.First.main.Line_2.Position.X := 50;
+  vSoundplayer.scene.First.main.Line_2.Position.Y := 60;
+  vSoundplayer.scene.First.main.Line_2.TextIsHtml := True;
+  vSoundplayer.scene.First.main.Line_2.TextSettings.Font.Size := 14;
+  vSoundplayer.scene.First.main.Line_2.TextSettings.VertAlign := TTextAlign.Leading;
+  vSoundplayer.scene.First.main.Line_2.WordWrap := True;
+  vSoundplayer.scene.First.main.Line_2.Text :=
+    'To start listening song just <font color="#ff63cbfc">create a playlist, push the "+" button</font> and then add songs in playlist with the <font color="#ff63cbfc">eject button</font>, push play to start listening.'
+    + #13#10 +
+    'Or just push the <font color="#ff63cbfc">eject button</font> to listen song in unamed playlist.';
+  vSoundplayer.scene.First.main.Line_2.Color := TAlphaColorRec.White;
+  vSoundplayer.scene.First.main.Line_2.Visible := True;
+
+  vSoundplayer.scene.First.main.Line_3 := TALText.Create(vSoundplayer.scene.First.main.Panel);
+  vSoundplayer.scene.First.main.Line_3.Name := 'A_SP_First_Main_Line_3';
+  vSoundplayer.scene.First.main.Line_3.Parent := vSoundplayer.scene.First.main.Panel;
+  vSoundplayer.scene.First.main.Line_3.Width := 700;
+  vSoundplayer.scene.First.main.Line_3.Height := 150;
+  vSoundplayer.scene.First.main.Line_3.Position.X := 50;
+  vSoundplayer.scene.First.main.Line_3.Position.Y := 120;
+  vSoundplayer.scene.First.main.Line_3.TextIsHtml := True;
+  vSoundplayer.scene.First.main.Line_3.TextSettings.Font.Size := 14;
+  vSoundplayer.scene.First.main.Line_3.TextSettings.VertAlign := TTextAlign.Leading;
+  vSoundplayer.scene.First.main.Line_3.WordWrap := True;
+  vSoundplayer.scene.First.main.Line_3.Text :=
+    'This message also appears when you deactivate the soundplayer addon and delete all playlists and clear the addon.';
+  vSoundplayer.scene.First.main.Line_3.Color := TAlphaColorRec.White;
+  vSoundplayer.scene.First.main.Line_3.Visible := True;
+
+  vSoundplayer.scene.First.main.Line_4 := TALText.Create(vSoundplayer.scene.First.main.Panel);
+  vSoundplayer.scene.First.main.Line_4.Name := 'A_SP_First_Main_Line_4';
+  vSoundplayer.scene.First.main.Line_4.Parent := vSoundplayer.scene.First.main.Panel;
+  vSoundplayer.scene.First.main.Line_4.Width := 700;
+  vSoundplayer.scene.First.main.Line_4.Height := 150;
+  vSoundplayer.scene.First.main.Line_4.Position.X := 50;
+  vSoundplayer.scene.First.main.Line_4.Position.Y := 180;
+  vSoundplayer.scene.First.main.Line_4.TextIsHtml := True;
+  vSoundplayer.scene.First.main.Line_4.TextSettings.Font.Size := 14;
+  vSoundplayer.scene.First.main.Line_4.TextSettings.VertAlign := TTextAlign.Leading;
+  vSoundplayer.scene.First.main.Line_4.WordWrap := True;
+  vSoundplayer.scene.First.main.Line_4.Text :=
+    '" <font color="#ffff0000">I love home music. Have Fun </font>" ';
+  vSoundplayer.scene.First.main.Line_4.Color := TAlphaColorRec.White;
+  vSoundplayer.scene.First.main.Line_4.Visible := True;
+
+  vSoundplayer.scene.First.main.Check := TCheckBox.Create(vSoundplayer.scene.First.main.Panel);
+  vSoundplayer.scene.First.main.Check.Name := 'A_SP_First_Main_Check';
+  vSoundplayer.scene.First.main.Check.Parent := vSoundplayer.scene.First.main.Panel;
+  vSoundplayer.scene.First.main.Check.Width := 400;
+  vSoundplayer.scene.First.main.Check.Height := 24;
+  vSoundplayer.scene.First.main.Check.Position.X := 20;
+  vSoundplayer.scene.First.main.Check.Position.Y := vSoundplayer.scene.First.main.Panel.Height - 70;
+  vSoundplayer.scene.First.main.Check.Text := 'Check to never see this message again.';
+  vSoundplayer.scene.First.main.Check.FontColor := TAlphaColorRec.White;
+  vSoundplayer.scene.First.main.Check.OnClick := addons.soundplayer.Input.mouse.Checkbox.OnMouseClick;
+  vSoundplayer.scene.First.main.Check.Visible := True;
+
+  vSoundplayer.scene.First.main.Done := TButton.Create(vSoundplayer.scene.First.main.Panel);
+  vSoundplayer.scene.First.main.Done.Name := 'A_SP_First_Main_Done';
+  vSoundplayer.scene.First.main.Done.Parent := vSoundplayer.scene.First.main.Panel;
+  vSoundplayer.scene.First.main.Done.Width := 120;
+  vSoundplayer.scene.First.main.Done.Height := 30;
+  vSoundplayer.scene.First.main.Done.Position.X := (vSoundplayer.scene.First.main.Panel.Width / 2) - 60;
+  vSoundplayer.scene.First.main.Done.Position.Y := vSoundplayer.scene.First.main.Panel.Height - 40;
+  vSoundplayer.scene.First.main.Done.Text := 'Done';
+  vSoundplayer.scene.First.main.Done.OnClick := addons.soundplayer.Input.mouse.Button.OnMouseClick;
+  vSoundplayer.scene.First.main.Done.Visible := True;
 end;
 
 ///

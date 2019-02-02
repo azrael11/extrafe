@@ -38,7 +38,7 @@ uses
   uMain_SetAll,
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
-  uSoundplayer_Player_Actions,
+  uSoundplayer_Player,
   uSoundplayer_Mouse;
 
 procedure Set_ID3v1_Frame;
@@ -866,7 +866,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.tag.mp3.Back);
-  uSoundplayer_Player_Actions.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
+  uSoundplayer_Player.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
 end;
 
 procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);

@@ -22,7 +22,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
-  uSoundplayer_Player_Actions;
+  uSoundplayer_Player;
 
 procedure uSoundplayer_TagSet_Opus;
 begin
@@ -366,7 +366,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.tag.opus.Back);
-  uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
+  uSoundPlayer_Player.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
 end;
 
 end.

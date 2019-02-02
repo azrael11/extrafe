@@ -29,7 +29,7 @@ procedure GetTags_WAV(mSongPath, mSongName: string);
 procedure GetTags_WMA(mSongPath, mSongName: string);
 
 // Load the tag Icon
-procedure uSoundplayer_Tag_LoadIcon;
+procedure Set_Icon;
 
 implementation
 
@@ -39,7 +39,7 @@ uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
   uSoundplayer_SetAll,
-  uSoundplayer_Player_Actions,
+  uSoundplayer_Player,
   uSoundplayer_Tag_Mp3;
 
 // Get Tags
@@ -250,7 +250,7 @@ end;
 
 ///
 
-procedure uSoundplayer_Tag_LoadIcon;
+procedure Set_Icon;
 begin
   if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.mp3' then
     vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_mp3.png')

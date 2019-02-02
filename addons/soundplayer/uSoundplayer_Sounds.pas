@@ -24,12 +24,17 @@ begin
   addons.soundplayer.Sound.Effects[1] := BASS_StreamCreateFile(False,
     PChar(addons.soundplayer.Path.Sounds + 'a_sp_unlock.mp3'), 0, 0, 0
     {$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
+  //Mouse Enter
+  addons.soundplayer.Sound.Effects[2] := BASS_StreamCreateFile(False,
+    PChar(addons.soundplayer.Path.Sounds + 'a_sp_hover.mp3'), 0, 0, 0
+    {$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
 end;
 
 procedure Free;
 begin
   BASS_StreamFree(addons.soundplayer.Sound.effects[0]);
   BASS_StreamFree(addons.soundplayer.Sound.effects[1]);
+  BASS_StreamFree(addons.soundplayer.Sound.effects[2]);
 end;
 
 end.

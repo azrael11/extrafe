@@ -66,7 +66,7 @@ uses
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
   uSoundplayer_Tag_Mp3_SetAll,
-  uSoundplayer_Player_Actions;
+  uSoundplayer_Player;
 
 procedure Get(vPath: String; vSongNum: Integer);
 begin

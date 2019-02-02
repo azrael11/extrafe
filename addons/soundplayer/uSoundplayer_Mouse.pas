@@ -17,7 +17,8 @@ uses
   FMX.Grid,
   FMX.Listbox,
   FMX.Menus,
-  ALFmxStdCtrls;
+  ALFmxStdCtrls,
+  BASS;
 
 type
   TSOUNDPLAYER_IMAGE = class(TObject)
@@ -81,7 +82,6 @@ type
     procedure OnMouseLeave(Sender: TObject);
   end;
 
-
 type
   TSOUNDPLAYER_MOUSE_ACTIONS = record
     Image: TSOUNDPLAYER_IMAGE;
@@ -103,8 +103,8 @@ uses
   uSnippet_Text,
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
-  uSoundplayer_Actions,
-  uSoundplayer_Player_Actions,
+  uSoundplayer,
+  uSoundplayer_Player,
   uSoundplayer_Info_Actions,
   uSoundplayer_Playlist_Actions,
   uSoundplayer_Playlist_Manage,
@@ -121,24 +121,24 @@ begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
       if TImage(Sender).Name = 'A_SP_Player_Play_Image' then
-        uSoundPlayer_Player_Actions.StartOrPause
+        uSoundplayer_Player.StartOrPause
       else if TImage(Sender).Name = 'A_SP_Player_Stop_Image' then
-        uSoundPlayer_Player_Actions.Stop
+        uSoundplayer_Player.Stop
       else if TImage(Sender).Name = 'A_SP_Player_Previous_Image' then
-        uSoundPlayer_Player_Actions.Previous
+        uSoundplayer_Player.Previous
       else if TImage(Sender).Name = 'A_SP_Player_Next_Image' then
-        uSoundPlayer_Player_Actions.Next
+        uSoundplayer_Player.Next
       else if TImage(Sender).Name = 'A_SP_Player_Eject_Image' then
       begin
         vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_AddSongs';
         vSoundplayer.scene.OpenDialog.Execute
       end
       else if TImage(Sender).Name = 'A_SP_Player_Suffle_Image' then
-        uSoundPlayer_Player_Actions.Suffle
+        uSoundplayer_Player.Suffle
       else if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
-        uSoundplayer_Player_Actions_SetRepeat(addons.soundplayer.Player.VRepeat)
+        uSoundplayer_Player.Set_Repeat(addons.soundplayer.Player.VRepeat)
       else if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
-        uSoundPlayer_Player_Actions_ShowTag(addons.soundplayer.Playlist.List.Songs.Strings
+        uSoundplayer_Player.Show_Tag(addons.soundplayer.Playlist.List.Songs.Strings
           [addons.soundplayer.Player.Playing_Now], vSoundplayer.Playlist.List.Selected)
       else if TImage(Sender).Name = 'A_SP_Info_Cover_Fullscreen' then
       begin
@@ -154,9 +154,9 @@ begin
         uSoundplayer_Playlist_Actions_EditPlaylist(not addons.soundplayer.Playlist.Edit)
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Edit' then
       begin
-        uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Songs_Edit.Edit,
+        uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Songs_Edit.Edit,
           vSoundplayer.Playlist.Songs_Edit.Edit_Glow);
-        uSoundPlayer_Player_Actions_ShowTag(addons.soundplayer.Playlist.List.Songs.Strings
+        uSoundplayer_Player.Show_Tag(addons.soundplayer.Playlist.List.Songs.Strings
           [vSoundplayer.Playlist.List.Selected], vSoundplayer.Playlist.List.Selected)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Up' then
@@ -172,9 +172,9 @@ begin
       else if TImage(Sender).Name = 'A_SP_Playlist_Remove_Image' then
         uSoundplayer_Playlist_Remove_Panel
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Left_Image' then
-        uSoundplayer_Player_Volume_Mute
+        uSoundplayer_Player_Volume.Mute
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Right_Image' then
-        uSoundplayer_Player_Volume_Mute
+        uSoundplayer_Player_Volume.Mute
       else if TImage(Sender).Name = 'A_SP_Settings_Image' then
         uSoundplayer_Settings_Set
     end
@@ -205,84 +205,85 @@ begin
       if TImage(Sender).Name = 'A_SP_Player_Play_Image' then
       begin
         if vSoundplayer.Player.Play_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
+          uSoundplayer_Player.OnOver(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Stop_Image' then
       begin
         if vSoundplayer.Player.Stop_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
+          uSoundplayer_Player.OnOver(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Previous_Image' then
       begin
         if vSoundplayer.Player.Previous_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow)
+          uSoundplayer_Player.OnOver(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Player_Next_Image' then
       begin
         if vSoundplayer.Player.Next_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
+          uSoundplayer_Player.OnOver(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Eject_Image' then
-        uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
+        uSoundplayer_Player.OnOver(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
       else if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
       begin
         if vSoundplayer.Player.Loop_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Loop, vSoundplayer.Player.Loop_Glow);
+          uSoundplayer_Player.OnOver(vSoundplayer.Player.Loop, vSoundplayer.Player.Loop_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Suffle_Image' then
       begin
         if vSoundplayer.Player.Suffle_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Suffle, vSoundplayer.Player.Suffle_Glow);
+          uSoundplayer_Player.OnOver(vSoundplayer.Player.Suffle, vSoundplayer.Player.Suffle_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
-        uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
+        uSoundplayer_Player.OnOver(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
+      else if TImage(Sender).Name = 'A_SP_Equalizer' then
+        vSoundplayer.Player.Equalizer_Glow.Enabled:= True
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
         vSoundplayer.Player.Speaker_Left_Lock_Volume_Glow.Enabled := True
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Right_Volume' then
         vSoundplayer.Player.Speaker_Right_Lock_Volume_Glow.Enabled := True
       else if TImage(Sender).Name = 'A_SP_Info_Cover_Fullscreen' then
-        uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Info.Cover_Fullscreen,
+        uSoundplayer_Player.OnOver(vSoundplayer.Info.Cover_Fullscreen,
           vSoundplayer.Info.Cover_Fullscreen_Glow)
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Lock' then
-        uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Playlist.Songs_Edit.Lock,
+        uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Songs_Edit.Lock,
           vSoundplayer.Playlist.Songs_Edit.Lock_Glow)
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Edit' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Edit_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Playlist.Songs_Edit.Edit,
+          uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Songs_Edit.Edit,
             vSoundplayer.Playlist.Songs_Edit.Edit_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Up' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Up_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Playlist.Songs_Edit.Up,
+          uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Songs_Edit.Up,
             vSoundplayer.Playlist.Songs_Edit.Up_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Down' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Playlist.Songs_Edit.Down,
+          uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Songs_Edit.Down,
             vSoundplayer.Playlist.Songs_Edit.Down_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Delete' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Delete_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnOver(vSoundplayer.Playlist.Songs_Edit.Delete,
+          uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Songs_Edit.Delete,
             vSoundplayer.Playlist.Songs_Edit.Delete_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Manage_Image' then
       begin
         if vSoundplayer.Playlist.Manage_Icon_Grey.Enabled = False then
-          uSoundPlayer_Playlist_Actions_OnOver(vSoundplayer.Playlist.Manage_Icon,
+          uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Manage_Icon,
             vSoundplayer.Playlist.Manage_Icon_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Add_Image' then
-        uSoundPlayer_Playlist_Actions_OnOver(vSoundplayer.Playlist.Create_Icon,
-          vSoundplayer.Playlist.Create_Icon_Glow)
+        uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Create_Icon, vSoundplayer.Playlist.Create_Icon_Glow)
       else if TImage(Sender).Name = 'A_SP_Playlist_Remove_Image' then
       begin
         if vSoundplayer.Playlist.Remove_Icon_Grey.Enabled = False then
-          uSoundPlayer_Playlist_Actions_OnOver(vSoundplayer.Playlist.Remove_Icon,
+          uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Remove_Icon,
             vSoundplayer.Playlist.Remove_Icon_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Settings_Image' then
@@ -301,9 +302,9 @@ begin
         end;
       end
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Left_Image' then
-        uSoundplayer_Player_Volume_Speakers_OnMouseAbove(True)
+        uSoundplayer_Player_Volume.Speakers_OnMouseAbove(True)
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Right_Image' then
-        uSoundplayer_Player_Volume_Speakers_OnMouseAbove(True)
+        uSoundplayer_Player_Volume.Speakers_OnMouseAbove(True)
     end
     else if extrafe.prog.State = 'addon_soundplayer_manage_playlists' then
     begin
@@ -342,85 +343,85 @@ begin
       if TImage(Sender).Name = 'A_SP_Player_Play_Image' then
       begin
         if vSoundplayer.Player.Play_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow)
+          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Player_Stop_Image' then
       begin
         if vSoundplayer.Player.Stop_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
+          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Previous_Image' then
       begin
         if vSoundplayer.Player.Previous_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Previous,
-            vSoundplayer.Player.Previous_Glow);
+          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Next_Image' then
       begin
         if vSoundplayer.Player.Next_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
+          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Eject_Image' then
-        uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
+        uSoundplayer_Player.OnLeave(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
       else if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
       begin
         if vSoundplayer.Player.Loop_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Loop, vSoundplayer.Player.Loop_Glow);
+          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Loop, vSoundplayer.Player.Loop_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Suffle_Image' then
       begin
         if vSoundplayer.Player.Suffle_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Suffle, vSoundplayer.Player.Suffle_Glow);
+          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Suffle, vSoundplayer.Player.Suffle_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
-        uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
+        uSoundplayer_Player.OnLeave(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
+      else if TImage(Sender).Name = 'A_SP_Equalizer' then
+        vSoundplayer.Player.Equalizer_Glow.Enabled:= False
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
         vSoundplayer.Player.Speaker_Left_Lock_Volume_Glow.Enabled := False
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Right_Volume' then
         vSoundplayer.Player.Speaker_Right_Lock_Volume_Glow.Enabled := False
       else if TImage(Sender).Name = 'A_SP_Info_Cover_Fullscreen' then
-        uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Info.Cover_Fullscreen,
+        uSoundplayer_Player.OnLeave(vSoundplayer.Info.Cover_Fullscreen,
           vSoundplayer.Info.Cover_Fullscreen_Glow)
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Lock' then
-        uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Playlist.Songs_Edit.Lock,
+        uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Songs_Edit.Lock,
           vSoundplayer.Playlist.Songs_Edit.Lock_Glow)
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Edit' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Edit_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Playlist.Songs_Edit.Edit,
+          uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Songs_Edit.Edit,
             vSoundplayer.Playlist.Songs_Edit.Edit_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Up' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Up_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Playlist.Songs_Edit.Up,
+          uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Songs_Edit.Up,
             vSoundplayer.Playlist.Songs_Edit.Up_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Down' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Playlist.Songs_Edit.Down,
+          uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Songs_Edit.Down,
             vSoundplayer.Playlist.Songs_Edit.Down_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Edit_Songs_Delete' then
       begin
         if vSoundplayer.Playlist.Songs_Edit.Delete_Grey.Enabled = False then
-          uSoundPlayer_Player_Actions.OnLeave(vSoundplayer.Playlist.Songs_Edit.Delete,
+          uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Songs_Edit.Delete,
             vSoundplayer.Playlist.Songs_Edit.Delete_Glow)
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Manage_Image' then
       begin
         if vSoundplayer.Playlist.Manage_Icon_Grey.Enabled = False then
-          uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Manage_Icon,
+          uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Manage_Icon,
             vSoundplayer.Playlist.Manage_Icon_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Playlist_Add_Image' then
-        uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Create_Icon,
-          vSoundplayer.Playlist.Create_Icon_Glow)
+        uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Create_Icon, vSoundplayer.Playlist.Create_Icon_Glow)
       else if TImage(Sender).Name = 'A_SP_Playlist_Remove_Image' then
       begin
         if vSoundplayer.Playlist.Remove_Icon_Grey.Enabled = False then
-          uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Remove_Icon,
+          uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Remove_Icon,
             vSoundplayer.Playlist.Remove_Icon_Glow);
       end
       else if TImage(Sender).Name = 'A_SP_Settings_Image' then
@@ -433,9 +434,9 @@ begin
           vSoundplayer.Info.Back_Right_Ani.Enabled := True
       end
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Left_Image' then
-        uSoundplayer_Player_Volume_Speakers_OnMouseAbove(False)
+        uSoundplayer_Player_Volume.Speakers_OnMouseAbove(False)
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Right_Image' then
-        uSoundplayer_Player_Volume_Speakers_OnMouseAbove(False)
+        uSoundplayer_Player_Volume.Speakers_OnMouseAbove(False)
     end
     else if extrafe.prog.State = 'addon_soundplayer_manage_playlists' then
     begin
@@ -513,18 +514,18 @@ procedure TSOUNDPLAYER_BUTTON.OnMouseClick(Sender: TObject);
 begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
-    if TButton(Sender).Name= 'A_SP_First_Main_Done' then
-      begin
-        FreeAndNil(vSoundplayer.scene.First.Panel);
-        vSoundplayer.scene.Back_Blur.Enabled:= False;
-      end;
+    if TButton(Sender).Name = 'A_SP_First_Main_Done' then
+    begin
+      FreeAndNil(vSoundplayer.scene.First.Panel);
+      vSoundplayer.scene.Back_Blur.Enabled := False;
+    end;
   end
   else if extrafe.prog.State = 'addon_soundplayer_manage_playlists' then
   begin
     if TButton(Sender).Name = 'A_SP_Playlist_Manage_CancelButton' then
       uSoundPlayer_Playlist_Manage_Free
     else if TButton(Sender).Name = 'A_SP_Playlist_Manage_LoadButton' then
-      uSoundplayer_Playlist_Manage_LoadPlaylist(vSoundplayer.Playlist.Manage.main.Grid.Selected);
+      uSoundplayer_Playlist_Manage.LoadPlaylist(vSoundplayer.Playlist.Manage.main.Grid.Selected);
   end
   else if extrafe.prog.State = 'addon_soundplayer_create_playlist' then
   begin
@@ -616,25 +617,15 @@ end;
 { TSOUNDPLAYER_TRACKBAR }
 procedure TSOUNDPLAYER_TRACKBAR.OnChange(Sender: TObject);
 begin
- if not Assigned(vSoundplayer.scene.First.Panel) then
+  if not Assigned(vSoundplayer.scene.First.Panel) then
   begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
       if TTrackBar(Sender).Name = 'A_SP_Player_Speaker_Left_VolumePos' then
-      begin
-        if addons.soundplayer.Volume.State = 'Master' then
-          uSoundplayer_Player_Volume_Update(TALTrackBar(Sender).Value, 'Both')
-        else
-          uSoundplayer_Player_Volume_Update(TALTrackBar(Sender).Value, 'Left');
-      end
+        uSoundplayer_Player_Volume.Update(TALTrackBar(Sender).Value)
       else if TTrackBar(Sender).Name = 'A_SP_Player_Speaker_Right_VolumePos' then
-      begin
-        if addons.soundplayer.Volume.State = 'Master' then
-          uSoundplayer_Player_Volume_Update(TALTrackBar(Sender).Value, 'Both')
-        else
-          uSoundplayer_Player_Volume_Update(TALTrackBar(Sender).Value, 'Right');
-      end
-    end;
+        uSoundplayer_Player_Volume.Update(TALTrackBar(Sender).Value)
+    end
   end;
 end;
 
@@ -646,9 +637,9 @@ begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
       if TTrackBar(Sender).Name = 'A_SP_Player_Speaker_Left_VolumePos' then
-        uSoundplayer_Player_Volume_Show
+        uSoundplayer_Player_Volume.Show
       else if TTrackBar(Sender).Name = 'A_SP_Player_Speaker_Right_VolumePos' then
-        uSoundplayer_Player_Volume_Show;
+        uSoundplayer_Player_Volume.Show;
     end;
   end;
 end;
@@ -661,9 +652,9 @@ begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
       if TTrackBar(Sender).Name = 'A_SP_Player_Speaker_Left_VolumePos' then
-        uSoundplayer_Player_Volume_Ani
+        uSoundplayer_Player_Volume.Ani
       else if TTrackBar(Sender).Name = 'A_SP_Player_Speaker_Right_VolumePos' then
-        uSoundplayer_Player_Volume_Ani
+        uSoundplayer_Player_Volume.Ani
     end;
   end;
 end;
@@ -684,8 +675,8 @@ begin
     begin
       if TALTrackBar(Sender).Name = 'A_SP_SongPos_Thumb' then
         addons.soundplayer.Player.Thumb_Active := True;
-    end
-  end;
+    end;
+  end
 end;
 
 procedure TSOUNDPLAYER_TRACKBAR_THUMB.OnMouseEnter(Sender: TObject);
@@ -726,7 +717,7 @@ begin
   begin
     if TALTrackBar(Sender).Name = 'A_SP_SongPos_Thumb' then
       if addons.soundplayer.Player.Thumb_Active then
-        uSoundplayer_Player_Actions_UpdateSongPosition(Sender, vSoundplayer.Player.Song_Pos.Value, False);
+        uSoundplayer_Player.Update_Thumb_Pos(Sender, vSoundplayer.Player.Song_Pos.Value, False);
   end;
 
 end;
@@ -739,7 +730,7 @@ begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
       if TALTrackBar(Sender).Name = 'A_SP_SongPos_Thumb' then
-        uSoundplayer_Player_Actions_UpdateSongPosition(Sender, vSoundplayer.Player.Song_Pos.Value, True);
+        uSoundplayer_Player.Update_Thumb_Pos(Sender, vSoundplayer.Player.Song_Pos.Value, True);
     end;
   end;
 end;
@@ -758,7 +749,7 @@ begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
     if TMenuItem(Sender).Name = 'A_SP_Playlist_List_Popup_Item_0' then
-      uSoundPlayer_Player_Actions_ShowTag(addons.soundplayer.Playlist.List.Songs.Strings
+      uSoundplayer_Player.Show_Tag(addons.soundplayer.Playlist.List.Songs.Strings
         [vSoundplayer.Playlist.List.Selected], vSoundplayer.Playlist.List.Selected)
     else if TMenuItem(Sender).Name = 'A_SP_Playlist_List_Popup_Item_1' then
       uSoundplayer_Playlist_Actions_Edit_MoveUp
@@ -775,8 +766,8 @@ end;
 
 procedure TSOUNDPLAYER_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
-  if TCheckBox(Sender).Name= 'A_SP_First_Main_Check' then
-    uSoundplayer_Actions.CheckFirst(not addons.soundplayer.Actions.First);
+  if TCheckBox(Sender).Name = 'A_SP_First_Main_Check' then
+    uSoundplayer.CheckFirst(not addons.soundplayer.Actions.First);
 end;
 
 procedure TSOUNDPLAYER_CHECKBOX.OnMouseEnter(Sender: TObject);
@@ -799,7 +790,7 @@ addons.soundplayer.Input.mouse.Trackbar := TSOUNDPLAYER_TRACKBAR.Create;
 addons.soundplayer.Input.mouse.Trackbar_Thumb := TSOUNDPLAYER_TRACKBAR_THUMB.Create;
 addons.soundplayer.Input.mouse.RadioButton := TSOUNDPLAYER_RADIOBUTTON.Create;
 addons.soundplayer.Input.mouse.Menuitem := TSOUNDPLAYER_MENUITEM.Create;
-addons.soundplayer.Input.mouse.Checkbox:= TSOUNDPLAYER_CHECKBOX.Create;
+addons.soundplayer.Input.mouse.Checkbox := TSOUNDPLAYER_CHECKBOX.Create;
 
 finalization
 

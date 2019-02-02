@@ -346,10 +346,10 @@
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <VerInfo_Release>9</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.19;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.20;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
         <Icon_MainIcon>ExtraFE_Icon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>19</VerInfo_Build>
+        <VerInfo_Build>20</VerInfo_Build>
         <DCC_ExeOutput>C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\Release\ExtraFE\win64\</DCC_ExeOutput>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
     </PropertyGroup>
@@ -387,9 +387,8 @@
         <DCCReference Include="addons\weather\uWeather_Mouse.pas"/>
         <DCCReference Include="main\configuration\uMain_Config_Info.pas"/>
         <DCCReference Include="main\uMain_Actions.pas"/>
-        <DCCReference Include="addons\soundplayer\uSoundplayer_Player_Actions.pas"/>
         <DCCReference Include="addons\soundplayer\uSoundplayer_Playlist_Actions.pas"/>
-        <DCCReference Include="addons\soundplayer\uSoundplayer_Actions.pas"/>
+        <DCCReference Include="addons\soundplayer\uSoundplayer.pas"/>
         <DCCReference Include="addons\soundplayer\_tag_libraries\mp3\uSoundplayer_Tag_Mp3.pas"/>
         <DCCReference Include="addons\weather\uWeather_SetAll.pas"/>
         <DCCReference Include="addons\weather\configuration\uWeather_Config_Towns.pas"/>
@@ -518,6 +517,7 @@
         <DCCReference Include="addons\weather\providers\uWeather_Providers_Yahoo.pas"/>
         <DCCReference Include="main\configuration\uMain_Config_Info_Credits.pas"/>
         <DCCReference Include="addons\soundplayer\uSoundplayer_Sounds.pas"/>
+        <DCCReference Include="addons\soundplayer\uSoundplayer_Player.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -82,7 +82,7 @@ uses
   uWeather_AllTypes,
   uWeather_SetAll,
   uSoundplayer_SetAll,
-  uSoundPlayer_Actions,
+  uSoundplayer,
   uSoundplayer_AllTypes,
   uPlay_AllTypes,
   uPlay_SetAll,
@@ -217,7 +217,7 @@ begin
       uWeather_Actions_Free;
       if Assigned(vWeather.Scene.Weather_Ani) then
         vWeather.Scene.Weather_Ani.Enabled := False;
-      uSoundPlayer_Actions.Free;
+      uSoundPlayer.Free;
       if Assigned(vSoundplayer.Scene.Soundplayer_Ani) then
         vSoundplayer.Scene.Soundplayer_Ani.Enabled := False;
       uPlay_Actions_Free;

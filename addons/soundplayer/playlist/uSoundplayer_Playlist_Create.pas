@@ -24,8 +24,9 @@ uses
   uLoad_AllTypes,
   uWindows,
   uSoundplayer_AllTypes,
-  uSoundplayer_Actions,
-  uSoundplayer_Playlist_Actions;
+  uSoundplayer,
+  uSoundplayer_Playlist_Actions,
+  uSoundplayer_Player;
 
 procedure uSoundPlayer_Playlist_Create_Panel;
 begin
@@ -108,7 +109,7 @@ procedure uSoundPlayer_Playlist_Create_Free;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.Playlist.Create.Panel);
-  uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Create_Icon,
+  uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Create_Icon,
     vSoundplayer.Playlist.Create_Icon_Glow);
   extrafe.prog.State := 'addon_soundplayer';
 end;
@@ -150,7 +151,7 @@ begin
       BASS_ChannelStop(sound.str_music[1]);
       vSoundplayer.Player.Song_Pos.Value := 0;
     end;
-    uSoundPlayer_Actions.Set_FirstTime;
+    uSoundPlayer.Set_FirstTime;
     vSoundplayer.info.Playlist_name.Text := vPlaylistName;
     vSoundplayer.info.Playlist_Type_Kind.Text := vPlaylistType;
     vSoundplayer.info.Total_Songs.Text := '0';

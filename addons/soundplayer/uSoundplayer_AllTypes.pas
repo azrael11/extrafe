@@ -156,7 +156,7 @@ type
   TADDON_SOUNDPLAYER_VOLUME = record
     Vol: Real;
     State: String;
-    Speakers: String;
+    Speaker: String;
     Mute: Real;
     Master: Real;
     Left: Real;
@@ -316,6 +316,8 @@ type
     Speaker_Right_Lock_Volume: TImage;
     Speaker_Right_Lock_Volume_Glow: TGlowEffect;
     Speaker_Right_Volume_Pos: TALTrackBar;
+    Equalizer: Timage;
+    Equalizer_Glow: TGlowEffect;
   end;
 
 type
@@ -343,6 +345,7 @@ type
     Back_Right: TImage;
     Back_Right_Ani: TFloatAnimation;
     Cover: TImage;
+    Cover_Label: TText;
     Cover_Fade_Ani: TFloatAnimation;
     Cover_Fullscreen: TImage;
     Cover_Fullscreen_Glow: TGlowEffect;
@@ -692,7 +695,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_Info_Actions,
-  uSoundplayer_Player_Actions,
+  uSoundplayer_Player,
   uSoundplayer_Tag_Mp3,
   uSoundplayer_Tag_Ogg;
 
@@ -701,14 +704,14 @@ uses
 procedure TSOUNDPLAYER_ADDON_TIMER_ONTIMER.OnTimer(Sender: TObject);
 begin
   if TTimer(Sender).Name = 'A_SP_Timer_Song' then
-    uSoundplayer_Player_Actions.Refresh;
+    uSoundplayer_Player.Refresh;
 end;
 
 { TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG }
 procedure TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG.OnClose(Sender: TObject);
 begin
   if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_AddSongs' then
-    uSoundPlayer_Player_Actions_AddNewSongs
+    uSoundplayer_Player_AddNewSongs
   else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Cover_AddComputer' then
     uSoundplayer_Tag_Mp3_Cover_Select
   else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Lyrics_AddComputer' then
@@ -750,7 +753,7 @@ begin
   begin
     if addons.Soundplayer.Player.Title_Ani then
       addons.Soundplayer.Player.Title_Ani_Left := not addons.Soundplayer.Player.Title_Ani_Left;
-    uSoundplayer_Player_Actions_Title_Animation;
+    uSoundplayer_Player.Title_Animation;
   end;
 end;
 

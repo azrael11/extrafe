@@ -37,7 +37,7 @@ begin
 //  ExtraFE_DB.Database := 'epiz_23299538_extrafe';
 //  ExtraFE_DB.Port := 3306;}
 
-{My raspberrypi server
+{//My raspberrypi server
   ExtraFE_DB.HostName := '192.168.2.4'; // http://az-creations.ddns.net/
   ExtraFE_DB.Port := 3306;
   ExtraFE_DB.User := 'Nikos_Azrael11';
@@ -45,7 +45,7 @@ begin
   ExtraFE_DB.Database := 'extrafe_db_main';}
 
 
-{Free RemoteSQL Server}
+ //Free RemoteSQL Server
   ExtraFE_DB.HostName := 'remotemysql.com';
   ExtraFE_DB.Port := 3306;
   ExtraFE_DB.User := 'UOow2q7XU9';

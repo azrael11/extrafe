@@ -19,9 +19,10 @@ implementation
 
 uses
   uLoad_AllTypes,
-  uSoundplayer_Actions,
+  uSoundplayer,
   uSoundplayer_Playlist_Actions,
-  uSoundplayer_AllTypes;
+  uSoundplayer_AllTypes,
+  uSoundplayer_Player;
 
 procedure uSoundplayer_Playlist_Remove_Panel;
 begin
@@ -99,7 +100,7 @@ procedure uSoundplayer_Playlist_Remove_Free;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.Playlist.Remove.Panel);
-  uSoundPlayer_Playlist_Actions_OnLeave(vSoundplayer.Playlist.Remove_Icon,
+  uSoundplayer_Player.OnLeave(vSoundplayer.Playlist.Remove_Icon,
     vSoundplayer.Playlist.Remove_Icon_Glow);
   extrafe.prog.State := 'addon_soundplayer';
 end;
@@ -192,7 +193,7 @@ begin
   addons.soundplayer.Player.Stop := True;
   addons.soundplayer.Player.Playing_Now := -1;
   // Set the main to no playlist first time
-  uSoundPlayer_Actions.Set_FirstTime;
+  uSoundPlayer.Set_FirstTime;
   // Free the remove panel
   uSoundplayer_Playlist_Remove_Free;
 end;
