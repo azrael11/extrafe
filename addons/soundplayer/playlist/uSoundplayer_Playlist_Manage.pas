@@ -47,6 +47,7 @@ begin
 
     extrafe.prog.State := 'addon_soundplayer_manage_playlists';
 
+    uSoundplayer.Hide_Animations;
     vSoundplayer.scene.Back_Blur.Enabled := True;
 
     vSoundplayer.Playlist.Manage.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);

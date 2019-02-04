@@ -140,7 +140,9 @@ uses
   uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas',
   uMain_Config_Info_Credits in 'main\configuration\uMain_Config_Info_Credits.pas',
   uSoundplayer_Sounds in 'addons\soundplayer\uSoundplayer_Sounds.pas',
-  uSoundplayer_Player in 'addons\soundplayer\uSoundplayer_Player.pas';
+  uSoundplayer_Player in 'addons\soundplayer\uSoundplayer_Player.pas',
+  uSoundplayer_Equalizer_SetAll in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer_SetAll.pas',
+  uSoundplayer_Equalizer_Mouse in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer_Mouse.pas';
 
 {$R *.res}
 

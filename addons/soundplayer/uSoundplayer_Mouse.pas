@@ -111,7 +111,8 @@ uses
   uSoundplayer_Playlist_Remove,
   uSoundplayer_Playlist_Create,
   uSoundplayer_Player_Volume,
-  uSoundplayer_Settings_SetAll;
+  uSoundplayer_Settings_SetAll,
+  uSoundplayer_Equalizer_SetAll;
 
 { TSOUNDPLAYER_IMAGE }
 procedure TSOUNDPLAYER_IMAGE.OnMouseClick(Sender: TObject);
@@ -140,6 +141,8 @@ begin
       else if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
         uSoundplayer_Player.Show_Tag(addons.soundplayer.Playlist.List.Songs.Strings
           [addons.soundplayer.Player.Playing_Now], vSoundplayer.Playlist.List.Selected)
+      else if TImage(Sender).Name = 'A_SP_Equalizer' then
+        uSoundplayer_Equalizer_SetAll.Load
       else if TImage(Sender).Name = 'A_SP_Info_Cover_Fullscreen' then
       begin
         if addons.soundplayer.Info.isCoverInFullscreen then
@@ -237,7 +240,7 @@ begin
       else if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
         uSoundplayer_Player.OnOver(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
       else if TImage(Sender).Name = 'A_SP_Equalizer' then
-        vSoundplayer.Player.Equalizer_Glow.Enabled:= True
+        uSoundplayer_Player.OnOver(vSoundplayer.Player.Equalizer, vSoundplayer.Player.Equalizer_Glow)
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
         vSoundplayer.Player.Speaker_Left_Lock_Volume_Glow.Enabled := True
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Right_Volume' then
@@ -375,7 +378,7 @@ begin
       else if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
         uSoundplayer_Player.OnLeave(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
       else if TImage(Sender).Name = 'A_SP_Equalizer' then
-        vSoundplayer.Player.Equalizer_Glow.Enabled:= False
+        uSoundplayer_Player.OnLeave(vSoundplayer.Player.Equalizer, vSoundplayer.Player.Equalizer_Glow)
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
         vSoundplayer.Player.Speaker_Left_Lock_Volume_Glow.Enabled := False
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Right_Volume' then

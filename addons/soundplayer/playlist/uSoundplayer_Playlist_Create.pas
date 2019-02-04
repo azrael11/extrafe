@@ -32,6 +32,8 @@ procedure uSoundPlayer_Playlist_Create_Panel;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := True;
 
+  uSoundplayer.Hide_Animations;
+
   vSoundplayer.Playlist.Create.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.Playlist.Create.Panel.Name := 'A_SP_Playlist_Create_Panel';
   vSoundplayer.Playlist.Create.Panel.Parent := vSoundplayer.scene.soundplayer;

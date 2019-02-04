@@ -22,11 +22,14 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
-  uSoundplayer_Player;
+  uSoundplayer_Player,
+  uSoundplayer;
 
 procedure uSoundplayer_TagSet_Opus;
 begin
   extrafe.prog.State := 'addon_soundplayer_tag_opus';
+
+  uSoundplayer.Hide_Animations;
 
   vSoundplayer.tag.opus.Back := TPanel.Create(vSoundplayer.scene.Soundplayer);
   vSoundplayer.tag.opus.Back.Name := 'A_SP_Tag_Opus';
@@ -36,6 +39,24 @@ begin
   vSoundplayer.tag.opus.Back.Position.X := (vSoundplayer.scene.Back.Width / 2) - 500;
   vSoundplayer.tag.opus.Back.Position.Y := (vSoundplayer.scene.Back.Height / 2) - 250;
   vSoundplayer.tag.opus.Back.Visible := True;
+
+  vSoundplayer.tag.opus.Back_Blur := TGaussianBlurEffect.Create(vSoundplayer.tag.opus.Back);
+  vSoundplayer.tag.opus.Back_Blur.Name := 'A_SP_Tag_Opus_Blur';
+  vSoundplayer.tag.opus.Back_Blur.Parent := vSoundplayer.tag.opus.Back;
+  vSoundplayer.tag.opus.Back_Blur.BlurAmount := 0.5;
+  vSoundplayer.tag.opus.Back_Blur.Enabled := False;
+
+  uLoad_SetAll_CreateHeader(vSoundplayer.tag.opus.Back, 'A_SP_Tag_Opus', addons.Soundplayer.Path.Images +
+    'sp_tag_opus.png', 'Tag ogg,opus');
+
+  // Prepei na balo ola se tab prota to opus/ogg meta to info
+
+  vSoundplayer.tag.opus.Main := TPanel.Create(vSoundplayer.tag.opus.Back);
+  vSoundplayer.tag.opus.Main.Name := 'A_SP_Opus_Main';
+  vSoundplayer.tag.opus.Main.Parent := vSoundplayer.tag.opus.Back;
+  vSoundplayer.tag.opus.Main.SetBounds(0, 30, vSoundplayer.tag.opus.Back.Width,
+    vSoundplayer.tag.opus.Back.Height - 30);
+  vSoundplayer.tag.opus.Main.Visible := True;
 
   vSoundplayer.tag.opus.Logo := TImage.Create(vSoundplayer.tag.opus.Back);
   vSoundplayer.tag.opus.Logo.Name := 'A_SP_Tag_Opus_Logo';
@@ -47,12 +68,6 @@ begin
   vSoundplayer.tag.opus.Logo.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_tag_opus.png');
   vSoundplayer.tag.opus.Logo.WrapMode := TImageWrapMode.Fit;
   vSoundplayer.tag.opus.Logo.Visible := True;
-
-  vSoundplayer.tag.opus.Back_Blur := TGaussianBlurEffect.Create(vSoundplayer.tag.opus.Back);
-  vSoundplayer.tag.opus.Back_Blur.Name := 'A_SP_Tag_Opus_Blur';
-  vSoundplayer.tag.opus.Back_Blur.Parent := vSoundplayer.tag.opus.Back;
-  vSoundplayer.tag.opus.Back_Blur.BlurAmount := 0.5;
-  vSoundplayer.tag.opus.Back_Blur.Enabled := False;
 
   vSoundplayer.tag.opus.Title := TLabel.Create(vSoundplayer.tag.opus.Back);
   vSoundplayer.tag.opus.Title.Name := 'A_SP_Tag_Opus_Title';
@@ -366,7 +381,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.tag.opus.Back);
-  uSoundPlayer_Player.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
+  uSoundplayer_Player.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
 end;
 
 end.

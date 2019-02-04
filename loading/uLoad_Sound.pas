@@ -4,6 +4,7 @@ interface
 uses
   System.Classes,
   Winapi.Windows,
+  FMX.Dialogs,
   Bass;
 
   procedure uLoad_Sound_StartSoundSystem;
@@ -16,13 +17,19 @@ uses
 
 procedure uLoad_Sound_StartSoundSystem;
 begin
+// Edo ola prepei na mpoune se katastasi try with expections.
+
   if (HiWord(BASS_GetVersion) <> BASSVERSION) then
 	  begin
 		  MessageBox(0,'An incorrect version of BASS.DLL was loaded',nil,MB_ICONERROR);
   		Halt;
 	  end;
-  	if not BASS_Init(-1, 44100, BASS_DEVICE_SPEAKERS, Winapi.Windows.HANDLE_PTR(Main_Form), nil) then
+  if not BASS_Init(-1, 44100, BASS_DEVICE_SPEAKERS, Winapi.Windows.HANDLE_PTR(Main_Form), nil) then
       MessageBox(0,'Error initializing audio!',nil,MB_ICONERROR);
+  if BASS_PluginLoad(PChar(extrafe.prog.Paths.Lib+ 'bass_fx.dll'), 0)= 0 then
+    begin
+
+    end;
 end;
 
 procedure uLoad_Sound_LoadSounds;

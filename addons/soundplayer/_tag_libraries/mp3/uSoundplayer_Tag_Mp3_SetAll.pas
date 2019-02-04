@@ -36,6 +36,7 @@ uses
   uSnippet_Text,
   uLoad_AllTypes,
   uMain_SetAll,
+  uSoundplayer,
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
   uSoundplayer_Player,
@@ -757,10 +758,14 @@ begin
 end;
 
 procedure uSoundplayer_TagSet_Mp3;
+const
+  cTabNames: array [0..2] of string= ('ID3v1','Id3v2','Info');
 var
   vi: Integer;
 begin
   extrafe.prog.State := 'addon_soundplayer_tag_mp3';
+
+  uSoundplayer.Hide_Animations;
 
   vSoundplayer.tag.mp3.Back := TPanel.Create(vSoundplayer.scene.Soundplayer);
   vSoundplayer.tag.mp3.Back.Name := 'A_SP_Tag_Mp3';
@@ -775,27 +780,36 @@ begin
   vSoundplayer.tag.mp3.Back_Blur.BlurAmount := 0.5;
   vSoundplayer.tag.mp3.Back_Blur.Enabled := False;
 
-  vSoundplayer.tag.mp3.Logo := TImage.Create(vSoundplayer.tag.mp3.Back);
+  uLoad_AllTypes.uLoad_SetAll_CreateHeader(vSoundplayer.tag.mp3.Back, 'A_SP_Tag_Mp3',
+    addons.Soundplayer.Path.Images + 'sp_tag_mp3.png', 'Tag mp3');
+
+  vSoundplayer.Tag.mp3.Main:= TPanel.Create(vSoundplayer.Tag.mp3.Back);
+  vSoundplayer.Tag.mp3.Main.Name:= 'A_SP_Back_Main';
+  vSoundplayer.Tag.mp3.Main.Parent:=  vSoundplayer.Tag.mp3.Back;
+  vSoundplayer.Tag.mp3.Main.SetBounds(0, 30, vSoundplayer.Tag.mp3.Back.Width, vSoundplayer.Tag.mp3.Back.Height - 30);
+  vSoundplayer.Tag.mp3.Main.Visible:= True;
+
+  vSoundplayer.tag.mp3.Logo := TImage.Create(vSoundplayer.Tag.mp3.Main);
   vSoundplayer.tag.mp3.Logo.Name := 'A_SP_Tag_Mp3_Logo';
-  vSoundplayer.tag.mp3.Logo.Parent := vSoundplayer.tag.mp3.Back;
-  vSoundplayer.tag.mp3.Logo.SetBounds(vSoundplayer.tag.mp3.Back.Width - 60, 10, 50, 50);
+  vSoundplayer.tag.mp3.Logo.Parent := vSoundplayer.Tag.mp3.Main;
+  vSoundplayer.tag.mp3.Logo.SetBounds(vSoundplayer.Tag.mp3.Main.Width - 60, 5, 50, 50);
   vSoundplayer.tag.mp3.Logo.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_tag_mp3.png');
   vSoundplayer.tag.mp3.Logo.WrapMode := TImageWrapMode.Fit;
   vSoundplayer.tag.mp3.Logo.Visible := True;
 
-  vSoundplayer.tag.mp3.TabControl := TTabControl.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.TabControl := TTabControl.Create(vSoundplayer.Tag.mp3.Main);
   vSoundplayer.tag.mp3.TabControl.Name := 'A_SP_Tag_Mp3_TabControl';
-  vSoundplayer.tag.mp3.TabControl.Parent := vSoundplayer.tag.mp3.Back;
-  vSoundplayer.tag.mp3.TabControl.SetBounds(10, 60, vSoundplayer.tag.mp3.Back.Width - 20,
+  vSoundplayer.tag.mp3.TabControl.Parent := vSoundplayer.Tag.mp3.Main;
+  vSoundplayer.tag.mp3.TabControl.SetBounds(10, 30, vSoundplayer.Tag.mp3.Main.Width - 20,
     vSoundplayer.tag.mp3.Back.Height - 100);
   vSoundplayer.tag.mp3.TabControl.Visible := True;
 
-  for vi := 0 to 1 do
+  for vi := 0 to 2 do
   begin
     vSoundplayer.tag.mp3.TabItem[vi] := TTabItem.Create(vSoundplayer.tag.mp3.TabControl);
     vSoundplayer.tag.mp3.TabItem[vi].Name := 'A_SP_Tag_Mp3_TabItem_' + IntToStr(vi);
     vSoundplayer.tag.mp3.TabItem[vi].Parent := vSoundplayer.tag.mp3.TabControl;
-    vSoundplayer.tag.mp3.TabItem[vi].Text := 'ID3v' + IntToStr(vi + 1);
+    vSoundplayer.tag.mp3.TabItem[vi].Text := cTabNames[vi];
     vSoundplayer.tag.mp3.TabItem[vi].Width := vSoundplayer.tag.mp3.TabControl.Width;
     vSoundplayer.tag.mp3.TabItem[vi].Height := vSoundplayer.tag.mp3.TabControl.Height;
     vSoundplayer.tag.mp3.TabItem[vi].Visible := True;

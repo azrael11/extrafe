@@ -29,7 +29,7 @@ begin
   if vSoundplayer.Playlist.Remove_Icon_Grey.Enabled = False then
   begin
     vSoundplayer.scene.Back_Blur.Enabled := True;
-
+    uSoundplayer.Hide_Animations;
     extrafe.prog.State := 'addon_soundplayer_playlist_remove';
 
     vSoundplayer.Playlist.Remove.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);

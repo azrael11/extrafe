@@ -32,6 +32,7 @@ uses
   OggVorbisAndOpusTagLibrary,
   uSoundplayer_Mouse,
   uSoundplayer_Tag_Mouse,
+  uSoundplayer_Equalizer_Mouse,
   Bass;
 
 type
@@ -61,6 +62,18 @@ type
     // ape:
     // wav:
     // wma:
+  end;
+
+
+type
+  TADDON_SOUNDPLAYER_EQUALIZER = record
+    PreAmp: Single;
+    Pan: Single;
+    Param: array [0 .. 9] of Single;
+    Preset: String;
+    Live_Preview: Boolean;
+    Cross_Fade: Boolean;
+    Cross_Fade_Sec: Integer;
   end;
 
 type
@@ -176,6 +189,7 @@ type
   TADDON_SOUNDPLAYER_INPUT = record
     mouse: TSOUNDPLAYER_MOUSE_ACTIONS;
     mouse_tag: TSOUNDPLAYER_MOUSE_TAG_ACTIONS;
+    mouse_eq: TSOUNDPLAYER_MOUSE_EQUALIZER_ACTIONS;
     // keyboard:
     // joystick:
   end;
@@ -199,6 +213,7 @@ type
     Main_Menu_Position: Integer;
     Actions: TADDON_SOUNDPLAYER_ACTIONS;
     Player: TADDON_SOUNDPLAYER_PLAYER;
+    Equalizer: TADDON_SOUNDPLAYER_EQUALIZER;
     Info: TADDON_SOUNDPLAYER_INFO;
     Playlist: TADDON_SOUNDPLAYER_PLAYLIST;
     Volume: TADDON_SOUNDPLAYER_VOLUME;
@@ -316,7 +331,7 @@ type
     Speaker_Right_Lock_Volume: TImage;
     Speaker_Right_Lock_Volume_Glow: TGlowEffect;
     Speaker_Right_Volume_Pos: TALTrackBar;
-    Equalizer: Timage;
+    Equalizer: TImage;
     Equalizer_Glow: TGlowEffect;
   end;
 
@@ -495,6 +510,30 @@ type
   end;
 
 type
+  TSOUNDPLAYER_ADDON_EQUALIZER = record
+    Panel: Tpanel;
+    Main: Tpanel;
+    Pan: TALTrackBar;
+    Pan_Metric: TLabel;
+    Pan_Labels: array [0 .. 1] of TLabel;
+    High: TLabel;
+    Middle: TLabel;
+    Low: TLabel;
+    PreAMP: TALTrackBar;
+    PreAMP_Label: TLabel;
+    Param: array [0 .. 9] of TALTrackBar;
+    Parem_Label: array [0 .. 9] of TLabel;
+    Live_Preview: TCheckBox;
+    Preset: Tpanel;
+    Presets: TListBox;
+    Preset_Load: TImage;
+    Preset_Save: TImage;
+    Preset_Delete: TImage;
+    Apply: TButton;
+    Cancel: TButton;
+  end;
+
+type
   TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v1 = record
     Title: TLabel;
     Title_V: TEdit;
@@ -599,6 +638,7 @@ type
   TSOUNDPLAYER_ADDON_TAGS_MP3 = record
     Back: Tpanel;
     Back_Blur: TGaussianBlurEffect;
+    Main: Tpanel;
     Logo: TImage;
     Button_Save: TButton;
     Button_Cancel: TButton;
@@ -629,6 +669,7 @@ type
   TSOUNDPLAYER_ADDON_TAGS_OPUS = record
     Back: Tpanel;
     Back_Blur: TGaussianBlurEffect;
+    Main: Tpanel;
     Logo: TImage;
     Button_Save: TButton;
     Button_Cancel: TButton;
@@ -682,6 +723,7 @@ type
     Info: TSOUNDPLAYER_ADDON_INFO;
     Playlist: TSOUNDPLAYER_ADDON_PLAYLIST;
     Timer: TSOUNDPLAYER_ADDON_TIMER;
+    EQ: TSOUNDPLAYER_ADDON_EQUALIZER;
     Tag: TSOUNDPLAYER_ADDON_TAGS;
     config: TSOUNDPLAYER_ADDON_CONFIG;
     Ani: TSOUNDPLAYER_ADDON_FLOATANIMATION;

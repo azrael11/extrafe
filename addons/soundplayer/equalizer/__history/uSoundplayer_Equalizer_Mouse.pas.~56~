@@ -1,0 +1,166 @@
+unit uSoundplayer_Equalizer_Mouse;
+
+interface
+
+uses
+  System.Classes,
+  System.UiTypes,
+  FMX.StdCtrls,
+  ALFmxStdCtrls;
+
+type
+  TSOUNDPLAYER_EQUALIZER_BUTTON = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TSOUNDPLAYER_EQUALIZER_TRACKBAR = class(TObject)
+    procedure OnChange(Sender: TObject);
+    procedure OnMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+    procedure OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+  end;
+
+type
+  TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB = class(TObject)
+    procedure OnChange(Sender: TObject);
+    procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+    procedure OnMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+    procedure OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+  end;
+
+type
+  TSOUNDPLAYER_EQUALIZER_CHECKBOX = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+
+type
+  TSOUNDPLAYER_MOUSE_EQUALIZER_ACTIONS = record
+    Button: TSOUNDPLAYER_EQUALIZER_BUTTON;
+    Trackbar: TSOUNDPLAYER_EQUALIZER_TRACKBAR;
+    Trackbar_Thump: TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB;
+    Checkbox: TSOUNDPLAYER_EQUALIZER_CHECKBOX;
+  end;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uSoundplayer_Equalizer_SetAll,
+  uSoundplayer_Equalizer;
+
+{ TSOUNDPLAYER_EQUALIZER_BUTTON }
+
+procedure TSOUNDPLAYER_EQUALIZER_BUTTON.OnMouseClick(Sender: TObject);
+begin
+  if TButton(Sender).Name = 'A_SP_Equalizer_Cancel' then
+    uSoundplayer_Equalizer_SetAll.Free;
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_BUTTON.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_BUTTON.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+{ TSOUNDPLAYER_EQUALIZER_TRACKBAR }
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR.OnChange(Sender: TObject);
+begin
+  if TALTrackBar(Sender).Name = 'A_SP_Equalizer_Pan' then
+    uSoundplayer_Equalizer.Update_Pan(Round(TALTrackBar(Sender).Value));
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR.OnMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR.OnMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
+  X, Y: Single);
+begin
+
+end;
+
+{ TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB }
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB.OnChange(Sender: TObject);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB.OnMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB.OnMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Single);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB.OnMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+
+end;
+
+{ TSOUNDPLAYER_EQUALIZER_CHECKBOX }
+
+procedure TSOUNDPLAYER_EQUALIZER_CHECKBOX.OnMouseClick(Sender: TObject);
+begin
+  if TCheckBox(Sender).Name= 'A_SP_Equalizer_Live_Preview' then
+    begin
+
+    end;
+  
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_CHECKBOX.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TSOUNDPLAYER_EQUALIZER_CHECKBOX.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+initialization
+
+addons.soundplayer.Input.mouse_eq.Button := TSOUNDPLAYER_EQUALIZER_BUTTON.Create;
+addons.soundplayer.Input.mouse_eq.Trackbar:= TSOUNDPLAYER_EQUALIZER_TRACKBAR.Create;
+addons.soundplayer.Input.mouse_eq.Trackbar_Thump:= TSOUNDPLAYER_EQUALIZER_TRACKBAR_THUMB.Create;
+addons.soundplayer.Input.mouse_eq.Checkbox:= TSOUNDPLAYER_EQUALIZER_CHECKBOX.Create;
+
+finalization
+
+addons.soundplayer.Input.mouse_eq.Button.Free;
+addons.soundplayer.Input.mouse_eq.Trackbar.Free;
+addons.soundplayer.Input.mouse_eq.Trackbar_Thump.Free;
+addons.soundplayer.Input.mouse_eq.Checkbox.Free;
+
+end.

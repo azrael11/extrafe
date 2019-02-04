@@ -98,6 +98,7 @@ begin
   if vPlay then
     BASS_ChannelPlay(sound.str_music[1], False);
   BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, vVolume);
+  BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_PAN, (addons.soundplayer.Equalizer.Pan/ 100));
 end;
 
 procedure Refresh;

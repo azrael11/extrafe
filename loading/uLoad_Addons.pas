@@ -394,6 +394,21 @@ begin
   addons.soundplayer.ini.ini.WriteInteger('Volume', 'Master', 1);
   addons.soundplayer.ini.ini.WriteInteger('Volume', 'Left', 1);
   addons.soundplayer.ini.ini.WriteInteger('Volume', 'Right', 1);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Pan', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'PreAMP', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_0', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_1', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_2', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_3', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_4', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_5', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_6', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_7', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_8', 0);
+  addons.soundplayer.ini.ini.WriteFloat('Equalizer', 'Param_9', 0);
+  addons.soundplayer.ini.ini.WriteString('Equalizer', 'Preset', 'Default');
+  addons.soundplayer.ini.ini.WriteBool('Equalizer', 'Cross_Fade', False);
+  addons.soundplayer.ini.ini.WriteInteger('Equalizer', 'Cross_Fade_Secs', 0);
 end;
 
 procedure uLoad_Addons_Soundplayer_Load;
@@ -433,6 +448,38 @@ begin
     addons.soundplayer.Volume.Left);
   addons.soundplayer.Volume.Right := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Right',
     addons.soundplayer.Volume.Right);
+
+  addons.soundplayer.Equalizer.PreAmp := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'PreAMP',
+    addons.soundplayer.Equalizer.PreAmp);
+  addons.soundplayer.Equalizer.Pan := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Pan',
+    addons.soundplayer.Equalizer.Pan);
+  addons.soundplayer.Equalizer.Param[0] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_0',
+    addons.soundplayer.Equalizer.Param[0]);
+  addons.soundplayer.Equalizer.Param[1] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_1',
+    addons.soundplayer.Equalizer.Param[1]);
+  addons.soundplayer.Equalizer.Param[2] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_2',
+    addons.soundplayer.Equalizer.Param[2]);
+  addons.soundplayer.Equalizer.Param[3] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_3',
+    addons.soundplayer.Equalizer.Param[3]);
+  addons.soundplayer.Equalizer.Param[4] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_4',
+    addons.soundplayer.Equalizer.Param[4]);
+  addons.soundplayer.Equalizer.Param[5] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_5',
+    addons.soundplayer.Equalizer.Param[5]);
+  addons.soundplayer.Equalizer.Param[6] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_6',
+    addons.soundplayer.Equalizer.Param[6]);
+  addons.soundplayer.Equalizer.Param[7] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_7',
+    addons.soundplayer.Equalizer.Param[7]);
+  addons.soundplayer.Equalizer.Param[8] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_8',
+    addons.soundplayer.Equalizer.Param[8]);
+  addons.soundplayer.Equalizer.Param[9] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_9',
+    addons.soundplayer.Equalizer.Param[9]);
+  addons.soundplayer.Equalizer.Preset := addons.soundplayer.ini.ini.ReadString('Equalizer', 'Preset',
+    addons.soundplayer.Equalizer.Preset);
+  addons.soundplayer.Equalizer.Live_Preview := False;
+  addons.soundplayer.Equalizer.Cross_Fade := addons.soundplayer.ini.ini.ReadBool('Equalizer', 'Cross_Fade',
+    addons.soundplayer.Equalizer.Cross_Fade);
+  addons.soundplayer.Equalizer.Cross_Fade_Sec := addons.soundplayer.ini.ini.ReadInteger('Equalizer',
+    'Cross_Fade_Secs', addons.soundplayer.Equalizer.Cross_Fade_Sec);
 end;
 
 /// //////////////////////////////////////////////////////////////////////////////////////////////////////////

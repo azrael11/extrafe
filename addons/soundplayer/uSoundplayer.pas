@@ -12,6 +12,8 @@ procedure Free;
 procedure Set_FirstTime;
 procedure Set_WithActivePlaylist(vPlaylist: Integer);
 procedure Set_WithActiveSong;
+
+procedure Hide_Animations;
 procedure Set_Animations;
 
 procedure CheckFirst(vCheched: Boolean);
@@ -232,6 +234,17 @@ begin
 
   vSoundplayer.info.Back_Left_Ani.Start;
   vSoundplayer.info.Back_Right_Ani.Start;
+
+  addons.Soundplayer.info.isCoverInFullscreen := False;
+end;
+
+procedure Hide_Animations;
+begin
+  vSoundplayer.Info.Back_Left_Ani.Stop;
+  vSoundplayer.Info.Back_Right_Ani.Stop;
+
+  vSoundplayer.info.Back_Left.Position.X := -558;
+  vSoundplayer.info.Back_Right.Position.X := 1878;
 
   addons.Soundplayer.info.isCoverInFullscreen := False;
 end;
