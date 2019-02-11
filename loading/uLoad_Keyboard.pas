@@ -13,7 +13,7 @@ uses
   loading,
   uLoad,
   uLoad_AllTypes,
-  uLoad_Actions;
+  uLoad_Login;
 
 procedure uLoad_Keyboard_SetKey(vKey: String);
 begin
@@ -22,7 +22,7 @@ begin
       if ex_load.Login.User_V.IsFocused then
         ex_load.Login.Pass_V.SetFocus
       else if ex_load.Login.Pass_V.IsFocused then
-        uLoad_Actions_Login;
+        uLoad_Login.Login;
     end
   else if UpperCase(vKey) = 'CAPS LOCK' then
     ex_load.Login.CapsLock.Visible := not ex_load.Login.CapsLock.Visible;

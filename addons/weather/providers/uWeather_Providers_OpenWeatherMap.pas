@@ -59,7 +59,8 @@ uses
   uWeather_Config_Towns,
   uWeather_Convert,
   uWeather_MenuActions,
-  uWeather_Actions;
+  uWeather_Actions,
+  uSnippet_Convert;
 
 procedure uWeather_Providers_OpenWeatherMap_Load;
 var
@@ -210,7 +211,7 @@ begin
   Result.Last_Checked := vJSONValue.GetValue<String>('dt');
   Result.Last_Checked := uWeather_Providers_OpenWeatherMap_ConvertHeadline_ConfigPanel(Result.Last_Checked);
   Result.Country_FlagCode := vJSONValue.GetValue<String>('sys.country');
-  Result.Country := uWeather_Convert_CodeToCountryName(LowerCase(Result.Country_FlagCode));
+  Result.Country := uSnippet_Convert.Code_To_Country(LowerCase(Result.Country_FlagCode));
   Result.Sunrise := vJSONValue.GetValue<String>('sys.sunrise');
   Result.Sunrise := uWeather_Providers_OpenWeatherMap_ConvertTime(Result.Sunrise);
   Result.Sunset := vJSONValue.GetValue<String>('sys.sunset');

@@ -30,10 +30,18 @@ type
     procedure OnMouseEnter(Sender: TObject);
     procedure OnMouseLeave(Sender: TObject);
     procedure OnTyping(Sender: TObject);
+    procedure OnChange(Sender: TObject);
   end;
 
 type
   TLOADING_TEXT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TLOADING_CHECKBOX = class(TObject)
     procedure OnMouseClick(Sender: TObject);
     procedure OnMouseEnter(Sender: TObject);
     procedure OnMouseLeave(Sender: TObject);
@@ -45,6 +53,7 @@ type
     Button: TLOADING_BUTTON;
     Edit: TLOADING_EDIT;
     Text: TLOADING_TEXT;
+    Checkbox: TLOADING_CHECKBOX;
   end;
 
 implementation
@@ -54,27 +63,32 @@ uses
   uKeyboard,
   uLoad_AllTypes,
   uLoad_SetAll,
-  uLoad_Actions;
+  uLoad_Login,
+  uLoad_Register,
+  uLoad_Forgat;
 
 { TLOADING_BUTTON }
 
 procedure TLOADING_BUTTON.OnMouseClick(Sender: TObject);
 begin
   if TButton(Sender).Name = 'Loading_Login_Login' then
-    uLoad_Actions_Login
+    uLoad_Login.Login
   else if TButton(Sender).Name = 'Loading_Login_Exit' then
     Application.Terminate
-  else if TButton(Sender).Name= 'Loading_Reg_Cancel' then
-    uLoad_Actions_Return_Login('Register')
+  else if TButton(Sender).Name= 'Loading_Reg_Register' then
+    uLoad_Register.Apply
+  else if TButton(Sender).Name = 'Loading_Reg_Cancel' then
+    uLoad_Register.Cancel
   else if TButton(Sender).Name = 'Loading_FPass_Send' then
-    uLoad_Actions_SendEmail
+    uLoad_Forgat.Send_Pass_WithEmail(ex_load)
   else if TButton(Sender).Name = 'Loading_FPass_Cancel' then
-    uLoad_Actions_Return_Login('FPass')
+    uLoad_Forgat.Cancel
   else if TButton(Sender).Name = 'Loading_Terms_Close' then
-    begin
-      FreeAndNil(ex_load.Terms.Panel);
-      ex_load.Reg.Main.Terms_Check.Enabled:= True;
-    end;
+  begin
+    FreeAndNil(ex_load.Terms.Panel);
+    ex_load.Reg.Main.Terms_Check.Enabled := True;
+    uLoad_Register.Update_ReadTerms;
+  end;
 end;
 
 procedure TLOADING_BUTTON.OnMouseEnter(Sender: TObject);
@@ -91,24 +105,55 @@ end;
 
 procedure TLOADING_IMAGE.OnMouseClick(Sender: TObject);
 begin
-
+  if TImage(Sender).Name= 'Loading_Register_Capt_Refresh' then
+   uLoad_Register.Refresh_Captcha
+  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
+    ex_load.Reg.Main.Pass_V.Password:= not ex_load.Reg.Main.Pass_V.Password
+  else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
+    ex_load.Reg.Main.RePass_V.Password:= not ex_load.Reg.Main.RePass_V.Password
 end;
 
 procedure TLOADING_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-
+  if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
+    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := True
+  else if TImage(Sender).Name= 'Loading_Register_Pass_Show' then
+    ex_load.Reg.Main.Pass_Show_Glow.Enabled:= True
+  else if TImage(Sender).Name= 'Loading_Register_RePass_Show' then
+    ex_load.Reg.Main.RePass_Show_Glow.Enabled:= True
 end;
 
 procedure TLOADING_IMAGE.OnMouseLeave(Sender: TObject);
 begin
-
+  if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
+    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := False
+  else if TImage(Sender).Name= 'Loading_Register_Pass_Show' then
+    ex_load.Reg.Main.Pass_Show_Glow.Enabled:= False
+  else if TImage(Sender).Name= 'Loading_Register_RePass_Show' then
+    ex_load.Reg.Main.RePass_Show_Glow.Enabled:= False
 end;
 
 { TLOADING_EDIT }
 
-procedure TLOADING_EDIT.OnMouseClick(Sender: TObject);
+procedure TLOADING_EDIT.OnChange(Sender: TObject);
 begin
 
+end;
+
+procedure TLOADING_EDIT.OnMouseClick(Sender: TObject);
+begin
+  if TEdit(Sender).Name = 'Loading_Register_User_V' then
+    uLoad_Register.Enable_Help(0)
+  else if TEdit(Sender).Name = 'Loading_Register_Pass_V' then
+    uLoad_Register.Enable_Help(1)
+  else if TEdit(Sender).Name = 'Loading_Register_RePass_V' then
+    uLoad_Register.Enable_Help(2)
+  else if TEdit(Sender).Name = 'Loading_Register_Email_V' then
+    uLoad_Register.Enable_Help(3)
+  else if TEdit(Sender).Name = 'Loading_Register_ReEmail_V' then
+    uLoad_Register.Enable_Help(4)
+  else if TEdit(Sender).Name = 'Loading_Register_Capt_V' then
+    uLoad_Register.Enable_Help(7)
 end;
 
 procedure TLOADING_EDIT.OnMouseEnter(Sender: TObject);
@@ -135,7 +180,19 @@ begin
       ex_load.Login.Warning.Visible := False;
       ex_load.Login.Forget_Pass.Visible := False;
     end;
-  end;
+  end
+  else if TEdit(Sender).Name = 'Loading_Register_User_V' then
+    uLoad_Register.Update_Username(TEdit(Sender).Text)
+  else if TEdit(Sender).Name = 'Loading_Register_Pass_V' then
+    uLoad_Register.Update_Password(TEdit(Sender).Text)
+  else if TEdit(Sender).Name = 'Loading_Register_RePass_V' then
+    uLoad_Register.Update_RePassword(TEdit(Sender).Text)
+  else if TEdit(Sender).Name = 'Loading_Register_Email_V' then
+    uLoad_Register.Update_Email(TEdit(Sender).Text)
+  else if TEdit(Sender).Name = 'Loading_Register_ReEmail_V' then
+    uLoad_Register.Update_ReEmail(TEdit(Sender).Text)
+  else if TEdit(Sender).Name = 'Loading_Register_Capt_V' then
+    uLoad_Register.Update_Captcha(TEdit(Sender).Text);
 end;
 
 { TLOADING_TEXT }
@@ -157,7 +214,10 @@ begin
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
   else if TText(Sender).Name = 'Loading_Register_Terms' then
-    uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+    begin
+      uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender));
+      uLoad_Register.Enable_Help(5);
+    end;
 end;
 
 procedure TLOADING_TEXT.OnMouseLeave(Sender: TObject);
@@ -170,12 +230,32 @@ begin
     uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
 end;
 
+{ TLOADING_CHECKBOX }
+
+procedure TLOADING_CHECKBOX.OnMouseClick(Sender: TObject);
+begin
+  if TCheckBox(Sender).Name= 'Loading_Register_Terms_Check' then
+    uLoad_Register.Update_AcceptTerms(not TCheckBox(Sender).IsChecked);
+end;
+
+procedure TLOADING_CHECKBOX.OnMouseEnter(Sender: TObject);
+begin
+  if TCheckBox(Sender).Name= 'Loading_Register_Terms_Check' then
+    uLoad_Register.Enable_Help(6);
+end;
+
+procedure TLOADING_CHECKBOX.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
 initialization
 
 ex_load.Input.mouse.Button := TLOADING_BUTTON.Create;
 ex_load.Input.mouse.Image := TLOADING_IMAGE.Create;
 ex_load.Input.mouse.Edit := TLOADING_EDIT.Create;
 ex_load.Input.mouse.Text := TLOADING_TEXT.Create;
+ex_load.Input.mouse.Checkbox := TLOADING_CHECKBOX.Create;
 
 finalization
 
@@ -183,5 +263,6 @@ ex_load.Input.mouse.Button.Free;
 ex_load.Input.mouse.Image.Free;
 ex_load.Input.mouse.Edit.Free;
 ex_load.Input.mouse.Text.Free;
+ex_load.Input.mouse.Checkbox.Free;
 
 end.

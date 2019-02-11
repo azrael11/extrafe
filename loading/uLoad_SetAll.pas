@@ -13,7 +13,8 @@ uses
   FMX.Ani,
   FMX.Types,
   FMX.Edit,
-  FMX.Memo;
+  FMX.Memo,
+  FMX.Filter.Effects;
 
 procedure uLoad_SetAll_Load;
 procedure uLoad_SetAll_Login;
@@ -25,7 +26,9 @@ implementation
 
 uses
   loading,
-  uLoad_AllTypes;
+  uLoad_AllTypes,
+  uLoad_Register;
+
 
 procedure uLoad_SetAll_Load;
 begin
@@ -34,7 +37,7 @@ begin
   ex_load.Scene.Back.Name := 'Loading_Back';
   ex_load.Scene.Back.Parent := Loading_Form;
   ex_load.Scene.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
-  ex_load.Scene.Back.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'load.png');
+  ex_load.Scene.Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back.WrapMode := TImageWrapMode.Fit;
   ex_load.Scene.Back.Visible := True;
 
@@ -52,7 +55,7 @@ begin
   ex_load.Scene.Logo.Name := 'Loading_Logo';
   ex_load.Scene.Logo.Parent := ex_load.Scene.Back;
   ex_load.Scene.Logo.SetBounds(0, 0, 530, 340);
-  ex_load.Scene.Logo.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'logo.png');
+  ex_load.Scene.Logo.Bitmap.LoadFromFile(ex_load.Path.Images + 'logo.png');
   ex_load.Scene.Logo.WrapMode := TImageWrapMode.Fit;
   ex_load.Scene.Logo.Visible := True;
 
@@ -145,33 +148,42 @@ begin
   ex_load.Login.Panel_Login_Correct.StartValue := 0.2;
   ex_load.Login.Panel_Login_Correct.Enabled := False;
 
-  ex_load.Login.Avatar := TImage.Create(ex_load.Login.Panel);
+  uLoad_SetAll_CreateHeader(ex_load.Login.Panel, 'Loading_Login', ex_load.Path.Images + 'login.png',
+    'Login');
+
+  ex_load.Login.Main := TPanel.Create(ex_load.Login.Panel);
+  ex_load.Login.Main.Name := 'Loading_Main';
+  ex_load.Login.Main.Parent := ex_load.Login.Panel;
+  ex_load.Login.Main.SetBounds(0, 30, ex_load.Login.Panel.Width, ex_load.Login.Panel.Height - 30);
+  ex_load.Login.Main.Visible := True;
+
+  ex_load.Login.Avatar := TImage.Create(ex_load.Login.Main);
   ex_load.Login.Avatar.Name := 'Loading_Login_Avatar';
-  ex_load.Login.Avatar.Parent := ex_load.Login.Panel;
+  ex_load.Login.Avatar.Parent := ex_load.Login.Main;
   ex_load.Login.Avatar.SetBounds(16, 24, 100, 100);
   ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
   ex_load.Login.Avatar.WrapMode := TImageWrapMode.Fit;
   ex_load.Login.Avatar.Visible := True;
 
-  ex_load.Login.CapsLock := TText.Create(ex_load.Login.Panel);
+  ex_load.Login.CapsLock := TText.Create(ex_load.Login.Main);
   ex_load.Login.CapsLock.Name := 'Loading_Login_CapsLock';
-  ex_load.Login.CapsLock.Parent := ex_load.Login.Panel;
+  ex_load.Login.CapsLock.Parent := ex_load.Login.Main;
   ex_load.Login.CapsLock.SetBounds(328, 90, 150, 17);
   ex_load.Login.CapsLock.Text := 'Caps Lock is on';
   ex_load.Login.CapsLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   ex_load.Login.CapsLock.TextSettings.HorzAlign := TTextAlign.Trailing;
   ex_load.Login.CapsLock.Visible := False;
 
-  ex_load.Login.User := TLabel.Create(ex_load.Login.Panel);
+  ex_load.Login.User := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.User.Name := 'Loading_Login_User';
-  ex_load.Login.User.Parent := ex_load.Login.Panel;
+  ex_load.Login.User.Parent := ex_load.Login.Main;
   ex_load.Login.User.SetBounds(152, 24, 200, 17);
   ex_load.Login.User.Text := 'Username :';
   ex_load.Login.User.Visible := True;
 
-  ex_load.Login.User_V := TEdit.Create(ex_load.Login.Panel);
+  ex_load.Login.User_V := TEdit.Create(ex_load.Login.Main);
   ex_load.Login.User_V.Name := 'Loading_Login_User_V';
-  ex_load.Login.User_V.Parent := ex_load.Login.Panel;
+  ex_load.Login.User_V.Parent := ex_load.Login.Main;
   ex_load.Login.User_V.SetBounds(152, 40, 329, 36);
   ex_load.Login.User_V.HitTest := True;
   ex_load.Login.User_V.TextSettings.FontColor := TAlphaColorRec.White;
@@ -184,16 +196,16 @@ begin
   ex_load.Login.User_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Login.User_V.Visible := True;
 
-  ex_load.Login.Pass := TLabel.Create(ex_load.Login.Panel);
+  ex_load.Login.Pass := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Pass.Name := 'Loading_Login_Pass';
-  ex_load.Login.Pass.Parent := ex_load.Login.Panel;
+  ex_load.Login.Pass.Parent := ex_load.Login.Main;
   ex_load.Login.Pass.SetBounds(152, 96, 200, 17);
   ex_load.Login.Pass.Text := 'Password :';
   ex_load.Login.Pass.Visible := True;
 
-  ex_load.Login.Pass_V := TEdit.Create(ex_load.Login.Panel);
+  ex_load.Login.Pass_V := TEdit.Create(ex_load.Login.Main);
   ex_load.Login.Pass_V.Name := 'Loading_Login_Pass_V';
-  ex_load.Login.Pass_V.Parent := ex_load.Login.Panel;
+  ex_load.Login.Pass_V.Parent := ex_load.Login.Main;
   ex_load.Login.Pass_V.SetBounds(152, 112, 329, 36);
   ex_load.Login.Pass_V.HitTest := True;
   ex_load.Login.Pass_V.TextSettings.FontColor := TAlphaColorRec.White;
@@ -207,55 +219,67 @@ begin
   ex_load.Login.Pass_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Login.Pass_V.Visible := True;
 
-  ex_load.Login.Login := TButton.Create(ex_load.Login.Panel);
+  ex_load.Login.Login := TButton.Create(ex_load.Login.Main);
   ex_load.Login.Login.Name := 'Loading_Login_Login';
-  ex_load.Login.Login.Parent := ex_load.Login.Panel;
+  ex_load.Login.Login.Parent := ex_load.Login.Main;
   ex_load.Login.Login.SetBounds(400, 184, 80, 22);
   ex_load.Login.Login.Text := 'Login';
   ex_load.Login.Login.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.Login.Login.Visible := True;
 
-  ex_load.Login.Exit_ExtraFE := TButton.Create(ex_load.Login.Panel);
+  ex_load.Login.Exit_ExtraFE := TButton.Create(ex_load.Login.Main);
   ex_load.Login.Exit_ExtraFE.Name := 'Loading_Login_Exit';
-  ex_load.Login.Exit_ExtraFE.Parent := ex_load.Login.Panel;
+  ex_load.Login.Exit_ExtraFE.Parent := ex_load.Login.Main;
   ex_load.Login.Exit_ExtraFE.SetBounds(400, 216, 80, 22);
   ex_load.Login.Exit_ExtraFE.Text := 'Exit';
   ex_load.Login.Exit_ExtraFE.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.Login.Exit_ExtraFE.Visible := True;
 
-  ex_load.Login.Int_Icon := TImage.Create(ex_load.Login.Panel);
+  ex_load.Login.Int_Icon := TImage.Create(ex_load.Login.Main);
   ex_load.Login.Int_Icon.Name := 'Loading_Login_Internet_Icon';
-  ex_load.Login.Int_Icon.Parent := ex_load.Login.Panel;
+  ex_load.Login.Int_Icon.Parent := ex_load.Login.Main;
   ex_load.Login.Int_Icon.SetBounds(16, 248, 25, 25);
-  ex_load.Login.Int_Icon.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'internet_active.png');
+  ex_load.Login.Int_Icon.Bitmap.LoadFromFile(ex_load.Path.Images + 'internet_active.png');
   ex_load.Login.Int_Icon.WrapMode := TImageWrapMode.Fit;
   ex_load.Login.Int_Icon.Visible := True;
 
-  ex_load.Login.Internet := TLabel.Create(ex_load.Login.Panel);
+  ex_load.Login.Int_Color:= TFillRGBEffect.Create(ex_load.Login.Int_Icon);
+  ex_load.Login.Int_Color.Name:= 'Loading_Login_Internet_Icon_Color';
+  ex_load.Login.Int_Color.Parent:=  ex_load.Login.Int_Icon;
+  ex_load.Login.Int_Color.Color:= TAlphaColorRec.Red;
+  ex_load.Login.Int_Color.Enabled:= False;
+
+  ex_load.Login.Internet := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Internet.Name := 'Loading_Login_Internet';
-  ex_load.Login.Internet.Parent := ex_load.Login.Panel;
+  ex_load.Login.Internet.Parent := ex_load.Login.Main;
   ex_load.Login.Internet.SetBounds(48, 256, 200, 17);
   ex_load.Login.Internet.Text := 'Not Connected';
   ex_load.Login.Internet.Visible := True;
 
-  ex_load.Login.Data_Icon := TImage.Create(ex_load.Login.Panel);
+  ex_load.Login.Data_Icon := TImage.Create(ex_load.Login.Main);
   ex_load.Login.Data_Icon.Name := 'Loading_Login_Database_Icon';
-  ex_load.Login.Data_Icon.Parent := ex_load.Login.Panel;
+  ex_load.Login.Data_Icon.Parent := ex_load.Login.Main;
   ex_load.Login.Data_Icon.SetBounds(16, 280, 25, 25);
-  ex_load.Login.Data_Icon.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'server_active.png');
+  ex_load.Login.Data_Icon.Bitmap.LoadFromFile(ex_load.Path.Images + 'server_active.png');
   ex_load.Login.Data_Icon.WrapMode := TImageWrapMode.Fit;
   ex_load.Login.Data_Icon.Visible := True;
 
-  ex_load.Login.Database := TLabel.Create(ex_load.Login.Panel);
+  ex_load.Login.Data_Color:= TFillRGBEffect.Create(ex_load.Login.Data_Icon);
+  ex_load.Login.Data_Color.Name:= 'Loading_Login_Database_Icon_Color';
+  ex_load.Login.Data_Color.Parent:=  ex_load.Login.Data_Icon;
+  ex_load.Login.Data_Color.Color:= TAlphaColorRec.Red;
+  ex_load.Login.Data_Color.Enabled:= False;
+
+  ex_load.Login.Database := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Database.Name := 'Loading_Login_Database';
-  ex_load.Login.Database.Parent := ex_load.Login.Panel;
+  ex_load.Login.Database.Parent := ex_load.Login.Main;
   ex_load.Login.Database.SetBounds(48, 288, 200, 17);
   ex_load.Login.Database.Text := 'Not Connected';
   ex_load.Login.Database.Visible := True;
 
-  ex_load.Login.NotRegister := TText.Create(ex_load.Login.Panel);
+  ex_load.Login.NotRegister := TText.Create(ex_load.Login.Main);
   ex_load.Login.NotRegister.Name := 'Loading_Login_Register';
-  ex_load.Login.NotRegister.Parent := ex_load.Login.Panel;
+  ex_load.Login.NotRegister.Parent := ex_load.Login.Main;
   ex_load.Login.NotRegister.SetBounds(288, 288, 193, 17);
   ex_load.Login.NotRegister.TextSettings.HorzAlign := TTextAlign.Trailing;
   ex_load.Login.NotRegister.Text := 'Not registered yet? Click here';
@@ -265,10 +289,10 @@ begin
   ex_load.Login.NotRegister.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Login.NotRegister.Visible := True;
 
-  ex_load.Login.Forget_Pass := TText.Create(ex_load.Login.Panel);
+  ex_load.Login.Forget_Pass := TText.Create(ex_load.Login.Main);
   ex_load.Login.Forget_Pass.Name := 'Loading_Login_Forget_Pass';
-  ex_load.Login.Forget_Pass.Parent := ex_load.Login.Panel;
-  ex_load.Login.Forget_Pass.SetBounds(136, 154, 193, 17);
+  ex_load.Login.Forget_Pass.Parent := ex_load.Login.Main;
+  ex_load.Login.Forget_Pass.SetBounds(136, 154, 300, 17);
   ex_load.Login.Forget_Pass.TextSettings.HorzAlign := TTextAlign.Trailing;
   ex_load.Login.Forget_Pass.Text := 'Forgot your password? Click here';
   ex_load.Login.Forget_Pass.TextSettings.FontColor := TAlphaColorRec.White;
@@ -277,10 +301,10 @@ begin
   ex_load.Login.Forget_Pass.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Login.Forget_Pass.Visible := False;
 
-  ex_load.Login.Warning := TLabel.Create(ex_load.Login.Panel);
+  ex_load.Login.Warning := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Warning.Name := 'Loading_Login_Warning';
-  ex_load.Login.Warning.Parent := ex_load.Login.Panel;
-  ex_load.Login.Warning.SetBounds(138, 8, 373, 22);
+  ex_load.Login.Warning.Parent := ex_load.Login.Main;
+  ex_load.Login.Warning.SetBounds(ex_load.Login.Main.Width - 550, 8, 500, 22);
   ex_load.Login.Warning.TextSettings.FontColor := TAlphaColorRec.Red;
   ex_load.Login.Warning.Text := 'OK ola kala';
   ex_load.Login.Warning.TextAlign := TTextAlign.Trailing;
@@ -307,7 +331,7 @@ begin
   ex_load.F_Pass.Panel.Opacity := 0.8;
   ex_load.F_Pass.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(ex_load.F_Pass.Panel, 'Loading_FPass', extrafe.loading.Images_Path + 'pass.png',
+  uLoad_SetAll_CreateHeader(ex_load.F_Pass.Panel, 'Loading_FPass', ex_load.Path.Images + 'pass.png',
     'Forget my password');
 
   ex_load.F_Pass.Main.Panel := TPanel.Create(ex_load.F_Pass.Panel);
@@ -379,8 +403,10 @@ begin
   ex_load.Reg.Panel.Opacity := 0.8;
   ex_load.Reg.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(ex_load.Reg.Panel, 'Loading_Register', extrafe.loading.Images_Path +
-    'register.png', 'Register');
+  uLoad_Register.Create_Help;
+
+  uLoad_SetAll_CreateHeader(ex_load.Reg.Panel, 'Loading_Register', ex_load.Path.Images + 'register.png',
+    'Register');
 
   ex_load.Reg.Main.Panel := TPanel.Create(ex_load.Reg.Panel);
   ex_load.Reg.Main.Panel.Name := 'Loading_Register_Main';
@@ -400,6 +426,8 @@ begin
   ex_load.Reg.Main.User_V.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.User_V.SetBounds(20, 30, ex_load.Reg.Main.Panel.Width - 40, 20);
   ex_load.Reg.Main.User_V.Text := '';
+  ex_load.Reg.Main.User_V.OnClick:= ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.User_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.User_V.Visible := True;
 
   ex_load.Reg.Main.Pass := TLabel.Create(ex_load.Reg.Main.Panel);
@@ -414,7 +442,28 @@ begin
   ex_load.Reg.Main.Pass_V.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.Pass_V.SetBounds(20, 75, ex_load.Reg.Main.Panel.Width - 40, 20);
   ex_load.Reg.Main.Pass_V.Text := '';
+  ex_load.Reg.Main.Pass_V.OnClick:= ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.Pass_V.OnTyping:= ex_load.Input.mouse.Edit.OnTyping;
+  ex_load.Reg.Main.Pass_V.Password:= True;
   ex_load.Reg.Main.Pass_V.Visible := True;
+
+  ex_load.Reg.Main.Pass_Show:= TImage.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.Pass_Show.Name:= 'Loading_Register_Pass_Show';
+  ex_load.Reg.Main.Pass_Show.Parent:=  ex_load.Reg.Main.Panel;
+  ex_load.Reg.Main.Pass_Show.SetBounds(ex_load.Reg.Main.Pass_V.Width- 2, 75, 20, 20);
+  ex_load.Reg.Main.Pass_Show.Bitmap.LoadFromFile(ex_load.Path.Images+ 'show.png');
+  ex_load.Reg.Main.Pass_Show.WrapMode:= TImageWrapMode.Fit;
+  ex_load.Reg.Main.Pass_Show.OnClick:= ex_load.Input.mouse.Image.OnMouseClick;
+  ex_load.Reg.Main.Pass_Show.OnMouseEnter:= ex_load.Input.mouse.Image.OnMouseEnter;
+  ex_load.Reg.Main.Pass_Show.OnMouseLeave:= ex_load.Input.mouse.Image.OnMouseLeave;
+  ex_load.Reg.Main.Pass_Show.Visible:= True;
+
+  ex_load.Reg.Main.Pass_Show_Glow:= TGlowEffect.Create(ex_load.Reg.Main.Pass_Show);
+  ex_load.Reg.Main.Pass_Show_Glow.Name:= 'Loading_Register_Pass_Show_Glow';
+  ex_load.Reg.Main.Pass_Show_Glow.Parent:=  ex_load.Reg.Main.Pass_Show;
+  ex_load.Reg.Main.Pass_Show_Glow.GlowColor:= TAlphaColorRec.Lime;
+  ex_load.Reg.Main.Pass_Show_Glow.Opacity:= 0.9;
+  ex_load.Reg.Main.Pass_Show_Glow.Enabled:= False;
 
   ex_load.Reg.Main.RePass := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.RePass.Name := 'Loading_Register_RePass';
@@ -428,7 +477,28 @@ begin
   ex_load.Reg.Main.RePass_V.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.RePass_V.SetBounds(20, 120, ex_load.Reg.Main.Panel.Width - 40, 20);
   ex_load.Reg.Main.RePass_V.Text := '';
+  ex_load.Reg.Main.RePass_V.OnClick:= ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.RePass_V.OnTyping:= ex_load.Input.mouse.Edit.OnTyping;
+  ex_load.Reg.Main.RePass_V.Password:= True;
   ex_load.Reg.Main.RePass_V.Visible := True;
+
+  ex_load.Reg.Main.RePass_Show:= TImage.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.RePass_Show.Name:= 'Loading_Register_RePass_Show';
+  ex_load.Reg.Main.RePass_Show.Parent:=  ex_load.Reg.Main.Panel;
+  ex_load.Reg.Main.RePass_Show.SetBounds(ex_load.Reg.Main.RePass_V.Width- 2, 120, 20, 20);
+  ex_load.Reg.Main.RePass_Show.Bitmap.LoadFromFile(ex_load.Path.Images+ 'show.png');
+  ex_load.Reg.Main.RePass_Show.WrapMode:= TImageWrapMode.Fit;
+  ex_load.Reg.Main.RePass_Show.OnClick:= ex_load.Input.mouse.Image.OnMouseClick;
+  ex_load.Reg.Main.RePass_Show.OnMouseEnter:= ex_load.Input.mouse.Image.OnMouseEnter;
+  ex_load.Reg.Main.RePass_Show.OnMouseLeave:= ex_load.Input.mouse.Image.OnMouseLeave;
+  ex_load.Reg.Main.RePass_Show.Visible:= True;
+
+  ex_load.Reg.Main.RePass_Show_Glow:= TGlowEffect.Create(ex_load.Reg.Main.RePass_Show);
+  ex_load.Reg.Main.RePass_Show_Glow.Name:= 'Loading_Register_RePass_Show_Glow';
+  ex_load.Reg.Main.RePass_Show_Glow.Parent:=  ex_load.Reg.Main.RePass_Show;
+  ex_load.Reg.Main.RePass_Show_Glow.GlowColor:= TAlphaColorRec.Lime;
+  ex_load.Reg.Main.RePass_Show_Glow.Opacity:= 0.9;
+  ex_load.Reg.Main.RePass_Show_Glow.Enabled:= False;
 
   ex_load.Reg.Main.Email := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Email.Name := 'Loading_Register_Email';
@@ -442,6 +512,8 @@ begin
   ex_load.Reg.Main.Email_V.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.Email_V.SetBounds(20, 165, ex_load.Reg.Main.Panel.Width - 40, 20);
   ex_load.Reg.Main.Email_V.Text := '';
+  ex_load.Reg.Main.Email_V.OnClick:= ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.Email_V.OnTyping:= ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.Email_V.Visible := True;
 
   ex_load.Reg.Main.ReEmail := TLabel.Create(ex_load.Reg.Main.Panel);
@@ -456,28 +528,52 @@ begin
   ex_load.Reg.Main.ReEmail_V.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.ReEmail_V.SetBounds(20, 210, ex_load.Reg.Main.Panel.Width - 40, 20);
   ex_load.Reg.Main.ReEmail_V.Text := '';
+  ex_load.Reg.Main.ReEmail_V.OnClick:= ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.ReEmail_V.OnTyping:= ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.ReEmail_V.Visible := True;
 
   ex_load.Reg.Main.Capt_Img := TImage.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt_Img.Name := 'Loading_Register_Capt_Img';
   ex_load.Reg.Main.Capt_Img.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.Capt_Img.SetBounds(20, 240, 240, 150);
-  ex_load.Reg.Main.Capt_Img.Bitmap.LoadFromFile(extrafe.loading.Images_Path + 'load.png');
+  ex_load.Reg.Main.Capt_Img.Bitmap.LoadFromFile(ex_load.Path.Images + 'captcha.png');
   ex_load.Reg.Main.Capt_Img.WrapMode := TImageWrapMode.Fit;
   ex_load.Reg.Main.Capt_Img.Visible := True;
+
+  uLoad_Register.Create_Captcha;
+
+  ex_load.Reg.Main.Capt_Refresh := TImage.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.Capt_Refresh.Name := 'Loading_Register_Capt_Refresh';
+  ex_load.Reg.Main.Capt_Refresh.Parent := ex_load.Reg.Main.Panel;
+  ex_load.Reg.Main.Capt_Refresh.SetBounds(266, 240, 24, 24);
+  ex_load.Reg.Main.Capt_Refresh.Bitmap.LoadFromFile(ex_load.Path.Images + 'refresh.png');
+  ex_load.Reg.Main.Capt_Refresh.WrapMode := TImageWrapMode.Fit;
+  ex_load.Reg.Main.Capt_Refresh.OnClick := ex_load.Input.mouse.Image.OnMouseClick;
+  ex_load.Reg.Main.Capt_Refresh.OnMouseEnter := ex_load.Input.mouse.Image.OnMouseEnter;
+  ex_load.Reg.Main.Capt_Refresh.OnMouseLeave := ex_load.Input.mouse.Image.OnMouseLeave;
+  ex_load.Reg.Main.Capt_Refresh.Visible := True;
+
+  ex_load.Reg.Main.Capt_Refresh_Glow := TGlowEffect.Create(ex_load.Reg.Main.Capt_Refresh);
+  ex_load.Reg.Main.Capt_Refresh_Glow.Name := 'Loading_Register_Capt_Refresh_Glow';
+  ex_load.Reg.Main.Capt_Refresh_Glow.Parent := ex_load.Reg.Main.Capt_Refresh;
+  ex_load.Reg.Main.Capt_Refresh_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  ex_load.Reg.Main.Capt_Refresh_Glow.Opacity := 0.9;
+  ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := False;
 
   ex_load.Reg.Main.Capt := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt.Name := 'Loading_Register_Capt';
   ex_load.Reg.Main.Capt.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Capt.SetBounds(20, 380, 200, 20);
+  ex_load.Reg.Main.Capt.SetBounds(20, 390, 200, 20);
   ex_load.Reg.Main.Capt.Text := 'Type captcha letters :';
   ex_load.Reg.Main.Capt.Visible := True;
 
   ex_load.Reg.Main.Capt_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt_V.Name := 'Loading_Register_Capt_V';
   ex_load.Reg.Main.Capt_V.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Capt_V.SetBounds(20, 400, 240, 20);
+  ex_load.Reg.Main.Capt_V.SetBounds(20, 410, 240, 20);
   ex_load.Reg.Main.Capt_V.Text := '';
+  ex_load.Reg.Main.Capt_V.OnClick:= ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.Capt_V.OnTyping:= ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.Capt_V.Visible := True;
 
   ex_load.Reg.Main.Terms := TText.Create(ex_load.Reg.Main.Panel);
@@ -498,6 +594,9 @@ begin
   ex_load.Reg.Main.Terms_Check.SetBounds(310, 320, 200, 17);
   ex_load.Reg.Main.Terms_Check.Text := 'I accept the terms';
   ex_load.Reg.Main.Terms_Check.Enabled := False;
+  ex_load.Reg.Main.Terms_Check.OnClick:= ex_load.Input.mouse.Checkbox.OnMouseClick;
+  ex_load.Reg.Main.Terms_Check.OnMouseEnter:= ex_load.Input.mouse.Checkbox.OnMouseEnter;
+  ex_load.Reg.Main.Terms_Check.OnMouseLeave:= ex_load.Input.mouse.Checkbox.OnMouseLeave;
   ex_load.Reg.Main.Terms_Check.Visible := True;
 
   ex_load.Reg.Main.Reg := TButton.Create(ex_load.Reg.Main.Panel);
@@ -528,7 +627,7 @@ begin
   ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 520);
   ex_load.Terms.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(ex_load.Terms.Panel, 'Loading_Terms', extrafe.loading.Images_Path + 'terms.png',
+  uLoad_SetAll_CreateHeader(ex_load.Terms.Panel, 'Loading_Terms', ex_load.Path.Images + 'terms.png',
     'Read the terms of ExtraFE.');
 
   ex_load.Terms.Main.Panel := TPanel.Create(ex_load.Terms.Panel);
@@ -542,10 +641,10 @@ begin
   ex_load.Terms.Main.Memo.Parent := ex_load.Terms.Main.Panel;
   ex_load.Terms.Main.Memo.SetBounds(10, 10, ex_load.Terms.Main.Panel.Width - 20,
     ex_load.Terms.Main.Panel.Height - 60);
-  ex_load.Terms.Main.Memo.Lines.LoadFromFile(extrafe.loading.Images_Path+ 'lin.txt');
-  ex_load.Terms.Main.Memo.WordWrap:= True;
-  ex_load.Terms.Main.Memo.TextSettings.Font.Size:= 14;
-  ex_load.Terms.Main.Memo.StyledSettings:= ex_load.Terms.Main.Memo.StyledSettings- [TStyledSetting.Size];
+  ex_load.Terms.Main.Memo.Lines.LoadFromFile(ex_load.Path.Images + 'lin.txt');
+  ex_load.Terms.Main.Memo.WordWrap := True;
+  ex_load.Terms.Main.Memo.TextSettings.Font.Size := 14;
+  ex_load.Terms.Main.Memo.StyledSettings := ex_load.Terms.Main.Memo.StyledSettings - [TStyledSetting.Size];
   ex_load.Terms.Main.Memo.Visible := True;
 
   ex_load.Terms.Main.Close := TButton.Create(ex_load.Terms.Main.Panel);

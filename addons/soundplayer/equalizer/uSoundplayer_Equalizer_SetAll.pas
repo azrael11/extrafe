@@ -5,10 +5,12 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  System.UiTypes,
   FMX.StdCtrls,
   FMX.Controls,
   FMX.Types,
   FMX.Listbox,
+  FMX.Objects,
   ALFMXStdCtrls;
 
 procedure Load;
@@ -34,6 +36,8 @@ begin
 
   uSoundplayer.Hide_Animations;
   vSoundplayer.scene.Back_Blur.Enabled := True;
+
+  uSoundplayer_Equalizer.Get_Temp;
 
   vSoundplayer.EQ.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.EQ.Panel.Name := 'A_SP_Equalizer';
@@ -61,17 +65,22 @@ begin
   vSoundplayer.EQ.Pan := TALTrackBar.Create(vSoundplayer.EQ.Main);
   vSoundplayer.EQ.Pan.Name := 'A_SP_Equalizer_Pan';
   vSoundplayer.EQ.Pan.Parent := vSoundplayer.EQ.Main;
-  vSoundplayer.EQ.Pan.SetBounds(334, 36, 390, 12);
+  vSoundplayer.EQ.Pan.SetBounds(334, 28, 390, 24);
   vSoundplayer.EQ.Pan.Min := -100;
   vSoundplayer.EQ.Pan.Max := 100;
+  vSoundplayer.EQ.Pan.ThumbSize:= 24;
+  vSoundplayer.EQ.Pan.Thumb.XRadius:= 12;
+  vSoundplayer.EQ.Pan.Thumb.YRadius:= 12;
   vSoundplayer.EQ.Pan.OnChange:= addons.soundplayer.Input.mouse_eq.Trackbar.OnChange;
   vSoundplayer.EQ.Pan.Value := addons.soundplayer.Equalizer.Pan;
+  vSoundplayer.EQ.Pan.BackGround.Fill.Color := TAlphaColorRec.White;
+  vSoundplayer.EQ.Pan.Highlight.Fill.Color := TAlphaColorRec.Deepskyblue;
   vSoundplayer.EQ.Pan.Visible := True;
 
   vSoundplayer.EQ.Pan_Labels[0] := TLabel.Create(vSoundplayer.EQ.Main);
   vSoundplayer.EQ.Pan_Labels[0].Name := 'A_SP_Equalizer_Pan_Label_0';
   vSoundplayer.EQ.Pan_Labels[0].Parent := vSoundplayer.EQ.Main;
-  vSoundplayer.EQ.Pan_Labels[0].SetBounds(320, 30, 20, 20);
+  vSoundplayer.EQ.Pan_Labels[0].SetBounds(320, 22, 20, 20);
   vSoundplayer.EQ.Pan_Labels[0].TextAlign := TTextAlign.Center;
   vSoundplayer.EQ.Pan_Labels[0].Text := 'L';
   vSoundplayer.EQ.Pan_Labels[0].Visible := True;
@@ -79,7 +88,7 @@ begin
   vSoundplayer.EQ.Pan_Labels[1] := TLabel.Create(vSoundplayer.EQ.Main);
   vSoundplayer.EQ.Pan_Labels[1].Name := 'A_SP_Equalizer_Pan_Label_1';
   vSoundplayer.EQ.Pan_Labels[1].Parent := vSoundplayer.EQ.Main;
-  vSoundplayer.EQ.Pan_Labels[1].SetBounds(724, 30, 20, 20);
+  vSoundplayer.EQ.Pan_Labels[1].SetBounds(724, 22, 20, 20);
   vSoundplayer.EQ.Pan_Labels[1].TextAlign := TTextAlign.Center;
   vSoundplayer.EQ.Pan_Labels[1].Text := 'R';
   vSoundplayer.EQ.Pan_Labels[1].Visible := True;
@@ -88,16 +97,31 @@ begin
   vSoundplayer.EQ.PreAmp.Name := 'A_SP_Equalizer_PreAMP';
   vSoundplayer.EQ.PreAmp.Parent := vSoundplayer.EQ.Main;
   vSoundplayer.EQ.PreAmp.Orientation := TOrientation.Vertical;
-  vSoundplayer.EQ.PreAmp.SetBounds(60, 70, 12, 260);
+  vSoundplayer.EQ.PreAmp.SetBounds(60, 70, 24, 260);
   vSoundplayer.EQ.PreAmp.Value := 0;
   vSoundplayer.EQ.PreAmp.Min := -15;
   vSoundplayer.EQ.PreAmp.Max := 15;
+  vSoundplayer.EQ.PreAmp.ThumbSize:= 24;
+  vSoundplayer.EQ.PreAmp.Thumb.XRadius:= 12;
+  vSoundplayer.EQ.PreAmp.Thumb.YRadius:= 12;
+  vSoundplayer.EQ.PreAmp.BackGround.Fill.Color := TAlphaColorRec.White;
+  vSoundplayer.EQ.PreAmp.Highlight.Fill.Color := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.EQ.PreAmp.Frequency:= 1;
   vSoundplayer.EQ.PreAmp.Visible := True;
+
+  vSoundplayer.EQ.Metric:= TImage.Create(vSoundplayer.EQ.Main);
+  vSoundplayer.EQ.Metric.Name:= 'A_SP_Equalizer_Metric';
+  vSoundplayer.EQ.Metric.Parent:= vSoundplayer.EQ.Main;
+  vSoundplayer.EQ.Metric.SetBounds(10, 78, 40, 240);
+  vSoundplayer.EQ.Metric.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_metric.png');
+  vSoundplayer.EQ.Metric.WrapMode:= TImageWrapMode.Stretch;
+  vSoundplayer.EQ.Metric.Visible:= True;
+
 
   vSoundplayer.EQ.High := TLabel.Create(vSoundplayer.EQ.Main);
   vSoundplayer.EQ.High.Name := 'A_SP_Equalizer_High';
   vSoundplayer.EQ.High.Parent := vSoundplayer.EQ.Main;
-  vSoundplayer.EQ.High.SetBounds(76, 72, 40, 20);
+  vSoundplayer.EQ.High.SetBounds(30, 62, 40, 20);
   vSoundplayer.EQ.High.Text := '- 15';
   vSoundplayer.EQ.High.TextSettings.HorzAlign := TTextAlign.Leading;
   vSoundplayer.EQ.High.Visible := True;
@@ -105,7 +129,7 @@ begin
   vSoundplayer.EQ.Middle := TLabel.Create(vSoundplayer.EQ.Main);
   vSoundplayer.EQ.Middle.Name := 'A_SP_Equalizer_Middle';
   vSoundplayer.EQ.Middle.Parent := vSoundplayer.EQ.Main;
-  vSoundplayer.EQ.Middle.SetBounds(76, 188, 40, 20);
+  vSoundplayer.EQ.Middle.SetBounds(30, 188, 40, 20);
   vSoundplayer.EQ.Middle.Text := '  0';
   vSoundplayer.EQ.Middle.TextSettings.HorzAlign := TTextAlign.Leading;
   vSoundplayer.EQ.Middle.Visible := True;
@@ -113,7 +137,7 @@ begin
   vSoundplayer.EQ.Low := TLabel.Create(vSoundplayer.EQ.Main);
   vSoundplayer.EQ.Low.Name := 'A_SP_Equalizer_Low';
   vSoundplayer.EQ.Low.Parent := vSoundplayer.EQ.Main;
-  vSoundplayer.EQ.Low.SetBounds(76, 308, 40, 20);
+  vSoundplayer.EQ.Low.SetBounds(30, 314, 40, 20);
   vSoundplayer.EQ.Low.Text := '+ 15';
   vSoundplayer.EQ.Low.TextSettings.HorzAlign := TTextAlign.Leading;
   vSoundplayer.EQ.Low.Visible := True;
@@ -132,19 +156,36 @@ begin
     vSoundplayer.EQ.Param[vi].Name := 'A_SP_Equalizer_Param_' + vi.ToString;
     vSoundplayer.EQ.Param[vi].Parent := vSoundplayer.EQ.Main;
     vSoundplayer.EQ.Param[vi].Orientation := TOrientation.Vertical;
-    vSoundplayer.EQ.Param[vi].SetBounds(150 + (vi * 64), 70, 12, 260);
-    vSoundplayer.EQ.Param[vi].Value := 0;
+    vSoundplayer.EQ.Param[vi].SetBounds(150 + (vi * 64), 70, 24, 260);
+    vSoundplayer.EQ.Param[vi].Value := uSoundplayer_Equalizer.vPar_Set[vi].fGain;
     vSoundplayer.EQ.Param[vi].Min := -15;
     vSoundplayer.EQ.Param[vi].Max := 15;
+    vSoundplayer.EQ.Param[vi].ThumbSize:= 24;
+    vSoundplayer.EQ.Param[vi].Thumb.XRadius:= 12;
+    vSoundplayer.EQ.Param[vi].Thumb.YRadius:= 12;
+    vSoundplayer.EQ.Param[vi].BackGround.Fill.Color := TAlphaColorRec.White;
+    vSoundplayer.EQ.Param[vi].Highlight.Fill.Color := TAlphaColorRec.Deepskyblue;
+    vSoundplayer.EQ.Param[vi].OnChange:= addons.soundplayer.Input.mouse_eq.Trackbar.OnChange;
+    vSoundplayer.EQ.Param[vi].TagString:= vi.ToString;
+    vSoundplayer.EQ.Param[vi].Tag:= vi;
+    vSoundplayer.EQ.Param[vi].Frequency:= 1;
     vSoundplayer.EQ.Param[vi].Visible := True;
 
-    vSoundplayer.EQ.Parem_Label[vi] := TLabel.Create(vSoundplayer.EQ.Main);
-    vSoundplayer.EQ.Parem_Label[vi].Name := 'A_SP_Equalizer_Param_Label_' + vi.ToString;
-    vSoundplayer.EQ.Parem_Label[vi].Parent := vSoundplayer.EQ.Main;
-    vSoundplayer.EQ.Parem_Label[vi].SetBounds(124 + (vi * 64), 330, 60, 20);
-    vSoundplayer.EQ.Parem_Label[vi].TextAlign := TTextAlign.Center;
-    vSoundplayer.EQ.Parem_Label[vi].Text := cParam_Names[vi];
-    vSoundplayer.EQ.Parem_Label[vi].Visible := True;
+    vSoundplayer.EQ.Param_Value[vi] := TLabel.Create(vSoundplayer.EQ.Main);
+    vSoundplayer.EQ.Param_Value[vi].Name := 'A_SP_Equalizer_Param_Value_' + vi.ToString;
+    vSoundplayer.EQ.Param_Value[vi].Parent := vSoundplayer.EQ.Main;
+    vSoundplayer.EQ.Param_Value[vi].SetBounds(132 + (vi * 64), 52, 60, 20);
+    vSoundplayer.EQ.Param_Value[vi].TextAlign := TTextAlign.Center;
+    vSoundplayer.EQ.Param_Value[vi].Text := uSoundplayer_Equalizer.vPar_Set[vi].fGain.ToString;
+    vSoundplayer.EQ.Param_Value[vi].Visible := True;
+
+    vSoundplayer.EQ.Param_Label[vi] := TLabel.Create(vSoundplayer.EQ.Main);
+    vSoundplayer.EQ.Param_Label[vi].Name := 'A_SP_Equalizer_Param_Label_' + vi.ToString;
+    vSoundplayer.EQ.Param_Label[vi].Parent := vSoundplayer.EQ.Main;
+    vSoundplayer.EQ.Param_Label[vi].SetBounds(132 + (vi * 64), 330, 60, 20);
+    vSoundplayer.EQ.Param_Label[vi].TextAlign := TTextAlign.Center;
+    vSoundplayer.EQ.Param_Label[vi].Text := cParam_Names[vi];
+    vSoundplayer.EQ.Param_Label[vi].Visible := True;
   end;
 
   vSoundplayer.EQ.Preset := TPanel.Create(vSoundplayer.EQ.Main);
@@ -189,7 +230,6 @@ begin
   vSoundplayer.EQ.Cancel.Text := 'Cancel';
   vSoundplayer.EQ.Cancel.OnClick := addons.soundplayer.Input.mouse_eq.Button.OnMouseClick;
   vSoundplayer.EQ.Cancel.Visible := True;
-
 end;
 
 procedure Free;

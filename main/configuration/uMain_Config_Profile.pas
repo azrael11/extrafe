@@ -46,8 +46,8 @@ uses
   uMain_SetAll,
   uMain_AllTypes,
   uMain_Mouse,
-  uLoad_UserAccount,
-  uDatabase_SqlCommands;
+  uDatabase_SqlCommands,
+  uDatabase_ActiveUser;
 
 procedure uMain_Config_Profile_Create;
 const
@@ -97,7 +97,7 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar_Show.Position.X := 10;
   mainScene.Config.main.R.Profile.User.Avatar_Show.Position.Y := 10;
   mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images +
-    User.data.Avatar + '.png');
+    user_Active.Avatar + '.png');
   mainScene.Config.main.R.Profile.User.Avatar_Show.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Avatar_Show.Visible := True;
 
@@ -135,7 +135,7 @@ begin
   mainScene.Config.main.R.Profile.User.Username_V.Height := 24;
   mainScene.Config.main.R.Profile.User.Username_V.Position.X := 220;
   mainScene.Config.main.R.Profile.User.Username_V.Position.Y := 60;
-  mainScene.Config.main.R.Profile.User.Username_V.Text := User.data.Username;
+  mainScene.Config.main.R.Profile.User.Username_V.Text := user_Active.Username;
   mainScene.Config.main.R.Profile.User.Username_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Username_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Username_V.Visible := True;
@@ -157,7 +157,7 @@ begin
   mainScene.Config.main.R.Profile.User.Password_V.Height := 24;
   mainScene.Config.main.R.Profile.User.Password_V.Position.X := 220;
   mainScene.Config.main.R.Profile.User.Password_V.Position.Y := 130;
-  mainScene.Config.main.R.Profile.User.Password_V.Text := User.data.Password;
+  mainScene.Config.main.R.Profile.User.Password_V.Text := user_Active.Password;
   mainScene.Config.main.R.Profile.User.Password_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Password_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Password_V.Password := True;
@@ -198,7 +198,7 @@ begin
   mainScene.Config.main.R.Profile.User.Name_V.Height := 24;
   mainScene.Config.main.R.Profile.User.Name_V.Position.X := 10;
   mainScene.Config.main.R.Profile.User.Name_V.Position.Y := 240;
-  mainScene.Config.main.R.Profile.User.Name_V.Text := User.data.Name;
+  mainScene.Config.main.R.Profile.User.Name_V.Text := user_Active.Name;
   mainScene.Config.main.R.Profile.User.Name_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Name_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Name_V.Visible := True;
@@ -210,7 +210,7 @@ begin
   mainScene.Config.main.R.Profile.User.Gender.Height := 32;
   mainScene.Config.main.R.Profile.User.Gender.Position.X := 348;
   mainScene.Config.main.R.Profile.User.Gender.Position.Y := 272;
-  if StrToBool(User.data.Genre) then
+  if StrToBool(user_Active.Genre) then
     mainScene.Config.main.R.Profile.User.Gender.Bitmap.LoadFromFile(ex_main.Paths.Config_Images +
       'config_male.png')
   else
@@ -236,7 +236,7 @@ begin
   mainScene.Config.main.R.Profile.User.Surname_V.Height := 24;
   mainScene.Config.main.R.Profile.User.Surname_V.Position.X := 10;
   mainScene.Config.main.R.Profile.User.Surname_V.Position.Y := 310;
-  mainScene.Config.main.R.Profile.User.Surname_V.Text := User.data.Surname;
+  mainScene.Config.main.R.Profile.User.Surname_V.Text := user_Active.Surname;
   mainScene.Config.main.R.Profile.User.Surname_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Surname_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Surname_V.Visible := True;
@@ -249,7 +249,7 @@ begin
   mainScene.Config.main.R.Profile.User.Country.Position.X := 410;
   mainScene.Config.main.R.Profile.User.Country.Position.Y := 224;
   mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images +
-    User.data.Country_Code + '.png');
+    user_Active.Country_Code + '.png');
   mainScene.Config.main.R.Profile.User.Country.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Country.Visible := True;
 
@@ -272,7 +272,7 @@ begin
   mainScene.Config.main.R.Profile.User.Email_Dir.Height := 24;
   mainScene.Config.main.R.Profile.User.Email_Dir.Position.X := 56;
   mainScene.Config.main.R.Profile.User.Email_Dir.Position.Y := 366;
-  mainScene.Config.main.R.Profile.User.Email_Dir.Text := User.data.Email;
+  mainScene.Config.main.R.Profile.User.Email_Dir.Text := user_Active.Email;
   mainScene.Config.main.R.Profile.User.Email_Dir.HorzTextAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Email_Dir.Visible := True;
 
@@ -1041,7 +1041,7 @@ end;
 function uMain_Config_Profile_Password_Check: Boolean;
 begin
   Result := False;
-  if mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text = User.data.Password then
+  if mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text = user_Active.Password then
   begin
     if mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text = mainScene.Config.main.R.Profile.User.Pass.
       main.New_Rewrite_V.Text then
@@ -1083,8 +1083,8 @@ begin
   if (vPage >= 1) and (vPage <= 26) then
   begin
     vAvatar.Page := vPage;
-    vAvatar.Checked := StrToInt(User.data.Avatar);
-    vAvatarPage_Num := (StrToInt(User.data.Avatar) div 20) + 1;
+    vAvatar.Checked := StrToInt(user_Active.Avatar);
+    vAvatarPage_Num := (StrToInt(user_Active.Avatar) div 20) + 1;
     for vi := 0 to 19 do
     begin
       mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Bitmap.LoadFromFile

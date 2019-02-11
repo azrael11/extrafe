@@ -21,7 +21,6 @@ function uWeather_Convert_WindSpeed(vWindSpeed: Single): Single;
 function uWeather_Convert_FixAstronomy(vValue: WideString): WideString;
 function uWeather_Convert_SunSpot(vSunrise, vSunset: String): TPathData;
 
-function uWeather_Convert_CodeToCountryName(vCode: String): String;
 
 implementation
 uses
@@ -235,14 +234,4 @@ begin
     addons.weather.Action.PathAni_Show:= False;
   end;
 end;
-
-function uWeather_Convert_CodeToCountryName(vCode: String): String;
-var
-  vTempIni: TIniFile;
-begin
-  vTempIni:= TIniFile.Create(ex_main.Paths.Flags_Images+ 'en.ini');
-  Result:= vTempIni.ReadString('COUNTRY', vCode, Result);
-  FreeAndNil(vTempIni);
-end;
-
 end.

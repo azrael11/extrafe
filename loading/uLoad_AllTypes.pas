@@ -44,12 +44,7 @@ type
   end;
 
 type
-  TEXTRAFE_LOADING = record
-    Images_Path: String;
-  end;
-
-type
-  TEXTRAFE_PROGRAM_PATHS= record
+  TEXTRAFE_PROGRAM_PATHS = record
     Lib: String;
     History: String;
     Fonts: String;
@@ -123,7 +118,7 @@ type
   TEXTRAFE_STATISTICS = record
     Path: String;
     Name: String;
-    Ini: TInifile;
+    Ini: TIniFile;
     Timer: TTimer;
     SumTime: Integer;
     Login_Success: Integer;
@@ -135,7 +130,6 @@ type
 
 type
   TEXTRAFE = record
-    loading: TEXTRAFE_LOADING;
     prog: TEXTRAFE_PROGRAM;
     Ini: TEXTRAFE_INI;
     users_active: Integer;
@@ -163,8 +157,6 @@ type
     Name: string;
     place: Integer;
   end;
-
-
 
   // CALENDAR Addon
 type
@@ -309,6 +301,7 @@ type
 type
   TLOGIN_SCENE = record
     Panel: TPanel;
+    Main: TPanel;
     Panel_Login_Error: TFloatAnimation;
     Panel_Login_Correct: TFloatAnimation;
     Panel_Shadow: TShadowEffect;
@@ -325,8 +318,10 @@ type
     Exit_ExtraFE: TButton;
     Internet: Tlabel;
     Int_Icon: TImage;
+    Int_Color: TFillRGBEffect;
     Database: Tlabel;
     Data_Icon: TImage;
+    Data_Color: TFillRGBEffect;
   end;
 
 type
@@ -348,20 +343,43 @@ type
   end;
 
 type
+  TLOADING_REGISTER_MAIN_DATA = record
+    Panel: TCalloutPanel;
+    Headers: array [0 .. 7] of Tlabel;
+    User: array [0 .. 4] of Tlabel;
+    Pass: array [0 .. 1] of Tlabel;
+    RePass: array [0 .. 1] of Tlabel;
+    Email: array [0 .. 1] of Tlabel;
+    ReEmail: array [0 .. 1] of Tlabel;
+    Terms: Tlabel;
+    Accept_Terms: Tlabel;
+    Captcha: array [0 .. 1] of Tlabel;
+    Check: array [0 .. 16] of TCheckBox;
+  end;
+
+type
   TLOADING_REGISTER_MAIN = record
     Panel: TPanel;
+    Data: TLOADING_REGISTER_MAIN_DATA;
     User: Tlabel;
     User_V: TEdit;
     Pass: Tlabel;
     Pass_V: TEdit;
+    Pass_Show: TImage;
+    Pass_Show_Glow: TGlowEffect;
     RePass: Tlabel;
     RePass_V: TEdit;
+    RePass_Show: TImage;
+    RePass_Show_Glow: TGlowEffect;
     Email: Tlabel;
     Email_V: TEdit;
     ReEmail: Tlabel;
     ReEmail_V: TEdit;
     Capt: Tlabel;
     Capt_Img: TImage;
+    Capt_Img_Word: array [0 .. 5] of TText;
+    Capt_Refresh: TImage;
+    Capt_Refresh_Glow: TGlowEffect;
     Capt_V: TEdit;
     Terms: TText;
     Terms_Check: TCheckBox;
@@ -372,7 +390,6 @@ type
 type
   TLOADING_REGISTER = record
     Panel: TPanel;
-    Header: TGLOBAL_HEADER;
     Main: TLOADING_REGISTER_MAIN;
   end;
 
@@ -397,6 +414,11 @@ type
   end;
 
 type
+  TLOADING_PATHS = record
+    Images: String;
+  end;
+
+type
   TLOADING = record
     Scene: TLOADING_SCENE;
     Login: TLOGIN_SCENE;
@@ -404,6 +426,7 @@ type
     Reg: TLOADING_REGISTER;
     Terms: TLOADING_TERMS;
     Input: TLOADING_INPUT;
+    Path: TLOADING_PATHS;
   end;
 
 var

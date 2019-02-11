@@ -78,7 +78,9 @@ end;
 procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR.OnChange(Sender: TObject);
 begin
   if TALTrackBar(Sender).Name = 'A_SP_Equalizer_Pan' then
-    uSoundplayer_Equalizer.Update_Pan(Round(TALTrackBar(Sender).Value));
+    uSoundplayer_Equalizer.Update_Pan(Round(TALTrackBar(Sender).Value))
+  else if TALTrackBar(Sender).Name = 'A_SP_Equalizer_Param_'+ TALTrackBar(Sender).TagString then
+    uSoundplayer_Equalizer.Update_Param(TALTrackBar(Sender).Tag, (Round(TALTrackBar(Sender).Value)));
 end;
 
 procedure TSOUNDPLAYER_EQUALIZER_TRACKBAR.OnMouseDown(Sender: TObject; Button: TMouseButton;

@@ -25,6 +25,7 @@ procedure uLoad_FirstTimeLoading;
 procedure uLoad_SetLoadingScreen;
 
 procedure uLoad_Start_ExtraFE;
+procedure IsDatabaseInternet;
 
 
 var
@@ -45,7 +46,7 @@ uses
   uWeather_SetAll,
   uLoad_SetAll,
   uLoad_AllTypes,
-  uLoad_Actions,
+  uLoad_Login,
   uLoad_Addons,
   uLoad_Emulation,
   uLoad_Sound,
@@ -119,7 +120,7 @@ begin
   Loading_Form.StyleBook:= mainScene.Main.Style;
 
   // program Loading Defaults
-  extrafe.loading.Images_Path := extrafe.prog.Path + 'data\loading\';
+  ex_load.Path.Images := extrafe.prog.Path + 'data\loading\';
 
   // Emulators
   uLoad_Emulation_LoadDefaults;
@@ -206,7 +207,7 @@ begin
     uLoad_SetLoadingScreen;
     extrafe.user_login := False;
     extrafe.users_active := -1;
-    uLoad_Actions_DatabaseInternet_Active;
+    IsDatabaseInternet;
     Default_Load := True;
   end
   else
@@ -223,6 +224,35 @@ begin
     ex_load.Scene.Back_Fade.Start;
   end;
 end;
+
+procedure IsDatabaseInternet;
+begin
+  if uWindows_IsConected_ToInternet then
+  begin
+    ex_load.Login.Internet.Text := 'Connected';
+    if uDatabase_Connect then
+    begin
+      ex_load.Login.Database.Text := 'Connected';
+      extrafe.database_is_connected := True;
+    end
+    else
+    begin
+      ex_load.Login.Data_Color.Enabled:= True;
+      ex_load.Login.Database.Text := 'Not Connected';
+      extrafe.database_is_connected := False;
+    end;
+  end
+  else
+  begin
+    ex_load.Login.Int_Color.Enabled:= True;
+    ex_load.Login.Internet.Text := 'Not Connected';
+    extrafe.database_is_connected := False;
+    ex_load.Login.Data_Color.Enabled:= True;
+    ex_load.Login.Database.Text := 'Not Connected';
+    extrafe.database_is_connected := False;
+  end;
+end;
+
 
 { SetDllDirectory(PChar(extrafe.program_lib+ 'keyC.dll'));
   vLib:= LoadLibrary('keyC.dll');

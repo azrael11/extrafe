@@ -35,7 +35,6 @@ implementation
 uses
   uLoad,
   uLoad_AllTypes,
-  uLoad_UserAccount,
   main,
   uMain_Actions,
   uMain_Emulation,
@@ -43,7 +42,8 @@ uses
   uMain_Config,
   uMain_Config_Emulators,
   uMain_Config_Themes,
-  uMain_Mouse;
+  uMain_Mouse,
+  uDatabase_ActiveUser;
 
 procedure uMain_SetAll_Set;
 var
@@ -154,7 +154,7 @@ begin
   mainScene.Header.Avatar.Height := 120;
   mainScene.Header.Avatar.Position.X := mainScene.Header.Back.Width - 179;
   mainScene.Header.Avatar.Position.Y := 5;
-  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user.data.Avatar + '.png');
+  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active.Avatar + '.png');
   mainScene.Header.Avatar.WrapMode := TImageWrapMode.Fit;
   mainScene.Header.Avatar.OnClick := ex_main.input.mouse.Image.OnMouseClick;
   mainScene.Header.Avatar.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;

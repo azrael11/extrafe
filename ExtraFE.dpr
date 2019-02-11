@@ -66,7 +66,6 @@ uses
   uMain_SetAll in 'main\uMain_SetAll.pas',
   uDatabase_SqlCommands in 'code\_database\uDatabase_SqlCommands.pas',
   uEmu_Arcade_Mame_Mouse in 'emu\arcade\mame\uEmu_Arcade_Mame_Mouse.pas',
-  uLoad_UserAccount in 'loading\uLoad_UserAccount.pas',
   uLoad_AllTypes in 'loading\uLoad_AllTypes.pas',
   uSoundplayer_Mouse in 'addons\soundplayer\uSoundplayer_Mouse.pas',
   uSoundplayer_Tag_Mp3_SetAll in 'addons\soundplayer\_tag_libraries\mp3\uSoundplayer_Tag_Mp3_SetAll.pas',
@@ -117,7 +116,7 @@ uses
   uWeather_Forcast in 'addons\weather\uWeather_Forcast.pas',
   uEmu_Arcade_Mame_Ini in 'emu\arcade\mame\uEmu_Arcade_Mame_Ini.pas',
   uLoad_SetAll in 'loading\uLoad_SetAll.pas',
-  uLoad_Actions in 'loading\uLoad_Actions.pas',
+  uLoad_Login in 'loading\uLoad_Login.pas',
   uLoad_Mouse in 'loading\uLoad_Mouse.pas',
   uPlay_AllTypes in 'addons\play\uPlay_AllTypes.pas',
   uLoad_Stats in 'loading\uLoad_Stats.pas',
@@ -142,7 +141,10 @@ uses
   uSoundplayer_Sounds in 'addons\soundplayer\uSoundplayer_Sounds.pas',
   uSoundplayer_Player in 'addons\soundplayer\uSoundplayer_Player.pas',
   uSoundplayer_Equalizer_SetAll in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer_SetAll.pas',
-  uSoundplayer_Equalizer_Mouse in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer_Mouse.pas';
+  uSoundplayer_Equalizer_Mouse in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer_Mouse.pas',
+  uSoundplayer_Equalizer in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer.pas',
+  uLoad_Register in 'loading\uLoad_Register.pas',
+  uSnippet_Convert in 'code\_snippets\uSnippet_Convert.pas';
 
 {$R *.res}
 

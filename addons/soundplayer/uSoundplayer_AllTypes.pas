@@ -64,7 +64,6 @@ type
     // wma:
   end;
 
-
 type
   TADDON_SOUNDPLAYER_EQUALIZER = record
     PreAmp: Single;
@@ -516,13 +515,15 @@ type
     Pan: TALTrackBar;
     Pan_Metric: TLabel;
     Pan_Labels: array [0 .. 1] of TLabel;
+    Metric: TImage;
     High: TLabel;
     Middle: TLabel;
     Low: TLabel;
-    PreAMP: TALTrackBar;
+    PreAmp: TALTrackBar;
     PreAMP_Label: TLabel;
     Param: array [0 .. 9] of TALTrackBar;
-    Parem_Label: array [0 .. 9] of TLabel;
+    Param_Value: array [0 .. 9] of TLabel;
+    Param_Label: array [0 .. 9] of TLabel;
     Live_Preview: TCheckBox;
     Preset: Tpanel;
     Presets: TListBox;
