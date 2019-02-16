@@ -202,6 +202,7 @@ type
 
 type
   TMAIN_CONFIG_PROFILE_USER = record
+    Panel: TPanel;
     Avatar_Show: TImage;
     Avatar_Change: TText;
     Username: TLabel;
@@ -209,6 +210,7 @@ type
     Password: TLabel;
     Password_V: TEdit;
     Password_Change: TText;
+    Personal: TGroupBox;
     Name: TLabel;
     Name_V: TEdit;
     Surname: TLabel;
@@ -217,7 +219,14 @@ type
     Country_Name: TLabel;
     Email: TImage;
     Email_Dir: TText;
-    Gender: TImage;
+    Gender_Male: TImage;
+    Gender_Male_Glow: TGlowEffect;
+    Gender_Male_Grey: TMonochromeEffect;
+    Gender_Female: TImage;
+    Gender_Female_Glow: TGlowEffect;
+    Gender_Female_Grey: TMonochromeEffect;
+    Apply_Changes: TButton;
+    Created: TText;
     Avatar: TMAIN_CONFIG_PROFILE_USER_AVATAR;
     Pass: TMAIN_CONFIG_PROFILE_USER_PASSWORD;
   end;
@@ -229,6 +238,7 @@ type
 
 type
   TMAIN_CONFIG_PROFILE_MACHINE = record
+    Panel: TPanel;
     Computer: TGroupBox;
     Computer_Info: TLabel;
     Computer_Info_V: TLabel;
@@ -375,10 +385,10 @@ type
   TMAIN_CONFIG_THEMES = record
     Panel: TPanel;
     Box: TVertScrollBox;
-    Frame: array [0..10] of TPanel;
-    Check: array [0..10] of TCheckBox;
-    Info: array [0..10] of  TLabel;
-    Image: array [0..10] of Timage;
+    Frame: array [0 .. 10] of TPanel;
+    Check: array [0 .. 10] of TCheckBox;
+    Info: array [0 .. 10] of TLabel;
+    Image: array [0 .. 10] of TImage;
     Apply: TButton;
   end;
 
@@ -391,21 +401,21 @@ type
     Desc_V: TLabel;
     Stable: TLabel;
     Stable_V: TLabel;
-    LastBuild: TLabel;
-    LastBuild_V: TLabel;
+    Homepage: TLabel;
+    Homepage_V: TText;
+    Documentation: TLabel;
+    Documentation_V: TText;
+    Forum: TLabel;
+    Forum_V: TText;
+    History_Group: TGroupBox;
     Stable_Num: TLabel;
     Build_Num: TLabel;
-    Stable_Left: TImage;
-    Stable_Left_Glow: TGlowEffect;
-    Stable_Right: TImage;
-    Stable_Right_Glow: TGlowEffect;
+    Stable_Left: TSpeedButton;
+    Stable_Right: TSpeedButton;
     Stable_History_Num: TLabel;
-    Build_Left: TImage;
-    Build_Left_Glow: TGlowEffect;
-    Build_Right: TImage;
-    Build_Right_Glow: TGlowEffect;
+    Build_Left: TSpeedButton;
+    Build_Right: TSpeedButton;
     Build_History_Num: TLabel;
-    History: TLabel;
     History_Info: TMemo;
   end;
 
@@ -466,7 +476,6 @@ type
     Panel: TPanel;
     Panel_Ani: TFloatAnimation;
     Panel_Shadow: TShadowEffect;
-    Header: TMAIN_GLOBAL_HEADER;
     Main: TMAIN_CONFIG_MAIN;
   end;
 

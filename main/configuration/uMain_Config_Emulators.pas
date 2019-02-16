@@ -69,6 +69,8 @@ var
   vi: Integer;
 begin
 
+  extrafe.prog.State:= 'main_config_emulators';
+
   mainScene.Config.main.R.Emulators.Panel := TPanel.Create(mainScene.Config.main.R.Panel[2]);
   mainScene.Config.main.R.Emulators.Panel.Name := 'Main_Config_Emulators_Main_Panel';
   mainScene.Config.main.R.Emulators.Panel.Parent := mainScene.Config.main.R.Panel[2];

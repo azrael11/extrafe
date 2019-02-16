@@ -74,35 +74,8 @@ begin
   mainScene.Config.Panel_Ani.OnFinish := ex_main.input.mouse.Animation.OnFinish;
   mainScene.Config.Panel_Ani.Enabled := False;
 
-  mainScene.Config.Header.Panel := TPanel.Create(mainScene.Config.Panel);
-  mainScene.Config.Header.Panel.Name := 'Main_Config_Header_Panel';
-  mainScene.Config.Header.Panel.Parent := mainScene.Config.Panel;
-  mainScene.Config.Header.Panel.Width := 810;
-  mainScene.Config.Header.Panel.Height := 30;
-  mainScene.Config.Header.Panel.Position.X := 0;
-  mainScene.Config.Header.Panel.Position.Y := 0;
-  mainScene.Config.Header.Panel.Visible := True;
-
-  mainScene.Config.Header.Icon := TImage.Create(mainScene.Config.Header.Panel);
-  mainScene.Config.Header.Icon.Name := 'Main_Config_Header_Icon';
-  mainScene.Config.Header.Icon.Parent := mainScene.Config.Header.Panel;
-  mainScene.Config.Header.Icon.Width := 24;
-  mainScene.Config.Header.Icon.Height := 24;
-  mainScene.Config.Header.Icon.Position.X := 6;
-  mainScene.Config.Header.Icon.Position.Y := 3;
-  mainScene.Config.Header.Icon.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_settings.png');
-  mainScene.Config.Header.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.Header.Icon.Visible := True;
-
-  mainScene.Config.Header.Text := TLabel.Create(mainScene.Config.Header.Panel);
-  mainScene.Config.Header.Text.Name := 'Main_Config_Header_Label';
-  mainScene.Config.Header.Text.Parent := mainScene.Config.Header.Panel;
-  mainScene.Config.Header.Text.Width := mainScene.Config.Header.Panel.Width;
-  mainScene.Config.Header.Text.Height := 24;
-  mainScene.Config.Header.Text.Position.X := 36;
-  mainScene.Config.Header.Text.Position.Y := 3;
-  mainScene.Config.Header.Text.Text := 'Main configuration';
-  mainScene.Config.Header.Text.Visible := True;
+  uLoad_SetAll_CreateHeader(mainScene.Config.Panel, 'Main_Config_Panel',
+    ex_main.Paths.Config_Images + 'config_settings.png', 'Main configuration');
 
   mainScene.Config.main.Left := TPanel.Create(mainScene.Config.Panel);
   mainScene.Config.main.Left.Name := 'Main_Config_Left_Panel';
@@ -251,6 +224,7 @@ begin
         uMain_Config_Info_Create;
     end;
     ex_main.Config.Active_Panel := vPanel;
+    mainScene.Config.Main.L.Button[vPanel].SetFocus;
   end;
 end;
 

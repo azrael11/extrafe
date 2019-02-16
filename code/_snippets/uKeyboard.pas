@@ -58,14 +58,10 @@ procedure MapKeyboard(vKey: String);
 begin
   if vVirtual_Keyboard_Active then
     uVirtual_Keyboard_SetKey(vKey)
-  else if extrafe.prog.State= 'loading' then
-    uLoad_Keyboard_SetKey(vKey)
-  else if extrafe.prog.State= 'main' then
+  else if ContainsText(extrafe.prog.State, 'load') then
+    uLoad_Keyboard.SetKey(vKey)
+  else if ContainsText(extrafe.prog.State, 'main') then
     uMain_Keyboard_SetKey(vKey)
-  else if extrafe.prog.State= 'main_config' then
-    begin
-
-    end
   else if ContainsText(extrafe.prog.State, 'mame') then
     uEmu_Arcade_Mame_Keyboard_SetKey(vKey)
   else if ContainsText(extrafe.prog.State,'addon_weather') then

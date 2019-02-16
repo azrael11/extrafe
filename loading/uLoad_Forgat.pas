@@ -4,10 +4,14 @@ interface
 
 uses
   System.Classes,
-  System.SysUtils;
+  System.SysUtils,
+  System.UiTypes,
+  FMX.Types;
 
 procedure Send_Pass_WithEmail(vEmail: string);
 procedure Cancel;
+
+procedure Update_Email(vEmail: String);
 
 implementation
 
@@ -25,10 +29,21 @@ end;
 
 procedure Send_Pass_WithEmail(vEmail: string);
 begin
-  if uInternet_Files.Send_HTML_Email(vEmail, 'forgat_password') then
-    Cancel
+  if ex_load.F_Pass.Main.Email_V.TextSettings.FontColor = TAlphaColorRec.White then
+  begin
+    if uInternet_Files.Send_HTML_Email(vEmail, 'forgat_password') then
+      Cancel
+    else
+      ex_load.F_Pass.Main.Warning.Visible := True;
+  end;
+end;
+
+procedure Update_Email(vEmail: String);
+begin
+  if uInternet_Files.ValidEmail(vEmail) then
+    ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.White
   else
-    ex_load.F_Pass.Main.Warning.Visible := True;
+    ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.Red;
 end;
 
 end.

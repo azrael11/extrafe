@@ -52,12 +52,12 @@ type
 
 type
   TEXTRAFE_PROGRAM = record
+    State: String;
     Path: String;
     Name: String;
     Paths: TEXTRAFE_PROGRAM_PATHS;
     Desc: String;
     Version: TEXTRAFE_BUILD_INFO;
-    State: String;
   end;
 
 type
@@ -311,6 +311,8 @@ type
     User_V: TEdit;
     Pass: Tlabel;
     Pass_V: TEdit;
+    Pass_Show: TImage;
+    Pass_Show_Glow: TGlowEffect;
     NotRegister: TText;
     Warning: Tlabel;
     Forget_Pass: TText;
@@ -327,6 +329,7 @@ type
 type
   TLOADING_FORGET_PASSWORD_MAIN = record
     Panel: TPanel;
+    User: TText;
     Avatar: TImage;
     Email: Tlabel;
     Email_V: TEdit;
@@ -338,7 +341,6 @@ type
 type
   TLOADING_FORGET_PASSWORD = record
     Panel: TPanel;
-    Header: TGLOBAL_HEADER;
     Main: TLOADING_FORGET_PASSWORD_MAIN;
   end;
 
@@ -391,6 +393,7 @@ type
   TLOADING_REGISTER = record
     Panel: TPanel;
     Main: TLOADING_REGISTER_MAIN;
+    Edit_Select: String;
   end;
 
 type

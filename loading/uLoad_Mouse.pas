@@ -80,7 +80,7 @@ begin
   else if TButton(Sender).Name = 'Loading_Reg_Cancel' then
     uLoad_Register.Cancel
   else if TButton(Sender).Name = 'Loading_FPass_Send' then
-    uLoad_Forgat.Send_Pass_WithEmail(ex_load)
+    uLoad_Forgat.Send_Pass_WithEmail(ex_load.F_Pass.Main.Email_V.Text)
   else if TButton(Sender).Name = 'Loading_FPass_Cancel' then
     uLoad_Forgat.Cancel
   else if TButton(Sender).Name = 'Loading_Terms_Close' then
@@ -111,6 +111,8 @@ begin
     ex_load.Reg.Main.Pass_V.Password:= not ex_load.Reg.Main.Pass_V.Password
   else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
     ex_load.Reg.Main.RePass_V.Password:= not ex_load.Reg.Main.RePass_V.Password
+  else if TImage(Sender).Name= 'Loading_Login_Pass_Show' then
+    ex_load.Login.Pass_V.Password:= not ex_load.Login.Pass_V.Password;
 end;
 
 procedure TLOADING_IMAGE.OnMouseEnter(Sender: TObject);
@@ -121,6 +123,8 @@ begin
     ex_load.Reg.Main.Pass_Show_Glow.Enabled:= True
   else if TImage(Sender).Name= 'Loading_Register_RePass_Show' then
     ex_load.Reg.Main.RePass_Show_Glow.Enabled:= True
+  else if TImage(Sender).Name= 'Loading_Login_Pass_Show' then
+    ex_load.Login.Pass_Show_Glow.Enabled:= True;
 end;
 
 procedure TLOADING_IMAGE.OnMouseLeave(Sender: TObject);
@@ -131,6 +135,8 @@ begin
     ex_load.Reg.Main.Pass_Show_Glow.Enabled:= False
   else if TImage(Sender).Name= 'Loading_Register_RePass_Show' then
     ex_load.Reg.Main.RePass_Show_Glow.Enabled:= False
+  else if TImage(Sender).Name= 'Loading_Login_Pass_Show' then
+    ex_load.Login.Pass_Show_Glow.Enabled:= False;
 end;
 
 { TLOADING_EDIT }
@@ -192,7 +198,9 @@ begin
   else if TEdit(Sender).Name = 'Loading_Register_ReEmail_V' then
     uLoad_Register.Update_ReEmail(TEdit(Sender).Text)
   else if TEdit(Sender).Name = 'Loading_Register_Capt_V' then
-    uLoad_Register.Update_Captcha(TEdit(Sender).Text);
+    uLoad_Register.Update_Captcha(TEdit(Sender).Text)
+  else if TEdit(Sender).Name= 'Loading_FPass_Email_V' then
+    uLoad_Forgat.Update_Email(TEdit(Sender).Text);
 end;
 
 { TLOADING_TEXT }

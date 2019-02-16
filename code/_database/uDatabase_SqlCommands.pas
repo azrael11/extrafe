@@ -9,23 +9,29 @@ uses
 function uDatabase_SQLCommands_Count_Records: Integer;
 function uDatabase_SQLCommands_Get_UserName(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_Password(vRecNum: Integer): String;
-function uDatabase_SQLCommands_Get_Avatar(vRecNum: Integer): String;
+function uDatabase_SQLCommands_Get_Email(vRecNum: Integer): String;
+function Get_IP(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_RealName(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_SurName(vRecNum: Integer): String;
-function uDatabase_SQLCommands_Get_Email(vRecNum: Integer): String;
-function uDatabase_SQLCommands_Get_LastDateVisit(vRecNum: Integer): String;
-function uDatabase_SQLCommands_Get_LastTimeVisit(vRecNum: Integer): String;
+function uDatabase_SQLCommands_Get_Avatar(vRecNum: Integer): String;
+function Get_DateTime_Created(vRecNum: Integer): String;
+function Get_LastDateTimeVisit(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_Country(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_Country_Code(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_Genre(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_LastGame(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_LastEmulator(vRecNum: Integer): String;
 function uDatabase_SQLCommands_Get_TimePlay(vRecNum: Integer): String;
+function Get_ServerFolder(vRecNum: Integer): String;
 
 function uDatabase_Is_User_Exists(vUser: string): Boolean;
 function uDatabase_Is_Password_Correct_For_User(vUser, vPassword: string): Boolean;
-procedure uDatabase_Change_Avatar(mNum: Integer);
-procedure uDatabase_Change_Password(vPassword: WideString);
+
+procedure Update_Avatar(mNum: Integer);
+procedure Update_Password(vPassword: WideString);
+procedure Update_Name(vName: String);
+procedure Update_Surename(vSurename: String);
+procedure Update_Genre(vGerne: String);
 
 function New_User: Boolean;
 
@@ -78,26 +84,6 @@ begin
     user_Active.Password := vCPassword;
     Result := True;
   end
-end;
-
-procedure uDatabase_Change_Avatar(mNum: Integer);
-begin
-  ExtraFE_Query.Close;
-  ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('UPDATE USER SET AVATAR=' + mNum.ToString + ' WHERE NUM=' +
-    user_Active.Database_Num.ToString);
-  ExtraFE_Query.ExecSQL;
-  user_Active.Avatar := mNum.ToString;
-end;
-
-procedure uDatabase_Change_Password(vPassword: WideString);
-begin
-  ExtraFE_Query.Close;
-  ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('UPDATE USER SET PASSWORD=''' + vPassword + ''' WHERE NUM=' +
-    IntToStr(user_Active.Database_Num));
-  ExtraFE_Query.ExecSQL;
-  user_Active.Password := vPassword;
 end;
 
 function uDatabase_SQLCommands_Count_Records: Integer;
@@ -177,14 +163,36 @@ begin
   ExtraFE_Query.Close;
 end;
 
-function uDatabase_SQLCommands_Get_LastDateVisit(vRecNum: Integer): String;
+function Get_IP(vRecNum: Integer): String;
 begin
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('SELECT LAST_DATE_VISIT as datevisit FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.SQL.Add('SELECT IP_ADDRESS as ip_address FROM USER WHERE NUM=' + vRecNum.ToString);
   ExtraFE_Query.Open;
   ExtraFE_Query.First;
-  Result := ExtraFE_Query.FieldByName('datevisit').AsString;
+  Result := ExtraFE_Query.FieldByName('ip_address').AsString;
+  ExtraFE_Query.Close;
+end;
+
+function Get_DateTime_Created(vRecNum: Integer): String;
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('SELECT DATETIME_CREATED as datetime_created FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.Open;
+  ExtraFE_Query.First;
+  Result := ExtraFE_Query.FieldByName('datetime_created').AsString;
+  ExtraFE_Query.Close;
+end;
+
+function Get_LastDateTimeVisit(vRecNum: Integer): String;
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('SELECT LAST_DATETIME_VISIT as last_datetime_visit FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.Open;
+  ExtraFE_Query.First;
+  Result := ExtraFE_Query.FieldByName('last_datetime_visit').AsString;
   ExtraFE_Query.Close;
 end;
 
@@ -192,10 +200,10 @@ function uDatabase_SQLCommands_Get_LastTimeVisit(vRecNum: Integer): String;
 begin
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('SELECT LAST_TIME_VISIT as timevisit FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.SQL.Add('SELECT LAST_TIME_VISIT as last_time_visit FROM USER WHERE NUM=' + vRecNum.ToString);
   ExtraFE_Query.Open;
   ExtraFE_Query.First;
-  Result := ExtraFE_Query.FieldByName('timevisit').AsString;
+  Result := ExtraFE_Query.FieldByName('last_time_visit').AsString;
   ExtraFE_Query.Close;
 end;
 
@@ -236,10 +244,10 @@ function uDatabase_SQLCommands_Get_LastGame(vRecNum: Integer): String;
 begin
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('SELECT LAST_GAME_PLAY as lastgame FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.SQL.Add('SELECT LAST_GAME_PLAY as last_game_play FROM USER WHERE NUM=' + vRecNum.ToString);
   ExtraFE_Query.Open;
   ExtraFE_Query.First;
-  Result := ExtraFE_Query.FieldByName('lastgame').AsString;
+  Result := ExtraFE_Query.FieldByName('last_game_play').AsString;
   ExtraFE_Query.Close;
 end;
 
@@ -247,10 +255,10 @@ function uDatabase_SQLCommands_Get_LastEmulator(vRecNum: Integer): String;
 begin
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('SELECT LAST_EMULATOR as lastemulator FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.SQL.Add('SELECT LAST_EMULATOR as last_emulator FROM USER WHERE NUM=' + vRecNum.ToString);
   ExtraFE_Query.Open;
   ExtraFE_Query.First;
-  Result := ExtraFE_Query.FieldByName('lastemulator').AsString;
+  Result := ExtraFE_Query.FieldByName('last_emulator').AsString;
   ExtraFE_Query.Close;
 end;
 
@@ -258,10 +266,21 @@ function uDatabase_SQLCommands_Get_TimePlay(vRecNum: Integer): String;
 begin
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('SELECT TOTAL_PLAY_TIME as totalplay FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.SQL.Add('SELECT TOTAL_PLAY_TIME as total_play_time FROM USER WHERE NUM=' + vRecNum.ToString);
   ExtraFE_Query.Open;
   ExtraFE_Query.First;
-  Result := ExtraFE_Query.FieldByName('totalplay').AsString;
+  Result := ExtraFE_Query.FieldByName('total_play_time').AsString;
+  ExtraFE_Query.Close;
+end;
+
+function Get_ServerFolder(vRecNum: Integer): String;
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('SELECT SERVER_FOLDER as server_folder FROM USER WHERE NUM=' + vRecNum.ToString);
+  ExtraFE_Query.Open;
+  ExtraFE_Query.First;
+  Result := ExtraFE_Query.FieldByName('server_folder').AsString;
   ExtraFE_Query.Close;
 end;
 
@@ -281,6 +300,57 @@ begin
     + ''', ''' + User_Reg.Last_Game_Play + ''', ''' + User_Reg.Last_Emulator + ''', ''' + User_Reg.Total_Time_Play + ''', '''
     + User_Reg.Server_Folder + ''')');
   ExtraFE_Query.ExecSQL;
+end;
+
+///
+procedure Update_Name(vName: String);
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('UPDATE USER SET NAME=''' + vName + ''' WHERE NUM=' +
+    IntToStr(user_Active.Database_Num));
+  ExtraFE_Query.ExecSQL;
+  user_Active.Name:= vName;
+end;
+
+procedure Update_Surename(vSurename: String);
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('UPDATE USER SET SURNAME=''' + vSurename + ''' WHERE NUM=' +
+    IntToStr(user_Active.Database_Num));
+  ExtraFE_Query.ExecSQL;
+  user_Active.Name:= vSurename;
+end;
+
+procedure Update_Genre(vGerne: String);
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('UPDATE USER SET GENRE=''' + vGerne + ''' WHERE NUM=' +
+    IntToStr(user_Active.Database_Num));
+  ExtraFE_Query.ExecSQL;
+  user_Active.Name:= vGerne;
+end;
+
+procedure Update_Avatar(mNum: Integer);
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('UPDATE USER SET AVATAR=' + mNum.ToString + ' WHERE NUM=' +
+    user_Active.Database_Num.ToString);
+  ExtraFE_Query.ExecSQL;
+  user_Active.Avatar := mNum.ToString;
+end;
+
+procedure Update_Password(vPassword: WideString);
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('UPDATE USER SET PASSWORD=''' + vPassword + ''' WHERE NUM=' +
+    IntToStr(user_Active.Database_Num));
+  ExtraFE_Query.ExecSQL;
+  user_Active.Password := vPassword;
 end;
 
 end.

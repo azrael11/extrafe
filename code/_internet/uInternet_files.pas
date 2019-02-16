@@ -27,7 +27,7 @@ function GeoIP(out vCountry_Code: string; out vIP: string; out vLat, vLon: Strin
 
 procedure Create_FTP_Folder(vFolder_Name: String);
 
-function Send_HTML_Email(vEmail, vTheme: String): Boolean;
+function Send_HTML_Email(vEmail, vTheme: String): boolean;
 procedure HTML_Registration(vHTMLBuild: TIdMessageBuilderHtml);
 procedure HTML_Password_Forgat(vHTMLBuild: TIdMessageBuilderHtml);
 
@@ -56,7 +56,9 @@ implementation
 
 uses
   uLoad_AllTypes,
-  uLoad_Register;
+  uLoad_Register,
+  uDatabase_ActiveUser,
+  uDatabase_SqlCommands;
 { TIdHTTPProgress }
 
 constructor TIdHTTPProgress.Create(AOwner: TComponent);
@@ -295,28 +297,25 @@ var
   vLogo: String;
 begin
   vBackground := ex_load.Path.Images + 'back.png';
-  vLogo:= ex_load.Path.Images+ 'logo.png';
+  vLogo := ex_load.Path.Images + 'logo.png';
 
-  vHTMLBuild.HtmlFiles.Add(vBackground, 'back.png');
-  vHTMLBuild.HtmlFiles.Add(vLogo, 'logo.png');
+  vHTMLBuild.HtmlFiles.Add(vBackground, 'back');
+  vHTMLBuild.HtmlFiles.Add(vLogo, 'logo');
 
   vHTMLBuild.Html.Add('<html>');
   vHTMLBuild.Html.Add('<head>');
-  vHTMLBuild.Html.Add('<style>body {'+
-  'background-image: url("back.png");'+
-  'background-repeat: repeat;'+
-  'background-color: #cccccc;'+
-  '}</style>');
+  vHTMLBuild.Html.Add('<style>body {' + 'background-image: url("cid:back");' + 'background-repeat: repeat;' +
+    'background-color: #cccccc;' + '}</style>');
   vHTMLBuild.Html.Add('</head>');
   vHTMLBuild.Html.Add('<body>Congratulations on your enrollment in the ExtraFE world.<p>');
-  vHTMLBuild.Html.Add('<p><img src="logo.png" alt="Smiley face" height="260" width="500">');
-  vHTMLBuild.Html.Add('<p><b>Username</b> : ' + User_Reg.Username+ '<br>');
-  vHTMLBuild.Html.Add('<b>Password</b> : ' + User_Reg.Password+ '<p>');
+  vHTMLBuild.Html.Add('<p><img src="cid:logo" alt="Smiley face" height="260" width="500">');
+  vHTMLBuild.Html.Add('<p><b>Username</b> : ' + User_Reg.Username + '<br>');
+  vHTMLBuild.Html.Add('<b>Password</b> : ' + User_Reg.Password + '<p>');
   vHTMLBuild.Html.Add
     ('At the moment we sent you the e-mail the possibilities we provide are limited.<br> In the future we will add more and more services and benefits and of course it will be free forever.<p>');
-  vHTMLBuild.Html.Add('<b>Homepage</b>      : ------<br>');
-  vHTMLBuild.Html.Add('<b>Documentation</b> : ------<br>');
-  vHTMLBuild.Html.Add('<b>Forum</b>         : ------<p>');
+  vHTMLBuild.Html.Add('<b>Homepage</b>      : <a href="http://extrafe.epizy.com">http://extrafe.epizy.com</a><br>');
+  vHTMLBuild.Html.Add('<b>Documentation</b> : <a href="http://extrafe.epizy.com/doc/">http://extrafe.epizy.com/doc/</a><br>');
+  vHTMLBuild.Html.Add('<b>Forum</b>         : <a href="http://extrafe.epizy.com/smf/">http://extrafe.epizy.com/smf/</a><p>');
   vHTMLBuild.Html.Add('Sincerely, the owner of ExraFE : <b>Nikos Kordas</b> AKA (azrael11).</body>');
   vHTMLBuild.Html.Add('</html>');
   vHTMLBuild.HtmlCharSet := 'utf-8';
@@ -332,42 +331,41 @@ var
   vLogo: String;
 begin
   vBackground := ex_load.Path.Images + 'back.png';
-  vLogo:= ex_load.Path.Images+ 'logo.png';
+  vLogo := ex_load.Path.Images + 'logo.png';
 
-  vHTMLBuild.HtmlFiles.Add(vBackground, 'back.png');
-  vHTMLBuild.HtmlFiles.Add(vLogo, 'logo.png');
+  vHTMLBuild.HtmlFiles.Add(vBackground, 'back');
+  vHTMLBuild.HtmlFiles.Add(vLogo, 'logo');
 
   vHTMLBuild.Html.Add('<html>');
   vHTMLBuild.Html.Add('<head>');
-  vHTMLBuild.Html.Add('<style>body {'+
-  'background-image: url("back.png");'+
-  'background-repeat: repeat;'+
-  'background-color: #cccccc;'+
-  '}</style>');
+  vHTMLBuild.Html.Add('<style>');
+  vHTMLBuild.Html.Add('<style>body {' + 'background-image: url("cid:back");' + 'background-repeat: repeat;' +
+    'background-color: #cccccc;' + '}</style>');
   vHTMLBuild.Html.Add('</head>');
-  vHTMLBuild.Html.Add('<body>You forgat your password.<p>');
-  vHTMLBuild.Html.Add('<p><img src="logo.png" alt="" height="260" width="500">');
-    vHTMLBuild.Html.Add
+  vHTMLBuild.Html.Add('<body> You forgat your password.<p>');
+  vHTMLBuild.Html.Add('<p><img src="cid:logo" alt="" height="260" width="500">');
+  vHTMLBuild.Html.Add
     ('<p>This email was sent to you because you asked us to enter the password you forgot.<p>');
-  vHTMLBuild.Html.Add('<p><b>Username</b> : ' + User_Reg.Username+ '<br>');
-  vHTMLBuild.Html.Add('<b>Password</b> : <b>' + User_Reg.Password+ '</b><p>');
+  vHTMLBuild.Html.Add('<p><b>Username</b> : ' + user_Active.Username + '<br>');
+  vHTMLBuild.Html.Add('<b>Password</b> : </b>' + uDatabase_SqlCommands.uDatabase_SQLCommands_Get_Password(user_Active.Database_Num) + '</b><p>');
   vHTMLBuild.Html.Add
     ('If you continue to have trouble accessing the ExtraFE please with your username send e-mail at: spoooky11@hotmail.gr.<p>');
-  vHTMLBuild.Html.Add('<b>Homepage</b>      : ------<br>');
-  vHTMLBuild.Html.Add('<b>Documentation</b> : ------<br>');
-  vHTMLBuild.Html.Add('<b>Forum</b>         : ------<p>');
+  vHTMLBuild.Html.Add('<b>Homepage</b>      : <a href="http://extrafe.epizy.com">http://extrafe.epizy.com</a><br>');
+  vHTMLBuild.Html.Add('<b>Documentation</b> : <a href="http://extrafe.epizy.com/doc/">http://extrafe.epizy.com/doc/</a><br>');
+  vHTMLBuild.Html.Add('<b>Forum</b>         : <a href="http://extrafe.epizy.com/smf/">http://extrafe.epizy.com/smf/</a><p>');
   vHTMLBuild.Html.Add('Sincerely, the owner of ExraFE : <b>Nikos Kordas</b> AKA (azrael11).</body>');
   vHTMLBuild.Html.Add('</html>');
   vHTMLBuild.HtmlCharSet := 'utf-8';
 end;
 
-function Send_HTML_Email(vEmail, vTheme: String): Boolean;
+function Send_HTML_Email(vEmail, vTheme: String): boolean;
 var
   vIdSMTP: TIdSMTP;
   vIdMessage: TIdMessage;
   vIOHandlerSSL: TIdSSLIOHandlerSocketOpenSSL;
   Htmlbuilder: TIdMessageBuilderHtml;
 begin
+  Result:= False;
   vIdSMTP := TIdSMTP.Create(ex_load.Scene.Back);
   vIdMessage := TIdMessage.Create(ex_load.Scene.Back);
   vIOHandlerSSL := TIdSSLIOHandlerSocketOpenSSL.Create(ex_load.Scene.Back);
@@ -398,15 +396,15 @@ begin
   try
     Htmlbuilder := TIdMessageBuilderHtml.Create;
     try
-      if vTheme= 'register_user' then
+      if vTheme = 'register_user' then
         HTML_Registration(Htmlbuilder)
-      else if vTheme= 'forgat_password' then
+      else if vTheme = 'forgat_password' then
         HTML_Password_Forgat(Htmlbuilder);
       vIdMessage := Htmlbuilder.NewMessage(nil);
       vIdMessage.From.Address := 'spoooky11@hotmail.gr';
-      if vTheme= 'register_user' then
+      if vTheme = 'register_user' then
         vIdMessage.Subject := 'Thank you for your registration to ExtraFE'
-      else if vTheme= 'forgat_password' then
+      else if vTheme = 'forgat_password' then
         vIdMessage.Subject := 'ExtraFE, revive forgaten password';
       vIdMessage.Priority := mpHigh;
       with vIdMessage.Recipients.Add do
@@ -418,7 +416,7 @@ begin
       vIdSMTP.Connect();
       try
         vIdSMTP.Send(vIdMessage);
-        // ShowMessage('Email sent');
+        Result:= True;
       finally
         vIdSMTP.Disconnect();
       end;

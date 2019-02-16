@@ -102,10 +102,7 @@ end;
 procedure uSnippet_Text_HyperLink_OnMouseLeave(Sender: TObject);
 begin
   TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style- [TFontStyle.fsUnderline];
-  if (extrafe.style.Name= 'Amakrits') or (extrafe.style.Name= 'Dark') or (extrafe.style.Name= 'Air') then
-    TText(Sender).TextSettings.FontColor:= claWhite
-  else
-    TText(Sender).TextSettings.FontColor:= claBlack;
+  TText(Sender).TextSettings.FontColor:= claWhite;
   TText(Sender).Cursor:= crDefault;
 end;
 

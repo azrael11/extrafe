@@ -77,7 +77,6 @@ uses
   uTIme_Time_Actions in 'addons\time\time\uTIme_Time_Actions.pas',
   uLoad_Addons in 'loading\uLoad_Addons.pas',
   uSnippets_Colors in 'code\_snippets\uSnippets_Colors.pas',
-  uMain_Config_Info_Actions in 'main\configuration\uMain_Config_Info_Actions.pas',
   uLoad_Emulation in 'loading\uLoad_Emulation.pas',
   uLoad_Sound in 'loading\uLoad_Sound.pas',
   uMain_Config_Addons_Actions in 'main\configuration\uMain_Config_Addons_Actions.pas',
@@ -144,7 +143,13 @@ uses
   uSoundplayer_Equalizer_Mouse in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer_Mouse.pas',
   uSoundplayer_Equalizer in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer.pas',
   uLoad_Register in 'loading\uLoad_Register.pas',
-  uSnippet_Convert in 'code\_snippets\uSnippet_Convert.pas';
+  uSnippet_Convert in 'code\_snippets\uSnippet_Convert.pas',
+  uLoad_Forgat in 'loading\uLoad_Forgat.pas',
+  uMain_Config_Profile_User in 'main\configuration\profile\uMain_Config_Profile_User.pas',
+  uMain_Config_Profile_Statistics in 'main\configuration\profile\uMain_Config_Profile_Statistics.pas',
+  uMain_Config_Profile_Machine in 'main\configuration\profile\uMain_Config_Profile_Machine.pas',
+  uMain_Config_Keyboard in 'main\configuration\uMain_Config_Keyboard.pas',
+  uMain_Config_Info_Extrafe in 'main\configuration\info\uMain_Config_Info_Extrafe.pas';
 
 {$R *.res}
 

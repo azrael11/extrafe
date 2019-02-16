@@ -147,6 +147,8 @@ procedure uMain_Config_Addons_Create;
 var
   vi: Integer;
 begin
+  extrafe.prog.State:= 'main_config_addons';
+
   mainScene.Config.main.R.Addons.Panel := TPanel.Create(mainScene.Config.main.R.Panel[4]);
   mainScene.Config.main.R.Addons.Panel.Name := 'Main_Config_Addons_Panel';
   mainScene.Config.main.R.Addons.Panel.Parent := mainScene.Config.main.R.Panel[4];

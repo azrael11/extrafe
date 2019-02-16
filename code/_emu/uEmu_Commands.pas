@@ -8,8 +8,8 @@ uses
   System.StrUtils,
   FMX.Dialogs,
   FMX.Forms,
-  Windows,
-  ShellApi;
+  Winapi.Windows,
+  Winapi.ShellApi;
 
 function fEmu_Commands_CaptureOutput(vDosProg, vParameters: WideString): TstringList;
 function fEmu_Commands_CaptureOutput1(const cDrive, vFullPath, vCMDLine, vOutSave: string): Boolean;
@@ -114,7 +114,7 @@ var
   start: TStartUpInfo;
   procInfo: TProcessInformation;
   tmpName: string;
-  tmp: Windows.THandle;
+  tmp: THandle;
   tmpSec: TSecurityAttributes;
   res: TstringList;
   return: Cardinal;
@@ -152,7 +152,7 @@ begin
           res.Free;
         end;
         // Windows.CopyFile(Pchar(tmpName),pchar(vOutSave),FALSE);
-        Windows.DeleteFile(PChar(tmpName));
+        DeleteFile(PChar(tmpName));
       end
       else
       begin
@@ -160,7 +160,7 @@ begin
       end;
     except
       CloseHandle(tmp);
-      Windows.DeleteFile(PChar(tmpName)); { *Converted from DeleteFile* }
+      DeleteFile(PChar(tmpName)); { *Converted from DeleteFile* }
       raise;
     end;
   finally

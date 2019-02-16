@@ -525,6 +525,7 @@ begin
   case vHeader of
     0:
       begin
+        ex_load.Reg.Edit_Select:= 'username';
         for vi := 0 to 4 do
         begin
           ex_load.Reg.Main.Data.User[vi].FontColor := TAlphaColorRec.White;
@@ -560,6 +561,7 @@ begin
       end;
     1:
       begin
+        ex_load.Reg.Edit_Select:= 'password';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.Pass[vi].FontColor := TAlphaColorRec.White;
@@ -580,6 +582,7 @@ begin
       end;
     2:
       begin
+        ex_load.Reg.Edit_Select:= 'repassword';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.RePass[vi].FontColor := TAlphaColorRec.White;
@@ -600,6 +603,7 @@ begin
       end;
     3:
       begin
+        ex_load.Reg.Edit_Select:= 'email';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.Email[vi].FontColor := TAlphaColorRec.White;
@@ -620,6 +624,7 @@ begin
       end;
     4:
       begin
+        ex_load.Reg.Edit_Select:= 'reemail';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.ReEmail[vi].FontColor := TAlphaColorRec.White;
@@ -656,6 +661,7 @@ begin
       end;
     7:
       begin
+        ex_load.Reg.Edit_Select:= 'captcha';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.Captcha[vi].FontColor := TAlphaColorRec.White;
