@@ -31,6 +31,7 @@ uses
   uMain_AllTypes,
   uMain_Mouse,
   uMain_Config_Profile,
+  uMain_Config_General,
   uMain_Config_Emulators,
   uMain_Config_Addons,
   uMain_Config_Themes,
@@ -50,10 +51,7 @@ begin
   mainScene.Config.Panel := TPanel.Create(Main_Form);
   mainScene.Config.Panel.Name := 'Main_Config_Panel';
   mainScene.Config.Panel.Parent := Main_Form;
-  mainScene.Config.Panel.Width := 810;
-  mainScene.Config.Panel.Height := 620;
-  mainScene.Config.Panel.Position.X := extrafe.res.Width + 810;
-  mainScene.Config.Panel.Position.Y := (extrafe.res.Height / 2) - 310;
+  mainScene.Config.Panel.SetBounds(extrafe.res.Width + 810, (extrafe.res.Height / 2) - 310, 810, 620);
   mainScene.Config.Panel.Visible := True;
 
   mainScene.Config.Panel_Shadow := TShadowEffect.Create(mainScene.Config.Panel);
@@ -80,10 +78,7 @@ begin
   mainScene.Config.main.Left := TPanel.Create(mainScene.Config.Panel);
   mainScene.Config.main.Left.Name := 'Main_Config_Left_Panel';
   mainScene.Config.main.Left.Parent := mainScene.Config.Panel;
-  mainScene.Config.main.Left.Width := 210;
-  mainScene.Config.main.Left.Height := 590;
-  mainScene.Config.main.Left.Position.X := 0;
-  mainScene.Config.main.Left.Position.Y := 30;
+  mainScene.Config.main.Left.SetBounds(0, 30, 210, 590);
   mainScene.Config.main.Left.Visible := True;
 
   mainScene.Config.main.Left_Blur := TBlurEffect.Create(mainScene.Config.main.Left);
@@ -95,10 +90,7 @@ begin
   mainScene.Config.main.Right := TPanel.Create(mainScene.Config.Panel);
   mainScene.Config.main.Right.Name := 'Main_Config_Right_Panel';
   mainScene.Config.main.Right.Parent := mainScene.Config.Panel;
-  mainScene.Config.main.Right.Width := 600;
-  mainScene.Config.main.Right.Height := 590;
-  mainScene.Config.main.Right.Position.X := 210;
-  mainScene.Config.main.Right.Position.Y := 30;
+  mainScene.Config.main.Right.SetBounds(210, 30, 600, 590);
   mainScene.Config.main.Right.Visible := True;
 
   for vi := 0 to 6 do
@@ -106,10 +98,7 @@ begin
     mainScene.Config.main.L.Button[vi] := TButton.Create(mainScene.Config.main.Left);
     mainScene.Config.main.L.Button[vi].Name := 'Main_Config_Button_' + IntToStr(vi);
     mainScene.Config.main.L.Button[vi].Parent := mainScene.Config.main.Left;
-    mainScene.Config.main.L.Button[vi].Width := 190;
-    mainScene.Config.main.L.Button[vi].Height := 33;
-    mainScene.Config.main.L.Button[vi].Position.X := 10;
-    mainScene.Config.main.L.Button[vi].Position.Y := 30 + (vi * 40);
+    mainScene.Config.main.L.Button[vi].SetBounds(10, 30 + (vi * 40), 190, 33);
     mainScene.Config.main.L.Button[vi].Text := cButton_Names[vi];
     mainScene.Config.main.L.Button[vi].OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
     mainScene.Config.main.L.Button[vi].Tag := vi;
@@ -122,8 +111,6 @@ begin
     mainScene.Config.main.R.Panel[vi].Name := 'Main_Config_Panel_' + IntToStr(vi);
     mainScene.Config.main.R.Panel[vi].Parent := mainScene.Config.main.Right;
     mainScene.Config.main.R.Panel[vi].Align := TAlignLayout.Client;
-    mainScene.Config.main.R.Panel[vi].Position.X := 0;
-    mainScene.Config.main.R.Panel[vi].Position.Y := 0;
     mainScene.Config.main.R.Panel[vi].Visible := False;
   end;
 
@@ -175,7 +162,7 @@ begin
     0:
       FreeAndNil(mainScene.Config.main.R.Profile.Panel);
     1:
-      ; // mainScene.Config.R.General
+      FreeAndNil(mainScene.Config.Main.R.General.Panel) ;
     2:
       begin
         for vi := 0 to 4 do
@@ -209,9 +196,9 @@ begin
 
     case vPanel of
       0:
-        uMain_Config_Profile_Create;
+        uMain_Config_Profile.Create;
       1:
-        ;
+        uMain_Config_General.Create;
       2:
         uMain_Config_Emulators_Create;
       3:
@@ -224,7 +211,7 @@ begin
         uMain_Config_Info_Create;
     end;
     ex_main.Config.Active_Panel := vPanel;
-    mainScene.Config.Main.L.Button[vPanel].SetFocus;
+    mainScene.Config.main.L.Button[vPanel].SetFocus;
   end;
 end;
 

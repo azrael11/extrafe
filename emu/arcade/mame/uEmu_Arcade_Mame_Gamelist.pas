@@ -35,6 +35,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSnippet_Text,
+  uSnippet_Search,
   uWindows,
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Game_SetAll,
@@ -274,6 +275,9 @@ var
 begin
   if mame.Gamelist.Selected <> mame.Gamelist.Games_Count then
   begin
+    if extrafe.prog.Virtual_Keyboard= False then
+      if uSnippet_Search.vSearch.Actions.Active then
+          uSnippet_Search.Clear;
     inc(mame.Gamelist.Selected, 1);
     uEmu_Arcade_Mame_Gamelist_Refresh;
     mame.Gamelist.Timer.Enabled := False;

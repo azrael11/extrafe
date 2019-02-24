@@ -12,6 +12,7 @@ uses
   FMX.Effects,
   FMX.Ani,
   FMX.Types,
+  FMX.Filter.Effects,
   ALFMXObjects;
 
 procedure uPlay_SetAll_Set;
@@ -31,7 +32,8 @@ uses
   uLoad_AllTypes,
   uMain_AllTypes,
   uPlay_AllTypes,
-  uAzHung_AllTypes;
+  uAzHung_AllTypes,
+  uPlay_Sounds;
 
 procedure uPlay_SetAll_Set;
 var
@@ -99,6 +101,8 @@ begin
     vPlay.Img_Img_Glow[vi].Opacity := 0.9;
     vPlay.Img_Img_Glow[vi].Enabled := False;
   end;
+
+  uPlay_Sounds.Load;
 end;
 
 procedure uPlay_SetAll_CreateGameScene(vNum: Integer);
@@ -125,6 +129,13 @@ begin
   vPlay.Info.Parent := vPlay.Main;
   vPlay.Info.SetBounds(510, 10, vPlay.Main.Width - 510, vPlay.Main.Height - 20);
   vPlay.Info.Visible := True;
+
+  vPlay.Info_Blur:= TGaussianBlurEffect.Create(vPlay.Info);
+  vPlay.Info_Blur.Name:= 'A_P_Info_Blur';
+  vPlay.Info_Blur.Parent:=  vPlay.Info;
+  vPlay.Info_Blur.BlurAmount:= 0.7;
+  vPlay.Info_Blur.Enabled:= False;
+
 
   vPlay.Info_Ani := TFloatAnimation.Create(vPlay.Info);
   vPlay.Info_Ani.Name := 'A_P_Info_Animation';
@@ -240,24 +251,10 @@ begin
     vPlay.Info_Img[vi].Visible := True;
     Inc(vk, 1);
 
-    vPlay.Info_Img_Full[vi] := TImage.Create(vPlay.Info_Img[vi]);
-    vPlay.Info_Img_Full[vi].Name := 'A_P_Info_Img_Full_'+ vi.ToString;
-    vPlay.Info_Img_Full[vi].Parent := vPlay.Info_Img[vi];
-    vPlay.Info_Img_Full[vi].Align := TAlignLayout.Client;
-    vPlay.Info_Img_Full[vi].Bitmap.LoadFromFile(addons.play.Path.Images + 'azplay_back.png');
-    vPlay.Info_Img_Full[vi].WrapMode := TImageWrapMode.Stretch;
-    vPlay.Info_Img_Full[vi].OnMouseLeave := addons.play.Input.mouse.Image.OnMouseLeave;
-    vPlay.Info_Img_Full[vi].Tag:= vi;
-    vPlay.Info_Img_Full[vi].Visible := False;
-
-    vPlay.Info_Img_Full_Icon[vi] := TImage.Create(vPlay.Info_Img_Full[vi]);
-    vPlay.Info_Img_Full_Icon[vi].Name := 'A_P_Info_Img_Full_Icon_'+ vi.ToString;
-    vPlay.Info_Img_Full_Icon[vi].Parent := vPlay.Info_Img_Full[vi];
-    vPlay.Info_Img_Full_Icon[vi].SetBounds(vPlay.Info_Img_Full[vi].Width - 26, 4, 22, 22);
-    vPlay.Info_Img_Full_Icon[vi].Bitmap.LoadFromFile(addons.play.Path.Images + 'azplay_full.png');
-    vPlay.Info_Img_Full_Icon[vi].WrapMode := TImageWrapMode.Fit;
-    vPlay.Info_Img_Full_Icon[vi].Opacity := 0.4;
-    vPlay.Info_Img_Full_Icon[vi].Visible := True;
+    vPlay.Info_Grey[vi]:= TMonochromeEffect.Create(vPlay.Info_Img[vi]);
+    vPlay.Info_Grey[vi].Name:= 'A_P_Info_Img_Grey_'+ vi.ToString;
+    vPlay.Info_Grey[vi].Parent:=   vPlay.Info_Img[vi];
+    vPlay.Info_Grey[vi].Enabled:= True;
 
     vPlay.Info_Img_Glow[vi] := TGlowEffect.Create(vPlay.Info_Img[vi]);
     vPlay.Info_Img_Glow[vi].Name := 'A_P_Info_Img_Glow_' + vi.ToString;
@@ -607,7 +604,7 @@ begin
   vPlay.Info_Start.Name := 'A_P_Info_Start';
   vPlay.Info_Start.Parent := vPlay.Info;
   vPlay.Info_Start.SetBounds(300, vPlay.Info.Height - 80, vPlay.Info.Width - 600, 40);
-  vPlay.Info_Start.Text := 'Start "AzOng" game (This game is under contruction';
+  vPlay.Info_Start.Text := 'Start "AzOng" game (This game is under contruction)';
   vPlay.Info_Start.Visible := True;
   vPlay.Info_Start.Enabled := False;
 end;
@@ -758,7 +755,7 @@ begin
   vPlay.Info_Start.Name := 'A_P_Info_Start';
   vPlay.Info_Start.Parent := vPlay.Info;
   vPlay.Info_Start.SetBounds(300, vPlay.Info.Height - 80, vPlay.Info.Width - 600, 40);
-  vPlay.Info_Start.Text := 'Start "AzSuko" game (This game is under construction';
+  vPlay.Info_Start.Text := 'Start "AzSuko" game (This game is under construction)';
   vPlay.Info_Start.Visible := True;
   vPlay.Info_Start.Enabled := False
 
@@ -910,7 +907,7 @@ begin
   vPlay.Info_Start.Name := 'A_P_Info_Start';
   vPlay.Info_Start.Parent := vPlay.Info;
   vPlay.Info_Start.SetBounds(300, vPlay.Info.Height - 80, vPlay.Info.Width - 600, 40);
-  vPlay.Info_Start.Text := 'Start "AzType" game (This game is under construction';
+  vPlay.Info_Start.Text := 'Start "AzType" game (This game is under construction)';
   vPlay.Info_Start.Visible := True;
   vPlay.Info_Start.Enabled := False;
 

@@ -55,8 +55,9 @@ type
     State: String;
     Path: String;
     Name: String;
-    Paths: TEXTRAFE_PROGRAM_PATHS;
     Desc: String;
+    Virtual_Keyboard: Boolean;
+    Paths: TEXTRAFE_PROGRAM_PATHS;
     Version: TEXTRAFE_BUILD_INFO;
   end;
 

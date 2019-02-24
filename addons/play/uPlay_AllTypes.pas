@@ -10,9 +10,12 @@ uses
   FMX.Objects,
   FMX.Effects,
   FMX.Ani,
+  FMX.Filter.Effects,
   ALFMXObjects,
   FmxPasLibVlcPlayerUnit,
-  uPlay_Mouse;
+  Radiant.Shapes,
+  uPlay_Mouse,
+  Bass;
 
 type
   TADDON_PLAY_ANIMATION = class(TObject)
@@ -32,11 +35,18 @@ type
   TADDON_PLAY_PATHS = record
     Icon: String;
     Images: String;
+    Sounds: String;
   end;
 
 type
   TADDON_PLAY_ACTIONS = record
     Game: String;
+  end;
+
+type
+  TADDON_PLAY_SOUNDS = record
+    Voices: array [0 .. 4] of HSAMPLE;
+    Mouse : array [0 .. 0] of HSAMPLE;
   end;
 
 type
@@ -48,6 +58,7 @@ type
     Ini: TADDON_PLAY_CONFIG;
     Path: TADDON_PLAY_PATHS;
     Input: TADDON_PLAY_INPUT;
+    Sounds: TADDON_PLAY_SOUNDS;
   end;
 
   ///
@@ -61,6 +72,15 @@ type
   end;
 
 type
+  TPLAY_FULL_PREVIEW = record
+    Frame: TRadiantFrame;
+    Close: TImage;
+    Close_Glow: TGlowEffect;
+    Back: TImage;
+    Image: TImage;
+  end;
+
+type
   TPLAY = record
     Main: Tlayout;
     Main_Ani: TFloatAnimation;
@@ -69,12 +89,13 @@ type
     Img_Img: array [0 .. 10] of TImage;
     Img_Img_Glow: array [0 .. 10] of TGlowEffect;
     Info: TVertScrollBox;
+    Info_Blur: TGaussianBlurEffect;
     Info_Ani: TFloatAnimation;
     Info_Text: array [0 .. 20] of TALText;
-    Info_Img: array [1 .. 10] of TImage;
-    Info_Img_Full: array [1..10] of TImage;
-    Info_Img_Full_Icon: array [1..10] of TImage;
-    Info_Img_Glow: array [0 .. 10] of TGlowEffect;
+    Info_Img: array [0 .. 7] of TImage;
+    Info_Grey: array [0 .. 7] of TMonochromeEffect;
+    Info_Img_Glow: array [0 .. 7] of TGlowEffect;
+    Full: TPLAY_FULL_PREVIEW;
     Info_Video: TFmxPasLibVlcPlayer;
     Info_Start: TButton;
     Score: TPLAY_SCOREBOARD;
@@ -85,6 +106,7 @@ var
   vPlay: TPLAY;
 
 implementation
+
 uses
   uLoad_AllTypes,
   uAzHung_Actions;
@@ -95,7 +117,7 @@ procedure TADDON_PLAY_ANIMATION.OnFinish(Sender: TObject);
 begin
   if TFloatAnimation(Sender).Name = 'A_P_Icons_Animation' then
   begin
-    if addons.play.Actions.Game= 'AzHung' then
+    if addons.play.Actions.Game = 'AzHung' then
       uAzHung_Actions_Load;
   end;
 end;

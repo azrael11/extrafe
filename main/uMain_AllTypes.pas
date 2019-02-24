@@ -67,14 +67,6 @@ type
 
   /// /////////////////////////////////////////////////////////////////////////////
   /// Construction
-
-type
-  TMAIN_GLOBAL_HEADER = record
-    Panel: TPanel;
-    Icon: TImage;
-    Text: TLabel;
-  end;
-
 type
   TMAIN_EXIT_MAIN = record
     Panel: TPanel;
@@ -88,7 +80,6 @@ type
   TMAIN_EXIT_PROGRAM = record
     Panel: TPanel;
     Panel_Shadow: TShadowEffect;
-    Header: TMAIN_GLOBAL_HEADER;
     Main: TMAIN_EXIT_MAIN;
   end;
 
@@ -175,7 +166,6 @@ type
 type
   TMAIN_CONFIG_PROFILE_USER_AVATAR = record
     Panel: TPanel;
-    Header: TMAIN_GLOBAL_HEADER;
     Main: TMAIN_CONFIG_PROFILE_USER_AVATAR_MAIN;
   end;
 
@@ -196,7 +186,6 @@ type
 type
   TMAIN_CONFIG_PROFILE_USER_PASSWORD = record
     Panel: TPanel;
-    Header: TMAIN_GLOBAL_HEADER;
     Main: TMAIN_CONFIG_PROFILE_USER_PASSWORD_MAIN;
   end;
 
@@ -275,9 +264,32 @@ type
   end;
 
   // Config General
+
+type
+  TMAIN_CONFIG_GENERAL_VISOUAL = record
+    Keyboard_Group: TGroupBox;
+    Virtual_Keyboard: TCheckBox;
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_GRAPHICS = record
+
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_SOUND = record
+
+  end;
+
 type
   TMAIN_CONFIG_GENERAL = record
-
+    Panel: TPanel;
+    Blur: TGaussianBlurEffect;
+    Contol: TTabControl;
+    Tab_Item: array [0 .. 2] of TTabItem;
+    Visual: TMAIN_CONFIG_GENERAL_VISOUAL;
+    Graphics: TMAIN_CONFIG_GENERAL_GRAPHICS;
+    Sound: TMAIN_CONFIG_GENERAL_SOUND;
   end;
 
   // Config Emulators
@@ -349,7 +361,6 @@ type
 type
   TMAIN_CONFIG_ADDONS_WEATHER_MESSAGE = record
     Panel: TPanel;
-    Header: TMAIN_GLOBAL_HEADER;
     Main: TMAIN_CONFIG_ADDONS_WEATHER_DEACTIVATE_MAIN;
   end;
 
@@ -433,10 +444,12 @@ type
     Groupbox: TGroupBox;
     Text: TALText;
     Groupbox_Other: TGroupBox;
-    Left_Box: TVertScrollBox;
-    Comps_Image: array [0 .. 10] of TImage;
-    Comps_Image_Glow: array [0 .. 10] of TGlowEffect;
-    Right_Box: array [0 .. 10] of TVertScrollBox;
+    Control: TTabControl;
+    Tab_Item: array [0 .. 1] of TTabItem;
+    Left_Box: array [0 .. 1] of TVertScrollBox;
+    Brand: array [0 .. 1] of array [0 .. 10] of TImage;
+    Brand_Glow: array [0 .. 1] of array [0 .. 10] of TGlowEffect;
+    Right_Box: array [0 .. 1] of array [0 .. 10] of TVertScrollBox;
     Paragraphs: array [0 .. 100] of TALText;
   end;
 

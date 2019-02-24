@@ -19,7 +19,8 @@ uses
   FmxPasLibVlcPlayerUnit,
   OXmlPDOM,
   uEmu_Arcade_Mame_Mouse,
-  uEmu_Arcade_Mame_Config_Mouse;
+  uEmu_Arcade_Mame_Config_Mouse,
+  BASS;
 
 /// /////////////////////////////////////////////////////////////////////////////
 ///
@@ -248,8 +249,11 @@ type
     Filters_Glow: TGlowEffect;
     Filters_Back_Image: TImage;
     T_Filters: TText;
+    Search_Back: TImage;
     Search: TImage;
     Search_Glow: TGlowEffect;
+    Search_Edit: TEdit;
+    Search_Edit_Ani: TFloatAnimation;
   end;
 
 type
@@ -265,6 +269,7 @@ type
     Image_Fade: TFadeTransitionEffect;
     Image_Fade_Ani: TFloatAnimation;
     Image_Reflaction: TReflectionEffect;
+    Full_Video: TFmxPasLibVlcPlayer;
     Video: TFmxPasLibVlcPlayer;
     Video_Reflaction: TReflectionEffect;
   end;
@@ -272,6 +277,7 @@ type
 type
   TEMU_MAME_SCENE = record
     Main: TImage;
+    Main_Blur: TGaussianBlurEffect;
     Left: TImage;
     Left_Anim: TFloatAnimation;
     Left_Blur: TBlurEffect;
@@ -791,6 +797,7 @@ type
     Ini_Filters: TIniFile;
     Filter: WideString;
     Images: WideString;
+    Sounds: WideString;
     Media_Path: WideString;
   end;
 
@@ -896,7 +903,13 @@ type
     Gamelist: TEMU_GAMELISTS_TIMER;
     Video: TEMU_VIDEO_TIMER;
   end;
-  /// /////////////////////////////////////////////////////////////////////////////
+
+  // Sounds
+
+type TEMU_MAME_SOUNDS= record
+  Effects: array [0 .. 10] of HSAMPLE;
+end;
+
   // TEMU MAME ANIMATATIONS
 
 type
@@ -922,6 +935,7 @@ type
     Input: TEMU_MAME_INPUT;
     Config: TEMU_MAME_CONFIG;
     Ani: TEMU_MAME_ANIMATIONS;
+    Sound: TEMU_MAME_SOUNDS;
     Timers: TEMU_MAME_TIMERS;
   end;
 

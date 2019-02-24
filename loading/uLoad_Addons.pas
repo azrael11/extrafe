@@ -501,6 +501,7 @@ begin
   addons.play.ini.ini := TIniFile.Create(addons.play.ini.Path + addons.play.ini.Name);
   addons.play.Path.Icon := addons.soundplayer.ini.Path + 'icon\';
   addons.play.Path.Images := addons.soundplayer.ini.Path + 'images\';
+  addons.play.Path.Sounds := addons.soundplayer.ini.Path + 'sounds\';
 
   addons.play.ini.ini.WriteString('PLAY', 'Addon_Name', 'play');
   addons.play.ini.ini.WriteBool('PLAY', 'Active', False);
@@ -536,6 +537,7 @@ begin
     addons.play.Main_Menu_Position);
   addons.play.Path.Icon := addons.play.ini.Path + 'icon\';
   addons.play.Path.Images := addons.play.ini.Path + 'images\';
+  addons.play.Path.Sounds := addons.play.ini.Path + 'sounds\';
 
   // Game AzHung
   gAzHung.Path.Game := addons.play.ini.Path + 'azhung\';

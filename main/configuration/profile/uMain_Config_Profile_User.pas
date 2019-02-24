@@ -19,6 +19,7 @@ type
     Surname: String;
     Genre: String;
   end;
+
 type
   TPROFILE_AVATAR_VARIABLES = record
     Page: Integer;
@@ -49,7 +50,6 @@ procedure Password;
 function Password_Check: Boolean;
 procedure Password_Change;
 
-
 implementation
 
 uses
@@ -60,7 +60,7 @@ uses
 
 procedure Load;
 begin
-  extrafe.prog.State:= 'main_config_profile_user';
+  extrafe.prog.State := 'main_config_profile_user';
 
   mainScene.Config.main.R.Profile.User.Panel := TPanel.Create(mainScene.Config.main.R.Profile.TabItem[0]);
   mainScene.Config.main.R.Profile.User.Panel.Name := 'Main_Config_Profile_User';
@@ -312,14 +312,14 @@ end;
 procedure Free;
 begin
   FreeAndNil(mainScene.Config.main.R.Profile.User.Panel);
-  extrafe.prog.State:= 'main_config';
+  extrafe.prog.State := 'main_config';
 end;
 
 procedure Return;
 begin
   extrafe.prog.State := 'main_config_profile_user';
   mainScene.Config.main.R.Profile.Blur.Enabled := False;
-  mainScene.Config.Main.Left_Blur.Enabled:= False;
+  mainScene.Config.main.Left_Blur.Enabled := False;
   FreeAndNil(mainScene.Config.main.R.Profile.User.Avatar.Panel);
   FreeAndNil(mainScene.Config.main.R.Profile.User.Pass.Panel);
 end;
@@ -370,7 +370,7 @@ var
 begin
 
   extrafe.prog.State := 'main_config_profile_avatar';
-  mainScene.Config.Main.Left_Blur.Enabled := True;
+  mainScene.Config.main.Left_Blur.Enabled := True;
   mainScene.Config.main.R.Profile.Blur.Enabled := True;
 
   // Avatar panel
@@ -385,43 +385,8 @@ begin
     (mainScene.Config.main.R.Panel[0].Height / 2) - 280;
   mainScene.Config.main.R.Profile.User.Avatar.Panel.Visible := False;
 
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel :=
-    TPanel.Create(mainScene.Config.main.R.Profile.User.Avatar.Panel);
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel.Name := 'Main_Config_Profile_Avatar_Header_Panel';
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.Panel;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel.Width :=
-    mainScene.Config.main.R.Profile.User.Avatar.Panel.Width;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel.Height := 30;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel.Position.X := 0;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel.Position.Y := 0;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Panel.Visible := True;
-
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon :=
-    TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.Header.Panel);
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Name := 'Main_Config_Profile_Avatar_Header_Icon';
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.Header.Panel;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Width := 24;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Height := 24;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Position.X := 6;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Position.Y := 3;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Bitmap.LoadFromFile
-    (ex_main.Paths.Avatar_Images + '0.png');
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Icon.Visible := True;
-
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Avatar.Header.Panel);
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Name := 'Main_Config_Profile_Avatar_Header_Label';
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.Header.Panel;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Width := 300;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Height := 24;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Position.X := 36;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Position.Y := 3;
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Text := 'Change the avatar';
-  mainScene.Config.main.R.Profile.User.Avatar.Header.Text.Visible := True;
+  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.Profile.User.Avatar.Panel,
+    'Main_Config_Profile_Avatar_Panel', ex_main.Paths.Avatar_Images + '0.png', 'Change the avatar');
 
   mainScene.Config.main.R.Profile.User.Avatar.main.Panel :=
     TPanel.Create(mainScene.Config.main.R.Profile.User.Avatar.Panel);
@@ -667,7 +632,7 @@ procedure Password;
 begin
 
   extrafe.prog.State := 'main_config_profile_password';
-  mainScene.Config.Main.Left_Blur.Enabled := True;
+  mainScene.Config.main.Left_Blur.Enabled := True;
   mainScene.Config.main.R.Profile.Blur.Enabled := True;
 
   // Change Password panel
@@ -682,43 +647,9 @@ begin
     (mainScene.Config.main.R.Panel[0].Height / 2) - 130;
   mainScene.Config.main.R.Profile.User.Pass.Panel.Visible := False;
 
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel :=
-    TPanel.Create(mainScene.Config.main.R.Profile.User.Pass.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel.Name := 'Main_Config_Profile_Password_Header_Panel';
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.Panel;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel.Width :=
-    mainScene.Config.main.R.Profile.User.Pass.Panel.Width;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel.Height := 30;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel.Position.X := 0;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel.Position.Y := 0;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Panel.Visible := True;
-
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon :=
-    TImage.Create(mainScene.Config.main.R.Profile.User.Pass.Header.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Name := 'Main_Config_Profile_Password_Header_Icon';
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.Header.Panel;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Width := 24;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Height := 24;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Position.X := 6;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Position.Y := 3;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Bitmap.LoadFromFile
-    (ex_main.Paths.Config_Images + 'config_pass.png');
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Icon.Visible := True;
-
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.Header.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Name := 'Main_Config_Profile_Password_Header_Label';
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.Header.Panel;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Width := 430;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Height := 24;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Position.X := 36;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Position.Y := 3;
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Text := 'Change the password';
-  mainScene.Config.main.R.Profile.User.Pass.Header.Text.Visible := True;
+  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.Profile.User.Pass.Panel,
+    'Main_Config_Profile_Password_Panel', ex_main.Paths.Config_Images + 'config_pass.png',
+    'Change the password');
 
   mainScene.Config.main.R.Profile.User.Pass.main.Panel :=
     TPanel.Create(mainScene.Config.main.R.Profile.User.Pass.Panel);

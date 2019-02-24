@@ -44,6 +44,9 @@ uses
   uTime_SetAll,
   uTime_AllTypes;
 
+var
+  vLast_Time_Check: TTime;
+
 procedure uTime_Time_Actions_Update_Analog;
 var
   vActuall_Time: TTime;
@@ -71,49 +74,58 @@ end;
 procedure uTime_Time_Actions_Update_Digital;
 var
   vActuall_Time: TTime;
-  vHour: Word;
-  vMinutes: Word;
-  vSeconds: Word;
-  vMilliseconds: Word;
+  vHour, vMinutes, vSeconds, vMilliseconds: Word;
+  vHour_Last, vMinutes_Last, vSeconds_Last, vMilliseconds_Last: Word;
   vFirst, vSecond, vThird, vSep, vCalc: Single;
 begin
   vActuall_Time := now;
+  DecodeTime(vLast_Time_Check, vHour_Last, vMinutes_Last, vSeconds_Last, vMilliseconds_Last);
   DecodeTime(vActuall_Time, vHour, vMinutes, vSeconds, vMilliseconds);
+  if ((vHour = vHour_Last) and (vMinutes = vMinutes_Last) and (vSeconds <> vSeconds_Last)) or
+    ((vHour = vHour_Last) and (vMinutes <> vMinutes_Last) and (vSeconds <> vSeconds_Last)) or
+    ((vHour <> vHour_Last) and (vMinutes <> vMinutes_Last) and (vSeconds <> vSeconds_Last)) then
+  begin
+    vTime.P_Time.Digital.Sep_1.Opacity := 1;
+    vTime.P_Time.Digital.Sep_2.Opacity := 1;
+    vTime.P_Time.Digital.Sep_1_Ani.Start;
+    vTime.P_Time.Digital.Sep_2_Ani.Start;
 
-  vTime.P_Time.Digital.Hour.Text := FloatToStr(vHour);
-  if Length(vTime.P_Time.Digital.Hour.Text) < 2 then
-    vTime.P_Time.Digital.Hour.Text := '0' + FloatToStr(vHour);
-  vTime.P_Time.Digital.Minutes.Text := FloatToStr(vMinutes);
-  if Length(vTime.P_Time.Digital.Minutes.Text) < 2 then
-    vTime.P_Time.Digital.Minutes.Text := '0' + FloatToStr(vMinutes);
-  vTime.P_Time.Digital.Seconds.Text := FloatToStr(vSeconds);
-  if Length(vTime.P_Time.Digital.Seconds.Text) < 2 then
-    vTime.P_Time.Digital.Seconds.Text := '0' + FloatToStr(vSeconds);
+    vTime.P_Time.Digital.Hour.Text := FloatToStr(vHour);
+    if Length(vTime.P_Time.Digital.Hour.Text) < 2 then
+      vTime.P_Time.Digital.Hour.Text := '0' + FloatToStr(vHour);
+    vTime.P_Time.Digital.Minutes.Text := FloatToStr(vMinutes);
+    if Length(vTime.P_Time.Digital.Minutes.Text) < 2 then
+      vTime.P_Time.Digital.Minutes.Text := '0' + FloatToStr(vMinutes);
+    vTime.P_Time.Digital.Seconds.Text := FloatToStr(vSeconds);
+    if Length(vTime.P_Time.Digital.Seconds.Text) < 2 then
+      vTime.P_Time.Digital.Seconds.Text := '0' + FloatToStr(vSeconds);
 
-  vFirst := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Hour);
-  vSecond := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Minutes);
-  vThird := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Seconds);
-  vSep := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Sep_1);
+    vFirst := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Hour);
+    vSecond := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Minutes);
+    vThird := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Seconds);
+    vSep := uSnippet_Text_ToPixels(vTime.P_Time.Digital.Sep_1);
 
-  vTime.P_Time.Digital.Hour.Width := vFirst;
-  vTime.P_Time.Digital.Minutes.Width := vSecond;
-  vTime.P_Time.Digital.Seconds.Width := vThird;
-  vTime.P_Time.Digital.Sep_1.Width := vSep;
-  vTime.P_Time.Digital.Sep_2.Width := vSep;
+    vTime.P_Time.Digital.Hour.Width := vFirst;
+    vTime.P_Time.Digital.Minutes.Width := vSecond;
+    vTime.P_Time.Digital.Seconds.Width := vThird;
+    vTime.P_Time.Digital.Sep_1.Width := vSep;
+    vTime.P_Time.Digital.Sep_2.Width := vSep;
 
-  vTime.P_Time.Digital.Hour.Position.X := 20;
-  vTime.P_Time.Digital.Minutes.Position.X := (vTime.P_Time.Digital.Back.Width / 2) - (vSecond / 2);
-  vTime.P_Time.Digital.Seconds.Position.X := (vTime.P_Time.Digital.Back.Width - 20) - vThird;
-  vCalc := vTime.P_Time.Digital.Minutes.Position.X -
-    (vTime.P_Time.Digital.Hour.Position.X + vTime.P_Time.Digital.Hour.Width);
-  vCalc := (vTime.P_Time.Digital.Hour.Position.X + vTime.P_Time.Digital.Hour.Width) + (vCalc / 2) -
-    (vTime.P_Time.Digital.Sep_1.Width / 2);
-  vTime.P_Time.Digital.Sep_1.Position.X := vCalc;
-  vCalc := vTime.P_Time.Digital.Seconds.Position.X -
-    (vTime.P_Time.Digital.Minutes.Position.X + vTime.P_Time.Digital.Minutes.Width);
-  vCalc := (vTime.P_Time.Digital.Minutes.Position.X + vTime.P_Time.Digital.Minutes.Width) + (vCalc / 2) -
-    (vTime.P_Time.Digital.Sep_2.Width / 2);
-  vTime.P_Time.Digital.Sep_2.Position.X := vCalc;
+    vTime.P_Time.Digital.Hour.Position.X := 20;
+    vTime.P_Time.Digital.Minutes.Position.X := (vTime.P_Time.Digital.Back.Width / 2) - (vSecond / 2);
+    vTime.P_Time.Digital.Seconds.Position.X := (vTime.P_Time.Digital.Back.Width - 20) - vThird;
+    vCalc := vTime.P_Time.Digital.Minutes.Position.X -
+      (vTime.P_Time.Digital.Hour.Position.X + vTime.P_Time.Digital.Hour.Width);
+    vCalc := (vTime.P_Time.Digital.Hour.Position.X + vTime.P_Time.Digital.Hour.Width) + (vCalc / 2) -
+      (vTime.P_Time.Digital.Sep_1.Width / 2);
+    vTime.P_Time.Digital.Sep_1.Position.X := vCalc;
+    vCalc := vTime.P_Time.Digital.Seconds.Position.X -
+      (vTime.P_Time.Digital.Minutes.Position.X + vTime.P_Time.Digital.Minutes.Width);
+    vCalc := (vTime.P_Time.Digital.Minutes.Position.X + vTime.P_Time.Digital.Minutes.Width) + (vCalc / 2) -
+      (vTime.P_Time.Digital.Sep_2.Width / 2);
+    vTime.P_Time.Digital.Sep_2.Position.X := vCalc;
+  end;
+  vLast_Time_Check := vActuall_Time;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -315,10 +327,10 @@ end;
 
 procedure uTime_Time_Actions_ChangeSep(vSep: String);
 begin
-  vTime.P_Time.Digital.Sep_1.Text:= vSep;
-  vTime.P_Time.Digital.Sep_2.Text:= vSep;
+  vTime.P_Time.Digital.Sep_1.Text := vSep;
+  vTime.P_Time.Digital.Sep_2.Text := vSep;
 
-  addons.time.P_Time.Digital_Sep:= vSep;
+  addons.time.P_Time.Digital_Sep := vSep;
   addons.time.Ini.Ini.WriteString('TIME_LOCAL', 'Digital_Sep', vSep);
 end;
 

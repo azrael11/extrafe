@@ -10,10 +10,17 @@ uses
   FMX.Forms,
   FMX.Objects,
   FMX.Effects,
+  FMX.Filter.Effects,
   FMX.Types,
   FMX.Edit,
   FMX.StdCtrls,
-  FMX.Layouts;
+  FMX.Layouts,
+  FMX.Ani;
+
+type
+  TANIMATION = class(TObject)
+    procedure OnFinish(Sender: TObject);
+  end;
 
 type
   TVIRTUAL_KEYBOARD_IMAGE = class(TObject)
@@ -37,25 +44,70 @@ type
   end;
 
 type
-  TVIRTUAL_KEYBOARD = class(TLayout)
-  private
-    FCapsLock: Boolean;
+  TVIRTUAL_KEYBOARD_MOUSE = record
+    Image: TVIRTUAL_KEYBOARD_IMAGE;
+    Text: TVIRTUAL_KEYBOARD_TEXT;
+    Rectangle: TVIRTUAL_KEYBOARD_RECTANGLE;
+  end;
 
-    procedure uVK_Create(vType, vTitle: String);
+type
+  TCONTRUCTION_TITLE = record
+    Back: TRectangle;
+    Icon: TImage;
+    Text: TText;
+  end;
 
-  var
-    vLayout: TLayout;
-    vBackground: TImage;
+type
+  TCONTRUCTION_EDIT = record
+    Back: TRectangle;
+    Edit: TEdit;
+  end;
 
-    procedure uVirtual_Keyboard_Create(Sender: TObject; vType, vTitle: String);
+type
+  TCONTRUCTION_DROPMENU = record
+    Back: TRectangle;
+    Box: TVertScrollBox;
+    Line_Back: array [0 .. 21] of TRectangle;
+    Icon: array [0 .. 21] of TImage;
+    Text: array [0 .. 21] of TText;
+  end;
 
-  public
-    Constructor Create(AOwner: TComponent); Override;
+type
+  TCONTRUCTION_KEYS = record
+    Shape: array [0 .. 60] of TRectangle;
+    Symbol: array [0 .. 60] of TText;
+  end;
 
-    procedure SetCapsLock(const value: Boolean);
-    property CapsLock: Boolean read FCapsLock write SetCapsLock;
+type
+  TCONSTRUCTION = record
+    Frame: TLayout;
+    Ani: TFloatAnimation;
+    Blur: TGaussianBlurEffect;
+    Blur_Ani: TFloatAnimation;
+    Back: TRectangle;
+    Title: TCONTRUCTION_TITLE;
+    Edit: TCONTRUCTION_EDIT;
+    Drop: TCONTRUCTION_DROPMENU;
+    Keys: TCONTRUCTION_KEYS;
+  end;
 
-    Destructor Destroy; Override;
+type
+  TOPTIONS = record
+    Previus_State: String;
+    vType: String;
+    Drop_Num: Integer;
+    Drop_Current: Integer;
+    Symbol: Boolean;
+    Capital: Boolean;
+    Shift: Boolean;
+  end;
+
+type
+  TVIRTUAL_KEYBOARD_ACTION = record
+    Construct: TCONSTRUCTION;
+    Options: TOPTIONS;
+    Mouse: TVIRTUAL_KEYBOARD_MOUSE;
+    Animation: TANIMATION;
   end;
 
 const
@@ -73,55 +125,25 @@ const
     ')', '', '', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '', '', 'A', 'S', 'D', 'F', 'G', 'H', 'J',
     'K', 'L', '', '', '', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '', '', '', '', '', '', '');
 
-procedure uVirtual_Keyboard_Create_Alt(Sender: TObject; vType, vTitle: String);
-
 var
-  // vVK_Back: TImage;
-  vVK_Back: TLayout;
+  VKey: TVIRTUAL_KEYBOARD_ACTION;
 
-  VK_Symbols: Boolean;
-  VK_Capitals: Boolean;
-  VK_Shifts: Boolean;
+procedure Create(Sender: TObject; vType, vTitle: String; vImage: TImage);
+procedure VK_Free;
 
-  VK_Drop_Num: Integer;
-  VK_Drop_Num_Current: Integer;
+procedure Set_Capital(vActive: Boolean);
+procedure Set_Symbols(vActive: Boolean);
+procedure Set_Shift(vActive: Boolean);
 
-  vVirtual_Keyboard_Active: Boolean;
-  vVirtual_Keyboard_Type: String;
-  // The background
-  VK_Background: TRectangle;
-  // The Title
-  VK_Title_Background: TRectangle;
-  VK_Title_Icon: TImage;
-  VK_Title: TText;
-  // The edit action type
-  VK_Edit_Background: TRectangle;
-  VK_Edit: TEdit;
-  // The Drop down menu
-  VK_Drop_Background: TRectangle;
-  VK_Drop_Box: TVertScrollBox;
-  VK_Drop_Line_Back: array [0 .. 21] of TRectangle;
-  VK_Drop_Icon: array [0 .. 21] of TImage;
-  VK_Drop_Text: array [0 .. 21] of TText;
-  // Keys
-  VK_Key: array [0 .. 60] of TRectangle;
-  VK_Key_Symbol: array [0 .. 60] of TText;
+procedure Drop(vLine: Integer; vString: String; vImagePath: String);
 
-  vVK_Image: TVIRTUAL_KEYBOARD_IMAGE;
-  vVK_Text: TVIRTUAL_KEYBOARD_TEXT;
-  vVK_Rectangle: TVIRTUAL_KEYBOARD_RECTANGLE;
+procedure Key(vActionKey: String);
 
-procedure uVirtual_Keyboard_Free;
+procedure Press(vActionKey: String);
 
-procedure uVirtual_Keyboard_Capital(vActive: Boolean);
-procedure uVirtual_Keyboard_Symbols(vActive: Boolean);
-procedure uVirtual_Keyboard_Shift(vActive: Boolean);
+Procedure Backspace;
 
-procedure uVirtual_Keyboard_Add_DropLine(vLine: Integer; vString: String; vImagePath: String);
-
-procedure uVirtual_Keyboard_SetKey(vKey: String);
-
-procedure uVirtual_Keyboard_DoAction(vKey: String);
+procedure Animation(vState: Boolean);
 
 implementation
 
@@ -131,248 +153,285 @@ uses
   uLoad_AllTypes,
   uEmu_Actions;
 
-procedure uVirtual_Keyboard_Create_Alt(Sender: TObject; vType, vTitle: String);
+procedure Animation(vState: Boolean);
+begin
+  if vState then
+  begin
+    VKey.Construct.Ani.StartValue := extrafe.res.Height + 1;
+    VKey.Construct.Ani.StopValue := extrafe.res.Half_Height - 250;
+    VKey.Construct.Ani.Start;
+    VKey.Construct.Blur.Enabled := True;
+    VKey.Construct.Blur_Ani.StartValue := 0;
+    VKey.Construct.Blur_Ani.StopValue := 1;
+    VKey.Construct.Blur_Ani.Start;
+  end
+  else
+  begin
+    VKey.Construct.Ani.StartValue := extrafe.res.Half_Height - 250;
+    VKey.Construct.Ani.StopValue := extrafe.res.Height + 1;
+    VKey.Construct.Ani.Start;
+    VKey.Construct.Blur_Ani.StartValue := 1;
+    VKey.Construct.Blur_Ani.StopValue := 0;
+    VKey.Construct.Blur_Ani.Start;
+  end;
+end;
+
+procedure Create(Sender: TObject; vType, vTitle: String; vImage: TImage);
 var
   vi, vfi: Integer;
 begin
-  vVK_Back := TLayout(Sender);
+  VKey.Options.Previus_State := extrafe.prog.State;
+  extrafe.prog.State := 'virtual_keyboard';
 
-  vVK_Back.Align := TAlignLayout.Client;
+  VKey.Construct.Frame := TLayout(Sender);
+  VKey.Construct.Frame.Align := TAlignLayout.Client;
+  VKey.Construct.Frame.Visible := True;
 
-  VK_Background := TRectangle.Create(vVK_Back);
-  VK_Background.Name := 'Virtual_Keyboard';
-  VK_Background.Parent := vVK_Back;
-  VK_Background.Width := 800;
-  VK_Background.Height := 500;
-  VK_Background.Position.X := extrafe.res.Half_Width - 400;
-  VK_Background.Position.Y := extrafe.res.Half_Height - 250;
-  VK_Background.XRadius := 8;
-  VK_Background.YRadius := 8;
-  VK_Background.Stroke.Thickness := 8;
-  VK_Background.Stroke.Color := TAlphaColorRec.Deepskyblue;
-  VK_Background.Fill.Color := StringToAlphaColor('#FF01182E');
-  VK_Background.Visible := True;
+  VKey.Construct.Blur := TGaussianBlurEffect.Create(vImage);
+  VKey.Construct.Blur.Name := 'Virtual_Keyboard_Emu_Blur';
+  VKey.Construct.Blur.Parent := vImage;
+  VKey.Construct.Blur.BlurAmount := 0;
+  VKey.Construct.Blur.Enabled := False;
 
-  VK_Title_Background := TRectangle.Create(VK_Background);
-  VK_Title_Background.Name := 'Virtual_Keyboard_BackTitle';
-  VK_Title_Background.Parent := VK_Background;
-  VK_Title_Background.Width := VK_Background.Width - 16;
-  VK_Title_Background.Height := 30;
-  VK_Title_Background.Position.X := 8;
-  VK_Title_Background.Position.Y := 8;
-  VK_Title_Background.XRadius := 4;
-  VK_Title_Background.YRadius := 4;
-  VK_Title_Background.Stroke.Thickness := 4;
-  VK_Title_Background.Stroke.Color := TAlphaColorRec.Black;
-  VK_Title_Background.Fill.Color := StringToAlphaColor('#FF010709');
-  VK_Title_Background.Corners := VK_Title_Background.Corners - [TCorner.BottomLeft, TCorner.BottomRight];
-  VK_Title_Background.Visible := True;
+  VKey.Construct.Blur_Ani := TFloatAnimation.Create(VKey.Construct.Blur);
+  VKey.Construct.Blur_Ani.Name := 'Virtual_Keyboard_Back_Blur_Animation';
+  VKey.Construct.Blur_Ani.Parent := VKey.Construct.Blur;
+  VKey.Construct.Blur_Ani.PropertyName := 'BlurAmount';
+  VKey.Construct.Blur_Ani.AnimationType := TAnimationType.&In;
+  VKey.Construct.Blur_Ani.Duration := 0.3;
 
-  VK_Title_Icon := TImage.Create(VK_Title_Background);
-  VK_Title_Icon.Name := 'Virtual_Keyboard_IconTitle';
-  VK_Title_Icon.Parent := VK_Title_Background;
-  VK_Title_Icon.Width := 28;
-  VK_Title_Icon.Height := 28;
-  VK_Title_Icon.Position.X := 1;
-  VK_Title_Icon.Position.Y := 1;
-  VK_Title_Icon.WrapMode := TImageWrapMode.Fit;
-  vVirtual_Keyboard_Type := vType;
-  if vVirtual_Keyboard_Type = 'Search' then
-    VK_Title_Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'vk_search.png')
-  else if vVirtual_Keyboard_Type = 'Type' then
-    VK_Title_Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'vk_type.png');
-  VK_Title_Icon.Visible := True;
+  VKey.Construct.Back := TRectangle.Create(VKey.Construct.Frame);
+  VKey.Construct.Back.Name := 'Virtual_Keyboard';
+  VKey.Construct.Back.Parent := VKey.Construct.Frame;
+  VKey.Construct.Back.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Height + 1, 800, 500);
+  VKey.Construct.Back.XRadius := 8;
+  VKey.Construct.Back.YRadius := 8;
+  VKey.Construct.Back.Stroke.Thickness := 8;
+  VKey.Construct.Back.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  VKey.Construct.Back.Fill.Color := StringToAlphaColor('#FF01182E');
+  VKey.Construct.Back.Visible := True;
 
-  VK_Title := TText.Create(VK_Title_Background);
-  VK_Title.Name := 'Virtual_Keyboard_Title';
-  VK_Title.Parent := VK_Title_Background;
-  VK_Title.Color := TAlphaColorRec.White;
-  VK_Title.Font.Family := 'Tahoma';
-  VK_Title.Font.Size := 16;
-  VK_Title.Width := VK_Title_Background.Width - 30;
-  VK_Title.Height := 28;
-  VK_Title.Position.X := 34;
-  VK_Title.Position.Y := 1;
-  VK_Title.Font.Style := VK_Title.Font.Style + [TFontStyle.fsBold];
-  VK_Title.Text := vTitle;
-  VK_Title.HorzTextAlign := TTextAlign.Leading;
-  VK_Title.VertTextAlign := TTextAlign.Center;
-  VK_Title.Visible := True;
+  VKey.Construct.Ani := TFloatAnimation.Create(VKey.Construct.Back);
+  VKey.Construct.Ani.Name := 'Virtual_Keyboard_Animation';
+  VKey.Construct.Ani.Parent := VKey.Construct.Back;
+  VKey.Construct.Ani.AnimationType := TAnimationType.&In;
+  VKey.Construct.Ani.Interpolation := TInterpolationType.Quadratic;
+  VKey.Construct.Ani.PropertyName := 'Position.Y';
+  VKey.Construct.Ani.OnFinish := VKey.Animation.OnFinish;
+  VKey.Construct.Ani.Duration := 0.3;
 
-  VK_Edit_Background := TRectangle.Create(VK_Background);
-  VK_Edit_Background.Name := 'Virtual_Keyboard_BackEdit';
-  VK_Edit_Background.Parent := VK_Background;
-  VK_Edit_Background.Width := VK_Background.Width - 16;
-  VK_Edit_Background.Height := 30;
-  VK_Edit_Background.Position.X := 8;
-  VK_Edit_Background.Position.Y := 58;
-  VK_Edit_Background.XRadius := 4;
-  VK_Edit_Background.YRadius := 4;
-  VK_Edit_Background.Stroke.Thickness := 4;
-  VK_Edit_Background.Stroke.Color := TAlphaColorRec.Black;
-  VK_Edit_Background.Fill.Color := StringToAlphaColor('#FF010709');
-  VK_Edit_Background.Corners := VK_Edit_Background.Corners - [TCorner.BottomLeft, TCorner.BottomRight];
-  VK_Edit_Background.Visible := True;
+  // Title
+  VKey.Construct.Title.Back := TRectangle.Create(VKey.Construct.Back);
+  VKey.Construct.Title.Back.Name := 'Virtual_Keyboard_BackTitle';
+  VKey.Construct.Title.Back.Parent := VKey.Construct.Back;
+  VKey.Construct.Title.Back.SetBounds(8, 8, VKey.Construct.Back.Width - 16, 30);
+  VKey.Construct.Title.Back.XRadius := 4;
+  VKey.Construct.Title.Back.YRadius := 4;
+  VKey.Construct.Title.Back.Stroke.Thickness := 4;
+  VKey.Construct.Title.Back.Stroke.Color := TAlphaColorRec.Black;
+  VKey.Construct.Title.Back.Fill.Color := StringToAlphaColor('#FF010709');
+  VKey.Construct.Title.Back.Corners := VKey.Construct.Title.Back.Corners -
+    [TCorner.BottomLeft, TCorner.BottomRight];
+  VKey.Construct.Title.Back.Visible := True;
 
-  VK_Edit := TEdit.Create(VK_Edit_Background);
-  VK_Edit.Name := 'Virtual_Keyboard_Edit';
-  VK_Edit.Parent := VK_Edit_Background;
-  VK_Edit.Width := VK_Edit_Background.Width - 20;
-  VK_Edit.Height := 22;
-  VK_Edit.Position.X := 10;
-  VK_Edit.Position.Y := 4;
-  VK_Edit.Text := '';
-  VK_Edit.ReadOnly := True;
-  VK_Edit.Caret.Color := TAlphaColorRec.Deepskyblue;
-  VK_Edit.TextSettings.HorzAlign := TTextAlign.Center;
-  VK_Edit.Visible := True;
+  VKey.Options.vType := vType;
+  VKey.Construct.Title.Icon := TImage.Create(VKey.Construct.Title.Back);
+  VKey.Construct.Title.Icon.Name := 'Virtual_Keyboard_IconTitle';
+  VKey.Construct.Title.Icon.Parent := VKey.Construct.Title.Back;
+  VKey.Construct.Title.Icon.SetBounds(1, 1, 28, 28);
+  VKey.Construct.Title.Icon.WrapMode := TImageWrapMode.Fit;
+  if VKey.Options.vType = 'Search' then
+    VKey.Construct.Title.Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'vk_search.png')
+  else if VKey.Options.vType = 'Type' then
+    VKey.Construct.Title.Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'vk_type.png');
+  VKey.Construct.Title.Icon.Visible := True;
 
-  VK_Drop_Background := TRectangle.Create(VK_Background);
-  VK_Drop_Background.Name := 'Virtual_Keyboard_Drop_Background';
-  VK_Drop_Background.Parent := VK_Background;
-  VK_Drop_Background.Width := VK_Background.Width - 16;
-  VK_Drop_Background.Height := 0;
-  VK_Drop_Background.Position.X := 8;
-  VK_Drop_Background.Position.Y := 88;
-  VK_Drop_Background.XRadius := 4;
-  VK_Drop_Background.YRadius := 4;
-  VK_Drop_Background.Stroke.Thickness := 4;
-  VK_Drop_Background.Stroke.Color := TAlphaColorRec.Black;
-  VK_Drop_Background.Fill.Color := StringToAlphaColor('#FF010709');
-  VK_Drop_Background.Corners := VK_Drop_Background.Corners - [TCorner.TopLeft, TCorner.TopRight];
-  VK_Drop_Background.Visible := True;
+  VKey.Construct.Title.Text := TText.Create(VKey.Construct.Title.Back);
+  VKey.Construct.Title.Text.Name := 'Virtual_Keyboard_Title';
+  VKey.Construct.Title.Text.Parent := VKey.Construct.Title.Back;
+  VKey.Construct.Title.Text.SetBounds(34, 1, VKey.Construct.Title.Back.Width - 30, 28);
+  VKey.Construct.Title.Text.Color := TAlphaColorRec.White;
+  VKey.Construct.Title.Text.Font.Family := 'Tahoma';
+  VKey.Construct.Title.Text.Font.Size := 16;
+  VKey.Construct.Title.Text.Font.Style := VKey.Construct.Title.Text.Font.Style + [TFontStyle.fsBold];
+  VKey.Construct.Title.Text.Text := vTitle;
+  VKey.Construct.Title.Text.HorzTextAlign := TTextAlign.Leading;
+  VKey.Construct.Title.Text.VertTextAlign := TTextAlign.Center;
+  VKey.Construct.Title.Text.Visible := True;
 
-  VK_Drop_Box := TVertScrollBox.Create(VK_Drop_Background);
-  VK_Drop_Box.Name := 'Virtual_Keyboard_Drop_Box';
-  VK_Drop_Box.Parent := VK_Drop_Background;
-  VK_Drop_Box.Align := TAlignLayout.Client;
-  VK_Drop_Box.Visible := True;
+  VKey.Construct.Edit.Back := TRectangle.Create(VKey.Construct.Back);
+  VKey.Construct.Edit.Back.Name := 'Virtual_Keyboard_BackEdit';
+  VKey.Construct.Edit.Back.Parent := VKey.Construct.Back;
+  VKey.Construct.Edit.Back.SetBounds(8, 58, VKey.Construct.Back.Width - 16, 30);
+  VKey.Construct.Edit.Back.XRadius := 4;
+  VKey.Construct.Edit.Back.YRadius := 4;
+  VKey.Construct.Edit.Back.Stroke.Thickness := 4;
+  VKey.Construct.Edit.Back.Stroke.Color := TAlphaColorRec.Black;
+  VKey.Construct.Edit.Back.Fill.Color := StringToAlphaColor('#FF010709');
+  VKey.Construct.Edit.Back.Corners := VKey.Construct.Edit.Back.Corners -
+    [TCorner.BottomLeft, TCorner.BottomRight];
+  VKey.Construct.Edit.Back.Visible := True;
+
+  VKey.Construct.Edit.Edit := TEdit.Create(VKey.Construct.Edit.Back);
+  VKey.Construct.Edit.Edit.Name := 'Virtual_Keyboard_Edit';
+  VKey.Construct.Edit.Edit.Parent := VKey.Construct.Edit.Back;
+  VKey.Construct.Edit.Edit.SetBounds(10, 4, VKey.Construct.Edit.Back.Width - 20, 22);
+  VKey.Construct.Edit.Edit.Text := '';
+  VKey.Construct.Edit.Edit.ReadOnly := True;
+  VKey.Construct.Edit.Edit.Caret.Color := TAlphaColorRec.Deepskyblue;
+  VKey.Construct.Edit.Edit.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  VKey.Construct.Edit.Edit.TextSettings.Font.Size := 18;
+  VKey.Construct.Edit.Edit.StyledSettings := VKey.Construct.Edit.Edit.StyledSettings -
+    [TStyledSetting.FontColor, TStyledSetting.Size];
+  VKey.Construct.Edit.Edit.TextSettings.HorzAlign := TTextAlign.Center;
+  VKey.Construct.Edit.Edit.Visible := True;
+
+  VKey.Construct.Drop.Back := TRectangle.Create(VKey.Construct.Back);
+  VKey.Construct.Drop.Back.Name := 'Virtual_Keyboard_Drop_Background';
+  VKey.Construct.Drop.Back.Parent := VKey.Construct.Back;
+  VKey.Construct.Drop.Back.SetBounds(8, 88, VKey.Construct.Back.Width - 16, 0);
+  VKey.Construct.Drop.Back.XRadius := 4;
+  VKey.Construct.Drop.Back.YRadius := 4;
+  VKey.Construct.Drop.Back.Stroke.Thickness := 4;
+  VKey.Construct.Drop.Back.Stroke.Color := TAlphaColorRec.Black;
+  VKey.Construct.Drop.Back.Fill.Color := StringToAlphaColor('#FF010709');
+  VKey.Construct.Drop.Back.Corners := VKey.Construct.Drop.Back.Corners - [TCorner.TopLeft, TCorner.TopRight];
+  VKey.Construct.Drop.Back.Visible := True;
+
+  VKey.Construct.Drop.Box := TVertScrollBox.Create(VKey.Construct.Drop.Back);
+  VKey.Construct.Drop.Box.Name := 'Virtual_Keyboard_Drop_Box';
+  VKey.Construct.Drop.Box.Parent := VKey.Construct.Drop.Back;
+  VKey.Construct.Drop.Box.Align := TAlignLayout.Client;
+  VKey.Construct.Drop.Box.Visible := True;
 
   vfi := 0;
   for vi := 0 to 50 do
   begin
-    VK_Key[vi] := TRectangle.Create(VK_Background);
-    VK_Key[vi].Name := 'Virtual_Keyboard_Key_' + IntToStr(vi);
-    VK_Key[vi].Parent := VK_Background;
+    VKey.Construct.Keys.Shape[vi] := TRectangle.Create(VKey.Construct.Back);
+    VKey.Construct.Keys.Shape[vi].Name := 'Virtual_Keyboard_Key_' + IntToStr(vi);
+    VKey.Construct.Keys.Shape[vi].Parent := VKey.Construct.Back;
     if vi = 11 then
     begin
-      VK_Key[vi].Width := 80;
-      VK_Key[vi].Height := 50;
-      VK_Key[vi].Position.X := (50 * 10) + 170;
-      VK_Key[vi].Position.Y := 220;
+      VKey.Construct.Keys.Shape[vi].Width := 80;
+      VKey.Construct.Keys.Shape[vi].Height := 50;
+      VKey.Construct.Keys.Shape[vi].Position.X := (50 * 10) + 170;
+      VKey.Construct.Keys.Shape[vi].Position.Y := 220;
     end
     else if vi = 23 then
     begin
-      VK_Key[vi].Width := 80;
-      VK_Key[vi].Height := 100;
-      VK_Key[vi].Position.X := (50 * 10) + 170;
-      VK_Key[vi].Position.Y := 270;
+      VKey.Construct.Keys.Shape[vi].Width := 80;
+      VKey.Construct.Keys.Shape[vi].Height := 100;
+      VKey.Construct.Keys.Shape[vi].Position.X := (50 * 10) + 170;
+      VKey.Construct.Keys.Shape[vi].Position.Y := 270;
     end
     else if vi = 47 then
     begin
-      VK_Key[vi].Width := 300;
-      VK_Key[vi].Height := 50;
-      VK_Key[vi].Position.X := (50 * 1) + 170;
-      VK_Key[vi].Position.Y := 420;
+      VKey.Construct.Keys.Shape[vi].Width := 300;
+      VKey.Construct.Keys.Shape[vi].Height := 50;
+      VKey.Construct.Keys.Shape[vi].Position.X := (50 * 1) + 170;
+      VKey.Construct.Keys.Shape[vi].Position.Y := 420;
     end
     else if vi in [48, 49, 50] then
     begin
-      VK_Key[vi].Width := 50;
-      VK_Key[vi].Height := 50;
+      VKey.Construct.Keys.Shape[vi].Width := 50;
+      VKey.Construct.Keys.Shape[vi].Height := 50;
       if vi = 48 then
-        VK_Key[vi].Position.X := (50 * 8) + 170
+        VKey.Construct.Keys.Shape[vi].Position.X := (50 * 8) + 170
       else if vi = 49 then
-        VK_Key[vi].Position.X := (50 * 9) + 170
+        VKey.Construct.Keys.Shape[vi].Position.X := (50 * 9) + 170
       else
-        VK_Key[vi].Position.X := (50 * 11) + 150;
-      VK_Key[vi].Position.Y := 420;
+        VKey.Construct.Keys.Shape[vi].Position.X := (50 * 11) + 150;
+      VKey.Construct.Keys.Shape[vi].Position.Y := 420;
     end
     else if vi in [0, 12, 24, 36] then
     begin
-      VK_Key[vi].Width := 120;
-      VK_Key[vi].Height := 50;
-      VK_Key[vi].Position.X := 50;
+      VKey.Construct.Keys.Shape[vi].Width := 120;
+      VKey.Construct.Keys.Shape[vi].Height := 50;
+      VKey.Construct.Keys.Shape[vi].Position.X := 50;
       if vi > 28 then
-        VK_Key[vi].Position.Y := 370
+        VKey.Construct.Keys.Shape[vi].Position.Y := 370
       else if vi > 18 then
-        VK_Key[vi].Position.Y := 320
+        VKey.Construct.Keys.Shape[vi].Position.Y := 320
       else if vi > 10 then
-        VK_Key[vi].Position.Y := 270
+        VKey.Construct.Keys.Shape[vi].Position.Y := 270
       else
-        VK_Key[vi].Position.Y := 220;
+        VKey.Construct.Keys.Shape[vi].Position.Y := 220;
     end
     else
     begin
-      VK_Key[vi].Width := 50;
-      VK_Key[vi].Height := 50;
+      VKey.Construct.Keys.Shape[vi].Width := 50;
+      VKey.Construct.Keys.Shape[vi].Height := 50;
       if (vi = 13) or (vi = 25) or (vi = 37) then
         vfi := 0;
-      VK_Key[vi].Position.X := (50 * vfi) + 170;
+      VKey.Construct.Keys.Shape[vi].Position.X := (50 * vfi) + 170;
       if vi > 36 then
-        VK_Key[vi].Position.Y := 370
+        VKey.Construct.Keys.Shape[vi].Position.Y := 370
       else if vi > 23 then
-        VK_Key[vi].Position.Y := 320
+        VKey.Construct.Keys.Shape[vi].Position.Y := 320
       else if vi > 11 then
-        VK_Key[vi].Position.Y := 270
+        VKey.Construct.Keys.Shape[vi].Position.Y := 270
       else
-        VK_Key[vi].Position.Y := 220;
+        VKey.Construct.Keys.Shape[vi].Position.Y := 220;
       inc(vfi, 1);
     end;
-    VK_Key[vi].Stroke.Thickness := 4;
-    VK_Key[vi].Stroke.Color := TAlphaColorRec.Black;
-    VK_Key[vi].Fill.Color := StringToAlphaColor('#FF010709');
-    VK_Key[vi].OnClick := vVK_Image.OnMouseClick;
-    VK_Key[vi].OnMouseEnter := vVK_Image.OnMouseEnter;
-    VK_Key[vi].OnMouseLeave := vVK_Image.OnMouseLeave;
-    VK_Key[vi].Tag := vi;
+    VKey.Construct.Keys.Shape[vi].Stroke.Thickness := 4;
+    VKey.Construct.Keys.Shape[vi].Stroke.Color := TAlphaColorRec.Black;
+    VKey.Construct.Keys.Shape[vi].Fill.Color := StringToAlphaColor('#FF010709');
+    VKey.Construct.Keys.Shape[vi].OnClick := VKey.Mouse.Image.OnMouseClick;
+    VKey.Construct.Keys.Shape[vi].OnMouseEnter := VKey.Mouse.Image.OnMouseEnter;
+    VKey.Construct.Keys.Shape[vi].OnMouseLeave := VKey.Mouse.Image.OnMouseLeave;
+    VKey.Construct.Keys.Shape[vi].Tag := vi;
     if vi <> 35 then
-      VK_Key[vi].Visible := True
+      VKey.Construct.Keys.Shape[vi].Visible := True
     else
-      VK_Key[vi].Visible := False;
+      VKey.Construct.Keys.Shape[vi].Visible := False;
 
-    VK_Key_Symbol[vi] := TText.Create(VK_Key[vi]);
-    VK_Key_Symbol[vi].Name := 'Virtual_Keyboard_Key_Name_' + IntToStr(vi);
-    VK_Key_Symbol[vi].Parent := VK_Key[vi];
-    VK_Key_Symbol[vi].Align := TAlignLayout.Client;
-    VK_Key_Symbol[vi].Color := TAlphaColorRec.White;
-    VK_Key_Symbol[vi].Font.Family := 'Tahoma';
-    VK_Key_Symbol[vi].Font.Size := 20;
-    VK_Key_Symbol[vi].Font.Style := VK_Key_Symbol[vi].Font.Style + [TFontStyle.fsBold];
-    VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
-    VK_Key_Symbol[vi].HorzTextAlign := TTextAlign.Center;
-    VK_Key_Symbol[vi].VertTextAlign := TTextAlign.Center;
-    VK_Key_Symbol[vi].OnClick := vVK_Text.OnMouseClick;
-    VK_Key_Symbol[vi].OnMouseEnter := vVK_Text.OnMouseEnter;
-    VK_Key_Symbol[vi].OnMouseLeave := vVK_Text.OnMouseLeave;
-    VK_Key_Symbol[vi].Tag := vi;
-    VK_Key_Symbol[vi].Visible := True;
+    VKey.Construct.Keys.Symbol[vi] := TText.Create(VKey.Construct.Keys.Shape[vi]);
+    VKey.Construct.Keys.Symbol[vi].Name := 'Virtual_Keyboard_Key_Name_' + IntToStr(vi);
+    VKey.Construct.Keys.Symbol[vi].Parent := VKey.Construct.Keys.Shape[vi];
+    VKey.Construct.Keys.Symbol[vi].Align := TAlignLayout.Client;
+    VKey.Construct.Keys.Symbol[vi].Color := TAlphaColorRec.White;
+    VKey.Construct.Keys.Symbol[vi].Font.Family := 'Tahoma';
+    VKey.Construct.Keys.Symbol[vi].Font.Size := 20;
+    VKey.Construct.Keys.Symbol[vi].Font.Style := VKey.Construct.Keys.Symbol[vi].Font.Style +
+      [TFontStyle.fsBold];
+    VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
+    VKey.Construct.Keys.Symbol[vi].HorzTextAlign := TTextAlign.Center;
+    VKey.Construct.Keys.Symbol[vi].VertTextAlign := TTextAlign.Center;
+    VKey.Construct.Keys.Symbol[vi].OnClick := VKey.Mouse.Text.OnMouseClick;
+    VKey.Construct.Keys.Symbol[vi].OnMouseEnter := VKey.Mouse.Text.OnMouseEnter;
+    VKey.Construct.Keys.Symbol[vi].OnMouseLeave := VKey.Mouse.Text.OnMouseLeave;
+    VKey.Construct.Keys.Symbol[vi].Tag := vi;
+    VKey.Construct.Keys.Symbol[vi].Visible := True;
   end;
 
-  vVirtual_Keyboard_Active := True;
-  VK_Symbols := False;
-  VK_Capitals := False;
-  VK_Shifts := False;
+  VKey.Options.Symbol := False;
+  VKey.Options.Capital := False;
+  VKey.Options.Shift := False;
 
-  VK_Drop_Num := -1;
-  VK_Drop_Num_Current := -1;
+  VKey.Options.Drop_Num := -1;
+  VKey.Options.Drop_Current := -1;
 
-  VK_Edit.SetFocus;
+  VKey.Construct.Edit.Edit.SetFocus;
+
+  Animation(True);
 end;
 
-procedure uVirtual_Keyboard_Free;
+procedure VK_Free;
 var
   vi: Integer;
 begin
-  vVirtual_Keyboard_Active := False;
-  VK_Drop_Num := -1;
+  extrafe.prog.State := VKey.Options.Previus_State;
+  VKey.Options.Drop_Num := -1;
   for vi := 20 downto 0 do
-    if Assigned(VK_Drop_Line_Back[vi]) then
-      FreeAndNil(VK_Drop_Line_Back[vi]);
-  FreeAndNil(VK_Background);
-  FreeAndNil(vVK_Back);
+    if Assigned(VKey.Construct.Drop.Line_Back[vi]) then
+      FreeAndNil(VKey.Construct.Drop.Line_Back[vi]);
+  FreeAndNil(VKey.Construct.Blur);
+  FreeAndNil(VKey.Construct.Back);
+  FreeAndNil(VKey.Construct.Frame);
 end;
 
-procedure uVirtual_Keyboard_Capital(vActive: Boolean);
+procedure Set_Capital(vActive: Boolean);
 var
   vi: Integer;
 begin
@@ -382,19 +441,19 @@ begin
     begin
       if vi in [0 .. 12, 23, 24, 34, 35, 36, 44 .. 50] then
       else
-        VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys_Capital[vi];
-      VK_Key_Symbol[12].TextSettings.FontColor := TAlphaColorRec.Red;
+        VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys_Capital[vi];
+      VKey.Construct.Keys.Symbol[12].TextSettings.FontColor := TAlphaColorRec.Red;
     end;
   end
   else
   begin
     for vi := 0 to 50 do
-      VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
-    VK_Key_Symbol[12].TextSettings.FontColor := TAlphaColorRec.White;
+      VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
+    VKey.Construct.Keys.Symbol[12].TextSettings.FontColor := TAlphaColorRec.White;
   end;
 end;
 
-procedure uVirtual_Keyboard_Symbols(vActive: Boolean);
+procedure Set_Symbols(vActive: Boolean);
 var
   vi: Integer;
 begin
@@ -403,33 +462,33 @@ begin
     for vi := 0 to 50 do
       if vi in [0, 11, 12, 23, 24, 35, 36, 47 .. 50] then
       else
-        VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys_Symbols[vi];
-    VK_Key_Symbol[36].TextSettings.FontColor := TAlphaColorRec.Red;
-    VK_Key_Symbol[12].TextSettings.FontColor := TAlphaColorRec.Gray;
-    VK_Key_Symbol[24].TextSettings.FontColor := TAlphaColorRec.Gray;
+        VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys_Symbols[vi];
+    VKey.Construct.Keys.Symbol[36].TextSettings.FontColor := TAlphaColorRec.Red;
+    VKey.Construct.Keys.Symbol[12].TextSettings.FontColor := TAlphaColorRec.Gray;
+    VKey.Construct.Keys.Symbol[24].TextSettings.FontColor := TAlphaColorRec.Gray;
   end
   else
   begin
-    if VK_Capitals then
+    if VKey.Options.Capital then
     begin
       for vi := 0 to 50 do
-        VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
-      uVirtual_Keyboard_Capital(VK_Capitals);
-      VK_Key_Symbol[24].TextSettings.FontColor := TAlphaColorRec.White;
-      VK_Key_Symbol[36].TextSettings.FontColor := TAlphaColorRec.White;
+        VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
+      Set_Capital(VKey.Options.Capital);
+      VKey.Construct.Keys.Symbol[24].TextSettings.FontColor := TAlphaColorRec.White;
+      VKey.Construct.Keys.Symbol[36].TextSettings.FontColor := TAlphaColorRec.White;
     end
     else
     begin
       for vi := 0 to 50 do
-        VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
-      VK_Key_Symbol[12].TextSettings.FontColor := TAlphaColorRec.White;
-      VK_Key_Symbol[24].TextSettings.FontColor := TAlphaColorRec.White;
-      VK_Key_Symbol[36].TextSettings.FontColor := TAlphaColorRec.White;
+        VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
+      VKey.Construct.Keys.Symbol[12].TextSettings.FontColor := TAlphaColorRec.White;
+      VKey.Construct.Keys.Symbol[24].TextSettings.FontColor := TAlphaColorRec.White;
+      VKey.Construct.Keys.Symbol[36].TextSettings.FontColor := TAlphaColorRec.White;
     end;
   end;
 end;
 
-procedure uVirtual_Keyboard_Shift(vActive: Boolean);
+procedure Set_Shift(vActive: Boolean);
 var
   vi: Integer;
 begin
@@ -438,84 +497,91 @@ begin
     for vi := 0 to 50 do
       if vi in [0, 11, 12, 23, 24, 34, 35, 36, 44 .. 50] then
       else
-        VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys_Shift[vi];
-    VK_Key_Symbol[12].TextSettings.FontColor := TAlphaColorRec.Gray;
-    VK_Key_Symbol[24].TextSettings.FontColor := TAlphaColorRec.Red;
-    VK_Key_Symbol[36].TextSettings.FontColor := TAlphaColorRec.Gray;
+        VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys_Shift[vi];
+    VKey.Construct.Keys.Symbol[12].TextSettings.FontColor := TAlphaColorRec.Gray;
+    VKey.Construct.Keys.Symbol[24].TextSettings.FontColor := TAlphaColorRec.Red;
+    VKey.Construct.Keys.Symbol[36].TextSettings.FontColor := TAlphaColorRec.Gray;
   end
   else
   begin
     for vi := 0 to 50 do
-      VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
-    VK_Key_Symbol[12].TextSettings.FontColor := TAlphaColorRec.White;
-    VK_Key_Symbol[24].TextSettings.FontColor := TAlphaColorRec.White;
-    VK_Key_Symbol[36].TextSettings.FontColor := TAlphaColorRec.White;
+      VKey.Construct.Keys.Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
+    VKey.Construct.Keys.Symbol[12].TextSettings.FontColor := TAlphaColorRec.White;
+    VKey.Construct.Keys.Symbol[24].TextSettings.FontColor := TAlphaColorRec.White;
+    VKey.Construct.Keys.Symbol[36].TextSettings.FontColor := TAlphaColorRec.White;
   end;
 end;
 
-procedure uVirtual_Keyboard_Add_DropLine(vLine: Integer; vString: String; vImagePath: String);
+procedure Drop(vLine: Integer; vString: String; vImagePath: String);
 begin
-  VK_Drop_Line_Back[vLine] := TRectangle.Create(VK_Drop_Box);
-  VK_Drop_Line_Back[vLine].Name := 'Virual_Keyboard_Drop_Line_' + vLine.ToString;
-  VK_Drop_Line_Back[vLine].Parent := VK_Drop_Box;
-  VK_Drop_Line_Back[vLine].Width := VK_Drop_Box.Width - 8;
-  VK_Drop_Line_Back[vLine].Height := 20;
-  VK_Drop_Line_Back[vLine].Position.X := 4;
-  VK_Drop_Line_Back[vLine].Position.Y := (vLine * 20) + 4;
-  VK_Drop_Line_Back[vLine].Fill.Color := TAlphaColorRec.Black;
-  VK_Drop_Line_Back[vLine].OnClick := vVK_Rectangle.OnMouseClick;
-  VK_Drop_Line_Back[vLine].OnMouseEnter := vVK_Rectangle.OnMouseEnter;
-  VK_Drop_Line_Back[vLine].OnMouseLeave := vVK_Rectangle.OnMouseLeave;
-  VK_Drop_Line_Back[vLine].Tag := vLine;
-  VK_Drop_Line_Back[vLine].Visible := True;
+  VKey.Construct.Drop.Line_Back[vLine] := TRectangle.Create(VKey.Construct.Drop.Box);
+  VKey.Construct.Drop.Line_Back[vLine].Name := 'Virual_Keyboard_Drop_Line_' + vLine.ToString;
+  VKey.Construct.Drop.Line_Back[vLine].Parent := VKey.Construct.Drop.Box;
+  VKey.Construct.Drop.Line_Back[vLine].SetBounds(4, (vLine * 20) + 4, VKey.Construct.Drop.Box.Width - 8, 20);
+  VKey.Construct.Drop.Line_Back[vLine].Fill.Color := TAlphaColorRec.Black;
+  VKey.Construct.Drop.Line_Back[vLine].OnClick := VKey.Mouse.Rectangle.OnMouseClick;
+  VKey.Construct.Drop.Line_Back[vLine].OnMouseEnter := VKey.Mouse.Rectangle.OnMouseEnter;
+  VKey.Construct.Drop.Line_Back[vLine].OnMouseLeave := VKey.Mouse.Rectangle.OnMouseLeave;
+  VKey.Construct.Drop.Line_Back[vLine].Tag := vLine;
+  VKey.Construct.Drop.Line_Back[vLine].Visible := True;
 
-  VK_Drop_Icon[vLine] := TImage.Create(VK_Drop_Line_Back[vLine]);
-  VK_Drop_Icon[vLine].Name := 'Virtual_Keyboard_Drop_Icon_' + vLine.ToString;
-  VK_Drop_Icon[vLine].Parent := VK_Drop_Line_Back[vLine];
-  VK_Drop_Icon[vLine].Width := 18;
-  VK_Drop_Icon[vLine].Height := 18;
-  VK_Drop_Icon[vLine].Position.X := 2;
-  VK_Drop_Icon[vLine].Position.Y := 1;
+  VKey.Construct.Drop.Icon[vLine] := TImage.Create(VKey.Construct.Drop.Line_Back[vLine]);
+  VKey.Construct.Drop.Icon[vLine].Name := 'Virtual_Keyboard_Drop_Icon_' + vLine.ToString;
+  VKey.Construct.Drop.Icon[vLine].Parent := VKey.Construct.Drop.Line_Back[vLine];
+  VKey.Construct.Drop.Icon[vLine].SetBounds(2, 1, 18, 18);
   if vImagePath <> '' then
-    VK_Drop_Icon[vLine].Bitmap.LoadFromFile(vImagePath);
-  VK_Drop_Icon[vLine].OnClick := vVK_Image.OnMouseClick;
-  VK_Drop_Icon[vLine].OnMouseEnter := vVK_Image.OnMouseEnter;
-  VK_Drop_Icon[vLine].OnMouseLeave := vVK_Image.OnMouseLeave;
-  VK_Drop_Icon[vLine].Tag := vLine;
-  VK_Drop_Icon[vLine].Visible := True;
+    VKey.Construct.Drop.Icon[vLine].Bitmap.LoadFromFile(vImagePath);
+  VKey.Construct.Drop.Icon[vLine].OnClick := VKey.Mouse.Image.OnMouseClick;
+  VKey.Construct.Drop.Icon[vLine].OnMouseEnter := VKey.Mouse.Image.OnMouseEnter;
+  VKey.Construct.Drop.Icon[vLine].OnMouseLeave := VKey.Mouse.Image.OnMouseLeave;
+  VKey.Construct.Drop.Icon[vLine].Tag := vLine;
+  VKey.Construct.Drop.Icon[vLine].Visible := True;
 
-  VK_Drop_Text[vLine] := TText.Create(VK_Drop_Line_Back[vLine]);
-  VK_Drop_Text[vLine].Name := 'Virtual_Keyboard_Drop_Text_' + vLine.ToString;
-  VK_Drop_Text[vLine].Parent := VK_Drop_Line_Back[vLine];
-  VK_Drop_Text[vLine].Width := VK_Drop_Line_Back[vLine].Width - 22;
-  VK_Drop_Text[vLine].Height := 18;
-  VK_Drop_Text[vLine].Font.Size := 16;
-  VK_Drop_Text[vLine].Position.X := 22;
-  VK_Drop_Text[vLine].Color := TAlphaColorRec.White;
-  VK_Drop_Text[vLine].TextSettings.HorzAlign := TTextAlign.Leading;
-  VK_Drop_Text[vLine].Text := vString;
-  VK_Drop_Text[vLine].Tag := vLine;
-  VK_Drop_Text[vLine].OnClick := vVK_Text.OnMouseClick;
-  VK_Drop_Text[vLine].OnMouseEnter := vVK_Text.OnMouseEnter;
-  VK_Drop_Text[vLine].OnMouseLeave := vVK_Text.OnMouseLeave;
-  VK_Drop_Text[vLine].Visible := True;
+  VKey.Construct.Drop.Text[vLine] := TText.Create(VKey.Construct.Drop.Line_Back[vLine]);
+  VKey.Construct.Drop.Text[vLine].Name := 'Virtual_Keyboard_Drop_Text_' + vLine.ToString;
+  VKey.Construct.Drop.Text[vLine].Parent := VKey.Construct.Drop.Line_Back[vLine];
+  VKey.Construct.Drop.Text[vLine].Width := VKey.Construct.Drop.Line_Back[vLine].Width - 22;
+  VKey.Construct.Drop.Text[vLine].Height := 18;
+  VKey.Construct.Drop.Text[vLine].Font.Size := 16;
+  VKey.Construct.Drop.Text[vLine].Position.X := 22;
+  VKey.Construct.Drop.Text[vLine].Color := TAlphaColorRec.White;
+  VKey.Construct.Drop.Text[vLine].TextSettings.HorzAlign := TTextAlign.Leading;
+  VKey.Construct.Drop.Text[vLine].Text := vString;
+  VKey.Construct.Drop.Text[vLine].Tag := vLine;
+  VKey.Construct.Drop.Text[vLine].OnClick := VKey.Mouse.Text.OnMouseClick;
+  VKey.Construct.Drop.Text[vLine].OnMouseEnter := VKey.Mouse.Text.OnMouseEnter;
+  VKey.Construct.Drop.Text[vLine].OnMouseLeave := VKey.Mouse.Text.OnMouseLeave;
+  VKey.Construct.Drop.Text[vLine].Visible := True;
 
   if vLine > 5 then
-    VK_Drop_Background.Height := 130
+    VKey.Construct.Drop.Back.Height := 130
   else
-    VK_Drop_Background.Height := (vLine + 1) * 21.66;
-  VK_Drop_Num := vLine;
+    VKey.Construct.Drop.Back.Height := (vLine + 1) * 21.66;
+  VKey.Options.Drop_Num := vLine;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
-procedure uVirtual_Keyboard_SetKey(vKey: String);
+Procedure Backspace;
+var
+  vStr: String;
+begin
+  if VKey.Construct.Edit.Edit.Text <> '' then
+  begin
+    vStr := VKey.Construct.Edit.Edit.Text;
+    Delete(vStr, Length(vStr), 1);
+    VKey.Construct.Edit.Edit.Text := vStr;
+    VKey.Construct.Edit.Edit.SelStart := Length(VKey.Construct.Edit.Edit.Text);
+  end
+end;
+
+procedure Key(vActionKey: String);
 var
   vi: Integer;
   vEditString: String;
   vScrollByNum: Single;
   vFoundDrop: Boolean;
 
-  function uVirtual_Keyboard_KeyToNum(vKey_Num: String): Integer;
+  function Key_To_Num(vKey_Num: String): Integer;
   begin
     if vKey_Num = '' then
       Result := 0
@@ -628,109 +694,109 @@ var
   end;
 
 begin
-  if (UpperCase(vKey) <> 'UP') and (UpperCase(vKey) <> 'DOWN') then
-  begin
+  { if (UpperCase(vActionKey) <> 'UP') and (UpperCase(vActionKey) <> 'DOWN') then
+    begin
     for vi := 0 to 50 do
-      VK_Key[vi].Fill.Color := TAlphaColorRec.Black;
-    VK_Key[uVirtual_Keyboard_KeyToNum(UpperCase(vKey))].Fill.Color := TAlphaColorRec.Deepskyblue;
-  end;
+    VKey.Construct.Keys.Shape[vi].Fill.Color := TAlphaColorRec.Black;
+    VKey.Construct.Keys.Shape[Key_To_Num(UpperCase(vActionKey))].Fill.Color :=
+    TAlphaColorRec.Deepskyblue;
+    end; }
 
-  if UpperCase(vKey) = 'BACKSPACE' then
+  if UpperCase(vActionKey) = 'ESC' then
   begin
-    if VK_Edit.Text <> '' then
-    begin
-      vEditString := VK_Edit.Text;
-      Delete(vEditString, Length(vEditString), 1);
-      VK_Edit.Text := vEditString;
-      VK_Edit.SelStart := Length(VK_Edit.Text);
-    end
+    if VKey.Options.vType = 'Input' then
+      Animation(False)
   end
-  else if UpperCase(vKey) = 'ENTER' then
+  else if UpperCase(vActionKey) = 'BACKSPACE' then
+    Backspace
+  else if UpperCase(vActionKey) = 'ENTER' then
+    Press('ENTER')
+  else if UpperCase(vActionKey) = 'CAPS LOCK' then
   begin
-    uVirtual_Keyboard_DoAction('ENTER');
-  end
-  else if UpperCase(vKey) = 'CAPS LOCK' then
-  begin
-    if VK_Key_Symbol[uVirtual_Keyboard_KeyToNum(UpperCase(vKey))].Color <> TAlphaColorRec.Grey then
+    if VKey.Construct.Keys.Symbol[Key_To_Num(UpperCase(vActionKey))].Color <> TAlphaColorRec.Grey then
     begin
-      VK_Capitals := not VK_Capitals;
-      uVirtual_Keyboard_Capital(VK_Capitals);
+      VKey.Options.Capital := not VKey.Options.Capital;
+      Set_Capital(VKey.Options.Capital);
     end;
   end
-  else if UpperCase(vKey) = 'SHIFT' then
+  else if UpperCase(vActionKey) = 'SHIFT' then
   begin
-    if (VK_Symbols = False) and (VK_Capitals = False) then
+    if (VKey.Options.Symbol = False) and (VKey.Options.Capital = False) then
     begin
-      VK_Shifts := not VK_Shifts;
-      uVirtual_Keyboard_Shift(VK_Shifts);
+      VKey.Options.Shift := not VKey.Options.Shift;
+      Set_Shift(VKey.Options.Shift);
     end;
   end
-  else if UpperCase(vKey) = 'CTRL' then
+  else if UpperCase(vActionKey) = 'CTRL' then
   begin
-    if VK_Key_Symbol[uVirtual_Keyboard_KeyToNum(UpperCase(vKey))].Color <> TAlphaColorRec.Gray then
+    if VKey.Construct.Keys.Symbol[Key_To_Num(UpperCase(vActionKey))].Color <> TAlphaColorRec.Gray then
     begin
-      VK_Symbols := not VK_Symbols;
-      uVirtual_Keyboard_Symbols(VK_Symbols);
+      VKey.Options.Symbol := not VKey.Options.Symbol;
+      Set_Symbols(VKey.Options.Symbol);
     end;
   end
-  else if UpperCase(vKey) = 'SPACE' then
+  else if UpperCase(vActionKey) = 'SPACE' then
   begin
-    VK_Edit.Text := VK_Edit.Text + ' ';
-    VK_Edit.SelStart := Length(VK_Edit.Text);
+    VKey.Construct.Edit.Edit.Text := VKey.Construct.Edit.Edit.Text + ' ';
+    VKey.Construct.Edit.Edit.SelStart := Length(VKey.Construct.Edit.Edit.Text);
   end
-  else if UpperCase(vKey) = 'UP' then
+  else if UpperCase(vActionKey) = 'UP' then
   begin
-    if VK_Drop_Num_Current > -1 then
+    if VKey.Options.Drop_Current > -1 then
     begin
-      if VK_Drop_Num > 5 then
-        vScrollByNum := ((VK_Drop_Num * 21.66) - 130) / VK_Drop_Num + 1;
+      if VKey.Options.Drop_Num > 5 then
+        vScrollByNum := ((VKey.Options.Drop_Num * 21.66) - 130) / VKey.Options.Drop_Num + 1;
       for vi := 0 to 50 do
-        VK_Key[vi].Fill.Color := TAlphaColorRec.Black;
-      VK_Drop_Line_Back[VK_Drop_Num_Current].Fill.Color := TAlphaColorRec.Black;
-      dec(VK_Drop_Num_Current, 1);
-      if VK_Drop_Num_Current <> -1 then
-        VK_Drop_Line_Back[VK_Drop_Num_Current].Fill.Color := TAlphaColorRec.Deepskyblue;
-      if VK_Drop_Num_Current < VK_Drop_Num + 1 then
-        if VK_Drop_Num_Current = 0 then
-          VK_Drop_Box.ScrollBy(0, 1000)
+        VKey.Construct.Keys.Shape[vi].Fill.Color := TAlphaColorRec.Black;
+      VKey.Construct.Drop.Line_Back[VKey.Options.Drop_Current].Fill.Color := TAlphaColorRec.Black;
+      dec(VKey.Options.Drop_Current, 1);
+      if VKey.Options.Drop_Current <> -1 then
+        VKey.Construct.Drop.Line_Back[VKey.Options.Drop_Current].Fill.Color := TAlphaColorRec.Deepskyblue;
+      if VKey.Options.Drop_Current < VKey.Options.Drop_Num + 1 then
+        if VKey.Options.Drop_Current = 0 then
+          VKey.Construct.Drop.Box.ScrollBy(0, 1000)
         else
-          VK_Drop_Box.ScrollBy(0, vScrollByNum);
+          VKey.Construct.Drop.Box.ScrollBy(0, vScrollByNum);
     end;
   end
-  else if UpperCase(vKey) = 'DOWN' then
+  else if UpperCase(vActionKey) = 'DOWN' then
   begin
-    if VK_Drop_Num_Current < 20 then
+    if VKey.Options.Drop_Current < 20 then
     begin
       for vi := 0 to 50 do
-        VK_Key[vi].Fill.Color := TAlphaColorRec.Black;
-      if VK_Drop_Num_Current < VK_Drop_Num then
+        VKey.Construct.Keys.Shape[vi].Fill.Color := TAlphaColorRec.Black;
+      if VKey.Options.Drop_Current < VKey.Options.Drop_Num then
       begin
-        if VK_Drop_Num > 5 then
-          vScrollByNum := ((VK_Drop_Num * 21.66) - 130) / VK_Drop_Num + 1;
-        if VK_Drop_Num_Current <> -1 then
-          VK_Drop_Line_Back[VK_Drop_Num_Current].Fill.Color := TAlphaColorRec.Black;
-        inc(VK_Drop_Num_Current, 1);
-        if VK_Drop_Num_Current > 20 then
-          VK_Drop_Num_Current := 20;
-        VK_Drop_Line_Back[VK_Drop_Num_Current].Fill.Color := TAlphaColorRec.Deepskyblue;
-        if VK_Drop_Num_Current > 1 then
-          if VK_Drop_Num = VK_Drop_Num_Current then
-            VK_Drop_Box.ScrollBy(0, -1000)
+        if VKey.Options.Drop_Num > 5 then
+          vScrollByNum := ((VKey.Options.Drop_Num * 21.66) - 130) / VKey.Options.Drop_Num + 1;
+        if VKey.Options.Drop_Current <> -1 then
+          VKey.Construct.Drop.Line_Back[VKey.Options.Drop_Current].Fill.Color := TAlphaColorRec.Black;
+        inc(VKey.Options.Drop_Current, 1);
+        if VKey.Options.Drop_Current > 20 then
+          VKey.Options.Drop_Current := 20;
+        VKey.Construct.Drop.Line_Back[VKey.Options.Drop_Current].Fill.Color := TAlphaColorRec.Deepskyblue;
+        if VKey.Options.Drop_Current > 1 then
+          if VKey.Options.Drop_Num = VKey.Options.Drop_Current then
+            VKey.Construct.Drop.Box.ScrollBy(0, -1000)
           else
-            VK_Drop_Box.ScrollBy(0, -vScrollByNum);
+            VKey.Construct.Drop.Box.ScrollBy(0, -vScrollByNum);
       end;
     end;
   end
   else
   begin
-    VK_Edit.Text := VK_Edit.Text + VK_Key_Symbol[uVirtual_Keyboard_KeyToNum(vKey)].Text;
-    VK_Edit.SelStart := Length(VK_Edit.Text);
+    if Key_To_Num(vActionKey) <> -1 then
+    begin
+      VKey.Construct.Edit.Edit.Text := VKey.Construct.Edit.Edit.Text + VKey.Construct.Keys.Symbol
+        [Key_To_Num(vActionKey)].Text;
+      VKey.Construct.Edit.Edit.SelStart := Length(VKey.Construct.Edit.Edit.Text);
+    end;
   end;
-  if (UpperCase(vKey) <> 'UP') and (UpperCase(vKey) <> 'DOWN') then
-    uVirtual_Keyboard_DoAction(UpperCase(vKey));
+  if (UpperCase(vActionKey) <> 'UP') and (UpperCase(vActionKey) <> 'DOWN') then
+    Press(UpperCase(vActionKey));
 end;
 
-procedure uVirtual_Keyboard_DoAction(vKey: String);
+procedure Press(vActionKey: String);
 begin
   if extrafe.prog.State = 'Loading' then
   begin
@@ -740,9 +806,9 @@ begin
   begin
 
   end
-  else if extrafe.prog.State = 'mame' then
+  else if VKey.Options.Previus_State = 'mame' then
   begin
-    uEmu_Actions_VirtualKeyboard_SetKey(vKey);
+    uEmu_Actions_VirtualKeyboard_SetKey(vActionKey);
   end;
 end;
 
@@ -756,13 +822,13 @@ end;
 procedure TVIRTUAL_KEYBOARD_IMAGE.OnMouseEnter(Sender: TObject);
 begin
   if TImage(Sender).Name = 'Virtual_Keyboard_Drop_Icon_' + TImage(Sender).Tag.ToString then
-    VK_Drop_Line_Back[TImage(Sender).Tag].Fill.Color := TAlphaColorRec.Deepskyblue;
+    VKey.Construct.Drop.Line_Back[TImage(Sender).Tag].Fill.Color := TAlphaColorRec.Deepskyblue;
 end;
 
 procedure TVIRTUAL_KEYBOARD_IMAGE.OnMouseLeave(Sender: TObject);
 begin
   if TImage(Sender).Name = 'Virtual_Keyboard_Drop_Icon_' + TImage(Sender).Tag.ToString then
-    VK_Drop_Line_Back[TImage(Sender).Tag].Fill.Color := TAlphaColorRec.Black;
+    VKey.Construct.Drop.Line_Back[TImage(Sender).Tag].Fill.Color := TAlphaColorRec.Black;
 end;
 
 { TVIRTUAL_KEYBOARD_TEXT }
@@ -775,9 +841,9 @@ begin
   begin
     if TText(Sender).Text <> '...' then
     begin
-      VK_Edit.Text := TText(Sender).Text;
-      VK_Edit.SelStart := Length(VK_Edit.Text);
-      uVirtual_Keyboard_DoAction('Drop');
+      VKey.Construct.Edit.Edit.Text := TText(Sender).Text;
+      VKey.Construct.Edit.Edit.SelStart := Length(VKey.Construct.Edit.Edit.Text);
+      Press('Drop');
     end;
   end
   else
@@ -786,57 +852,58 @@ begin
     begin
       if TText(Sender).Color <> TAlphaColorRec.Grey then
       begin
-        VK_Capitals := not VK_Capitals;
-        uVirtual_Keyboard_Capital(VK_Capitals)
+        VKey.Options.Capital := not VKey.Options.Capital;
+        Set_Capital(VKey.Options.Capital)
       end;
     end
     else if TText(Sender).Text = 'Shift' then
     begin
-      if (VK_Symbols = False) and (VK_Capitals = False) then
+      if (VKey.Options.Symbol = False) and (VKey.Options.Capital = False) then
       begin
-        VK_Shifts := not VK_Shifts;
-        uVirtual_Keyboard_Shift(VK_Shifts);
+        VKey.Options.Shift := not VKey.Options.Shift;
+        Set_Shift(VKey.Options.Shift);
       end;
     end
     else if TText(Sender).Text = 'Symbols' then
     begin
       if TText(Sender).Color <> TAlphaColorRec.Gray then
       begin
-        VK_Symbols := not VK_Symbols;
-        uVirtual_Keyboard_Symbols(VK_Symbols);
+        VKey.Options.Symbol := not VKey.Options.Symbol;
+        Set_Symbols(VKey.Options.Symbol);
       end;
     end
     else if TText(Sender).Text = 'Back' then
     begin
-      if VK_Edit.Text <> '' then
+      if VKey.Construct.Edit.Edit.Text <> '' then
       begin
-        vString := VK_Edit.Text;
+        vString := VKey.Construct.Edit.Edit.Text;
         Delete(vString, Length(vString), 1);
-        VK_Edit.Text := vString;
-        VK_Edit.SelStart := Length(VK_Edit.Text);
-        uVirtual_Keyboard_DoAction('Back');
+        VKey.Construct.Edit.Edit.Text := vString;
+        VKey.Construct.Edit.Edit.SelStart := Length(VKey.Construct.Edit.Edit.Text);
+        Press('Back');
       end;
     end
     else if TText(Sender).Text = 'Space' then
     begin
-      VK_Edit.Text := VK_Edit.Text + ' ';
-      uVirtual_Keyboard_DoAction('Space');
+      VKey.Construct.Edit.Edit.Text := VKey.Construct.Edit.Edit.Text + ' ';
+      Press('Space');
     end
     else if TText(Sender).Text = 'Exit' then
-      uVirtual_Keyboard_DoAction('Key_Esc')
+      Press('Esc')
     else if TText(Sender).Text = 'Enter' then
-      uVirtual_Keyboard_DoAction('Key_Enter')
+      Press('Enter')
     else
     begin
-      VK_Edit.Text := VK_Edit.Text + VK_Key_Symbol[TImage(Sender).Tag].Text;
-      uVirtual_Keyboard_DoAction(TText(Sender).Text);
-      if VK_Shifts then
+      VKey.Construct.Edit.Edit.Text := VKey.Construct.Edit.Edit.Text + VKey.Construct.Keys.Symbol
+        [TImage(Sender).Tag].Text;
+      Press(TText(Sender).Text);
+      if VKey.Options.Shift then
       begin
-        VK_Shifts := not VK_Shifts;
-        uVirtual_Keyboard_Shift(VK_Shifts);
+        VKey.Options.Shift := not VKey.Options.Shift;
+        Set_Shift(VKey.Options.Shift);
       end;
     end;
-    VK_Edit.SelStart := Length(VK_Edit.Text);
+    VKey.Construct.Edit.Edit.SelStart := Length(VKey.Construct.Edit.Edit.Text);
   end;
 end;
 
@@ -846,317 +913,28 @@ var
 begin
   if TText(Sender).Name = 'Virtual_Keyboard_Drop_Text_' + TText(Sender).Tag.ToString then
   begin
-    if VK_Drop_Num_Current <> TText(Sender).Tag then
+    if VKey.Options.Drop_Current <> TText(Sender).Tag then
     begin
       for vi := 0 to 20 do
-        if Assigned(VK_Drop_Line_Back[vi]) then
-          VK_Drop_Line_Back[vi].Fill.Color := TAlphaColorRec.Black;
+        if Assigned(VKey.Construct.Drop.Line_Back[vi]) then
+          VKey.Construct.Drop.Line_Back[vi].Fill.Color := TAlphaColorRec.Black;
     end;
-    VK_Drop_Line_Back[TText(Sender).Tag].Fill.Color := TAlphaColorRec.Deepskyblue;
-    VK_Drop_Num_Current := TText(Sender).Tag;
+    VKey.Construct.Drop.Line_Back[TText(Sender).Tag].Fill.Color := TAlphaColorRec.Deepskyblue;
+    VKey.Options.Drop_Current := TText(Sender).Tag;
   end
   else
-    VK_Key[TText(Sender).Tag].Fill.Color := TAlphaColorRec.Deepskyblue;
+    VKey.Construct.Keys.Shape[TText(Sender).Tag].Fill.Color := TAlphaColorRec.Deepskyblue;
 end;
 
 procedure TVIRTUAL_KEYBOARD_TEXT.OnMouseLeave(Sender: TObject);
 begin
   if TText(Sender).Name = 'Virtual_Keyboard_Drop_Text_' + TText(Sender).Tag.ToString then
   begin
-    VK_Drop_Line_Back[TText(Sender).Tag].Fill.Color := TAlphaColorRec.Black;
-    VK_Drop_Num_Current := -1;
+    VKey.Construct.Drop.Line_Back[TText(Sender).Tag].Fill.Color := TAlphaColorRec.Black;
+    VKey.Options.Drop_Current := -1;
   end
   else
-    VK_Key[TText(Sender).Tag].Fill.Color := StringToAlphaColor('#FF010709');
-end;
-
-{ TVIRTUAL_KEYBOARD }
-
-constructor TVIRTUAL_KEYBOARD.Create(AOwner: TComponent);
-begin
-  inherited;
-  uVirtual_Keyboard_Create(nil, '', '');
-end;
-
-destructor TVIRTUAL_KEYBOARD.Destroy;
-begin
-
-  inherited;
-end;
-
-procedure TVIRTUAL_KEYBOARD.SetCapsLock(const value: Boolean);
-begin
-
-end;
-
-procedure TVIRTUAL_KEYBOARD.uVirtual_Keyboard_Create(Sender: TObject; vType, vTitle: String);
-var
-  vi, vfi: Integer;
-begin
-  // vVK_Back:= TImage(Sender);
-  // vVK_Back:= TLayout(sender);
-
-  // vVK_Back.Align:= TAlignLayout.Client;
-  // vVK_Back.Width:= 400;
-  // vVK_Back.Height:= 350;
-  // vVK_Back.Position.X:= (Emu_Form.Width/ 2)- (vVK_Back.Width / 2);
-  // vVK_Back.Position.Y:= 250;
-  self.Align := TAlignLayout.Client;
-  // VK_Background:= TRectangle.Create(vVK_Back);
-  VK_Background := TRectangle.Create(self);
-  VK_Background.Name := 'Virtual_Keyboard';
-  VK_Background.Parent := self;
-  VK_Background.Width := 800;
-  VK_Background.Height := 500;
-  VK_Background.Position.X := extrafe.res.Half_Width - 400;
-  VK_Background.Position.Y := extrafe.res.Half_Height + 250;
-  VK_Background.XRadius := 8;
-  VK_Background.YRadius := 8;
-  VK_Background.Stroke.Thickness := 8;
-  VK_Background.Stroke.Color := TAlphaColorRec.Deepskyblue;
-  VK_Background.Fill.Color := StringToAlphaColor('#FF01182E');
-  VK_Background.Visible := True;
-
-  VK_Title_Background := TRectangle.Create(VK_Background);
-  VK_Title_Background.Name := 'Virtual_Keyboard_BackTitle';
-  VK_Title_Background.Parent := VK_Background;
-  VK_Title_Background.Width := VK_Background.Width - 16;
-  VK_Title_Background.Height := 30;
-  VK_Title_Background.Position.X := 8;
-  VK_Title_Background.Position.Y := 8;
-  VK_Title_Background.XRadius := 4;
-  VK_Title_Background.YRadius := 4;
-  VK_Title_Background.Stroke.Thickness := 4;
-  VK_Title_Background.Stroke.Color := TAlphaColorRec.Black;
-  VK_Title_Background.Fill.Color := StringToAlphaColor('#FF010709');
-  VK_Title_Background.Corners := VK_Title_Background.Corners - [TCorner.BottomLeft, TCorner.BottomRight];
-  VK_Title_Background.Visible := True;
-
-  VK_Title_Icon := TImage.Create(VK_Title_Background);
-  VK_Title_Icon.Name := 'Virtual_Keyboard_IconTitle';
-  VK_Title_Icon.Parent := VK_Title_Background;
-  VK_Title_Icon.Width := 28;
-  VK_Title_Icon.Height := 28;
-  VK_Title_Icon.Position.X := 1;
-  VK_Title_Icon.Position.Y := 1;
-  VK_Title_Icon.WrapMode := TImageWrapMode.Fit;
-  vVirtual_Keyboard_Type := vType;
-  if vVirtual_Keyboard_Type = 'Search' then
-    VK_Title_Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'vk_search.png')
-  else if vVirtual_Keyboard_Type = 'Type' then
-    VK_Title_Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'vk_type.png');
-  VK_Title_Icon.Visible := True;
-
-  VK_Title := TText.Create(VK_Title_Background);
-  VK_Title.Name := 'Virtual_Keyboard_Title';
-  VK_Title.Parent := VK_Title_Background;
-  VK_Title.Color := TAlphaColorRec.White;
-  VK_Title.Font.Family := 'Tahoma';
-  VK_Title.Font.Size := 16;
-  VK_Title.Width := VK_Title_Background.Width - 30;
-  VK_Title.Height := 28;
-  VK_Title.Position.X := 34;
-  VK_Title.Position.Y := 1;
-  VK_Title.Font.Style := VK_Title.Font.Style + [TFontStyle.fsBold];
-  VK_Title.Text := vTitle;
-  VK_Title.HorzTextAlign := TTextAlign.Leading;
-  VK_Title.VertTextAlign := TTextAlign.Center;
-  VK_Title.Visible := True;
-
-  VK_Edit_Background := TRectangle.Create(VK_Background);
-  VK_Edit_Background.Name := 'Virtual_Keyboard_BackEdit';
-  VK_Edit_Background.Parent := VK_Background;
-  VK_Edit_Background.Width := VK_Background.Width - 16;
-  VK_Edit_Background.Height := 30;
-  VK_Edit_Background.Position.X := 8;
-  VK_Edit_Background.Position.Y := 58;
-  VK_Edit_Background.XRadius := 4;
-  VK_Edit_Background.YRadius := 4;
-  VK_Edit_Background.Stroke.Thickness := 4;
-  VK_Edit_Background.Stroke.Color := TAlphaColorRec.Black;
-  VK_Edit_Background.Fill.Color := StringToAlphaColor('#FF010709');
-  VK_Edit_Background.Corners := VK_Edit_Background.Corners - [TCorner.BottomLeft, TCorner.BottomRight];
-  VK_Edit_Background.Visible := True;
-
-  VK_Edit := TEdit.Create(VK_Edit_Background);
-  VK_Edit.Name := 'Virtual_Keyboard_Edit';
-  VK_Edit.Parent := VK_Edit_Background;
-  VK_Edit.Width := VK_Edit_Background.Width - 20;
-  VK_Edit.Height := 22;
-  VK_Edit.Position.X := 10;
-  VK_Edit.Position.Y := 4;
-  VK_Edit.Text := '';
-  VK_Edit.ReadOnly := True;
-  VK_Edit.Caret.Color := TAlphaColorRec.Deepskyblue;
-  VK_Edit.TextSettings.HorzAlign := TTextAlign.Center;
-  VK_Edit.Visible := True;
-
-  VK_Drop_Background := TRectangle.Create(VK_Background);
-  VK_Drop_Background.Name := 'Virtual_Keyboard_Drop_Background';
-  VK_Drop_Background.Parent := VK_Background;
-  VK_Drop_Background.Width := VK_Background.Width - 16;
-  VK_Drop_Background.Height := 130;
-  VK_Drop_Background.Position.X := 8;
-  VK_Drop_Background.Position.Y := 88;
-  VK_Drop_Background.XRadius := 4;
-  VK_Drop_Background.YRadius := 4;
-  VK_Drop_Background.Stroke.Thickness := 4;
-  VK_Drop_Background.Stroke.Color := TAlphaColorRec.Black;
-  VK_Drop_Background.Fill.Color := StringToAlphaColor('#FF010709');
-  VK_Drop_Background.Corners := VK_Drop_Background.Corners - [TCorner.TopLeft, TCorner.TopRight];
-  VK_Drop_Background.Visible := True;
-
-  VK_Drop_Box := TVertScrollBox.Create(VK_Drop_Background);
-  VK_Drop_Box.Name := 'Virtual_Keyboard_Drop_Box';
-  VK_Drop_Box.Parent := VK_Drop_Background;
-  VK_Drop_Box.Align := TAlignLayout.Client;
-  VK_Drop_Box.Visible := True;
-
-  for vi := 0 to 20 do
-  begin
-    VK_Drop_Line_Back[vi] := TRectangle.Create(VK_Drop_Box);
-    VK_Drop_Line_Back[vi].Name := 'Virual_Keyboard_Drop_Line_' + vi.ToString;
-    VK_Drop_Line_Back[vi].Parent := VK_Drop_Box;
-    VK_Drop_Line_Back[vi].Width := VK_Drop_Box.Width - 28;
-    VK_Drop_Line_Back[vi].Height := 20;
-    VK_Drop_Line_Back[vi].Position.X := 4;
-    VK_Drop_Line_Back[vi].Position.Y := (vi * 20) + 4;
-    VK_Drop_Line_Back[vi].Fill.Color := TAlphaColorRec.Black;
-    VK_Drop_Line_Back[vi].Visible := True;
-
-    VK_Drop_Icon[vi] := TImage.Create(VK_Drop_Line_Back[vi]);
-    VK_Drop_Icon[vi].Name := 'Virtual_Keyboard_Drop_Icon_' + vi.ToString;
-    VK_Drop_Icon[vi].Parent := VK_Drop_Line_Back[vi];
-    VK_Drop_Icon[vi].Width := 18;
-    VK_Drop_Icon[vi].Height := 18;
-    VK_Drop_Icon[vi].Position.X := 2;
-    VK_Drop_Icon[vi].Position.Y := 1;
-    VK_Drop_Icon[vi].Bitmap.LoadFromFile(ex_main.Paths.Images + 'line.png');
-    VK_Drop_Icon[vi].Visible := True;
-
-    VK_Drop_Text[vi] := TText.Create(VK_Drop_Line_Back[vi]);
-    VK_Drop_Text[vi].Name := 'Virtual_Keyboard_Drop_Text_' + vi.ToString;
-    VK_Drop_Text[vi].Parent := VK_Drop_Line_Back[vi];
-    VK_Drop_Text[vi].Width := 300;
-    VK_Drop_Text[vi].Height := 18;
-    VK_Drop_Text[vi].Font.Size := 16;
-    VK_Drop_Text[vi].Color := TAlphaColorRec.White;
-    if vi = 20 then
-      VK_Drop_Text[vi].Text := '...'
-    else
-      VK_Drop_Text[vi].Text := 'Here is a result that counts';
-    VK_Drop_Text[vi].Visible := True;
-  end;
-
-  vfi := 0;
-  for vi := 0 to 50 do
-  begin
-    VK_Key[vi] := TRectangle.Create(VK_Background);
-    VK_Key[vi].Name := 'Virtual_Keyboard_Key_' + IntToStr(vi);
-    VK_Key[vi].Parent := VK_Background;
-    if vi = 11 then
-    begin
-      VK_Key[vi].Width := 80;
-      VK_Key[vi].Height := 50;
-      VK_Key[vi].Position.X := (50 * 10) + 170;
-      VK_Key[vi].Position.Y := 220;
-    end
-    else if vi = 23 then
-    begin
-      VK_Key[vi].Width := 80;
-      VK_Key[vi].Height := 100;
-      VK_Key[vi].Position.X := (50 * 10) + 170;
-      VK_Key[vi].Position.Y := 270;
-    end
-    else if vi = 47 then
-    begin
-      VK_Key[vi].Width := 300;
-      VK_Key[vi].Height := 50;
-      VK_Key[vi].Position.X := (50 * 1) + 170;
-      VK_Key[vi].Position.Y := 420;
-    end
-    else if vi in [48, 49, 50] then
-    begin
-      VK_Key[vi].Width := 50;
-      VK_Key[vi].Height := 50;
-      if vi = 48 then
-        VK_Key[vi].Position.X := (50 * 8) + 170
-      else if vi = 49 then
-        VK_Key[vi].Position.X := (50 * 9) + 170
-      else
-        VK_Key[vi].Position.X := (50 * 11) + 150;
-      VK_Key[vi].Position.Y := 420;
-    end
-    else if vi in [0, 12, 24, 36] then
-    begin
-      VK_Key[vi].Width := 120;
-      VK_Key[vi].Height := 50;
-      VK_Key[vi].Position.X := 50;
-      if vi > 28 then
-        VK_Key[vi].Position.Y := 370
-      else if vi > 18 then
-        VK_Key[vi].Position.Y := 320
-      else if vi > 10 then
-        VK_Key[vi].Position.Y := 270
-      else
-        VK_Key[vi].Position.Y := 220;
-    end
-    else
-    begin
-      VK_Key[vi].Width := 50;
-      VK_Key[vi].Height := 50;
-      if (vi = 13) or (vi = 25) or (vi = 37) then
-        vfi := 0;
-      VK_Key[vi].Position.X := (50 * vfi) + 170;
-      if vi > 36 then
-        VK_Key[vi].Position.Y := 370
-      else if vi > 23 then
-        VK_Key[vi].Position.Y := 320
-      else if vi > 11 then
-        VK_Key[vi].Position.Y := 270
-      else
-        VK_Key[vi].Position.Y := 220;
-      inc(vfi, 1);
-    end;
-    VK_Key[vi].Stroke.Thickness := 4;
-    VK_Key[vi].Stroke.Color := TAlphaColorRec.Black;
-    VK_Key[vi].Fill.Color := StringToAlphaColor('#FF010709');
-    VK_Key[vi].OnClick := vVK_Image.OnMouseClick;
-    VK_Key[vi].OnMouseEnter := vVK_Image.OnMouseEnter;
-    VK_Key[vi].OnMouseLeave := vVK_Image.OnMouseLeave;
-    VK_Key[vi].Tag := vi;
-    if vi <> 35 then
-      VK_Key[vi].Visible := True
-    else
-      VK_Key[vi].Visible := False;
-
-    VK_Key_Symbol[vi] := TText.Create(VK_Key[vi]);
-    VK_Key_Symbol[vi].Name := 'Virtual_Keyboard_Key_Name_' + IntToStr(vi);
-    VK_Key_Symbol[vi].Parent := VK_Key[vi];
-    VK_Key_Symbol[vi].Align := TAlignLayout.Client;
-    VK_Key_Symbol[vi].Color := TAlphaColorRec.White;
-    VK_Key_Symbol[vi].Font.Family := 'Tahoma';
-    VK_Key_Symbol[vi].Font.Size := 20;
-    VK_Key_Symbol[vi].Font.Style := VK_Key_Symbol[vi].Font.Style + [TFontStyle.fsBold];
-    VK_Key_Symbol[vi].Text := cVirtual_Keyboard_Keys[vi];
-    VK_Key_Symbol[vi].HorzTextAlign := TTextAlign.Center;
-    VK_Key_Symbol[vi].VertTextAlign := TTextAlign.Center;
-    VK_Key_Symbol[vi].OnClick := vVK_Text.OnMouseClick;
-    VK_Key_Symbol[vi].OnMouseEnter := vVK_Text.OnMouseEnter;
-    VK_Key_Symbol[vi].OnMouseLeave := vVK_Text.OnMouseLeave;
-    VK_Key_Symbol[vi].Tag := vi;
-    VK_Key_Symbol[vi].Visible := True;
-  end;
-
-  vVirtual_Keyboard_Active := True;
-  VK_Symbols := False;
-  VK_Capitals := False;
-  VK_Shifts := False;
-end;
-
-procedure TVIRTUAL_KEYBOARD.uVK_Create(vType, vTitle: String);
-begin
-
+    VKey.Construct.Keys.Shape[TText(Sender).Tag].Fill.Color := StringToAlphaColor('#FF010709');
 end;
 
 { TVIRTUAL_KEYBOARD_RECTANGLE }
@@ -1178,16 +956,32 @@ begin
     TRectangle(Sender).Fill.Color := TAlphaColorRec.Black;
 end;
 
+{ TANIMATION }
+
+procedure TANIMATION.OnFinish(Sender: TObject);
+begin
+  if TFloatAnimation(Sender).Name = 'Virtual_Keyboard_Animation' then
+  begin
+    if VKey.Construct.Back.Position.Y = extrafe.res.Height + 1 then
+    begin
+      VKey.Construct.Blur.Enabled := False;
+      VK_Free;
+    end;
+  end;
+end;
+
 initialization
 
-vVK_Image := TVIRTUAL_KEYBOARD_IMAGE.Create;
-vVK_Text := TVIRTUAL_KEYBOARD_TEXT.Create;
-vVK_Rectangle := TVIRTUAL_KEYBOARD_RECTANGLE.Create;
+VKey.Mouse.Image := TVIRTUAL_KEYBOARD_IMAGE.Create;
+VKey.Mouse.Text := TVIRTUAL_KEYBOARD_TEXT.Create;
+VKey.Mouse.Rectangle := TVIRTUAL_KEYBOARD_RECTANGLE.Create;
+VKey.Animation := TANIMATION.Create;
 
 finalization
 
-vVK_Image.Free;
-vVK_Text.Free;
-vVK_Rectangle.Free;
+VKey.Mouse.Image.Free;
+VKey.Mouse.Text.Free;
+VKey.Mouse.Rectangle.Free;
+VKey.Animation.Free;
 
 end.

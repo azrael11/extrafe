@@ -46,26 +46,31 @@ uses
 procedure TADDON_PLAY_INPUT_IMAGE.OnMouseClick(Sender: TObject);
 begin
   if TImage(Sender).Name = 'A_P_Icon_' + (TImage(Sender).Tag).ToString then
-    uPlay_SetAll_CreateGameScene(TImage(Sender).Tag);
+    uPlay_SetAll_CreateGameScene(TImage(Sender).Tag)
+  else if TImage(Sender).Name = 'A_P_Info_Img_' + (TImage(Sender).Tag).ToString then
+    uPlay_Actions_Image_Full(TImage(Sender))
+  else if TImage(Sender).Name = 'AzPlay_Full_Preview_Exit' then
+    uPlay_Actions_Image_Full_Close;
 end;
 
 procedure TADDON_PLAY_INPUT_IMAGE.OnMouseEnter(Sender: TObject);
 begin
   if TImage(Sender).Name = 'A_P_Icon_' + (TImage(Sender).Tag).ToString then
-    vPlay.Img_Img_Glow[TImage(Sender).Tag].Enabled := True
-  else if not Assigned(vOverImage) then
-  begin
-    if TImage(Sender).Name = 'A_P_Info_Img_' + (TImage(Sender).Tag).ToString then
-      uPlay_Actions_OnMouseOver_Image(TImage(Sender));
-  end;
+    MouseOver_GameIcon(TImage(Sender).Tag)
+  else if TImage(Sender).Name = 'A_P_Info_Img_' + (TImage(Sender).Tag).ToString then
+    uPlay_Actions_OnMouseOver_Image(TImage(Sender))
+  else if TImage(Sender).Name = 'AzPlay_Full_Preview_Exit' then
+    vPlay.Full.Close_Glow.Enabled := True;
 end;
 
 procedure TADDON_PLAY_INPUT_IMAGE.OnMouseLeave(Sender: TObject);
 begin
   if TImage(Sender).Name = 'A_P_Icon_' + (TImage(Sender).Tag).ToString then
     vPlay.Img_Img_Glow[TImage(Sender).Tag].Enabled := False
-  else if TImage(Sender).Name = 'A_P_Info_Img_Full_'+ (TImage(Sender).Tag).ToString  then
-    uPlay_Actions_OnMouseLeave_Image(TImage(Sender));
+  else if TImage(Sender).Name = 'A_P_Info_Img_' + (TImage(Sender).Tag).ToString then
+    uPlay_Actions_OnMouseLeave_Image(TImage(Sender))
+  else if TImage(Sender).Name = 'AzPlay_Full_Preview_Exit' then
+    vPlay.Full.Close_Glow.Enabled := False;
 end;
 
 { TADDON_PLAY_INPUT_BUTTON }

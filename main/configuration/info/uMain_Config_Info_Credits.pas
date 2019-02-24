@@ -11,6 +11,7 @@ uses
   FMX.Layouts,
   FMX.Types,
   FMX.StdCtrls,
+  FMX.TabControl,
   ALFMXObjects;
 
 procedure uMain_Config_Info_Credits_Show;
@@ -18,7 +19,7 @@ procedure uMain_Config_Info_Credits_Show;
 procedure uMain_Config_Info_Credits_CreateBrands_Images;
 
 procedure uMain_Config_Info_Credits_ClearBrands;
-procedure uMain_Config_Info_Credits_ShowBrand(vNum: Integer);
+procedure uMain_Config_Info_Credits_ShowBrand(vNum, vNum_1: Integer);
 
 procedure uMain_Config_Info_Credits_ShowEmbarcadero;
 procedure uMain_Config_Info_Credits_ShowGimp;
@@ -32,6 +33,10 @@ uses
   uMain_AllTypes;
 
 procedure uMain_Config_Info_Credits_Show;
+const
+  cTab_Names: array [0 .. 1] of string = ('Programs', 'Components / Libraries');
+var
+  vi: Integer;
 begin
   ex_main.Config.Info_Credits_Selected := -1;
 
@@ -74,17 +79,6 @@ begin
     + ' when he comes to my house then i start develop the <b>ExtraFE</b>.';
   mainScene.Config.Main.R.Info.Credits.Text.Visible := True;
 
-  mainScene.Config.Main.R.Info.Credits.Left_Box :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Panel);
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Name := 'Main_Config_Info_Credits_LeftBox';
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Parent := mainScene.Config.Main.R.Info.Credits.Panel;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Width := 100;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Height :=
-    mainScene.Config.Main.R.Info.Credits.Panel.Height - 110;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.X := 10;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.Y := 100;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Visible := True;
-
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other :=
     TGroupBox.Create(mainScene.Config.Main.R.Info.Credits.Panel);
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Name := 'Main_Config_Info_Credits_Groupbox_Others';
@@ -98,87 +92,154 @@ begin
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Text := '-------------------------';
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Visible := True;
 
-  mainScene.Config.Main.R.Info.Credits.Left_Box :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Name := 'Main_Config_Info_Credits_VBox_Left';
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Parent := mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Width := 120;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Height :=
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.X := 0;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Position.Y := 0;
-  mainScene.Config.Main.R.Info.Credits.Left_Box.Visible := True;
+  mainScene.Config.Main.R.Info.Credits.Control :=
+    TTabControl.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
+  mainScene.Config.Main.R.Info.Credits.Control.Name := 'Main_Config_Info_Credits_TabControl';
+  mainScene.Config.Main.R.Info.Credits.Control.Parent := mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
+  mainScene.Config.Main.R.Info.Credits.Control.Align := TAlignLayout.Client;
+  mainScene.Config.Main.R.Info.Credits.Control.Visible := True;
+
+  for vi := 0 to 1 do
+  begin
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi] :=
+      TTabItem.Create(mainScene.Config.Main.R.Info.Credits.Control);
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Name := 'Main_Config_Info_Credits_TabItem_' +
+      vi.ToString;
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Parent := mainScene.Config.Main.R.Info.Credits.Control;
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].SetBounds(0, 0,
+      mainScene.Config.Main.R.Info.Credits.Control.Width,
+      mainScene.Config.Main.R.Info.Credits.Control.Height);
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Text := cTab_Names[vi];
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Visible := True;
+  end;
+
+  for vi := 0 to 1 do
+  begin
+    mainScene.Config.Main.R.Info.Credits.Left_Box[vi] :=
+      TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[vi]);
+    mainScene.Config.Main.R.Info.Credits.Left_Box[vi].Name := 'Main_Config_Info_Credits_LeftBox_' +
+      vi.ToString;
+    mainScene.Config.Main.R.Info.Credits.Left_Box[vi].Parent :=
+      mainScene.Config.Main.R.Info.Credits.Tab_Item[vi];
+    mainScene.Config.Main.R.Info.Credits.Left_Box[vi].SetBounds(10, 10, 100,
+      mainScene.Config.Main.R.Info.Credits.Control.Height - 20);
+    mainScene.Config.Main.R.Info.Credits.Left_Box[vi].Visible := True;
+  end;
 
   uMain_Config_Info_Credits_CreateBrands_Images;
 end;
 
 procedure uMain_Config_Info_Credits_CreateBrands_Images;
 const
-  cImages_Names: array [0 .. 3] of string = ('config_emb.png', 'config_gimp.png', 'config_bass.png',
-    'config_pasvlc.png');
+  cImages_Names_Programs: array [0 .. 1] of string = ('config_emb.png', 'config_gimp.png');
+  cImages_Names_Comp: array [0 .. 1] of string = ('config_bass.png', 'config_pasvlc.png');
 var
   vi: Integer;
 begin
-  for vi := 0 to 3 do
+  // Programs
+  for vi := 0 to 1 do
   begin
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi] :=
-      TImage.Create(mainScene.Config.Main.R.Info.Credits.Left_Box);
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].Name := 'Main_Config_Info_Credits_Image_' +
-      vi.ToString;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].Parent :=
-      mainScene.Config.Main.R.Info.Credits.Left_Box;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].SetBounds(5, 15 + (vi * 70), 110, 60);
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].Bitmap.LoadFromFile
-      (ex_main.Paths.Config_Images + cImages_Names[vi]);
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].WrapMode := TImageWrapMode.Fit;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].OnClick :=
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi] :=
+      TImage.Create(mainScene.Config.Main.R.Info.Credits.Left_Box[0]);
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Name := 'Main_Config_Info_Credits_Image_' + vi.ToString;
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Parent :=
+      mainScene.Config.Main.R.Info.Credits.Left_Box[0];
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].SetBounds(5, 15 + (vi * 70), 110, 60);
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Bitmap.LoadFromFile
+      (ex_main.Paths.Config_Images + cImages_Names_Programs[vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].WrapMode := TImageWrapMode.Fit;
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].OnClick :=
       ex_main.Input.mouse_config.Image.OnMouseClick;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].OnMouseEnter :=
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].OnMouseEnter :=
       ex_main.Input.mouse_config.Image.OnMouseEnter;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].OnMouseLeave :=
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].OnMouseLeave :=
       ex_main.Input.mouse_config.Image.OnMouseLeave;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].Tag := vi;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image[vi].Visible := True;
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Tag := vi;
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].TagString := '0';
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Visible := True;
 
-    mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi] :=
-      TGlowEffect.Create(mainScene.Config.Main.R.Info.Credits.Comps_Image[vi]);
-    mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi].Name := 'Main_Config_Info_Credits_Image_Glow_' +
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[0, vi] :=
+      TGlowEffect.Create(mainScene.Config.Main.R.Info.Credits.Brand[0, vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[0, vi].Name := 'Main_Config_Info_Credits_Image_Glow_' +
       vi.ToString;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi].Parent :=
-      mainScene.Config.Main.R.Info.Credits.Comps_Image[vi];
-    mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi].GlowColor := TAlphaColorRec.Deepskyblue;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi].Opacity := 0.9;
-    mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi].Enabled := False;
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[0, vi].Parent :=
+      mainScene.Config.Main.R.Info.Credits.Brand[0, vi];
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[0, vi].GlowColor := TAlphaColorRec.Deepskyblue;
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[0, vi].Opacity := 0.9;
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[0, vi].Enabled := False;
+  end;
+
+  // Components / Libraries
+  for vi := 0 to 1 do
+  begin
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi] :=
+      TImage.Create(mainScene.Config.Main.R.Info.Credits.Left_Box[1]);
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Name := 'Main_Config_Info_Credits_Image_' + vi.ToString;
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Parent :=
+      mainScene.Config.Main.R.Info.Credits.Left_Box[1];
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].SetBounds(5, 15 + (vi * 70), 110, 60);
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Bitmap.LoadFromFile
+      (ex_main.Paths.Config_Images + cImages_Names_Comp[vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].WrapMode := TImageWrapMode.Fit;
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].OnClick :=
+      ex_main.Input.mouse_config.Image.OnMouseClick;
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].OnMouseEnter :=
+      ex_main.Input.mouse_config.Image.OnMouseEnter;
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].OnMouseLeave :=
+      ex_main.Input.mouse_config.Image.OnMouseLeave;
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Tag := vi;
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].TagString := '1';
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Visible := True;
+
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[1, vi] :=
+      TGlowEffect.Create(mainScene.Config.Main.R.Info.Credits.Brand[1, vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[1, vi].Name := 'Main_Config_Info_Credits_Image_Glow_' +
+      vi.ToString;
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[1, vi].Parent :=
+      mainScene.Config.Main.R.Info.Credits.Brand[1, vi];
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[1, vi].GlowColor := TAlphaColorRec.Deepskyblue;
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[1, vi].Opacity := 0.9;
+    mainScene.Config.Main.R.Info.Credits.Brand_Glow[1, vi].Enabled := False;
   end;
 end;
 
 procedure uMain_Config_Info_Credits_ClearBrands;
 var
-  vi: Integer;
+  vi, vk: Integer;
 begin
-  for vi := 0 to 3 do
-  begin
-    if Assigned(mainScene.Config.Main.R.Info.Credits.Right_Box[vi]) then
+  for vi := 0 to 1 do
+    for vk := 0 to 10 do
+    begin
+      if Assigned(mainScene.Config.Main.R.Info.Credits.Right_Box[vi, vk]) then
       begin
-        FreeAndNil(mainScene.Config.Main.R.Info.Credits.Right_Box[vi]);
-        mainScene.Config.Main.R.Info.Credits.Comps_Image_Glow[vi].Enabled:= False;
+        FreeAndNil(mainScene.Config.Main.R.Info.Credits.Right_Box[vi, vk]);
+        mainScene.Config.Main.R.Info.Credits.Brand_Glow[vi, vk].Enabled := False;
       end;
-  end;
+    end;
 end;
 
-procedure uMain_Config_Info_Credits_ShowBrand(vNum: Integer);
+procedure uMain_Config_Info_Credits_ShowBrand(vNum, vNum_1: Integer);
 begin
   uMain_Config_Info_Credits_ClearBrands;
-
   case vNum of
     0:
-      uMain_Config_Info_Credits_ShowEmbarcadero;
+      begin
+        case vNum_1 of
+          0:
+            uMain_Config_Info_Credits_ShowEmbarcadero;
+          1:
+            uMain_Config_Info_Credits_ShowGimp;
+        end;
+      end;
     1:
-      uMain_Config_Info_Credits_ShowGimp;
-    2:
-      uMain_Config_Info_Credits_ShowBASS;
-    3:
-      uMain_Config_Info_Credits_ShowPasVlc;
+      begin
+        case vNum_1 of
+          0:
+            uMain_Config_Info_Credits_ShowBASS;
+          1:
+            uMain_Config_Info_Credits_ShowPasVlc;
+        end;
+      end;
   end;
 end;
 
@@ -186,23 +247,23 @@ procedure uMain_Config_Info_Credits_ShowEmbarcadero;
 begin
   ex_main.Config.Info_Credits_Selected := 0;
 
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0] :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Name := 'Main_Config_Info_Credits_VBox_Right';
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].SetBounds(120, 0,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0].Visible := True;
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0] :=
+    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[0]);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Name := 'Main_Config_Info_Credits_VBox_Right_0';
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Parent :=
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[0];
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].SetBounds(120, 0,
+    mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Name := 'Main_Config_Info_Credits_Parag_0';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].SetBounds(10, 10,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0].Width - 20, 100);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Width - 20, 100);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
@@ -215,12 +276,12 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Name := 'Main_Config_Info_Credits_Parag_1';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].SetBounds(10, 110,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0].Width - 20, 150);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Width - 20, 150);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.VertAlign := TTextAlign.Leading;
@@ -234,12 +295,12 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Name := 'Main_Config_Info_Credits_Parag_2';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].SetBounds(10, 270,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0].Width - 20, 140);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Width - 20, 140);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.VertAlign := TTextAlign.Leading;
@@ -252,12 +313,12 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Name := 'Main_Config_Info_Credits_Parag_3';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3].SetBounds(10, 410,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0].Width - 20, 30);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Width - 20, 30);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3].WordWrap := True;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3].TextSettings.Font.Size := 14;
@@ -267,12 +328,12 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[3].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[4] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Name := 'Main_Config_Info_Credits_Parag_4';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[4].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[4].SetBounds(10, 440,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[0].Width - 20, 200);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Width - 20, 200);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[4].WordWrap := True;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[4].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[4].TextSettings.Font.Size := 14;
@@ -290,23 +351,23 @@ procedure uMain_Config_Info_Credits_ShowGimp;
 begin
   ex_main.Config.Info_Credits_Selected := 1;
 
-  mainScene.Config.Main.R.Info.Credits.Right_Box[1] :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[1].Name := 'Main_Config_Info_Credits_VBox_Right';
-  mainScene.Config.Main.R.Info.Credits.Right_Box[1].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[1].SetBounds(120, 0,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[1].Visible := True;
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1] :=
+    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[0]);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Name := 'Main_Config_Info_Credits_VBox_Right';
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Parent :=
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[0];
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].SetBounds(120, 0,
+    mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Name := 'Main_Config_Info_Credits_Parag_0';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[1];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].SetBounds(10, 10,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[1].Width - 20, 100);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Width - 20, 100);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
@@ -319,12 +380,12 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Name := 'Main_Config_Info_Credits_Parag_1';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[1];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].SetBounds(10, 80,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[1].Width - 20, 110);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Width - 20, 110);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.VertAlign := TTextAlign.Leading;
@@ -341,23 +402,23 @@ procedure uMain_Config_Info_Credits_ShowBASS;
 begin
   ex_main.Config.Info_Credits_Selected := 2;
 
-  mainScene.Config.Main.R.Info.Credits.Right_Box[2] :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[2].Name := 'Main_Config_Info_Credits_VBox_Right';
-  mainScene.Config.Main.R.Info.Credits.Right_Box[2].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[2].SetBounds(120, 0,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[2].Visible := True;
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0] :=
+    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[1]);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Name := 'Main_Config_Info_Credits_VBox_Right';
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Parent :=
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[1];
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].SetBounds(120, 0,
+    mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[2]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Name := 'Main_Config_Info_Credits_Parag_0';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[2];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].SetBounds(10, 10,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[2].Width - 20, 100);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Width - 20, 100);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
@@ -370,12 +431,12 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[2]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Name := 'Main_Config_Info_Credits_Parag_1';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[2];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].SetBounds(10, 100,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[2].Width - 20, 140);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Width - 20, 140);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.VertAlign := TTextAlign.Leading;
@@ -392,23 +453,23 @@ procedure uMain_Config_Info_Credits_ShowPasVlc;
 begin
   ex_main.Config.Info_Credits_Selected := 3;
 
-  mainScene.Config.Main.R.Info.Credits.Right_Box[3] :=
-    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[3].Name := 'Main_Config_Info_Credits_VBox_Right';
-  mainScene.Config.Main.R.Info.Credits.Right_Box[3].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Right_Box[3].SetBounds(120, 0,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height);
-  mainScene.Config.Main.R.Info.Credits.Right_Box[3].Visible := True;
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1] :=
+    TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[1]);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Name := 'Main_Config_Info_Credits_VBox_Right';
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Parent :=
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[1];
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].SetBounds(120, 0,
+    mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[3]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Name := 'Main_Config_Info_Credits_Parag_0';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[3];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].SetBounds(10, 10,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[3].Width - 20, 100);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Width - 20, 100);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
@@ -421,12 +482,12 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1] :=
-    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[3]);
+    TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1]);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Name := 'Main_Config_Info_Credits_Parag_1';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Parent :=
-    mainScene.Config.Main.R.Info.Credits.Right_Box[3];
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1];
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].SetBounds(10, 100,
-    mainScene.Config.Main.R.Info.Credits.Right_Box[3].Width - 20, 80);
+    mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Width - 20, 80);
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.VertAlign := TTextAlign.Leading;

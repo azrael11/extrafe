@@ -133,7 +133,7 @@ begin
       start.dwFlags := STARTF_USESTDHANDLES or STARTF_USESHOWWINDOW;
       start.wShowWindow := SW_HIDE;
       // Start The Program
-      if CreateProcess(nil, PChar(vFullPath  + vCMDLine), nil, nil, True, 0, nil, PChar(cDrive), start,
+      if CreateProcess(nil, PChar(vFullPath + vCMDLine), nil, nil, True, 0, nil, PChar(cDrive), start,
         procInfo) then
       begin
         SetPriorityClass(procInfo.hProcess, Idle_Priority_Class);
@@ -187,8 +187,8 @@ begin
       Application.ProcessMessages;
       keybd_event(Ord('A'), 0, 0, 0);
     end;
-    // WaitForInputIdle(Sei.hProcess, INFINITE);
-    // WaitForSingleObject(Sei.hProcess, INFINITE);
+    WaitForInputIdle(Sei.hProcess, Infinite);
+    WaitForSingleObject(Sei.hProcess, Infinite);
     CloseHandle(Sei.hProcess);
   end;
 end;
@@ -210,6 +210,7 @@ end;
 function fEmu_Commands_RunGame(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
 var
   Sei: TShellExecuteInfo;
+  tmpProcessInformation: TProcessInformation;
 begin
   FillChar(Sei, SizeOf(Sei), #0);
   Sei.cbSize := SizeOf(Sei);
@@ -226,11 +227,11 @@ begin
     // Application.ProcessMessages;
     // keybd_event(Ord('A'), 0, 0, 0);
     // end;
-    if WaitForInputIdle(Sei.hProcess, INFINITE) = 0 then
-      begin
-//    if WaitForSingleObject(Sei.hProcess, Infinite)= 0 then
-      CloseHandle(Sei.hProcess);
-      end;
+//    if WaitForInputIdle(Sei.hProcess, Infinite) = 0 then
+//    begin
+      if WaitForSingleObject(Sei.hProcess, Infinite) = 0 then
+        CloseHandle(Sei.hProcess);
+//    end;
   end;
 end;
 

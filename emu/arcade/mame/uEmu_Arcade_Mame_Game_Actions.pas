@@ -51,6 +51,7 @@ procedure uEmu_Arcade_Mame_Game_Actions_Enter;
 var
   romName: WideString;
 begin
+
   romName := mame.Gamelist.List[0, mame.Gamelist.Selected, 0];
   vMame.Scene.Load_Game.Visible := True;
   vMame.Scene.Load_Game_Line2.Text := mame.Gamelist.List[0, mame.Gamelist.Selected, 0];

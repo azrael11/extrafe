@@ -27,7 +27,6 @@ procedure uLoad_SetLoadingScreen;
 procedure uLoad_Start_ExtraFE;
 procedure IsDatabaseInternet;
 
-
 var
 
   Default_Load: Boolean;
@@ -87,7 +86,9 @@ begin
   extrafe.prog.Version.Build := uWindows_GetVersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[3];
   extrafe.prog.Desc := 'Code name: Mnimi';
   extrafe.prog.Paths.History := extrafe.ini.Path + 'history\';
-  extrafe.prog.Paths.Fonts:= extrafe.Ini.Path+ 'fonts\';
+  extrafe.prog.Paths.Fonts := extrafe.ini.Path + 'fonts\';
+  extrafe.prog.Virtual_Keyboard := extrafe.ini.ini.ReadBool('Visual', 'Virtual_Keyboard',
+    extrafe.prog.Virtual_Keyboard);
 
   ex_main.Paths.Flags_Images := extrafe.prog.Path + 'data\main\flags\';
   ex_main.Paths.Avatar_Images := extrafe.prog.Path + 'data\main\avatars\';
@@ -107,17 +108,16 @@ begin
   extrafe.style.Name := extrafe.ini.ini.ReadString('Themes', 'Name', extrafe.style.Name);
   extrafe.style.Num := extrafe.ini.ini.ReadInteger('Themes', 'Number', extrafe.style.Num);
 
-  mainScene.main.Style := TStyleBook.Create(Main_Form);
-  mainScene.main.Style.Name := 'Main_StyleBook';
-  mainScene.main.Style.Parent := Main_Form;
+  mainScene.main.style := TStyleBook.Create(Main_Form);
+  mainScene.main.style.Name := 'Main_StyleBook';
+  mainScene.main.style.Parent := Main_Form;
 
   // Main Style
-  extrafe.Style.Name := extrafe.ini.ini.ReadString('Themes', 'Name', extrafe.Style.Name);
-  if extrafe.Style.Name <> '' then
-    uMain_Config_Themes_ApplyTheme(extrafe.Style.Name);
+  extrafe.style.Name := extrafe.ini.ini.ReadString('Themes', 'Name', extrafe.style.Name);
+  if extrafe.style.Name <> '' then
+    uMain_Config_Themes_ApplyTheme(extrafe.style.Name);
 
-
-  Loading_Form.StyleBook:= mainScene.Main.Style;
+  Loading_Form.StyleBook := mainScene.main.style;
 
   // program Loading Defaults
   ex_load.Path.Images := extrafe.prog.Path + 'data\loading\';
@@ -143,6 +143,10 @@ begin
     extrafe.ini.ini.WriteInteger('General_Graphics', 'Res_X', 1920);
     extrafe.ini.ini.WriteInteger('General_Graphics', 'Res_Y', 1080);
     extrafe.ini.ini.WriteBool('General_Graphics', 'Fullscreen', True);
+    // Visual
+    extrafe.ini.ini.WriteBool('Visual', 'Virtual_Keyoard', True);
+    extrafe.prog.Virtual_Keyboard := True;
+
     // User
     extrafe.ini.ini.WriteInteger('Users', 'Active', -1);
     extrafe.users_active := -1;
@@ -177,7 +181,7 @@ begin
   // DONE 1 -oNikos Kordas -cuLoad: Set the loading screen in the right place
 
   uKeyboard_HookKeyboard;
-  FHook.Active:= True;
+  FHook.Active := True;
   uLoad_SetAll_Load;
 
   if (extrafe.style.Name = 'Amakrits') or (extrafe.style.Name = 'Dark') or (extrafe.style.Name = 'Air') then
@@ -237,22 +241,21 @@ begin
     end
     else
     begin
-      ex_load.Login.Data_Color.Enabled:= True;
+      ex_load.Login.Data_Color.Enabled := True;
       ex_load.Login.Database.Text := 'Not Connected';
       extrafe.database_is_connected := False;
     end;
   end
   else
   begin
-    ex_load.Login.Int_Color.Enabled:= True;
+    ex_load.Login.Int_Color.Enabled := True;
     ex_load.Login.Internet.Text := 'Not Connected';
     extrafe.database_is_connected := False;
-    ex_load.Login.Data_Color.Enabled:= True;
+    ex_load.Login.Data_Color.Enabled := True;
     ex_load.Login.Database.Text := 'Not Connected';
     extrafe.database_is_connected := False;
   end;
 end;
-
 
 { SetDllDirectory(PChar(extrafe.program_lib+ 'keyC.dll'));
   vLib:= LoadLibrary('keyC.dll');

@@ -14,7 +14,8 @@ uses
   FMX.Layouts,
   Radiant.Shapes,
   ALFMXObjects,
-  uAzHung_Mouse;
+  uAzHung_Mouse,
+  Bass;
 
 type
   TGAME_AZHUNG_ANIMATION = class(TObject)
@@ -166,10 +167,24 @@ type
   end;
 
 type
+  TAZHUNG_GAME_SOUNDS = record
+    Music: array [0 .. 1] of HSAMPLE;
+    Mouse: array [0 .. 1] of HSAMPLE;
+  end;
+
+type
+  TAZHUNG_GAME_PATH= record
+    Images: String;
+    Sounds: String;
+  end;
+
+type
   TAZHUNG = record
     Main: TFrame;
     Load: TAZHUNG_LOADING;
     Game: TAZHUNG_GAME_SCENE;
+    Sounds: TAZHUNG_GAME_SOUNDS;
+    Path: TAZHUNG_GAME_PATH;
   end;
 
 var

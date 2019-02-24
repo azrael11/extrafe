@@ -632,6 +632,8 @@ begin
   mame.Prog.Ini.WriteString('PROG', 'Games_XML', mame.Prog.Games_XML);
   mame.Prog.Images:= mame.Prog.Path+ 'images\';
   mame.Prog.Ini.WriteString('PROG', 'Images', mame.Prog.Images);
+  mame.Prog.Sounds:= mame.Prog.Path+ 'sounds\';
+  mame.Prog.Ini.WriteString('PROG', 'Sounds', mame.Prog.Sounds);
   mame.Prog.Data_Path:= mame.Prog.Path+ 'database\';
   mame.Prog.Ini.WriteString('PROG', 'Data_Path', mame.Prog.Data_Path);
 

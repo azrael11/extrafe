@@ -232,7 +232,8 @@ begin
   mainScene.Config.main.R.addons.Panel_Blur.Enabled := True;
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel := TPanel.Create(mainScene.Config.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Name := 'Main_Config_Addons_Weather_Activate_Msg';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Name :=
+    'Main_Config_Addons_Soundplayer_Activate_Msg';
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Parent := mainScene.Config.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Width := 500;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Height := 200;
@@ -242,48 +243,9 @@ begin
     (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Header';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel.Width :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Width;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel.Height := 30;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel.Position.X := 0;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel.Position.Y := 0;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel.Visible := True;
-
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon :=
-    TImage.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Header_Icon';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Width := 24;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Height := 24;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Position.X := 6;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Position.Y := 3;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Bitmap.LoadFromFile
-    (addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png');
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Icon.Visible := True;
-
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Header_Text';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Width := 300;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Height := 24;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Position.X := 36;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Position.Y := 3;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Text := 'Activate Soundplayer addon';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Font.Style :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Font.Style + [TFontStyle.fsBold];
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Header.Text.Visible := True;
+  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel,
+    'Main_Config_Addons_Soundplayer_Activate_Msg', addons.soundplayer.Path.Icon +
+    'addons_soundplayer_icon.png', 'Activate Soundplayer addon');
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel :=
     TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel);
@@ -451,48 +413,9 @@ begin
     (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Header';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel.Width :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Width;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel.Height := 30;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel.Position.X := 0;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel.Position.Y := 0;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel.Visible := True;
-
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon :=
-    TImage.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Header_Icon';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Width := 24;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Height := 24;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Position.X := 6;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Position.Y := 3;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Bitmap.LoadFromFile
-    (addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png');
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Icon.Visible := True;
-
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Header_Text';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Width := 300;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Height := 24;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Position.X := 36;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Position.Y := 3;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Text := 'Deactivate Soundplayer addon';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Font.Style :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Font.Style + [TFontStyle.fsBold];
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Header.Text.Visible := True;
+  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel,
+    'Main_Config_Addons_Soundplayer_Deactivate_Msg', addons.soundplayer.Path.Icon +
+    'addons_soundplayer_icon.png', 'Deactivate Soundplayer addon');
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel :=
     TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel);
@@ -616,48 +539,9 @@ begin
     (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Header';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel.Width :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Width;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel.Height := 30;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel.Position.X := 0;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel.Position.Y := 0;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel.Visible := True;
-
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon :=
-    TImage.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Header_Icon';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Width := 24;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Height := 24;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Position.X := 6;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Position.Y := 3;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Bitmap.LoadFromFile
-    (addons.weather.Path.Icon + 'addons_weather_icon.png');
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Icon.Visible := True;
-
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Header_Text';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Width := 300;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Height := 24;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Position.X := 36;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Position.Y := 3;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Text := 'Activate Weather addon';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Font.Style :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Font.Style + [TFontStyle.fsBold];
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Header.Text.Visible := True;
+  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel,
+    'Main_Config_Addons_Weather_Activate_Msg', addons.weather.Path.Icon + 'addons_weather_icon.png',
+    'Activate Weather addon');
 
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel :=
     TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel);
@@ -849,48 +733,9 @@ begin
     (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Header';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel.Width :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Width;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel.Height := 30;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel.Position.X := 0;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel.Position.Y := 0;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel.Visible := True;
-
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon :=
-    TImage.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Header_Icon';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Width := 24;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Height := 24;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Position.X := 6;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Position.Y := 3;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Bitmap.LoadFromFile
-    (addons.weather.Path.Icon + 'addons_weather_icon.png');
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Icon.Visible := True;
-
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Header_Text';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Width := 300;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Height := 24;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Position.X := 36;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Position.Y := 3;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Text := 'Deactivate Weather addon';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Font.Style :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Font.Style + [TFontStyle.fsBold];
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Header.Text.Visible := True;
+  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel,
+    'Main_Config_Addons_Weather_Deactivate_Msg', addons.weather.Path.Icon + 'addons_weather_icon.png',
+    'Deactivate Weather addon');
 
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel :=
     TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel);

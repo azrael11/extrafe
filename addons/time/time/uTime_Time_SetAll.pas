@@ -133,6 +133,15 @@ begin
     vTime.P_Time.Digital.Sep_1.TextSettings.FontColor := TAlphaColorRec.White;
   vTime.P_Time.Digital.Sep_1.Visible := True;
 
+  vTime.P_Time.Digital.Sep_1_Ani:= TFloatAnimation.Create(vTime.P_Time.Digital.Sep_1);
+  vTime.P_Time.Digital.Sep_1_Ani.Name:= 'A_T_P_Time_Digital_Sep_1_Animation';
+  vTime.P_Time.Digital.Sep_1_Ani.Parent:=  vTime.P_Time.Digital.Sep_1;
+  vTime.P_Time.Digital.Sep_1_Ani.PropertyName:= 'Opacity';
+  vTime.P_Time.Digital.Sep_1_Ani.StartValue:= 1;
+  vTime.P_Time.Digital.Sep_1_Ani.StopValue:= 0.1;
+  vTime.P_Time.Digital.Sep_1_Ani.Duration:= 0.8;
+  vTime.P_Time.Digital.Sep_1_Ani.Enabled:= False;
+
   vTime.P_Time.Digital.Minutes := TText.Create(vTime.P_Time.Digital.Back);
   vTime.P_Time.Digital.Minutes.Name := 'A_T_P_Time_Digital_Minutes';
   vTime.P_Time.Digital.Minutes.Parent := vTime.P_Time.Digital.Back;
@@ -161,6 +170,15 @@ begin
   else
     vTime.P_Time.Digital.Sep_2.TextSettings.FontColor := TAlphaColorRec.White;
   vTime.P_Time.Digital.Sep_2.Visible := True;
+
+  vTime.P_Time.Digital.Sep_2_Ani:= TFloatAnimation.Create(vTime.P_Time.Digital.Sep_2);
+  vTime.P_Time.Digital.Sep_2_Ani.Name:= 'A_T_P_Time_Digital_Sep_2_Animation';
+  vTime.P_Time.Digital.Sep_2_Ani.Parent:=  vTime.P_Time.Digital.Sep_2;
+  vTime.P_Time.Digital.Sep_2_Ani.PropertyName:= 'Opacity';
+  vTime.P_Time.Digital.Sep_2_Ani.StartValue:= 1;
+  vTime.P_Time.Digital.Sep_2_Ani.StopValue:= 0.1;
+  vTime.P_Time.Digital.Sep_2_Ani.Duration:= 0.8;
+  vTime.P_Time.Digital.Sep_2_Ani.Enabled:= False;
 
   vTime.P_Time.Digital.Seconds := TText.Create(vTime.P_Time.Digital.Back);
   vTime.P_Time.Digital.Seconds.Name := 'A_T_P_Time_Digital_Seocnds';

@@ -739,6 +739,7 @@ begin
   mame.Prog.Games_List:= mame.Prog.Ini.ReadString('PROG', 'Games_List', mame.Prog.Games_List);
   mame.Prog.Games_XML:= mame.Prog.Ini.ReadString('PROG', 'Games_XML', mame.Prog.Games_XML);
   mame.Prog.Images:= mame.Prog.Ini.ReadString('PROG', 'Images', mame.Prog.Images);
+  mame.Prog.Sounds:= mame.Prog.Ini.ReadString('PROG', 'Sounds', mame.Prog.Sounds);
 
   mame.Emu.Name:= mame.Prog.Ini.ReadString('MAME', 'mame_name', mame.Emu.Name);
   mame.Emu.Path:= mame.Prog.Ini.ReadString('MAME', 'mame_path', mame.Emu.Path);

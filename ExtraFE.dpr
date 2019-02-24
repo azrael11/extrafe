@@ -136,7 +136,7 @@ uses
   uAzHung_Sound in 'addons\play\azhung\uAzHung_Sound.pas',
   uWeather_Providers_OpenWeatherMap in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas',
   uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas',
-  uMain_Config_Info_Credits in 'main\configuration\uMain_Config_Info_Credits.pas',
+  uMain_Config_Info_Credits in 'main\configuration\info\uMain_Config_Info_Credits.pas',
   uSoundplayer_Sounds in 'addons\soundplayer\uSoundplayer_Sounds.pas',
   uSoundplayer_Player in 'addons\soundplayer\uSoundplayer_Player.pas',
   uSoundplayer_Equalizer_SetAll in 'addons\soundplayer\equalizer\uSoundplayer_Equalizer_SetAll.pas',
@@ -149,7 +149,14 @@ uses
   uMain_Config_Profile_Statistics in 'main\configuration\profile\uMain_Config_Profile_Statistics.pas',
   uMain_Config_Profile_Machine in 'main\configuration\profile\uMain_Config_Profile_Machine.pas',
   uMain_Config_Keyboard in 'main\configuration\uMain_Config_Keyboard.pas',
-  uMain_Config_Info_Extrafe in 'main\configuration\info\uMain_Config_Info_Extrafe.pas';
+  uMain_Config_Info_Extrafe in 'main\configuration\info\uMain_Config_Info_Extrafe.pas',
+  uMain_Config_General in 'main\configuration\uMain_Config_General.pas',
+  uMain_Config_General_Visual in 'main\configuration\general\uMain_Config_General_Visual.pas',
+  uMain_Config_General_Graphics in 'main\configuration\general\uMain_Config_General_Graphics.pas',
+  uMain_Config_General_Sound in 'main\configuration\general\uMain_Config_General_Sound.pas',
+  uPlay_Sounds in 'addons\play\uPlay_Sounds.pas',
+  uSnippet_Search in 'code\_snippets\uSnippet_Search.pas',
+  uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas';
 
 {$R *.res}
 

@@ -114,8 +114,10 @@ type
     Rect: TRadiantRectangle;
     Hour: TText;
     Sep_1: TText;
+    Sep_1_Ani: TFloatAnimation;
     Seconds: TText;
     Sep_2: TText;
+    Sep_2_Ani: TFloatAnimation;
     Minutes: TText;
   end;
 

@@ -10,7 +10,7 @@ uses
   FMX.TabControl,
   FMX.Filter.Effects;
 
-procedure uMain_Config_Profile_Create;
+procedure Create;
 
 implementation
 
@@ -19,7 +19,7 @@ uses
   uMain_Config_Profile_User,
   uMain_Config_Profile_Machine;
 
-procedure uMain_Config_Profile_Create;
+procedure Create;
 const
   cTab_Names: array [0 .. 2] of string = ('User', 'Statistics', 'Machine');
 var
@@ -31,15 +31,13 @@ begin
   mainScene.Config.main.R.Profile.Panel.Align := TAlignLayout.Client;
   mainScene.Config.main.R.Profile.Panel.Visible := True;
 
-  mainScene.Config.main.R.Profile.Blur :=
-    TGaussianBlurEffect.Create(mainScene.Config.main.R.Profile.Panel);
+  mainScene.Config.main.R.Profile.Blur := TGaussianBlurEffect.Create(mainScene.Config.main.R.Profile.Panel);
   mainScene.Config.main.R.Profile.Blur.Name := 'Main_Config_Profile_Main_Blur';
   mainScene.Config.main.R.Profile.Blur.Parent := mainScene.Config.main.R.Profile.Panel;
   mainScene.Config.main.R.Profile.Blur.BlurAmount := 0.5;
   mainScene.Config.main.R.Profile.Blur.Enabled := False;
 
-  mainScene.Config.main.R.Profile.TabControl :=
-    TTabControl.Create(mainScene.Config.main.R.Profile.Panel);
+  mainScene.Config.main.R.Profile.TabControl := TTabControl.Create(mainScene.Config.main.R.Profile.Panel);
   mainScene.Config.main.R.Profile.TabControl.Name := 'Main_Config_Profile_Main_TabContol';
   mainScene.Config.main.R.Profile.TabControl.Parent := mainScene.Config.main.R.Profile.Panel;
   mainScene.Config.main.R.Profile.TabControl.Align := TAlignLayout.Client;
@@ -51,13 +49,14 @@ begin
       TTabItem.Create(mainScene.Config.main.R.Profile.TabControl);
     mainScene.Config.main.R.Profile.TabItem[vi].Name := 'Main_Config_Profile_Main_TabItem_' + IntToStr(vi);
     mainScene.Config.main.R.Profile.TabItem[vi].Parent := mainScene.Config.main.R.Profile.TabControl;
+    mainScene.Config.main.R.Profile.TabItem[vi].SetBounds(0, 0,
+      mainScene.Config.main.R.Profile.TabControl.Width, mainScene.Config.main.R.Profile.TabControl.Height);
     mainScene.Config.main.R.Profile.TabItem[vi].Text := cTab_Names[vi];
-    mainScene.Config.main.R.Profile.TabItem[vi].Width := mainScene.Config.main.R.Profile.TabControl.Width;
-    mainScene.Config.main.R.Profile.TabItem[vi].Height := mainScene.Config.main.R.Profile.TabControl.Height;
     mainScene.Config.main.R.Profile.TabItem[vi].Visible := True;
   end;
 
   uMain_Config_Profile_User.Load;
   uMain_Config_Profile_Machine.Load;
 end;
+
 end.

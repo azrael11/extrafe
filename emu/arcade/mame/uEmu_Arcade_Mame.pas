@@ -28,7 +28,8 @@ uses
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Filters,
-  uEmu_Arcade_Mame_Config;
+  uEmu_Arcade_Mame_Config,
+  uEmu_Arcade_Mame_Sounds;
 
 procedure uEmu_Arcade_Mame_Loading;
 begin
@@ -67,6 +68,9 @@ begin
 
   uEmu_Arcade_Mame_SetAll_Set;
   uEmu_Arcade_Mame_Display_Main;
+
+  //Sounds
+  uEmu_Arcade_Mame_Sounds.Load;
 end;
 
 procedure uEmu_Arcade_Mame_Display_Main;
@@ -90,6 +94,7 @@ end;
 Procedure uEmu_Arcade_Mame_Exit;
 begin
   FreeAndNil(vMame.Scene.Main);
+  uEmu_Arcade_Mame_Sounds.Unload;
   mame.Support.ClearSupport;
   extrafe.prog.State := 'main';
   uEmu_Actions_Exit;

@@ -527,6 +527,13 @@
         <DCCReference Include="main\configuration\profile\uMain_Config_Profile_Machine.pas"/>
         <DCCReference Include="main\configuration\uMain_Config_Keyboard.pas"/>
         <DCCReference Include="main\configuration\info\uMain_Config_Info_Extrafe.pas"/>
+        <DCCReference Include="main\configuration\uMain_Config_General.pas"/>
+        <DCCReference Include="main\configuration\general\uMain_Config_General_Visual.pas"/>
+        <DCCReference Include="main\configuration\general\uMain_Config_General_Graphics.pas"/>
+        <DCCReference Include="main\configuration\general\uMain_Config_General_Sound.pas"/>
+        <DCCReference Include="addons\play\uPlay_Sounds.pas"/>
+        <DCCReference Include="code\_snippets\uSnippet_Search.pas"/>
+        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

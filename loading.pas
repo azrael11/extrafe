@@ -6,10 +6,10 @@ uses
   System.UITypes,
   System.Classes,
   FMX.Forms,
-  FMX.Types;
+  FMX.Types, FMX.Controls, FMX.Objects;
+
 type
-  TLoading_Form = class(TForm)
-    procedure FormCreate(Sender: TObject);
+  TLoading_Form = class(TForm)    procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
   private

@@ -35,6 +35,7 @@ implementation
 
 uses
   uLoad_AllTypes,
+  uSnippet_Search,
   uEmu_Arcade_Mame,
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Gamelist,
@@ -132,7 +133,7 @@ begin
   vMame.Scene.Snap.Black_Image.Visible := False;
   vMame.Scene.Snap.Video.Visible := False;
   vMame.Scene.Snap.Image.Visible := False;
-  vMame.Scene.Gamelist.Search.Visible := False;
+  uSnippet_Search.vSearch.Scene.Back.Visible:= False;
   vMame.Scene.Gamelist.Filters.Visible := False;
   vMame.Scene.Gamelist.Up_Back_Image.Visible := False;
   vMame.Scene.Gamelist.Down_Back_Image.Visible := False;
