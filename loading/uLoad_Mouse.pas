@@ -5,6 +5,7 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  System.UiTypes,
   FMX.Objects,
   FMX.StdCtrls,
   FMX.Forms,
@@ -59,6 +60,7 @@ type
 implementation
 
 uses
+  uLoad,
   uSnippet_Text,
   uKeyboard,
   uLoad_AllTypes,
@@ -74,7 +76,7 @@ begin
   if TButton(Sender).Name = 'Loading_Login_Login' then
     uLoad_Login.Login
   else if TButton(Sender).Name = 'Loading_Login_Exit' then
-    Application.Terminate
+    uLoad_Login.Exit_Program
   else if TButton(Sender).Name= 'Loading_Reg_Register' then
     uLoad_Register.Apply
   else if TButton(Sender).Name = 'Loading_Reg_Cancel' then
@@ -212,12 +214,16 @@ begin
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uLoad_SetAll_Forget_Password
   else if TText(Sender).Name = 'Loading_Register_Terms' then
-    uLoad_SetAll_Terms;
+    uLoad_SetAll_Terms
+  else if TText(Sender).Name = 'Loading_Intro_Text' then
+    uLoad.Skip_Intro;
 end;
 
 procedure TLOADING_TEXT.OnMouseEnter(Sender: TObject);
 begin
-  if TText(Sender).Name = 'Loading_Login_Register' then
+  if TText(Sender).Name= 'Loading_Intro_Text' then
+    ex_load.Intro.Text.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue
+  else if TText(Sender).Name = 'Loading_Login_Register' then
     uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
@@ -230,7 +236,9 @@ end;
 
 procedure TLOADING_TEXT.OnMouseLeave(Sender: TObject);
 begin
-  if TText(Sender).Name = 'Loading_Login_Register' then
+  if TText(Sender).Name= 'Loading_Intro_Text' then
+    ex_load.Intro.Text.TextSettings.FontColor:= TAlphaColorRec.White
+  else if TText(Sender).Name = 'Loading_Login_Register' then
     uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))

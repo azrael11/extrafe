@@ -279,21 +279,15 @@ type
 
 type
   TSOUNDPLAYER_ADDON_PLAYER = record
-    Play: TImage;
+    Play: TText;
     Play_Glow: TGlowEffect;
-    Play_Grey: TMonochromeEffect;
-    Play_Color: TFillRGBEffect;
-    Stop: TImage;
+    Stop: TText;
     Stop_Glow: TGlowEffect;
-    Stop_Grey: TMonochromeEffect;
-    Stop_Color: TFillRGBEffect;
-    Previous: TImage;
+    Previous: TText;
     Previous_Glow: TGlowEffect;
-    Previous_Grey: TMonochromeEffect;
-    Next: TImage;
+    Next: TText;
     Next_Glow: TGlowEffect;
-    Next_Grey: TMonochromeEffect;
-    Eject: TImage;
+    Eject: TText;
     Eject_Glow: TGlowEffect;
     Loop: TImage;
     Loop_State: TImage;

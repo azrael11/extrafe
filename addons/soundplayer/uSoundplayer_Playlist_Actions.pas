@@ -192,15 +192,15 @@ begin
   if addons.soundplayer.Playlist.List.Songs.Count > 1 then
   begin
     addons.soundplayer.Player.HasNext_Track := True;
-    vSoundplayer.Player.Next_Grey.Enabled := False;
+    vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Grey;
   end
   else
   begin
     addons.soundplayer.Player.HasNext_Track := False;
-    vSoundplayer.Player.Next_Grey.Enabled := True;
+    vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
   end;
   addons.soundplayer.Player.HasPrevious_Track := False;
-  vSoundplayer.Player.Previous_Grey.Enabled := True;
+  vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Grey;
   vSoundplayer.info.Playlist_name.Text := addons.soundplayer.Playlist.List.Name;
   vSoundplayer.Playlist.List.Selected := 0;
   vSoundplayer.info.Total_Songs.Text := '1/' + IntToStr(vk);
@@ -294,9 +294,9 @@ begin
   end;
   if (addons.soundplayer.Playlist.List.Songs_Num - 1 <> Row) and (Row <> 0) then
   begin
-    vSoundplayer.Player.Previous_Grey.Enabled := False;
+    vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
     addons.soundplayer.Player.HasPrevious_Track := True;
-    vSoundplayer.Player.Next_Grey.Enabled := False;
+    vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
     addons.soundplayer.Player.HasNext_Track := True;
     if addons.soundplayer.Playlist.Edit then
     begin
@@ -306,9 +306,9 @@ begin
   end
   else if Row = 0 then
   begin
-    vSoundplayer.Player.Previous_Grey.Enabled := True;
+    vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Grey;
     addons.soundplayer.Player.HasPrevious_Track := False;
-    vSoundplayer.Player.Next_Grey.Enabled := False;
+    vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
     addons.soundplayer.Player.HasNext_Track := True;
     if addons.soundplayer.Playlist.Edit then
     begin
@@ -318,9 +318,9 @@ begin
   end
   else
   begin
-    vSoundplayer.Player.Previous_Grey.Enabled := False;
+    vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
     addons.soundplayer.Player.HasPrevious_Track := True;
-    vSoundplayer.Player.Next_Grey.Enabled := True;
+    vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Grey;
     addons.soundplayer.Player.HasNext_Track := False;
     if addons.soundplayer.Playlist.Edit then
     begin
@@ -524,13 +524,13 @@ begin
 
       if addons.soundplayer.Player.Playing_Now = 0 then
       begin
-        vSoundplayer.Player.Previous_Grey.Enabled := True;
-        vSoundplayer.Player.Next_Grey.Enabled := False;
+        vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Grey;
+        vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
       end
       else
       begin
-        vSoundplayer.Player.Previous_Grey.Enabled := False;
-        vSoundplayer.Player.Next_Grey.Enabled := False;
+        vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
       end;
       vSoundplayer.Playlist.List.Selected := vSoundplayer.Playlist.List.Selected - 1;
     end;
@@ -543,13 +543,13 @@ begin
       Dec(addons.soundplayer.Player.Playing_Now, 1);
       if addons.soundplayer.Player.Playing_Now = 0 then
       begin
-        vSoundplayer.Player.Previous_Grey.Enabled := True;
-        vSoundplayer.Player.Next_Grey.Enabled := False;
+        vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Grey;
+        vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
       end
       else
       begin
-        vSoundplayer.Player.Previous_Grey.Enabled := False;
-        vSoundplayer.Player.Next_Grey.Enabled := False;
+        vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
       end;
     end;
     vSoundplayer.Playlist.List.Selected := vSoundplayer.Playlist.List.Selected - 1;
@@ -584,13 +584,13 @@ begin
       Inc(addons.soundplayer.Player.Playing_Now, 1);
       if addons.soundplayer.Player.Playing_Now = addons.soundplayer.Playlist.List.Songs_Num - 1 then
       begin
-        vSoundplayer.Player.Previous_Grey.Enabled := False;
-        vSoundplayer.Player.Next_Grey.Enabled := True;
+        vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Grey;
       end
       else
       begin
-        vSoundplayer.Player.Previous_Grey.Enabled := False;
-        vSoundplayer.Player.Next_Grey.Enabled := False;
+        vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
       end;
     end;
     vSoundplayer.Playlist.List.Selected := vSoundplayer.Playlist.List.Selected + 1;

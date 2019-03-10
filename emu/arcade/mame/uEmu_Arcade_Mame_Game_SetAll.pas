@@ -129,7 +129,6 @@ begin
   mame.Game.Menu_Selected := 0;
   vMame.Scene.Snap.SnapInfo.Visible := False;
   vMame.Scene.Snap.Type_Arcade.Visible := False;
-  vMame.Scene.Snap.Type_Frame.Visible := False;
   vMame.Scene.Snap.Black_Image.Visible := False;
   vMame.Scene.Snap.Video.Visible := False;
   vMame.Scene.Snap.Image.Visible := False;
@@ -191,7 +190,6 @@ begin
 
   vMame.Scene.Snap.SnapInfo.Visible := True;
   vMame.Scene.Snap.Type_Arcade.Visible := True;
-  vMame.Scene.Snap.Type_Frame.Visible := True;
   vMame.Scene.Snap.Black_Image.Visible := True;
   vMame.Scene.Snap.Video.Visible := True;
   vMame.Scene.Snap.Image.Visible := True;

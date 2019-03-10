@@ -1,4 +1,4 @@
-unit uLoad_SetAll;
+﻿unit uLoad_SetAll;
 
 interface
 
@@ -38,7 +38,7 @@ begin
   ex_load.Scene.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
   ex_load.Scene.Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back.WrapMode := TImageWrapMode.Fit;
-  ex_load.Scene.Back.Visible := True;
+  ex_load.Scene.Back.Visible := False;
 
   ex_load.Scene.Back_Fade := TFloatAnimation.Create(ex_load.Scene.Back);
   ex_load.Scene.Back_Fade.Name := 'Loading_FadeOut';
@@ -169,7 +169,9 @@ begin
   ex_load.Login.CapsLock.Name := 'Loading_Login_CapsLock';
   ex_load.Login.CapsLock.Parent := ex_load.Login.Main;
   ex_load.Login.CapsLock.SetBounds(328, 90, 150, 17);
-  ex_load.Login.CapsLock.Text := 'Caps Lock is on';
+  ex_load.Login.CapsLock.Font.Family:= 'IcoMoon-Free';
+  ex_load.Login.CapsLock.Text := #$e900 ;
+  ex_load.Login.CapsLock.TextSettings.Font.Size := 16;
   ex_load.Login.CapsLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   ex_load.Login.CapsLock.TextSettings.HorzAlign := TTextAlign.Trailing;
   ex_load.Login.CapsLock.Visible := False;

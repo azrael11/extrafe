@@ -1,6 +1,7 @@
 unit uAzHung_Sound;
 
 interface
+
 uses
   System.Classes,
   BASS;
@@ -9,20 +10,30 @@ procedure Load;
 procedure Unload;
 
 implementation
+
 uses
   uLoad_AllTypes,
   uAzHung_AllTypes;
 
 procedure Load;
 begin
-  //Music Menu
-
+  // Music
+  // Menu
+  vAzHung.Sounds.Music[0] := BASS_StreamCreateFile(False,
+    PChar(gAzHung.Path.Sounds + 'a_azp_azh_menu.mp3'), 0, 0, 0
+{$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
+  // Ingame
+  vAzHung.Sounds.Music[1] := BASS_StreamCreateFile(False,
+    PChar(gAzHung.Path.Sounds + 'a_azp_azh_ingame.mp3'), 0, 0, 0
+{$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
 
 end;
 
 procedure Unload;
 begin
-
+  // Music
+  BASS_StreamFree(vAzHung.Sounds.Music[0]);
+  BASS_StreamFree(vAzHung.Sounds.Music[1]);
 end;
 
 end.

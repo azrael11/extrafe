@@ -24,6 +24,9 @@ procedure Set_ActionsButtons(vPlay: Boolean);
 procedure OnOver(vImage: TImage; vGlow: TGlowEffect);
 procedure OnLeave(vImage: TImage; vGlow: TGlowEffect);
 
+procedure Text_OnOver(vText: TText; vGlow: TGlowEffect);
+procedure Text_OnLeave(vText: TText; vGlow: TGlowEffect);
+
 procedure StartOrPause;
 procedure Stop;
 procedure Previous;
@@ -85,8 +88,8 @@ end;
 
 procedure Buttons_State(vPlay, vStop, vSuffle: Boolean; vRepeat: String);
 begin
-  vSoundplayer.Player.Play_Color.Enabled := vPlay;
-  vSoundplayer.Player.Stop_Color.Enabled := vStop;
+  // vSoundplayer.Player.Play.TextSettings.FontColor:= TAlphaColorRec.
+  // vSoundplayer.Player.Stop.TextSettings.FontColor:= TAlphaColorRec.Red;
   vSoundplayer.Player.Suffle_Color.Enabled := vSuffle;
   // Edo na grapso gia to repeat
 end;
@@ -98,7 +101,7 @@ begin
   if vPlay then
     BASS_ChannelPlay(sound.str_music[1], False);
   BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, vVolume);
-  BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_PAN, (addons.soundplayer.Equalizer.Pan/ 100));
+  BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_PAN, (addons.soundplayer.Equalizer.Pan / 100));
 end;
 
 procedure Refresh;
@@ -186,14 +189,13 @@ procedure Set_ActionsButtons(vPlay: Boolean);
 begin
   addons.soundplayer.Player.Play := vPlay;
   if addons.soundplayer.Player.Stop then
-    vSoundplayer.Player.Stop_Color.Enabled := True
+    vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Red
   else
   begin
     if vPlay then
-      vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Blueviolet
+      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet
     else if addons.soundplayer.Player.Pause then
-      vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Greenyellow;
-    vSoundplayer.Player.Play_Color.Enabled := True;
+      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
   end;
 
   if addons.soundplayer.Player.Suffle then
@@ -203,23 +205,23 @@ begin
     (addons.soundplayer.Player.Playing_Now <> 0) then
   begin
     addons.soundplayer.Player.HasPrevious_Track := True;
-    vSoundplayer.Player.Previous_Grey.Enabled := False;
+    vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     addons.soundplayer.Player.HasNext_Track := True;
-    vSoundplayer.Player.Next_Grey.Enabled := False;
+    vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
   end
   else if addons.soundplayer.Player.Playing_Now = 0 then
   begin
     addons.soundplayer.Player.HasPrevious_Track := False;
-    vSoundplayer.Player.Previous_Grey.Enabled := True;
+    vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
     addons.soundplayer.Player.HasNext_Track := True;
-    vSoundplayer.Player.Next_Grey.Enabled := False;
+    vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   end
   else
   begin
     addons.soundplayer.Player.HasPrevious_Track := True;
-    vSoundplayer.Player.Previous_Grey.Enabled := False;
+    vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     addons.soundplayer.Player.HasNext_Track := False;
-    vSoundplayer.Player.Next_Grey.Enabled := True;
+    vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
   end;
 end;
 
@@ -246,7 +248,7 @@ end;
 // Click actions
 procedure StartOrPause;
 begin
-  if vSoundplayer.Player.Play_Grey.Enabled = False then
+  if vSoundplayer.Player.Play.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
     if (addons.soundplayer.Player.Play = False) or (addons.soundplayer.Player.Pause = True) then
     begin
@@ -256,14 +258,13 @@ begin
       else
         BASS_ChannelPlay(sound.str_music[1], False);
       if addons.soundplayer.Player.Pause then
-        vSoundplayer.Player.Play.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-      OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
+        vSoundplayer.Player.Play.Text := #$ea1d;
+      Text_OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
       State(True, False, False, addons.soundplayer.Player.Mute, addons.soundplayer.Player.Suffle,
         addons.soundplayer.Player.vRepeat);
-      vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Blueviolet;
-      vSoundplayer.Player.Play_Color.Enabled := True;
+      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
       vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Blueviolet;
-      vSoundplayer.Player.Stop_Color.Enabled := False;
+      vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
       vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
       vSoundplayer.timer.Song.Enabled := True;
       uSoundplayer_Player.Update_Last_Song(addons.soundplayer.Player.Playing_Now);
@@ -271,12 +272,11 @@ begin
     else
     begin
       BASS_ChannelPause(sound.str_music[1]);
-      vSoundplayer.Player.Play.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
+      vSoundplayer.Player.Play.Text := #$ea1d;
+      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
       addons.soundplayer.Player.Pause := True;
       addons.soundplayer.Player.Play := False;
-      OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
-      vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Greenyellow;
-      vSoundplayer.Player.Play_Color.Enabled := True;
+      Text_OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
       vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Greenyellow;
       vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '2';
       vSoundplayer.timer.Song.Enabled := True;
@@ -287,7 +287,7 @@ end;
 
 procedure Stop;
 begin
-  if vSoundplayer.Player.Stop_Grey.Enabled = False then
+  if vSoundplayer.Player.Stop.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
     if sound.str_music[1] <> 0 then
       if (addons.soundplayer.Player.Play = True) or (addons.soundplayer.Player.Pause = True) then
@@ -297,11 +297,10 @@ begin
         vSoundplayer.Player.Song_Pos.Value := 0;
         addons.soundplayer.Player.Play := False;
         addons.soundplayer.Player.Pause := False;
-        uSoundplayer_Player.OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
+        uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
         addons.soundplayer.Player.Stop := True;
-        vSoundplayer.Player.Stop_Color.Enabled := True;
-        vSoundplayer.Player.Play.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-        vSoundplayer.Player.Play_Color.Enabled := False;
+        vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Red;
+        vSoundplayer.Player.Play.Text := #$ea1c;
         vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '1';
         vPressed_Already := True;
       end;
@@ -310,7 +309,7 @@ end;
 
 procedure Previous;
 begin
-  if vSoundplayer.Player.Previous_Grey.Enabled = False then
+  if vSoundplayer.Player.Previous.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
     if sound.str_music[1] <> 0 then
       if addons.soundplayer.Player.Playing_Now > 0 then
@@ -321,13 +320,13 @@ begin
         if addons.soundplayer.Player.Playing_Now = 0 then
         begin
           addons.soundplayer.Player.HasPrevious_Track := False;
-          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow);
-          vSoundplayer.Player.Previous_Grey.Enabled := True;
+          uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow);
+          vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
           if addons.soundplayer.Playlist.Edit then
             vSoundplayer.Playlist.Songs_Edit.Up_Grey.Enabled := True;
         end;
         addons.soundplayer.Player.HasNext_Track := True;
-        vSoundplayer.Player.Next_Grey.Enabled := False;
+        vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
         if addons.soundplayer.Playlist.Edit then
           vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled := False;
         BASS_StreamFree(sound.str_music[1]);
@@ -364,7 +363,7 @@ end;
 
 procedure Next;
 begin
-  if vSoundplayer.Player.Next_Grey.Enabled = False then
+  if vSoundplayer.Player.Next.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
     if addons.soundplayer.Player.Playing_Now < vSoundplayer.Playlist.List.RowCount - 1 then
     begin
@@ -374,13 +373,13 @@ begin
       if addons.soundplayer.Player.Playing_Now = vSoundplayer.Playlist.List.RowCount - 1 then
       begin
         addons.soundplayer.Player.HasNext_Track := False;
-        uSoundplayer_Player.OnLeave(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
-        vSoundplayer.Player.Next_Grey.Enabled := True;
+        uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
+        vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
         if addons.soundplayer.Playlist.Edit then
           vSoundplayer.Playlist.Songs_Edit.Down_Grey.Enabled := True;
       end;
       addons.soundplayer.Player.HasPrevious_Track := True;
-      vSoundplayer.Player.Previous_Grey.Enabled := False;
+      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
       if addons.soundplayer.Playlist.Edit then
         vSoundplayer.Playlist.Songs_Edit.Up_Grey.Enabled := False;
       BASS_StreamFree(sound.str_music[1]);
@@ -687,16 +686,16 @@ begin
     FreeAndNil(vSongList);
     vSoundplayer.Player.Song_Tag.Visible := True;
 
-    vSoundplayer.Player.Play_Grey.Enabled := False;
-    vSoundplayer.Player.Stop_Grey.Enabled := False;
+    vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     if addons.soundplayer.Player.Playing_Now > 1 then
-      vSoundplayer.Player.Previous_Grey.Enabled := False
+      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
     else
-      vSoundplayer.Player.Previous_Grey.Enabled := True;
+      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
     if addons.soundplayer.Playlist.List.Songs_Num > 1 then
-      vSoundplayer.Player.Next_Grey.Enabled := False
+      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
     else
-      vSoundplayer.Player.Next_Grey.Enabled := True;
+      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
 
     vSoundplayer.Player.Loop_Grey.Enabled := False;
     if addons.soundplayer.Playlist.List.Songs_Num > 1 then
@@ -787,7 +786,7 @@ begin
       addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type;
     uSoundplayer_Tag_Mp3.Get_Cover_Image(vPath, vDescription, vImage);
     vSoundplayer.info.Cover.Bitmap := vImage;
-    vSoundplayer.Info.Cover_Label.Text:= vDescription;
+    vSoundplayer.info.Cover_Label.Text := vDescription;
   end
   else if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.ogg'
   then
@@ -818,7 +817,37 @@ begin
     end;
   end;
 end;
+
 /// /////////////////////////////////////////////////////////////////////////////
+procedure Text_OnOver(vText: TText; vGlow: TGlowEffect);
+  procedure Text_ScaleUp;
+  begin
+    vText.Scale.X := 1.1;
+    vText.Scale.Y := 1.1;
+    vText.Position.X := vText.Position.X - ((vText.Width * 0.1) / 2);
+    vText.Position.Y := vText.Position.Y - ((vText.Height * 0.1) / 2);
+    vGlow.Enabled := True;
+  end;
+
+begin
+  Text_ScaleUp;
+  BASS_ChannelPlay(addons.soundplayer.sound.Effects[2], False);
+end;
+
+procedure Text_OnLeave(vText: TText; vGlow: TGlowEffect);
+  procedure Text_ScaleDown;
+  begin
+    vText.Scale.X := 1;
+    vText.Scale.Y := 1;
+    vText.Position.X := vText.Position.X + ((vText.Width * 0.1) / 2);
+    vText.Position.Y := vText.Position.Y + ((vText.Height * 0.1) / 2);
+    vGlow.Enabled := False;
+  end;
+
+begin
+  Text_ScaleDown;
+end;
+
 procedure OnOver(vImage: TImage; vGlow: TGlowEffect);
   procedure ScaleUp;
   begin
@@ -834,20 +863,17 @@ begin
   begin
     if (addons.soundplayer.Player.Play) or (addons.soundplayer.Player.Pause) then
     begin
-      if vSoundplayer.Player.Play_Color.Enabled then
+      if addons.soundplayer.Player.Pause then
       begin
-        if addons.soundplayer.Player.Pause then
-        begin
-          vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-          vGlow.GlowColor := TAlphaColorRec.Blueviolet;
-          vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Blueviolet;
-        end
-        else
-        begin
-          vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
-          vGlow.GlowColor := TAlphaColorRec.Greenyellow;
-          vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Greenyellow;
-        end;
+        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
+        vGlow.GlowColor := TAlphaColorRec.Blueviolet;
+        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+      end
+      else
+      begin
+        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
+        vGlow.GlowColor := TAlphaColorRec.Greenyellow;
+        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
       end;
     end;
     ScaleUp;
@@ -879,21 +905,19 @@ begin
   begin
     if vImage.Name = 'A_SP_Player_Play_Image' then
     begin
-      if vSoundplayer.Player.Play_Color.Enabled then
+      if (addons.soundplayer.Player.Play) or (addons.soundplayer.Player.Pause) then
       begin
-        if (addons.soundplayer.Player.Play) or (addons.soundplayer.Player.Pause) then
+        if addons.soundplayer.Player.Pause then
         begin
-          if addons.soundplayer.Player.Pause then
-          begin
-            vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
-            vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Greenyellow;
-          end
-          else
-          begin
-            vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-            vSoundplayer.Player.Play_Color.Color := TAlphaColorRec.Blueviolet;
-          end;
+          vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
+          vSoundplayer.Player.Play.TextSettings.FontColor:= TAlphaColorRec.Greenyellow;
+        end
+        else
+        begin
+          vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
+          vSoundplayer.Player.Play.TextSettings.FontColor:= TAlphaColorRec.Blueviolet;
         end;
+
       end;
       ScaleDown;
     end

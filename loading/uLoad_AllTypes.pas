@@ -15,8 +15,10 @@ uses
   FMX.Edit,
   FMX.Types,
   FMX.Memo,
+  FMX.Layouts,
   ALFmxTabControl,
   BASS,
+  FmxPasLibVlcPlayerUnit,
   uLoad_Mouse,
   uMain_AllTypes,
   uTime_AllTypes,
@@ -299,6 +301,13 @@ type
     Timer_Pros: TLOADING_TIMER_ONTIMER;
   end;
 
+type TLOADING_INTRO= record
+  Back: TLayout;
+  Video: TFmxPasLibVlcPlayer;
+  Text: TText;
+  Timer: TTimer;
+end;
+
 type
   TLOGIN_SCENE = record
     Panel: TPanel;
@@ -425,6 +434,7 @@ type
 type
   TLOADING = record
     Scene: TLOADING_SCENE;
+    Intro: TLOADING_INTRO;
     Login: TLOGIN_SCENE;
     F_Pass: TLOADING_FORGET_PASSWORD;
     Reg: TLOADING_REGISTER;
@@ -493,7 +503,16 @@ end;
 
 procedure TLOADING_TIMER_ONTIMER.OnTimer(Sender: TObject);
 begin
-
+  if TTimer(Sender).Name= 'Loading_Intro_Timer' then
+  begin
+    if ex_load.Intro.Video.IsPlay= False then
+      begin
+        FreeAndNil(ex_load.Intro.Back);
+        ex_load.Intro.Timer.Enabled:= False;
+        ex_load.Scene.Back.Visible := True;
+      end;
+  end;
+  
 end;
 
 initialization

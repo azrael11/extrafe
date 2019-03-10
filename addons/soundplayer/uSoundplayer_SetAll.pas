@@ -216,45 +216,38 @@ begin
   vSoundplayer.scene.Back_Player.SetBounds(0, 10, vSoundplayer.scene.soundplayer.Width, 200);
   vSoundplayer.scene.Back_Player.Visible := True;
 
-  vSoundplayer.player.Play := Timage.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.player.Play.Name := 'A_SP_Player_Play_Image';
+  vSoundplayer.player.Play := TText.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.player.Play.Name := 'A_SP_Player_Play';
   vSoundplayer.player.Play.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.player.Play.SetBounds((extrafe.res.Width / 2) - 32, 137, 48, 48);
-  vSoundplayer.player.Play.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-  vSoundplayer.player.Play.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.player.Play.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.player.Play.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.player.Play.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.Player.Play.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.Player.Play.Text:= #$ea1c;
+  vSoundplayer.Player.Play.TextSettings.Font.Size:= 48;
+  vSoundplayer.Player.Play.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Play.OnClick := addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.player.Play.OnMouseEnter := addons.soundplayer.Input.mouse.Text.OnMouseEnter;
+  vSoundplayer.player.Play.OnMouseLeave := addons.soundplayer.Input.mouse.Text.OnMouseLeave;
   vSoundplayer.player.Play.Visible := True;
 
-  vSoundplayer.player.Play_Grey := TMonochromeEffect.Create(vSoundplayer.player.Play);
-  vSoundplayer.player.Play_Grey.Name := 'A_SP_Player_Play_Grey';
-  vSoundplayer.player.Play_Grey.Parent := vSoundplayer.player.Play;
-  vSoundplayer.player.Play_Grey.Enabled := False;
-
-  vSoundplayer.player.Play_Color := TFillRGBEffect.Create(vSoundplayer.player.Play);
-  vSoundplayer.player.Play_Color.Name := 'A_SP_Player_Stop_Color';
-  vSoundplayer.player.Play_Color.Parent := vSoundplayer.player.Play;
-  vSoundplayer.player.Play_Color.Color := TAlphaColorRec.Deepskyblue;
-  vSoundplayer.player.Play_Color.Enabled := False;
-
-  vSoundplayer.player.Play_Glow := TGlowEffect.Create(vSoundplayer.player.Play_Color);
+  vSoundplayer.player.Play_Glow := TGlowEffect.Create(vSoundplayer.player.Play);
   vSoundplayer.player.Play_Glow.Name := 'A_SP_Player_Play_Glow';
-  vSoundplayer.player.Play_Glow.Parent := vSoundplayer.player.Play_Color;
+  vSoundplayer.player.Play_Glow.Parent := vSoundplayer.player.Play;
   vSoundplayer.player.Play_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vSoundplayer.player.Play_Glow.Softness := 0.4;
   vSoundplayer.player.Play_Glow.Opacity := 0.9;
   vSoundplayer.player.Play_Glow.Enabled := True;
 
-  vSoundplayer.player.Stop := Timage.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.player.Stop.Name := 'A_SP_Player_Stop_Image';
+  vSoundplayer.player.Stop := TText.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.player.Stop.Name := 'A_SP_Player_Stop';
   vSoundplayer.player.Stop.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.player.Stop.SetBounds(vSoundplayer.player.Play.Position.X - 72, 137, 48, 48);
-  vSoundplayer.player.Stop.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_stop.png');
-  vSoundplayer.player.Stop.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.player.Stop.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.player.Stop.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.player.Stop.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.player.Stop.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.player.Stop.Text:= #$ea1e;
+  vSoundplayer.player.Stop.TextSettings.Font.Size:= 48;
+  vSoundplayer.player.Stop.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Stop.OnClick := addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.player.Stop.OnMouseEnter := addons.soundplayer.Input.mouse.Text.OnMouseEnter;
+  vSoundplayer.player.Stop.OnMouseLeave := addons.soundplayer.Input.mouse.Text.OnMouseLeave;
   vSoundplayer.player.Stop.Visible := True;
 
   vSoundplayer.player.Stop_Glow := TGlowEffect.Create(vSoundplayer.player.Stop);
@@ -265,26 +258,17 @@ begin
   vSoundplayer.player.Stop_Glow.Opacity := 0.9;
   vSoundplayer.player.Stop_Glow.Enabled := False;
 
-  vSoundplayer.player.Stop_Grey := TMonochromeEffect.Create(vSoundplayer.player.Stop);
-  vSoundplayer.player.Stop_Grey.Name := 'A_SP_Player_Stop_Grey';
-  vSoundplayer.player.Stop_Grey.Parent := vSoundplayer.player.Stop;
-  vSoundplayer.player.Stop_Grey.Enabled := False;
-
-  vSoundplayer.player.Stop_Color := TFillRGBEffect.Create(vSoundplayer.player.Stop);
-  vSoundplayer.player.Stop_Color.Name := 'A_SP_Player_Stop_Color';
-  vSoundplayer.player.Stop_Color.Parent := vSoundplayer.player.Stop;
-  vSoundplayer.player.Stop_Color.Color := TAlphaColorRec.Red;
-  vSoundplayer.player.Stop_Color.Enabled := False;
-
-  vSoundplayer.player.Previous := Timage.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.player.Previous.Name := 'A_SP_Player_Previous_Image';
+  vSoundplayer.player.Previous := TText.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.player.Previous.Name := 'A_SP_Player_Previous';
   vSoundplayer.player.Previous.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.player.Previous.SetBounds(vSoundplayer.player.Stop.Position.X - 72, 137, 48, 48);
-  vSoundplayer.player.Previous.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_previous.png');
-  vSoundplayer.player.Previous.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.player.Previous.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.player.Previous.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.player.Previous.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.player.Previous.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.player.Previous.Text:= #$ea23;
+  vSoundplayer.player.Previous.TextSettings.Font.Size:= 48;
+  vSoundplayer.player.Previous.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Previous.OnClick := addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.player.Previous.OnMouseEnter := addons.soundplayer.Input.mouse.Text.OnMouseEnter;
+  vSoundplayer.player.Previous.OnMouseLeave := addons.soundplayer.Input.mouse.Text.OnMouseLeave;
   vSoundplayer.player.Previous.Visible := True;
 
   vSoundplayer.player.Previous_Glow := TGlowEffect.Create(vSoundplayer.player.Previous);
@@ -295,20 +279,17 @@ begin
   vSoundplayer.player.Previous_Glow.Opacity := 0.9;
   vSoundplayer.player.Previous_Glow.Enabled := False;
 
-  vSoundplayer.player.Previous_Grey := TMonochromeEffect.Create(vSoundplayer.player.Previous);
-  vSoundplayer.player.Previous_Grey.Name := 'A_SP_Player_Previous_Grey';
-  vSoundplayer.player.Previous_Grey.Parent := vSoundplayer.player.Previous;
-  vSoundplayer.player.Previous_Grey.Enabled := False;
-
-  vSoundplayer.player.Next := Timage.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.player.Next.Name := 'A_SP_Player_Next_Image';
+  vSoundplayer.player.Next := TText.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.player.Next.Name := 'A_SP_Player_Next';
   vSoundplayer.player.Next.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.player.Next.SetBounds(vSoundplayer.player.Play.Position.X + 72, 137, 48, 48);
-  vSoundplayer.player.Next.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_next.png');
-  vSoundplayer.player.Next.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.player.Next.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.player.Next.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.player.Next.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.player.Next.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.Player.Next.Text:= #$ea24;
+  vSoundplayer.Player.Next.Font.Size:= 48;
+  vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Next.OnClick := addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.player.Next.OnMouseEnter := addons.soundplayer.Input.mouse.Text.OnMouseEnter;
+  vSoundplayer.player.Next.OnMouseLeave := addons.soundplayer.Input.mouse.Text.OnMouseLeave;
   vSoundplayer.player.Next.Visible := True;
 
   vSoundplayer.player.Next_Glow := TGlowEffect.Create(vSoundplayer.player.Next);
@@ -319,20 +300,17 @@ begin
   vSoundplayer.player.Next_Glow.Opacity := 0.9;
   vSoundplayer.player.Next_Glow.Enabled := False;
 
-  vSoundplayer.player.Next_Grey := TMonochromeEffect.Create(vSoundplayer.player.Next);
-  vSoundplayer.player.Next_Grey.Name := 'A_SP_Player_Next_Grey';
-  vSoundplayer.player.Next_Grey.Parent := vSoundplayer.player.Next;
-  vSoundplayer.player.Next_Grey.Enabled := False;
-
-  vSoundplayer.player.Eject := Timage.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.player.Eject.Name := 'A_SP_Player_Eject_Image';
+  vSoundplayer.player.Eject := TText.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.player.Eject.Name := 'A_SP_Player_Eject';
   vSoundplayer.player.Eject.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.player.Eject.SetBounds(vSoundplayer.player.Next.Position.X + 72, 137, 48, 48);
-  vSoundplayer.player.Eject.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_eject.png');
-  vSoundplayer.player.Eject.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.player.Eject.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
-  vSoundplayer.player.Eject.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
-  vSoundplayer.player.Eject.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
+  vSoundplayer.player.Eject.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.player.Eject.Text:= #$ea25;
+  vSoundplayer.player.Eject.Font.Size:= 48;
+  vSoundplayer.player.Eject.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.player.Eject.OnClick := addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.player.Eject.OnMouseEnter := addons.soundplayer.Input.mouse.Text.OnMouseEnter;
+  vSoundplayer.player.Eject.OnMouseLeave := addons.soundplayer.Input.mouse.Text.OnMouseLeave;
   vSoundplayer.player.Eject.Visible := True;
 
   vSoundplayer.player.Eject_Glow := TGlowEffect.Create(vSoundplayer.player.Eject);

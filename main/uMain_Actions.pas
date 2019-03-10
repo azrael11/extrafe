@@ -35,9 +35,6 @@ procedure uMain_Actions_ShowHide_Addons(vAddon_Num: Integer);
 procedure uMain_Actions_Update_All;
 procedure uMain_Actions_Update_Footer_Timer;
 
-procedure uMain_Actions_Load_Fonts;
-procedure uMain_Actions_Releash_Fonts;
-
 var
   vMain_Timer: TMAIN_TIMER;
 
@@ -175,39 +172,6 @@ begin
     if addons.soundplayer.Player.Play then
       uSoundplayer_Player.Refresh;
 end;
-
-procedure uMain_Actions_Load_Fonts;
-begin
-  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'rope.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  AddFontResource(PChar(extrafe.prog.Paths.Fonts + '8bit.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'mellow.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'contro.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock2.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-end;
-
-procedure uMain_Actions_Releash_Fonts;
-begin
-  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'rope.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + '8bit.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'mellow.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'contro.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock2.ttf'));
-  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
-end;
-
 { TMAIN_TIMER }
 
 procedure TMAIN_TIMER.OnTimer(Sender: TObject);

@@ -160,7 +160,10 @@ end;
 
 procedure MouseOver_GameIcon(vGame: Integer);
 begin
+  if addons.play.Actions.Sound_Over_Game_Play_Now<> -1 then
+    BASS_ChannelStop(addons.play.Sounds.Voices[addons.play.Actions.Sound_Over_Game_Play_Now]);
   vPlay.Img_Img_Glow[vGame].Enabled := True;
+  addons.play.Actions.Sound_Over_Game_Play_Now:= vGame;
   BASS_ChannelPlay(addons.play.Sounds.Voices[vGame], False);
 end;
 

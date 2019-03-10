@@ -15,6 +15,7 @@ uses
   IdGlobal;
 
 procedure Login;
+procedure Exit_Program;
 
 implementation
 
@@ -24,6 +25,7 @@ uses
   uLoad,
   uLoad_AllTypes,
   uLoad_SetAll,
+  uLoad_Font,
   uDatabase,
   uDatabase_SqlCommands,
   uDatabase_ActiveUser;
@@ -69,6 +71,12 @@ begin
       end;
     end;
   end;
+end;
+
+procedure Exit_Program;
+begin
+  uLoad_Font.UnLoad;
+  Application.Terminate
 end;
 
 end.

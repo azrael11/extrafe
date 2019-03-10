@@ -26,6 +26,9 @@ procedure uMain_Config_Info_Credits_ShowGimp;
 procedure uMain_Config_Info_Credits_ShowBASS;
 procedure uMain_Config_Info_Credits_ShowPasVlc;
 
+var
+  vTab_Selected: Integer;
+
 implementation
 
 uses
@@ -86,7 +89,7 @@ begin
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width :=
     mainScene.Config.Main.R.Info.Credits.Panel.Width - 20;
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height :=
-    mainScene.Config.Main.R.Info.TabControl.Height - 120;
+    mainScene.Config.Main.R.Info.Credits.Panel.Height - 120;
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Position.X := 10;
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Position.Y := 90;
   mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Text := '-------------------------';
@@ -96,7 +99,9 @@ begin
     TTabControl.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
   mainScene.Config.Main.R.Info.Credits.Control.Name := 'Main_Config_Info_Credits_TabControl';
   mainScene.Config.Main.R.Info.Credits.Control.Parent := mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Control.Align := TAlignLayout.Client;
+  mainScene.Config.Main.R.Info.Credits.Control.SetBounds(2, 22,
+    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width- 4,
+    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height - 22);
   mainScene.Config.Main.R.Info.Credits.Control.Visible := True;
 
   for vi := 0 to 1 do
@@ -110,6 +115,9 @@ begin
       mainScene.Config.Main.R.Info.Credits.Control.Width,
       mainScene.Config.Main.R.Info.Credits.Control.Height);
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Text := cTab_Names[vi];
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].OnClick :=
+      ex_main.Input.mouse_config.TabItem.OnMouseClick;
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Tag := vi;
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Visible := True;
   end;
 
@@ -121,12 +129,13 @@ begin
       vi.ToString;
     mainScene.Config.Main.R.Info.Credits.Left_Box[vi].Parent :=
       mainScene.Config.Main.R.Info.Credits.Tab_Item[vi];
-    mainScene.Config.Main.R.Info.Credits.Left_Box[vi].SetBounds(10, 10, 100,
+    mainScene.Config.Main.R.Info.Credits.Left_Box[vi].SetBounds(10, 10, 120,
       mainScene.Config.Main.R.Info.Credits.Control.Height - 20);
     mainScene.Config.Main.R.Info.Credits.Left_Box[vi].Visible := True;
   end;
 
   uMain_Config_Info_Credits_CreateBrands_Images;
+  vTab_Selected := -1;
 end;
 
 procedure uMain_Config_Info_Credits_CreateBrands_Images;
@@ -241,12 +250,12 @@ begin
         end;
       end;
   end;
+  ex_main.Config.Info_Credits_Tab_Selected := vNum;
+  ex_main.Config.Info_Credits_Selected := vNum_1;
 end;
 
 procedure uMain_Config_Info_Credits_ShowEmbarcadero;
 begin
-  ex_main.Config.Info_Credits_Selected := 0;
-
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0] :=
     TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[0]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Name := 'Main_Config_Info_Credits_VBox_Right_0';
@@ -254,7 +263,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Tab_Item[0];
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].SetBounds(120, 0,
     mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Control.Height);
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
@@ -349,8 +358,6 @@ end;
 
 procedure uMain_Config_Info_Credits_ShowGimp;
 begin
-  ex_main.Config.Info_Credits_Selected := 1;
-
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1] :=
     TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[0]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Name := 'Main_Config_Info_Credits_VBox_Right';
@@ -358,7 +365,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Tab_Item[0];
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].SetBounds(120, 0,
     mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Control.Height);
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
@@ -400,8 +407,6 @@ end;
 
 procedure uMain_Config_Info_Credits_ShowBASS;
 begin
-  ex_main.Config.Info_Credits_Selected := 2;
-
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0] :=
     TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[1]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Name := 'Main_Config_Info_Credits_VBox_Right';
@@ -409,7 +414,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Tab_Item[1];
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].SetBounds(120, 0,
     mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Control.Height);
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=
@@ -451,8 +456,6 @@ end;
 
 procedure uMain_Config_Info_Credits_ShowPasVlc;
 begin
-  ex_main.Config.Info_Credits_Selected := 3;
-
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1] :=
     TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[1]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Name := 'Main_Config_Info_Credits_VBox_Right';
@@ -460,7 +463,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Tab_Item[1];
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].SetBounds(120, 0,
     mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
-    mainScene.Config.Main.R.Info.Credits.Control.Height);
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] :=

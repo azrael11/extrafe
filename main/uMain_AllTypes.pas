@@ -54,6 +54,7 @@ type
     Addons_Active_Tab: Integer;
     Addons_Tab_First: Integer;
     Addons_Tab_Last: Integer;
+    Info_Credits_Tab_Selected: Integer;
     Info_Credits_Selected: Integer;
   end;
 

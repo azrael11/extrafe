@@ -1,9 +1,0 @@
-unit uAzHung_Sound;
-
-interface
-uses
-  System.Classess;
-
-implementation
-
-end.

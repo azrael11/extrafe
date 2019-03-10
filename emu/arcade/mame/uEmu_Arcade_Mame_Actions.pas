@@ -10,7 +10,8 @@ uses
   FMX.Objects,
   FMX.Types,
   FMX.Layouts,
-  FMX.Graphics;
+  FMX.Graphics,
+  FMX.Effects;
 
 procedure uEmu_Arcade_Mame_Actions_ShowData;
 
@@ -54,278 +55,216 @@ uses
   uEmu_Arcade_Mame_AllTypes;
 
 procedure uEmu_Arcade_Mame_Actions_ShowData;
-  procedure uEmu_Arcade_Mame_Actions_SetImageHorizontal;
-  begin
-    vMame.Scene.Snap.Type_Arcade.Visible := False;
-
-    vMame.Scene.Snap.Type_Frame.Visible := True;
-    vMame.Scene.Snap.Type_Frame.Width := 640;
-    vMame.Scene.Snap.Type_Frame.Height := 480;
-    vMame.Scene.Snap.Type_Frame.Position.X := (vMame.Scene.Right.Width / 2) - 320;
-    vMame.Scene.Snap.Type_Frame.Position.Y := 210;
-    vMame.Scene.Snap.Type_Frame.Bitmap.LoadFromFile(mame.Prog.Images + 'frame_horizontal_red.png');
-
-    vMame.Scene.Snap.Type_Frame_Reflection.Offset := 2;
-
-    vMame.Scene.Snap.Black_Image.Width := 640;
-    vMame.Scene.Snap.Black_Image.Height := 480;
-    vMame.Scene.Snap.Black_Image.Position.X := (vMame.Scene.Right.Width / 2) - 320;
-    vMame.Scene.Snap.Black_Image.Position.Y := 210;
-
-    vMame.Scene.Snap.Black_Reflection.Offset := 12;
-
-    vMame.Scene.Snap.Image.Width := 630;
-    vMame.Scene.Snap.Image.Height := 470;
-    vMame.Scene.Snap.Image.Position.X := (vMame.Scene.Right.Width / 2) - 315;
-    vMame.Scene.Snap.Image.Position.Y := 215;;
-
-    vMame.Scene.Snap.Image_Reflaction.Offset := 12;
-  end;
-
-  procedure uEmu_Arcade_Mame_Actions_SetImageVertical;
-  begin
-    vMame.Scene.Snap.Type_Arcade.Visible := False;
-
-    vMame.Scene.Snap.Type_Frame.Visible := True;
-    vMame.Scene.Snap.Type_Frame.Width := 480;
-    vMame.Scene.Snap.Type_Frame.Height := 640;
-    vMame.Scene.Snap.Type_Frame.Position.X := (vMame.Scene.Right.Width / 2) - 240;
-    vMame.Scene.Snap.Type_Frame.Position.Y := 50;
-    vMame.Scene.Snap.Type_Frame.Bitmap.LoadFromFile(mame.Prog.Images + 'frame_vertical_red.png');
-
-    vMame.Scene.Snap.Type_Frame_Reflection.Offset := 2;
-
-    vMame.Scene.Snap.Black_Image.Width := 480;
-    vMame.Scene.Snap.Black_Image.Height := 640;
-    vMame.Scene.Snap.Black_Image.Position.X := (vMame.Scene.Right.Width / 2) - 240;
-    vMame.Scene.Snap.Black_Image.Position.Y := 50;
-
-    vMame.Scene.Snap.Black_Reflection.Offset := 12;
-
-    vMame.Scene.Snap.Image.Width := 470;
-    vMame.Scene.Snap.Image.Height := 630;
-    vMame.Scene.Snap.Image.Position.X := (vMame.Scene.Right.Width / 2) - 235;
-    vMame.Scene.Snap.Image.Position.Y := 55;
-
-    vMame.Scene.Snap.Image_Reflaction.Offset := 12;
-  end;
-
 var
   vImageExists: Boolean;
 begin
   if mame.Main.SnapCategory = 'Video Snaps' then
   begin
+    if mame.Actions.Video_Scene_Show= False then
+    begin
+      uEmu_Arcade_Mame_SetAll.HideShow_Image_Scene(False);
+      uEmu_Arcade_Mame_SetAll.HideShow_Video_Scene(True);
+    end;
     mame.Gamelist.Timer.Enabled := False;
     if Assigned(vMameVideoTimer) then
       FreeAndNil(vMameVideoTimer);
-    // vMame.Scene.Snap.Video.Stop;
-    vMame.Scene.Snap.Type_Arcade.Visible := True;
-    vMame.Scene.Snap.Image.Visible := True;
-    vMame.Scene.Snap.Image.Width := 400;
-    vMame.Scene.Snap.Image.Height := 220;
-    vMame.Scene.Snap.Image.Position.X := (vMame.Scene.Right.Width / 2) - 190;
-    vMame.Scene.Snap.Image.Position.Y := 282;
-    vMame.Scene.Snap.Black_Image.Width := 416;
-    vMame.Scene.Snap.Black_Image.Height := 226;
-    vMame.Scene.Snap.Black_Image.Position.X := (vMame.Scene.Right.Width / 2) - 196;
-    vMame.Scene.Snap.Black_Image.Position.Y := 278;
-    vMame.Scene.Snap.Image.Visible := False;
+    vMame.Scene.Snap.Video.Stop;
     if FileExists(mame.emu.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.mp4') then
     begin
-      // vMame.Scene.Snap.Video.Visible := False;
-      // vMame.Scene.Snap.Video.Stop;
-      // vMame.Scene.Snap.Video.WrapMode := TImageWrapMode.Stretch;
-      // vMameVideoTimer := TTimer.Create(vMame.Scene.Main);
-      // vMameVideoTimer.Enabled := True;
-      // vMameVideoTimer.OnTimer := mame.Timers.Video.OnTimer;
+      vMameVideoTimer := TTimer.Create(vMame.Scene.Main);
+      vMameVideoTimer.Enabled := True;
+      vMameVideoTimer.OnTimer := mame.Timers.Video.OnTimer;
+      vMame.Scene.Snap.Video.Visible := True;
+      if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        // vMame.Scene.Snap.Video.Visible := True;
-        // if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
-        // then
-        // begin
-        // vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
-        // mame.Gamelist.Selected, 0] + '.png');
-        // end
-        // else
-        // begin
-        // vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + 'imagenotfound.png');
-        // end;
-      end;
+        vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+      end
     end
     else
     begin
-      vImageExists := False;
-      if mame.Main.SnapCategory = 'Snapshots' then
+      if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Video.Stop;
-        vMame.Scene.Snap.Video.Visible := False;
-        vMame.Scene.Snap.Image.Visible := True;
-        uEmu_Arcade_Mame_Actions_PlayGameMusic(mame.emu.Media.Soundtracks + mame.Gamelist.List[0,
-          mame.Gamelist.Selected, 0] + '.zip');
-        if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
-        then
-        begin
-          vMame.Scene.Snap.Image_Fade.Target.LoadFromFile(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vMame.Scene.Snap.Image_Fade_Ani.Enabled := True;
-          vImageExists := True;
-        end
+        vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
       end
-      else if mame.Main.SnapCategory = 'Cabinets' then
+      else
       begin
-        if FileExists(mame.emu.Media.Cabinets + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
-        then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Cabinets + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Control Panels' then
-      begin
-        if FileExists(mame.emu.Media.Control_Panels + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] +
-          '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Control_Panels + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Flyers' then
-      begin
-        if FileExists(mame.emu.Media.Flyers + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Flyers + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Marquees' then
-      begin
-        if FileExists(mame.emu.Media.Marquees + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
-        then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Marquees + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Pcbs' then
-      begin
-        if FileExists(mame.emu.Media.Pcbs + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Pcbs + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Artwork Preview' then
-      begin
-        if FileExists(mame.emu.Media.Artwork_Preview + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] +
-          '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Artwork_Preview + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end;
-      end
-      else if mame.Main.SnapCategory = 'Bosses' then
-      begin
-        if FileExists(mame.emu.Media.Bosses + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Bosses + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'How To' then
-      begin
-        if FileExists(mame.emu.Media.How_To + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.How_To + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Logos' then
-      begin
-        if FileExists(mame.emu.Media.Logos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Logos + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Scores' then
-      begin
-        if FileExists(mame.emu.Media.Scores + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Scores + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Selects' then
-      begin
-        if FileExists(mame.emu.Media.Selects + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Selects + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Titles' then
-      begin
-        if FileExists(mame.emu.Media.Titles + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Titles + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Versus' then
-      begin
-        if FileExists(mame.emu.Media.Versus + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Versus + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Game Over' then
-      begin
-        if FileExists(mame.emu.Media.Game_Over + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
-        then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Game_Over + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
-      end
-      else if mame.Main.SnapCategory = 'Ends' then
-      begin
-        if FileExists(mame.emu.Media.Ends + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Ends + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end;
-      end
-      else if mame.Main.SnapCategory = 'Warnings' then
-      begin
-        if FileExists(mame.emu.Media.Warnings + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
-        then
-        begin
-          vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Warnings + mame.Gamelist.List[0,
-            mame.Gamelist.Selected, 0] + '.png');
-          vImageExists := True;
-        end
+        vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + 'imagenotfound.png');
       end;
-
-      if vImageExists = False then
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Snapshots + 'imagenotfound.png');
+    end;
+  end
+  else
+  begin
+    if mame.Actions.Video_Scene_Show then
+    begin
+      uEmu_Arcade_Mame_SetAll.HideShow_Image_Scene(True);
+      uEmu_Arcade_Mame_SetAll.HideShow_Video_Scene(False);
+      vMame.Scene.Snap.Video.Stop;
+    end;
+    vImageExists := False;
+    vMame.Scene.Snap.Image_Reflaction.Enabled := False;
+    if mame.Main.SnapCategory = 'Snapshots' then
+    begin
+      uEmu_Arcade_Mame_Actions_PlayGameMusic(mame.emu.Media.Soundtracks + mame.Gamelist.List[0,
+        mame.Gamelist.Selected, 0] + '.zip');
+      if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image_Fade.Target.LoadFromFile(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vMame.Scene.Snap.Image_Fade_Ani.Enabled := True;
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Cabinets' then
+    begin
+      if FileExists(mame.emu.Media.Cabinets + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Cabinets + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Control Panels' then
+    begin
+      if FileExists(mame.emu.Media.Control_Panels + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
+      then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Control_Panels + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Flyers' then
+    begin
+      if FileExists(mame.emu.Media.Flyers + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Flyers + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Marquees' then
+    begin
+      if FileExists(mame.emu.Media.Marquees + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Marquees + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Pcbs' then
+    begin
+      if FileExists(mame.emu.Media.Pcbs + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Pcbs + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Artwork Preview' then
+    begin
+      if FileExists(mame.emu.Media.Artwork_Preview + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
+      then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Artwork_Preview + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end;
+    end
+    else if mame.Main.SnapCategory = 'Bosses' then
+    begin
+      if FileExists(mame.emu.Media.Bosses + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Bosses + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'How To' then
+    begin
+      if FileExists(mame.emu.Media.How_To + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.How_To + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Logos' then
+    begin
+      if FileExists(mame.emu.Media.Logos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Logos + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Scores' then
+    begin
+      if FileExists(mame.emu.Media.Scores + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Scores + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Selects' then
+    begin
+      if FileExists(mame.emu.Media.Selects + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Selects + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Titles' then
+    begin
+      if FileExists(mame.emu.Media.Titles + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Titles + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Versus' then
+    begin
+      if FileExists(mame.emu.Media.Versus + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Versus + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Game Over' then
+    begin
+      if FileExists(mame.emu.Media.Game_Over + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Game_Over + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
+    end
+    else if mame.Main.SnapCategory = 'Ends' then
+    begin
+      if FileExists(mame.emu.Media.Ends + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Ends + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end;
+    end
+    else if mame.Main.SnapCategory = 'Warnings' then
+    begin
+      if FileExists(mame.emu.Media.Warnings + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      begin
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Warnings + mame.Gamelist.List[0,
+          mame.Gamelist.Selected, 0] + '.png');
+        vImageExists := True;
+      end
     end;
 
+    if vImageExists = False then
+      vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Snapshots + 'imagenotfound.png');
   end;
 
   if mame.Main.SnapCategory = 'Video Snaps' then
@@ -333,19 +272,17 @@ begin
     if mame.Main.SnapMode = 'frame' then
     begin
       if vMame.Scene.Snap.Image.Bitmap.Width > vMame.Scene.Snap.Image.Bitmap.Height then
-        uEmu_Arcade_Mame_Actions_SetImageHorizontal
+        vMame.Scene.Snap.Image.SetBounds((vMame.Scene.Right.Width / 2) - 315, 215, 630, 470)
       else
-        uEmu_Arcade_Mame_Actions_SetImageVertical;
+        vMame.Scene.Snap.Image.SetBounds((vMame.Scene.Right.Width / 2) - 235, 55, 470, 630);
     end
-    else
-      vMame.Scene.Snap.Type_Frame.Visible := False;
   end
   else
   begin
     if vMame.Scene.Snap.Image_Fade.Target.Width > vMame.Scene.Snap.Image_Fade.Target.Height then
-      uEmu_Arcade_Mame_Actions_SetImageHorizontal
+      vMame.Scene.Snap.Image.SetBounds((vMame.Scene.Right.Width / 2) - 315, 215, 630, 470)
     else
-      uEmu_Arcade_Mame_Actions_SetImageVertical;
+      vMame.Scene.Snap.Image.SetBounds((vMame.Scene.Right.Width / 2) - 235, 55, 470, 630);
   end;
 
   if mame.Support.List_Active[0] then
@@ -415,7 +352,7 @@ end;
 procedure uEmu_Arcade_Mame_Actions_CloseTopicSearch;
 begin
 
-  vMame.Scene.Gamelist.Search_Edit.Width:= 0;
+  vMame.Scene.Gamelist.Search_Edit.Width := 0;
   vMame.Scene.Gamelist.Listbox.SetFocus;
 end;
 

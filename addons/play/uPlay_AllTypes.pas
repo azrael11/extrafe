@@ -41,6 +41,7 @@ type
 type
   TADDON_PLAY_ACTIONS = record
     Game: String;
+    Sound_Over_Game_Play_Now: Integer;
   end;
 
 type

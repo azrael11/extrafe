@@ -9,7 +9,8 @@ uses
   System.UiTypes,
   FMX.StdCtrls,
   FMX.Objects,
-  FMX.Edit;
+  FMX.Edit,
+  FMX.TABControl;
 
 type
   TMAIN_CONFIG_IMAGE = class(TObject)
@@ -58,6 +59,11 @@ type
   end;
 
 type
+  TMAIN_CONFIG_TABITEM = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+  end;
+
+type
   TMAIN_MOUSE_CONFIG_ACTIONS = record
     Image: TMAIN_CONFIG_IMAGE;
     Text: TMAIN_CONFIG_TEXT;
@@ -66,6 +72,7 @@ type
     Radio: TMAIN_CONFIG_RADIOBUTTON;
     Speedbutton: TMAIN_CONFIG_SPEEDBUTTON;
     Checkbox: TMAIN_CONFIG_CHECKBOX;
+    TabItem: TMAIN_CONFIG_TABITEM;
   end;
 
 implementation
@@ -132,8 +139,9 @@ begin
       uMain_Config_Info_Extrafe.Next_Build
     else if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
     begin
-      if ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag then
-        uMain_Config_Info_Credits_ShowBrand((TImage(Sender).TagString).ToInteger, TImage(Sender).Tag);
+      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or
+         (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
+          uMain_Config_Info_Credits_ShowBrand((TImage(Sender).TagString).ToInteger, TImage(Sender).Tag);
     end;
   end;
 end;
@@ -190,7 +198,8 @@ begin
   begin
     if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
     begin
-      if ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag then
+      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or
+        (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
         mainScene.Config.Main.R.Info.Credits.Brand_Glow[(TImage(Sender).TagString).ToInteger,
           TImage(Sender).Tag].Enabled := True;
     end;
@@ -255,9 +264,10 @@ begin
   begin
     if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
     begin
-      if ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag then
-        mainScene.Config.Main.R.Info.Credits.Brand_Glow[(TImage(Sender).TagString).ToInteger,
-          TImage(Sender).Tag].Enabled := False;
+      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or
+        (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
+          mainScene.Config.Main.R.Info.Credits.Brand_Glow[(TImage(Sender).TagString).ToInteger,
+            TImage(Sender).Tag].Enabled := False;
     end;
   end
 end;
@@ -476,9 +486,9 @@ end;
 
 procedure TMAIN_CONFIG_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
-  if TCheckBox(Sender).Name= 'Main_Config_General_Visoual_VirtualKeyboard' then
+  if TCheckBox(Sender).Name = 'Main_Config_General_Visoual_VirtualKeyboard' then
   begin
-    extrafe.prog.Virtual_Keyboard:= not extrafe.prog.Virtual_Keyboard;
+    extrafe.prog.Virtual_Keyboard := not extrafe.prog.Virtual_Keyboard;
     extrafe.Ini.Ini.WriteBool('Visual', 'Virtual_Keyboard', extrafe.prog.Virtual_Keyboard);
   end;
 end;
@@ -493,6 +503,16 @@ begin
 
 end;
 
+{ TMAIN_CONFIG_TABITEM }
+
+procedure TMAIN_CONFIG_TABITEM.OnMouseClick(Sender: TObject);
+begin
+  if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_0' then
+    vTab_Selected:= 0
+  else if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_1' then
+    vTab_Selected:= 1;
+end;
+
 initialization
 
 ex_main.Input.mouse_config.Image := TMAIN_CONFIG_IMAGE.Create;
@@ -501,7 +521,8 @@ ex_main.Input.mouse_config.Edit := TMAIN_CONFIG_EDIT.Create;
 ex_main.Input.mouse_config.Button := TMAIN_CONFIG_BUTTON.Create;
 ex_main.Input.mouse_config.Radio := TMAIN_CONFIG_RADIOBUTTON.Create;
 ex_main.Input.mouse_config.Speedbutton := TMAIN_CONFIG_SPEEDBUTTON.Create;
-ex_main.Input.mouse_config.Checkbox:= TMAIN_CONFIG_CHECKBOX.Create;
+ex_main.Input.mouse_config.Checkbox := TMAIN_CONFIG_CHECKBOX.Create;
+ex_main.Input.mouse_config.TabItem := TMAIN_CONFIG_TABITEM.Create;
 
 finalization
 
@@ -512,5 +533,6 @@ ex_main.Input.mouse_config.Button.Free;
 ex_main.Input.mouse_config.Radio.Free;
 ex_main.Input.mouse_config.Speedbutton.Free;
 ex_main.Input.mouse_config.Checkbox.Free;
+ex_main.Input.mouse_config.TabItem.Free;
 
 end.

@@ -4,6 +4,7 @@ interface
 
 uses
   System.Classes,
+  System.SysUtils,
   FMX.TabControl,
   FMX.StdCtrls,
   FMX.Layouts,
@@ -261,8 +262,6 @@ type
     SnapInfo: TText;
     Type_Arcade: TImage;
     Type_Arcade_Reflection: TReflectionEffect;
-    Type_Frame: TImage;
-    Type_Frame_Reflection: TReflectionEffect;
     Black_Image: TImage;
     Black_Reflection: TReflectionEffect;
     Image: TImage;
@@ -906,9 +905,10 @@ type
 
   // Sounds
 
-type TEMU_MAME_SOUNDS= record
-  Effects: array [0 .. 10] of HSAMPLE;
-end;
+type
+  TEMU_MAME_SOUNDS = record
+    Effects: array [0 .. 10] of HSAMPLE;
+  end;
 
   // TEMU MAME ANIMATATIONS
 
@@ -923,7 +923,13 @@ type
   end;
 
 type
+  TEMU_MAME_ACTIONS = record
+    Video_Scene_Show: Boolean;
+  end;
+
+type
   TEMU_MAME = record
+    Actions: TEMU_MAME_ACTIONS;
     Prog: TEMU_MAME_PROG;
     Emu: TEMU_MAME_EMU;
     Samples: WideString;
@@ -960,8 +966,9 @@ end;
 
 procedure TEMU_GAMELISTS_ANIMATION.OnFinish(Sender: TObject);
 begin
-  vMame.Scene.Snap.Image.Bitmap := vMame.Scene.Snap.Image_Fade.Target;
   vMame.Scene.Snap.Image_Fade_Ani.Enabled := False;
+  vMame.Scene.Snap.Image.Bitmap := vMame.Scene.Snap.Image_Fade.Target;
+  vMame.Scene.Snap.Image_Reflaction.Enabled:= True;
 end;
 
 { TEMU_VIDEO_TIMER }

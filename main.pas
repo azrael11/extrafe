@@ -40,8 +40,6 @@ type
     Main_IdHttp: TIdHTTP;
     FadeTransitionEffect1: TFadeTransitionEffect;
     FloatAnimation1: TFloatAnimation;
-
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
 
   private
@@ -59,19 +57,15 @@ implementation
 
 uses
   uLoad_AllTypes,
+  uLoad_Font,
   uMain_Actions,
   uKeyboard,
   uDatabase;
 
-procedure TMain_Form.FormCreate(Sender: TObject);
-begin
-  uMain_Actions_Load_Fonts;
-end;
-
 procedure TMain_Form.FormDestroy(Sender: TObject);
 begin
   uDatabase_Disconnect;
-  uMain_Actions_Releash_Fonts;
+  uLoad_Font.UnLoad;
   ReportMemoryLeaksOnShutdown:= False;
 end;
 

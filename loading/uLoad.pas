@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.SysUtils,
   System.UIConsts,
+  System.UiTypes,
   IniFiles,
   Winapi.Windows,
   FMX.Forms,
@@ -13,11 +14,11 @@ uses
   FMX.Effects,
   FMX.Dialogs,
   FMX.Controls,
+  FMX.Types,
+  FMX.Layouts,
   ALFmxTabControl,
-  bass;
-
-
-// function HookKeyIs(vParam: Word): String; external 'keyC.dll';
+  FmxPasLibVlcPlayerUnit,
+  BASS;
 
 procedure uLoad_StartLoading;
 procedure uLoad_SetDefaults;
@@ -25,6 +26,8 @@ procedure uLoad_FirstTimeLoading;
 procedure uLoad_SetLoadingScreen;
 
 procedure uLoad_Start_ExtraFE;
+procedure Play_Intro_Video;
+procedure Skip_Intro;
 procedure IsDatabaseInternet;
 
 var
@@ -50,6 +53,7 @@ uses
   uLoad_Emulation,
   uLoad_Sound,
   uLoad_Stats,
+  uLoad_Font,
   uDatabase;
 
 procedure uLoad_StartLoading;
@@ -74,6 +78,8 @@ begin
 
   uDatabase_Create;
   uLoad_Start_ExtraFE;
+  uLoad_Font.Load;
+  Play_Intro_Video;
 end;
 
 procedure uLoad_SetDefaults;
@@ -174,26 +180,10 @@ begin
 end;
 
 procedure uLoad_SetLoadingScreen;
-const
-  cFont_White = claWhite;
-  cFont_Black = claBlack;
 begin
-  // DONE 1 -oNikos Kordas -cuLoad: Set the loading screen in the right place
-
   uKeyboard_HookKeyboard;
   FHook.Active := True;
   uLoad_SetAll_Load;
-
-  if (extrafe.style.Name = 'Amakrits') or (extrafe.style.Name = 'Dark') or (extrafe.style.Name = 'Air') then
-    ex_load.Login.Forget_Pass.TextSettings.FontColor := claWhite
-  else
-    ex_load.Login.Forget_Pass.TextSettings.FontColor := claBlack;
-
-  if (extrafe.style.Name = 'Amakrits') or (extrafe.style.Name = 'Dark') or (extrafe.style.Name = 'Air') then
-    ex_load.Login.NotRegister.TextSettings.FontColor := cFont_White
-  else
-    ex_load.Login.NotRegister.TextSettings.FontColor := cFont_Black;
-
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -257,16 +247,50 @@ begin
   end;
 end;
 
-{ SetDllDirectory(PChar(extrafe.program_lib+ 'keyC.dll'));
-  vLib:= LoadLibrary('keyC.dll');
-  if vLib<> 0 then
-  ShowMessage('Success loading library')
-  else
-  raise EDLLLoadError.Create('Unable to Load DLL');
-  vLoadProcedure:= TLoadProcedure(GetProcAddress(vLib, 'HookKeyboard'));
-  if @vLoadProcedure<> nil then
-  ShowMessage('Your Keyboard is Hooked');
+procedure Play_Intro_Video;
+begin
+  ex_load.Intro.Back:= TLayout.Create(Loading_Form);
+  ex_load.Intro.Back.Name:= 'Loading_Intro_Back';
+  ex_load.Intro.Back.Parent:= Loading_Form;
+  ex_load.Intro.Back.Align:= TAlignLayout.Client;
+  ex_load.Intro.Back.Visible:= True;
 
-  //  if @vHookKeyPressed<> nil then
-  //    ShowMessage('Success loading procedure'); }
+  ex_load.Intro.Video:= TFmxPasLibVlcPlayer.Create(ex_load.Intro.Back);
+  ex_load.Intro.Video.Name:= 'Loading_Intro';
+  ex_load.Intro.Video.Parent:=  ex_load.Intro.Back;
+  ex_load.Intro.Video.Align:= TAlignLayout.Client;
+  ex_load.Intro.Video.Play(ex_load.Path.Images + 'intro.mp4');
+  ex_load.Intro.Video.WrapMode:= TImageWrapMode.Stretch;
+  ex_load.Intro.Video.Visible:= True;
+
+  ex_load.Intro.Text:= TText.Create(ex_load.Intro.Video);
+  ex_load.Intro.Text.Name:= 'Loading_Intro_Text';
+  ex_load.Intro.Text.Parent:=  ex_load.Intro.Video;
+  ex_load.Intro.Text.SetBounds(extrafe.res.Width- 310, 10, 300, 30);
+  ex_load.Intro.Text.Font.Family:= 'IcoMoon-Free';
+  ex_load.Intro.Text.Text:= 'Skip Video '+ #$ea14;
+  ex_load.Intro.Text.TextSettings.FontColor:= TAlphaColorRec.White;
+  ex_load.Intro.Text.TextSettings.Font.Size:= 32;
+  ex_load.Intro.Text.TextSettings.HorzAlign:= TTextAlign.Trailing;
+  ex_load.Intro.Text.OnClick:= ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Intro.Text.OnMouseEnter:= ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Intro.Text.OnMouseLeave:= ex_load.Input.mouse.Text.OnMouseLeave;
+  ex_load.Intro.Text.Visible:= True;
+
+  ex_load.Intro.Timer:= TTimer.Create(Loading_Form);
+  ex_load.Intro.Timer.Name:= 'Loading_Intro_Timer';
+  ex_load.Intro.Timer.Parent:=  Loading_Form;
+  ex_load.Intro.Timer.OnTimer:= ex_load.Scene.Timer_Pros.OnTimer;
+  ex_load.Intro.Timer.Enabled:= True;
+
+end;
+
+procedure Skip_Intro;
+begin
+  ex_load.Intro.Video.Stop;
+  FreeAndNil(ex_load.Intro.Back);
+  ex_load.Intro.Timer.Enabled:= False;
+  ex_load.Scene.Back.Visible := True;
+end;
+
 end.

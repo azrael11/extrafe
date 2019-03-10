@@ -4,7 +4,8 @@ interface
 
 uses
   System.Classes,
-  System.SysUtils;
+  System.SysUtils,
+  System.UiTypes;
 
 procedure Load;
 procedure Free;
@@ -82,10 +83,9 @@ begin
 
   vSoundplayer.Player.Song_Title.Text := '';
   vSoundplayer.Player.Song_Tag.Visible := False;
-  vSoundplayer.Player.Play_Grey.Enabled := True;
-  vSoundplayer.Player.Stop_Grey.Enabled := True;
-  vSoundplayer.Player.Previous_Grey.Enabled := True;
-  vSoundplayer.Player.Next_Grey.Enabled := True;
+  vSoundplayer.Player.Play.TextSettings.FontColor:= TAlphaColorRec.Grey;
+  vSoundplayer.Player.Stop.TextSettings.FontColor:= TAlphaColorRec.Grey;
+  vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Grey;
   vSoundplayer.Player.Loop_Grey.Enabled := True;
   vSoundplayer.Player.Suffle_Grey.Enabled := True;
   vSoundplayer.Player.Song_Time.Text := '00:00:00';
@@ -143,8 +143,8 @@ begin
   begin
     uSoundplayer_Playlist_Actions_AddSongs_Load(addons.Soundplayer.Playlist.List.VType, vPlaylist);
     uSoundplayer_Player.Get_Tag(addons.Soundplayer.Player.Playing_Now);
-    vSoundplayer.Player.Play_Grey.Enabled := False;
-    vSoundplayer.Player.Stop_Grey.Enabled := False;
+    vSoundplayer.Player.Play.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+    vSoundplayer.Player.Stop.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
     vSoundplayer.Player.Loop_Grey.Enabled := False;
     vSoundplayer.Player.Suffle_Grey.Enabled := False;
     uSoundplayer_Player.Set_ActionsButtons(addons.Soundplayer.Player.Play);
@@ -153,10 +153,10 @@ begin
   else
   begin
     vSoundplayer.Player.Song_Tag.Visible := False;
-    vSoundplayer.Player.Play_Grey.Enabled := True;
-    vSoundplayer.Player.Stop_Grey.Enabled := True;
-    vSoundplayer.Player.Previous_Grey.Enabled := True;
-    vSoundplayer.Player.Next_Grey.Enabled := True;
+    vSoundplayer.Player.Play.TextSettings.FontColor:= TAlphaColorRec.Grey;
+    vSoundplayer.Player.Stop.TextSettings.FontColor:= TAlphaColorRec.Grey;
+    vSoundplayer.Player.Previous.TextSettings.FontColor:= TAlphaColorRec.Grey;
+    vSoundplayer.Player.Next.TextSettings.FontColor:= TAlphaColorRec.Grey;
     vSoundplayer.Player.Loop_Grey.Enabled := True;
     vSoundplayer.Player.Suffle_Grey.Enabled := True;
   end;

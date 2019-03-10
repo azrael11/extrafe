@@ -9,7 +9,8 @@ uses
   System.IniFiles,
   System.UiTypes,
   FMX.Objects,
-  FMX.Layouts;
+  FMX.Layouts,
+  BASS;
 
 procedure uAzHung_Actions_Load;
 procedure uAzHung_Actions_Free;
@@ -42,7 +43,8 @@ uses
   uLoad_AllTypes,
   uPlay_AllTypes,
   uAzHung_AllTypes,
-  uAzHung_SetAll;
+  uAzHung_SetAll,
+  uAzHung_Sound;
 
 procedure uAzHung_Actions_Load;
 begin
@@ -51,12 +53,17 @@ begin
   gAzHung.Path.Images := gAzHung.Path.Game + 'images\';
   gAzHung.Path.Score := gAzHung.Path.Game + 'score\';
 
+  uAzHung_Sound.Load;
   uAzHung_SetAll_Set;
+
+  BASS_ChannelPlay(vAzHung.Sounds.Music[0], False);
+
 end;
 
 procedure uAzHung_Actions_Free;
 begin
   FreeAndNil(vAzHung.Main);
+  uAzHung_Sound.Unload;
   addons.play.Actions.Game := '';
 end;
 
@@ -96,6 +103,8 @@ begin
   if Assigned(vAzHung.Load.Start.Select.Frame) then
     FreeAndNil(vAzHung.Load.Start.Select.Frame);
   FreeAndNil(vAzHung.Load.Start.Select.Back);
+  BASS_ChannelStop(vAzHung.Sounds.Music[0]);
+  BASS_ChannelPlay(vAzHung.Sounds.Music[1], False);
 end;
 
 procedure uAzHung_Actions_Create_Modes;

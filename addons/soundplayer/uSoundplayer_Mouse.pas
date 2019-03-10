@@ -121,20 +121,7 @@ begin
   begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
-      if TImage(Sender).Name = 'A_SP_Player_Play_Image' then
-        uSoundplayer_Player.StartOrPause
-      else if TImage(Sender).Name = 'A_SP_Player_Stop_Image' then
-        uSoundplayer_Player.Stop
-      else if TImage(Sender).Name = 'A_SP_Player_Previous_Image' then
-        uSoundplayer_Player.Previous
-      else if TImage(Sender).Name = 'A_SP_Player_Next_Image' then
-        uSoundplayer_Player.Next
-      else if TImage(Sender).Name = 'A_SP_Player_Eject_Image' then
-      begin
-        vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_AddSongs';
-        vSoundplayer.scene.OpenDialog.Execute
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Suffle_Image' then
+      if TImage(Sender).Name = 'A_SP_Player_Suffle_Image' then
         uSoundplayer_Player.Suffle
       else if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
         uSoundplayer_Player.Set_Repeat(addons.soundplayer.Player.VRepeat)
@@ -205,29 +192,7 @@ begin
   begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
-      if TImage(Sender).Name = 'A_SP_Player_Play_Image' then
-      begin
-        if vSoundplayer.Player.Play_Grey.Enabled = False then
-          uSoundplayer_Player.OnOver(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Stop_Image' then
-      begin
-        if vSoundplayer.Player.Stop_Grey.Enabled = False then
-          uSoundplayer_Player.OnOver(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Previous_Image' then
-      begin
-        if vSoundplayer.Player.Previous_Grey.Enabled = False then
-          uSoundplayer_Player.OnOver(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow)
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Next_Image' then
-      begin
-        if vSoundplayer.Player.Next_Grey.Enabled = False then
-          uSoundplayer_Player.OnOver(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Eject_Image' then
-        uSoundplayer_Player.OnOver(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
-      else if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
+      if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
       begin
         if vSoundplayer.Player.Loop_Grey.Enabled = False then
           uSoundplayer_Player.OnOver(vSoundplayer.Player.Loop, vSoundplayer.Player.Loop_Glow);
@@ -343,29 +308,7 @@ begin
   begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
-      if TImage(Sender).Name = 'A_SP_Player_Play_Image' then
-      begin
-        if vSoundplayer.Player.Play_Grey.Enabled = False then
-          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow)
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Stop_Image' then
-      begin
-        if vSoundplayer.Player.Stop_Grey.Enabled = False then
-          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Previous_Image' then
-      begin
-        if vSoundplayer.Player.Previous_Grey.Enabled = False then
-          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow);
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Next_Image' then
-      begin
-        if vSoundplayer.Player.Next_Grey.Enabled = False then
-          uSoundplayer_Player.OnLeave(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
-      end
-      else if TImage(Sender).Name = 'A_SP_Player_Eject_Image' then
-        uSoundplayer_Player.OnLeave(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
-      else if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
+      if TImage(Sender).Name = 'A_SP_Player_Loop_Image' then
       begin
         if vSoundplayer.Player.Loop_Grey.Enabled = False then
           uSoundplayer_Player.OnLeave(vSoundplayer.Player.Loop, vSoundplayer.Player.Loop_Glow);
@@ -475,7 +418,20 @@ procedure TSOUNDPLAYER_TEXT.OnMouseClick(Sender: TObject);
 begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
-    if TText(Sender).Name = 'A_SP_SongTime_Play' then
+    if TText(Sender).Name = 'A_SP_Player_Previous' then
+        uSoundplayer_Player.Previous
+    else if TText(Sender).Name = 'A_SP_Player_Stop' then
+        uSoundplayer_Player.Stop
+    else if TText(Sender).Name = 'A_SP_Player_Play' then
+        uSoundplayer_Player.StartOrPause
+    else if TText(Sender).Name = 'A_SP_Player_Next' then
+        uSoundplayer_Player.Next
+    else if TText(Sender).Name = 'A_SP_Player_Eject' then
+      begin
+        vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_AddSongs';
+        vSoundplayer.scene.OpenDialog.Execute
+      end
+    else if TText(Sender).Name = 'A_SP_SongTime_Play' then
       addons.soundplayer.Player.Time_Negative := not addons.soundplayer.Player.Time_Negative;
   end
 end;
@@ -484,7 +440,29 @@ procedure TSOUNDPLAYER_TEXT.OnMouseEnter(Sender: TObject);
 begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
-    if TText(Sender).Name = 'A_SP_SongTime_Play' then
+    if TText(Sender).Name = 'A_SP_Player_Previous' then
+      begin
+        if vSoundplayer.Player.Previous.TextSettings.FontColor= TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow)
+      end
+    else if TText(Sender).Name = 'A_SP_Player_Stop' then
+      begin
+        if vSoundplayer.Player.Stop.TextSettings.FontColor= TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
+      end
+    else if TText(Sender).Name = 'A_SP_Player_Play' then
+      begin
+        if vSoundplayer.Player.Play.TextSettings.FontColor= TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow);
+      end
+    else if TText(Sender).Name = 'A_SP_Player_Next' then
+      begin
+        if vSoundplayer.Player.Next.TextSettings.FontColor =  TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
+      end
+    else if TText(Sender).Name = 'A_SP_Player_Eject' then
+      uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
+    else if TText(Sender).Name = 'A_SP_SongTime_Play' then
       uSnippet_Text_ChangeColor_OnMouseEnter(Sender, claDeepskyblue);
   end
   else if extrafe.prog.State = 'addon_soundplayer_tag_mp3' then
@@ -500,7 +478,29 @@ procedure TSOUNDPLAYER_TEXT.OnMouseLeave(Sender: TObject);
 begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
-    if TText(Sender).Name = 'A_SP_SongTime_Play' then
+    if TText(Sender).Name = 'A_SP_Player_Previous' then
+      begin
+        if vSoundplayer.Player.Previous.TextSettings.FontColor= TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Previous, vSoundplayer.Player.Previous_Glow);
+      end
+    else if TText(Sender).Name = 'A_SP_Player_Stop' then
+      begin
+        if vSoundplayer.Player.Stop.TextSettings.FontColor= TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
+      end
+    else if TImage(Sender).Name = 'A_SP_Player_Play' then
+      begin
+        if vSoundplayer.Player.Play.TextSettings.FontColor= TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Play, vSoundplayer.Player.Play_Glow)
+      end
+    else if TText(Sender).Name = 'A_SP_Player_Next' then
+      begin
+        if vSoundplayer.Player.Next.TextSettings.FontColor= TAlphaColorRec.Deepskyblue then
+          uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Next, vSoundplayer.Player.Next_Glow);
+      end
+    else if TText(Sender).Name = 'A_SP_Player_Eject' then
+      uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Eject, vSoundplayer.Player.Eject_Glow)
+    else if TText(Sender).Name = 'A_SP_SongTime_Play' then
       uSnippet_Text_ChangeColor_OnMouseLeave(Sender, claWhiteSmoke);
   end
   else if extrafe.prog.State = 'addon_soundplayer_tag_mp3' then
