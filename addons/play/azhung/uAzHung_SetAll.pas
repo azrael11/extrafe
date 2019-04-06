@@ -15,20 +15,22 @@ uses
   FMX.Layouts,
   FMX.Ani,
   Radiant.Shapes,
-  ALFMXObjects;
+  ALFMXObjects,
+  BASS;
 
-procedure uAzHung_SetAll_Set;
-procedure uAzHung_SetAll_Set_First;
+procedure Game_Set;
 
-procedure uAzHung_SetAll_Set_Start;
-procedure uAzHung_SetAll_Set_Start_Tip(vType: String);
-procedure uAzHung_SetAll_Set_Game;
-procedure uAzHung_SetAll_Create_Letter_Un(vNum: Integer);
-procedure uAzHung_SetAll_Create_Lives(vNum: Integer);
-procedure uAzHung_SetAll_Create_WinWord_InList(vNum: Integer);
+procedure Menu;
+procedure Game_Menu;
+procedure Game_Menu_Tips(vType: String);
 
-procedure uAzHung_SetAll_CreateLose(vWord: String);
-procedure uAzHung_SetAll_CreateWin(vWord: String);
+procedure Game;
+procedure Game_Letter_Un(vNum: Integer);
+procedure Game_Lives(vNum: Integer);
+procedure Game_WinList(vNum: Integer);
+
+procedure Lose_Word(vWord: String);
+procedure Win_Word(vWord: String);
 
 implementation
 
@@ -37,7 +39,7 @@ uses
   uPlay_AllTypes,
   uAzHung_AllTypes;
 
-procedure uAzHung_SetAll_Set;
+procedure Game_Set;
 begin
   vAzHung.Main := TFrame.Create(vPlay.Main);
   vAzHung.Main.Name := 'AzHung';
@@ -45,10 +47,11 @@ begin
   vAzHung.Main.SetBounds(0, 0, vPlay.Main.Width, vPlay.Main.Height - 10);
   vAzHung.Main.Visible := True;
 
-  uAzHung_SetAll_Set_First;
+  Menu;
+  BASS_ChannelPlay(vAzHung.Sounds.Music[0], False);
 end;
 
-procedure uAzHung_SetAll_Set_First;
+procedure Menu;
 begin
   vAzHung.Load.Back := TImage.Create(vAzHung.Main);
   vAzHung.Load.Back.Name := 'AzHung_Back';
@@ -149,7 +152,7 @@ begin
   vAzHung.Load.Exit_Glow.Enabled := False;
 end;
 
-procedure uAzHung_SetAll_Set_Start;
+procedure Game_Menu;
 begin
   vAzHung.Load.Start.Select.Back := TImage.Create(vAzHung.Main);
   vAzHung.Load.Start.Select.Back.Name := 'AzHung_Start_Back';
@@ -272,7 +275,7 @@ begin
   vAzHung.Load.Start.Select.Back_ToStart_Glow.Enabled := False;
 end;
 
-procedure uAzHung_SetAll_Set_Start_Tip(vType: String);
+procedure Game_Menu_Tips(vType: String);
 begin
   if Assigned(vAzHung.Load.Start.Select.Frame) then
     FreeAndNil(vAzHung.Load.Start.Select.Frame);
@@ -319,7 +322,7 @@ begin
   gAzHung.Actions.GameMode := vType;
 end;
 
-procedure uAzHung_SetAll_Set_Game;
+procedure Game;
 const
   cEnglish_Set: array [0 .. 25] of string = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
@@ -500,7 +503,7 @@ begin
   vAzHung.Game.Correct_Box.Visible := True;
 end;
 
-procedure uAzHung_SetAll_Create_Letter_Un(vNum: Integer);
+procedure Game_Letter_Un(vNum: Integer);
 begin
   vAzHung.Game.Letter_Un[vNum] := TText.Create(vAzHung.Game.Back);
   vAzHung.Game.Letter_Un[vNum].Name := 'AzHung_Game_Letter_Un' + vNum.ToString;
@@ -513,7 +516,7 @@ begin
   vAzHung.Game.Letter_Un[vNum].Visible := True;
 end;
 
-procedure uAzHung_SetAll_Create_Lives(vNum: Integer);
+procedure Game_Lives(vNum: Integer);
 var
   vi: Integer;
 begin
@@ -529,7 +532,7 @@ begin
   end;
 end;
 
-procedure uAzHung_SetAll_Create_WinWord_InList(vNum: Integer);
+procedure Game_WinList(vNum: Integer);
 begin
   vAzHung.Game.Correct_ListWord[vNum] := TText.Create(vAzHung.Game.Correct_Box);
   vAzHung.Game.Correct_ListWord[vNum].Name := 'AzHung_Game_List_WinWord_' + vNum.ToString;
@@ -544,177 +547,221 @@ begin
   vAzHung.Game.Correct_ListWord[vNum].Visible := True;
 end;
 
-procedure uAzHung_SetAll_CreateLose(vWord: String);
+procedure Lose_Word(vWord: String);
 var
   vi: Integer;
 begin
-  vAzHung.Game.Lose.Back := TImage.Create(vAzHung.Main);
-  vAzHung.Game.Lose.Back.Name := 'AzHung_Game_Lose';
-  vAzHung.Game.Lose.Back.Parent := vAzHung.Main;
-  vAzHung.Game.Lose.Back.SetBounds((vAzHung.Main.Width / 2) - 400, (vAzHung.Main.Height / 2) - 250, 800, 500);
-  vAzHung.Game.Lose.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_back.png');
-  vAzHung.Game.Lose.Back.WrapMode := TImageWrapMode.Stretch;
-  vAzHung.Game.Lose.Back.Visible := True;
+  vAzHung.Game.Confirm.Back := TImage.Create(vAzHung.Main);
+  vAzHung.Game.Confirm.Back.Name := 'AzHung_Game_Confirm';
+  vAzHung.Game.Confirm.Back.Parent := vAzHung.Main;
+  vAzHung.Game.Confirm.Back.SetBounds((vAzHung.Main.Width / 2) - 400, (vAzHung.Main.Height / 2) - 250, 800, 500);
+  vAzHung.Game.Confirm.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_back.png');
+  vAzHung.Game.Confirm.Back.WrapMode := TImageWrapMode.Stretch;
+  vAzHung.Game.Confirm.Back.Visible := True;
 
   for vi := 0 to 1 do
   begin
-    vAzHung.Game.Lose.Hor[vi] := TImage.Create(vAzHung.Game.Lose.Back);
-    vAzHung.Game.Lose.Hor[vi].Name := 'AzHung_Correct_Lose_Hor_' + vi.ToString;
-    vAzHung.Game.Lose.Hor[vi].Parent := vAzHung.Game.Lose.Back;
+    vAzHung.Game.Confirm.Hor[vi] := TImage.Create(vAzHung.Game.Confirm.Back);
+    vAzHung.Game.Confirm.Hor[vi].Name := 'AzHung_Correct_Confirm_Hor_' + vi.ToString;
+    vAzHung.Game.Confirm.Hor[vi].Parent := vAzHung.Game.Confirm.Back;
     if vi = 0 then
-      vAzHung.Game.Lose.Hor[vi].SetBounds(0, 0, vAzHung.Game.Lose.Back.Width, 5)
+      vAzHung.Game.Confirm.Hor[vi].SetBounds(0, 0, vAzHung.Game.Confirm.Back.Width, 5)
     else
-      vAzHung.Game.Lose.Hor[vi].SetBounds(0, vAzHung.Game.Lose.Back.Height - 5,
-        vAzHung.Game.Lose.Back.Width, 5);
-    vAzHung.Game.Lose.Hor[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
-    vAzHung.Game.Lose.Hor[vi].WrapMode := TImageWrapMode.Stretch;
-    vAzHung.Game.Lose.Hor[vi].Visible := True;
+      vAzHung.Game.Confirm.Hor[vi].SetBounds(0, vAzHung.Game.Confirm.Back.Height - 5,
+        vAzHung.Game.Confirm.Back.Width, 5);
+    vAzHung.Game.Confirm.Hor[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
+    vAzHung.Game.Confirm.Hor[vi].WrapMode := TImageWrapMode.Stretch;
+    vAzHung.Game.Confirm.Hor[vi].Visible := True;
   end;
 
   for vi := 0 to 1 do
   begin
-    vAzHung.Game.Lose.Vert[vi] := TImage.Create(vAzHung.Game.Lose.Back);
-    vAzHung.Game.Lose.Vert[vi].Name := 'AzHung_Correct_Lose_Vert_' + vi.ToString;
-    vAzHung.Game.Lose.Vert[vi].Parent := vAzHung.Game.Lose.Back;
+    vAzHung.Game.Confirm.Vert[vi] := TImage.Create(vAzHung.Game.Confirm.Back);
+    vAzHung.Game.Confirm.Vert[vi].Name := 'AzHung_Correct_Confirm_Vert_' + vi.ToString;
+    vAzHung.Game.Confirm.Vert[vi].Parent := vAzHung.Game.Confirm.Back;
     if vi = 0 then
-      vAzHung.Game.Lose.Vert[vi].SetBounds(0, 0, 5, vAzHung.Game.Lose.Back.Height)
+      vAzHung.Game.Confirm.Vert[vi].SetBounds(0, 0, 5, vAzHung.Game.Confirm.Back.Height)
     else
-      vAzHung.Game.Lose.Vert[vi].SetBounds(vAzHung.Game.Lose.Back.Width - 5, 0,
-        5, vAzHung.Game.Lose.Back.Height);
-    vAzHung.Game.Lose.Vert[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
-    vAzHung.Game.Lose.Vert[vi].WrapMode := TImageWrapMode.Stretch;
-    vAzHung.Game.Lose.Vert[vi].Visible := True;
+      vAzHung.Game.Confirm.Vert[vi].SetBounds(vAzHung.Game.Confirm.Back.Width - 5, 0,
+        5, vAzHung.Game.Confirm.Back.Height);
+    vAzHung.Game.Confirm.Vert[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
+    vAzHung.Game.Confirm.Vert[vi].WrapMode := TImageWrapMode.Stretch;
+    vAzHung.Game.Confirm.Vert[vi].Visible := True;
   end;
 
-  vAzHung.Game.Lose.Word := TText.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.Word.Name := 'AzHung_Game_Lose_Word';
-  vAzHung.Game.Lose.Word.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.Word.SetBounds(100, 40, 240, 40);
-  vAzHung.Game.Lose.Word.TextSettings.Font.Family := 'Mellow DEMO';
-  vAzHung.Game.Lose.Word.TextSettings.FontColor := TAlphaColorRec.White;
-  vAzHung.Game.Lose.Word.TextSettings.Font.Size := 36;
-  vAzHung.Game.Lose.Word.Text := 'The word was : ';
-  vAzHung.Game.Lose.Word.Visible := True;
+  vAzHung.Game.Confirm.Word := TText.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.Word.Name := 'AzHung_Game_Confirm_Word';
+  vAzHung.Game.Confirm.Word.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.Word.SetBounds(100, 40, 240, 40);
+  vAzHung.Game.Confirm.Word.TextSettings.Font.Family := 'Mellow DEMO';
+  vAzHung.Game.Confirm.Word.TextSettings.FontColor := TAlphaColorRec.White;
+  vAzHung.Game.Confirm.Word.TextSettings.Font.Size := 36;
+  vAzHung.Game.Confirm.Word.Text := 'The word was : ';
+  vAzHung.Game.Confirm.Word.Visible := True;
 
-  vAzHung.Game.Lose.Word_V := TText.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.Word_V.Name := 'AzHung_Game_Lose_Word_V';
-  vAzHung.Game.Lose.Word_V.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.Word_V.SetBounds(300, 40, 400, 40);
-  vAzHung.Game.Lose.Word_V.TextSettings.Font.Family := 'Mellow DEMO';
-  vAzHung.Game.Lose.Word_V.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vAzHung.Game.Lose.Word_V.TextSettings.Font.Size := 36;
-  vAzHung.Game.Lose.Word_V.Text := vWord;
-  vAzHung.Game.Lose.Word_V.Visible := True;
+  vAzHung.Game.Confirm.Word_V := TText.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.Word_V.Name := 'AzHung_Game_Confirm_Word_V';
+  vAzHung.Game.Confirm.Word_V.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.Word_V.SetBounds(300, 40, 400, 40);
+  vAzHung.Game.Confirm.Word_V.TextSettings.Font.Family := 'Mellow DEMO';
+  vAzHung.Game.Confirm.Word_V.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vAzHung.Game.Confirm.Word_V.TextSettings.Font.Size := 36;
+  vAzHung.Game.Confirm.Word_V.Text := vWord;
+  vAzHung.Game.Confirm.Word_V.Visible := True;
 
-  vAzHung.Game.Lose.Word_Des := TALText.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.Word_Des.Name := 'AzHung_Game_Lose_Word_Des';
-  vAzHung.Game.Lose.Word_Des.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.Word_Des.SetBounds(50, 100, vAzHung.Game.Lose.Back.Width - 100, 220);
+  vAzHung.Game.Confirm.Word_Des := TText.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.Word_Des.Name := 'AzHung_Game_Confirm_Word_Des';
+  vAzHung.Game.Confirm.Word_Des.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.Word_Des.SetBounds(50, 100, vAzHung.Game.Confirm.Back.Width - 100, 220);
   if gAzHung.Actions.Lives > 1 then
-    vAzHung.Game.Lose.Word_Des.Text := 'You lost a live. You must be more carefull next time. ' + #13#10 +
+    vAzHung.Game.Confirm.Word_Des.Text := 'You lost a live. You must be more carefull next time. ' + #13#10 +
       'Plese make thinking choices.'
   else
-    vAzHung.Game.Lose.Word_Des.Text := 'You lost all of your lives. Your score is ''';
-  vAzHung.Game.Lose.Word_Des.TextSettings.FontColor := TAlphaColorRec.White;
-  vAzHung.Game.Lose.Word_Des.TextSettings.Font.Size := 16;
-  vAzHung.Game.Lose.Word_Des.TextIsHtml := True;
-  vAzHung.Game.Lose.Word_Des.WordWrap := True;
-  vAzHung.Game.Lose.Word_Des.Visible := True;
+    vAzHung.Game.Confirm.Word_Des.Text := 'You lost all of your lives. Your score is ''';
+  vAzHung.Game.Confirm.Word_Des.TextSettings.FontColor := TAlphaColorRec.White;
+  vAzHung.Game.Confirm.Word_Des.TextSettings.Font.Size := 16;
+  vAzHung.Game.Confirm.Word_Des.WordWrap := True;
+  vAzHung.Game.Confirm.Word_Des.Visible := True;
 
-  vAzHung.Game.Lose.OK := TImage.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.OK.Name := 'AzHung_Game_Lose_OK';
-  vAzHung.Game.Lose.OK.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.OK.SetBounds((vAzHung.Game.Lose.Back.Width / 2) - 50, vAzHung.Game.Lose.Back.Height -
-    50, 100, 50);
-  vAzHung.Game.Lose.OK.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_lose_button.png');
-  vAzHung.Game.Lose.OK.WrapMode := TImageWrapMode.Fit;
-  vAzHung.Game.Lose.OK.OnClick := gAzHung.Input.mouse.Image.OnMouseClick;
-  vAzHung.Game.Lose.OK.Visible := True;
+  vAzHung.Game.Confirm.OK := TRectangle.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.OK.Name := 'AzHung_Game_Lose_OK';
+  vAzHung.Game.Confirm.OK.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.OK.SetBounds((vAzHung.Game.Confirm.Back.Width / 2) - 50, vAzHung.Game.Confirm.Back.Height -
+    60, 120, 40);
+  vAzHung.Game.Confirm.OK.Fill.Color:= TAlphaColorRec.Deepskyblue;
+  vAzHung.Game.Confirm.OK.Stroke.Thickness:= 1;
+  vAzHung.Game.Confirm.OK.Stroke.Color:= TAlphaColorRec.White;
+  vAzHung.Game.Confirm.OK.OnClick := gAzHung.Input.mouse.Rectangle.OnMouseClick;
+  vAzHung.Game.Confirm.OK.OnMouseEnter:= gAzHung.Input.mouse.Rectangle.OnMouseEnter;
+  vAzHung.Game.Confirm.OK.OnMouseLeave:= gAzHung.Input.mouse.Rectangle.OnMouseLeave;
+  vAzHung.Game.Confirm.OK.Visible := True;
+
+  vAzHung.Game.Confirm.OK_Text:= TText.Create(vAzHung.Game.Confirm.OK);
+  vAzHung.Game.Confirm.OK_Text.Name:= 'AzHung_Game_Lose_OK_Text';
+  vAzHung.Game.Confirm.OK_Text.Parent:=  vAzHung.Game.Confirm.OK;
+  vAzHung.Game.Confirm.OK_Text.SetBounds(10, 5, 100, 30);
+  vAzHung.Game.Confirm.OK_Text.Text:= #$e9e6 + ' Again';
+  vAzHung.Game.Confirm.OK_Text.Font.Family:= 'IcoMoon-Free';
+  vAzHung.Game.Confirm.OK_Text.TextSettings.FontColor:= TAlphaColorRec.White;
+  vAzHung.Game.Confirm.OK_Text.TextSettings.Font.Size:= 24;
+  vAzHung.Game.Confirm.OK_Text.OnClick:= gAzHung.Input.mouse.Text.OnMouseClick;
+  vAzHung.Game.Confirm.OK_Text.OnMouseEnter:= gAzHung.Input.mouse.Text.OnMouseEnter;
+  vAzHung.Game.Confirm.OK_Text.OnMouseLeave:= gAzHung.Input.mouse.Text.OnMouseLeave;
+  vAzHung.Game.Confirm.OK_Text.Visible:= True;
+
+  vAzHung.Game.Confirm.OK_Glow:= TGlowEffect.Create(vAzHung.Game.Confirm.OK);
+  vAzHung.Game.Confirm.OK_Glow.Name:= 'AzHung_Game_Lose_OK_Glow';
+  vAzHung.Game.Confirm.OK_Glow.Parent:=  vAzHung.Game.Confirm.OK;
+  vAzHung.Game.Confirm.OK_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vAzHung.Game.Confirm.OK_Glow.Opacity:= 0.9;
+  vAzHung.Game.Confirm.OK_Glow.Enabled:= False;
 end;
 
-procedure uAzHung_SetAll_CreateWin(vWord: String);
+procedure Win_Word(vWord: String);
 var
   vi: Integer;
 begin
-  vAzHung.Game.Lose.Back := TImage.Create(vAzHung.Main);
-  vAzHung.Game.Lose.Back.Name := 'AzHung_Game_Win';
-  vAzHung.Game.Lose.Back.Parent := vAzHung.Main;
-  vAzHung.Game.Lose.Back.SetBounds((vAzHung.Main.Width / 2) - 400, (vAzHung.Main.Height / 2) - 250, 800, 500);
-  vAzHung.Game.Lose.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_back.png');
-  vAzHung.Game.Lose.Back.WrapMode := TImageWrapMode.Stretch;
-  vAzHung.Game.Lose.Back.Visible := True;
+  vAzHung.Game.Confirm.Back := TImage.Create(vAzHung.Main);
+  vAzHung.Game.Confirm.Back.Name := 'AzHung_Game_Win';
+  vAzHung.Game.Confirm.Back.Parent := vAzHung.Main;
+  vAzHung.Game.Confirm.Back.SetBounds((vAzHung.Main.Width / 2) - 400, (vAzHung.Main.Height / 2) - 250, 800, 500);
+  vAzHung.Game.Confirm.Back.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_back.png');
+  vAzHung.Game.Confirm.Back.WrapMode := TImageWrapMode.Stretch;
+  vAzHung.Game.Confirm.Back.Visible := True;
 
    for vi := 0 to 1 do
   begin
-    vAzHung.Game.Lose.Hor[vi] := TImage.Create(vAzHung.Game.Lose.Back);
-    vAzHung.Game.Lose.Hor[vi].Name := 'AzHung_Correct_Win_Hor_' + vi.ToString;
-    vAzHung.Game.Lose.Hor[vi].Parent := vAzHung.Game.Lose.Back;
+    vAzHung.Game.Confirm.Hor[vi] := TImage.Create(vAzHung.Game.Confirm.Back);
+    vAzHung.Game.Confirm.Hor[vi].Name := 'AzHung_Correct_Win_Hor_' + vi.ToString;
+    vAzHung.Game.Confirm.Hor[vi].Parent := vAzHung.Game.Confirm.Back;
     if vi = 0 then
-      vAzHung.Game.Lose.Hor[vi].SetBounds(0, 0, vAzHung.Game.Lose.Back.Width, 5)
+      vAzHung.Game.Confirm.Hor[vi].SetBounds(0, 0, vAzHung.Game.Confirm.Back.Width, 5)
     else
-      vAzHung.Game.Lose.Hor[vi].SetBounds(0, vAzHung.Game.Lose.Back.Height - 5,
-        vAzHung.Game.Lose.Back.Width, 5);
-    vAzHung.Game.Lose.Hor[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
-    vAzHung.Game.Lose.Hor[vi].WrapMode := TImageWrapMode.Stretch;
-    vAzHung.Game.Lose.Hor[vi].Visible := True;
+      vAzHung.Game.Confirm.Hor[vi].SetBounds(0, vAzHung.Game.Confirm.Back.Height - 5,
+        vAzHung.Game.Confirm.Back.Width, 5);
+    vAzHung.Game.Confirm.Hor[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
+    vAzHung.Game.Confirm.Hor[vi].WrapMode := TImageWrapMode.Stretch;
+    vAzHung.Game.Confirm.Hor[vi].Visible := True;
   end;
 
   for vi := 0 to 1 do
   begin
-    vAzHung.Game.Lose.Vert[vi] := TImage.Create(vAzHung.Game.Lose.Back);
-    vAzHung.Game.Lose.Vert[vi].Name := 'AzHung_Correct_Win_Vert_' + vi.ToString;
-    vAzHung.Game.Lose.Vert[vi].Parent := vAzHung.Game.Lose.Back;
+    vAzHung.Game.Confirm.Vert[vi] := TImage.Create(vAzHung.Game.Confirm.Back);
+    vAzHung.Game.Confirm.Vert[vi].Name := 'AzHung_Correct_Win_Vert_' + vi.ToString;
+    vAzHung.Game.Confirm.Vert[vi].Parent := vAzHung.Game.Confirm.Back;
     if vi = 0 then
-      vAzHung.Game.Lose.Vert[vi].SetBounds(0, 0, 5, vAzHung.Game.Lose.Back.Height)
+      vAzHung.Game.Confirm.Vert[vi].SetBounds(0, 0, 5, vAzHung.Game.Confirm.Back.Height)
     else
-      vAzHung.Game.Lose.Vert[vi].SetBounds(vAzHung.Game.Lose.Back.Width - 5, 0,
-        5, vAzHung.Game.Lose.Back.Height);
-    vAzHung.Game.Lose.Vert[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
-    vAzHung.Game.Lose.Vert[vi].WrapMode := TImageWrapMode.Stretch;
-    vAzHung.Game.Lose.Vert[vi].Visible := True;
+      vAzHung.Game.Confirm.Vert[vi].SetBounds(vAzHung.Game.Confirm.Back.Width - 5, 0,
+        5, vAzHung.Game.Confirm.Back.Height);
+    vAzHung.Game.Confirm.Vert[vi].Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_line.png');
+    vAzHung.Game.Confirm.Vert[vi].WrapMode := TImageWrapMode.Stretch;
+    vAzHung.Game.Confirm.Vert[vi].Visible := True;
   end;
 
-  vAzHung.Game.Lose.Word := TText.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.Word.Name := 'AzHung_Game_Win_Word';
-  vAzHung.Game.Lose.Word.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.Word.SetBounds(100, 40, 280, 40);
-  vAzHung.Game.Lose.Word.TextSettings.Font.Family := 'Mellow DEMO';
-  vAzHung.Game.Lose.Word.TextSettings.FontColor := TAlphaColorRec.White;
-  vAzHung.Game.Lose.Word.TextSettings.Font.Size := 36;
-  vAzHung.Game.Lose.Word.Text := 'Bravo word was : ';
-  vAzHung.Game.Lose.Word.Visible := True;
+  vAzHung.Game.Confirm.Word := TText.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.Word.Name := 'AzHung_Game_Win_Word';
+  vAzHung.Game.Confirm.Word.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.Word.SetBounds(100, 40, 280, 40);
+  vAzHung.Game.Confirm.Word.TextSettings.Font.Family := 'Mellow DEMO';
+  vAzHung.Game.Confirm.Word.TextSettings.FontColor := TAlphaColorRec.White;
+  vAzHung.Game.Confirm.Word.TextSettings.Font.Size := 36;
+  vAzHung.Game.Confirm.Word.Text := 'Excellent word was : ';
+  vAzHung.Game.Confirm.Word.Visible := True;
 
-  vAzHung.Game.Lose.Word_V := TText.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.Word_V.Name := 'AzHung_Game_Win_Word_V';
-  vAzHung.Game.Lose.Word_V.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.Word_V.SetBounds(320, 40, 400, 40);
-  vAzHung.Game.Lose.Word_V.TextSettings.Font.Family := 'Mellow DEMO';
-  vAzHung.Game.Lose.Word_V.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vAzHung.Game.Lose.Word_V.TextSettings.Font.Size := 36;
-  vAzHung.Game.Lose.Word_V.Text := vWord;
-  vAzHung.Game.Lose.Word_V.Visible := True;
+  vAzHung.Game.Confirm.Word_V := TText.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.Word_V.Name := 'AzHung_Game_Win_Word_V';
+  vAzHung.Game.Confirm.Word_V.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.Word_V.SetBounds(320, 40, 400, 40);
+  vAzHung.Game.Confirm.Word_V.TextSettings.Font.Family := 'Mellow DEMO';
+  vAzHung.Game.Confirm.Word_V.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vAzHung.Game.Confirm.Word_V.TextSettings.Font.Size := 36;
+  vAzHung.Game.Confirm.Word_V.Text := vWord;
+  vAzHung.Game.Confirm.Word_V.Visible := True;
 
-  vAzHung.Game.Lose.Word_Des := TALText.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.Word_Des.Name := 'AzHung_Game_Win_Word_Des';
-  vAzHung.Game.Lose.Word_Des.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.Word_Des.SetBounds(50, 100, vAzHung.Game.Lose.Back.Width - 100, 220);
-  vAzHung.Game.Lose.Word_Des.Text := 'You win with score : ' + gAzHung.Actions.Score.ToString + #13#10 +
-    'Now go for more and break the record.';
-  vAzHung.Game.Lose.Word_Des.TextSettings.FontColor := TAlphaColorRec.White;
-  vAzHung.Game.Lose.Word_Des.TextSettings.Font.Size := 16;
-  vAzHung.Game.Lose.Word_Des.TextIsHtml := True;
-  vAzHung.Game.Lose.Word_Des.WordWrap := True;
-  vAzHung.Game.Lose.Word_Des.Visible := True;
+  vAzHung.Game.Confirm.Word_Des := TText.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.Word_Des.Name := 'AzHung_Game_Win_Word_Des';
+  vAzHung.Game.Confirm.Word_Des.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.Word_Des.SetBounds(50, 100, vAzHung.Game.Confirm.Back.Width - 100, 220);
+  vAzHung.Game.Confirm.Word_Des.Text := 'As far your score is : ' + gAzHung.Actions.Score.ToString + #13#10 +
+    'Click next to find the next word.';
+  vAzHung.Game.Confirm.Word_Des.TextSettings.FontColor := TAlphaColorRec.White;
+  vAzHung.Game.Confirm.Word_Des.TextSettings.Font.Size := 16;
+  vAzHung.Game.Confirm.Word_Des.WordWrap := True;
+  vAzHung.Game.Confirm.Word_Des.Visible := True;
 
-  vAzHung.Game.Lose.OK := TImage.Create(vAzHung.Game.Lose.Back);
-  vAzHung.Game.Lose.OK.Name := 'AzHung_Game_Win_OK';
-  vAzHung.Game.Lose.OK.Parent := vAzHung.Game.Lose.Back;
-  vAzHung.Game.Lose.OK.SetBounds((vAzHung.Game.Lose.Back.Width / 2) - 50, vAzHung.Game.Lose.Back.Height -
-    50, 100, 50);
-  vAzHung.Game.Lose.OK.Bitmap.LoadFromFile(gAzHung.Path.Images + 'azhung_lose_button.png');
-  vAzHung.Game.Lose.OK.WrapMode := TImageWrapMode.Fit;
-  vAzHung.Game.Lose.OK.OnClick := gAzHung.Input.mouse.Image.OnMouseClick;
-  vAzHung.Game.Lose.OK.Visible := True;
+  vAzHung.Game.Confirm.OK := TRectangle.Create(vAzHung.Game.Confirm.Back);
+  vAzHung.Game.Confirm.OK.Name := 'AzHung_Game_Win_OK';
+  vAzHung.Game.Confirm.OK.Parent := vAzHung.Game.Confirm.Back;
+  vAzHung.Game.Confirm.OK.SetBounds((vAzHung.Game.Confirm.Back.Width / 2) - 50, vAzHung.Game.Confirm.Back.Height -
+    60, 120, 40);
+  vAzHung.Game.Confirm.OK.Fill.Color:= TAlphaColorRec.Deepskyblue;
+  vAzHung.Game.Confirm.OK.Stroke.Thickness:= 1;
+  vAzHung.Game.Confirm.OK.Stroke.Color:= TAlphaColorRec.White;
+  vAzHung.Game.Confirm.OK.OnClick := gAzHung.Input.mouse.Rectangle.OnMouseClick;
+  vAzHung.Game.Confirm.OK.OnMouseEnter:= gAzHung.Input.mouse.Rectangle.OnMouseEnter;
+  vAzHung.Game.Confirm.OK.OnMouseLeave:= gAzHung.Input.mouse.Rectangle.OnMouseLeave;
+  vAzHung.Game.Confirm.OK.Visible := True;
+
+  vAzHung.Game.Confirm.OK_Text:= TText.Create(vAzHung.Game.Confirm.OK);
+  vAzHung.Game.Confirm.OK_Text.Name:= 'AzHung_Game_Win_OK_Text';
+  vAzHung.Game.Confirm.OK_Text.Parent:=  vAzHung.Game.Confirm.OK;
+  vAzHung.Game.Confirm.OK_Text.SetBounds(10, 5, 100, 30);
+  vAzHung.Game.Confirm.OK_Text.Text:= #$e9e8 + ' Next';
+  vAzHung.Game.Confirm.OK_Text.Font.Family:= 'IcoMoon-Free';
+  vAzHung.Game.Confirm.OK_Text.TextSettings.FontColor:= TAlphaColorRec.White;
+  vAzHung.Game.Confirm.OK_Text.TextSettings.Font.Size:= 24;
+  vAzHung.Game.Confirm.OK_Text.OnClick:= gAzHung.Input.mouse.Text.OnMouseClick;
+  vAzHung.Game.Confirm.OK_Text.OnMouseEnter:= gAzHung.Input.mouse.Text.OnMouseEnter;
+  vAzHung.Game.Confirm.OK_Text.OnMouseLeave:= gAzHung.Input.mouse.Text.OnMouseLeave;
+  vAzHung.Game.Confirm.OK_Text.Visible:= True;
+
+  vAzHung.Game.Confirm.OK_Glow:= TGlowEffect.Create(vAzHung.Game.Confirm.OK);
+  vAzHung.Game.Confirm.OK_Glow.Name:= 'AzHung_Game_Win_OK_Glow';
+  vAzHung.Game.Confirm.OK_Glow.Parent:=  vAzHung.Game.Confirm.OK;
+  vAzHung.Game.Confirm.OK_Glow.GlowColor:= TAlphaColorRec.Deepskyblue;
+  vAzHung.Game.Confirm.OK_Glow.Opacity:= 0.9;
+  vAzHung.Game.Confirm.OK_Glow.Enabled:= False;
 end;
 
 end.

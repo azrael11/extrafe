@@ -57,7 +57,6 @@ implementation
 
 uses
   uLoad_AllTypes,
-  uLoad_Font,
   uMain_Actions,
   uKeyboard,
   uDatabase;
@@ -65,7 +64,6 @@ uses
 procedure TMain_Form.FormDestroy(Sender: TObject);
 begin
   uDatabase_Disconnect;
-  uLoad_Font.UnLoad;
   ReportMemoryLeaksOnShutdown:= False;
 end;
 

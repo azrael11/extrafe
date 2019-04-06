@@ -13,7 +13,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
-  uSoundplayer_Playlist_Actions,
+  uSoundplayer_Playlist,
   uSoundplayer_Playlist_Create;
 
 procedure uSoundplayer_Keyboard_SetKey(vKey: string);

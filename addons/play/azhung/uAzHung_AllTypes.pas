@@ -130,14 +130,16 @@ type
   end;
 
 type
-  TAZHUNG_GAME_SCENE_LOSE = record
+  TAZHUNG_GAME_SCENE_CONFIRM = record
     Back: TImage;
     Hor: array [0 .. 1] of TImage;
     Vert: array [0 .. 1] of TImage;
     Word: TText;
     Word_V: TText;
-    Word_Des: TALText;
-    OK: TImage;
+    Word_Des: TText;
+    OK: TRectangle;
+    OK_Text: TText;
+    OK_Glow: TGlowEffect;
   end;
 
 type
@@ -163,7 +165,7 @@ type
     Correct_Line_Hor: TImage;
     Correct_Line_Hor_1: TImage;
     Correct_Line_Vert: TImage;
-    Lose: TAZHUNG_GAME_SCENE_LOSE;
+    Confirm: TAZHUNG_GAME_SCENE_CONFIRM;
   end;
 
 type

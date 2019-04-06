@@ -25,7 +25,7 @@ uses
   uWindows,
   uSoundplayer_AllTypes,
   uSoundplayer,
-  uSoundplayer_Playlist_Actions,
+  uSoundplayer_Playlist,
   uSoundplayer_Player;
 
 procedure uSoundPlayer_Playlist_Create_Panel;
@@ -37,18 +37,16 @@ begin
   vSoundplayer.Playlist.Create.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.Playlist.Create.Panel.Name := 'A_SP_Playlist_Create_Panel';
   vSoundplayer.Playlist.Create.Panel.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.Playlist.Create.Panel.SetBounds((vSoundplayer.scene.soundplayer.Width / 2) - 250,
-    (vSoundplayer.scene.soundplayer.Height / 2) - 125, 500, 150);
+  vSoundplayer.Playlist.Create.Panel.SetBounds((vSoundplayer.scene.soundplayer.Width / 2) - 250, (vSoundplayer.scene.soundplayer.Height / 2) - 125, 500, 150);
   vSoundplayer.Playlist.Create.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(vSoundplayer.Playlist.Create.Panel, 'A_SP_Playlist_Create_Panel',
-    addons.soundplayer.Path.Images + 'sp_add.png', 'Create a new playlist.');
+  uLoad_SetAll_CreateHeader(vSoundplayer.Playlist.Create.Panel, 'A_SP_Playlist_Create_Panel', addons.soundplayer.Path.Images + 'sp_add.png',
+    'Create a new playlist.');
 
   vSoundplayer.Playlist.Create.main.Panel := TPanel.Create(vSoundplayer.Playlist.Create.Panel);
   vSoundplayer.Playlist.Create.main.Panel.Name := 'A_SP_Playlist_Create_Panel_Main';
   vSoundplayer.Playlist.Create.main.Panel.Parent := vSoundplayer.Playlist.Create.Panel;
-  vSoundplayer.Playlist.Create.main.Panel.SetBounds(0, 30, vSoundplayer.Playlist.Create.Panel.Width,
-    vSoundplayer.Playlist.Create.Panel.Height - 30);
+  vSoundplayer.Playlist.Create.main.Panel.SetBounds(0, 30, vSoundplayer.Playlist.Create.Panel.Width, vSoundplayer.Playlist.Create.Panel.Height - 30);
   vSoundplayer.Playlist.Create.main.Panel.Visible := True;
 
   vSoundplayer.Playlist.Create.main.Text := TLabel.Create(vSoundplayer.Playlist.Create.main.Panel);
@@ -56,8 +54,7 @@ begin
   vSoundplayer.Playlist.Create.main.Text.Parent := vSoundplayer.Playlist.Create.main.Panel;
   vSoundplayer.Playlist.Create.main.Text.SetBounds(10, 12, 300, 24);
   vSoundplayer.Playlist.Create.main.Text.Text := 'Write the name of the playlist';
-  vSoundplayer.Playlist.Create.main.Text.Font.Style := vSoundplayer.Playlist.Create.main.Text.Font.Style +
-    [TFontStyle.fsBold];
+  vSoundplayer.Playlist.Create.main.Text.Font.Style := vSoundplayer.Playlist.Create.main.Text.Font.Style + [TFontStyle.fsBold];
   vSoundplayer.Playlist.Create.main.Text.Visible := True;
 
   vSoundplayer.Playlist.Create.main.Edit := TEdit.Create(vSoundplayer.Playlist.Create.main.Panel);
@@ -72,8 +69,7 @@ begin
   vSoundplayer.Playlist.Create.main.Text_Type.Parent := vSoundplayer.Playlist.Create.main.Panel;
   vSoundplayer.Playlist.Create.main.Text_Type.SetBounds(420, 12, 100, 24);
   vSoundplayer.Playlist.Create.main.Text_Type.Text := 'Choose type';
-  vSoundplayer.Playlist.Create.main.Text_Type.Font.Style :=
-    vSoundplayer.Playlist.Create.main.Text_Type.Font.Style + [TFontStyle.fsBold];
+  vSoundplayer.Playlist.Create.main.Text_Type.Font.Style := vSoundplayer.Playlist.Create.main.Text_Type.Font.Style + [TFontStyle.fsBold];
   vSoundplayer.Playlist.Create.main.Text_Type.Visible := True;
 
   vSoundplayer.Playlist.Create.main.Main_Type := TComboBox.Create(vSoundplayer.Playlist.Create.main.Panel);
@@ -87,8 +83,7 @@ begin
   vSoundplayer.Playlist.Create.main.Create := TButton.Create(vSoundplayer.Playlist.Create.main.Panel);
   vSoundplayer.Playlist.Create.main.Create.Name := 'A_SP_Playlist_Create_CreateButton';
   vSoundplayer.Playlist.Create.main.Create.Parent := vSoundplayer.Playlist.Create.main.Panel;
-  vSoundplayer.Playlist.Create.main.Create.SetBounds(50, vSoundplayer.Playlist.Create.main.Panel.Height -
-    40, 100, 25);
+  vSoundplayer.Playlist.Create.main.Create.SetBounds(50, vSoundplayer.Playlist.Create.main.Panel.Height - 40, 100, 25);
   vSoundplayer.Playlist.Create.main.Create.Text := 'Create';
   vSoundplayer.Playlist.Create.main.Create.OnClick := addons.soundplayer.Input.mouse.Button.OnMouseClick;
   vSoundplayer.Playlist.Create.main.Create.Visible := True;
@@ -96,8 +91,8 @@ begin
   vSoundplayer.Playlist.Create.main.Cancel := TButton.Create(vSoundplayer.Playlist.Create.main.Panel);
   vSoundplayer.Playlist.Create.main.Cancel.Name := 'A_SP_Playlist_Create_CancelButton';
   vSoundplayer.Playlist.Create.main.Cancel.Parent := vSoundplayer.Playlist.Create.main.Panel;
-  vSoundplayer.Playlist.Create.main.Cancel.SetBounds(vSoundplayer.Playlist.Create.main.Panel.Width - 150,
-    vSoundplayer.Playlist.Create.main.Panel.Height - 40, 100, 25);
+  vSoundplayer.Playlist.Create.main.Cancel.SetBounds(vSoundplayer.Playlist.Create.main.Panel.Width - 150, vSoundplayer.Playlist.Create.main.Panel.Height -
+    40, 100, 25);
   vSoundplayer.Playlist.Create.main.Cancel.Text := 'Cancel';
   vSoundplayer.Playlist.Create.main.Cancel.OnClick := addons.soundplayer.Input.mouse.Button.OnMouseClick;
   vSoundplayer.Playlist.Create.main.Cancel.Visible := True;
@@ -111,8 +106,7 @@ procedure uSoundPlayer_Playlist_Create_Free;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.Playlist.Create.Panel);
-  uSoundplayer_Player.OnOver(vSoundplayer.Playlist.Create_Icon,
-    vSoundplayer.Playlist.Create_Icon_Glow);
+  uSoundplayer_Player.Text_OnLeave(vSoundplayer.Playlist.Create_Icon, vSoundplayer.Playlist.Create_Icon_Glow);
   extrafe.prog.State := 'addon_soundplayer';
 end;
 
@@ -153,13 +147,13 @@ begin
       BASS_ChannelStop(sound.str_music[1]);
       vSoundplayer.Player.Song_Pos.Value := 0;
     end;
-    uSoundPlayer.Set_FirstTime;
+    uSoundplayer.Set_FirstTime;
     vSoundplayer.info.Playlist_name.Text := vPlaylistName;
     vSoundplayer.info.Playlist_Type_Kind.Text := vPlaylistType;
     vSoundplayer.info.Total_Songs.Text := '0';
     vSoundplayer.info.Time_Total.Text := '00:00:00';
-    vSoundplayer.Playlist.Manage_Icon_Grey.Enabled := False;
-    vSoundplayer.Playlist.Remove_Icon_Grey.Enabled := False;
+    vSoundplayer.Playlist.Manage_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     vSoundplayer.Playlist.List.RowCount := -1;
     uSoundPlayer_Playlist_Create_Free;
   end

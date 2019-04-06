@@ -16,6 +16,7 @@ uses
   FMX.Controls,
   FMX.Types,
   FMX.Layouts,
+  FMX.Ani,
   ALFmxTabControl,
   FmxPasLibVlcPlayerUnit,
   BASS;
@@ -53,7 +54,6 @@ uses
   uLoad_Emulation,
   uLoad_Sound,
   uLoad_Stats,
-  uLoad_Font,
   uDatabase;
 
 procedure uLoad_StartLoading;
@@ -78,7 +78,7 @@ begin
 
   uDatabase_Create;
   uLoad_Start_ExtraFE;
-  uLoad_Font.Load;
+//  ex_load.Scene.Back.Visible := True;
   Play_Intro_Video;
 end;
 
@@ -253,14 +253,17 @@ begin
   ex_load.Intro.Back.Name:= 'Loading_Intro_Back';
   ex_load.Intro.Back.Parent:= Loading_Form;
   ex_load.Intro.Back.Align:= TAlignLayout.Client;
+  ex_load.Intro.Back.Cursor:= crDefault;
   ex_load.Intro.Back.Visible:= True;
 
   ex_load.Intro.Video:= TFmxPasLibVlcPlayer.Create(ex_load.Intro.Back);
   ex_load.Intro.Video.Name:= 'Loading_Intro';
   ex_load.Intro.Video.Parent:=  ex_load.Intro.Back;
   ex_load.Intro.Video.Align:= TAlignLayout.Client;
-  ex_load.Intro.Video.Play(ex_load.Path.Images + 'intro.mp4');
+//  ex_load.Intro.Video.Play(ex_load.Path.Images + 'intro.mp4');
   ex_load.Intro.Video.WrapMode:= TImageWrapMode.Stretch;
+  ex_load.Intro.Video.Cursor:= crDefault;
+  ex_load.Intro.Video.OnMouseMove:= ex_load.Input.mouse.Layout.OnMouseMove;
   ex_load.Intro.Video.Visible:= True;
 
   ex_load.Intro.Text:= TText.Create(ex_load.Intro.Video);
@@ -270,19 +273,30 @@ begin
   ex_load.Intro.Text.Font.Family:= 'IcoMoon-Free';
   ex_load.Intro.Text.Text:= 'Skip Video '+ #$ea14;
   ex_load.Intro.Text.TextSettings.FontColor:= TAlphaColorRec.White;
-  ex_load.Intro.Text.TextSettings.Font.Size:= 32;
+  ex_load.Intro.Text.TextSettings.Font.Size:= 24;
+  ex_load.Intro.Text.Opacity:= 1;
   ex_load.Intro.Text.TextSettings.HorzAlign:= TTextAlign.Trailing;
   ex_load.Intro.Text.OnClick:= ex_load.Input.mouse.Text.OnMouseClick;
   ex_load.Intro.Text.OnMouseEnter:= ex_load.Input.mouse.Text.OnMouseEnter;
   ex_load.Intro.Text.OnMouseLeave:= ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Intro.Text.Visible:= True;
 
+  ex_load.Intro.Text_Ani:= TFloatAnimation.Create(ex_load.Intro.Text);
+  ex_load.Intro.Text_Ani.Name:= 'Loading_Intro_Text_Ani';
+  ex_load.Intro.Text_Ani.Parent:=  ex_load.Intro.Text;
+  ex_load.Intro.Text_Ani.Duration:= 0.3;
+  ex_load.Intro.Text_Ani.StopValue:= 0;
+  ex_load.Intro.Text_Ani.PropertyName:= 'Opacity';
+  ex_load.Intro.Text_Ani.Enabled:= False;
+
   ex_load.Intro.Timer:= TTimer.Create(Loading_Form);
   ex_load.Intro.Timer.Name:= 'Loading_Intro_Timer';
   ex_load.Intro.Timer.Parent:=  Loading_Form;
+  ex_load.Intro.Timer.Interval:= 1;
   ex_load.Intro.Timer.OnTimer:= ex_load.Scene.Timer_Pros.OnTimer;
   ex_load.Intro.Timer.Enabled:= True;
 
+  ex_load.Intro.Fade_Count:= 0;
 end;
 
 procedure Skip_Intro;

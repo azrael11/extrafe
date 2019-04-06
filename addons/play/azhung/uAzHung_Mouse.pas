@@ -23,9 +23,17 @@ type
   end;
 
 type
+  TAZHUNG_MOUSE_RECTANGLE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
   TAZHUNG_MOUSE = record
     Text: TAZHUNG_MOUSE_TEXT;
     Image: TAZHUNG_MOUSE_IMAGE;
+    Rectangle: TAZHUNG_MOUSE_RECTANGLE;
   end;
 
 implementation
@@ -40,23 +48,32 @@ uses
 procedure TAZHUNG_MOUSE_TEXT.OnMouseClick(Sender: TObject);
 begin
   if TText(Sender).Name = 'AzHung_Start' then
-    uAzHung_Actions_Start
+    uAzHung_Actions.Choose_Game_Menu
   else if TText(Sender).Name = 'AzHung_Exit' then
     uAzHung_Actions_ReturnToPlay
   else if TText(Sender).Name = 'AzHung_Start_BackTOStart' then
     uAzHung_Actions_ReturnToFirst_From_Start
   else if TText(Sender).Name = 'AzHung_Start_Easy' then
-    uAzHung_SetAll_Set_Start_Tip('easy')
+    uAzHung_SetAll.Game_Menu_Tips('easy')
   else if TText(Sender).Name = 'AzHung_Start_Medium' then
-    uAzHung_SetAll_Set_Start_Tip('medium')
+    uAzHung_SetAll.Game_Menu_Tips('medium')
   else if TText(Sender).Name = 'AzHung_Start_Hard' then
-    uAzHung_SetAll_Set_Start_Tip('hard')
+    uAzHung_SetAll.Game_Menu_Tips('hard')
   else if TText(Sender).Name = 'AzHung_Start_StartGame' then
     uAzHung_Actions_StartGame
   else if TText(Sender).Name = 'AzHung_Game_Letter_' + (TText(Sender).TagString) then
     uAzHung_Actions_ClickLetter(TText(Sender), TText(Sender).Text)
-  else if TText(Sender).Name= 'AzHung_Game_Correct_Catch_Num' then
-    uAzHung_Actions_PlayWinListAnim;
+  else if TText(Sender).Name = 'AzHung_Game_Correct_Catch_Num' then
+    uAzHung_Actions_PlayWinListAnim
+  else if TText(Sender).Name = 'AzHung_Game_Win_OK_Text' then
+    uAzHung_Actions_Reload_Game_Win
+  else if TText(Sender).Name = 'AzHung_Game_Lose_OK_Text' then
+  begin
+    if gAzHung.Actions.Lives > 1 then
+      uAzHung_Actions_Reload_Game_Lose_WithNewWord
+    else
+      uAzHung_Actions_Reload_Game_Lose_New;
+  end
 end;
 
 procedure TAZHUNG_MOUSE_TEXT.OnMouseEnter(Sender: TObject);
@@ -83,7 +100,10 @@ begin
       vAzHung.Load.Start.Select.Start_Game_Glow.Enabled := True;
   end
   else if TText(Sender).Name = 'AzHung_Game_Letter_' + (TText(Sender).TagString) then
-    vAzHung.Game.Letter_Glow[TText(Sender).Tag].Enabled := True;
+    vAzHung.Game.Letter_Glow[TText(Sender).Tag].Enabled := True
+  else if (TText(Sender).Name = 'AzHung_Game_Win_OK_Text') or
+    (TText(Sender).Name = 'AzHung_Game_Lose_OK_Text') then
+    vAzHung.Game.Confirm.OK_Glow.Enabled := True;
 end;
 
 procedure TAZHUNG_MOUSE_TEXT.OnMouseLeave(Sender: TObject);
@@ -110,23 +130,17 @@ begin
       vAzHung.Load.Start.Select.Start_Game_Glow.Enabled := False;
   end
   else if TText(Sender).Name = 'AzHung_Game_Letter_' + (TText(Sender).TagString) then
-    vAzHung.Game.Letter_Glow[TText(Sender).Tag].Enabled := False;
+    vAzHung.Game.Letter_Glow[TText(Sender).Tag].Enabled := False
+  else if (TText(Sender).Name = 'AzHung_Game_Win_OK_Text') or
+    (TText(Sender).Name = 'AzHung_Game_Lose_OK_Text') then
+    vAzHung.Game.Confirm.OK_Glow.Enabled := False;
 end;
 
 { TAZHUNG_MOUSE_IMAGE }
 
 procedure TAZHUNG_MOUSE_IMAGE.OnMouseClick(Sender: TObject);
 begin
-  if TImage(Sender).Name = 'AzHung_Game_Win_OK' then
-    uAzHung_Actions_Reload_Game_Win
-  else if TImage(Sender).Name = 'AzHung_Game_Lose_OK' then
-  begin
-    if gAzHung.Actions.Lives > 1 then
-      uAzHung_Actions_Reload_Game_Lose_WithNewWord
-    else
-      uAzHung_Actions_Reload_Game_Lose_New;
-  end
-  else if TImage(Sender).Name = 'AzHung_Correct_Catch' then
+  if TImage(Sender).Name = 'AzHung_Correct_Catch' then
     uAzHung_Actions_PlayWinListAnim;
 end;
 
@@ -140,14 +154,45 @@ begin
 
 end;
 
+{ TAZHUNG_MOUSE_RECTANGLE }
+
+procedure TAZHUNG_MOUSE_RECTANGLE.OnMouseClick(Sender: TObject);
+begin
+  if TRectangle(Sender).Name = 'AzHung_Game_Win_OK' then
+    uAzHung_Actions_Reload_Game_Win
+  else if TRectangle(Sender).Name = 'AzHung_Game_Lose_OK' then
+  begin
+    if gAzHung.Actions.Lives > 1 then
+      uAzHung_Actions_Reload_Game_Lose_WithNewWord
+    else
+      uAzHung_Actions_Reload_Game_Lose_New;
+  end
+end;
+
+procedure TAZHUNG_MOUSE_RECTANGLE.OnMouseEnter(Sender: TObject);
+begin
+  if (TRectangle(Sender).Name = 'AzHung_Game_Win_OK') or (TRectangle(Sender).Name = 'AzHung_Game_Lose_OK')
+  then
+    vAzHung.Game.Confirm.OK_Glow.Enabled := True
+end;
+
+procedure TAZHUNG_MOUSE_RECTANGLE.OnMouseLeave(Sender: TObject);
+begin
+  if (TRectangle(Sender).Name = 'AzHung_Game_Win_OK') or (TRectangle(Sender).Name = 'AzHung_Game_Lose_OK')
+  then
+    vAzHung.Game.Confirm.OK_Glow.Enabled := False;
+end;
+
 initialization
 
 gAzHung.Input.mouse.Text := TAZHUNG_MOUSE_TEXT.Create;
 gAzHung.Input.mouse.Image := TAZHUNG_MOUSE_IMAGE.Create;
+gAzHung.Input.mouse.Rectangle := TAZHUNG_MOUSE_RECTANGLE.Create;
 
 finalization
 
 gAzHung.Input.mouse.Text.Free;
 gAzHung.Input.mouse.Image.Free;
+gAzHung.Input.mouse.Rectangle.Free;
 
 end.

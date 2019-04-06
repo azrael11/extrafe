@@ -235,7 +235,7 @@ end;
 procedure Free;
 begin
   FreeAndNil(vSoundplayer.EQ.Panel);
-  uSoundplayer_Player.OnLeave(vSoundplayer.Player.Equalizer, vSoundplayer.Player.Equalizer_Glow);
+  uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Equalizer, vSoundplayer.Player.Equalizer_Glow);
   vSoundplayer.scene.Back_Blur.Enabled := False;
   extrafe.prog.State := 'addon_soundplayer';
 end;

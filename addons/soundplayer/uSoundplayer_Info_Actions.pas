@@ -53,26 +53,6 @@ begin
 
 end;
 
-procedure uSoundplayer_Info_Actions_ShowCoverFullscreen;
-begin
-  vSoundplayer.info.Cover_Fullscreen.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_exit_fullscreen.png');
-
-  vSoundplayer.info.Cover.Width:= extrafe.res.Width - 200;
-  vSoundplayer.info.Cover.Height:= vSoundplayer.info.Back_Right.Height - 100;
-  vSoundplayer.info.Cover.Position.X:= 100;
-  vSoundplayer.info.Cover.Position.Y:= 50;
-  vSoundplayer.info.Cover.Opacity:= 0;
-  vSoundplayer.info.Cover.WrapMode:= TImageWrapMode.Center;
-  vSoundplayer.info.Cover.WrapMode:= TImageWrapMode.Fit;
-  vSoundplayer.info.Cover.Visible:= True;
-
-  vSoundplayer.info.Cover_Fade_Ani.StartValue:= vSoundplayer.info.Cover.Opacity;
-  vSoundplayer.info.Cover_Fade_Ani.StopValue:= 1;
-  vSoundplayer.info.Cover_Fade_Ani.AnimationType:= TAnimationType.&InOut;
-  vSoundplayer.info.Cover_Fade_Ani.Start;
-
-end;
-
 procedure uSoundplayer_Info_Actions_StartAnimationCoverExitFullscreen;
 begin
   vSoundplayer.info.Cover.Visible:= False;
@@ -107,7 +87,7 @@ end;
 
 procedure uSoundplayer_Info_Actions_ShowCoverExitFullscreen;
 begin
-  vSoundplayer.info.Cover_Fullscreen.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_fullscreen.png');
+  vSoundplayer.info.Cover_Fullscreen.Text:= #$e989;
 
   vSoundplayer.info.Cover.Width:= 500;
   vSoundplayer.info.Cover.Height:= vSoundplayer.info.Back_Right.Height - 100;
@@ -121,6 +101,26 @@ begin
   vSoundplayer.info.Cover_Fade_Ani.StopValue:= 1;
   vSoundplayer.info.Cover_Fade_Ani.AnimationType:= TAnimationType.&InOut;
   vSoundplayer.info.Cover_Fade_Ani.Start;
+end;
+
+procedure uSoundplayer_Info_Actions_ShowCoverFullscreen;
+begin
+  vSoundplayer.info.Cover_Fullscreen.Text:= #$e98a;
+
+  vSoundplayer.info.Cover.Width:= extrafe.res.Width - 200;
+  vSoundplayer.info.Cover.Height:= vSoundplayer.info.Back_Right.Height - 100;
+  vSoundplayer.info.Cover.Position.X:= 100;
+  vSoundplayer.info.Cover.Position.Y:= 50;
+  vSoundplayer.info.Cover.Opacity:= 0;
+  vSoundplayer.info.Cover.WrapMode:= TImageWrapMode.Center;
+  vSoundplayer.info.Cover.WrapMode:= TImageWrapMode.Fit;
+  vSoundplayer.info.Cover.Visible:= True;
+
+  vSoundplayer.info.Cover_Fade_Ani.StartValue:= vSoundplayer.info.Cover.Opacity;
+  vSoundplayer.info.Cover_Fade_Ani.StopValue:= 1;
+  vSoundplayer.info.Cover_Fade_Ani.AnimationType:= TAnimationType.&InOut;
+  vSoundplayer.info.Cover_Fade_Ani.Start;
+
 end;
 
 end.

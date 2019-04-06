@@ -36,6 +36,92 @@ uses
   Bass;
 
 type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_GENERAL = record
+    Filename: String;
+    Loaded: Boolean;
+    MajorVersion: Integer;
+    MinorVersion: Integer;
+    Size: Integer;
+    FramesCount: Integer;
+    BitRate: Integer;
+    CoverArtCount: Integer;
+    PlayTime: Double;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_MPEG = record
+    FrameSize: Integer;
+    SampleRate: Integer;
+    BitRate: Integer;
+    Padding: Boolean;
+    Copyrighted: Boolean;
+    Quality: Integer;
+    ChannelMode: String;
+    Layer: String;
+    ExtensionMode: String;
+  end;
+
+
+// Keep it for future use
+{type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV = record
+    FmtSize: Integer;
+    FormatTag: Integer;
+    Channels: Integer;
+    AvgBytesPerSec: Integer;
+    BlockAlign: Integer;
+    BitsPerSamples: Integer;
+    CbSize: Integer;
+    ChannelMask: Integer;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF = record
+    Channels: Integer;
+    SampleFrames: Integer;
+    SampleSize: Integer;
+    SampleRate: Double;
+    CompressionID: String;
+    Compression: String;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS = record
+    FormatVersion: Integer;
+    FormatID: Integer;
+    SamplingFrequency: Integer;
+    SampleCount: Integer;
+    ChannelType: String;
+    BlockSizePerChannel: Integer;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF = record
+    FormatVersion: String;
+    SampleRate: Integer;
+    ChannelNumber: Integer;
+    CompressionName: String;
+    SampleCount: Integer;
+    PlayTime: Double;
+    BitRate: Integer;
+    SoundDateLenght: Integer;
+    DSTFramesCount: Integer;
+    DSTFramesRate: Integer;
+    Ratio: Double;
+  end;        }
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO = record
+    General: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_GENERAL;
+    MPEG: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_MPEG;
+//  Keep it for future use
+{    WAV: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV;
+    AIFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF;
+    DS: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS;
+    DFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF;}
+  end;
+
+type
   TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3 = record
     ID3v1: TID3v1Tag;
     ID3v2: TID3v2Tag;
@@ -45,6 +131,7 @@ type
     TagError: Integer;
     Rating_Before_Save: Integer;
     Rating: Integer;
+    Info: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO;
   end;
 
 type
@@ -83,7 +170,10 @@ type
     HasNext_Track: Boolean;
     HasPrevious_Track: Boolean;
     VRepeat: String;
+    VRepeat_Num: Integer;
+    VRepeat_Songs_Num: Integer;
     Suffle: Boolean;
+    Suffle_List: TStringList;
     Mute: Boolean;
     Playing_Now: SmallInt;
     LastPlayed: SmallInt;
@@ -289,11 +379,11 @@ type
     Next_Glow: TGlowEffect;
     Eject: TText;
     Eject_Glow: TGlowEffect;
-    Loop: TImage;
-    Loop_State: TImage;
-    Loop_To: TImage;
+    Loop: TText;
+    Loop_State: TText;
+    Loop_State_Glow: TGlowEffect;
+    Loop_To: TText;
     Loop_Glow: TGlowEffect;
-    Loop_Grey: TMonochromeEffect;
     Song_Title: TText;
     Song_Title_Cover_Left: TRectangle;
     Song_Title_Cover_Right: TRectangle;
@@ -304,12 +394,12 @@ type
     Song_Pos: TALTrackBar;
     Song_Tag: TImage;
     Song_Tag_Glow: TGlowEffect;
+    Song_KBPS: TText;
+    Song_SampleRate: TText;
     Song_Time: TText;
     Song_PlayTime: TText;
-    Suffle: TImage;
+    Suffle: TText;
     Suffle_Glow: TGlowEffect;
-    Suffle_Grey: TMonochromeEffect;
-    Suffle_Color: TFillRGBEffect;
     Speaker_Left: TImage;
     Speaker_Left_Hue: THueAdjustEffect;
     Speaker_Left_Percent: TText;
@@ -324,7 +414,7 @@ type
     Speaker_Right_Lock_Volume: TImage;
     Speaker_Right_Lock_Volume_Glow: TGlowEffect;
     Speaker_Right_Volume_Pos: TALTrackBar;
-    Equalizer: TImage;
+    Equalizer: TText;
     Equalizer_Glow: TGlowEffect;
   end;
 
@@ -355,7 +445,7 @@ type
     Cover: TImage;
     Cover_Label: TText;
     Cover_Fade_Ani: TFloatAnimation;
-    Cover_Fullscreen: TImage;
+    Cover_Fullscreen: TText;
     Cover_Fullscreen_Glow: TGlowEffect;
     Cover_Fullscreen_Ani_Width: TFloatAnimation;
     Cover_Fullscreen_Ani_Height: TFloatAnimation;
@@ -427,20 +517,16 @@ type
 
 type
   TSOUNDPLAYER_ADDON_PLAYLIST_SONGS_EDIT = record
-    Lock: TImage;
+    Lock: TText;
     Lock_Glow: TGlowEffect;
-    Edit: TImage;
+    Edit: TText;
     Edit_Glow: TGlowEffect;
-    Edit_Grey: TMonochromeEffect;
-    Up: TImage;
+    Up: TText;
     Up_Glow: TGlowEffect;
-    Up_Grey: TMonochromeEffect;
-    Down: TImage;
+    Down: TText;
     Down_Glow: TGlowEffect;
-    Down_Grey: TMonochromeEffect;
-    Delete: TImage;
+    Delete: TText;
     Delete_Glow: TGlowEffect;
-    Delete_Grey: TMonochromeEffect;
   end;
 
 type
@@ -465,16 +551,14 @@ type
     List_Line_Edit_Left: TImage;
     List_Line_Edit_Right: TImage;
     Songs_Edit: TSOUNDPLAYER_ADDON_PLAYLIST_SONGS_EDIT;
-    Manage_Icon: TImage;
+    Manage_Icon: TText;
     Manage_Icon_Glow: TGlowEffect;
-    Manage_Icon_Grey: TMonochromeEffect;
     Manage: TSOUNDPLAYER_ADDON_PLAYLIST_MANAGE;
-    Create_Icon: TImage;
+    Create_Icon: TText;
     Create_Icon_Glow: TGlowEffect;
     Create: TSOUNDPLAYER_ADDON_PLAYLIST_CREATE;
-    Remove_Icon: TImage;
+    Remove_Icon: TText;
     Remove_Icon_Glow: TGlowEffect;
-    Remove_Icon_Grey: TMonochromeEffect;
     Remove: TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE;
     Remove_Song: TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE_SONG;
   end;
@@ -630,6 +714,95 @@ type
   end;
 
 type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_GENERAL = record
+    Box: TGroupBox;
+    Filename: TText;
+    Loaded: TCheckBox;
+    MajorVersion: TText;
+    MinorVersion: TText;
+    Size: TText;
+    FramesCount: TText;
+    BitRate: TText;
+    CoverArtCount: TText;
+    PlayTime: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_MPEG = record
+    Box: TGroupBox;
+    FrameSize: TText;
+    SampleRate: TText;
+    BitRate: TText;
+    Padding: TCheckBox;
+    Copyrighted: TCheckBox;
+    Quality: TText;
+    ChannelMode: TText;
+    Layer: TText;
+    ExtensionMode: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_WAV = record
+    Box: TGroupBox;
+    FmtSize: TText;
+    FormatTag: TText;
+    Channels: TText;
+    AvgBytesPerSec: TText;
+    BlockAlign: TText;
+    BitsPerSamples: TText;
+    CbSize: TText;
+    ChannelMask: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_AIFF = record
+    Box: TGroupBox;
+    Channels: TText;
+    SampleFrames: TText;
+    SampleSize: TText;
+    SampleRate: TText;
+    CompressionID: TText;
+    Compression: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DS= record
+    Box: TGroupBox;
+    FormatVersion: TText;
+    FormatID: TText;
+    SamplingFrequency: TText;
+    SampleCount: TText;
+    ChannelType: TText;
+    BlockSizePerChannel: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DFF= record
+    Box: TGroupBox;
+    FormatVersion: TText;
+    SampleRate: TText;
+    ChannelNumber: TText;
+    CompressionName: TText;
+    SampleCount: TText;
+    PlayTime: TText;
+    BitRate: TText;
+    SoundDataLenght: TText;
+    DSTFramesCount: TText;
+    DSTFramesRate: TText;
+    Ratio: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO = record
+    General: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_GENERAL;
+    MPEG: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_MPEG;
+    WAV: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_WAV;
+    AIFF: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_AIFF;
+    DSInfo: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DS;
+    DFFInfo: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DFF;
+  end;
+
+type
   TSOUNDPLAYER_ADDON_TAGS_MP3 = record
     Back: Tpanel;
     Back_Blur: TGaussianBlurEffect;
@@ -638,9 +811,10 @@ type
     Button_Save: TButton;
     Button_Cancel: TButton;
     TabControl: TTabControl;
-    TabItem: array [0 .. 1] of TTabItem;
+    TabItem: array [0 .. 2] of TTabItem;
     ID3v1: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v1;
     ID3v2: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v2;
+    Info: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO;
     Cover_Select: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_COVER_SELECT;
     Lyrics_Add: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_ADD;
   end;
@@ -759,7 +933,7 @@ end;
 
 procedure TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG.OnShow(Sender: TObject);
 begin
-  vSoundplayer.scene.OpenDialog.FileName := '';
+  vSoundplayer.scene.OpenDialog.Filename := '';
   if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_AddSongs' then
     vSoundplayer.scene.OpenDialog.Filter := 'mp3 files (*.mp3)|*.mp3|ogg files(*.ogg)|*.ogg'
   else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Mp3_Cover_AddComputer' then

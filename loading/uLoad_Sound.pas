@@ -21,7 +21,11 @@ uses
 
 procedure uLoad_Sound_StartSoundSystem;
 begin
-  // Edo ola prepei na mpoune se katastasi try with expections.
+//   Edo ola prepei na mpoune se katastasi try with expections.
+  if (HiWord(BASS_GetVersion)) <> BASSVERSION then
+  begin
+
+  end;
 
   if (HiWord(BASS_GetVersion) <> BASSVERSION) then
   begin

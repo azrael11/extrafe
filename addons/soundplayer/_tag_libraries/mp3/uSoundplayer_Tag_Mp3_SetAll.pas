@@ -24,6 +24,7 @@ uses
 procedure uSoundplayer_TagSet_Mp3;
 procedure Set_ID3v1_Frame;
 procedure Set_ID3v2_Frame;
+procedure Set_Info_Frame;
 procedure uSoundplayer_TagSet_Mp3_SelectCover;
 procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);
 procedure uSoundplayer_TagSet_Mp3_ShowLyrics_AddDialog;
@@ -757,9 +758,525 @@ begin
   vSoundplayer.tag.mp3.Button_Cancel.Visible := True;
 end;
 
+procedure Set_Info_Frame;
+begin
+  vSoundplayer.tag.mp3.Info.General.Loaded := TCheckBox.Create(vSoundplayer.tag.mp3.TabItem[2]);
+  vSoundplayer.tag.mp3.Info.General.Loaded.Name := 'A_SP_Tag_Mp3_Info_General_Loaded';
+  vSoundplayer.tag.mp3.Info.General.Loaded.Parent := vSoundplayer.tag.mp3.TabItem[2];
+  vSoundplayer.tag.mp3.Info.General.Loaded.SetBounds(10, 10, 400, 27);
+  vSoundplayer.tag.mp3.Info.General.Loaded.Text := ' : Loaded';
+  vSoundplayer.tag.mp3.Info.General.Loaded.IsChecked := addons.Soundplayer.Player.tag.mp3.Info.General.Loaded;
+  vSoundplayer.tag.mp3.Info.General.Loaded.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.Loaded.Enabled := False;
+  vSoundplayer.tag.mp3.Info.General.Loaded.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.Box := TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[2]);
+  vSoundplayer.tag.mp3.Info.General.Box.Name := 'A_SP_Tag_Mp3_Info_General';
+  vSoundplayer.tag.mp3.Info.General.Box.Parent := vSoundplayer.tag.mp3.TabItem[2];
+  vSoundplayer.tag.mp3.Info.General.Box.SetBounds(10, 45, (vSoundplayer.tag.mp3.TabControl.Width / 2) - 15,
+    vSoundplayer.tag.mp3.TabControl.Height - 45);
+  vSoundplayer.tag.mp3.Info.General.Box.Text := 'General';
+  vSoundplayer.tag.mp3.Info.General.Box.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.Filename := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.Filename.Name := 'A_SP_Tag_Mp3_Info_General_Filename';
+  vSoundplayer.tag.mp3.Info.General.Filename.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.Filename.SetBounds(15, 20, vSoundplayer.tag.mp3.Info.General.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.Filename.Text := 'Filename : '+ addons.Soundplayer.Player.tag.mp3.Info.General.Filename;
+  vSoundplayer.tag.mp3.Info.General.Filename.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.Filename.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.Filename.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.MajorVersion := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.MajorVersion.Name := 'A_SP_Tag_Mp3_Info_General_MajorVersion';
+  vSoundplayer.tag.mp3.Info.General.MajorVersion.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.MajorVersion.SetBounds(15, 50, vSoundplayer.tag.mp3.Info.General.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.MajorVersion.Text := 'Major Version : ' +
+    addons.Soundplayer.Player.tag.mp3.Info.General.MajorVersion.ToString;
+  vSoundplayer.tag.mp3.Info.General.MajorVersion.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.MajorVersion.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.MajorVersion.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.MinorVersion := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.MinorVersion.Name := 'A_SP_Tag_Mp3_Info_General_MinorVersion';
+  vSoundplayer.tag.mp3.Info.General.MinorVersion.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.MinorVersion.SetBounds(15, 80, vSoundplayer.tag.mp3.Info.General.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.MinorVersion.Text := 'Minor Version : ' +
+    addons.Soundplayer.Player.tag.mp3.Info.General.MinorVersion.ToString;
+  vSoundplayer.tag.mp3.Info.General.MinorVersion.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.MinorVersion.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.MinorVersion.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.Size := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.Size.Name := 'A_SP_Tag_Mp3_Info_General_Size';
+  vSoundplayer.tag.mp3.Info.General.Size.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.Size.SetBounds(15, 110, vSoundplayer.tag.mp3.Info.General.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.Size.Text := 'Size : ' + addons.Soundplayer.Player.tag.mp3.Info.General.
+    Size.ToString+ ' bytes';
+  vSoundplayer.tag.mp3.Info.General.Size.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.Size.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.Size.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.FramesCount := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.FramesCount.Name := 'A_SP_Tag_Mp3_Info_General_FramesCount';
+  vSoundplayer.tag.mp3.Info.General.FramesCount.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.FramesCount.SetBounds(15, 140, vSoundplayer.tag.mp3.Info.General.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.FramesCount.Text := 'Frames Count : ' +
+    addons.Soundplayer.Player.tag.mp3.Info.General.FramesCount.ToString;
+  vSoundplayer.tag.mp3.Info.General.FramesCount.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.FramesCount.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.FramesCount.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.BitRate := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.BitRate.Name := 'A_SP_Tag_Mp3_Info_General_BitRate';
+  vSoundplayer.tag.mp3.Info.General.BitRate.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.BitRate.SetBounds(15, 170, vSoundplayer.tag.mp3.Info.General.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.BitRate.Text := 'BitRate : ' +
+    addons.Soundplayer.Player.tag.mp3.Info.General.BitRate.ToString+ ' bps';
+  vSoundplayer.tag.mp3.Info.General.BitRate.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.BitRate.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.BitRate.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount.Name := 'A_SP_Tag_Mp3_Info_General_CoverArtCount';
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount.SetBounds(15, 200,
+    vSoundplayer.tag.mp3.Info.General.Box.Width - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount.Text := 'Cover Art Count : ' +
+    addons.Soundplayer.Player.tag.mp3.Info.General.CoverArtCount.ToString;
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.CoverArtCount.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.General.PlayTime := TText.Create(vSoundplayer.tag.mp3.Info.General.Box);
+  vSoundplayer.tag.mp3.Info.General.PlayTime.Name := 'A_SP_Tag_Mp3_Info_General_PlayTime';
+  vSoundplayer.tag.mp3.Info.General.PlayTime.Parent := vSoundplayer.tag.mp3.Info.General.Box;
+  vSoundplayer.tag.mp3.Info.General.PlayTime.SetBounds(15, 230, vSoundplayer.tag.mp3.Info.General.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.General.PlayTime.Text := 'Play : ' +
+    addons.Soundplayer.Player.tag.mp3.Info.General.PlayTime.ToString + ' times';
+  vSoundplayer.tag.mp3.Info.General.PlayTime.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.General.PlayTime.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.General.PlayTime.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.Box := TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[2]);
+  vSoundplayer.tag.mp3.Info.Mpeg.Box.Name := 'A_SP_Tag_Mp3_Info_Mpeg';
+  vSoundplayer.tag.mp3.Info.Mpeg.Box.Parent := vSoundplayer.tag.mp3.TabItem[2];
+  vSoundplayer.tag.mp3.Info.Mpeg.Box.SetBounds((vSoundplayer.tag.mp3.TabControl.Width /2)+ 5, 45, (vSoundplayer.tag.mp3.TabControl.Width / 2) - 15,
+    vSoundplayer.tag.mp3.TabControl.Height - 45);
+  vSoundplayer.tag.mp3.Info.Mpeg.Box.Text := 'MPEG';
+  vSoundplayer.tag.mp3.Info.Mpeg.Box.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize := TText.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize.Name := 'A_SP_Tag_Mp3_Info_Mpeg_FrameSize';
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize.SetBounds(15, 20, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize.Text := 'Frame Size : ' +
+    addons.Soundplayer.Player.tag.mp3.Info.Mpeg.FrameSize.ToString;
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.FrameSize.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate := TText.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate.Name := 'A_SP_Tag_Mp3_Info_Mpeg_SampleRate';
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate.SetBounds(15, 50, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate.Text := 'Sample Rate : '+
+    addons.Soundplayer.Player.tag.mp3.Info.Mpeg.SampleRate.ToString+ ' Hz';
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.SampleRate.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate := TText.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate.Name := 'A_SP_Tag_Mp3_Info_Mpeg_BitRate';
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate.SetBounds(15, 80, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate.Text := 'BitRate : '+  addons.Soundplayer.Player.tag.mp3.Info.Mpeg.BitRate.ToString+ ' bps';
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.BitRate.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding := TCheckBox.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.Name := 'A_SP_Tag_Mp3_Info_Mpeg_Padding';
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.SetBounds(15, 110, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.IsChecked := addons.Soundplayer.Player.tag.mp3.Info.Mpeg.Padding;
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.Text := ' : Padding';
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.Enabled := False;
+  vSoundplayer.tag.mp3.Info.Mpeg.Padding.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted := TCheckBox.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.Name := 'A_SP_Tag_Mp3_Info_Mpeg_Copyrighted';
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.SetBounds(15, 140, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.IsChecked :=
+    addons.Soundplayer.Player.tag.mp3.Info.Mpeg.Copyrighted;
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.Text := ': Copyrighted';
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.Enabled := False;
+  vSoundplayer.tag.mp3.Info.Mpeg.Copyrighted.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality := TText.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality.Name := 'A_SP_Tag_Mp3_Info_Mpeg_Quality';
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality.SetBounds(15, 170, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality.Text := 'Sound Quality : '+  addons.Soundplayer.Player.tag.mp3.Info.Mpeg.Quality.ToString;
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.Quality.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode := TText.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode.Name := 'A_SP_Tag_Mp3_Info_Mpeg_ChannelMode';
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode.SetBounds(15, 200, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode.Text := 'Channel Mode : '+ addons.Soundplayer.Player.tag.mp3.Info.Mpeg.ChannelMode;
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.ChannelMode.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer := TText.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer.Name := 'A_SP_Tag_Mp3_Info_Mpeg_Layer';
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer.SetBounds(15, 230, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer.Text := 'Layers : '+ addons.Soundplayer.Player.tag.mp3.Info.Mpeg.Layer;
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer.TextSettings.HorzAlign := TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.Layer.Visible := True;
+
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode := TText.Create(vSoundplayer.tag.mp3.Info.Mpeg.Box);
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode.Name := 'A_SP_Tag_Mp3_Info_Mpeg_ExtensionMode';
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode.Parent := vSoundplayer.tag.mp3.Info.Mpeg.Box;
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode.SetBounds(15, 270, vSoundplayer.tag.mp3.Info.Mpeg.Box.Width
+    - 10, 27);
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode.Text := 'Mode Extension : '+
+    addons.Soundplayer.Player.tag.mp3.Info.Mpeg.ExtensionMode;
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode.TextSettings.FontColor := TAlphaColorRec.White;
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.Info.Mpeg.ExtensionMode.Visible := True;
+
+  // The implentamentions of the Wav, Aiff, DS, DFF variables that not needed when mp3
+  // But must keep for future use
+  { vSoundplayer.tag.mp3.Info.Wav.Box := TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[2]);
+    vSoundplayer.tag.mp3.Info.Wav.Box.Name := 'A_SP_Tag_Mp3_Info_Wav';
+    vSoundplayer.tag.mp3.Info.Wav.Box.Parent := vSoundplayer.tag.mp3.TabItem[2];
+    vSoundplayer.tag.mp3.Info.Wav.Box.SetBounds(330, 15, 150, vSoundplayer.tag.mp3.TabControl.Height - 45);
+    vSoundplayer.tag.mp3.Info.Wav.Box.Text := 'WAV';
+    vSoundplayer.tag.mp3.Info.Wav.Box.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.FmtSize := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.FmtSize.Name := 'A_SP_Tag_Mp3_Info_Wav_FmtSize';
+    vSoundplayer.tag.mp3.Info.Wav.FmtSize.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.FmtSize.SetBounds(5, 5, vSoundplayer.tag.mp3.Info.Wav.Box.Width - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.FmtSize.Text := addons.Soundplayer.Player.tag.mp3.Info.Wav.FmtSize.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.FmtSize.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.FmtSize.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.FormatTag := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.FormatTag.Name := 'A_SP_Tag_Mp3_Info_Wav_FormatTag';
+    vSoundplayer.tag.mp3.Info.Wav.FormatTag.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.FormatTag.SetBounds(5, 30, vSoundplayer.tag.mp3.Info.Wav.Box.Width - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.FormatTag.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Wav.FormatTag.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.FormatTag.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.FormatTag.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.Channels := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.Channels.Name := 'A_SP_Tag_Mp3_Info_Wav_Channels';
+    vSoundplayer.tag.mp3.Info.Wav.Channels.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.Channels.SetBounds(5, 60, vSoundplayer.tag.mp3.Info.Wav.Box.Width - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.Channels.Text := addons.Soundplayer.Player.tag.mp3.Info.Wav.Channels.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.Channels.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.Channels.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.AvgBytesPerSec := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.AvgBytesPerSec.Name := 'A_SP_Tag_Mp3_Info_Wav_AvgBytesPerSec';
+    vSoundplayer.tag.mp3.Info.Wav.AvgBytesPerSec.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.AvgBytesPerSec.SetBounds(5, 90, vSoundplayer.tag.mp3.Info.Wav.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.AvgBytesPerSec.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Wav.AvgBytesPerSec.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.AvgBytesPerSec.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.AvgBytesPerSec.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.BlockAlign := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.BlockAlign.Name := 'A_SP_Tag_Mp3_Info_Wav_BlockAlign';
+    vSoundplayer.tag.mp3.Info.Wav.BlockAlign.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.BlockAlign.SetBounds(5, 120, vSoundplayer.tag.mp3.Info.Wav.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.BlockAlign.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Wav.BlockAlign.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.BlockAlign.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.BlockAlign.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.BitsPerSamples := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.BitsPerSamples.Name := 'A_SP_Tag_Mp3_Info_Wav_BitsPerSamples';
+    vSoundplayer.tag.mp3.Info.Wav.BitsPerSamples.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.BitsPerSamples.SetBounds(5, 150, vSoundplayer.tag.mp3.Info.Wav.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.BitsPerSamples.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Wav.BitsPerSamples.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.BitsPerSamples.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.BitsPerSamples.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.CbSize := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.CbSize.Name := 'A_SP_Tag_Mp3_Info_Wav_CbSize';
+    vSoundplayer.tag.mp3.Info.Wav.CbSize.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.CbSize.SetBounds(5, 180, vSoundplayer.tag.mp3.Info.Wav.Box.Width - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.CbSize.Text := addons.Soundplayer.Player.tag.mp3.Info.Wav.CbSize.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.CbSize.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.CbSize.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Wav.ChannelMask := TText.Create(vSoundplayer.tag.mp3.Info.Wav.Box);
+    vSoundplayer.tag.mp3.Info.Wav.ChannelMask.Name := 'A_SP_Tag_Mp3_Info_Wav_ChannelMask';
+    vSoundplayer.tag.mp3.Info.Wav.ChannelMask.Parent := vSoundplayer.tag.mp3.Info.Wav.Box;
+    vSoundplayer.tag.mp3.Info.Wav.ChannelMask.SetBounds(5, 210, vSoundplayer.tag.mp3.Info.Wav.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Wav.ChannelMask.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Wav.ChannelMask.ToString;
+    vSoundplayer.tag.mp3.Info.Wav.ChannelMask.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Wav.ChannelMask.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Aiff.Box := TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[2]);
+    vSoundplayer.tag.mp3.Info.Aiff.Box.Name := 'A_SP_Tag_Mp3_Info_Aiff';
+    vSoundplayer.tag.mp3.Info.Aiff.Box.Parent := vSoundplayer.tag.mp3.TabItem[2];
+    vSoundplayer.tag.mp3.Info.Aiff.Box.SetBounds(490, 15, 150, vSoundplayer.tag.mp3.TabControl.Height - 45);
+    vSoundplayer.tag.mp3.Info.Aiff.Box.Text := 'AIFF';
+    vSoundplayer.tag.mp3.Info.Aiff.Box.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Aiff.Channels := TText.Create(vSoundplayer.tag.mp3.Info.Aiff.Box);
+    vSoundplayer.tag.mp3.Info.Aiff.Channels.Name := 'A_SP_Tag_Mp3_Info_Aiff_Channels';
+    vSoundplayer.tag.mp3.Info.Aiff.Channels.Parent := vSoundplayer.tag.mp3.Info.Aiff.Box;
+    vSoundplayer.tag.mp3.Info.Aiff.Channels.SetBounds(5, 5, vSoundplayer.tag.mp3.Info.Aiff.Box.Width - 10, 27);
+    vSoundplayer.tag.mp3.Info.Aiff.Channels.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Aiff.Channels.ToString;
+    vSoundplayer.tag.mp3.Info.Aiff.Channels.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Aiff.Channels.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Aiff.SampleFrames := TText.Create(vSoundplayer.tag.mp3.Info.Aiff.Box);
+    vSoundplayer.tag.mp3.Info.Aiff.SampleFrames.Name := 'A_SP_Tag_Mp3_Info_Aiff_SampleFrames';
+    vSoundplayer.tag.mp3.Info.Aiff.SampleFrames.Parent := vSoundplayer.tag.mp3.Info.Aiff.Box;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleFrames.SetBounds(5, 30, vSoundplayer.tag.mp3.Info.Aiff.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Aiff.SampleFrames.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Aiff.SampleFrames.ToString;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleFrames.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleFrames.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Aiff.SampleSize := TText.Create(vSoundplayer.tag.mp3.Info.Aiff.Box);
+    vSoundplayer.tag.mp3.Info.Aiff.SampleSize.Name := 'A_SP_Tag_Mp3_Info_Aiff_SampleSize';
+    vSoundplayer.tag.mp3.Info.Aiff.SampleSize.Parent := vSoundplayer.tag.mp3.Info.Aiff.Box;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleSize.SetBounds(5, 60, vSoundplayer.tag.mp3.Info.Aiff.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Aiff.SampleSize.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Aiff.SampleSize.ToString;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleSize.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleSize.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Aiff.SampleRate := TText.Create(vSoundplayer.tag.mp3.Info.Aiff.Box);
+    vSoundplayer.tag.mp3.Info.Aiff.SampleRate.Name := 'A_SP_Tag_Mp3_Info_Aiff_SampleRate';
+    vSoundplayer.tag.mp3.Info.Aiff.SampleRate.Parent := vSoundplayer.tag.mp3.Info.Aiff.Box;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleRate.SetBounds(5, 90, vSoundplayer.tag.mp3.Info.Aiff.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Aiff.SampleRate.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Aiff.SampleRate.ToString;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleRate.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Aiff.SampleRate.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Aiff.CompressionID := TText.Create(vSoundplayer.tag.mp3.Info.Aiff.Box);
+    vSoundplayer.tag.mp3.Info.Aiff.CompressionID.Name := 'A_SP_Tag_Mp3_Info_Aiff_CompressionID';
+    vSoundplayer.tag.mp3.Info.Aiff.CompressionID.Parent := vSoundplayer.tag.mp3.Info.Aiff.Box;
+    vSoundplayer.tag.mp3.Info.Aiff.CompressionID.SetBounds(5, 120, vSoundplayer.tag.mp3.Info.Aiff.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Aiff.CompressionID.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.Aiff.CompressionID;
+    vSoundplayer.tag.mp3.Info.Aiff.CompressionID.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Aiff.CompressionID.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.Aiff.Compression := TText.Create(vSoundplayer.tag.mp3.Info.Aiff.Box);
+    vSoundplayer.tag.mp3.Info.Aiff.Compression.Name := 'A_SP_Tag_Mp3_Info_Aiff_Compression';
+    vSoundplayer.tag.mp3.Info.Aiff.Compression.Parent := vSoundplayer.tag.mp3.Info.Aiff.Box;
+    vSoundplayer.tag.mp3.Info.Aiff.Compression.SetBounds(5, 150, vSoundplayer.tag.mp3.Info.Aiff.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.Aiff.Compression.Text := addons.Soundplayer.Player.tag.mp3.Info.Aiff.Compression;
+    vSoundplayer.tag.mp3.Info.Aiff.Compression.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.Aiff.Compression.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DSInfo.Box := TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[2]);
+    vSoundplayer.tag.mp3.Info.DSInfo.Box.Name := 'A_SP_Tag_Mp3_Info_DSInfo';
+    vSoundplayer.tag.mp3.Info.DSInfo.Box.Parent := vSoundplayer.tag.mp3.TabItem[2];
+    vSoundplayer.tag.mp3.Info.DSInfo.Box.SetBounds(650, 15, 150, vSoundplayer.tag.mp3.TabControl.Height - 45);
+    vSoundplayer.tag.mp3.Info.DSInfo.Box.Text := 'DS';
+    vSoundplayer.tag.mp3.Info.DSInfo.Box.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatVersion := TText.Create(vSoundplayer.tag.mp3.Info.DSInfo.Box);
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatVersion.Name := 'A_SP_Tag_Mp3_DSInfo_FormatVersion';
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatVersion.Parent := vSoundplayer.tag.mp3.Info.DSInfo.Box;
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatVersion.SetBounds(5, 5, vSoundplayer.tag.mp3.Info.DSInfo.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatVersion.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.DS.FormatVersion.ToString;
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatVersion.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatVersion.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatID := TText.Create(vSoundplayer.tag.mp3.Info.DSInfo.Box);
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatID.Name := 'A_SP_Tag_Mp3_DSInfo_FormatID';
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatID.Parent := vSoundplayer.tag.mp3.Info.DSInfo.Box;
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatID.SetBounds(5, 30, vSoundplayer.tag.mp3.Info.DSInfo.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatID.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.DS.FormatID.ToString;
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatID.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.DSInfo.FormatID.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DSInfo.SamplingFrequency := TText.Create(vSoundplayer.tag.mp3.Info.DSInfo.Box);
+    vSoundplayer.tag.mp3.Info.DSInfo.SamplingFrequency.Name := 'A_SP_Tag_Mp3_DSInfo_SamplingFrequency';
+    vSoundplayer.tag.mp3.Info.DSInfo.SamplingFrequency.Parent := vSoundplayer.tag.mp3.Info.DSInfo.Box;
+    vSoundplayer.tag.mp3.Info.DSInfo.SamplingFrequency.SetBounds(5, 60,
+    vSoundplayer.tag.mp3.Info.DSInfo.Box.Width - 10, 27);
+    vSoundplayer.tag.mp3.Info.DSInfo.SamplingFrequency.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.DS.SamplingFrequency.ToString;
+    vSoundplayer.tag.mp3.Info.DSInfo.SamplingFrequency.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.DSInfo.SamplingFrequency.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DSInfo.SampleCount := TText.Create(vSoundplayer.tag.mp3.Info.DSInfo.Box);
+    vSoundplayer.tag.mp3.Info.DSInfo.SampleCount.Name := 'A_SP_Tag_Mp3_DSInfo_SampleCount';
+    vSoundplayer.tag.mp3.Info.DSInfo.SampleCount.Parent := vSoundplayer.tag.mp3.Info.DSInfo.Box;
+    vSoundplayer.tag.mp3.Info.DSInfo.SampleCount.SetBounds(5, 90, vSoundplayer.tag.mp3.Info.DSInfo.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.DSInfo.SampleCount.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.DS.SampleCount.ToString;
+    vSoundplayer.tag.mp3.Info.DSInfo.SampleCount.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.DSInfo.SampleCount.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DSInfo.ChannelType := TText.Create(vSoundplayer.tag.mp3.Info.DSInfo.Box);
+    vSoundplayer.tag.mp3.Info.DSInfo.ChannelType.Name := 'A_SP_Tag_Mp3_DSInfo_ChannelType';
+    vSoundplayer.tag.mp3.Info.DSInfo.ChannelType.Parent := vSoundplayer.tag.mp3.Info.DSInfo.Box;
+    vSoundplayer.tag.mp3.Info.DSInfo.ChannelType.SetBounds(5, 120, vSoundplayer.tag.mp3.Info.DSInfo.Box.Width
+    - 10, 27);
+    vSoundplayer.tag.mp3.Info.DSInfo.ChannelType.Text := addons.Soundplayer.Player.tag.mp3.Info.DS.ChannelType;
+    vSoundplayer.tag.mp3.Info.DSInfo.ChannelType.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.DSInfo.ChannelType.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DSInfo.BlockSizePerChannel := TText.Create(vSoundplayer.tag.mp3.Info.DSInfo.Box);
+    vSoundplayer.tag.mp3.Info.DSInfo.BlockSizePerChannel.Name := 'A_SP_Tag_Mp3_DSInfo_BlockSizePerChannel';
+    vSoundplayer.tag.mp3.Info.DSInfo.BlockSizePerChannel.Parent := vSoundplayer.tag.mp3.Info.DSInfo.Box;
+    vSoundplayer.tag.mp3.Info.DSInfo.BlockSizePerChannel.SetBounds(5, 150,
+    vSoundplayer.tag.mp3.Info.DSInfo.Box.Width - 10, 27);
+    vSoundplayer.tag.mp3.Info.DSInfo.BlockSizePerChannel.Text :=
+    addons.Soundplayer.Player.tag.mp3.Info.DS.BlockSizePerChannel.ToString;
+    vSoundplayer.tag.mp3.Info.DSInfo.BlockSizePerChannel.TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.tag.mp3.Info.DSInfo.BlockSizePerChannel.Visible := True;
+
+    vSoundplayer.tag.mp3.Info.DFFInfo.Box := TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[2]);
+    vSoundplayer.tag.mp3.Info.DFFInfo.Box.Name := 'A_SP_Tag_Mp3_Info_DFFInfo';
+    vSoundplayer.tag.mp3.Info.DFFInfo.Box.Parent := vSoundplayer.tag.mp3.TabItem[2];
+    vSoundplayer.tag.mp3.Info.DFFInfo.Box.SetBounds(810, 15, 150, vSoundplayer.tag.mp3.TabControl.Height - 45);
+    vSoundplayer.tag.mp3.Info.DFFInfo.Box.Text := 'DFF';
+    vSoundplayer.tag.mp3.Info.DFFInfo.Box.Visible := True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.FormatVersion:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.FormatVersion.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_FormatVersion';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.FormatVersion.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.FormatVersion.SetBounds(5, 5, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.FormatVersion.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.FormatVersion;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.FormatVersion.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.FormatVersion.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleRate:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleRate.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_SampleRate';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleRate.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleRate.SetBounds(5, 30, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleRate.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.SampleRate.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleRate.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleRate.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.ChannelNumber:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.ChannelNumber.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_ChannelNumber';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.ChannelNumber.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.ChannelNumber.SetBounds(5, 60, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.ChannelNumber.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.ChannelNumber.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.ChannelNumber.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.ChannelNumber.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.CompressionName:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.CompressionName.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_CompressionName';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.CompressionName.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.CompressionName.SetBounds(5, 90, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.CompressionName.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.CompressionName;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.CompressionName.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.CompressionName.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleCount:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleCount.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_SampleCount';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleCount.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleCount.SetBounds(5, 120, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleCount.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.SampleCount.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleCount.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SampleCount.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.PlayTime:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.PlayTime.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_PlayTime';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.PlayTime.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.PlayTime.SetBounds(5, 150, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.PlayTime.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.PlayTime.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.PlayTime.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.PlayTime.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.BitRate:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.BitRate.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_BitRate';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.BitRate.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.BitRate.SetBounds(5, 180, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.BitRate.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.BitRate.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.BitRate.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.BitRate.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SoundDataLenght:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SoundDataLenght.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_SoundDataLenght';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SoundDataLenght.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SoundDataLenght.SetBounds(5, 210, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SoundDataLenght.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.SoundDateLenght.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SoundDataLenght.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.SoundDataLenght.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesCount:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesCount.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_DSTFramesCount';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesCount.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesCount.SetBounds(5, 240, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesCount.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.DSTFramesCount.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesCount.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesCount.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesRate:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesRate.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_DSTFramesRate';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesRate.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesRate.SetBounds(5, 270, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesRate.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.DSTFramesRate.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesRate.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.DSTFramesRate.Visible:= True;
+
+    vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio:= TText.Create(vSoundplayer.tag.mp3.Info.DFFInfo.Box);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio.Name:= 'A_SP_Tag_Mp3_Info_DFFInfo_Ratio';
+    vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio.Parent:=  vSoundplayer.tag.mp3.Info.DFFInfo.Box;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio.SetBounds(5, 300, vSoundplayer.tag.mp3.Info.DFFInfo.Box.Width - 10, 27);
+    vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio.Text:= addons.soundplayer.Player.Tag.mp3.Info.DFF.Ratio.ToString;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio.TextSettings.FontColor:= TAlphaColorRec.White;
+    vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio.Visible:= True; }
+end;
+
 procedure uSoundplayer_TagSet_Mp3;
 const
-  cTabNames: array [0..2] of string= ('ID3v1','Id3v2','Info');
+  cTabNames: array [0 .. 2] of string = ('ID3v1', 'Id3v2', 'Info');
 var
   vi: Integer;
 begin
@@ -783,24 +1300,25 @@ begin
   uLoad_AllTypes.uLoad_SetAll_CreateHeader(vSoundplayer.tag.mp3.Back, 'A_SP_Tag_Mp3',
     addons.Soundplayer.Path.Images + 'sp_tag_mp3.png', 'Tag mp3');
 
-  vSoundplayer.Tag.mp3.Main:= TPanel.Create(vSoundplayer.Tag.mp3.Back);
-  vSoundplayer.Tag.mp3.Main.Name:= 'A_SP_Back_Main';
-  vSoundplayer.Tag.mp3.Main.Parent:=  vSoundplayer.Tag.mp3.Back;
-  vSoundplayer.Tag.mp3.Main.SetBounds(0, 30, vSoundplayer.Tag.mp3.Back.Width, vSoundplayer.Tag.mp3.Back.Height - 30);
-  vSoundplayer.Tag.mp3.Main.Visible:= True;
+  vSoundplayer.tag.mp3.Main := TPanel.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Main.Name := 'A_SP_Back_Main';
+  vSoundplayer.tag.mp3.Main.Parent := vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Main.SetBounds(0, 30, vSoundplayer.tag.mp3.Back.Width,
+    vSoundplayer.tag.mp3.Back.Height - 30);
+  vSoundplayer.tag.mp3.Main.Visible := True;
 
-  vSoundplayer.tag.mp3.Logo := TImage.Create(vSoundplayer.Tag.mp3.Main);
+  vSoundplayer.tag.mp3.Logo := TImage.Create(vSoundplayer.tag.mp3.Main);
   vSoundplayer.tag.mp3.Logo.Name := 'A_SP_Tag_Mp3_Logo';
-  vSoundplayer.tag.mp3.Logo.Parent := vSoundplayer.Tag.mp3.Main;
-  vSoundplayer.tag.mp3.Logo.SetBounds(vSoundplayer.Tag.mp3.Main.Width - 60, 5, 50, 50);
+  vSoundplayer.tag.mp3.Logo.Parent := vSoundplayer.tag.mp3.Main;
+  vSoundplayer.tag.mp3.Logo.SetBounds(vSoundplayer.tag.mp3.Main.Width - 60, 5, 50, 50);
   vSoundplayer.tag.mp3.Logo.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_tag_mp3.png');
   vSoundplayer.tag.mp3.Logo.WrapMode := TImageWrapMode.Fit;
   vSoundplayer.tag.mp3.Logo.Visible := True;
 
-  vSoundplayer.tag.mp3.TabControl := TTabControl.Create(vSoundplayer.Tag.mp3.Main);
+  vSoundplayer.tag.mp3.TabControl := TTabControl.Create(vSoundplayer.tag.mp3.Main);
   vSoundplayer.tag.mp3.TabControl.Name := 'A_SP_Tag_Mp3_TabControl';
-  vSoundplayer.tag.mp3.TabControl.Parent := vSoundplayer.Tag.mp3.Main;
-  vSoundplayer.tag.mp3.TabControl.SetBounds(10, 30, vSoundplayer.Tag.mp3.Main.Width - 20,
+  vSoundplayer.tag.mp3.TabControl.Parent := vSoundplayer.tag.mp3.Main;
+  vSoundplayer.tag.mp3.TabControl.SetBounds(10, 30, vSoundplayer.tag.mp3.Main.Width - 20,
     vSoundplayer.tag.mp3.Back.Height - 100);
   vSoundplayer.tag.mp3.TabControl.Visible := True;
 
@@ -817,6 +1335,7 @@ begin
 
   Set_ID3v1_Frame;
   Set_ID3v2_Frame;
+  Set_Info_Frame;
 
 end;
 
@@ -880,7 +1399,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.tag.mp3.Back);
-  uSoundplayer_Player.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
+  uSoundplayer_Player.OnLeave(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow);
 end;
 
 procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);

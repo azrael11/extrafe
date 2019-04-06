@@ -10,7 +10,7 @@ uses
   ID3v1Library,
   ID3v2Library,
   OggVorbisAndOpusTagLibrary,
-  uSoundplayer_Playlist_Actions,
+  uSoundplayer_Playlist,
   uWindows,
   BASS;
 
@@ -47,8 +47,8 @@ procedure GetTags_MP3(mSongPath, mSongName: string; mPlaylistNum, mSongNum: Smal
 var
   myTag: TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG;
 begin
-  uSoundplayer_Tag_Mp3.Get_ID3v1(mSongPath+ mSongName);
-  uSoundplayer_Tag_Mp3.Get_ID3v2(mSongPath+ mSongName);
+  uSoundplayer_Tag_Mp3.Get_ID3v1(mSongPath + mSongName);
+  uSoundplayer_Tag_Mp3.Get_ID3v2(mSongPath + mSongName);
 
   myTag.Title := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
   myTag.Artist := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
@@ -106,7 +106,7 @@ begin
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre :=
       addons.soundplayer.Player.Tag.mp3.ID3v1.Genre;
 
-  //Get Rate
+  // Get Rate
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate := uSoundplayer_Tag_Mp3.GetRate.ToString;
 
   addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
@@ -253,10 +253,20 @@ end;
 procedure Set_Icon;
 begin
   if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.mp3' then
-    vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_mp3.png')
+  begin
+    vSoundplayer.Player.Song_Tag.Visible:= True;
+    vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_mp3.png');
+    vSoundplayer.Player.Song_KBPS.Text := addons.soundplayer.Player.Tag.mp3.info.General.BitRate.ToString
+      + ' Kbps';
+    vSoundplayer.Player.Song_SampleRate.Text := addons.soundplayer.Player.Tag.mp3.info.MPEG.SampleRate.
+      ToString + ' Hz';
+  end
   else if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.ogg'
   then
+  begin
+    vSoundplayer.Player.Song_Tag.Visible:= True;
     vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_opus.png')
+  end
 end;
 
 end.

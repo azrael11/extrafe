@@ -12,12 +12,12 @@ uses
   FMX.Layouts,
   BASS;
 
-procedure uAzHung_Actions_Load;
-procedure uAzHung_Actions_Free;
+procedure Game_Load;
+procedure Game_Free;
 
 procedure uAzHung_Actions_ReturnToPlay;
 
-procedure uAzHung_Actions_Start;
+procedure Choose_Game_Menu;
 procedure uAzHung_Actions_ReturnToFirst_From_Start;
 procedure uAzHung_Actions_StartGame;
 
@@ -46,7 +46,7 @@ uses
   uAzHung_SetAll,
   uAzHung_Sound;
 
-procedure uAzHung_Actions_Load;
+procedure Game_Load;
 begin
   gAzHung.Path.Game := addons.play.Ini.Path + 'azhung\';
   gAzHung.Path.Sounds := gAzHung.Path.Game + 'sounds\';
@@ -54,13 +54,10 @@ begin
   gAzHung.Path.Score := gAzHung.Path.Game + 'score\';
 
   uAzHung_Sound.Load;
-  uAzHung_SetAll_Set;
-
-  BASS_ChannelPlay(vAzHung.Sounds.Music[0], False);
-
+  uAzHung_SetAll.Game_Set;
 end;
 
-procedure uAzHung_Actions_Free;
+procedure Game_Free;
 begin
   FreeAndNil(vAzHung.Main);
   uAzHung_Sound.Unload;
@@ -69,7 +66,7 @@ end;
 
 procedure uAzHung_Actions_ReturnToPlay;
 begin
-  uAzHung_Actions_Free;
+  Game_Free;
   vPlay.Img_Box_Ani.StartValue := vPlay.Img_Box.Position.X;
   vPlay.Img_Box_Ani.StopValue := 0;
   vPlay.Info_Ani.StartValue := vPlay.Info.Position.X;
@@ -80,15 +77,15 @@ end;
 
 procedure uAzHung_Actions_ReturnToFirst_From_Start;
 begin
-  uAzHung_SetAll_Set_First;
+  uAzHung_SetAll.Menu;
   if Assigned(vAzHung.Load.Start.Select.Frame) then
     FreeAndNil(vAzHung.Load.Start.Select.Frame);
   FreeAndNil(vAzHung.Load.Start.Select.Back);
 end;
 
-procedure uAzHung_Actions_Start;
+procedure Choose_Game_Menu;
 begin
-  uAzHung_SetAll_Set_Start;
+  uAzHung_SetAll.Game_Menu;
   FreeAndNil(vAzHung.Load.Back);
 end;
 
@@ -97,8 +94,8 @@ begin
   gAzHung.Actions.Score := 0;
   gAzHung.Actions.Score_Before := 0;
   uAzHung_Actions_Create_Modes;
-  uAzHung_SetAll_Set_Game;
-  uAzHung_SetAll_Create_Lives(gAzHung.Actions.Lives);
+  uAzHung_SetAll.Game;
+  uAzHung_SetAll.Game_Lives(gAzHung.Actions.Lives);
   uAzHung_Actions_Choose_Word;
   if Assigned(vAzHung.Load.Start.Select.Frame) then
     FreeAndNil(vAzHung.Load.Start.Select.Frame);
@@ -181,7 +178,7 @@ begin
   SetLength(vAzHung.Game.Letter_Un, vCountLetter);
 
   for vi := 0 to vCountLetter - 1 do
-    uAzHung_SetALL_Create_Letter_Un(vi);
+    uAzHung_SetALL.Game_Letter_Un(vi);
 end;
 
 procedure uAzHung_Actions_ClickLetter(vText: TText; vLetter: String);
@@ -269,25 +266,24 @@ begin
     end;
 
     for vi := 0 to gAzHung.Actions.Correct.Num do
-      uAzHung_SetAll_Create_WinWord_InList(vi);
+      uAzHung_SetAll.Game_WinList(vi);
   end;
 end;
 
 procedure uAzHung_Actions_ShowWin;
 begin
   vAzHung.Game.Back_Blur.Enabled := True;
-  uAzHung_SetAll_CreateWin(gAzHung.Actions.WordToFind);
+  uAzHung_SetAll.Win_Word(gAzHung.Actions.WordToFind);
 end;
 
 procedure uAzHung_Actions_ShowLose;
 begin
   vAzHung.Game.Back_Blur.Enabled := True;
-  uAzHung_SetAll_CreateLose(gAzHung.Actions.WordToFind);
+  uAzHung_SetAll.Lose_Word(gAzHung.Actions.WordToFind);
 end;
 
 procedure uAzHung_Actions_Reload_Game_Win;
 begin
-
   if gAzHung.Actions.GameMode = 'easy' then
     gAzHung.Actions.Easy.Delete(gAzHung.Actions.Num_In_List)
   else if gAzHung.Actions.GameMode = 'medium' then
@@ -296,10 +292,10 @@ begin
     gAzHung.Actions.Hard.Delete(gAzHung.Actions.Num_In_List);
 
   gAzHung.Actions.Score_Before := gAzHung.Actions.Score;
-  FreeAndNil(vAzHung.Game.Lose.Back);
+  FreeAndNil(vAzHung.Game.Confirm.Back);
   FreeAndNil(vAzHung.Game.Back);
-  uAzHung_SetAll_Set_Game;
-  uAzHung_SetAll_Create_Lives(gAzHung.Actions.Lives);
+  uAzHung_SetAll.Game;
+  uAzHung_SetAll.Game_Lives(gAzHung.Actions.Lives);
   Inc(gAzHung.Actions.Correct.Num, 1);
   gAzHung.Actions.Correct.List.Add(gAzHung.Actions.WordToFind);
   uAzHung_Actions_ShowWinList;
@@ -311,19 +307,19 @@ end;
 procedure uAzHung_Actions_Reload_Game_Lose_WithNewWord;
 begin
   Dec(gAzHung.Actions.Lives, 1);
-  FreeAndNil(vAzHung.Game.Lose.Back);
+  FreeAndNil(vAzHung.Game.Confirm.Back);
   FreeAndNil(vAzHung.Game.Back);
-  uAzHung_SetAll_Set_Game;
-  uAzHung_SetAll_Create_Lives(gAzHung.Actions.Lives);
+  uAzHung_SetAll.Game;
+  uAzHung_SetAll.Game_Lives(gAzHung.Actions.Lives);
   uAzHung_Actions_Choose_Word;
   vAzHung.Game.Score_V.Text := gAzHung.Actions.Score_Before.ToString;
 end;
 
 procedure uAzHung_Actions_Reload_Game_Lose_New;
 begin
-  FreeAndNil(vAzHung.Game.Lose.Back);
+  FreeAndNil(vAzHung.Game.Confirm.Back);
   FreeAndNil(vAzHung.Game.Back);
-  uAzHung_SetAll_Set_First;
+  uAzHung_SetAll.Menu;
 end;
 
 procedure uAzHung_Actions_PlayWinListAnim;

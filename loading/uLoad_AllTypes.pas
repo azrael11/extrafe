@@ -301,12 +301,15 @@ type
     Timer_Pros: TLOADING_TIMER_ONTIMER;
   end;
 
-type TLOADING_INTRO= record
-  Back: TLayout;
-  Video: TFmxPasLibVlcPlayer;
-  Text: TText;
-  Timer: TTimer;
-end;
+type
+  TLOADING_INTRO = record
+    Back: TLayout;
+    Video: TFmxPasLibVlcPlayer;
+    Text: TText;
+    Text_Ani: TFloatAnimation;
+    Timer: TTimer;
+    Fade_Count: Integer;
+  end;
 
 type
   TLOGIN_SCENE = record
@@ -503,16 +506,23 @@ end;
 
 procedure TLOADING_TIMER_ONTIMER.OnTimer(Sender: TObject);
 begin
-  if TTimer(Sender).Name= 'Loading_Intro_Timer' then
+  if TTimer(Sender).Name = 'Loading_Intro_Timer' then
   begin
-    if ex_load.Intro.Video.IsPlay= False then
-      begin
-        FreeAndNil(ex_load.Intro.Back);
-        ex_load.Intro.Timer.Enabled:= False;
-        ex_load.Scene.Back.Visible := True;
-      end;
+    if ex_load.Intro.Fade_Count > 150 then
+    begin
+      ex_load.Intro.Video.Cursor := crNone;
+      ex_load.Intro.Text.Cursor:= crNone;
+      ex_load.Intro.Text_Ani.Start;
+    end;
+    if ex_load.Intro.Video.IsPlay = False then
+    begin
+      FreeAndNil(ex_load.Intro.Back);
+      ex_load.Intro.Timer.Enabled := False;
+      ex_load.Scene.Back.Visible := True;
+    end;
+    if ex_load.Intro.Video.Cursor = crDefault then
+      Inc(ex_load.Intro.Fade_Count, 1);
   end;
-  
 end;
 
 initialization

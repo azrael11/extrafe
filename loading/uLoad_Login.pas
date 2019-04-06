@@ -25,7 +25,6 @@ uses
   uLoad,
   uLoad_AllTypes,
   uLoad_SetAll,
-  uLoad_Font,
   uDatabase,
   uDatabase_SqlCommands,
   uDatabase_ActiveUser;
@@ -75,7 +74,6 @@ end;
 
 procedure Exit_Program;
 begin
-  uLoad_Font.UnLoad;
   Application.Terminate
 end;
 

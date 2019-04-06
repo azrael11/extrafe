@@ -119,7 +119,7 @@ begin
   if TFloatAnimation(Sender).Name = 'A_P_Icons_Animation' then
   begin
     if addons.play.Actions.Game = 'AzHung' then
-      uAzHung_Actions_Load;
+      uAzHung_Actions.Game_Load;
   end;
 end;
 

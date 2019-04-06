@@ -13,7 +13,7 @@ uses
   uWeather_Mouse in 'addons\weather\uWeather_Mouse.pas',
   uMain_Config_Info in 'main\configuration\uMain_Config_Info.pas',
   uMain_Actions in 'main\uMain_Actions.pas',
-  uSoundplayer_Playlist_Actions in 'addons\soundplayer\uSoundplayer_Playlist_Actions.pas',
+  uSoundplayer_Playlist in 'addons\soundplayer\uSoundplayer_Playlist.pas',
   uSoundplayer in 'addons\soundplayer\uSoundplayer.pas',
   uSoundplayer_Tag_Mp3 in 'addons\soundplayer\_tag_libraries\mp3\uSoundplayer_Tag_Mp3.pas',
   uWeather_SetAll in 'addons\weather\uWeather_SetAll.pas',
@@ -156,8 +156,7 @@ uses
   uMain_Config_General_Sound in 'main\configuration\general\uMain_Config_General_Sound.pas',
   uPlay_Sounds in 'addons\play\uPlay_Sounds.pas',
   uSnippet_Search in 'code\_snippets\uSnippet_Search.pas',
-  uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas',
-  uLoad_Font in 'loading\uLoad_Font.pas';
+  uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas';
 
 {$R *.res}
 

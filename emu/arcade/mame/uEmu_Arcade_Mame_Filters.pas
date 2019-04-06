@@ -168,7 +168,7 @@ begin
   if vFilterName = 'All_Unfiltered' then
     vList.LoadFromFile(mame.Prog.Data_Path + mame.Prog.Games_List);
 
-  SetLength(mame.Gamelist.List, 30);
+  SetLength(mame.Gamelist.List, 31);
   for vi := 0 to 30 do
     for vk := 0 to vList.Count - 1 do
       SetLength(mame.Gamelist.List[vi], vk);
