@@ -18,7 +18,8 @@ uses
   ALFmxObjects,
   ALFmxLayouts,
   ALFmxTabControl,
-  FMX.Filter.Effects;
+  FMX.Filter.Effects,
+  BASS;
 
 type
   TMAIN_TIMER = class(TObject)
@@ -87,6 +88,7 @@ begin
       mainScene.Footer.Back_Ani.Enabled := True;
       uMain_Actions_SetCurrent_Icon_Active(vNum);
       extrafe.prog.State := 'addon_' + mAddonName;
+      BASS_ChannelPlay(ex_main.Sounds.effects[0], False);
     end
     else
     begin
@@ -113,6 +115,7 @@ begin
         uMain_Actions_All_Icons_Active(vNum);
         extrafe.prog.State := 'main';
       end;
+      BASS_ChannelPlay(ex_main.Sounds.effects[1], False);
     end;
 end;
 

@@ -287,9 +287,9 @@ begin
       vSoundplayer.scene.OpenDialog.Execute
     end
     else if TText(Sender).Name = 'A_SP_Player_Loop' then
-      uSoundplayer_Player.Set_Repeat(addons.soundplayer.Player.VRepeat)
+      uSoundplayer_Player.Repeat_Set(addons.soundplayer.Player.VRepeat)
     else if TText(Sender).Name = 'A_SP_Player_Loop_State' then
-      uSoundplayer_Player.Inc_LoopState
+      uSoundplayer_Player.Repeat_Inc_LoopState
     else if TImage(Sender).Name = 'A_SP_Player_Suffle' then
       uSoundplayer_Player.Suffle
     else if TText(Sender).Name = 'A_SP_SongTime_Play' then
@@ -370,6 +370,11 @@ begin
       uSnippet_Text_ChangeColor_OnMouseEnter(Sender, claDeepskyblue)
     else if TText(Sender).Name = 'A_SP_Equalizer' then
       uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Equalizer, vSoundplayer.Player.Equalizer_Glow)
+    else if TText(Sender).Name = 'A_SP_Lyrics' then
+    begin
+      if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+        uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Lyrics, vSoundplayer.Player.Lyrics_Glow)
+    end
     else if TText(Sender).Name = 'A_SP_Playlist_Manage' then
     begin
       if vSoundplayer.Playlist.Manage_Icon.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
@@ -458,6 +463,11 @@ begin
       uSnippet_Text_ChangeColor_OnMouseLeave(Sender, claWhiteSmoke)
     else if TText(Sender).Name = 'A_SP_Equalizer' then
       uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Equalizer, vSoundplayer.Player.Equalizer_Glow)
+    else if TText(Sender).Name = 'A_SP_Lyrics' then
+    begin
+      if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+        uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Lyrics, vSoundplayer.Player.Lyrics_Glow)
+    end
     else if TText(Sender).Name = 'A_SP_Playlist_Manage' then
     begin
       if vSoundplayer.Playlist.Manage_Icon.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then

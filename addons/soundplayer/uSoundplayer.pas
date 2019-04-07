@@ -62,6 +62,8 @@ procedure Free;
 begin
   if Assigned(vSoundplayer.scene.Soundplayer) then
   begin
+    if addons.soundplayer.Player.Play then
+      uSoundplayer_Player_Volume.Adjust(True);
     uSoundplayer_Sounds.Free;
     FreeAndNil(vSoundplayer.scene.ImgList);
     FreeAndNil(vSoundplayer.scene.Soundplayer);
@@ -105,8 +107,17 @@ begin
   vSoundplayer.info.Time_Total.Text := addons.Soundplayer.Playlist.List.Songs_Total_Time;
   vSoundplayer.timer.Song.Enabled := True;
   addons.Soundplayer.Player.Thumb_Active := False;
+  if addons.soundplayer.Player.Suffle then
+  begin
+    uSoundplayer_Player.Repeat_Back(addons.soundplayer.Player.VRepeat);
+    uSoundplayer_Player.Suffle_Back;
+    uSoundplayer_Player.Set_Play(addons.soundplayer.Player.Play, addons.soundplayer.Player.Pause, addons.soundplayer.Player.Stop, addons.soundplayer.Player.Mute);
+    uSoundplayer_Player.Set_Previous_Next;
+  end
+  else
   uSoundplayer_Player.State(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop, addons.Soundplayer.Player.Mute,
     addons.Soundplayer.Player.Suffle, addons.Soundplayer.Player.VRepeat);
+  uSoundplayer_Player_Volume.Adjust(False);
 end;
 
 procedure Set_Animations;

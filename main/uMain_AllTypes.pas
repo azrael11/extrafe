@@ -23,7 +23,8 @@ uses
   ALFMXObjects,
   IdHTTP,
   IdComponent,
-  uMain_Mouse;
+  uMain_Mouse,
+  BASS;
 
 type
   TMAIN_POSITIONS = Record
@@ -37,6 +38,7 @@ type
     Config_Images: String;
     Avatar_Images: String;
     Flags_Images: String;
+    Sounds: String;
   end;
 
 type
@@ -59,11 +61,18 @@ type
   end;
 
 type
+  TMAIN_SOUNDS = record
+    effects: array [0..100] of HSAMPLE;
+    mouse : array [0..100] of HSAMPLE;
+  end;
+
+type
   TMAIN = record
     Paths: TMAIN_PATHS;
     Settings: TMAIN_SETTINGS;
     Input: TMAIN_INPUT;
     Config: TMAIN_CONFIG;
+    Sounds: TMAIN_SOUNDS;
   end;
 
   /// /////////////////////////////////////////////////////////////////////////////

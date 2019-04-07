@@ -269,6 +269,7 @@ var
   vi: Integer;
   vDescription: String;
   vImage: TBitmap;
+  vMemoChars: Integer;
 begin
   Get_ID3v2(vPath);
   vSoundplayer.Tag.mp3.ID3v2.Title_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
@@ -288,11 +289,12 @@ begin
 
   vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.Clear;
 
-  if addons.soundplayer.Player.Tag.mp3.Lyrics.Count < 1 then
-    vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Grey.Enabled := True
+  vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.AddStrings(addons.soundplayer.Player.Tag.mp3.Lyrics);
+  vMemoChars := Length(StringReplace(StringReplace( vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text , #10, '', [rfReplaceAll]), #13, '', [rfReplaceAll]));
+  if vMemoChars> 1 then
+    vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor := TAlphaColorRec.Red
   else
-    for vi := 0 to addons.soundplayer.Player.Tag.mp3.Lyrics.Count - 1 do
-      vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.AddStrings(addons.soundplayer.Player.Tag.mp3.Lyrics);
+    vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
 
   vFoundAPIC_Frames := 0;
   for vi := addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 downto 0 do
@@ -306,7 +308,7 @@ begin
   if vFoundAPIC_Frames = 0 then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Grey.Enabled := True;
-    vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Grey.Enabled := True;
+    vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor:= TAlphaColorRec.Grey;
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Enabled := True;
   end;
 
@@ -638,7 +640,7 @@ begin
 
   vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Enabled := False;
   vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Grey.Enabled := False;
-  vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Grey.Enabled := False;
+  vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor := TAlphaColorRec.Red;
 
   uSoundplayer_Tag_Mp3_Cover_Select_Cancel;
 end;
@@ -656,7 +658,7 @@ begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Enabled := True;
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Grey.Enabled := True;
     vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Glow.Enabled := False;
-    vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Grey.Enabled := True;
+    vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
     vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := '';
   end
   else

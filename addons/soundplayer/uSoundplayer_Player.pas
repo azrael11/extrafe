@@ -14,6 +14,7 @@ uses
   bass;
 
 procedure State(vPlay, vPause, vStop, vMute, vSuffle: Boolean; vRepeat: String);
+procedure Set_Play(vPlay, vPause, vStop, vMute: Boolean);
 
 procedure Refresh;
 procedure Refresh_GoTo(vGo: Integer; vPlay: Boolean);
@@ -30,10 +31,15 @@ procedure Previous;
 procedure Next;
 procedure Set_Previous_Next;
 
-procedure Set_Repeat(vCurrent: String);
-procedure Inc_LoopState;
+procedure Repeat_Set(vCurrent: String);
+procedure Repeat_Inc_LoopState;
+procedure Repeat_Back(vRepeat: String);
+
 procedure Suffle;
 procedure Suffle_GoTo;
+procedure Suffle_Create_List;
+procedure Suffle_Back;
+
 procedure Show_Tag(vSongName: String; vSongNum: Integer);
 
 procedure Title_Animation;
@@ -83,12 +89,30 @@ begin
   addons.soundplayer.Player.Suffle := vSuffle;
   addons.soundplayer.Player.vRepeat := vRepeat;
 
+  Set_Play(vPlay, vPause, vStop, vMute);
+  Set_Previous_Next;
+
+  if addons.soundplayer.Playlist.List.Songs_Num > 0 then
+  begin
+    Repeat_Back(vRepeat);
+    if addons.soundplayer.Player.VRepeat_Num = -1 then
+    begin
+      addons.soundplayer.Player.Suffle := not vSuffle;
+      Suffle;
+    end;
+  end;
+  addons.soundplayer.Player.Time_Negative := addons.soundplayer.Player.Time_Negative;
+end;
+
+procedure Set_Play(vPlay, vPause, vStop, vMute: Boolean);
+begin
   if vStop then
   begin
     vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Red;
     vSoundplayer.Player.Play.Text := #$ea1c;
     vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '2';
   end
   else
   begin
@@ -98,6 +122,7 @@ begin
       vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
       vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Blueviolet;
       vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
     end
     else if vPause then
     begin
@@ -105,6 +130,7 @@ begin
       vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
       vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Greenyellow;
       vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '1';
     end
     else
     begin
@@ -112,30 +138,9 @@ begin
       vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     end;
   end;
-
-  Set_Previous_Next;
-  if addons.soundplayer.Playlist.List.Songs_Num > 0 then
-  begin
-    vSoundplayer.Player.Loop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    if vRepeat = '' then
-      Set_Repeat('List_Inf')
-    else if vRepeat = 'Song_1' then
-      Set_Repeat('')
-    else if vRepeat = 'Song_Inf' then
-      Set_Repeat('Song_1')
-    else if vRepeat = 'List_1' then
-      Set_Repeat('Song_Inf')
-    else if vRepeat = 'List_Inf' then
-      Set_Repeat('List_1');
-    vSoundplayer.Player.Suffle.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    if addons.soundplayer.Player.VRepeat_Num = -1 then
-    begin
-      addons.soundplayer.Player.Suffle := not vSuffle;
-      Suffle;
-    end;
-  end;
-  addons.soundplayer.Player.Time_Negative := addons.soundplayer.Player.Time_Negative;
 end;
+
+/// /////////////////////////////////////////////
 
 procedure Refresh;
 var
@@ -181,27 +186,21 @@ begin
           if addons.soundplayer.Player.Suffle_List.Count = 1 then
           begin
             if addons.soundplayer.Player.VRepeat_Num = 1 then
-            begin
-              addons.soundplayer.Player.VRepeat_Num := -1;
-            end
+              addons.soundplayer.Player.VRepeat_Num := -1
             else
-            begin
               Dec(addons.soundplayer.Player.VRepeat_Num, 1);
-            end;
           end;
           Suffle_GoTo;
         end
         else if addons.soundplayer.Player.vRepeat = 'List_Inf' then
-        begin
           Suffle_GoTo;
-        end;
       end
       else if addons.soundplayer.Player.vRepeat <> '' then
       begin
         if addons.soundplayer.Player.vRepeat = 'Song_1' then
         begin
           if addons.soundplayer.Player.VRepeat_Num = 1 then
-            Set_Repeat('List_Inf')
+            Repeat_Set('List_Inf')
           else
           begin
             Dec(addons.soundplayer.Player.VRepeat_Num, 1);
@@ -210,18 +209,14 @@ begin
           Refresh_GoTo(addons.soundplayer.Player.Playing_Now, addons.soundplayer.Player.Play);
         end
         else if addons.soundplayer.Player.vRepeat = 'Song_Inf' then
-        begin
-          Refresh_GoTo(addons.soundplayer.Player.Playing_Now, True);
-        end
+          Refresh_GoTo(addons.soundplayer.Player.Playing_Now, True)
         else if addons.soundplayer.Player.vRepeat = 'List_1' then
         begin
           vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '3';
           if addons.soundplayer.Player.VRepeat_Songs_Num = 0 then
           begin
             if addons.soundplayer.Player.VRepeat_Num = 1 then
-            begin
-              Set_Repeat('List_Inf');
-            end
+              Repeat_Set('List_Inf')
             else
             begin
               Dec(addons.soundplayer.Player.VRepeat_Num, 1);
@@ -416,7 +411,8 @@ procedure Previous;
 begin
   if vSoundplayer.Player.Previous.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
-    if (addons.soundplayer.Player.Suffle = False) and (addons.soundplayer.Player.vRepeat = '') then
+    if (addons.soundplayer.Player.Suffle = False) and ((addons.soundplayer.Player.vRepeat = '') or (addons.soundplayer.Player.vRepeat = 'List_1') or
+      (addons.soundplayer.Player.vRepeat = 'List_Inf')) then
     begin
       if sound.str_music[1] <> 0 then
         if addons.soundplayer.Player.Playing_Now > 0 then
@@ -445,7 +441,8 @@ procedure Next;
 begin
   if vSoundplayer.Player.Next.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
-    if (addons.soundplayer.Player.Suffle = False) and (addons.soundplayer.Player.vRepeat = '') then
+    if (addons.soundplayer.Player.Suffle = False) and ((addons.soundplayer.Player.vRepeat = '') or (addons.soundplayer.Player.vRepeat = 'List_1') or
+      (addons.soundplayer.Player.vRepeat = 'List_Inf')) then
     begin
       if addons.soundplayer.Player.Playing_Now < vSoundplayer.Playlist.List.RowCount - 1 then
       begin
@@ -468,7 +465,7 @@ begin
   end
 end;
 
-procedure Set_Repeat(vCurrent: String);
+procedure Repeat_Set(vCurrent: String);
 begin
   if vSoundplayer.Player.Loop.TextSettings.FontColor <> TAlphaColorRec.Grey then
   begin
@@ -479,9 +476,17 @@ begin
     else if vCurrent = 'Song_Inf' then
       addons.soundplayer.Player.vRepeat := 'List_1'
     else if vCurrent = 'List_1' then
-      addons.soundplayer.Player.vRepeat := 'List_Inf'
+    begin
+      addons.soundplayer.Player.vRepeat := 'List_Inf';
+      if addons.soundplayer.Player.Suffle then
+        Suffle;
+    end
     else if vCurrent = 'List_Inf' then
+    begin
       addons.soundplayer.Player.vRepeat := '';
+      if addons.soundplayer.Player.Suffle then
+        Suffle;
+    end;
 
     if addons.soundplayer.Player.vRepeat = '' then
     begin
@@ -569,7 +574,7 @@ begin
   end;
 end;
 
-procedure Inc_LoopState;
+procedure Repeat_Inc_LoopState;
 begin
   if addons.soundplayer.Player.VRepeat_Num <> -1 then
   begin
@@ -579,6 +584,23 @@ begin
     vSoundplayer.Player.Loop_State.Text := addons.soundplayer.Player.VRepeat_Num.ToString;
   end;
 end;
+
+procedure Repeat_Back(vRepeat: String);
+begin
+  vSoundplayer.Player.Loop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  if vRepeat = '' then
+    Repeat_Set('List_Inf')
+  else if vRepeat = 'Song_1' then
+    Repeat_Set('')
+  else if vRepeat = 'Song_Inf' then
+    Repeat_Set('Song_1')
+  else if vRepeat = 'List_1' then
+    Repeat_Set('Song_Inf')
+  else if vRepeat = 'List_Inf' then
+    Repeat_Set('List_1');
+  vSoundplayer.Player.Suffle.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+end;
+/// //////////////////////////////////////
 
 procedure Suffle;
 var
@@ -602,15 +624,8 @@ begin
     end
     else
     begin
+      Suffle_Create_List;
       vSoundplayer.Player.Suffle.TextSettings.FontColor := TAlphaColorRec.Limegreen;
-      if Assigned(addons.soundplayer.Player.Suffle_List) then
-        FreeAndNil(addons.soundplayer.Player.Suffle_List);
-      if not Assigned(addons.soundplayer.Player.Suffle_List) then
-      begin
-        addons.soundplayer.Player.Suffle_List := TStringList.Create;
-        for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
-          addons.soundplayer.Player.Suffle_List.Add(vi.ToString);
-      end;
       if vSoundplayer.Player.Next.TextSettings.FontColor = TAlphaColorRec.Grey then
         vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
       if vSoundplayer.Player.Previous.TextSettings.FontColor = TAlphaColorRec.Grey then
@@ -647,76 +662,65 @@ begin
   end
   else
   begin
+    for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
+      vSoundplayer.Playlist.List.Cells[1, vi] := '3';
     if addons.soundplayer.Player.vRepeat = 'List_1' then
     begin
-      for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
-        vSoundplayer.Playlist.List.Cells[1, vi] := '3';
       if addons.soundplayer.Player.VRepeat_Num = -1 then
       begin
-        Set_Repeat('List_Inf');
+        Repeat_Set('List_Inf');
         Suffle;
-        Refresh_GoTo(0, True);
         Set_Previous_Next;
       end
       else
       begin
         vSoundplayer.Player.Loop_State.Text := addons.soundplayer.Player.VRepeat_Num.ToString;
-        if Assigned(addons.soundplayer.Player.Suffle_List) then
-          FreeAndNil(addons.soundplayer.Player.Suffle_List);
-        if not Assigned(addons.soundplayer.Player.Suffle_List) then
-        begin
-          addons.soundplayer.Player.Suffle_List := TStringList.Create;
-          for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
-            addons.soundplayer.Player.Suffle_List.Add(vi.ToString);
-        end;
+        Suffle_Create_List;
         vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
         vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-        Refresh_GoTo(0, True);
       end;
     end
     else if addons.soundplayer.Player.vRepeat = 'List_Inf' then
     begin
-      for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
-        vSoundplayer.Playlist.List.Cells[1, vi] := '3';
-      if Assigned(addons.soundplayer.Player.Suffle_List) then
-        FreeAndNil(addons.soundplayer.Player.Suffle_List);
-      if not Assigned(addons.soundplayer.Player.Suffle_List) then
-      begin
-        addons.soundplayer.Player.Suffle_List := TStringList.Create;
-        for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
-          addons.soundplayer.Player.Suffle_List.Add(vi.ToString);
-      end;
+      Suffle_Create_List;
       vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
       vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      Refresh_GoTo(0, True);
     end
     else
-    begin
-      for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
-        vSoundplayer.Playlist.List.Cells[1, vi] := '3';
       Suffle;
-      Refresh_GoTo(0, True);
-    end;
-    // if (addons.soundplayer.Player.vRepeat = 'List_1') and (addons.soundplayer.Player.VRepeat_Num > 0) then
-    // begin
-    // vSoundplayer.Player.Loop_State.Text := addons.soundplayer.Player.VRepeat_Num.ToString;
-    //
-    // end;
-    { if (addons.soundplayer.Player.vRepeat <> 'List_1') or (addons.soundplayer.Player.vRepeat <> 'List_Inf') then
-      begin
-      Refresh_GoTo(0, False);
-      Suffle;
-      end
-      else
-      begin
-      if (addons.soundplayer.Player.vRepeat = 'List_1') and (addons.soundplayer.Player.VRepeat_Num > 0) then
-      Refresh_GoTo(0, True)
-      else
-      begin
-      Refresh_GoTo(0, False);
-      end;
-      end; }
+    Refresh_GoTo(0, True);
   end;
+end;
+
+procedure Suffle_Create_List;
+var
+  vi: Integer;
+begin
+  if Assigned(addons.soundplayer.Player.Suffle_List) then
+    FreeAndNil(addons.soundplayer.Player.Suffle_List);
+  if not Assigned(addons.soundplayer.Player.Suffle_List) then
+  begin
+    addons.soundplayer.Player.Suffle_List := TStringList.Create;
+    for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
+      addons.soundplayer.Player.Suffle_List.Add(vi.ToString);
+  end;
+end;
+
+procedure Suffle_Back;
+var
+  vi: Integer;
+  list_num: String;
+begin
+  for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
+    vSoundplayer.Playlist.List.Cells[1, vi] := '12';
+  for vi := 0 to addons.soundplayer.Player.Suffle_List.Count - 1 do
+  begin
+    list_num := addons.soundplayer.Player.Suffle_List.Strings[vi];
+    vSoundplayer.Playlist.List.Cells[1, list_num.ToInteger] := '3';
+  end;
+  if addons.soundplayer.Player.Play then
+    vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
+  vSoundplayer.Player.Suffle.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -914,6 +918,7 @@ var
   vDescription: String;
   vImage: TBitmap;
   vPath: String;
+  vStringChars: Integer;
 begin
   vSoundplayer.Player.Song_Title.Text := '"' + addons.soundplayer.Playlist.List.Song_Info[vSongNum].Title + '" by "' +
     addons.soundplayer.Playlist.List.Song_Info[vSongNum].Artist + '"';
@@ -964,6 +969,11 @@ begin
         vSoundplayer.Player.Rate[vi].Visible := False;
       vSoundplayer.Player.Rate_No.Visible := True;
     end;
+    vStringChars := Length(StringReplace(StringReplace(addons.soundplayer.Playlist.List.Song_Info[vSongNum].Lyrics.Text , #10, '', [rfReplaceAll]), #13, '', [rfReplaceAll]));
+    if vStringChars > 1 then
+      vSoundplayer.Player.Lyrics.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
+    else
+      vSoundplayer.Player.Lyrics.TextSettings.FontColor := TAlphaColorRec.Grey;
   end
   else if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.ogg' then
   begin

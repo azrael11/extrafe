@@ -74,15 +74,15 @@ begin
   if viPos_mp3 <> 0 then
   begin
     if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_0' then
-      uSoundplayer_Tag_Mp3.Rate_SelectStars(0)
+      uSoundplayer_Tag_MP3.Rate_SelectStars(0)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_1' then
-      uSoundplayer_Tag_Mp3.Rate_SelectStars(1)
+      uSoundplayer_Tag_MP3.Rate_SelectStars(1)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_2' then
-      uSoundplayer_Tag_Mp3.Rate_SelectStars(2)
+      uSoundplayer_Tag_MP3.Rate_SelectStars(2)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_3' then
-      uSoundplayer_Tag_Mp3.Rate_SelectStars(3)
+      uSoundplayer_Tag_MP3.Rate_SelectStars(3)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_4' then
-      uSoundplayer_Tag_Mp3.Rate_SelectStars(4)
+      uSoundplayer_Tag_MP3.Rate_SelectStars(4)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Cover_ArrowLeft' then
     begin
       if vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Enabled = False then
@@ -93,26 +93,6 @@ begin
       if vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Grey.Enabled = False then
         uSoundplayer_Tag_Mp3_Cover_Next;
     end
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer' then
-    begin
-      vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_Mp3_Cover_AddComputer';
-      vSoundplayer.scene.OpenDialog.Execute;
-    end
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Remove' then
-    begin
-      if vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Grey.Enabled = False then
-        uSoundplayer_Tag_Mp3_Cover_Remove
-    end
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer' then
-    begin
-      vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_Mp3_Lyrics_AddComputer';
-      vSoundplayer.scene.OpenDialog.Execute;
-    end
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove' then
-    begin
-      if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Grey.Enabled = False then
-        uSoundplayer_Tag_Mp3_Lyrics_Delete;
-    end;
   end
   else if viPos_ogg <> 0 then
   begin
@@ -126,8 +106,7 @@ begin
   end;
 end;
 
-procedure TSOUNDPLAYER_TAG_IMAGE.OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
-  X, Y: Single);
+procedure TSOUNDPLAYER_TAG_IMAGE.OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 var
   viPos_mp3: Integer;
   viPos_ogg: Integer;
@@ -136,10 +115,10 @@ begin
   viPos_ogg := Pos('addon_soundplayer_tag_opus', extrafe.prog.State);
   if viPos_mp3 <> 0 then
   begin
-    if TImage(Sender).Name = ('A_SP_Tag_Mp3_ID3v2_Rate_'+ TImage(Sender).TagString) then
+    if TImage(Sender).Name = ('A_SP_Tag_Mp3_ID3v2_Rate_' + TImage(Sender).TagString) then
     begin
       if Button = TMouseButton.mbRight then
-        uSoundplayer_Tag_Mp3.Rate_RemoveAll
+        uSoundplayer_Tag_MP3.Rate_RemoveAll
     end;
   end
   else if viPos_ogg <> 0 then
@@ -158,15 +137,15 @@ begin
   if viPos_mp3 <> 0 then
   begin
     if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_0' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(0, False)
+      uSoundplayer_Tag_MP3.Show_RateStars(0, False)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_1' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(1, False)
+      uSoundplayer_Tag_MP3.Show_RateStars(1, False)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_2' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(2, False)
+      uSoundplayer_Tag_MP3.Show_RateStars(2, False)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_3' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(3, False)
+      uSoundplayer_Tag_MP3.Show_RateStars(3, False)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_4' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(4, False)
+      uSoundplayer_Tag_MP3.Show_RateStars(4, False)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Cover_ArrowLeft' then
     begin
       if vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Enabled = False then
@@ -177,24 +156,6 @@ begin
       if vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Grey.Enabled = False then
         vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Glow.Enabled := True;
     end
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer' then
-      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Computer_Glow.Enabled := True
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddInternet' then
-      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Internet_Glow.Enabled := True
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Remove' then
-    begin
-      if vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Grey.Enabled = False then
-        vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Glow.Enabled := True
-    end
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer' then
-      vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Computer_Glow.Enabled := True
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddInternet' then
-      vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Internet_Glow.Enabled := True
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove' then
-    begin
-      if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Grey.Enabled = False then
-        vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Glow.Enabled := True;
-    end;
   end
   else if viPos_ogg <> 0 then
   begin
@@ -220,15 +181,15 @@ begin
   if viPos_mp3 <> 0 then
   begin
     if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_0' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+      uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_1' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+      uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_2' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+      uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_3' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+      uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_4' then
-      uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+      uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Cover_ArrowLeft' then
     begin
       if vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Enabled = False then
@@ -239,24 +200,10 @@ begin
       if vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Grey.Enabled = False then
         vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight_Glow.Enabled := False;
     end
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer' then
-      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Computer_Glow.Enabled := False
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddInternet' then
-      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Internet_Glow.Enabled := False
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Remove' then
-    begin
-      if vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Grey.Enabled = False then
-        vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Glow.Enabled := False
-    end
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer' then
       vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Computer_Glow.Enabled := False
     else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddInternet' then
       vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Internet_Glow.Enabled := False
-    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove' then
-    begin
-      if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Grey.Enabled = False then
-        vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Glow.Enabled := False;
-    end;
   end
   else if viPos_ogg <> 0 then
   begin
@@ -329,7 +276,27 @@ begin
     if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v1_Transfer' then
       uSoundplayer_Tag_MP3_Transfer('to_2')
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Transfer' then
-      uSoundplayer_Tag_MP3_Transfer('to_1');
+      uSoundplayer_Tag_MP3_Transfer('to_1')
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer' then
+    begin
+      vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_Mp3_Cover_AddComputer';
+      vSoundplayer.scene.OpenDialog.Execute;
+    end
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Remove' then
+    begin
+      if vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor <> TAlphaColorRec.Grey then
+        uSoundplayer_Tag_Mp3_Cover_Remove
+    end
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer' then
+    begin
+      vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_Mp3_Lyrics_AddComputer';
+      vSoundplayer.scene.OpenDialog.Execute;
+    end
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove' then
+    begin
+      if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor <> TAlphaColorRec.Grey then
+        uSoundplayer_Tag_Mp3_Lyrics_Delete;
+    end;
   end
   else if viPos_ogg <> 0 then
   begin
@@ -338,13 +305,71 @@ begin
 end;
 
 procedure TSOUNDPLAYER_TAG_TEXT.OnMouseEnter(Sender: TObject);
+var
+  viPos_mp3: Integer;
+  viPos_ogg: Integer;
 begin
+  viPos_mp3 := Pos('addon_soundplayer_tag_mp3', extrafe.prog.State);
+  viPos_ogg := Pos('addon_soundplayer_tag_opus', extrafe.prog.State);
+  if viPos_mp3 <> 0 then
+  begin
+    if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer' then
+      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Computer_Glow.Enabled := True
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddInternet' then
+      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Internet_Glow.Enabled := True
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Remove' then
+    begin
+      if vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor <> TAlphaColorRec.Grey then
+        vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Glow.Enabled := True
+    end
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer' then
+      vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Computer_Glow.Enabled := True
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddInternet' then
+      vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Internet_Glow.Enabled := True
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove' then
+    begin
+      if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor <> TAlphaColorRec.Grey then
+        vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Glow.Enabled := True;
+    end;
+  end
+  else if viPos_ogg <> 0 then
+  begin
 
+  end;
 end;
 
 procedure TSOUNDPLAYER_TAG_TEXT.OnMouseLeave(Sender: TObject);
+var
+  viPos_mp3: Integer;
+  viPos_ogg: Integer;
 begin
+  viPos_mp3 := Pos('addon_soundplayer_tag_mp3', extrafe.prog.State);
+  viPos_ogg := Pos('addon_soundplayer_tag_opus', extrafe.prog.State);
+  if viPos_mp3 <> 0 then
+  begin
+    if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer' then
+      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Computer_Glow.Enabled := False
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_AddInternet' then
+      vSoundplayer.Tag.mp3.ID3v2.Cover_Add_Internet_Glow.Enabled := False
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Remove' then
+    begin
+      if vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor <> TAlphaColorRec.Grey then
+        vSoundplayer.Tag.mp3.ID3v2.Cover_Remove_Glow.Enabled := False
+    end
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddComputer' then
+      vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Computer_Glow.Enabled := False
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddInternet' then
+      vSoundplayer.Tag.mp3.ID3v2.Lyrics_Add_Internet_Glow.Enabled := False
+    else if TImage(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove' then
+    begin
+      if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor <> TAlphaColorRec.Grey then
+        vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove_Glow.Enabled := False;
+    end;
+  end
+  else if viPos_ogg <> 0 then
+  begin
 
+  end;
 end;
 
 { TSOUNDPLAYER_TAG_RADIOBUTTON }
@@ -376,8 +401,7 @@ begin
 
 end;
 
-procedure TSOUNDPLAYER_TAG_CIRCLE.OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
-  X, Y: Single);
+procedure TSOUNDPLAYER_TAG_CIRCLE.OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 begin
 
 end;
@@ -385,29 +409,29 @@ end;
 procedure TSOUNDPLAYER_TAG_CIRCLE.OnMouseEnter(Sender: TObject);
 begin
   if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_0' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(0, False)
+    uSoundplayer_Tag_MP3.Show_RateStars(0, False)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_1' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(1, False)
+    uSoundplayer_Tag_MP3.Show_RateStars(1, False)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_2' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(2, False)
+    uSoundplayer_Tag_MP3.Show_RateStars(2, False)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_3' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(3, False)
+    uSoundplayer_Tag_MP3.Show_RateStars(3, False)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_4' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(4, False)
+    uSoundplayer_Tag_MP3.Show_RateStars(4, False)
 end;
 
 procedure TSOUNDPLAYER_TAG_CIRCLE.OnMouseLeave(Sender: TObject);
 begin
   if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_0' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+    uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_1' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+    uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_2' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+    uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_3' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+    uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
   else if TCircle(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_4' then
-    uSoundplayer_Tag_Mp3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+    uSoundplayer_Tag_MP3.Show_RateStars(addons.soundplayer.Player.Tag.mp3.Rating, True)
 end;
 
 initialization

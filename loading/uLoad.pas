@@ -100,6 +100,7 @@ begin
   ex_main.Paths.Avatar_Images := extrafe.prog.Path + 'data\main\avatars\';
   ex_main.Paths.Images := extrafe.prog.Path + 'data\main\images\';
   ex_main.Paths.Config_Images := extrafe.prog.Path + 'data\main\config_images\';
+  ex_main.Paths.Sounds:= extrafe.prog.Path + 'data\main\sounds\';
 
   // program graphics
   extrafe.res.Width := extrafe.ini.ini.ReadInteger('General_Graphics', 'Res_X', extrafe.res.Width);

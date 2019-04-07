@@ -156,7 +156,8 @@ uses
   uMain_Config_General_Sound in 'main\configuration\general\uMain_Config_General_Sound.pas',
   uPlay_Sounds in 'addons\play\uPlay_Sounds.pas',
   uSnippet_Search in 'code\_snippets\uSnippet_Search.pas',
-  uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas';
+  uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas',
+  uMain_Sounds in 'main\uMain_Sounds.pas';
 
 {$R *.res}
 

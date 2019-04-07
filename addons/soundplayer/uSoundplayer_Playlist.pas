@@ -22,11 +22,11 @@ uses
 
 procedure State(vPlaylist_State: String; vPlaylist_Num: Integer);
 
-procedure uSoundplayer_Playlist_Actions_SortPlaylistIni;
+procedure SortPlaylistIni;
 
 procedure EditPlaylist(vActive: Boolean);
 
-procedure uSoundplayer_Playlist_Actions_LoadPlaylists;
+procedure LoadPlaylists;
 
 // Create playlist based types
 procedure NewPlaylist_m3u(mPlaylistName: string; mNum: SmallInt);
@@ -156,7 +156,7 @@ begin
   else
     vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
   vSoundplayer.Playlist.Create_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  uSoundplayer_Playlist_Actions_LoadPlaylists;
+  LoadPlaylists;
 end;
 /// /
 
@@ -443,7 +443,7 @@ end;
 
 ///
 
-procedure uSoundplayer_Playlist_Actions_SortPlaylistIni;
+procedure SortPlaylistIni;
 var
   vi: Integer;
 begin
@@ -472,7 +472,7 @@ begin
   end;
 end;
 
-procedure uSoundplayer_Playlist_Actions_LoadPlaylists;
+procedure LoadPlaylists;
 var
   vi: Integer;
   vPLInfo: TADDON_SOUNDPLAYER_PLAYLIST_PLAYLISTS;

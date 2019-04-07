@@ -406,7 +406,7 @@ begin
     vSoundplayer.Playlist.Manage.main.Grid.Selected := vSelected - 1;
 
     uSoundplayer_Playlist_Manage_AddPlaylistToGrid;
-    uSoundplayer_Playlist_Actions_SortPlaylistIni;
+    uSoundplayer_Playlist.SortPlaylistIni;
     if vSelected - 1 = 0 then
     begin
       vSoundplayer.Playlist.Manage.main.Up_Glow.Enabled := False;
@@ -442,7 +442,7 @@ begin
     vSoundplayer.Playlist.Manage.main.Grid.Selected := vSelected + 1;
 
     uSoundplayer_Playlist_Manage_AddPlaylistToGrid;
-    uSoundplayer_Playlist_Actions_SortPlaylistIni;
+    uSoundplayer_Playlist.SortPlaylistIni;
     if vSelected + 1 = addons.soundplayer.Playlist.Total then
     begin
       vSoundplayer.Playlist.Manage.main.Down_Glow.Enabled := False;

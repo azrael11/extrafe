@@ -12,7 +12,8 @@ uses
   FMX.Effects,
   FMX.StdCtrls,
   uMain_Config_Mouse,
-  uMain_Config_Emulation_Arcade_Scripts_Mouse;
+  uMain_Config_Emulation_Arcade_Scripts_Mouse,
+  BASS;
 
 type
   TMAIN_ANIMATION = class(TObject)
@@ -115,6 +116,7 @@ begin
       if mainScene.Footer.Back_Blur.Enabled = False then
         uMain_Config_ShowHide(extrafe.prog.State);
     end;
+    BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
   end;
 end;
 

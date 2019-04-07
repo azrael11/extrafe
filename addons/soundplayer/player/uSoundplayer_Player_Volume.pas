@@ -15,6 +15,8 @@ procedure Update(mValue: single);
 
 procedure Speakers_OnMouseAbove(vState: Boolean);
 
+procedure Adjust(vLeave: Boolean);
+
 implementation
 
 uses
@@ -134,6 +136,17 @@ begin
       vSoundplayer.Player.Speaker_Right_Hue.Enabled := vState;
     end;
   end;
+end;
+
+procedure Adjust(vLeave: Boolean);
+var
+  vAdjust_Volume: Real;
+begin
+  if vLeave then
+    vAdjust_Volume:= (addons.soundplayer.Volume.Vol / 100) / 2
+  else
+    vAdjust_Volume:= (addons.soundplayer.Volume.Vol / 100) * 2;
+  BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, vAdjust_Volume);
 end;
 
 end.

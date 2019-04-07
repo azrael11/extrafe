@@ -212,6 +212,7 @@ type
     Comment: String;
     Track_Seconds: string;
     Rate: String;
+    Lyrics: TStringList;
     // Cover_A: TBitmap;
     // Cover_B: TBitmap;
     // Cover_C: TBitmap;
@@ -414,6 +415,8 @@ type
     Speaker_Right_Lock_Volume: TImage;
     Speaker_Right_Lock_Volume_Glow: TGlowEffect;
     Speaker_Right_Volume_Pos: TALTrackBar;
+    Lyrics: TText;
+    Lyrics_Glow: TGlowEffect;
     Equalizer: TText;
     Equalizer_Glow: TGlowEffect;
   end;
@@ -676,22 +679,20 @@ type
     Cover_ArrowRight_Glow: TGlowEffect;
     Cover_ArrowRight_Grey: TMonochromeEffect;
     Cover_Num: TLabel;
-    Cover_Add_Computer: TImage;
+    Cover_Add_Computer: TText;
     Cover_Add_Computer_Glow: TGlowEffect;
-    Cover_Add_Internet: TImage;
+    Cover_Add_Internet: TText;
     Cover_Add_Internet_Glow: TGlowEffect;
-    Cover_Remove: TImage;
+    Cover_Remove: TText;
     Cover_Remove_Glow: TGlowEffect;
-    Cover_Remove_Grey: TMonochromeEffect;
     Lyrics: TGroupBox;
     Lyrics_Memo: TMemo;
-    Lyrics_Add_Computer: TImage;
+    Lyrics_Add_Computer: TText;
     Lyrics_Add_Computer_Glow: TGlowEffect;
-    Lyrics_Add_Internet: TImage;
+    Lyrics_Add_Internet: TText;
     Lyrics_Add_Internet_Glow: TGlowEffect;
-    Lyrics_Remove: TImage;
+    Lyrics_Remove: TText;
     Lyrics_Remove_Glow: TGlowEffect;
-    Lyrics_Remove_Grey: TMonochromeEffect;
   end;
 
 type

@@ -109,6 +109,12 @@ begin
   // Get Rate
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate := uSoundplayer_Tag_Mp3.GetRate.ToString;
 
+  // Get Lyrics
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics := Tstringlist.Create;
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.Add(addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeLyrics
+    ('USLT', addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID,
+    addons.soundplayer.Player.Tag.mp3.Lyrics_Description));
+
   addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
   addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
 

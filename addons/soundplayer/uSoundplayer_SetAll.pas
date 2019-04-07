@@ -390,6 +390,26 @@ begin
   vSoundplayer.Player.Suffle_Glow.Opacity := 0.9;
   vSoundplayer.Player.Suffle_Glow.Enabled := False;
 
+  vSoundplayer.Player.Lyrics := TText.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.Player.Lyrics.Name := 'A_SP_Lyrics';
+  vSoundplayer.Player.Lyrics.Parent := vSoundplayer.scene.Back_Player;
+  vSoundplayer.Player.Lyrics.SetBounds(vSoundplayer.Player.Suffle.Position.X + 190, 159, 24, 24);
+  vSoundplayer.Player.Lyrics.Font.Family := 'IcoMoon-Free';
+  vSoundplayer.Player.Lyrics.Text := #$e922;
+  vSoundplayer.Player.Lyrics.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.Player.Lyrics.TextSettings.Font.Size := 24;
+  vSoundplayer.Player.Lyrics.OnClick := addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.Player.Lyrics.OnMouseEnter := addons.soundplayer.Input.mouse.Text.OnMouseEnter;
+  vSoundplayer.Player.Lyrics.OnMouseLeave := addons.soundplayer.Input.mouse.Text.OnMouseLeave;
+  vSoundplayer.Player.Lyrics.Visible := True;
+
+  vSoundplayer.Player.Lyrics_Glow := TGlowEffect.Create(vSoundplayer.Player.Lyrics);
+  vSoundplayer.Player.Lyrics_Glow.Name := 'A_SP_Lyrics_Glow';
+  vSoundplayer.Player.Lyrics_Glow.Parent := vSoundplayer.Player.Lyrics;
+  vSoundplayer.Player.Lyrics_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.Player.Lyrics_Glow.Opacity := 0.9;
+  vSoundplayer.Player.Lyrics_Glow.Enabled := False;
+
   vSoundplayer.Player.Equalizer := TText.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.Player.Equalizer.Name := 'A_SP_Equalizer';
   vSoundplayer.Player.Equalizer.Parent := vSoundplayer.scene.Back_Player;

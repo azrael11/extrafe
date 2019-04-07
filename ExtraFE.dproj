@@ -389,10 +389,10 @@
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <VerInfo_Release>9</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.20;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.21;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
         <Icon_MainIcon>ExtraFE_Icon.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>20</VerInfo_Build>
+        <VerInfo_Build>21</VerInfo_Build>
         <DCC_ExeOutput>C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\Release\ExtraFE\win64\</DCC_ExeOutput>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <DCC_UnitSearchPath>C:\Users\spooo\Documents\My_Projects\components\alcinoe_fmx\alcinoe _rio\source;C:\Users\spooo\Documents\My_Projects\components\zeoslib\src;C:\Users\spooo\Documents\My_Projects\components\zeoslib\src\component;C:\Users\spooo\Documents\My_Projects\components\zeoslib\src\core;C:\Users\spooo\Documents\My_Projects\components\zeoslib\src\dbc;C:\Users\spooo\Documents\My_Projects\components\zeoslib\src\parsesql;C:\Users\spooo\Documents\My_Projects\components\zeoslib\src\plain;C:\Users\spooo\Documents\My_Projects\components\PasLibVlc_3.0.5\PasLibVlc\source;C:\Users\spooo\Documents\My_Projects\components\PasLibVlc_3.0.5\PasLibVlc\source.fmx;C:\Users\spooo\Documents\My_Projects\components\oxml\units;C:\Users\spooo\Documents\My_Projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\APEv2 Library\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Flac Tag Library\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\ID3v2 Library\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\MP4 Tag Library\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Ogg Vorbis and Opus Tag Library\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WAV Tag Library\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WMA Tag Library\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\bass_fx24\Delphi;C:\Users\spooo\Documents\My_Projects\components\bass\bass24\delphi;C:\Users\spooo\Documents\My_Projects\components\hook\Hooks\Win64;C:\Users\spooo\Documents\My_Projects\components\hook\Hooks</DCC_UnitSearchPath>
@@ -580,6 +580,7 @@
         <DCCReference Include="addons\play\uPlay_Sounds.pas"/>
         <DCCReference Include="code\_snippets\uSnippet_Search.pas"/>
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas"/>
+        <DCCReference Include="main\uMain_Sounds.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
