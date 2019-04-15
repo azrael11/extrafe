@@ -13,22 +13,30 @@ uses
   FMX.Dialogs,
   Bass;
 
-procedure uSoundPlayer_Playlist_Create_Panel;
-procedure uSoundPlayer_Playlist_Create_Free;
+procedure Load;
+procedure Free;
 
-procedure uSoundPlayer_Playlist_Create_NewPlaylist(vPlaylistName, vPlaylistType: string);
+procedure New(vPlaylistName, vPlaylistType: string);
+
+// Create playlist based types
+procedure m3u(mPlaylistName: string; mNum: SmallInt);
+procedure pls(mPlaylistName: string; mNum: SmallInt);
+procedure asx(mPlaylistName: string; mNum: SmallInt);
+procedure xspf(mPlaylistName: string; mNum: SmallInt);
+procedure wpl(mPlaylistName: string; mNum: SmallInt);
+procedure expl(mPlaylistName: string; mNum: SmallInt);
 
 implementation
-
 uses
   uLoad_AllTypes,
   uWindows,
   uSoundplayer_AllTypes,
   uSoundplayer,
   uSoundplayer_Playlist,
-  uSoundplayer_Player;
+  uSoundplayer_Player,
+  uSoundplayer_Playlist_Const;
 
-procedure uSoundPlayer_Playlist_Create_Panel;
+procedure Load;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := True;
 
@@ -102,7 +110,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer_create_playlist';
 end;
 
-procedure uSoundPlayer_Playlist_Create_Free;
+procedure Free;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.Playlist.Create.Panel);
@@ -110,7 +118,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
 end;
 
-procedure uSoundPlayer_Playlist_Create_NewPlaylist(vPlaylistName, vPlaylistType: string);
+procedure New(vPlaylistName, vPlaylistType: string);
 var
   mNum: SmallInt;
   vLists: TStringList;
@@ -131,34 +139,79 @@ begin
     mNum := addons.soundplayer.Playlist.Total;
     Inc(mNum, 1);
     if vPlaylistType = '.m3u' then
-      NewPlaylist_m3u(vPlaylistName, mNum)
+      uSoundplayer_Playlist_Create.m3u(vPlaylistName, mNum)
     else if vPlaylistType = 'pls' then
-      NewPlaylist_pls(vPlaylistName, mNum)
+      uSoundplayer_Playlist_Create.pls(vPlaylistName, mNum)
     else if vPlaylistType = 'asx' then
-      NewPlaylist_asx(vPlaylistName, mNum)
+      uSoundplayer_Playlist_Create.asx(vPlaylistName, mNum)
     else if vPlaylistType = 'xspf' then
-      NewPlaylist_xspf(vPlaylistName, mNum)
+      uSoundplayer_Playlist_Create.xspf(vPlaylistName, mNum)
     else if vPlaylistType = 'wpl' then
-      NewPlaylist_wpl(vPlaylistName, mNum)
+      uSoundplayer_Playlist_Create.wpl(vPlaylistName, mNum)
     else if vPlaylistType = 'expl' then
-      NewPlaylist_expl(vPlaylistName, mNum);
-    if addons.soundplayer.Player.Play then
-    begin
-      BASS_ChannelStop(sound.str_music[1]);
-      vSoundplayer.Player.Song_Pos.Value := 0;
-    end;
-    uSoundplayer.Set_FirstTime;
-    vSoundplayer.info.Playlist_name.Text := vPlaylistName;
-    vSoundplayer.info.Playlist_Type_Kind.Text := vPlaylistType;
-    vSoundplayer.info.Total_Songs.Text := '0';
-    vSoundplayer.info.Time_Total.Text := '00:00:00';
-    vSoundplayer.Playlist.Manage_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vSoundplayer.Playlist.List.RowCount := -1;
-    uSoundPlayer_Playlist_Create_Free;
+      uSoundplayer_Playlist_Create.expl(vPlaylistName, mNum);
+
+    uSoundplayer_Playlist_Const.New_State(vPlaylistName, vPlaylistType);
+    Free;
   end
   else
     ShowMessage('There is allready a playlist with this name.');
+end;
+
+// Create playlist based types
+procedure m3u(mPlaylistName: string; mNum: SmallInt);
+begin
+  addons.soundplayer.Playlist.List.Playlist := TStringList.Create;
+  addons.soundplayer.Playlist.List.Playlist.Add('#EXTM3U');
+  addons.soundplayer.Playlist.List.Playlist.SaveToFile(addons.soundplayer.Path.Playlists + mPlaylistName + '.m3u');
+  addons.soundplayer.Playlist.List.Name := mPlaylistName;
+  addons.soundplayer.Playlist.List.vType := '.m3u';
+  addons.soundplayer.Playlist.List.Num := mNum;
+  addons.soundplayer.Playlist.List.Played := 0;
+  addons.soundplayer.Playlist.List.Last_Played := DateTimeToStr(Now);
+  addons.soundplayer.Playlist.List.Songs_Num := 0;
+  addons.soundplayer.Playlist.List.Songs := TStringList.Create;
+
+  addons.soundplayer.Playlist.Total := mNum;
+  addons.soundplayer.Playlist.Active := mNum;
+  addons.soundplayer.Playlist.List.Name := mPlaylistName;
+
+  addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'TotalPlaylists', addons.soundplayer.Playlist.Total);
+  addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'ActivePlaylist', addons.soundplayer.Playlist.Active);
+  addons.soundplayer.Ini.Ini.WriteString('Playlists', 'ActivePlaylistName', addons.soundplayer.Playlist.List.Name);
+  addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_Name', addons.soundplayer.Playlist.List.Name);
+  addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_Path', addons.soundplayer.Path.Playlists);
+  addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_Type', '.m3u');
+  addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'PL_' + IntToStr(mNum) + '_Songs', 0);
+  addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'Pl_' + IntToStr(mNum) + '_Played', 0);
+  addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_LastPlayed', DateTimeToStr(Now));
+
+  vSoundplayer.info.Playlist_name.Text := mPlaylistName;
+end;
+
+procedure pls(mPlaylistName: string; mNum: SmallInt);
+begin
+
+end;
+
+procedure asx(mPlaylistName: string; mNum: SmallInt);
+begin
+
+end;
+
+procedure xspf(mPlaylistName: string; mNum: SmallInt);
+begin
+
+end;
+
+procedure wpl(mPlaylistName: string; mNum: SmallInt);
+begin
+
+end;
+
+procedure expl(mPlaylistName: string; mNum: SmallInt);
+begin
+
 end;
 
 end.

@@ -85,6 +85,7 @@ type
   TPLAY = record
     Main: Tlayout;
     Main_Ani: TFloatAnimation;
+    Main_Blur: TGaussianBlurEffect;
     Img_Box: TVertScrollBox;
     Img_Box_Ani: TFloatAnimation;
     Img_Img: array [0 .. 10] of TImage;

@@ -37,6 +37,9 @@ procedure Info;
 procedure Playlist;
 procedure Cover;
 
+procedure Band_Information;
+procedure Lyrics;
+
 procedure RemoveSong_Dialog;
 
 implementation
@@ -108,6 +111,14 @@ begin
   vSoundplayer.scene.Back_Blur.Parent := vSoundplayer.scene.Back;
   vSoundplayer.scene.Back_Blur.BlurAmount := 0.5;
   vSoundplayer.scene.Back_Blur.Enabled := False;
+
+  vSoundplayer.scene.Back_Presentation := TImage.Create(vSoundplayer.scene.Soundplayer);
+  vSoundplayer.scene.Back_Presentation.Name := 'A_SP_Presentation';
+  vSoundplayer.scene.Back_Presentation.Parent:= vSoundplayer.scene.Soundplayer;
+  vSoundplayer.scene.Back_Presentation.SetBounds(extrafe.res.Half_Width - 700, 20, 1400, 900);
+  vSoundplayer.scene.Back_Presentation.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back_info.png');
+  vSoundplayer.scene.Back_Presentation.WrapMode:= TImageWrapMode.Tile;
+  vSoundplayer.scene.Back_Presentation.Visible:= False;
 
   // Up Line
   vSoundplayer.scene.UpLine := Timage.Create(vSoundplayer.scene.Back);
@@ -472,28 +483,16 @@ begin
 
   for vi := 0 to 4 do
   begin
-    vSoundplayer.Player.Rate[vi] := Timage.Create(vSoundplayer.scene.Back_Player);
+    vSoundplayer.Player.Rate[vi] := TText.Create(vSoundplayer.scene.Back_Player);
     vSoundplayer.Player.Rate[vi].Name := 'A_SP_Player_Rate_' + vi.ToString;
     vSoundplayer.Player.Rate[vi].Parent := vSoundplayer.scene.Back_Player;
     vSoundplayer.Player.Rate[vi].SetBounds((610 + (vi * 28)), 170, 24, 24);
-    vSoundplayer.Player.Rate[vi].Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_star.png');
-    vSoundplayer.Player.Rate[vi].WrapMode := TImageWrapMode.Fit;
-    vSoundplayer.Player.Rate[vi].Visible := False;
-
-    vSoundplayer.Player.Rate_Gray[vi] := TMonochromeEffect.Create(vSoundplayer.Player.Rate[vi]);
-    vSoundplayer.Player.Rate_Gray[vi].Name := 'A_SP_Player_Rate_Grey_' + vi.ToString;
-    vSoundplayer.Player.Rate_Gray[vi].Parent := vSoundplayer.Player.Rate[vi];
-    vSoundplayer.Player.Rate_Gray[vi].Enabled := False;
+    vSoundplayer.Player.Rate[vi].Font.Family:= 'IcoMoon-Free';
+    vSoundplayer.Player.Rate[vi].TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+    vSoundplayer.Player.Rate[vi].Font.Size:= 24;
+    vSoundplayer.Player.Rate[vi].Text:= #$e9d7;
+    vSoundplayer.Player.Rate[vi].Visible := True;
   end;
-
-  vSoundplayer.Player.Rate_No := TText.Create(vSoundplayer.scene.Back_Player);
-  vSoundplayer.Player.Rate_No.Name := 'A_SP_Player_Rate_No';
-  vSoundplayer.Player.Rate_No.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.Player.Rate_No.SetBounds(610, 170, 140, 30);
-  vSoundplayer.Player.Rate_No.Font.Size := 22;
-  vSoundplayer.Player.Rate_No.Text := 'Not Rated Yet.';
-  vSoundplayer.Player.Rate_No.TextSettings.FontColor := TAlphaColorRec.White;
-  vSoundplayer.Player.Rate_No.Visible := False;
 
   vSoundplayer.Player.Song_Pos := TALTrackbar.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.Player.Song_Pos.Name := 'A_SP_SongPos';
@@ -672,6 +671,27 @@ begin
   vSoundplayer.Player.Speaker_Right_Volume_Pos.Thumb.OnMouseEnter := addons.soundplayer.Input.mouse.Trackbar_Thumb.OnMouseEnter;
   vSoundplayer.Player.Speaker_Right_Volume_Pos.Thumb.OnMouseLeave := addons.soundplayer.Input.mouse.Trackbar_Thumb.OnMouseLeave;
   vSoundplayer.Player.Speaker_Right_Volume_Pos.Visible := True;
+
+  vSoundplayer.Player.Band_Info:= TText.Create(vSoundplayer.scene.Back_Player);
+  vSoundplayer.Player.Band_Info.Name := 'A_SP_BandInfo';
+  vSoundplayer.Player.Band_Info.Parent:=   vSoundplayer.scene.Back_Player;
+  vSoundplayer.Player.Band_Info.SetBounds(430, 10, 24, 24);
+  vSoundplayer.Player.Band_Info.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.Player.Band_Info.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.Player.Band_Info.Font.Size:= 24;
+  vSoundplayer.Player.Band_Info.Text:= #$e923;
+  vSoundplayer.Player.Band_Info.OnClick := addons.soundplayer.Input.mouse.Text.OnMouseClick;
+  vSoundplayer.Player.Band_Info.OnMouseEnter:= addons.soundplayer.Input.mouse.Text.OnMouseEnter;
+  vSoundplayer.Player.Band_Info.OnMouseLeave:= addons.soundplayer.Input.mouse.Text.OnMouseLeave;
+  vSoundplayer.Player.Band_Info.Visible:= True;
+
+  vSoundplayer.Player.Band_Info_Glow := TGlowEffect.Create(vSoundplayer.Player.Band_Info);
+  vSoundplayer.Player.Band_Info_Glow.Name := 'A_SP_Band_Info_Glow';
+  vSoundplayer.Player.Band_Info_Glow.Parent := vSoundplayer.Player.Band_Info;
+  vSoundplayer.Player.Band_Info_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vSoundplayer.Player.Band_Info_Glow.Opacity := 0.9;
+  vSoundplayer.Player.Band_Info_Glow.Enabled := False;
+
 end;
 
 procedure Info;
@@ -1411,6 +1431,56 @@ begin
   vSoundplayer.Playlist.Remove_Song.main.Cancel.Text := 'Cancel';
   vSoundplayer.Playlist.Remove_Song.main.Cancel.OnClick := addons.soundplayer.Input.mouse.Button.OnMouseClick;
   vSoundplayer.Playlist.Remove_Song.main.Cancel.Visible := True;
+end;
+
+procedure Band_Information;
+begin
+  vSoundplayer.scene.Back_Blur.Enabled:= True;
+  vSoundplayer.scene.Back_Presentation.Visible:= True;
+
+  vSoundplayer.Player.Band_Info_Press.Box:= TVertScrollBox.Create(vSoundplayer.scene.Back_Presentation);
+  vSoundplayer.Player.Band_Info_Press.Box.Name := 'A_SP_Bandinfo_Box';
+  vSoundplayer.Player.Band_Info_Press.Box.Parent:=  vSoundplayer.scene.Back_Presentation;
+  vSoundplayer.Player.Band_Info_Press.Box.SetBounds(0, 0, vSoundplayer.scene.Back_Presentation.Width, vSoundplayer.scene.Back_Presentation.Height);
+  vSoundplayer.Player.Band_Info_Press.Box.Visible:= True;
+
+  vSoundplayer.Player.Band_Info_Press.Name:= TText.Create(vSoundplayer.Player.Band_Info_Press.Box);
+  vSoundplayer.Player.Band_Info_Press.Name.Name := 'A_SP_Bandinfo_Text';
+  vSoundplayer.Player.Band_Info_Press.Name.Parent:=  vSoundplayer.Player.Band_Info_Press.Box;
+  vSoundplayer.Player.Band_Info_Press.Name.SetBounds(30, 20, vSoundplayer.Player.Band_Info_Press.Box.Width - 60, 40);
+  vSoundplayer.Player.Band_Info_Press.Name.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.Player.Band_Info_Press.Name.TextSettings.FontColor:= TAlphaColorRec.White;
+  vSoundplayer.Player.Band_Info_Press.Name.Font.Size:= 36;
+  vSoundplayer.Player.Band_Info_Press.Name.Text:= '';
+  vSoundplayer.Player.Band_Info_Press.Name.Visible:= True;
+
+  vSoundplayer.Player.Band_Info_Press.Image:= TImage.Create(vSoundplayer.Player.Band_Info_Press.Box);
+  vSoundplayer.Player.Band_Info_Press.Image.Name:= 'A_SP_Bandinfo_Image';
+  vSoundplayer.Player.Band_Info_Press.Image.Parent:=  vSoundplayer.Player.Band_Info_Press.Box;
+  vSoundplayer.Player.Band_Info_Press.Image.SetBounds(30, 70, 300, 300);
+  vSoundplayer.Player.Band_Info_Press.Image.WrapMode:= TImageWrapMode.Stretch;
+  vSoundplayer.Player.Band_Info_Press.Image.Visible:= True;
+
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum:= TMemo.Create(vSoundplayer.Player.Band_Info_Press.Box);
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum.Name := 'A_SP_Bandinfo_MemoSum';
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum.Parent:=  vSoundplayer.Player.Band_Info_Press.Box;
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum.SetBounds(360, 70, vSoundplayer.Player.Band_Info_Press.Box.Width - 390, 300);
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum.ReadOnly:= True;
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum.WordWrap:= True;
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum.Visible:= True;
+
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm:= TMemo.Create(vSoundplayer.Player.Band_Info_Press.Box);
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm.Name := 'A_SP_Bandinfo_MemoComm';
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm.Parent:=  vSoundplayer.Player.Band_Info_Press.Box;
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm.SetBounds(30, 380, vSoundplayer.Player.Band_Info_Press.Box.Width - 60, vSoundplayer.Player.Band_Info_Press.Box.Height- 400);
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm.ReadOnly:= True;
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm.WordWrap:= True;
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm.Visible:= True;
+end;
+
+procedure Lyrics;
+begin
+
 end;
 
 end.

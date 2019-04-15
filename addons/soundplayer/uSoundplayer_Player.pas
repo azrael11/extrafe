@@ -6,11 +6,17 @@ uses
   System.Classes,
   System.SysUtils,
   System.UITypes,
+  System.JSON,
   FMX.Types,
   FMX.Objects,
   FMX.Effects,
   FMX.Graphics,
   FMX.Grid,
+  IPPeerClient,
+  REST.Client,
+  REST.Types,
+  Data.Bind.Components,
+  Data.Bind.ObjectScope,
   bass;
 
 procedure State(vPlay, vPause, vStop, vMute, vSuffle: Boolean; vRepeat: String);
@@ -40,6 +46,8 @@ procedure Suffle_GoTo;
 procedure Suffle_Create_List;
 procedure Suffle_Back;
 
+procedure Band_Info;
+
 procedure Show_Tag(vSongName: String; vSongNum: Integer);
 
 procedure Title_Animation;
@@ -49,15 +57,15 @@ procedure Get_Tag(vSongNum: SmallInt);
 procedure Update_Thumb_Pos(Sender: TObject; vValue: Single; vKeep: Boolean);
 
 // Add new songs
-procedure uSoundplayer_Player_AddNewSongs;
+procedure Add_Songs;
 
 // Add songs in playlist based types
-procedure AddSongs_In_m3u(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string; mSongNum: SmallInt);
-procedure AddSongs_In_pls(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
-procedure AddSongs_In_asx(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
-procedure AddSongs_In_xspf(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
-procedure AddSongs_In_wpl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
-procedure AddSongs_In_expl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_m3u(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string; mSongNum: SmallInt);
+procedure Add_Songs_pls(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_asx(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_xspf(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_wpl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_expl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
 
 // Update last played song from the current playlist
 procedure Update_Last_Song(vNum: Integer);
@@ -65,20 +73,21 @@ procedure Update_Last_Song(vNum: Integer);
 implementation
 
 uses
+  main,
   uLoad_AllTypes,
   uSnippet_Text,
+  uInternet_Files,
   uWindows,
   uSoundplayer,
   uSoundplayer_AllTypes,
+  uSoundplayer_SetAll,
+  uSoundplayer_Playlist,
   uSoundplayer_Playlist_Create,
   uSoundplayer_Tag_Get,
   uSoundplayer_Tag_Mp3_SetAll,
   uSoundplayer_Tag_Mp3,
   uSoundplayer_Tag_Ogg_SetAll,
   uSoundplayer_Tag_Ogg;
-
-var
-  vPressed_Already: Boolean = False;
 
 procedure State(vPlay, vPause, vStop, vMute, vSuffle: Boolean; vRepeat: String);
 begin
@@ -92,6 +101,13 @@ begin
   Set_Play(vPlay, vPause, vStop, vMute);
   Set_Previous_Next;
 
+  if addons.soundplayer.Playlist.List.Songs_Num <= 0 then
+  begin
+    vSoundplayer.Player.Loop.TextSettings.FontColor := TAlphaColorRec.Grey;
+    vSoundplayer.Player.Suffle.TextSettings.FontColor := TAlphaColorRec.Grey;
+    vSoundplayer.Player.Equalizer.TextSettings.FontColor := TAlphaColorRec.Grey;
+    vSoundplayer.Player.Lyrics.TextSettings.FontColor := TAlphaColorRec.Grey;
+  end;
   if addons.soundplayer.Playlist.List.Songs_Num > 0 then
   begin
     Repeat_Back(vRepeat);
@@ -106,36 +122,44 @@ end;
 
 procedure Set_Play(vPlay, vPause, vStop, vMute: Boolean);
 begin
-  if vStop then
+  if addons.soundplayer.Playlist.List.Songs_Num <= 0 then
   begin
-    vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Red;
-    vSoundplayer.Player.Play.Text := #$ea1c;
-    vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-    vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '2';
+    vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Grey;
+    vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Grey;
   end
   else
   begin
-    if vPlay then
+    if vStop then
     begin
+      vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Red;
       vSoundplayer.Player.Play.Text := #$ea1c;
-      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
-      vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Blueviolet;
-      vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
-    end
-    else if vPause then
-    begin
-      vSoundplayer.Player.Play.Text := #$ea1d;
-      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
-      vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Greenyellow;
-      vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '1';
+      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+      vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '2';
     end
     else
     begin
-      vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      if vPlay then
+      begin
+        vSoundplayer.Player.Play.Text := #$ea1c;
+        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+        vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Blueviolet;
+        vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
+      end
+      else if vPause then
+      begin
+        vSoundplayer.Player.Play.Text := #$ea1d;
+        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
+        vSoundplayer.Player.Play_Glow.GlowColor := TAlphaColorRec.Greenyellow;
+        vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '1';
+      end
+      else
+      begin
+        vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      end;
     end;
   end;
 end;
@@ -248,52 +272,60 @@ end;
 
 procedure Set_Previous_Next;
 begin
-  if (addons.soundplayer.Player.Playing_Now = 0) and (addons.soundplayer.Playlist.List.Songs_Num = 0) then
+  if addons.soundplayer.Playlist.List.Songs_Num <= 0 then
   begin
-    addons.soundplayer.Player.HasPrevious_Track := False;
-    vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
-    addons.soundplayer.Player.HasNext_Track := False;
     vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
-    if addons.soundplayer.Playlist.Edit then
-    begin
-      vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Grey;
-      vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
-    end;
-  end
-  else if (addons.soundplayer.Player.Playing_Now + 1 < addons.soundplayer.Playlist.List.Songs_Num) and (addons.soundplayer.Player.Playing_Now <> 0) then
-  begin
-    addons.soundplayer.Player.HasPrevious_Track := True;
-    vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    addons.soundplayer.Player.HasNext_Track := True;
-    vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    if addons.soundplayer.Playlist.Edit then
-    begin
-      vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    end;
-  end
-  else if addons.soundplayer.Player.Playing_Now = 0 then
-  begin
-    addons.soundplayer.Player.HasPrevious_Track := False;
     vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
-    addons.soundplayer.Player.HasNext_Track := True;
-    vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    if addons.soundplayer.Playlist.Edit then
-    begin
-      vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Grey;
-      vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    end;
   end
   else
   begin
-    addons.soundplayer.Player.HasPrevious_Track := True;
-    vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    addons.soundplayer.Player.HasNext_Track := False;
-    vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
-    if addons.soundplayer.Playlist.Edit then
+    if (addons.soundplayer.Player.Playing_Now = 0) and (addons.soundplayer.Playlist.List.Songs_Num = 0) then
     begin
-      vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
+      addons.soundplayer.Player.HasPrevious_Track := False;
+      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
+      addons.soundplayer.Player.HasNext_Track := False;
+      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
+      if addons.soundplayer.Playlist.Edit then
+      begin
+        vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Grey;
+        vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
+      end;
+    end
+    else if (addons.soundplayer.Player.Playing_Now + 1 < addons.soundplayer.Playlist.List.Songs_Num) and (addons.soundplayer.Player.Playing_Now <> 0) then
+    begin
+      addons.soundplayer.Player.HasPrevious_Track := True;
+      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      addons.soundplayer.Player.HasNext_Track := True;
+      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      if addons.soundplayer.Playlist.Edit then
+      begin
+        vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      end;
+    end
+    else if addons.soundplayer.Player.Playing_Now = 0 then
+    begin
+      addons.soundplayer.Player.HasPrevious_Track := False;
+      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
+      addons.soundplayer.Player.HasNext_Track := True;
+      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      if addons.soundplayer.Playlist.Edit then
+      begin
+        vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Grey;
+        vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      end;
+    end
+    else
+    begin
+      addons.soundplayer.Player.HasPrevious_Track := True;
+      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      addons.soundplayer.Player.HasNext_Track := False;
+      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
+      if addons.soundplayer.Playlist.Edit then
+      begin
+        vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+        vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
+      end;
     end;
   end;
 end;
@@ -309,7 +341,6 @@ begin
   if extrafe.prog.State = 'addon_soundplayer' then
   begin
     vSoundplayer.Playlist.List.Selected := addons.soundplayer.Player.Playing_Now;
-    uSoundplayer_Tag_Mp3.APICIndex := 0;
     uSoundplayer_Player.Get_Tag(addons.soundplayer.Player.Playing_Now);
     uSoundplayer_Tag_Get.Set_Icon;
     vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
@@ -380,7 +411,6 @@ begin
     vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '2';
     vSoundplayer.timer.Song.Enabled := True;
   end;
-  vPressed_Already := True;
 end;
 
 procedure Stop;
@@ -402,7 +432,6 @@ begin
         addons.soundplayer.Player.Pause := False;
         uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Stop, vSoundplayer.Player.Stop_Glow);
         vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '1';
-        vPressed_Already := True;
       end;
   end;
 end;
@@ -620,7 +649,6 @@ begin
       for vi := 0 to addons.soundplayer.Playlist.List.Songs_Num - 1 do
         vSoundplayer.Playlist.List.Cells[1, vi] := '3';
       vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
-      vPressed_Already := True;
     end
     else
     begin
@@ -630,7 +658,6 @@ begin
         vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
       if vSoundplayer.Player.Previous.TextSettings.FontColor = TAlphaColorRec.Grey then
         vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      vPressed_Already := True;
     end;
     addons.soundplayer.Player.Suffle := not addons.soundplayer.Player.Suffle;
   end;
@@ -744,7 +771,8 @@ begin
 end;
 
 ///
-procedure AddSongs_In_m3u(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string; mSongNum: SmallInt);
+
+procedure Add_Songs_m3u(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string; mSongNum: SmallInt);
 var
   vss: string;
   vSongTime: string;
@@ -764,32 +792,32 @@ begin
   BASS_StreamFree(sound.str_music[2]);
 end;
 
-procedure AddSongs_In_pls(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_pls(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
 begin
 
 end;
 
-procedure AddSongs_In_asx(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_asx(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
 begin
 
 end;
 
-procedure AddSongs_In_xspf(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_xspf(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
 begin
 
 end;
 
-procedure AddSongs_In_wpl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_wpl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
 begin
 
 end;
 
-procedure AddSongs_In_expl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
+procedure Add_Songs_expl(mPlaylistNum: SmallInt; mTrackName, mTrackPath: string);
 begin
 
 end;
 
-procedure uSoundplayer_Player_AddNewSongs;
+procedure Add_Songs;
 var
   vSongList: TStringList;
   vi: SmallInt;
@@ -803,6 +831,7 @@ var
 begin
   if vSoundplayer.scene.OpenDialog.FileName <> '' then
   begin
+    vSongNum := addons.soundplayer.Player.Playing_Now;
     // Needed data for playlist
     vPlaylistName := addons.soundplayer.Playlist.List.Name;
     if vPlaylistName = '' then
@@ -823,98 +852,48 @@ begin
     // Add list of songs in stringlist
     vSongList := TStringList.Create;
     vSongList.AddStrings(vSoundplayer.scene.OpenDialog.Files);
-    // Add rows in stringgrid
-    if vSoundplayer.Playlist.List.Cells[0, 0] = '' then
-      vSoundplayer.Playlist.List.RowCount := vSongList.Count
-    else
-      vSoundplayer.Playlist.List.RowCount := vSoundplayer.Playlist.List.RowCount + vSongList.Count;
-    // Add songs in Playlist and Stringgrid
     if vPlaylistName = 'temp' then
     begin
-      uSoundPlayer_Playlist_Create_NewPlaylist(vPlaylistName, vPlaylistType);
+      uSoundplayer_Playlist_Create.New(vPlaylistName, vPlaylistType);
+      addons.soundplayer.Playlist.List.Songs := TStringList.Create;
     end;
-    addons.soundplayer.Playlist.List.Playlist.LoadFromFile(addons.soundplayer.Path.Playlists + addons.soundplayer.Playlist.List.Name + vPlaylistType);
-    addons.soundplayer.Playlist.List.Songs := TStringList.Create;
+
     for vi := 0 to vSongList.Count - 1 do
     begin
       vSongNum := vSongsInPlaylist + vi;
       if vPlaylistType = '.m3u' then
-        AddSongs_In_m3u(vPlaylistNum, ExtractFileName(vSongList.Strings[vi]), ExtractFilePath(vSongList.Strings[vi]), vSongNum)
+        Add_Songs_m3u(vPlaylistNum, ExtractFileName(vSongList.Strings[vi]), ExtractFilePath(vSongList.Strings[vi]), vSongNum)
         // AddSongs_In_pls
       else if vPlaylistType = 'pls' then
-        // AddSongs_In_asx
+        // Add_Songs_asx
       else if vPlaylistType = 'asx' then
-        // AddSongs_In_xspf
+        // Add_Songs_xspf
       else if vPlaylistType = 'xspf' then
-        // AddSongs_In_wpl
+        // Add_Songs_wpl
       else if vPlaylistType = 'wpl' then
-        // AddSongs_In_expl;
+        // Add_Songs_expl;
       else if vPlaylistType = 'expl' then
       begin
 
       end;
-      vSoundplayer.Playlist.List.Cells[0, vSongNum] := IntToStr(vSongNum + 1);
-      vSoundplayer.Playlist.List.Cells[1, vSongNum] := '3';
-      vSoundplayer.Playlist.List.Cells[2, vSongNum] := addons.soundplayer.Playlist.List.Song_Info[vSongNum].Title;
-      vSoundplayer.Playlist.List.Cells[3, vSongNum] := addons.soundplayer.Playlist.List.Song_Info[vSongNum].Artist;
-      vSoundplayer.Playlist.List.Cells[4, vSongNum] := addons.soundplayer.Playlist.List.Song_Info[vSongNum].Track_Seconds;
-      if addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Type = '.mp3' then
-        vSoundplayer.Playlist.List.Cells[5, vSongNum] := '7'
-      else
-        vSoundplayer.Playlist.List.Cells[5, vSongNum] := '8'
     end;
     // update playlist config ini
     addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'PL_' + IntToStr(vPlaylistNum) + '_Songs', (vSongsInPlaylist + vSongList.Count));
-    // update playlist array
-    addons.soundplayer.Playlist.List.Songs_Num := vSongsInPlaylist + vSongList.Count;
-    // update soundplayer face vars
-    if vPlaylistPlayingSong <> -1 then
-      addons.soundplayer.Player.Playing_Now := 0;
-    vSoundplayer.info.Total_Songs.Text := IntToStr(addons.soundplayer.Player.Playing_Now) + '/' + IntToStr(addons.soundplayer.Playlist.List.Songs_Num);
-    // Select the first song if playlist was empty and get tag details
-    if vSongsInPlaylist = 0 then
-    begin
-      vSoundplayer.Playlist.List.Cells[1, 0] := '2';
-      vSoundplayer.Playlist.List.SelectRow(0);
-      uSoundplayer_Player.Get_Tag(0);
-      sound.str_music[1] := BASS_StreamCreateFile(False, PChar(vSongList.Strings[0]), 0, 0, BASS_SAMPLE_FLOAT
-{$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-      addons.soundplayer.Player.Stop := True;
-      addons.soundplayer.Player.LastPlayed := 0;
-      addons.soundplayer.Player.Playing_Now := addons.soundplayer.Player.LastPlayed;
-    end;
     FreeAndNil(vSongList);
-    vSoundplayer.Player.Song_Tag.Visible := True;
-
-    vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vSoundplayer.Player.Stop.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    if addons.soundplayer.Player.Playing_Now > 1 then
-      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
-    else
-      vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
-    if addons.soundplayer.Playlist.List.Songs_Num > 1 then
-      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
-    else
-      vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
-
-    vSoundplayer.Player.Loop.TextSettings.FontColor := TAlphaColorRec.Grey;
-
-    if addons.soundplayer.Playlist.List.Songs_Num > 1 then
-      vSoundplayer.Player.Suffle.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
-    else
-      vSoundplayer.Player.Suffle.TextSettings.FontColor := TAlphaColorRec.Grey;
-
-    vSoundplayer.info.Back_Left_Ani.Enabled := True;
-    vSoundplayer.info.Back_Left.Position.X := 2;
-    vSoundplayer.info.Back_Right_Ani.Enabled := True;
-    vSoundplayer.info.Back_Right.Position.X := vSoundplayer.scene.Back_Info.Width - 602;
+    uSoundplayer_Playlist.State('Playlist', vPlaylistNum);
+    if addons.soundplayer.Player.Play then
+    begin
+      vSoundplayer.Playlist.List.Cells[1, addons.soundplayer.Player.Playing_Now] := '0';
+    end;
+    vSoundplayer.Playlist.List.Selected := addons.soundplayer.Player.Playing_Now;
+    Set_Previous_Next;
   end;
 end;
 
 procedure Get_Tag(vSongNum: SmallInt);
 var
   vSong: string;
-  vi: Integer;
+  vi, vk: Integer;
   vDescription: String;
   vImage: TBitmap;
   vPath: String;
@@ -947,29 +926,28 @@ begin
 
   if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.mp3' then
   begin
+    vk := 0;
     for vi := 0 to 4 do
     begin
+      vSoundplayer.Player.Rate[vi].Text := #$e9d7;
       vSoundplayer.Player.Rate[vi].Visible := True;
-      vSoundplayer.Player.Rate_No.Visible := True;
     end;
-    vSoundplayer.Player.Rate_No.Visible := True;
     if addons.soundplayer.Playlist.List.Song_Info[vSongNum].Rate > IntToStr(0) then
     begin
-      for vi := 0 to 4 do
-        vSoundplayer.Player.Rate[vi].Visible := True;
-      for vi := 0 to 4 do
-        vSoundplayer.Player.Rate_Gray[vi].Enabled := True;
-      for vi := 0 to ((addons.soundplayer.Playlist.List.Song_Info[vSongNum].Rate.ToInteger) div 51) - 1 do
-        vSoundplayer.Player.Rate_Gray[vi].Enabled := False;
-      vSoundplayer.Player.Rate_No.Visible := False;
-    end
-    else
-    begin
-      for vi := 0 to 4 do
-        vSoundplayer.Player.Rate[vi].Visible := False;
-      vSoundplayer.Player.Rate_No.Visible := True;
+      for vi := 0 to Round(((addons.soundplayer.Playlist.List.Song_Info[vSongNum].Rate.ToSingle) / 25.5)) - 1 do
+      begin
+        if not Odd(vi) then
+          vSoundplayer.Player.Rate[vk].Text := #$e9d8
+        else
+        begin
+          vSoundplayer.Player.Rate[vk].Text := #$e9d9;
+          Inc(vk, 1);
+        end;
+      end;
     end;
-    vStringChars := Length(StringReplace(StringReplace(addons.soundplayer.Playlist.List.Song_Info[vSongNum].Lyrics.Text , #10, '', [rfReplaceAll]), #13, '', [rfReplaceAll]));
+
+    vStringChars := Length(StringReplace(StringReplace(addons.soundplayer.Playlist.List.Song_Info[vSongNum].Lyrics.Text, #10, '', [rfReplaceAll]), #13, '',
+      [rfReplaceAll]));
     if vStringChars > 1 then
       vSoundplayer.Player.Lyrics.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
     else
@@ -977,23 +955,27 @@ begin
   end
   else if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.ogg' then
   begin
-    for vi := 0 to 4 do
-    begin
-      vSoundplayer.Player.Rate[vi].Visible := False;
-      vSoundplayer.Player.Rate_No.Visible := False;
-    end;
-    vSoundplayer.Player.Rate_No.Visible := False;
+
   end;
 
   if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.mp3' then
   begin
     vPath := addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Path + addons.soundplayer.Playlist.List.Song_Info
       [addons.soundplayer.Player.Playing_Now].Disk_Name + addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type;
-    uSoundplayer_Tag_Mp3.Get_Cover_Image(vPath, vDescription, vImage);
-    vSoundplayer.info.Cover.Bitmap := vImage;
-    vSoundplayer.info.Cover_Label.Text := vDescription;
+    uSoundplayer_Tag_Mp3.APICIndex := 0;
+    if uSoundplayer_Tag_Mp3.Cover_Get_Image(vPath, vDescription, vImage) then
+    begin
+      vSoundplayer.info.Cover.Bitmap := vImage;
+      vSoundplayer.info.Cover_Label.Text := vDescription;
+    end
+    else
+    begin
+      vSoundplayer.info.Cover.Bitmap := nil;
+      vSoundplayer.info.Cover_Label.Text := '';
+    end;
   end
   else if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.ogg' then
+    // This must be function and return boolean with out from function
     GetTags_OGG_Cover(vSongNum);
   vSong := addons.soundplayer.Playlist.List.Songs.Strings[vSongNum];
 end;
@@ -1011,7 +993,7 @@ begin
 
     if addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Type = '.mp3' then
     begin
-      uSoundplayer_TagSet_Mp3;
+      uSoundplayer_Tag_Mp3_SetAll.Load;
       uSoundplayer_Tag_Mp3.Get(vSongName, vSongNum);
     end
     else if addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Type = '.ogg' then
@@ -1150,36 +1132,31 @@ procedure OnLeave(vImage: TImage; vGlow: TGlowEffect);
   end;
 
 begin
-  if vPressed_Already = False then
+  if vImage.Name = 'A_SP_Player_Play_Image' then
   begin
-    if vImage.Name = 'A_SP_Player_Play_Image' then
+    if (addons.soundplayer.Player.Play) or (addons.soundplayer.Player.Pause) then
     begin
-      if (addons.soundplayer.Player.Play) or (addons.soundplayer.Player.Pause) then
+      if addons.soundplayer.Player.Pause then
       begin
-        if addons.soundplayer.Player.Pause then
-        begin
-          vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
-          vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
-        end
-        else
-        begin
-          vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-          vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
-        end;
-
+        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
+        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
+      end
+      else
+      begin
+        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
+        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
       end;
-      ScaleDown;
-    end
-    else if vImage.Name = 'A_SP_Player_Stop_Image' then
-    begin
-      if addons.soundplayer.Player.Stop = False then
-        ScaleDown;
-    end
-    else
+
+    end;
+    ScaleDown;
+  end
+  else if vImage.Name = 'A_SP_Player_Stop_Image' then
+  begin
+    if addons.soundplayer.Player.Stop = False then
       ScaleDown;
   end
   else
-    vPressed_Already := False;
+    ScaleDown;
 end;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////
@@ -1205,6 +1182,65 @@ begin
     end;
     vSoundplayer.Player.Song_Title_Ani.Start;
   end;
+end;
+
+///
+procedure Band_Info;
+var
+  vRESTClient: TRESTClient;
+  vRESTRequest: TRESTRequest;
+  vRESTResponse: TRESTResponse;
+  vJSONValue: TJSONValue;
+  vAPI: String;
+  vOutValue: String;
+  vArtist, vImageUrl, vSummary, vComment: String;
+begin
+  uSoundplayer_SetAll.Band_Information;
+
+  vAPI := '17d1261b9ed4b209902d9167320e3663';
+  vRESTClient := TRESTClient.Create('');
+  vRESTClient.Name := 'Soundplayer_BandInfo_RestClient';
+  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
+  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
+  vRESTClient.BaseURL := 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + addons.soundplayer.Playlist.List.Song_Info
+    [addons.soundplayer.Player.Playing_Now].Artist + '&api_key=' + vAPI + '&format=json';
+  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
+
+  vRESTResponse := TRESTResponse.Create(vRESTClient);
+  vRESTResponse.Name := 'OpenWeatherMap_Response';
+
+  vRESTRequest := TRESTRequest.Create(vRESTClient);
+  vRESTRequest.Name := 'Soundplayer_BandInfo_Request';
+  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
+  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
+  vRESTRequest.Client := vRESTClient;
+  vRESTRequest.Method := TRESTRequestMethod.rmGET;
+  vRESTRequest.Response := vRESTResponse;
+  vRESTRequest.Timeout := 30000;
+
+  vRESTRequest.Execute;
+  vJSONValue := vRESTResponse.JSONValue;
+  /// Here is the response to format
+
+  vArtist := vJSONValue.GetValue<String>('artist.name');
+  vSoundplayer.Player.Band_Info_Press.Name.Text := vArtist;
+  vImageUrl := '';
+  if vJSONValue.TryGetValue('artist.image[4].#text', vOutValue) then
+    vImageUrl := vOutValue;
+  if vImageUrl = '' then
+    if vJSONValue.TryGetValue('artist.image[3].#text', vOutValue) then
+      vImageUrl := vOutValue;
+  if vImageUrl = '' then
+    if vJSONValue.TryGetValue('artist.image[2].#text', vOutValue) then
+      vImageUrl := vOutValue;
+  if vImageUrl <> '' then
+    vSoundplayer.Player.Band_Info_Press.Image.Bitmap := uInternet_Files.Get_Image(vImageUrl);
+  vSummary := vJSONValue.GetValue<String>('artist.bio.summary');
+  vSoundplayer.Player.Band_Info_Press.Memo_Sum.Lines.Text:= vSummary;
+  vComment := vJSONValue.GetValue<String>('artist.bio.content');
+  vSoundplayer.Player.Band_Info_Press.Memo_Comm.Lines.Text:= vComment;
+  FreeAndNil(vJSONValue);
+  FreeAndNil(vRESTRequest);
 end;
 
 end.

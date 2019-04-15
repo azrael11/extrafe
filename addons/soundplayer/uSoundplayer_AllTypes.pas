@@ -353,6 +353,7 @@ type
     Back: TImage;
     Back_Blur: TGaussianBlurEffect;
     Back_Player: TImage;
+    Back_Presentation: TImage;
     UpLine: TImage;
     Back_Info: TImage;
     MiddleLine: TImage;
@@ -366,6 +367,15 @@ type
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
     First: TSOUNDPLAYER_ADDON_SCENE_FIRST;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYER_BANDINFO= record
+    Box: TVertScrollBox;
+    Name: TTExt;
+    Image: TImage;
+    Memo_Sum: TMemo;
+    Memo_Comm: TMemo;
   end;
 
 type
@@ -389,9 +399,7 @@ type
     Song_Title_Cover_Left: TRectangle;
     Song_Title_Cover_Right: TRectangle;
     Song_Title_Ani: TFloatAnimation;
-    Rate_No: TText;
-    Rate: array [0 .. 4] of TImage;
-    Rate_Gray: array [0 .. 4] of TMonochromeEffect;
+    Rate: array [0 .. 4] of TText;
     Song_Pos: TALTrackBar;
     Song_Tag: TImage;
     Song_Tag_Glow: TGlowEffect;
@@ -419,6 +427,9 @@ type
     Lyrics_Glow: TGlowEffect;
     Equalizer: TText;
     Equalizer_Glow: TGlowEffect;
+    Band_Info: TText;
+    Band_Info_Glow: TGlowEffect;
+    Band_Info_Press: TSOUNDPLAYER_ADDON_PLAYER_BANDINFO;
   end;
 
 type
@@ -619,25 +630,18 @@ type
   TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v1 = record
     Title: TLabel;
     Title_V: TEdit;
-    Title_Differ: TImage;
     Artist: TLabel;
     Artist_V: TEdit;
-    Artist_Differ: TImage;
     Album: TLabel;
     Album_V: TEdit;
-    Album_Differ: TImage;
     Year: TLabel;
     Year_V: TEdit;
-    Year_Differ: TImage;
     Genre: TLabel;
     Genre_V: TComboEdit;
-    Genre_Differ: TImage;
     Track: TLabel;
     Track_V: TEdit;
-    Track_Differ: TImage;
     Comment: TLabel;
     Comment_V: TEdit;
-    Comment_Differ: TImage;
     Transfer: TText;
   end;
 
@@ -645,39 +649,30 @@ type
   TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v2 = record
     Title: TLabel;
     Title_V: TEdit;
-    Title_Differ: TImage;
     Artist: TLabel;
     Artist_V: TEdit;
-    Artist_Differ: TImage;
     Album: TLabel;
     Album_V: TEdit;
-    Album_Differ: TImage;
     Year: TLabel;
     Year_V: TEdit;
-    Year_Differ: TImage;
     Genre: TLabel;
     Genre_V: TComboEdit;
-    Genre_Differ: TImage;
     Track: TLabel;
     Track_V: TEdit;
-    Track_Differ: TImage;
     Comment: TLabel;
     Comment_V: TEdit;
-    Comment_Differ: TImage;
     Transfer: TText;
     Rate_Label: TLabel;
-    Rate: array [0 .. 4] of TImage;
-    Rate_Glow: array [0 .. 4] of TGlowEffect;
-    Rate_Dot: array [0 .. 4] of TCircle;
+    Rate: array [0 .. 9] of TText;
+    Rate_Glow: array [0 .. 9] of TGlowEffect;
+    Rate_Dot: array [0 .. 9] of TText;
     Covers: TGroupBox;
     Cover: TImage;
     Cover_Label: TLabel;
-    Cover_ArrowLeft: TImage;
+    Cover_ArrowLeft: TText;
     Cover_ArrowLeft_Glow: TGlowEffect;
-    Cover_ArrowLeft_Grey: TMonochromeEffect;
-    Cover_ArrowRight: TImage;
+    Cover_ArrowRight: TText;
     Cover_ArrowRight_Glow: TGlowEffect;
-    Cover_ArrowRight_Grey: TMonochromeEffect;
     Cover_Num: TLabel;
     Cover_Add_Computer: TText;
     Cover_Add_Computer_Glow: TGlowEffect;
@@ -700,6 +695,7 @@ type
     Panel: Tpanel;
     Main: Tpanel;
     List: TListBox;
+    Covers: array [0..4] of TImage;
     Load: TButton;
     Cancel: TButton;
   end;
@@ -923,11 +919,11 @@ end;
 procedure TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG.OnClose(Sender: TObject);
 begin
   if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_AddSongs' then
-    uSoundplayer_Player_AddNewSongs
-  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Cover_AddComputer' then
-    uSoundplayer_Tag_Mp3_Cover_Select
-  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Lyrics_AddComputer' then
-    uSoundplayer_Tag_Mp3_Lyrics_Add
+    uSoundplayer_Player.Add_Songs
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Mp3_Cover_AddComputer' then
+    uSoundplayer_Tag_Mp3.Cover_Select
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Mp3_Lyrics_AddComputer' then
+    uSoundplayer_Tag_Mp3.Lyrics_Add
   else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Ogg_Cover_AddComputer' then
     uSoundplayer_Tag_Ogg_Cover_Select;
 end;

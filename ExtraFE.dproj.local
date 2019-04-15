@@ -6,8 +6,8 @@
     <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.pas</Transaction>
     <Transaction>2018/02/04 11:32:22.000.957,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\ExtraFE.dproj</Transaction>
     <Transaction>2018/02/04 11:32:53.000.005,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas</Transaction>
-    <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.fmx</Transaction>
     <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.pas</Transaction>
+    <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.fmx</Transaction>
     <Transaction>2018/02/04 11:40:43.000.031,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading\uLoad.pas</Transaction>
     <Transaction>2018/02/04 11:43:35.000.575,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_effects\uText.pas</Transaction>
     <Transaction>2018/02/04 11:45:22.000.059,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_os\uWindows.pas</Transaction>
@@ -313,8 +313,8 @@
     <Transaction>2018/12/29 10:04:27.000.395,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\code\_database\uDatabase.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:38.000.709,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:51.000.456,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\play\azhung\uAzHung_Sound.pas</Transaction>
-    <Transaction>2019/01/16 10:35:54.000.622,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo.pas</Transaction>
     <Transaction>2019/01/16 10:35:54.000.583,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas</Transaction>
+    <Transaction>2019/01/16 10:35:54.000.622,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo.pas</Transaction>
     <Transaction>2019/01/17 08:34:10.000.679,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/17 08:34:33.000.963,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\main\configuration\uMain_Config_Info_Credits.pas</Transaction>
     <Transaction>2019/01/29 11:39:49.000.946,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
@@ -371,8 +371,10 @@
     <Transaction>2019/03/09 11:08:43.000.223,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading\uLoad_Font.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/03/16 09:37:56.000.157,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading\uLoad_Font.pas=</Transaction>
     <Transaction>2019/03/29 17:47:18.000.317,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\soundplayer\uSoundplayer_Playlist_Actions.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\soundplayer\uSoundplayer_Playlist.pas</Transaction>
-    <Transaction>2019/04/07 08:46:36.455,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
-    <Transaction>2019/04/07 08:46:48.053,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\main\uMain_Sounds.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/04/07 08:46:36.000.455,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/04/07 08:46:48.000.053,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\main\uMain_Sounds.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/04/13 18:12:43.000.975,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/04/13 18:13:12.000.772,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android=""/>
@@ -412,6 +414,7 @@
     <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Manage.pas"/>
     <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Remove.pas"/>
     <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Create.pas"/>
+    <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas"/>
     <File Path="addons\soundplayer\settings"/>
     <File Path="addons\soundplayer\settings\uSoundplayer_Settings_SetAll.pas"/>
     <File Path="addons\soundplayer\_tag_libraries"/>

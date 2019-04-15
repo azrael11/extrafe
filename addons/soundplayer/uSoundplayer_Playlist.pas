@@ -28,31 +28,6 @@ procedure EditPlaylist(vActive: Boolean);
 
 procedure LoadPlaylists;
 
-// Create playlist based types
-procedure NewPlaylist_m3u(mPlaylistName: string; mNum: SmallInt);
-procedure NewPlaylist_pls(mPlaylistName: string; mNum: SmallInt);
-procedure NewPlaylist_asx(mPlaylistName: string; mNum: SmallInt);
-procedure NewPlaylist_xspf(mPlaylistName: string; mNum: SmallInt);
-procedure NewPlaylist_wpl(mPlaylistName: string; mNum: SmallInt);
-procedure NewPlaylist_expl(mPlaylistName: string; mNum: SmallInt);
-
-// Add songs in playlist from load
-procedure uSoundplayer_Playlist_Actions_AddSongs_Load(mPlaylistType: string; mPL_Num: SmallInt);
-procedure AddSongs_m3u(mPL_Num: SmallInt);
-procedure AddSongs_pls(mPL_Num: SmallInt);
-procedure AddSongs_asx(mPL_Num: SmallInt);
-procedure AddSongs_xspf(mPL_Num: SmallInt);
-procedure AddSongs_wpl(mPL_Num: SmallInt);
-procedure AddSongs_expl(mPL_Num: SmallInt);
-
-// Edit Playlist
-procedure uSoundplyaer_Playlist_Actions_Row_In_M3u(vType, vSong: String);
-procedure uSoundplyaer_Playlist_Actions_Row_In_Pls(vType: String);
-procedure uSoundplyaer_Playlist_Actions_Row_In_Asx(vType: String);
-procedure uSoundplyaer_Playlist_Actions_Row_In_Xspf(vType: String);
-procedure uSoundplyaer_Playlist_Actions_Row_In_Wpl(vType: String);
-procedure uSoundplyaer_Playlist_Actions_Row_In_expl(vType: String);
-
 // Stringgrid
 procedure OnSelectCell(Sender: TObject; const ACol, ARow: Integer; var CanSelect: Boolean);
 procedure OnDoubleClick(const Column: TColumn; const Row: Integer);
@@ -66,6 +41,24 @@ procedure Edit_SongInfo(vType: String; vSelected: Integer);
 procedure Edit_Delete;
 procedure Edit_Delete_Song;
 procedure Edit_Delete_Cancel;
+// Edit Playlist by its type
+procedure Edit_M3u(vType, vSong: String);
+procedure Edit_Pls(vType: String);
+procedure Edit_Asx(vType: String);
+procedure Edit_Xspf(vType: String);
+procedure Edit_Wpl(vType: String);
+procedure Edit_expl(vType: String);
+
+// Add songs in playlist from load
+procedure AddSongs(mPlaylistType: string; mPL_Num: SmallInt);
+procedure AddSongs_m3u(mPL_Num: SmallInt);
+procedure AddSongs_pls(mPL_Num: SmallInt);
+procedure AddSongs_asx(mPL_Num: SmallInt);
+procedure AddSongs_xspf(mPL_Num: SmallInt);
+procedure AddSongs_wpl(mPL_Num: SmallInt);
+procedure AddSongs_expl(mPL_Num: SmallInt);
+
+
 
 implementation
 
@@ -112,7 +105,7 @@ begin
     uSoundplayer_Tag_Mp3.APICIndex := 0;
     if addons.Soundplayer.Playlist.List.Songs_Num > 0 then
     begin
-      uSoundplayer_Playlist_Actions_AddSongs_Load(addons.Soundplayer.Playlist.List.vType, vPlaylist_Num);
+      uSoundplayer_Playlist.AddSongs(addons.Soundplayer.Playlist.List.vType, vPlaylist_Num);
       uSoundplayer_Player.Get_Tag(addons.Soundplayer.Player.Playing_Now);
       uSoundplayer_Tag_Get.Set_Icon;
     end
@@ -160,63 +153,21 @@ begin
 end;
 /// /
 
-procedure NewPlaylist_m3u(mPlaylistName: string; mNum: SmallInt);
+procedure AddSongs(mPlaylistType: string; mPL_Num: SmallInt);
 begin
-  addons.Soundplayer.Playlist.List.Playlist := TStringList.Create;
-  addons.Soundplayer.Playlist.List.Playlist.Add('#EXTM3U');
-  addons.Soundplayer.Playlist.List.Playlist.SaveToFile(addons.Soundplayer.Path.Playlists + mPlaylistName + '.m3u');
-  addons.Soundplayer.Playlist.List.Name := mPlaylistName;
-  addons.Soundplayer.Playlist.List.vType := '.m3u';
-  addons.Soundplayer.Playlist.List.Num := mNum;
-  addons.Soundplayer.Playlist.List.Played := 0;
-  addons.Soundplayer.Playlist.List.Last_Played := DateTimeToStr(Now);
-  addons.Soundplayer.Playlist.List.Songs_Num := 0;
-  addons.Soundplayer.Playlist.List.Songs := TStringList.Create;
-
-  addons.Soundplayer.Playlist.Total := mNum;
-  addons.Soundplayer.Playlist.Active := mNum;
-  addons.Soundplayer.Playlist.List.Name := mPlaylistName;
-
-  addons.Soundplayer.Ini.Ini.WriteInteger('Playlists', 'TotalPlaylists', addons.Soundplayer.Playlist.Total);
-  addons.Soundplayer.Ini.Ini.WriteInteger('Playlists', 'ActivePlaylist', addons.Soundplayer.Playlist.Active);
-  addons.Soundplayer.Ini.Ini.WriteString('Playlists', 'ActivePlaylistName', addons.Soundplayer.Playlist.List.Name);
-  addons.Soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_Name', addons.Soundplayer.Playlist.List.Name);
-  addons.Soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_Path', addons.Soundplayer.Path.Playlists);
-  addons.Soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_Type', '.m3u');
-  addons.Soundplayer.Ini.Ini.WriteInteger('Playlists', 'PL_' + IntToStr(mNum) + '_Songs', 0);
-  addons.Soundplayer.Ini.Ini.WriteInteger('Playlists', 'Pl_' + IntToStr(mNum) + '_Played', 0);
-  addons.Soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + IntToStr(mNum) + '_LastPlayed', DateTimeToStr(Now));
-
-  vSoundplayer.info.Playlist_name.Text := mPlaylistName;
+  if mPlaylistType = '.m3u' then
+    AddSongs_m3u(mPL_Num)
+  else if mPlaylistType = 'pls' then
+    AddSongs_pls(mPL_Num)
+  else if mPlaylistType = 'asx' then
+    AddSongs_asx(mPL_Num)
+  else if mPlaylistType = 'xspf' then
+    AddSongs_xspf(mPL_Num)
+  else if mPlaylistType = 'wpl' then
+    AddSongs_wpl(mPL_Num)
+  else if mPlaylistType = 'expl' then
+    AddSongs_expl(mPL_Num)
 end;
-
-procedure NewPlaylist_pls(mPlaylistName: string; mNum: SmallInt);
-begin
-
-end;
-
-procedure NewPlaylist_asx(mPlaylistName: string; mNum: SmallInt);
-begin
-
-end;
-
-procedure NewPlaylist_xspf(mPlaylistName: string; mNum: SmallInt);
-begin
-
-end;
-
-procedure NewPlaylist_wpl(mPlaylistName: string; mNum: SmallInt);
-begin
-
-end;
-
-procedure NewPlaylist_expl(mPlaylistName: string; mNum: SmallInt);
-begin
-
-end;
-
-/// /////////////////////////////////////////////////////////////////////////////
-// Add songs in playlist from load
 
 procedure AddSongs_m3u(mPL_Num: SmallInt);
 var
@@ -304,22 +255,7 @@ begin
 
 end;
 
-procedure uSoundplayer_Playlist_Actions_AddSongs_Load(mPlaylistType: string; mPL_Num: SmallInt);
-begin
-  if mPlaylistType = '.m3u' then
-    AddSongs_m3u(mPL_Num)
-  else if mPlaylistType = 'pls' then
-    AddSongs_pls(mPL_Num)
-  else if mPlaylistType = 'asx' then
-    AddSongs_asx(mPL_Num)
-  else if mPlaylistType = 'xspf' then
-    AddSongs_xspf(mPL_Num)
-  else if mPlaylistType = 'wpl' then
-    AddSongs_wpl(mPL_Num)
-  else if mPlaylistType = 'expl' then
-    AddSongs_expl(mPL_Num)
-end;
-
+////////////////////////////////////////////////////////////////////////
 // Stringgrid
 procedure OnSelectCell(Sender: TObject; const ACol, ARow: Integer; var CanSelect: Boolean);
 begin
@@ -693,7 +629,7 @@ var
 begin
   // Change line in Playlist
   if addons.Soundplayer.Playlist.List.vType = '.m3u' then
-    uSoundplyaer_Playlist_Actions_Row_In_M3u('move_up', addons.Soundplayer.Playlist.List.Songs.Strings[vSoundplayer.Playlist.List.Selected]);
+    Edit_M3u('move_up', addons.Soundplayer.Playlist.List.Songs.Strings[vSoundplayer.Playlist.List.Selected]);
 
   // Change line in Songs list
   Edit_SongInfo('move_up', vSoundplayer.Playlist.List.Selected);
@@ -726,7 +662,7 @@ var
 begin
   // Change line in Playlist
   if addons.Soundplayer.Playlist.List.vType = '.m3u' then
-    uSoundplyaer_Playlist_Actions_Row_In_M3u('move_down', addons.Soundplayer.Playlist.List.Songs.Strings[vSoundplayer.Playlist.List.Selected]);
+    Edit_M3u('move_down', addons.Soundplayer.Playlist.List.Songs.Strings[vSoundplayer.Playlist.List.Selected]);
 
   // Change line in Songs list
   Edit_SongInfo('move_down', vSoundplayer.Playlist.List.Selected);
@@ -798,7 +734,7 @@ procedure Edit_Delete_Song;
 begin
   // Delete from the playlist
   if addons.Soundplayer.Playlist.List.vType = '.m3u' then
-    uSoundplyaer_Playlist_Actions_Row_In_M3u('delete', addons.Soundplayer.Playlist.List.Songs.Strings[vSoundplayer.Playlist.List.Selected]);
+    Edit_M3u('delete', addons.Soundplayer.Playlist.List.Songs.Strings[vSoundplayer.Playlist.List.Selected]);
 
   // Delete from songs list
   Edit_SongInfo('delete', vSoundplayer.Playlist.List.Selected);
@@ -833,7 +769,7 @@ begin
 end;
 
 // Edit Playlist
-procedure uSoundplyaer_Playlist_Actions_Row_In_M3u(vType, vSong: String);
+procedure Edit_M3u(vType, vSong: String);
 var
   vStr, vStr1: String;
   vStr_, vStr_1: String;
@@ -897,27 +833,27 @@ begin
   end;
 end;
 
-procedure uSoundplyaer_Playlist_Actions_Row_In_Pls(vType: String);
+procedure Edit_Pls(vType: String);
 begin
 
 end;
 
-procedure uSoundplyaer_Playlist_Actions_Row_In_Asx(vType: String);
+procedure Edit_Asx(vType: String);
 begin
 
 end;
 
-procedure uSoundplyaer_Playlist_Actions_Row_In_Xspf(vType: String);
+procedure Edit_Xspf(vType: String);
 begin
 
 end;
 
-procedure uSoundplyaer_Playlist_Actions_Row_In_Wpl(vType: String);
+procedure Edit_Wpl(vType: String);
 begin
 
 end;
 
-procedure uSoundplyaer_Playlist_Actions_Row_In_expl(vType: String);
+procedure Edit_expl(vType: String);
 begin
 
 end;

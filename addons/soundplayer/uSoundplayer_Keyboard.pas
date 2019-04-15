@@ -22,9 +22,9 @@ begin
   if extrafe.prog.State = 'addon_soundplayer_create_playlist' then
   begin
     if UpperCase(vKey) = 'ESC' then
-      uSoundPlayer_Playlist_Create_Free
+      uSoundPlayer_Playlist_Create.Free
     else if UpperCase(vKey) = 'ENTER' then
-      uSoundPlayer_Playlist_Create_NewPlaylist(vSoundplayer.Playlist.Create.Main.Edit.Text,
+      uSoundPlayer_Playlist_Create.New(vSoundplayer.Playlist.Create.Main.Edit.Text,
         vSoundplayer.Playlist.Create.Main.Main_Type.Items.Strings
         [vSoundplayer.Playlist.Create.Main.Main_Type.ItemIndex]);
   end

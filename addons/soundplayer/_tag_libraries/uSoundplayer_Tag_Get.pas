@@ -107,7 +107,7 @@ begin
       addons.soundplayer.Player.Tag.mp3.ID3v1.Genre;
 
   // Get Rate
-  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate := uSoundplayer_Tag_Mp3.GetRate.ToString;
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate := uSoundplayer_Tag_Mp3.Rating_Get.ToString;
 
   // Get Lyrics
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics := Tstringlist.Create;

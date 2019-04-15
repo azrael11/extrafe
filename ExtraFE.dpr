@@ -157,7 +157,8 @@ uses
   uPlay_Sounds in 'addons\play\uPlay_Sounds.pas',
   uSnippet_Search in 'code\_snippets\uSnippet_Search.pas',
   uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas',
-  uMain_Sounds in 'main\uMain_Sounds.pas';
+  uMain_Sounds in 'main\uMain_Sounds.pas',
+  uSoundplayer_Playlist_Const in 'addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas';
 
 {$R *.res}
 

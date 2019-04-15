@@ -42,6 +42,7 @@ uses
 procedure TLoading_Form.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   ReportMemoryLeaksOnShutdown := False;
+  Application.ProcessMessages;
 end;
 
 procedure TLoading_Form.FormCreate(Sender: TObject);

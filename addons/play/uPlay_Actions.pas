@@ -78,13 +78,13 @@ procedure uPlay_Actions_Image_Full(vImage: TImage);
 var
   vImage_Path: String;
 begin
+  vPlay.Main_Blur.Enabled := True;
   vPlay.Info_Blur.Enabled := True;
 
   vPlay.Full.Frame := TRadiantFrame.Create(mainScene.Main.Down_Level);
   vPlay.Full.Frame.Name := 'AzPlay_Full_Preview';
   vPlay.Full.Frame.Parent := mainScene.Main.Down_Level;
-  vPlay.Full.Frame.SetBounds(vPlay.Info.Position.X + 50, 180, vPlay.Info.Width - 100,
-    vPlay.Info.Height - 100);
+  vPlay.Full.Frame.SetBounds(vPlay.Info.Position.X + 50, 180, vPlay.Info.Width - 100, vPlay.Info.Height - 100);
   vPlay.Full.Frame.FrameSize.Units := TRadiantDimensionUnits.Pixels;
   vPlay.Full.Frame.FrameSize.Pixels := 10;
   vPlay.Full.Frame.Fill.Color := TAlphaColorRec.Deepskyblue;
@@ -127,6 +127,7 @@ end;
 procedure uPlay_Actions_Image_Full_Close;
 begin
   vPlay.Info_Blur.Enabled := False;
+  vPlay.Main_Blur.Enabled := False;
   FreeAndNil(vPlay.Full.Frame);
 end;
 
@@ -160,10 +161,10 @@ end;
 
 procedure MouseOver_GameIcon(vGame: Integer);
 begin
-  if addons.play.Actions.Sound_Over_Game_Play_Now<> -1 then
+  if addons.play.Actions.Sound_Over_Game_Play_Now <> -1 then
     BASS_ChannelStop(addons.play.Sounds.Voices[addons.play.Actions.Sound_Over_Game_Play_Now]);
   vPlay.Img_Img_Glow[vGame].Enabled := True;
-  addons.play.Actions.Sound_Over_Game_Play_Now:= vGame;
+  addons.play.Actions.Sound_Over_Game_Play_Now := vGame;
   BASS_ChannelPlay(addons.play.Sounds.Voices[vGame], False);
 end;
 

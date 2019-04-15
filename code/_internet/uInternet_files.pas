@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.JSON,
   System.Sysutils,
+  FMX.Graphics,
   IdBaseComponent,
   IdComponent,
   IdTCPConnection,
@@ -31,6 +32,9 @@ function Send_HTML_Email(vEmail, vTheme: String): boolean;
 procedure HTML_Registration(vHTMLBuild: TIdMessageBuilderHtml);
 procedure HTML_Password_Forgat(vHTMLBuild: TIdMessageBuilderHtml);
 
+function Get_Image(vPath: String): TBitmap;
+
+
 type
   TIdHTTPProgress = class(TIdHTTP)
   private
@@ -55,6 +59,7 @@ type
 implementation
 
 uses
+  main,
   uLoad_AllTypes,
   uLoad_Register,
   uDatabase_ActiveUser,
@@ -428,6 +433,24 @@ begin
   except
     on E: Exception do
       // ShowMessage('Failed: ' + E.Message);
+  end;
+end;
+
+function Get_Image(vPath: String): TBitmap;
+var
+  MS : TMemoryStream;
+  vIdHTTP: TIdHTTP;
+begin
+  MS := TMemoryStream.Create;
+  Result:= TBitmap.Create;
+  vIdHTTP:= TIdHTTP.Create(Main_Form);
+  try
+    vIdHTTP.get(vPath,MS);
+    Ms.Seek(0,soFromBeginning);
+    Result.LoadFromStream(MS);
+  finally
+    FreeAndNil(MS);
+    FreeAndNil(vIdHTTP);
   end;
 end;
 

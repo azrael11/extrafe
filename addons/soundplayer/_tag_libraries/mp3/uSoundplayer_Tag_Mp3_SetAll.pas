@@ -21,14 +21,17 @@ uses
   FMX.Listbox,
   FMX.Graphics;
 
-procedure uSoundplayer_TagSet_Mp3;
+procedure Load;
+procedure Free;
+
 procedure Set_ID3v1_Frame;
 procedure Set_ID3v2_Frame;
 procedure Set_Info_Frame;
-procedure uSoundplayer_TagSet_Mp3_SelectCover;
-procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);
-procedure uSoundplayer_TagSet_Mp3_ShowLyrics_AddDialog;
-procedure uSoundplayer_TagSet_Mp3_Free;
+
+procedure SelectCover;
+procedure Cover_Label(vShow: Boolean);
+procedure Lyrics_Add;
+
 
 implementation
 
@@ -61,14 +64,6 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Title_V.Text := '';
   vSoundplayer.tag.mp3.ID3v1.Title_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v1.Title_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[0]);
-  vSoundplayer.tag.mp3.ID3v1.Title_Differ.Name := 'A_SP_Tag_Mp3_ID3v1_Title_Differ';
-  vSoundplayer.tag.mp3.ID3v1.Title_Differ.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Title_Differ.SetBounds(336, 30, 24, 24);
-  vSoundplayer.tag.mp3.ID3v1.Title_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v1.Title_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v1.Title_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v1.Artist := TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Artist.Name := 'A_SP_Tag_Mp3_ID3v1_Artist';
   vSoundplayer.tag.mp3.ID3v1.Artist.Parent := vSoundplayer.tag.mp3.TabItem[0];
@@ -83,14 +78,6 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Artist_V.SetBounds(100, 60, 260, 24);
   vSoundplayer.tag.mp3.ID3v1.Artist_V.Text := '';
   vSoundplayer.tag.mp3.ID3v1.Artist_V.Visible := True;
-
-  vSoundplayer.tag.mp3.ID3v1.Artist_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[0]);
-  vSoundplayer.tag.mp3.ID3v1.Artist_Differ.Name := 'A_SP_Tag_Mp3_ID3v1_Artist_Differ';
-  vSoundplayer.tag.mp3.ID3v1.Artist_Differ.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Artist_Differ.SetBounds(336, 60, 24, 24);
-  vSoundplayer.tag.mp3.ID3v1.Artist_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v1.Artist_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v1.Artist_Differ.Visible := False;
 
   vSoundplayer.tag.mp3.ID3v1.Album := TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Album.Name := 'A_SP_Tag_Mp3_ID3v1_Album';
@@ -107,14 +94,6 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Album_V.Text := '';
   vSoundplayer.tag.mp3.ID3v1.Album_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v1.Album_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[0]);
-  vSoundplayer.tag.mp3.ID3v1.Album_Differ.Name := 'A_SP_Tag_Mp3_ID3v1_Album_Differ';
-  vSoundplayer.tag.mp3.ID3v1.Album_Differ.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Album_Differ.SetBounds(336, 90, 24, 24);
-  vSoundplayer.tag.mp3.ID3v1.Album_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v1.Album_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v1.Album_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v1.Year := TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Year.Name := 'A_SP_Tag_Mp3_ID3v1_Year';
   vSoundplayer.tag.mp3.ID3v1.Year.Parent := vSoundplayer.tag.mp3.TabItem[0];
@@ -129,14 +108,6 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Year_V.SetBounds(100, 120, 260, 24);
   vSoundplayer.tag.mp3.ID3v1.Year_V.Text := '';
   vSoundplayer.tag.mp3.ID3v1.Year_V.Visible := True;
-
-  vSoundplayer.tag.mp3.ID3v1.Year_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[0]);
-  vSoundplayer.tag.mp3.ID3v1.Year_Differ.Name := 'A_SP_Tag_Mp3_ID3v1_Year_Differ';
-  vSoundplayer.tag.mp3.ID3v1.Year_Differ.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Year_Differ.SetBounds(336, 120, 24, 24);
-  vSoundplayer.tag.mp3.ID3v1.Year_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v1.Year_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v1.Year_Differ.Visible := False;
 
   vSoundplayer.tag.mp3.ID3v1.Genre := TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Genre.Name := 'A_SP_Tag_Mp3_ID3v1_Genre';
@@ -154,14 +125,6 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Genre_V.Text := '';
   vSoundplayer.tag.mp3.ID3v1.Genre_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v1.Genre_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[0]);
-  vSoundplayer.tag.mp3.ID3v1.Genre_Differ.Name := 'A_SP_Tag_Mp3_ID3v1_Genre_Differ';
-  vSoundplayer.tag.mp3.ID3v1.Genre_Differ.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Genre_Differ.SetBounds(318, 150, 24, 24);
-  vSoundplayer.tag.mp3.ID3v1.Genre_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v1.Genre_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v1.Genre_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v1.Track := TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Track.Name := 'A_SP_Tag_Mp3_ID3v1_Track';
   vSoundplayer.tag.mp3.ID3v1.Track.Parent := vSoundplayer.tag.mp3.TabItem[0];
@@ -176,14 +139,6 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Track_V.SetBounds(100, 180, 260, 24);
   vSoundplayer.tag.mp3.ID3v1.Track_V.Text := '';
   vSoundplayer.tag.mp3.ID3v1.Track_V.Visible := True;
-
-  vSoundplayer.tag.mp3.ID3v1.Track_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[0]);
-  vSoundplayer.tag.mp3.ID3v1.Track_Differ.Name := 'A_SP_Tag_Mp3_ID3v1_Track_Differ';
-  vSoundplayer.tag.mp3.ID3v1.Track_Differ.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Track_Differ.SetBounds(336, 180, 24, 24);
-  vSoundplayer.tag.mp3.ID3v1.Track_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v1.Track_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v1.Track_Differ.Visible := False;
 
   vSoundplayer.tag.mp3.ID3v1.Comment := TLabel.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Comment.Name := 'A_SP_Tag_Mp3_ID3v1_Comments';
@@ -200,25 +155,16 @@ begin
   vSoundplayer.tag.mp3.ID3v1.Comment_V.Text := '';
   vSoundplayer.tag.mp3.ID3v1.Comment_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v1.Comment_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[0]);
-  vSoundplayer.tag.mp3.ID3v1.Comment_Differ.Name := 'A_SP_Tag_Mp3_ID3v1_Comment_Differ';
-  vSoundplayer.tag.mp3.ID3v1.Comment_Differ.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Comment_Differ.SetBounds(336, 210, 24, 24);
-  vSoundplayer.tag.mp3.ID3v1.Comment_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v1.Comment_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v1.Comment_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v1.Transfer := TText.Create(vSoundplayer.tag.mp3.TabItem[0]);
   vSoundplayer.tag.mp3.ID3v1.Transfer.Name := 'A_SP_Tag_Mp3_ID3v1_Transfer';
   vSoundplayer.tag.mp3.ID3v1.Transfer.Parent := vSoundplayer.tag.mp3.TabItem[0];
-  vSoundplayer.tag.mp3.ID3v1.Transfer.SetBounds(200, 240, 160, 24);
+  vSoundplayer.tag.mp3.ID3v1.Transfer.SetBounds(10, 350, 160, 24);
   vSoundplayer.tag.mp3.ID3v1.Transfer.Text := 'Tranfer data to ID3v2';
-  vSoundplayer.tag.mp3.ID3v1.Transfer.Font.Style := vSoundplayer.tag.mp3.ID3v1.Transfer.Font.Style + [TFontStyle.fsBold];
   vSoundplayer.tag.mp3.ID3v1.Transfer.TextSettings.FontColor := TAlphaColorRec.White;
-  vSoundplayer.tag.mp3.ID3v1.Transfer.TextSettings.HorzAlign := TTextAlign.Trailing;
-  vSoundplayer.tag.mp3.ID3v1.Transfer.OnClick := addons.Soundplayer.Input.mouse.Text.OnMouseClick;
-  vSoundplayer.tag.mp3.ID3v1.Transfer.OnMouseEnter := addons.Soundplayer.Input.mouse.Text.OnMouseEnter;
-  vSoundplayer.tag.mp3.ID3v1.Transfer.OnMouseLeave := addons.Soundplayer.Input.mouse.Text.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v1.Transfer.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.ID3v1.Transfer.OnClick := addons.Soundplayer.Input.mouse_tag.Text.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v1.Transfer.OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Text.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v1.Transfer.OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Text.OnMouseLeave;
   vSoundplayer.tag.mp3.ID3v1.Transfer.Visible := True;
 end;
 
@@ -242,14 +188,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Title_V.Text := '';
   vSoundplayer.tag.mp3.ID3v2.Title_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v2.Title_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
-  vSoundplayer.tag.mp3.ID3v2.Title_Differ.Name := 'A_SP_Tag_Mp3_ID3v2_Title_Differ';
-  vSoundplayer.tag.mp3.ID3v2.Title_Differ.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Title_Differ.SetBounds(336, 30, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Title_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v2.Title_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Title_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v2.Artist := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Artist.Name := 'A_SP_Tag_Mp3_ID3v2_Artist';
   vSoundplayer.tag.mp3.ID3v2.Artist.Parent := vSoundplayer.tag.mp3.TabItem[1];
@@ -264,14 +202,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Artist_V.SetBounds(100, 60, 260, 24);
   vSoundplayer.tag.mp3.ID3v2.Artist_V.Text := '';
   vSoundplayer.tag.mp3.ID3v2.Artist_V.Visible := True;
-
-  vSoundplayer.tag.mp3.ID3v2.Artist_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
-  vSoundplayer.tag.mp3.ID3v2.Artist_Differ.Name := 'A_SP_Tag_Mp3_ID3v2_Artist_Differ';
-  vSoundplayer.tag.mp3.ID3v2.Artist_Differ.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Artist_Differ.SetBounds(336, 60, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Artist_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v2.Artist_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Artist_Differ.Visible := False;
 
   vSoundplayer.tag.mp3.ID3v2.Album := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Album.Name := 'A_SP_Tag_Mp3_ID3v2_Album';
@@ -288,14 +218,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Album_V.Text := '';
   vSoundplayer.tag.mp3.ID3v2.Album_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v2.Album_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
-  vSoundplayer.tag.mp3.ID3v2.Album_Differ.Name := 'A_SP_Tag_Mp3_ID3v2_Album_Differ';
-  vSoundplayer.tag.mp3.ID3v2.Album_Differ.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Album_Differ.SetBounds(336, 90, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Album_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v2.Album_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Album_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v2.Year := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Year.Name := 'A_SP_Tag_Mp3_ID3v2_Year';
   vSoundplayer.tag.mp3.ID3v2.Year.Parent := vSoundplayer.tag.mp3.TabItem[1];
@@ -310,14 +232,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Year_V.SetBounds(100, 120, 260, 24);
   vSoundplayer.tag.mp3.ID3v2.Year_V.Text := '';
   vSoundplayer.tag.mp3.ID3v2.Year_V.Visible := True;
-
-  vSoundplayer.tag.mp3.ID3v2.Year_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
-  vSoundplayer.tag.mp3.ID3v2.Year_Differ.Name := 'A_SP_Tag_Mp3_ID3v2_Year_Differ';
-  vSoundplayer.tag.mp3.ID3v2.Year_Differ.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Year_Differ.SetBounds(336, 120, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Year_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v2.Year_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Year_Differ.Visible := False;
 
   vSoundplayer.tag.mp3.ID3v2.Genre := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Genre.Name := 'A_SP_Tag_Mp3_ID3v2_Genre';
@@ -335,14 +249,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Genre_V.Text := '';
   vSoundplayer.tag.mp3.ID3v2.Genre_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v2.Genre_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
-  vSoundplayer.tag.mp3.ID3v2.Genre_Differ.Name := 'A_SP_Tag_Mp3_ID3v2_Genre_Differ';
-  vSoundplayer.tag.mp3.ID3v2.Genre_Differ.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Genre_Differ.SetBounds(318, 150, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Genre_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v2.Genre_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Genre_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v2.Track := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Track.Name := 'A_SP_Tag_Mp3_ID3v2_Track';
   vSoundplayer.tag.mp3.ID3v2.Track.Parent := vSoundplayer.tag.mp3.TabItem[1];
@@ -357,14 +263,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Track_V.SetBounds(100, 180, 260, 24);
   vSoundplayer.tag.mp3.ID3v2.Track_V.Text := '';
   vSoundplayer.tag.mp3.ID3v2.Track_V.Visible := True;
-
-  vSoundplayer.tag.mp3.ID3v2.Track_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
-  vSoundplayer.tag.mp3.ID3v2.Track_Differ.Name := 'A_SP_Tag_Mp3_ID3v2_Track_Differ';
-  vSoundplayer.tag.mp3.ID3v2.Track_Differ.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Track_Differ.SetBounds(336, 180, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Track_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v2.Track_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Track_Differ.Visible := False;
 
   vSoundplayer.tag.mp3.ID3v2.Comment := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Comment.Name := 'A_SP_Tag_Mp3_ID3v2_Comments';
@@ -381,33 +279,28 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Comment_V.Text := '';
   vSoundplayer.tag.mp3.ID3v2.Comment_V.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v2.Comment_Differ := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
-  vSoundplayer.tag.mp3.ID3v2.Comment_Differ.Name := 'A_SP_Tag_Mp3_ID3v2_Comment_Differ';
-  vSoundplayer.tag.mp3.ID3v2.Comment_Differ.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Comment_Differ.SetBounds(336, 210, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Comment_Differ.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_different.png');
-  vSoundplayer.tag.mp3.ID3v2.Comment_Differ.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Comment_Differ.Visible := False;
-
   vSoundplayer.tag.mp3.ID3v2.Rate_Label := TLabel.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Rate_Label.Name := 'A_SP_Tag_Mp3_ID3v2_Rate_Label';
   vSoundplayer.tag.mp3.ID3v2.Rate_Label.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Rate_Label.SetBounds(10, 240, 100, 24);
-  vSoundplayer.tag.mp3.ID3v2.Rate_Label.Text := 'Rating : ';
+  vSoundplayer.tag.mp3.ID3v2.Rate_Label.SetBounds(92, 246, 200, 24);
+  vSoundplayer.tag.mp3.ID3v2.Rate_Label.Text := 'Rating : No Rating';
   vSoundplayer.tag.mp3.ID3v2.Rate_Label.Font.Style := vSoundplayer.tag.mp3.ID3v2.Rate_Label.Font.Style + [TFontStyle.fsBold];
   vSoundplayer.tag.mp3.ID3v2.Rate_Label.Visible := True;
 
-  for vi := 0 to 4 do
+  for vi := 0 to 9 do
   begin
-    vSoundplayer.tag.mp3.ID3v2.Rate[vi] := TImage.Create(vSoundplayer.tag.mp3.TabItem[1]);
+    vSoundplayer.tag.mp3.ID3v2.Rate[vi] := TText.Create(vSoundplayer.tag.mp3.TabItem[1]);
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].Name := 'A_SP_Tag_Mp3_ID3v2_Rate_' + vi.ToString;
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].Parent := vSoundplayer.tag.mp3.TabItem[1];
-    vSoundplayer.tag.mp3.ID3v2.Rate[vi].SetBounds(100 + (28 * vi), 240, 24, 24);
-    vSoundplayer.tag.mp3.ID3v2.Rate[vi].Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_star.png');
-    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnClick := addons.Soundplayer.Input.mouse_tag.Image.OnMouseClick;
-    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Image.OnMouseEnter;
-    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Image.OnMouseLeave;
-    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseDown := addons.Soundplayer.Input.mouse_tag.Image.OnMouseDown;
+    vSoundplayer.tag.mp3.ID3v2.Rate[vi].SetBounds(92 + (28 * vi), 268, 22, 22);
+    vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Font.Family:= 'IcoMoon-Free';
+    vSoundplayer.Tag.mp3.ID3v2.Rate[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Font.Size:= 22;
+    vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Text:= #$e9d9;
+    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnClick := addons.Soundplayer.Input.mouse_tag.Text.OnMouseClick;
+    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Text.OnMouseEnter;
+    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Text.OnMouseLeave;
+    vSoundplayer.tag.mp3.ID3v2.Rate[vi].OnMouseDown := addons.Soundplayer.Input.mouse_tag.Text.OnMouseDown;
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].TagString := vi.ToString;
     vSoundplayer.tag.mp3.ID3v2.Rate[vi].Visible := True;
 
@@ -419,31 +312,31 @@ begin
     vSoundplayer.tag.mp3.ID3v2.Rate_Glow[vi].Opacity := 0.9;
     vSoundplayer.tag.mp3.ID3v2.Rate_Glow[vi].Enabled := False;
 
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi] := TCircle.Create(vSoundplayer.tag.mp3.TabItem[1]);
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi] := TText.Create(vSoundplayer.tag.mp3.TabItem[1]);
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Name := 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_' + vi.ToString;
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Parent := vSoundplayer.tag.mp3.TabItem[1];
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].SetBounds(107 + (28 * vi), 247, 10, 10);
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Fill.Bitmap.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_back.png');
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Fill.Kind := TBrushKind.Bitmap;
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Fill.Bitmap.WrapMode := TWrapMode.Tile;
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Stroke.Thickness := 0;
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].OnClick := addons.Soundplayer.Input.mouse_tag.Circle.OnMouseClick;
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Circle.OnMouseEnter;
-    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Circle.OnMouseLeave;
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].SetBounds(92 + (28 * vi), 268, 22, 22);
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Font.Family:= 'IcoMoon-Free';
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Font.Size:= 22;
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Text:= #$e9d7;
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].OnClick := addons.Soundplayer.Input.mouse_tag.Text.OnMouseClick;
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Text.OnMouseEnter;
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Text.OnMouseLeave;
+    vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].TagString:= vi.ToString;
     vSoundplayer.tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
   end;
 
   vSoundplayer.tag.mp3.ID3v2.Transfer := TText.Create(vSoundplayer.tag.mp3.TabItem[1]);
   vSoundplayer.tag.mp3.ID3v2.Transfer.Name := 'A_SP_Tag_Mp3_ID3v2_Transfer';
   vSoundplayer.tag.mp3.ID3v2.Transfer.Parent := vSoundplayer.tag.mp3.TabItem[1];
-  vSoundplayer.tag.mp3.ID3v2.Transfer.SetBounds(200, 350, 160, 24);
+  vSoundplayer.tag.mp3.ID3v2.Transfer.SetBounds(10, 350, 160, 24);
   vSoundplayer.tag.mp3.ID3v2.Transfer.Text := 'Tranfer data to ID3v1';
-  vSoundplayer.tag.mp3.ID3v2.Transfer.Font.Style := vSoundplayer.tag.mp3.ID3v2.Transfer.Font.Style + [TFontStyle.fsBold];
   vSoundplayer.tag.mp3.ID3v2.Transfer.TextSettings.FontColor := TAlphaColorRec.White;
-  vSoundplayer.tag.mp3.ID3v2.Transfer.TextSettings.HorzAlign := TTextAlign.Trailing;
-  vSoundplayer.tag.mp3.ID3v2.Transfer.OnClick := addons.Soundplayer.Input.mouse.Text.OnMouseClick;
-  vSoundplayer.tag.mp3.ID3v2.Transfer.OnMouseEnter := addons.Soundplayer.Input.mouse.Text.OnMouseEnter;
-  vSoundplayer.tag.mp3.ID3v2.Transfer.OnMouseLeave := addons.Soundplayer.Input.mouse.Text.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2.Transfer.TextSettings.HorzAlign:= TTextAlign.Leading;
+  vSoundplayer.tag.mp3.ID3v2.Transfer.OnClick := addons.Soundplayer.Input.mouse_tag.Text.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2.Transfer.OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Text.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2.Transfer.OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Text.OnMouseLeave;
   vSoundplayer.tag.mp3.ID3v2.Transfer.Visible := True;
 
   vSoundplayer.tag.mp3.ID3v2.Covers := TGroupBox.Create(vSoundplayer.tag.mp3.TabItem[1]);
@@ -470,15 +363,17 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Cover_Label.TextAlign := TTextAlign.Center;
   vSoundplayer.tag.mp3.ID3v2.Cover_Label.Visible := True;
 
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft := TImage.Create(vSoundplayer.tag.mp3.ID3v2.Covers);
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft := TText.Create(vSoundplayer.tag.mp3.ID3v2.Covers);
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.Name := 'A_SP_Tag_Mp3_ID3v2_Covers_Cover_ArrowLeft';
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.Parent := vSoundplayer.tag.mp3.ID3v2.Covers;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.SetBounds(10, 260, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_arrowleft.png');
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.OnClick := addons.Soundplayer.Input.mouse_tag.Image.OnMouseClick;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Image.OnMouseEnter;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.SetBounds(10, 130, 24, 24);
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.Font.Size:= 24;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.Text:= #$ea44;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.OnClick := addons.Soundplayer.Input.mouse_tag.Text.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Text.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Text.OnMouseLeave;
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft.Visible := True;
 
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft_Glow := TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft);
@@ -489,20 +384,17 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft_Glow.Opacity := 0.9;
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft_Glow.Enabled := False;
 
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft_Grey := TMonochromeEffect.Create(vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft);
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Name := 'A_SP_Tag_Mp3_Covers_Cover_ArrowLeft_Grey';
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Parent := vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowLeft_Grey.Enabled := False;
-
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight := TImage.Create(vSoundplayer.tag.mp3.ID3v2.Covers);
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight := TText.Create(vSoundplayer.tag.mp3.ID3v2.Covers);
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.Name := 'A_SP_Tag_Mp3_ID3v2_Covers_Cover_ArrowRight';
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.Parent := vSoundplayer.tag.mp3.ID3v2.Covers;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.SetBounds(vSoundplayer.tag.mp3.ID3v2.Covers.Width - 34, 260, 24, 24);
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.Bitmap.LoadFromFile(addons.Soundplayer.Path.Images + 'sp_arrowright.png');
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.WrapMode := TImageWrapMode.Fit;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.OnClick := addons.Soundplayer.Input.mouse_tag.Image.OnMouseClick;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Image.OnMouseEnter;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Image.OnMouseLeave;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.SetBounds(vSoundplayer.tag.mp3.ID3v2.Covers.Width - 34, 130, 24, 24);
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.Font.Family:= 'IcoMoon-Free';
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.Font.Size:= 24;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.Text:= #$ea42;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.OnClick := addons.Soundplayer.Input.mouse_tag.Text.OnMouseClick;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.OnMouseEnter := addons.Soundplayer.Input.mouse_tag.Text.OnMouseEnter;
+  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.OnMouseLeave := addons.Soundplayer.Input.mouse_tag.Text.OnMouseLeave;
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight.Visible := True;
 
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Glow := TGlowEffect.Create(vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight);
@@ -512,11 +404,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Glow.Opacity := 0.9;
   vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Glow.Enabled := False;
-
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Grey := TMonochromeEffect.Create(vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight);
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Grey.Name := 'A_SP_Tag_Mp3_Covers_Cover_ArrowRight_Grey';
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Grey.Parent := vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight;
-  vSoundplayer.tag.mp3.ID3v2.Cover_ArrowRight_Grey.Enabled := False;
 
   vSoundplayer.tag.mp3.ID3v2.Cover_Add_Computer := TText.Create(vSoundplayer.tag.mp3.ID3v2.Covers);
   vSoundplayer.tag.mp3.ID3v2.Cover_Add_Computer.Name := 'A_SP_Tag_Mp3_ID3v2_Covers_AddComputer';
@@ -656,22 +543,6 @@ begin
   vSoundplayer.tag.mp3.ID3v2.Lyrics_Remove_Glow.GlowColor := TAlphaColorRec.Red;
   vSoundplayer.tag.mp3.ID3v2.Lyrics_Remove_Glow.Opacity := 0.9;
   vSoundplayer.tag.mp3.ID3v2.Lyrics_Remove_Glow.Enabled := False;
-
-  vSoundplayer.tag.mp3.Button_Save := TButton.Create(vSoundplayer.tag.mp3.Back);
-  vSoundplayer.tag.mp3.Button_Save.Name := 'A_SP_Tag_Mp3_Save';
-  vSoundplayer.tag.mp3.Button_Save.Parent := vSoundplayer.tag.mp3.Back;
-  vSoundplayer.tag.mp3.Button_Save.SetBounds(100, vSoundplayer.tag.mp3.Back.Height - 34, 100, 24);
-  vSoundplayer.tag.mp3.Button_Save.Text := 'Save changes';
-  vSoundplayer.tag.mp3.Button_Save.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
-  vSoundplayer.tag.mp3.Button_Save.Visible := True;
-
-  vSoundplayer.tag.mp3.Button_Cancel := TButton.Create(vSoundplayer.tag.mp3.Back);
-  vSoundplayer.tag.mp3.Button_Cancel.Name := 'A_SP_Tag_Mp3_Cancel';
-  vSoundplayer.tag.mp3.Button_Cancel.Parent := vSoundplayer.tag.mp3.Back;
-  vSoundplayer.tag.mp3.Button_Cancel.SetBounds(vSoundplayer.tag.mp3.Back.Width - 200, vSoundplayer.tag.mp3.Back.Height - 34, 100, 24);
-  vSoundplayer.tag.mp3.Button_Cancel.Text := 'Cancel';
-  vSoundplayer.tag.mp3.Button_Cancel.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
-  vSoundplayer.tag.mp3.Button_Cancel.Visible := True;
 end;
 
 procedure Set_Info_Frame;
@@ -1166,7 +1037,7 @@ begin
     vSoundplayer.Tag.mp3.Info.DFFInfo.Ratio.Visible:= True; }
 end;
 
-procedure uSoundplayer_TagSet_Mp3;
+procedure Load;
 const
   cTabNames: array [0 .. 2] of string = ('ID3v1', 'Id3v2', 'Info');
 var
@@ -1225,9 +1096,26 @@ begin
   Set_ID3v2_Frame;
   Set_Info_Frame;
 
+  vSoundplayer.tag.mp3.Button_Save := TButton.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Button_Save.Name := 'A_SP_Tag_Mp3_Save';
+  vSoundplayer.tag.mp3.Button_Save.Parent := vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Button_Save.SetBounds(100, vSoundplayer.tag.mp3.Back.Height - 34, 100, 24);
+  vSoundplayer.tag.mp3.Button_Save.Text := 'Save changes';
+  vSoundplayer.tag.mp3.Button_Save.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Button_Save.Visible := True;
+
+  vSoundplayer.tag.mp3.Button_Cancel := TButton.Create(vSoundplayer.tag.mp3.Back);
+  vSoundplayer.tag.mp3.Button_Cancel.Name := 'A_SP_Tag_Mp3_Cancel';
+  vSoundplayer.tag.mp3.Button_Cancel.Parent := vSoundplayer.tag.mp3.Back;
+  vSoundplayer.tag.mp3.Button_Cancel.SetBounds(vSoundplayer.tag.mp3.Back.Width - 200, vSoundplayer.tag.mp3.Back.Height - 34, 100, 24);
+  vSoundplayer.tag.mp3.Button_Cancel.Text := 'Cancel';
+  vSoundplayer.tag.mp3.Button_Cancel.OnClick := addons.Soundplayer.Input.mouse_tag.Button.OnMouseClick;
+  vSoundplayer.tag.mp3.Button_Cancel.Visible := True;
 end;
 
-procedure uSoundplayer_TagSet_Mp3_SelectCover;
+procedure SelectCover;
+var
+  vi: Integer;
 begin
   vSoundplayer.tag.mp3.Back_Blur.Enabled := True;
   vSoundplayer.tag.mp3.TabControl.Enabled := False;
@@ -1235,7 +1123,7 @@ begin
   vSoundplayer.tag.mp3.Cover_Select.Panel := TPanel.Create(vSoundplayer.scene.Soundplayer);
   vSoundplayer.tag.mp3.Cover_Select.Panel.Name := 'A_SP_Tag_Mp3_CoverSelet';
   vSoundplayer.tag.mp3.Cover_Select.Panel.Parent := vSoundplayer.scene.Soundplayer;
-  vSoundplayer.tag.mp3.Cover_Select.Panel.SetBounds(extrafe.res.Half_Width - 100, extrafe.res.Half_Height - 250, 200, 300);
+  vSoundplayer.tag.mp3.Cover_Select.Panel.SetBounds(extrafe.res.Half_Width - 275, extrafe.res.Half_Height - 300, 550, 400);
   vSoundplayer.tag.mp3.Cover_Select.Panel.Visible := True;
 
   uLoad_SetAll_CreateHeader(vSoundplayer.tag.mp3.Cover_Select.Panel, 'A_SP_Tag_Mp3_CoverSelet', addons.Soundplayer.Path.Images + 'sp_nocover.png',
@@ -1257,8 +1145,14 @@ begin
   vSoundplayer.tag.mp3.Cover_Select.List.Items.Add('Company Logo');
   vSoundplayer.tag.mp3.Cover_Select.List.Items.Add('Other');
   vSoundplayer.tag.mp3.Cover_Select.List.ItemIndex := 0;
-  vSoundplayer.tag.mp3.Cover_Select.List.ItemHeight := 37;
+  vSoundplayer.tag.mp3.Cover_Select.List.ItemHeight := 60;
   vSoundplayer.tag.mp3.Cover_Select.List.Visible := True;
+
+  for vi := 0 to 4 do
+  begin
+    vSoundplayer.Tag.mp3.Cover_Select.List.ListItems[vi].TextSettings.Font.Size:= 24;
+    vSoundplayer.Tag.mp3.Cover_Select.List.ListItems[vi].StyledSettings:= vSoundplayer.Tag.mp3.Cover_Select.List.ListItems[vi].StyledSettings -[TstyledSetting.Size];
+  end;
 
   vSoundplayer.tag.mp3.Cover_Select.Load := TButton.Create(vSoundplayer.tag.mp3.Cover_Select.Main);
   vSoundplayer.tag.mp3.Cover_Select.Load.Name := 'A_SP_Tag_Mp3_CoverSelet_Main_Load';
@@ -1278,7 +1172,7 @@ begin
   vSoundplayer.tag.mp3.Cover_Select.Cancel.Visible := True;
 end;
 
-procedure uSoundplayer_TagSet_Mp3_Free;
+procedure Free;
 begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
@@ -1286,12 +1180,12 @@ begin
   uSoundplayer_Player.OnLeave(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow);
 end;
 
-procedure uSoundplayer_TagSet_Mp3_ShowCoverLabel(vShow: Boolean);
+procedure Cover_Label(vShow: Boolean);
 begin
 
 end;
 
-procedure uSoundplayer_TagSet_Mp3_ShowLyrics_AddDialog;
+procedure Lyrics_Add;
 begin
   vSoundplayer.tag.mp3.Back_Blur.Enabled := True;
   vSoundplayer.tag.mp3.TabControl.Enabled := False;

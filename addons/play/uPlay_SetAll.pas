@@ -45,6 +45,12 @@ begin
   vPlay.Main.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
   vPlay.Main.Visible := True;
 
+  vPlay.Main_Blur:= TGaussianBlurEffect.Create(vPlay.Main);
+  vPlay.Main_Blur.Name:= 'A_P_Main_Blur';
+  vPlay.Main_Blur.Parent:=  vPlay.Main;
+  vPlay.Main_Blur.BlurAmount:= 0.7;
+  vPlay.Main_Blur.Enabled:= False;
+
   vPlay.Main_Ani := TFloatAnimation.Create(vPlay.Main);
   vPlay.Main_Ani.Name := 'A_P_Animation';
   vPlay.Main_Ani.Parent := vPlay.Main;

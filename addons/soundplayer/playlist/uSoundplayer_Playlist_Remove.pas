@@ -10,10 +10,10 @@ uses
   FMX.StdCtrls,
   Bass;
 
-procedure uSoundplayer_Playlist_Remove_Panel;
-procedure uSoundplayer_Playlist_Remove_Free;
+procedure Load;
+procedure Free;
 
-procedure uSoundplayer_Playlist_Remove_RemoveAndDeletePlaylist;
+procedure Playlist;
 
 implementation
 
@@ -22,9 +22,10 @@ uses
   uSoundplayer,
   uSoundplayer_Playlist,
   uSoundplayer_AllTypes,
-  uSoundplayer_Player;
+  uSoundplayer_Player,
+  uSoundplayer_Playlist_Const;
 
-procedure uSoundplayer_Playlist_Remove_Panel;
+procedure Load;
 begin
   if vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
@@ -96,7 +97,7 @@ begin
   end;
 end;
 
-procedure uSoundplayer_Playlist_Remove_Free;
+procedure Free;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.Playlist.Remove.Panel);
@@ -104,8 +105,7 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
 end;
 
-procedure uSoundplayer_Playlist_Remove_RemoveAndDeletePlaylist;
-
+procedure Playlist;
 type
   TPlRec = record
     Name: String;
@@ -178,23 +178,11 @@ begin
   addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'TotalPlaylists', addons.soundplayer.Playlist.Total);
   addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'ActivePlaylist', -1);
   addons.soundplayer.Ini.Ini.WriteString('Playlists', 'ActivePlaylistName', '');
-  // Free the list record
-  addons.soundplayer.Playlist.List.Name := '';
-  addons.soundplayer.Playlist.List.VType := '';
-  addons.soundplayer.Playlist.List.Num := -1;
-  FreeAndNil(addons.soundplayer.Playlist.List.Playlist);
-  FreeAndNil(addons.soundplayer.Playlist.List.Songs);
-  addons.soundplayer.Playlist.List.Songs_Num := -1;
-  // Free the music
-  BASS_ChannelStop(sound.str_music[1]);
-  BASS_StreamFree(sound.str_music[1]);
-  addons.soundplayer.Player.Play := False;
-  addons.soundplayer.Player.Stop := True;
-  addons.soundplayer.Player.Playing_Now := -1;
-  // Set the main to no playlist first time
-  uSoundplayer.Set_FirstTime;
-  // Free the remove panel
-  uSoundplayer_Playlist_Remove_Free;
+
+  uSoundplayer_Playlist_Const.New_State('', '');
+  vSoundplayer.Info.Total_Songs.Text:= '';
+  vSoundplayer.Info.Time_Total.Text:= '';
+  Free;
 end;
 
 end.

@@ -296,12 +296,14 @@ begin
       addons.soundplayer.Player.Time_Negative := not addons.soundplayer.Player.Time_Negative
     else if TText(Sender).Name = 'A_SP_Equalizer' then
       uSoundplayer_Equalizer_SetAll.Load
+    else if TText(Sender).Name = 'A_SP_BandInfo' then
+      uSoundplayer_Player.Band_Info
     else if TText(Sender).Name = 'A_SP_Playlist_Manage' then
       uSoundPlayer_Playlist_Manage_Panel
     else if TText(Sender).Name = 'A_SP_Playlist_Add' then
-      uSoundPlayer_Playlist_Create_Panel
+      uSoundPlayer_Playlist_Create.Load
     else if TText(Sender).Name = 'A_SP_Playlist_Remove' then
-      uSoundplayer_Playlist_Remove_Panel
+      uSoundplayer_Playlist_Remove.Load
     else if TText(Sender).Name = 'A_SP_Info_Cover_Fullscreen' then
     begin
       if addons.soundplayer.Info.isCoverInFullscreen then
@@ -375,6 +377,8 @@ begin
       if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
         uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Lyrics, vSoundplayer.Player.Lyrics_Glow)
     end
+    else if TText(Sender).Name = 'A_SP_BandInfo' then
+      uSoundplayer_Player.Text_OnOver(vSoundplayer.Player.Band_Info, vSoundplayer.Player.Band_Info_Glow)
     else if TText(Sender).Name = 'A_SP_Playlist_Manage' then
     begin
       if vSoundplayer.Playlist.Manage_Icon.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
@@ -411,13 +415,6 @@ begin
       if vSoundplayer.Playlist.Songs_Edit.Delete.TextSettings.FontColor <> TAlphaColorRec.Grey then
         uSoundplayer_Player.Text_OnOver(vSoundplayer.Playlist.Songs_Edit.Delete, vSoundplayer.Playlist.Songs_Edit.Delete_Glow)
     end
-  end
-  else if extrafe.prog.State = 'addon_soundplayer_tag_mp3' then
-  begin
-    if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v1_Transfer' then
-      uSnippet_Text_HyperLink_OnMouseEnter(Sender)
-    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Transfer' then
-      uSnippet_Text_HyperLink_OnMouseEnter(Sender);
   end;
 end;
 
@@ -468,6 +465,8 @@ begin
       if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
         uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Lyrics, vSoundplayer.Player.Lyrics_Glow)
     end
+    else if TText(Sender).Name = 'A_SP_BandInfo' then
+      uSoundplayer_Player.Text_OnLeave(vSoundplayer.Player.Band_Info, vSoundplayer.Player.Band_Info_Glow)
     else if TText(Sender).Name = 'A_SP_Playlist_Manage' then
     begin
       if vSoundplayer.Playlist.Manage_Icon.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
@@ -504,13 +503,6 @@ begin
       if vSoundplayer.Playlist.Songs_Edit.Delete.TextSettings.FontColor <> TAlphaColorRec.Grey then
         uSoundplayer_Player.Text_OnLeave(vSoundplayer.Playlist.Songs_Edit.Delete, vSoundplayer.Playlist.Songs_Edit.Delete_Glow)
     end
-  end
-  else if extrafe.prog.State = 'addon_soundplayer_tag_mp3' then
-  begin
-    if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v1_Transfer' then
-      uSnippet_Text_HyperLink_OnMouseLeave(Sender)
-    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Transfer' then
-      uSnippet_Text_HyperLink_OnMouseLeave(Sender);
   end;
 end;
 
@@ -535,17 +527,17 @@ begin
   else if extrafe.prog.State = 'addon_soundplayer_create_playlist' then
   begin
     if TButton(Sender).Name = 'A_SP_Playlist_Create_CreateButton' then
-      uSoundPlayer_Playlist_Create_NewPlaylist(vSoundplayer.Playlist.Create.main.Edit.Text,
+      uSoundPlayer_Playlist_Create.New(vSoundplayer.Playlist.Create.main.Edit.Text,
         vSoundplayer.Playlist.Create.main.Main_Type.Items.Strings[vSoundplayer.Playlist.Create.main.Main_Type.ItemIndex])
     else if TButton(Sender).Name = 'A_SP_Playlist_Create_CancelButton' then
-      uSoundPlayer_Playlist_Create_Free;
+      uSoundPlayer_Playlist_Create.Free;
   end
   else if extrafe.prog.State = 'addon_soundplayer_playlist_remove' then
   begin
     if TButton(Sender).Name = 'A_SP_Playlist_Remove_Remove' then
-      uSoundPlayer_Playlist_Remove_RemoveAndDeletePlaylist
+      uSoundPlayer_Playlist_Remove.Playlist
     else if TButton(Sender).Name = 'A_SP_Playlist_Remove_Cancel' then
-      uSoundPlayer_Playlist_Remove_Free;
+      uSoundPlayer_Playlist_Remove.Free;
   end
   else if extrafe.prog.State = 'addon_soundplayer_playlist_edit' then
   begin
