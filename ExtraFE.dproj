@@ -582,6 +582,10 @@
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas"/>
         <DCCReference Include="main\uMain_Sounds.pas"/>
         <DCCReference Include="addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas"/>
+        <DCCReference Include="addons\soundplayer\scrapers\uSoundplayer_Scrapers_Lastfm.pas"/>
+        <DCCReference Include="addons\soundplayer\scrapers\uSoundplayer_Scrapers_Flicker.pas"/>
+        <DCCReference Include="addons\soundplayer\scrapers\uSoundplayer_Scrapers_AZLyrics.pas"/>
+        <DCCReference Include="addons\weather\configuration\uWeather_Config_Mouse.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

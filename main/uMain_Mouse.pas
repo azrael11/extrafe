@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.SysUtils,
   System.StrUtils,
+  System.UiTypes,
   FMX.Ani,
   FMX.Objects,
   FMX.Dialogs,
@@ -152,6 +153,7 @@ begin
       if mainScene.Footer.Back_Blur.Enabled = False then
         mainScene.Footer.Settings_Glow.Enabled := True;
     end;
+    TImage(Sender).Cursor:= crHandPoint;
   end;
 end;
 

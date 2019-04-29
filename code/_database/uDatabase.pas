@@ -4,6 +4,8 @@ interface
 
 uses
   System.Classes,
+  System.SysUtils,
+  FMX.Dialogs,
   ZAbstractRODataset,
   ZAbstractDataset,
   ZDataset,
@@ -60,7 +62,14 @@ end;
 
 function uDatabase_Connect: Boolean;
 begin
-  ExtraFE_DB.Connect;
+  try
+    ExtraFE_DB.Connect;
+  except
+    on E : Exception do
+    begin
+//      ShowMessage('Something Wrong with the server click to continue');
+    end;
+  end;
   Result := ExtraFE_DB.Connected;
 end;
 

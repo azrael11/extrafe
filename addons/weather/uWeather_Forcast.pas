@@ -9,7 +9,9 @@ uses
   uWeather_Config_Towns_Add,
   OXmlPDOM;
 
-function uWeather_Forcast_Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
+procedure Get_From;
+
+function Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
 
 var
   vNTXML: IXMLDocument;
@@ -27,7 +29,14 @@ uses
   uLoad_AllTypes,
   uWeather_Convert;
 
-function uWeather_Forcast_Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
+procedure Get_From;
+begin
+  if addons.weather.Action.Provider = 'yahoo' then
+  else if addons.weather.Action.Provider = 'openweathermap' then
+end;
+
+
+function Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
 const
   cTemp_Forcast = 'data\addons\weather\temp\ChoosenTown.xml';
 var

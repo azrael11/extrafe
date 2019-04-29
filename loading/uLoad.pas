@@ -232,17 +232,17 @@ begin
     end
     else
     begin
-      ex_load.Login.Data_Color.Enabled := True;
+      ex_load.Login.Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
       ex_load.Login.Database.Text := 'Not Connected';
       extrafe.database_is_connected := False;
     end;
   end
   else
   begin
-    ex_load.Login.Int_Color.Enabled := True;
+    ex_load.Login.Int_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
     ex_load.Login.Internet.Text := 'Not Connected';
     extrafe.database_is_connected := False;
-    ex_load.Login.Data_Color.Enabled := True;
+    ex_load.Login.Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
     ex_load.Login.Database.Text := 'Not Connected';
     extrafe.database_is_connected := False;
   end;

@@ -120,30 +120,6 @@ begin
     if TImage(Sender).Name = 'A_W_Settings_Image' then
       uWeather_Config_ShowHide(False)
       // Towns
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Add' then
-    begin
-      if vWeather.Config.main.Right.Towns.Add_Town_Grey.Enabled = False then
-        uWeather_Config_Towns_Add_Load;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Lock' then
-      uWeather_Config_Towns_Edit(not addons.weather.Config.Edit_Lock)
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Refresh' then
-      uWeather_Config_Towns_Edit_Refresh_Show
-    else if TImage(Sender).Name = 'A_W_Config_Towns_PosUp' then
-    begin
-      if vWeather.Config.main.Right.Towns.GoUp_Grey.Enabled = False then
-        uWeather_Config_Towns_TownGoUp;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_PosDown' then
-    begin
-      if vWeather.Config.main.Right.Towns.GoDown_Grey.Enabled = False then
-        uWeather_Config_Towns_TownGoDown;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Delete' then
-    begin
-      if addons.weather.Config.Edit_Lock then
-        uWeather_Config_Towns_Edit_Delete_Show
-    end
     // IconSets
     else if TImage(Sender).TagFloat = 100 then
       uWeather_Config_Iconsets_UseIconSet(addons.weather.Config.Iconset.Names.Strings[TImage(Sender).Tag])
@@ -176,33 +152,7 @@ begin
     if TImage(Sender).Name = 'A_W_Settings_Image' then
       vWeather.Scene.Settings_Glow.Enabled := True
       // Towns
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Add' then
-    begin
-      if vWeather.Config.main.Right.Towns.Add_Town_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.Add_Town_Glow.Enabled := True
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Lock' then
-      vWeather.Config.main.Right.Towns.EditLock_Glow.Enabled := True
-    else if TImage(Sender).Name = 'A_W_Config_Towns_PosUp' then
-    begin
-      if vWeather.Config.main.Right.Towns.GoUp_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := True;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_PosDown' then
-    begin
-      if vWeather.Config.main.Right.Towns.GoDown_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := True;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Refresh' then
-    begin
-      if vWeather.Config.main.Right.Towns.Refresh_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.Refresh_Glow.Enabled := True;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Delete' then
-    begin
-      if vWeather.Config.main.Right.Towns.Delete_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := True;
-    end
+   
     // Iconsets
     else if TImage(Sender).TagFloat = 100 then
       vWeather.Config.main.Right.Iconsets.Mini[TImage(Sender).Tag].Panel_Glow.Enabled := True
@@ -244,33 +194,6 @@ begin
     if TImage(Sender).Name = 'A_W_Settings_Image' then
       vWeather.Scene.Settings_Glow.Enabled := False
       // Towns
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Add' then
-    begin
-      if vWeather.Config.main.Right.Towns.Add_Town_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.Add_Town_Glow.Enabled := False
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Lock' then
-      vWeather.Config.main.Right.Towns.EditLock_Glow.Enabled := False
-    else if TImage(Sender).Name = 'A_W_Config_Towns_PosUp' then
-    begin
-      if vWeather.Config.main.Right.Towns.GoUp_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := False;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_PosDown' then
-    begin
-      if vWeather.Config.main.Right.Towns.GoDown_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := False;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Refresh' then
-    begin
-      if vWeather.Config.main.Right.Towns.Refresh_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.Refresh_Glow.Enabled := False;
-    end
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Delete' then
-    begin
-      if vWeather.Config.main.Right.Towns.Delete_Grey.Enabled = False then
-        vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := False;
-    end
     // Iconsets
     else if TImage(Sender).TagFloat = 100 then
       vWeather.Config.main.Right.Iconsets.Mini[TImage(Sender).Tag].Panel_Glow.Enabled := False

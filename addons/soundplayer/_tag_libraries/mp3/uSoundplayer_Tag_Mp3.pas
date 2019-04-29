@@ -38,6 +38,9 @@ procedure Lyrics_Add;
 procedure Lyrics_Add_Cancel;
 procedure Lyrics_Load;
 procedure Lyrics_Delete;
+procedure Lyrics_Get_Add;
+procedure Lyrics_Get_Cancel;
+
 
 // Rating System
 procedure Rating_Set;
@@ -248,7 +251,9 @@ var
   vi: Integer;
   vDescription: String;
   vImage: TBitmap;
-  vMemoChars: Integer;
+  vTextFile: TextFile;
+  vString: String;
+
 begin
   Get_ID3v2(vPath);
   vSoundplayer.Tag.mp3.ID3v2.Title_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
@@ -263,15 +268,30 @@ begin
   addons.soundplayer.Player.Tag.mp3.Lyrics := Tstringlist.Create;
   addons.soundplayer.Player.Tag.mp3.Lyrics.Add(addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeLyrics('USLT',
     addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID, addons.soundplayer.Player.Tag.mp3.Lyrics_Description));
+  addons.soundplayer.Player.Tag.mp3.Lyrics.SaveToFile(addons.soundplayer.Path.Files + 'templyric.txt');
+  addons.soundplayer.Player.Tag.mp3.Lyrics.Clear;
+
+  AssignFile(vTextFile, addons.soundplayer.Path.Files + 'templyric.txt');
+  Reset(vTextFile);
+  while Not EOF(vTextFile) do
+  begin
+    Readln(vTextFile, vString);
+    addons.soundplayer.Player.Tag.mp3.Lyrics.Add(vString);
+  end;
+  CloseFile(vTextFile);
+  DeleteFile(addons.soundplayer.Path.Files+ 'templyric.txt');
 
   vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.Clear;
-
   vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.AddStrings(addons.soundplayer.Player.Tag.mp3.Lyrics);
-  vMemoChars := Length(StringReplace(StringReplace(vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text, #10, '', [rfReplaceAll]), #13, '', [rfReplaceAll]));
-  if vMemoChars > 1 then
+
+  if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.Count - 1 > 1 then
     vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor := TAlphaColorRec.Red
   else
     vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
+
+  //  Count lines in one line with #10#13 seperators
+  // vMemoChars: Integer;
+  // vMemoChars := Length(StringReplace(StringReplace(vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text, #10, '', [rfReplaceAll]), #13, '', [rfReplaceAll]));
 
   if addons.soundplayer.Player.Tag.mp3.Info.General.CoverArtCount = 0 then
   begin
@@ -588,7 +608,7 @@ begin
 
     AssignFile(vTextFile, vSoundplayer.scene.OpenDialog.Filename);
     Reset(vTextFile);
-    while not eof(vTextFile) do
+    while not EOF(vTextFile) do
     begin
       Readln(vTextFile, vText);
       vLyricsList.Add(vText);
@@ -628,6 +648,20 @@ begin
   vSoundplayer.Tag.mp3.Back_Blur.Enabled := False;
   vSoundplayer.Tag.mp3.TabControl.Enabled := True;
   FreeAndNil(vSoundplayer.Tag.mp3.Lyrics_Add.Panel);
+end;
+
+procedure Lyrics_Get_Add;
+begin
+  vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines:= vSoundplayer.Tag.mp3.Lyrics_Int.Lyrics_Box.Lines;
+  Lyrics_Get_Cancel;
+end;
+
+procedure Lyrics_Get_Cancel;
+begin
+  extrafe.prog.State := 'addon_soundplayer_tag_mp3';
+  vSoundplayer.Tag.mp3.Back_Blur.Enabled := False;
+  vSoundplayer.Tag.mp3.TabControl.Enabled := True;
+  FreeAndNil(vSoundplayer.Tag.mp3.Lyrics_Int.Panel);
 end;
 
 procedure Lyrics_Delete;
@@ -729,7 +763,7 @@ begin
   if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath then
   begin
     vk := 0;
-    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text:= 'Rating : Not Rating';
+    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : Not Rating';
     for vi := 0 to 4 do
     begin
       vSoundplayer.Player.Rate[vi].Text := #$e9d7;
@@ -747,7 +781,7 @@ begin
           inc(vk, 1);
         end;
       end;
-      vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text:= 'Rating : '+ addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate + '/10';
+      vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : ' + addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate + '/10';
     end;
   end;
   addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate := Rating_Get.ToString;
@@ -836,7 +870,7 @@ begin
     vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
   end;
   addons.soundplayer.Player.Tag.mp3.Rating := 0;
-  vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text:= 'Rating : Not Rating';
+  vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : Not Rating';
 end;
 
 procedure Rating_Save;
@@ -890,7 +924,7 @@ begin
       vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
     addons.soundplayer.Player.Tag.mp3.Rating := round(vRating);
     addons.soundplayer.Player.Tag.mp3.Rating_Before_Save := round(vRating);
-    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text:= 'Rating : '+ addons.soundplayer.Player.Tag.mp3.Rating.ToString + '/10';
+    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : ' + addons.soundplayer.Player.Tag.mp3.Rating.ToString + '/10';
   end
   else
   begin
@@ -898,7 +932,7 @@ begin
       vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
     addons.soundplayer.Player.Tag.mp3.Rating := -1;
     addons.soundplayer.Player.Tag.mp3.Rating_Before_Save := -1;
-    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text:= 'Rating : Not Rating';
+    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : Not Rating';
   end;
 end;
 

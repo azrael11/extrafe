@@ -25,6 +25,7 @@ uses
   FMX.Menus,
   FMX.ExtCtrls,
   FMX.Layouts,
+  Radiant.Shapes,
   ALFmxStdCtrls,
   ID3v1Library,
   ID3v2Library,
@@ -62,9 +63,9 @@ type
   end;
 
 
-// Keep it for future use
-{type
-  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV = record
+  // Keep it for future use
+  { type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV = record
     FmtSize: Integer;
     FormatTag: Integer;
     Channels: Integer;
@@ -73,30 +74,30 @@ type
     BitsPerSamples: Integer;
     CbSize: Integer;
     ChannelMask: Integer;
-  end;
+    end;
 
-type
-  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF = record
+    type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF = record
     Channels: Integer;
     SampleFrames: Integer;
     SampleSize: Integer;
     SampleRate: Double;
     CompressionID: String;
     Compression: String;
-  end;
+    end;
 
-type
-  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS = record
+    type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS = record
     FormatVersion: Integer;
     FormatID: Integer;
     SamplingFrequency: Integer;
     SampleCount: Integer;
     ChannelType: String;
     BlockSizePerChannel: Integer;
-  end;
+    end;
 
-type
-  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF = record
+    type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF = record
     FormatVersion: String;
     SampleRate: Integer;
     ChannelNumber: Integer;
@@ -108,17 +109,17 @@ type
     DSTFramesCount: Integer;
     DSTFramesRate: Integer;
     Ratio: Double;
-  end;        }
+    end; }
 
 type
   TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO = record
     General: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_GENERAL;
     MPEG: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_MPEG;
-//  Keep it for future use
-{    WAV: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV;
-    AIFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF;
-    DS: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS;
-    DFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF;}
+    // Keep it for future use
+    { WAV: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV;
+      AIFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF;
+      DS: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS;
+      DFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF; }
   end;
 
 type
@@ -370,12 +371,43 @@ type
   end;
 
 type
-  TSOUNDPLAYER_ADDON_PLAYER_BANDINFO= record
+  TSOUNDPLAYER_ADDON_PLAYER_BANDINFO = record
     Box: TVertScrollBox;
-    Name: TTExt;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Header: TRectangle;
+    Name: TText;
     Image: TImage;
+    Powered_By: TText;
+    Powered_Img: TImage;
     Memo_Sum: TMemo;
     Memo_Comm: TMemo;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYER_LYRICS = record
+    Box: TVertScrollBox;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Header: TRectangle;
+    Name: TText;
+    Powered_By: TText;
+    Powered_Img: TImage;
+    Lyrics: array of TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYER_ALBUMINFO = record
+    Box: TVertScrollBox;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Header: TRectangle;
+    Name: TText;
+    Powered_By: TText;
+    Powered_Img: TImage;
+    Image: TImage;
+    TrackBox: TVertScrollBox;
+    Memo_Sum: TMemo;
   end;
 
 type
@@ -425,11 +457,15 @@ type
     Speaker_Right_Volume_Pos: TALTrackBar;
     Lyrics: TText;
     Lyrics_Glow: TGlowEffect;
+    Lyrics_Press: TSOUNDPLAYER_ADDON_PLAYER_LYRICS;
     Equalizer: TText;
     Equalizer_Glow: TGlowEffect;
     Band_Info: TText;
     Band_Info_Glow: TGlowEffect;
     Band_Info_Press: TSOUNDPLAYER_ADDON_PLAYER_BANDINFO;
+    Album_Info: TText;
+    Album_Info_Glow: TGlowEffect;
+    Album_Info_Press: TSOUNDPLAYER_ADDON_PLAYER_ALBUMINFO;
   end;
 
 type
@@ -695,7 +731,7 @@ type
     Panel: Tpanel;
     Main: Tpanel;
     List: TListBox;
-    Covers: array [0..4] of TImage;
+    Covers: array [0 .. 4] of TImage;
     Load: TButton;
     Cancel: TButton;
   end;
@@ -706,6 +742,19 @@ type
     Main: Tpanel;
     Radio_Above: TRadioButton;
     Radio_Clear: TRadioButton;
+    Add: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_INTERNET = record
+    Panel: Tpanel;
+    Main: TPanel;
+    Info: TLabel;
+    Providers_Box: TVertScrollBox;
+    Providers: array [0 .. 10] of TImage;
+    Providers_Glow: array [0 .. 10] of TGlowEffect;
+    Lyrics_Box: TMemo;
     Add: TButton;
     Cancel: TButton;
   end;
@@ -763,7 +812,7 @@ type
   end;
 
 type
-  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DS= record
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DS = record
     Box: TGroupBox;
     FormatVersion: TText;
     FormatID: TText;
@@ -774,7 +823,7 @@ type
   end;
 
 type
-  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DFF= record
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DFF = record
     Box: TGroupBox;
     FormatVersion: TText;
     SampleRate: TText;
@@ -814,6 +863,7 @@ type
     Info: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO;
     Cover_Select: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_COVER_SELECT;
     Lyrics_Add: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_ADD;
+    Lyrics_Int: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_INTERNET;
   end;
 
 type

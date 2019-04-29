@@ -72,6 +72,9 @@ procedure Update_ReadTerms;
 procedure Update_AcceptTerms(vAccept: Boolean);
 procedure Update_Captcha(vValue: String);
 
+procedure Show_Password;
+procedure Show_RePassword;
+
 procedure Apply;
 procedure Cancel;
 
@@ -110,8 +113,8 @@ begin
     if vi <> 0 then
       Distance := Random(10);
     Height := -15 + Random(30);
-    ex_load.Reg.Main.Capt_Img_Word[vi].SetBounds(10 + ((vi * 30) + Distance),
-      ((ex_load.Reg.Main.Capt_Img.Height / 2) - 12) + Height, ex_load.Reg.Main.Capt_Img.Width - 20, 50);
+    ex_load.Reg.Main.Capt_Img_Word[vi].SetBounds(10 + ((vi * 30) + Distance), ((ex_load.Reg.Main.Capt_Img.Height / 2) - 12) + Height,
+      ex_load.Reg.Main.Capt_Img.Width - 20, 50);
     Color := Random(4);
     case Color of
       0:
@@ -142,15 +145,15 @@ begin
   for vi := 0 to 5 do
     FreeAndNil(ex_load.Reg.Main.Capt_Img_Word[vi]);
   Create_Captcha;
+  ex_load.Reg.Main.Capt_Refresh.RotationAngle:= ex_load.Reg.Main.Capt_Refresh.RotationAngle+ 25;
 end;
 
 function Check_Data: Boolean;
 begin
-  if (User.User_Empty = False) and (User.User_Total > 7) and (User.User_Num) and (User.User_Symbol) and
-    (User.User_Cap) and (User.Pass_Empty = False) and (User.Pass_Total > 5) and (User.RePass_Empty = False)
-    and (User.RePass_Match) and (User.Email_Empty = False) and (User.Email_Correct) and
-    (User.ReEmail_Empty = False) and (User.ReEmail_Match) and (User.Terms) and (User.Accept_Terms) and
-    (User.Captcha_Empty = False) and (User.Captcha_Match) then
+  if (User.User_Empty = False) and (User.User_Total > 7) and (User.User_Num) and (User.User_Symbol) and (User.User_Cap) and (User.Pass_Empty = False) and
+    (User.Pass_Total > 5) and (User.RePass_Empty = False) and (User.RePass_Match) and (User.Email_Empty = False) and (User.Email_Correct) and
+    (User.ReEmail_Empty = False) and (User.ReEmail_Match) and (User.Terms) and (User.Accept_Terms) and (User.Captcha_Empty = False) and (User.Captcha_Match)
+  then
     Result := True
   else
     Result := False;
@@ -172,7 +175,7 @@ var
   end;
 
 begin
-  Result:= False;
+  Result := False;
   if Check_Data then
   begin
     uInternet_Files.GeoIP(vCountry_Code, vIp, vLat, vLon);
@@ -193,17 +196,17 @@ begin
     User_Reg.Last_Emulator := 'Unknown';
     User_Reg.Total_Time_Play := '00:00:00';
     User_Reg.Server_Folder := create_server_folder_name;
-    uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); //Ready with no bgcolor
+    uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
     uInternet_Files.Create_FTP_Folder(User_Reg.Server_Folder); // Ready
     uDatabase_SQLCommands.New_User;
-    Result:= True;
+    Result := True;
   end;
 end;
 
 procedure Create_Help;
 const
-  cHeaders: array [0 .. 7] of string = ('Username : ', 'Password :', 'Retype Password :', 'Email :',
-    'Retype Email :', 'Terms :', 'Accept Terms :', 'Captcha :');
+  cHeaders: array [0 .. 7] of string = ('Username : ', 'Password :', 'Retype Password :', 'Email :', 'Retype Email :', 'Terms :', 'Accept Terms :',
+    'Captcha :');
 var
   vi: Integer;
   vCode, vIp, vPosition: String;
@@ -263,8 +266,7 @@ begin
         ex_load.Reg.Main.Data.User[vi].Text := 'Doesn''t contain captial letter';
     end;
     ex_load.Reg.Main.Data.User[vi].FontColor := TAlphaColorRec.Dimgrey;
-    ex_load.Reg.Main.Data.User[vi].StyledSettings := ex_load.Reg.Main.Data.User[vi].StyledSettings -
-      [TStyledSetting.FontColor, TStyledSetting.Style];
+    ex_load.Reg.Main.Data.User[vi].StyledSettings := ex_load.Reg.Main.Data.User[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
     ex_load.Reg.Main.Data.User[vi].Visible := True;
 
     ex_load.Reg.Main.Data.Check[vi] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -297,8 +299,7 @@ begin
         ex_load.Reg.Main.Data.Pass[vi].Text := 'Is smaller that 6 characters';
     end;
     ex_load.Reg.Main.Data.Pass[vi].FontColor := TAlphaColorRec.Dimgrey;
-    ex_load.Reg.Main.Data.Pass[vi].StyledSettings := ex_load.Reg.Main.Data.Pass[vi].StyledSettings -
-      [TStyledSetting.FontColor, TStyledSetting.Style];
+    ex_load.Reg.Main.Data.Pass[vi].StyledSettings := ex_load.Reg.Main.Data.Pass[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
     ex_load.Reg.Main.Data.Pass[vi].Visible := True;
 
     ex_load.Reg.Main.Data.Check[vi + 5] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -323,8 +324,7 @@ begin
     ex_load.Reg.Main.Data.RePass[vi] := TLabel.Create(ex_load.Reg.Main.Data.Panel);
     ex_load.Reg.Main.Data.RePass[vi].Name := 'Data_Retype_Pass_' + vi.ToString;
     ex_load.Reg.Main.Data.RePass[vi].Parent := ex_load.Reg.Main.Data.Panel;
-    ex_load.Reg.Main.Data.RePass[vi].SetBounds(40, 188 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width
-      - 50, 20);
+    ex_load.Reg.Main.Data.RePass[vi].SetBounds(40, 188 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width - 50, 20);
     case vi of
       0:
         ex_load.Reg.Main.Data.RePass[vi].Text := 'Is Empty';
@@ -332,8 +332,7 @@ begin
         ex_load.Reg.Main.Data.RePass[vi].Text := 'Don''t match';
     end;
     ex_load.Reg.Main.Data.RePass[vi].FontColor := TAlphaColorRec.Dimgrey;
-    ex_load.Reg.Main.Data.RePass[vi].StyledSettings := ex_load.Reg.Main.Data.RePass[vi].StyledSettings -
-      [TStyledSetting.FontColor, TStyledSetting.Style];
+    ex_load.Reg.Main.Data.RePass[vi].StyledSettings := ex_load.Reg.Main.Data.RePass[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
     ex_load.Reg.Main.Data.RePass[vi].Visible := True;
 
     ex_load.Reg.Main.Data.Check[vi + 7] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -358,8 +357,7 @@ begin
     ex_load.Reg.Main.Data.Email[vi] := TLabel.Create(ex_load.Reg.Main.Data.Panel);
     ex_load.Reg.Main.Data.Email[vi].Name := 'Data_Eimail_' + vi.ToString;
     ex_load.Reg.Main.Data.Email[vi].Parent := ex_load.Reg.Main.Data.Panel;
-    ex_load.Reg.Main.Data.Email[vi].SetBounds(40, 248 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width
-      - 50, 20);
+    ex_load.Reg.Main.Data.Email[vi].SetBounds(40, 248 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width - 50, 20);
     case vi of
       0:
         ex_load.Reg.Main.Data.Email[vi].Text := 'Is Empty';
@@ -367,8 +365,7 @@ begin
         ex_load.Reg.Main.Data.Email[vi].Text := 'Is not correct';
     end;
     ex_load.Reg.Main.Data.Email[vi].FontColor := TAlphaColorRec.Dimgrey;
-    ex_load.Reg.Main.Data.Email[vi].StyledSettings := ex_load.Reg.Main.Data.Email[vi].StyledSettings -
-      [TStyledSetting.FontColor, TStyledSetting.Style];
+    ex_load.Reg.Main.Data.Email[vi].StyledSettings := ex_load.Reg.Main.Data.Email[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
     ex_load.Reg.Main.Data.Email[vi].Visible := True;
 
     ex_load.Reg.Main.Data.Check[vi + 9] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -393,8 +390,7 @@ begin
     ex_load.Reg.Main.Data.ReEmail[vi] := TLabel.Create(ex_load.Reg.Main.Data.Panel);
     ex_load.Reg.Main.Data.ReEmail[vi].Name := 'Data_Retype_Eimail_' + vi.ToString;
     ex_load.Reg.Main.Data.ReEmail[vi].Parent := ex_load.Reg.Main.Data.Panel;
-    ex_load.Reg.Main.Data.ReEmail[vi].SetBounds(40, 308 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width
-      - 50, 20);
+    ex_load.Reg.Main.Data.ReEmail[vi].SetBounds(40, 308 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width - 50, 20);
     case vi of
       0:
         ex_load.Reg.Main.Data.ReEmail[vi].Text := 'Is Empty';
@@ -402,8 +398,7 @@ begin
         ex_load.Reg.Main.Data.ReEmail[vi].Text := 'Don''t match';
     end;
     ex_load.Reg.Main.Data.ReEmail[vi].FontColor := TAlphaColorRec.Dimgrey;
-    ex_load.Reg.Main.Data.ReEmail[vi].StyledSettings := ex_load.Reg.Main.Data.ReEmail[vi].StyledSettings -
-      [TStyledSetting.FontColor, TStyledSetting.Style];
+    ex_load.Reg.Main.Data.ReEmail[vi].StyledSettings := ex_load.Reg.Main.Data.ReEmail[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
     ex_load.Reg.Main.Data.ReEmail[vi].Visible := True;
 
     ex_load.Reg.Main.Data.Check[vi + 11] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -429,8 +424,7 @@ begin
   ex_load.Reg.Main.Data.Terms.SetBounds(40, 368, ex_load.Reg.Main.Data.Panel.Width - 50, 20);
   ex_load.Reg.Main.Data.Terms.Text := 'Must Read it';
   ex_load.Reg.Main.Data.Terms.FontColor := TAlphaColorRec.Dimgrey;
-  ex_load.Reg.Main.Data.Terms.StyledSettings := ex_load.Reg.Main.Data.Terms.StyledSettings -
-    [TStyledSetting.FontColor, TStyledSetting.Style];
+  ex_load.Reg.Main.Data.Terms.StyledSettings := ex_load.Reg.Main.Data.Terms.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
   ex_load.Reg.Main.Data.Terms.Visible := True;
 
   ex_load.Reg.Main.Data.Check[13] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -455,8 +449,7 @@ begin
   ex_load.Reg.Main.Data.Accept_Terms.SetBounds(40, 408, ex_load.Reg.Main.Data.Panel.Width - 50, 20);
   ex_load.Reg.Main.Data.Accept_Terms.Text := 'Must Accept it';
   ex_load.Reg.Main.Data.Accept_Terms.FontColor := TAlphaColorRec.Dimgrey;
-  ex_load.Reg.Main.Data.Accept_Terms.StyledSettings := ex_load.Reg.Main.Data.Accept_Terms.StyledSettings -
-    [TStyledSetting.FontColor, TStyledSetting.Style];
+  ex_load.Reg.Main.Data.Accept_Terms.StyledSettings := ex_load.Reg.Main.Data.Accept_Terms.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
   ex_load.Reg.Main.Data.Accept_Terms.Visible := True;
 
   ex_load.Reg.Main.Data.Check[14] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -480,8 +473,7 @@ begin
     ex_load.Reg.Main.Data.Captcha[vi] := TLabel.Create(ex_load.Reg.Main.Data.Panel);
     ex_load.Reg.Main.Data.Captcha[vi].Name := 'Data_Retype_Captcha_' + vi.ToString;
     ex_load.Reg.Main.Data.Captcha[vi].Parent := ex_load.Reg.Main.Data.Panel;
-    ex_load.Reg.Main.Data.Captcha[vi].SetBounds(40, 448 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width
-      - 50, 20);
+    ex_load.Reg.Main.Data.Captcha[vi].SetBounds(40, 448 + (vi * 18), ex_load.Reg.Main.Data.Panel.Width - 50, 20);
     case vi of
       0:
         ex_load.Reg.Main.Data.Captcha[vi].Text := 'Is Empty';
@@ -489,8 +481,7 @@ begin
         ex_load.Reg.Main.Data.Captcha[vi].Text := 'Don''t match';
     end;
     ex_load.Reg.Main.Data.Captcha[vi].FontColor := TAlphaColorRec.Dimgrey;
-    ex_load.Reg.Main.Data.Captcha[vi].StyledSettings := ex_load.Reg.Main.Data.Captcha[vi].StyledSettings -
-      [TStyledSetting.FontColor, TStyledSetting.Style];
+    ex_load.Reg.Main.Data.Captcha[vi].StyledSettings := ex_load.Reg.Main.Data.Captcha[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Style];
     ex_load.Reg.Main.Data.Captcha[vi].Visible := True;
 
     ex_load.Reg.Main.Data.Check[vi + 15] := TCheckBox.Create(ex_load.Reg.Main.Data.Panel);
@@ -525,7 +516,7 @@ begin
   case vHeader of
     0:
       begin
-        ex_load.Reg.Edit_Select:= 'username';
+        ex_load.Reg.Edit_Select := 'username';
         for vi := 0 to 4 do
         begin
           ex_load.Reg.Main.Data.User[vi].FontColor := TAlphaColorRec.White;
@@ -561,7 +552,7 @@ begin
       end;
     1:
       begin
-        ex_load.Reg.Edit_Select:= 'password';
+        ex_load.Reg.Edit_Select := 'password';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.Pass[vi].FontColor := TAlphaColorRec.White;
@@ -582,7 +573,7 @@ begin
       end;
     2:
       begin
-        ex_load.Reg.Edit_Select:= 'repassword';
+        ex_load.Reg.Edit_Select := 'repassword';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.RePass[vi].FontColor := TAlphaColorRec.White;
@@ -603,7 +594,7 @@ begin
       end;
     3:
       begin
-        ex_load.Reg.Edit_Select:= 'email';
+        ex_load.Reg.Edit_Select := 'email';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.Email[vi].FontColor := TAlphaColorRec.White;
@@ -624,7 +615,7 @@ begin
       end;
     4:
       begin
-        ex_load.Reg.Edit_Select:= 'reemail';
+        ex_load.Reg.Edit_Select := 'reemail';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.ReEmail[vi].FontColor := TAlphaColorRec.White;
@@ -661,7 +652,7 @@ begin
       end;
     7:
       begin
-        ex_load.Reg.Edit_Select:= 'captcha';
+        ex_load.Reg.Edit_Select := 'captcha';
         for vi := 0 to 1 do
         begin
           ex_load.Reg.Main.Data.Captcha[vi].FontColor := TAlphaColorRec.White;
@@ -700,8 +691,7 @@ end;
 procedure Update_Username(vValue: String);
 const
   cNumbers = ['0' .. '9'];
-  cSymbols = ['!', '@', '#', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '{', '}', '[', ']', ':', ';',
-    '"', '|', '\', '/'];
+  cSymbols = ['!', '@', '#', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '{', '}', '[', ']', ':', ';', '"', '|', '\', '/'];
   cCapitals = ['A' .. 'Z'];
 var
   vi: Integer;
@@ -914,13 +904,44 @@ begin
     User.Captcha_Match := False;
   end;
 end;
+
+procedure Show_Password;
+begin
+  if ex_load.Reg.Main.Pass_V.Password then
+  begin
+    ex_load.Reg.Main.Pass_Show.Text := #$e9ce;
+    ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  end
+  else
+  begin
+    ex_load.Reg.Main.Pass_Show.Text := #$e9d1;
+    ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  end;
+  ex_load.Reg.Main.Pass_V.Password := not ex_load.Reg.Main.Pass_V.Password;
+end;
+
+procedure Show_RePassword;
+begin
+  if ex_load.Reg.Main.RePass_V.Password then
+  begin
+    ex_load.Reg.Main.RePass_Show.Text := #$e9ce;
+    ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  end
+  else
+  begin
+    ex_load.Reg.Main.RePass_Show.Text := #$e9d1;
+    ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  end;
+  ex_load.Reg.Main.RePass_V.Password := not ex_load.Reg.Main.RePass_V.Password;
+end;
+
 // The two action buttons
 
 procedure Apply;
 begin
   if Register_User then
   begin
-    ex_load.Login.User_V.Text:= User_Reg.Username;
+    ex_load.Login.User_V.Text := User_Reg.Username;
     Cancel;
   end;
 end;
@@ -928,7 +949,7 @@ end;
 procedure Cancel;
 begin
   uLoad_SetAll_Login;
-   FreeAndNil(ex_load.Reg.Panel);
+  FreeAndNil(ex_load.Reg.Panel);
 end;
 
 end.

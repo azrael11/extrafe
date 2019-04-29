@@ -46,6 +46,8 @@ uses
 procedure GetTags_MP3(mSongPath, mSongName: string; mPlaylistNum, mSongNum: SmallInt; mSongTime: string);
 var
   myTag: TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG;
+  vTextFile: TextFile;
+  vString: String;
 begin
   uSoundplayer_Tag_Mp3.Get_ID3v1(mSongPath + mSongName);
   uSoundplayer_Tag_Mp3.Get_ID3v2(mSongPath + mSongName);
@@ -114,6 +116,19 @@ begin
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.Add(addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeLyrics
     ('USLT', addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID,
     addons.soundplayer.Player.Tag.mp3.Lyrics_Description));
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.SaveToFile(addons.soundplayer.Path.Files + 'templyric.txt');
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.Clear;
+
+  AssignFile(vTextFile, addons.soundplayer.Path.Files + 'templyric.txt');
+  Reset(vTextFile);
+  while Not EOF(vTextFile) do
+  begin
+    Readln(vTextFile, vString);
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.Add(vString);
+  end;
+  CloseFile(vTextFile);
+  DeleteFile(addons.soundplayer.Path.Files+ 'templyric.txt');
+
 
   addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
   addons.soundplayer.Player.Tag.mp3.ID3v2.Free;

@@ -103,7 +103,7 @@ end;
 
 procedure TLOADING_BUTTON.OnMouseEnter(Sender: TObject);
 begin
-
+  TButton(Sender).Cursor := crHandPoint;
 end;
 
 procedure TLOADING_BUTTON.OnMouseLeave(Sender: TObject);
@@ -115,38 +115,17 @@ end;
 
 procedure TLOADING_IMAGE.OnMouseClick(Sender: TObject);
 begin
-  if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
-    uLoad_Register.Refresh_Captcha
-  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
-    ex_load.Reg.Main.Pass_V.Password := not ex_load.Reg.Main.Pass_V.Password
-  else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
-    ex_load.Reg.Main.RePass_V.Password := not ex_load.Reg.Main.RePass_V.Password
-  else if TImage(Sender).Name = 'Loading_Login_Pass_Show' then
-    ex_load.Login.Pass_V.Password := not ex_load.Login.Pass_V.Password;
+
 end;
 
 procedure TLOADING_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-  if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
-    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := True
-  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
-    ex_load.Reg.Main.Pass_Show_Glow.Enabled := True
-  else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
-    ex_load.Reg.Main.RePass_Show_Glow.Enabled := True
-  else if TImage(Sender).Name = 'Loading_Login_Pass_Show' then
-    ex_load.Login.Pass_Show_Glow.Enabled := True;
+
 end;
 
 procedure TLOADING_IMAGE.OnMouseLeave(Sender: TObject);
 begin
-  if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
-    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := False
-  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
-    ex_load.Reg.Main.Pass_Show_Glow.Enabled := False
-  else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
-    ex_load.Reg.Main.RePass_Show_Glow.Enabled := False
-  else if TImage(Sender).Name = 'Loading_Login_Pass_Show' then
-    ex_load.Login.Pass_Show_Glow.Enabled := False;
+
 end;
 
 { TLOADING_EDIT }
@@ -221,10 +200,18 @@ begin
     uLoad_SetAll_Register
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uLoad_SetAll_Forget_Password
+  else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
+    uLoad_Login.Show_Password
+  else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
+    uLoad_Register.Refresh_Captcha
   else if TText(Sender).Name = 'Loading_Register_Terms' then
     uLoad_SetAll_Terms
+  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
+    uLoad_Register.Show_Password
+  else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
+    uLoad_Register.Show_RePassword
   else if TText(Sender).Name = 'Loading_Intro_Text' then
-    uLoad.Skip_Intro;
+    uLoad.Skip_Intro
 end;
 
 procedure TLOADING_TEXT.OnMouseEnter(Sender: TObject);
@@ -235,11 +222,31 @@ begin
     uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+  else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
+  begin
+    ex_load.Login.Pass_Show_Glow.Enabled := True;
+    TText(Sender).Cursor := crHandPoint;
+  end
+  else if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
+  begin
+    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := True;
+    TText(Sender).Cursor := crHandPoint;
+  end
   else if TText(Sender).Name = 'Loading_Register_Terms' then
   begin
     uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender));
     uLoad_Register.Enable_Help(5);
-  end;
+  end
+  else if TText(Sender).Name = 'Loading_Register_Pass_Show' then
+  begin
+    ex_load.Reg.Main.Pass_Show_Glow.Enabled := True;
+    TText(Sender).Cursor := crHandPoint;
+  end
+  else if TText(Sender).Name = 'Loading_Register_RePass_Show' then
+  begin
+    ex_load.Reg.Main.RePass_Show_Glow.Enabled := True;
+    TText(Sender).Cursor := crHandPoint;
+  end
 end;
 
 procedure TLOADING_TEXT.OnMouseLeave(Sender: TObject);
@@ -250,8 +257,16 @@ begin
     uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
+  else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
+    ex_load.Login.Pass_Show_Glow.Enabled := False
+  else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
+    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := False
   else if TText(Sender).Name = 'Loading_Register_Terms' then
     uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
+  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
+    ex_load.Reg.Main.Pass_Show_Glow.Enabled := False
+  else if TText(Sender).Name = 'Loading_Register_RePass_Show' then
+    ex_load.Reg.Main.RePass_Show_Glow.Enabled := False;
 end;
 
 { TLOADING_CHECKBOX }
@@ -277,7 +292,7 @@ end;
 
 procedure TLOADING_VIDEO.OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
 begin
-  if TFmxPasLibVlcPlayer(Sender).Name= 'Loading_Intro' then
+  if TFmxPasLibVlcPlayer(Sender).Name = 'Loading_Intro' then
   begin
     ex_load.Intro.Video.Cursor := crDefault;
     ex_load.Intro.Text.Cursor := crDefault;

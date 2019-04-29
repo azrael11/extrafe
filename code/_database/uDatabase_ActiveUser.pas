@@ -25,10 +25,13 @@ type TDATABASE_ACTIVEUSER= record
   Server_Folder: String;
 end;
 
-  procedure uDatabase_Active_User_Collect_Info_From_Database;
+procedure uDatabase_Active_User_Collect_Info_From_Database;
 
-  var
-    user_Active: TDATABASE_ACTIVEUSER;
+procedure Temp_User;
+
+var
+  user_Active: TDATABASE_ACTIVEUSER;
+
 implementation
 uses
   loading,
@@ -52,4 +55,24 @@ begin
   user_Active.Server_Folder:= uDatabase_SQLCommands.Get_ServerFolder(user_Active.Database_Num);
 end;
 
+procedure Temp_User;
+begin
+  user_Active.Database_Num := 0;
+  user_Active.Username := 'JohnDoe';
+  user_Active.Password := '123456';
+  user_Active.Email := 'JohnDoe@temp.com';
+  user_Active.IP := '100.100.100.100';
+  user_Active.Name := 'Jonh';
+  user_Active.Surname := 'Doe';
+  user_Active.Avatar := '0';
+  user_Active.DateTime_Created := '00:00:00:00';
+  user_Active.Last_DateTime_Visit := '00:00:00:00';
+  user_Active.Country := 'Nowhere';
+  user_Active.Country_Code := '-1';
+  user_Active.Genre := 'Male';
+  user_Active.Game_Play := '';
+  user_Active.Game_Emulator := '';
+  user_Active.Total_Time := '';
+  user_Active.Server_Folder := 'nothing';
+end;
 end.

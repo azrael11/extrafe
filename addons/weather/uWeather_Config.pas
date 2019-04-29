@@ -53,7 +53,7 @@ begin
       0:
         uWeather_Config_Provider_Show;
       1:
-        uWeather_Config_Towns_Show;
+        uWeather_Config_Towns.Load;
       2:
         uWeather_Config_Options_Show;
       3:

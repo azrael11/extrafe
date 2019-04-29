@@ -101,6 +101,7 @@ begin
     mainScene.Config.main.L.Button[vi].SetBounds(10, 30 + (vi * 40), 190, 33);
     mainScene.Config.main.L.Button[vi].Text := cButton_Names[vi];
     mainScene.Config.main.L.Button[vi].OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
+    mainScene.Config.Main.L.Button[vi].OnMouseEnter:= ex_main.Input.mouse_config.Button.OnMouseEnter;
     mainScene.Config.main.L.Button[vi].Tag := vi;
     mainScene.Config.main.L.Button[vi].Visible := True;
   end;

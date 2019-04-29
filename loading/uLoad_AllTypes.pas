@@ -324,7 +324,7 @@ type
     User_V: TEdit;
     Pass: Tlabel;
     Pass_V: TEdit;
-    Pass_Show: TImage;
+    Pass_Show: TText;
     Pass_Show_Glow: TGlowEffect;
     NotRegister: TText;
     Warning: Tlabel;
@@ -332,11 +332,9 @@ type
     Login: TButton;
     Exit_ExtraFE: TButton;
     Internet: Tlabel;
-    Int_Icon: TImage;
-    Int_Color: TFillRGBEffect;
+    Int_Icon: TText;
     Database: Tlabel;
-    Data_Icon: TImage;
-    Data_Color: TFillRGBEffect;
+    Data_Icon: TText;
   end;
 
 type
@@ -380,11 +378,11 @@ type
     User_V: TEdit;
     Pass: Tlabel;
     Pass_V: TEdit;
-    Pass_Show: TImage;
+    Pass_Show: TText;
     Pass_Show_Glow: TGlowEffect;
     RePass: Tlabel;
     RePass_V: TEdit;
-    RePass_Show: TImage;
+    RePass_Show: TText;
     RePass_Show_Glow: TGlowEffect;
     Email: Tlabel;
     Email_V: TEdit;
@@ -393,7 +391,7 @@ type
     Capt: Tlabel;
     Capt_Img: TImage;
     Capt_Img_Word: array [0 .. 5] of TText;
-    Capt_Refresh: TImage;
+    Capt_Refresh: TText;
     Capt_Refresh_Glow: TGlowEffect;
     Capt_V: TEdit;
     Terms: TText;

@@ -51,6 +51,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
+  uSoundplayer_Scrapers_AZLyrics,
   uSoundplayer_Tag_MP3_SetAll,
   uSoundplayer_Tag_MP3,
   uSoundplayer_Tag_OGG_SetAll,
@@ -68,7 +69,9 @@ begin
   viPos_ogg := Pos('addon_soundplayer_tag_opus', extrafe.prog.State);
   if viPos_mp3 <> 0 then
   begin
-
+    if TImage(Sender).Name = 'A_SP_Tag_Mp3_Lyrics_Get_Provider_0' then
+      vSoundplayer.Tag.mp3.Lyrics_Int.Lyrics_Box.Lines := uSoundplayer_Scrapers_AZLyrics.Lyrics(vSoundplayer.Tag.mp3.ID3v2.Title_V.Text,
+        vSoundplayer.Tag.mp3.ID3v2.Artist_V.Text);
   end
   else if viPos_ogg <> 0 then
   begin
@@ -91,6 +94,7 @@ begin
   viPos_ogg := Pos('addon_soundplayer_tag_opus', extrafe.prog.State);
   if viPos_mp3 <> 0 then
   begin
+    if TImage(Sender).Name = 'A_SP_Tag_Mp3_Lyrics_Get_Provider_0' then
 
   end
   else if viPos_ogg <> 0 then
@@ -108,7 +112,8 @@ begin
   viPos_ogg := Pos('addon_soundplayer_tag_opus', extrafe.prog.State);
   if viPos_mp3 <> 0 then
   begin
-
+    if TImage(Sender).Name = 'A_SP_Tag_Mp3_Lyrics_Get_Provider_0' then
+      vSoundplayer.Tag.mp3.Lyrics_Int.Providers_Glow[0].Enabled := True
   end
   else if viPos_ogg <> 0 then
   begin
@@ -122,6 +127,7 @@ begin
         vSoundplayer.Tag.Opus.Cover_Delete_Glow.Enabled := True;
     end;
   end;
+  TImage(Sender).Cursor := crHandPoint;
 end;
 
 procedure TSOUNDPLAYER_TAG_IMAGE.OnMouseLeave(Sender: TObject);
@@ -133,7 +139,8 @@ begin
   viPos_ogg := Pos('addon_soundplayer_tag_opus', extrafe.prog.State);
   if viPos_mp3 <> 0 then
   begin
-
+    if TImage(Sender).Name = 'A_SP_Tag_Mp3_Lyrics_Get_Provider_0' then
+      vSoundplayer.Tag.mp3.Lyrics_Int.Providers_Glow[0].Enabled := False
   end
   else if viPos_ogg <> 0 then
   begin
@@ -171,7 +178,11 @@ begin
     else if TButton(Sender).Name = 'A_SP_Tag_Mp3_LyricsAdd_Main_Add' then
       uSoundplayer_Tag_MP3.Lyrics_Load
     else if TButton(Sender).Name = 'A_SP_Tag_Mp3_LyricsAdd_Main_Cancel' then
-      uSoundplayer_Tag_MP3.Lyrics_Add_Cancel;
+      uSoundplayer_Tag_MP3.Lyrics_Add_Cancel
+    else if TButton(Sender).Name = 'A_SP_Tag_Mp3_Lyrics_Get_Add' then
+      uSoundplayer_Tag_MP3.Lyrics_Get_Add
+    else if TButton(Sender).Name = 'A_SP_Tag_Mp3_Lyrics_Get_Cancel' then
+      uSoundplayer_Tag_MP3.Lyrics_Get_Cancel
   end
   else if viPos_ogg <> 0 then
   begin
@@ -184,7 +195,7 @@ end;
 
 procedure TSOUNDPLAYER_TAG_BUTTON.OnMouseEnter(Sender: TObject);
 begin
-
+  TImage(Sender).Cursor := crHandPoint;
 end;
 
 procedure TSOUNDPLAYER_TAG_BUTTON.OnMouseLeave(Sender: TObject);
@@ -235,6 +246,8 @@ begin
       vSoundplayer.scene.OpenDialog.Name := 'A_SP_OpenDialog_Mp3_Lyrics_AddComputer';
       vSoundplayer.scene.OpenDialog.Execute;
     end
+    else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_AddInternet' then
+      uSoundplayer_Tag_MP3_SetAll.Lyrics_Get
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Lyrics_Remove' then
     begin
       if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor <> TAlphaColorRec.Grey then

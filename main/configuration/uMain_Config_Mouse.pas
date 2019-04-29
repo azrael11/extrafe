@@ -10,7 +10,8 @@ uses
   FMX.StdCtrls,
   FMX.Objects,
   FMX.Edit,
-  FMX.TABControl;
+  FMX.TABControl,
+  BASS;
 
 type
   TMAIN_CONFIG_IMAGE = class(TObject)
@@ -432,11 +433,12 @@ begin
     else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Cancel' then
       uMain_Config_Addons_Actions_Activate_Soundplayer_FreeMessage
   end;
+  BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
 end;
 
 procedure TMAIN_CONFIG_BUTTON.OnMouseEnter(Sender: TObject);
 begin
-
+  TButton(Sender).Cursor := crHandPoint;
 end;
 
 procedure TMAIN_CONFIG_BUTTON.OnMouseLeave(Sender: TObject);

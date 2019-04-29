@@ -6,17 +6,12 @@ uses
   System.Classes,
   System.SysUtils,
   System.UITypes,
-  System.JSON,
   FMX.Types,
   FMX.Objects,
   FMX.Effects,
   FMX.Graphics,
   FMX.Grid,
-  IPPeerClient,
-  REST.Client,
-  REST.Types,
-  Data.Bind.Components,
-  Data.Bind.ObjectScope,
+  FMX.Memo,
   bass;
 
 procedure State(vPlay, vPause, vStop, vMute, vSuffle: Boolean; vRepeat: String);
@@ -47,6 +42,11 @@ procedure Suffle_Create_List;
 procedure Suffle_Back;
 
 procedure Band_Info;
+procedure Band_Info_Close;
+procedure Lyrics;
+procedure Lyrics_Close;
+procedure Album;
+procedure Album_Close;
 
 procedure Show_Tag(vSongName: String; vSongNum: Integer);
 
@@ -82,6 +82,7 @@ uses
   uSoundplayer_AllTypes,
   uSoundplayer_SetAll,
   uSoundplayer_Playlist,
+  uSoundplayer_Scrapers_LastFm,
   uSoundplayer_Playlist_Create,
   uSoundplayer_Tag_Get,
   uSoundplayer_Tag_Mp3_SetAll,
@@ -897,7 +898,6 @@ var
   vDescription: String;
   vImage: TBitmap;
   vPath: String;
-  vStringChars: Integer;
 begin
   vSoundplayer.Player.Song_Title.Text := '"' + addons.soundplayer.Playlist.List.Song_Info[vSongNum].Title + '" by "' +
     addons.soundplayer.Playlist.List.Song_Info[vSongNum].Artist + '"';
@@ -946,9 +946,7 @@ begin
       end;
     end;
 
-    vStringChars := Length(StringReplace(StringReplace(addons.soundplayer.Playlist.List.Song_Info[vSongNum].Lyrics.Text, #10, '', [rfReplaceAll]), #13, '',
-      [rfReplaceAll]));
-    if vStringChars > 1 then
+    if addons.soundplayer.Playlist.List.Song_Info[vSongNum].Lyrics.Count - 1 > 1 then
       vSoundplayer.Player.Lyrics.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
     else
       vSoundplayer.Player.Lyrics.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -1184,63 +1182,92 @@ begin
   end;
 end;
 
-///
+/// Band Info Presentation
 procedure Band_Info;
-var
-  vRESTClient: TRESTClient;
-  vRESTRequest: TRESTRequest;
-  vRESTResponse: TRESTResponse;
-  vJSONValue: TJSONValue;
-  vAPI: String;
-  vOutValue: String;
-  vArtist, vImageUrl, vSummary, vComment: String;
 begin
+  extrafe.prog.State:= 'addon_soundplayer_player_band';
+
+  Text_OnLeave(vSoundplayer.Player.Band_Info, vSoundplayer.Player.Band_Info_Glow);
   uSoundplayer_SetAll.Band_Information;
 
-  vAPI := '17d1261b9ed4b209902d9167320e3663';
-  vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'Soundplayer_BandInfo_RestClient';
-  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + addons.soundplayer.Playlist.List.Song_Info
-    [addons.soundplayer.Player.Playing_Now].Artist + '&api_key=' + vAPI + '&format=json';
-  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
+  uSoundplayer_Scrapers_LastFm.Artist_Company;
+end;
 
-  vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'OpenWeatherMap_Response';
+procedure Band_Info_Close;
+begin
+  extrafe.prog.State:= 'addon_soundplayer';
+  FreeAndNil(vSoundplayer.Player.Band_Info_Press.Header);
+  FreeAndNil(vSoundplayer.Player.Band_Info_Press.Name);
+  FreeAndNil(vSoundplayer.Player.Band_Info_Press.Powered_By);
+  FreeAndNil(vSoundplayer.Player.Band_Info_Press.Powered_Img);
+  FreeAndNil(vSoundplayer.Player.Band_Info_Press.Close);
+  FreeAndNil(vSoundplayer.Player.Band_Info_Press.Box);
+  vSoundplayer.scene.Back_Blur.Enabled := False;
+  vSoundplayer.scene.Back_Presentation.Visible := False;
+end;
 
-  vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'Soundplayer_BandInfo_Request';
-  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTRequest.Client := vRESTClient;
-  vRESTRequest.Method := TRESTRequestMethod.rmGET;
-  vRESTRequest.Response := vRESTResponse;
-  vRESTRequest.Timeout := 30000;
+/// Lyrics Presentation
+procedure Lyrics;
+var
+  vi: Integer;
+begin
+  extrafe.prog.State:= 'addon_soundplayer_player_lyrics';
+  Text_OnLeave(vSoundplayer.Player.Lyrics, vSoundplayer.Player.Lyrics_Glow);
+  uSoundplayer_SetAll.Lyrics;
 
-  vRESTRequest.Execute;
-  vJSONValue := vRESTResponse.JSONValue;
-  /// Here is the response to format
+  vSoundplayer.Player.Lyrics_Press.Name.Text := addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Title;
 
-  vArtist := vJSONValue.GetValue<String>('artist.name');
-  vSoundplayer.Player.Band_Info_Press.Name.Text := vArtist;
-  vImageUrl := '';
-  if vJSONValue.TryGetValue('artist.image[4].#text', vOutValue) then
-    vImageUrl := vOutValue;
-  if vImageUrl = '' then
-    if vJSONValue.TryGetValue('artist.image[3].#text', vOutValue) then
-      vImageUrl := vOutValue;
-  if vImageUrl = '' then
-    if vJSONValue.TryGetValue('artist.image[2].#text', vOutValue) then
-      vImageUrl := vOutValue;
-  if vImageUrl <> '' then
-    vSoundplayer.Player.Band_Info_Press.Image.Bitmap := uInternet_Files.Get_Image(vImageUrl);
-  vSummary := vJSONValue.GetValue<String>('artist.bio.summary');
-  vSoundplayer.Player.Band_Info_Press.Memo_Sum.Lines.Text:= vSummary;
-  vComment := vJSONValue.GetValue<String>('artist.bio.content');
-  vSoundplayer.Player.Band_Info_Press.Memo_Comm.Lines.Text:= vComment;
-  FreeAndNil(vJSONValue);
-  FreeAndNil(vRESTRequest);
+  SetLength(vSoundplayer.Player.Lyrics_Press.Lyrics, addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Lyrics.Count + 1);
+
+  for vi := 0 to addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Lyrics.Count do
+  begin
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi] := TText.Create(vSoundplayer.Player.Lyrics_Press.Box);
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi].Name := 'A_SP_Lyrics_Lyrics_' + vi.ToString;
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi].Parent := vSoundplayer.Player.Lyrics_Press.Box;
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi].SetBounds(30, (vi * 34), vSoundplayer.Player.Lyrics_Press.Box.Width - 30, 34);
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi].Font.Family := 'Tahoma';
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi].TextSettings.FontColor := TAlphaColorRec.White;
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi].Font.Size := 28;
+    if vi = addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Lyrics.Count then
+      vSoundplayer.Player.Lyrics_Press.Lyrics[vi].Text := ''
+    else
+      vSoundplayer.Player.Lyrics_Press.Lyrics[vi].Text := addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Lyrics.Strings[vi];
+    vSoundplayer.Player.Lyrics_Press.Lyrics[vi].Visible := True;
+  end;
+end;
+
+procedure Lyrics_Close;
+begin
+  extrafe.prog.State:= 'addon_soundplayer';
+  FreeAndNil(vSoundplayer.Player.Lyrics_Press.Header);
+  FreeAndNil(vSoundplayer.Player.Lyrics_Press.Name);
+  FreeAndNil(vSoundplayer.Player.Lyrics_Press.Close);
+  FreeAndNil(vSoundplayer.Player.Lyrics_Press.Box);
+  vSoundplayer.scene.Back_Blur.Enabled := False;
+  vSoundplayer.scene.Back_Presentation.Visible := False;
+end;
+
+/// Album Presentation
+procedure Album;
+begin
+  extrafe.prog.State:= 'addon_soundplayer_player_album';
+
+  Text_OnLeave(vSoundplayer.Player.Album_Info, vSoundplayer.Player.Album_Info_Glow);
+  uSoundplayer_SetAll.Album_Information;
+
+  uSoundplayer_Scrapers_LastFm.Album;
+end;
+
+procedure Album_Close;
+begin
+  extrafe.prog.State:= 'addon_soundplayer';
+  FreeAndNil(vSoundplayer.Player.Album_Info_Press.Powered_By);
+  FreeAndNil(vSoundplayer.Player.Album_Info_Press.Powered_Img);
+  FreeAndNil(vSoundplayer.Player.Album_Info_Press.Name);
+  FreeAndNil(vSoundplayer.Player.Album_Info_Press.Box);
+  FreeAndNil(vSoundplayer.Player.Album_Info_Press.Close);
+  vSoundplayer.scene.Back_Blur.Enabled := False;
+  vSoundplayer.scene.Back_Presentation.Visible := False;
 end;
 
 end.

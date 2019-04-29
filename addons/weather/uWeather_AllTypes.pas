@@ -20,6 +20,7 @@ uses
   ALFmxTabControl,
   ALFmxObjects,
   uWeather_Mouse,
+  uWeather_Config_Mouse,
   Bass;
 
 type
@@ -230,6 +231,7 @@ type
 type
   TADDON_WEATHER_INPUT = record
     mouse: TWEATHER_MOUSE;
+    mouse_config: TWEATHER_CONFIG_MOUSE;
     // keyboard:
     // joystick:
   end;
@@ -487,23 +489,19 @@ type
   TWEATHER_CONFIG_PANEL_RIGHT_TOWNS = record
     CityList: TVertScrollBox;
     Town: array of TWEATHER_CONFIG_TOWN_PANEL;
-    Add_Town: TImage;
+    Action: TPanel;
+    Add_Town: TText;
     Add_Town_Glow: TGlowEffect;
-    Add_Town_Grey: TMonochromeEffect;
-    EditLock: TImage;
+    EditLock: TText;
     EditLock_Glow: TGlowEffect;
-    GoUp: TImage;
+    GoUp: TText;
     GoUp_Glow: TGlowEffect;
-    GoUp_Grey: TMonochromeEffect;
-    GoDown: TImage;
+    GoDown: TText;
     GoDown_Glow: TGlowEffect;
-    GoDown_Grey: TMonochromeEffect;
-    Refresh_Icon: TImage;
+    Refresh_Icon: TText;
     Refresh_Glow: TGlowEffect;
-    Refresh_Grey: TMonochromeEffect;
-    Delete_Icon: TImage;
+    Delete_Icon: TText;
     Delete_Glow: TGlowEffect;
-    Delete_Grey: TMonochromeEffect;
     Add: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_ADD;
     Delete: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_DELETE;
     Refresh: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_REFRESH;

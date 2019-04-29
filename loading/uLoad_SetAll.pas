@@ -89,8 +89,7 @@ begin
   ex_load.Scene.Code_Name.SetBounds(extrafe.res.Width - 240, 90, 161, 26);
   ex_load.Scene.Code_Name.TextSettings.FontColor := TAlphaColorRec.White;
   ex_load.Scene.Code_Name.Text := extrafe.prog.Desc;
-  ex_load.Scene.Code_Name.TextSettings.Font.Style := ex_load.Scene.Code_Name.TextSettings.Font.Style +
-    [TFontstyle.fsBold];
+  ex_load.Scene.Code_Name.TextSettings.Font.Style := ex_load.Scene.Code_Name.TextSettings.Font.Style + [TFontstyle.fsBold];
   ex_load.Scene.Code_Name.RotationAngle := 38;
   ex_load.Scene.Code_Name.TextSettings.Font.Size := 16;
   ex_load.Scene.Code_Name.Visible := True;
@@ -100,10 +99,9 @@ begin
   ex_load.Scene.Ver.Parent := ex_load.Scene.Back;
   ex_load.Scene.Ver.SetBounds(extrafe.res.Width - 350, 160, 260, 26);
   ex_load.Scene.Ver.TextSettings.FontColor := TAlphaColorRec.White;
-  ex_load.Scene.Ver.Text := 'Version: ' + extrafe.prog.Version.Major + '.' + extrafe.prog.Version.Minor + '.'
-    + extrafe.prog.Version.Realeash + ' build ' + extrafe.prog.Version.Build;
-  ex_load.Scene.Ver.TextSettings.Font.Style := ex_load.Scene.Code_Name.TextSettings.Font.Style +
-    [TFontstyle.fsBold];
+  ex_load.Scene.Ver.Text := 'Version: ' + extrafe.prog.Version.Major + '.' + extrafe.prog.Version.Minor + '.' + extrafe.prog.Version.Realeash + ' build ' +
+    extrafe.prog.Version.Build;
+  ex_load.Scene.Ver.TextSettings.Font.Style := ex_load.Scene.Code_Name.TextSettings.Font.Style + [TFontstyle.fsBold];
   ex_load.Scene.Ver.RotationAngle := 38;
   ex_load.Scene.Ver.TextSettings.Font.Size := 16;
   ex_load.Scene.Ver.Visible := True;
@@ -169,8 +167,8 @@ begin
   ex_load.Login.CapsLock.Name := 'Loading_Login_CapsLock';
   ex_load.Login.CapsLock.Parent := ex_load.Login.Main;
   ex_load.Login.CapsLock.SetBounds(328, 90, 150, 17);
-  ex_load.Login.CapsLock.Font.Family:= 'IcoMoon-Free';
-  ex_load.Login.CapsLock.Text := #$e900 ;
+  ex_load.Login.CapsLock.Font.Family := 'IcoMoon-Free';
+  ex_load.Login.CapsLock.Text := #$e900;
   ex_load.Login.CapsLock.TextSettings.Font.Size := 16;
   ex_load.Login.CapsLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   ex_load.Login.CapsLock.TextSettings.HorzAlign := TTextAlign.Trailing;
@@ -193,8 +191,7 @@ begin
   ex_load.Login.User_V.TextSettings.HorzAlign := TTextAlign.Leading;
   ex_load.Login.User_V.TextSettings.VertAlign := TTextAlign.Center;
   ex_load.Login.User_V.Text := 'azrael11';
-  ex_load.Login.User_V.StyledSettings := ex_load.Login.User_V.StyledSettings -
-    [TStyledSetting.ssSize, TStyledSetting.FontColor, TStyledSetting.Other];
+  ex_load.Login.User_V.StyledSettings := ex_load.Login.User_V.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor, TStyledSetting.Other];
   ex_load.Login.User_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Login.User_V.Visible := True;
 
@@ -216,20 +213,23 @@ begin
   ex_load.Login.Pass_V.TextSettings.VertAlign := TTextAlign.Center;
   ex_load.Login.Pass_V.Password := True;
   ex_load.Login.Pass_V.Text := '11azrael';
-  ex_load.Login.Pass_V.StyledSettings := ex_load.Login.Pass_V.StyledSettings -
-    [TStyledSetting.ssSize, TStyledSetting.FontColor, TStyledSetting.Other];
+  ex_load.Login.Pass_V.StyledSettings := ex_load.Login.Pass_V.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor, TStyledSetting.Other];
   ex_load.Login.Pass_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Login.Pass_V.Visible := True;
 
-  ex_load.Login.Pass_Show := TImage.Create(ex_load.Login.Main);
+  ex_load.Login.Pass_Show := TText.Create(ex_load.Login.Main);
   ex_load.Login.Pass_Show.Name := 'Loading_Login_Pass_Show';
   ex_load.Login.Pass_Show.Parent := ex_load.Login.Main;
   ex_load.Login.Pass_Show.SetBounds(443, 112, 36, 36);
-  ex_load.Login.Pass_Show.Bitmap.LoadFromFile(ex_load.Path.Images + 'show.png');
-  ex_load.Login.Pass_Show.WrapMode := TImageWrapMode.Fit;
-  ex_load.Login.Pass_Show.OnClick := ex_load.Input.mouse.Image.OnMouseClick;
-  ex_load.Login.Pass_Show.OnMouseEnter := ex_load.Input.mouse.Image.OnMouseEnter;
-  ex_load.Login.Pass_Show.OnMouseLeave := ex_load.Input.mouse.Image.OnMouseLeave;
+  ex_load.Login.Pass_Show.Font.Family := 'IcoMoon-Free';
+  ex_load.Login.Pass_Show.Font.Size := 24;
+  ex_load.Login.Pass_Show.Text := #$e9d1;
+  ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  ex_load.Login.Pass_Show.TextSettings.HorzAlign := TTextAlign.Center;
+  ex_load.Login.Pass_Show.TextSettings.VertAlign := TTextAlign.Center;
+  ex_load.Login.Pass_Show.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Login.Pass_Show.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Login.Pass_Show.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Login.Pass_Show.Visible := True;
 
   ex_load.Login.Pass_Show_Glow := TGlowEffect.Create(ex_load.Login.Pass_Show);
@@ -245,6 +245,7 @@ begin
   ex_load.Login.Login.SetBounds(400, 184, 80, 22);
   ex_load.Login.Login.Text := 'Login';
   ex_load.Login.Login.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
+  ex_load.Login.Login.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.Login.Login.Visible := True;
 
   ex_load.Login.Exit_ExtraFE := TButton.Create(ex_load.Login.Main);
@@ -253,21 +254,18 @@ begin
   ex_load.Login.Exit_ExtraFE.SetBounds(400, 216, 80, 22);
   ex_load.Login.Exit_ExtraFE.Text := 'Exit';
   ex_load.Login.Exit_ExtraFE.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
+  ex_load.Login.Exit_ExtraFE.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.Login.Exit_ExtraFE.Visible := True;
 
-  ex_load.Login.Int_Icon := TImage.Create(ex_load.Login.Main);
+  ex_load.Login.Int_Icon := TText.Create(ex_load.Login.Main);
   ex_load.Login.Int_Icon.Name := 'Loading_Login_Internet_Icon';
   ex_load.Login.Int_Icon.Parent := ex_load.Login.Main;
-  ex_load.Login.Int_Icon.SetBounds(16, 248, 25, 25);
-  ex_load.Login.Int_Icon.Bitmap.LoadFromFile(ex_load.Path.Images + 'internet_active.png');
-  ex_load.Login.Int_Icon.WrapMode := TImageWrapMode.Fit;
+  ex_load.Login.Int_Icon.SetBounds(16, 248, 24, 24);
+  ex_load.Login.Int_Icon.Font.Family := 'IcoMoon-Free';
+  ex_load.Login.Int_Icon.Font.Size := 24;
+  ex_load.Login.Int_Icon.Text := #$e9c9;
+  ex_load.Login.Int_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   ex_load.Login.Int_Icon.Visible := True;
-
-  ex_load.Login.Int_Color := TFillRGBEffect.Create(ex_load.Login.Int_Icon);
-  ex_load.Login.Int_Color.Name := 'Loading_Login_Internet_Icon_Color';
-  ex_load.Login.Int_Color.Parent := ex_load.Login.Int_Icon;
-  ex_load.Login.Int_Color.Color := TAlphaColorRec.Red;
-  ex_load.Login.Int_Color.Enabled := False;
 
   ex_load.Login.Internet := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Internet.Name := 'Loading_Login_Internet';
@@ -276,19 +274,15 @@ begin
   ex_load.Login.Internet.Text := 'Not Connected';
   ex_load.Login.Internet.Visible := True;
 
-  ex_load.Login.Data_Icon := TImage.Create(ex_load.Login.Main);
+  ex_load.Login.Data_Icon := TText.Create(ex_load.Login.Main);
   ex_load.Login.Data_Icon.Name := 'Loading_Login_Database_Icon';
   ex_load.Login.Data_Icon.Parent := ex_load.Login.Main;
-  ex_load.Login.Data_Icon.SetBounds(16, 280, 25, 25);
-  ex_load.Login.Data_Icon.Bitmap.LoadFromFile(ex_load.Path.Images + 'server_active.png');
-  ex_load.Login.Data_Icon.WrapMode := TImageWrapMode.Fit;
+  ex_load.Login.Data_Icon.SetBounds(16, 280, 24, 24);
+  ex_load.Login.Data_Icon.Font.Family := 'IcoMoon-Free';
+  ex_load.Login.Data_Icon.Font.Size := 24;
+  ex_load.Login.Data_Icon.Text := #$e964;
+  ex_load.Login.Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   ex_load.Login.Data_Icon.Visible := True;
-
-  ex_load.Login.Data_Color := TFillRGBEffect.Create(ex_load.Login.Data_Icon);
-  ex_load.Login.Data_Color.Name := 'Loading_Login_Database_Icon_Color';
-  ex_load.Login.Data_Color.Parent := ex_load.Login.Data_Icon;
-  ex_load.Login.Data_Color.Color := TAlphaColorRec.Red;
-  ex_load.Login.Data_Color.Enabled := False;
 
   ex_load.Login.Database := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Database.Name := 'Loading_Login_Database';
@@ -328,8 +322,7 @@ begin
   ex_load.Login.Warning.TextSettings.FontColor := TAlphaColorRec.Red;
   ex_load.Login.Warning.Text := 'OK ola kala';
   ex_load.Login.Warning.TextAlign := TTextAlign.Trailing;
-  ex_load.Login.Warning.StyledSettings := ex_load.Login.Warning.StyledSettings -
-    [TStyledSetting.FontColor, TStyledSetting.Size];
+  ex_load.Login.Warning.StyledSettings := ex_load.Login.Warning.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
   ex_load.Login.Warning.Visible := False;
 
   ex_load.Scene.Logo.Position.X := ex_load.Login.Panel.Position.X;
@@ -353,8 +346,7 @@ begin
   ex_load.F_Pass.Panel.Opacity := 0.8;
   ex_load.F_Pass.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(ex_load.F_Pass.Panel, 'Loading_FPass', ex_load.Path.Images + 'pass.png',
-    'Forget my password');
+  uLoad_SetAll_CreateHeader(ex_load.F_Pass.Panel, 'Loading_FPass', ex_load.Path.Images + 'pass.png', 'Forget my password');
 
   ex_load.F_Pass.Main.Panel := TPanel.Create(ex_load.F_Pass.Panel);
   ex_load.F_Pass.Main.Panel.Name := 'Loading_FPass_Main';
@@ -391,8 +383,7 @@ begin
   ex_load.F_Pass.Main.Email_V.Parent := ex_load.F_Pass.Main.Panel;
   ex_load.F_Pass.Main.Email_V.SetBounds(10, 90, ex_load.F_Pass.Main.Panel.Width - 20, 20);
   ex_load.F_Pass.Main.Email_V.Text := '';
-  ex_load.F_Pass.Main.Email_V.StyledSettings := ex_load.F_Pass.Main.Email_V.StyledSettings -
-    [TStyledSetting.FontColor];
+  ex_load.F_Pass.Main.Email_V.StyledSettings := ex_load.F_Pass.Main.Email_V.StyledSettings - [TStyledSetting.FontColor];
   ex_load.F_Pass.Main.Email_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.F_Pass.Main.Email_V.Visible := True;
 
@@ -407,8 +398,7 @@ begin
   ex_load.F_Pass.Main.Cancel := TButton.Create(ex_load.F_Pass.Main.Panel);
   ex_load.F_Pass.Main.Cancel.Name := 'Loading_FPass_Cancel';
   ex_load.F_Pass.Main.Cancel.Parent := ex_load.F_Pass.Main.Panel;
-  ex_load.F_Pass.Main.Cancel.SetBounds(ex_load.F_Pass.Main.Panel.Width - 150, ex_load.F_Pass.Main.Panel.Height
-    - 40, 100, 30);
+  ex_load.F_Pass.Main.Cancel.SetBounds(ex_load.F_Pass.Main.Panel.Width - 150, ex_load.F_Pass.Main.Panel.Height - 40, 100, 30);
   ex_load.F_Pass.Main.Cancel.Text := 'Cancel';
   ex_load.F_Pass.Main.Cancel.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.F_Pass.Main.Cancel.Visible := True;
@@ -420,8 +410,7 @@ begin
   ex_load.F_Pass.Main.Warning.TextSettings.FontColor := TAlphaColorRec.Red;
   ex_load.F_Pass.Main.Warning.Text := 'Wrong Email';
   ex_load.F_Pass.Main.Warning.TextAlign := TTextAlign.Trailing;
-  ex_load.F_Pass.Main.Warning.StyledSettings := ex_load.F_Pass.Main.Warning.StyledSettings -
-    [TStyledSetting.FontColor, TStyledSetting.Size];
+  ex_load.F_Pass.Main.Warning.StyledSettings := ex_load.F_Pass.Main.Warning.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
   ex_load.F_Pass.Main.Warning.Visible := False;
 
   FreeAndNil(ex_load.Login.Panel);
@@ -442,8 +431,7 @@ begin
 
   uLoad_Register.Create_Help;
 
-  uLoad_SetAll_CreateHeader(ex_load.Reg.Panel, 'Loading_Register', ex_load.Path.Images + 'register.png',
-    'Register');
+  uLoad_SetAll_CreateHeader(ex_load.Reg.Panel, 'Loading_Register', ex_load.Path.Images + 'register.png', 'Register');
 
   ex_load.Reg.Main.Panel := TPanel.Create(ex_load.Reg.Panel);
   ex_load.Reg.Main.Panel.Name := 'Loading_Register_Main';
@@ -484,15 +472,17 @@ begin
   ex_load.Reg.Main.Pass_V.Password := True;
   ex_load.Reg.Main.Pass_V.Visible := True;
 
-  ex_load.Reg.Main.Pass_Show := TImage.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.Pass_Show := TText.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Pass_Show.Name := 'Loading_Register_Pass_Show';
   ex_load.Reg.Main.Pass_Show.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.Pass_Show.SetBounds(ex_load.Reg.Main.Pass_V.Width - 2, 75, 20, 20);
-  ex_load.Reg.Main.Pass_Show.Bitmap.LoadFromFile(ex_load.Path.Images + 'show.png');
-  ex_load.Reg.Main.Pass_Show.WrapMode := TImageWrapMode.Fit;
-  ex_load.Reg.Main.Pass_Show.OnClick := ex_load.Input.mouse.Image.OnMouseClick;
-  ex_load.Reg.Main.Pass_Show.OnMouseEnter := ex_load.Input.mouse.Image.OnMouseEnter;
-  ex_load.Reg.Main.Pass_Show.OnMouseLeave := ex_load.Input.mouse.Image.OnMouseLeave;
+  ex_load.Reg.Main.Pass_Show.Font.Family := 'IcoMoon-Free';
+  ex_load.Reg.Main.Pass_Show.Font.Size := 18;
+  ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  ex_load.Reg.Main.Pass_Show.Text := #$e9d1;
+  ex_load.Reg.Main.Pass_Show.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Reg.Main.Pass_Show.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Reg.Main.Pass_Show.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Reg.Main.Pass_Show.Visible := True;
 
   ex_load.Reg.Main.Pass_Show_Glow := TGlowEffect.Create(ex_load.Reg.Main.Pass_Show);
@@ -519,15 +509,17 @@ begin
   ex_load.Reg.Main.RePass_V.Password := True;
   ex_load.Reg.Main.RePass_V.Visible := True;
 
-  ex_load.Reg.Main.RePass_Show := TImage.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.RePass_Show := TText.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.RePass_Show.Name := 'Loading_Register_RePass_Show';
   ex_load.Reg.Main.RePass_Show.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.RePass_Show.SetBounds(ex_load.Reg.Main.RePass_V.Width - 2, 120, 20, 20);
-  ex_load.Reg.Main.RePass_Show.Bitmap.LoadFromFile(ex_load.Path.Images + 'show.png');
-  ex_load.Reg.Main.RePass_Show.WrapMode := TImageWrapMode.Fit;
-  ex_load.Reg.Main.RePass_Show.OnClick := ex_load.Input.mouse.Image.OnMouseClick;
-  ex_load.Reg.Main.RePass_Show.OnMouseEnter := ex_load.Input.mouse.Image.OnMouseEnter;
-  ex_load.Reg.Main.RePass_Show.OnMouseLeave := ex_load.Input.mouse.Image.OnMouseLeave;
+  ex_load.Reg.Main.RePass_Show.Font.Family := 'IcoMoon-Free';
+  ex_load.Reg.Main.RePass_Show.Font.Size := 18;
+  ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  ex_load.Reg.Main.RePass_Show.Text := #$e9d1;
+  ex_load.Reg.Main.RePass_Show.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Reg.Main.RePass_Show.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Reg.Main.RePass_Show.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Reg.Main.RePass_Show.Visible := True;
 
   ex_load.Reg.Main.RePass_Show_Glow := TGlowEffect.Create(ex_load.Reg.Main.RePass_Show);
@@ -579,15 +571,17 @@ begin
 
   uLoad_Register.Create_Captcha;
 
-  ex_load.Reg.Main.Capt_Refresh := TImage.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.Capt_Refresh := TText.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt_Refresh.Name := 'Loading_Register_Capt_Refresh';
   ex_load.Reg.Main.Capt_Refresh.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.Capt_Refresh.SetBounds(266, 240, 24, 24);
-  ex_load.Reg.Main.Capt_Refresh.Bitmap.LoadFromFile(ex_load.Path.Images + 'refresh.png');
-  ex_load.Reg.Main.Capt_Refresh.WrapMode := TImageWrapMode.Fit;
-  ex_load.Reg.Main.Capt_Refresh.OnClick := ex_load.Input.mouse.Image.OnMouseClick;
-  ex_load.Reg.Main.Capt_Refresh.OnMouseEnter := ex_load.Input.mouse.Image.OnMouseEnter;
-  ex_load.Reg.Main.Capt_Refresh.OnMouseLeave := ex_load.Input.mouse.Image.OnMouseLeave;
+  ex_load.Reg.Main.Capt_Refresh.Font.Family:= 'IcoMoon-Free';
+  ex_load.Reg.Main.Capt_Refresh.Font.Size:= 24;
+  ex_load.Reg.Main.Capt_Refresh.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  ex_load.Reg.Main.Capt_Refresh.Text:= #$e982;
+  ex_load.Reg.Main.Capt_Refresh.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Reg.Main.Capt_Refresh.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Reg.Main.Capt_Refresh.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Reg.Main.Capt_Refresh.Visible := True;
 
   ex_load.Reg.Main.Capt_Refresh_Glow := TGlowEffect.Create(ex_load.Reg.Main.Capt_Refresh);
@@ -642,15 +636,16 @@ begin
   ex_load.Reg.Main.Reg.SetBounds(50, ex_load.Reg.Main.Panel.Height - 40, 100, 30);
   ex_load.Reg.Main.Reg.Text := 'Register';
   ex_load.Reg.Main.Reg.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
+  ex_load.Reg.Main.Reg.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.Reg.Main.Reg.Visible := True;
 
   ex_load.Reg.Main.Cancel := TButton.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Cancel.Name := 'Loading_Reg_Cancel';
   ex_load.Reg.Main.Cancel.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Cancel.SetBounds(ex_load.Reg.Main.Panel.Width - 150, ex_load.Reg.Main.Panel.Height -
-    40, 100, 30);
+  ex_load.Reg.Main.Cancel.SetBounds(ex_load.Reg.Main.Panel.Width - 150, ex_load.Reg.Main.Panel.Height - 40, 100, 30);
   ex_load.Reg.Main.Cancel.Text := 'Cancel';
   ex_load.Reg.Main.Cancel.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
+  ex_load.Reg.Main.Cancel.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.Reg.Main.Cancel.Visible := True;
 
   FreeAndNil(ex_load.Login.Panel);
@@ -664,8 +659,7 @@ begin
   ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 520);
   ex_load.Terms.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(ex_load.Terms.Panel, 'Loading_Terms', ex_load.Path.Images + 'terms.png',
-    'Read the terms of ExtraFE.');
+  uLoad_SetAll_CreateHeader(ex_load.Terms.Panel, 'Loading_Terms', ex_load.Path.Images + 'terms.png', 'Read the terms of ExtraFE.');
 
   ex_load.Terms.Main.Panel := TPanel.Create(ex_load.Terms.Panel);
   ex_load.Terms.Main.Panel.Name := 'Loading_Terms_Main';
@@ -676,8 +670,7 @@ begin
   ex_load.Terms.Main.Memo := TMemo.Create(ex_load.Terms.Main.Panel);
   ex_load.Terms.Main.Memo.Name := 'Loading_Terms_Terms';
   ex_load.Terms.Main.Memo.Parent := ex_load.Terms.Main.Panel;
-  ex_load.Terms.Main.Memo.SetBounds(10, 10, ex_load.Terms.Main.Panel.Width - 20,
-    ex_load.Terms.Main.Panel.Height - 60);
+  ex_load.Terms.Main.Memo.SetBounds(10, 10, ex_load.Terms.Main.Panel.Width - 20, ex_load.Terms.Main.Panel.Height - 60);
   ex_load.Terms.Main.Memo.Lines.LoadFromFile(ex_load.Path.Images + 'lin.txt');
   ex_load.Terms.Main.Memo.WordWrap := True;
   ex_load.Terms.Main.Memo.TextSettings.Font.Size := 14;
@@ -687,8 +680,7 @@ begin
   ex_load.Terms.Main.Close := TButton.Create(ex_load.Terms.Main.Panel);
   ex_load.Terms.Main.Close.Name := 'Loading_Terms_Close';
   ex_load.Terms.Main.Close.Parent := ex_load.Terms.Main.Panel;
-  ex_load.Terms.Main.Close.SetBounds((ex_load.Terms.Main.Panel.Width / 2) - 50,
-    ex_load.Terms.Main.Panel.Height - 40, 100, 30);
+  ex_load.Terms.Main.Close.SetBounds((ex_load.Terms.Main.Panel.Width / 2) - 50, ex_load.Terms.Main.Panel.Height - 40, 100, 30);
   ex_load.Terms.Main.Close.Text := 'Close';
   ex_load.Terms.Main.Close.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.Terms.Main.Close.Visible := True;

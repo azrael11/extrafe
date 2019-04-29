@@ -71,9 +71,9 @@ begin
     vWeather.Config.Main.Right.Towns.Town[vNum].Glow_Panel.GlowColor := TAlphaColorRec.Red;
   end;
   if vNum = 0 then
-    vWeather.Config.Main.Right.Towns.GoUp_Grey.Enabled := True;
+    vWeather.Config.Main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
   if vNum = addons.weather.Action.Active_Total then
-    vWeather.Config.Main.Right.Towns.GoDown_Grey.Enabled := True;
+    vWeather.Config.Main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
 
   vWeather.Scene.Arrow_Left.Visible := False;
   if vWeather.Config.Main.Right.Towns.Town[1].Panel <> nil then

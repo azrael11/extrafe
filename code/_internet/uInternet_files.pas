@@ -22,6 +22,9 @@ uses
   REST.Client,
   REST.Types;
 
+const
+  HTTP_RESPONSE_OK = 200;
+
 {$M+}
 function ValidEmail(email: string): boolean;
 function GeoIP(out vCountry_Code: string; out vIP: string; out vLat, vLon: String): boolean;
@@ -33,7 +36,7 @@ procedure HTML_Registration(vHTMLBuild: TIdMessageBuilderHtml);
 procedure HTML_Password_Forgat(vHTMLBuild: TIdMessageBuilderHtml);
 
 function Get_Image(vPath: String): TBitmap;
-
+function GetPage(aURL: string): string;
 
 type
   TIdHTTPProgress = class(TIdHTTP)
@@ -451,6 +454,30 @@ begin
   finally
     FreeAndNil(MS);
     FreeAndNil(vIdHTTP);
+  end;
+end;
+
+function GetPage(aURL: string): string;
+var
+  Response: TStringStream;
+  HTTP: TIdHTTP;
+begin
+  Result := '';
+  Response := TStringStream.Create('');
+  try
+    HTTP := TIdHTTP.Create(nil);
+    try
+      HTTP.Get(aURL, Response);
+      if HTTP.ResponseCode = HTTP_RESPONSE_OK then begin
+        Result := Response.DataString;
+      end else begin
+        // TODO -cLogging: add some logging
+      end;
+    finally
+      HTTP.Free;
+    end;
+  finally
+    Response.Free;
   end;
 end;
 
