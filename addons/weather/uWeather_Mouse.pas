@@ -7,13 +7,22 @@ uses
   System.Types,
   System.Rtti,
   System.SysUtils,
+  System.UiTypes,
   FMX.Graphics,
   FMX.Objects,
   FMX.StdCtrls,
   FMX.Dialogs,
   FMX.Grid,
-  System.UITypes,
-  System.Threading;
+  FMX.Layouts,
+  System.Threading,
+  Bass;
+
+type
+  TWEATHER_ADDON_LAYOUT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
 
 type
   TWEATHER_ADDON_PANEL = class(TObject)
@@ -71,6 +80,7 @@ type
 
 type
   TWEATHER_MOUSE = record
+    Layout: TWEATHER_ADDON_LAYOUT;
     Image: TWEATHER_ADDON_IMAGE;
     Button: TWEATHER_ADDON_BUTTON;
     Panel: TWEATHER_ADDON_PANEL;
@@ -99,7 +109,8 @@ uses
   uWeather_Config_Towns_Delete,
   uWeather_Config_Options,
   uWeather_MenuActions,
-  uWeather_Config_Iconsets;
+  uWeather_Config_Iconsets,
+  uWeather_Providers_Yahoo;
 
 { TWEATHER_ADDON_IMAGE }
 
@@ -120,20 +131,14 @@ begin
     if TImage(Sender).Name = 'A_W_Settings_Image' then
       uWeather_Config_ShowHide(False)
       // Towns
-    // IconSets
+      // IconSets
     else if TImage(Sender).TagFloat = 100 then
       uWeather_Config_Iconsets_UseIconSet(addons.weather.Config.Iconset.Names.Strings[TImage(Sender).Tag])
     else if TImage(Sender).TagFloat = 101 then
       uWeather_Config_Iconsets_ShowSet(addons.weather.Config.Iconset.Names.Strings[TSpeedButton(Sender).Tag])
     else if TImage(Sender).Name = 'A_W_Config_Iconsets_Back' then
       uWeather_Config_Iconsets_ReturnToPreview
-  end
-  else if extrafe.prog.state = 'addon_weather_config_towns_add' then
-  begin
-    if TImage(Sender).Name = 'A_W_Config_Towns_Add_Search' then
-      uWeather_Config_Towns_Add_FindTown(vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text);
   end;
-
 end;
 
 procedure TWEATHER_ADDON_IMAGE.OnMouseEnter(Sender: TObject);
@@ -146,14 +151,15 @@ begin
       vWeather.Scene.Arrow_Right_Glow.Enabled := True
     else if TImage(Sender).Name = 'A_W_Settings_Image' then
       vWeather.Scene.Settings_Glow.Enabled := True;
+    TImage(Sender).Cursor := crHandPoint;
   end
   else if extrafe.prog.state = 'addon_weather_config' then
   begin
     if TImage(Sender).Name = 'A_W_Settings_Image' then
       vWeather.Scene.Settings_Glow.Enabled := True
       // Towns
-   
-    // Iconsets
+
+      // Iconsets
     else if TImage(Sender).TagFloat = 100 then
       vWeather.Config.main.Right.Iconsets.Mini[TImage(Sender).Tag].Panel_Glow.Enabled := True
     else if TImage(Sender).TagFloat = 101 then
@@ -170,11 +176,6 @@ begin
       else
         vWeather.Config.main.Right.Towns.Town[TImage(Sender).Tag].Glow_Panel.Enabled := True
     end;
-  end
-  else if extrafe.prog.state = 'addon_weather_config_towns_add' then
-  begin
-    if TImage(Sender).Name = 'A_W_Config_Towns_Add_Search' then
-      vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Enabled := True;
   end;
 end;
 
@@ -194,7 +195,7 @@ begin
     if TImage(Sender).Name = 'A_W_Settings_Image' then
       vWeather.Scene.Settings_Glow.Enabled := False
       // Towns
-    // Iconsets
+      // Iconsets
     else if TImage(Sender).TagFloat = 100 then
       vWeather.Config.main.Right.Iconsets.Mini[TImage(Sender).Tag].Panel_Glow.Enabled := False
     else if TImage(Sender).TagFloat = 101 then
@@ -212,11 +213,6 @@ begin
         vWeather.Config.main.Right.Towns.Town[TImage(Sender).Tag].Glow_Panel.Enabled := False
     end
   end
-  else if extrafe.prog.state = 'addon_weather_config_towns_add' then
-  begin
-    if TImage(Sender).Name = 'A_W_Config_Towns_Add_Search' then
-      vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Enabled := False;
-  end;
 end;
 
 { TWEATHER_ADDON_BUTTON }
@@ -227,26 +223,6 @@ begin
   begin
     if TButton(Sender).Name = 'A_W_First_Main_Done' then
       FreeAndNil(vWeather.Scene.First.Panel);
-  end
-  else if extrafe.prog.state = 'addon_weather_config' then
-  begin
-    if TButton(Sender).Name = 'A_W_Config_Left_Button_0' then
-      uWeather_Config_ShowPanel(0)
-    else if TButton(Sender).Name = 'A_W_Config_Left_Button_1' then
-      uWeather_Config_ShowPanel(1)
-    else if TButton(Sender).Name = 'A_W_Config_Left_Button_2' then
-      uWeather_Config_ShowPanel(2)
-    else if TButton(Sender).Name = 'A_W_Config_Left_Button_3' then
-      uWeather_Config_ShowPanel(3)
-  end
-  else if extrafe.prog.state = 'addon_weather_config_towns_add' then
-  begin
-    if TButton(Sender).Name = 'A_W_Config_Towns_Add_Add' then
-      uWeather_Config_Towns_Add_AddTown(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, False)
-    else if TButton(Sender).Name = 'A_W_Config_Towns_Add_AddStay' then
-      // uWeather_Config_Towns_Add_AddTown(True)
-    else if TButton(Sender).Name = 'A_W_Config_Towns_Add_Cancel' then
-      uWeather_Config_Towns_Add_Free;
   end
   else if extrafe.prog.state = 'addon_weather_config_towns_delete' then
   begin
@@ -291,6 +267,8 @@ end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseEnter(Sender: TObject);
 begin
+  if TPanel(Sender).Name = 'A_W_Hourly_Info_Upper_Layout_' + TPanel(Sender).TagString then
+    vWeather.Scene.Tab[TPanel(Sender).Tag].Forecast_Hourly.Hourly[(TPanel(Sender).TagString).ToInteger].Glow.Enabled := True;
   if extrafe.prog.state = 'addon_weather_config' then
   begin
     if TPanel(Sender).TagFloat = 1000 then
@@ -306,10 +284,13 @@ begin
     else if TPanel(Sender).TagFloat = 100 then
       vWeather.Config.main.Right.Iconsets.Mini[TPanel(Sender).Tag].Panel_Glow.Enabled := True;
   end;
+  TPanel(Sender).Cursor := crHandPoint;
 end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseLeave(Sender: TObject);
 begin
+  if TPanel(Sender).Name = 'A_W_Hourly_Info_Upper_Layout_' + TPanel(Sender).TagString then
+    vWeather.Scene.Tab[TPanel(Sender).Tag].Forecast_Hourly.Hourly[(TPanel(Sender).TagString).ToInteger].Glow.Enabled := False;
   if extrafe.prog.state = 'addon_weather_config' then
   begin
     if TPanel(Sender).TagFloat = 1000 then
@@ -331,17 +312,82 @@ end;
 
 procedure TWEATHER_ADDON_TEXT.OnMouseClick(Sender: TObject);
 begin
-
+  if TText(Sender).Name = 'A_W_WeatherTempratureUnit_F' then
+  begin
+    if TText(Sender).TextSettings.FontColor = TAlphaColorRec.White then
+    begin
+      uWeather_Providers_Yahoo.Use_Imperial;
+      BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+    end;
+  end
+  else if TText(Sender).Name = 'A_W_WeatherTempratureUnit_C' then
+  begin
+    if TText(Sender).TextSettings.FontColor = TAlphaColorRec.White then
+    begin
+      uWeather_Providers_Yahoo.Use_Metric;
+      BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+    end;
+  end;
 end;
 
 procedure TWEATHER_ADDON_TEXT.OnMouseEnter(Sender: TObject);
 begin
-
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
+    if TText(Sender).Name = 'A_W_Yahoo_Hourly_Left' then
+    begin
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left_Glow.Enabled := True;
+      uWeather_Providers_Yahoo.Main_Hourly_Slide('left');
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Hourly_Right' then
+    begin
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right_Glow.Enabled := True;
+      uWeather_Providers_Yahoo.Main_Hourly_Slide('right');
+    end
+    else if TText(Sender).Name = 'A_W_WeatherTempratureUnit_F' then
+    begin
+      if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
+      begin
+        TText(Sender).Cursor := crHandPoint;
+        vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_F_Glow.Enabled := True;
+      end;
+    end
+    else if TText(Sender).Name = 'A_W_WeatherTempratureUnit_C' then
+    begin
+      if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
+      begin
+        TText(Sender).Cursor := crHandPoint;
+        vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C_Glow.Enabled := True;
+      end;
+    end;
+  end;
 end;
 
 procedure TWEATHER_ADDON_TEXT.OnMouseLeave(Sender: TObject);
 begin
-
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
+    if TText(Sender).Name = 'A_W_Yahoo_Hourly_Left' then
+    begin
+      uWeather_Providers_Yahoo.Main_Hourly_Slide_Free;
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left_Glow.Enabled := False;
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Hourly_Right' then
+    begin
+      uWeather_Providers_Yahoo.Main_Hourly_Slide_Free;
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right_Glow.Enabled := False;
+    end
+    else if TText(Sender).Name = 'A_W_WeatherTempratureUnit_F' then
+    begin
+      if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
+        vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_F_Glow.Enabled := False;
+    end
+    else if TText(Sender).Name = 'A_W_WeatherTempratureUnit_C' then
+    begin
+      if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
+        vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C_Glow.Enabled := False;
+    end;
+  end;
 end;
 
 { TWEATHER_ADDON_TLABEL }
@@ -392,11 +438,7 @@ end;
 
 procedure TWEATHER_ADDON_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
-  if TCheckBox(Sender).Name = 'Weather_Config_Provider_yahoo_CheckBox' then
-    uWeather_Config_Provider_YahooCheck
-  else if TCheckBox(Sender).Name = 'Weather_Config_Provider_openweathermap_CheckBox' then
-    uWeather_Config_Provider_OpenWeatherMapCheck
-  else if TCheckBox(Sender).Name = 'Weather_Config_Options_Degree_Celcius_Checkbox' then
+  if TCheckBox(Sender).Name = 'Weather_Config_Options_Degree_Celcius_Checkbox' then
     uWeather_Config_Options_UseDegree(vWeather.Config.main.Right.Options.Degree_C.Text)
   else if TCheckBox(Sender).Name = 'Weather_Config_Options_Degree_Fahrenheit_Checkbox' then
     uWeather_Config_Options_UseDegree(vWeather.Config.main.Right.Options.Degree_F.Text)
@@ -422,18 +464,27 @@ end;
 
 procedure TWEATHER_ADDON_TIMER.OnTimer(Sender: TObject);
 begin
-  if Assigned(vTask) then
-  begin
-    if not(vTask.Status = Ttaskstatus.Running) then
-    begin
-      vTaskTimer.Enabled := False;
-      uWeather_Actions_ShowTheForcast;
-    end;
-  end;
+
+end;
+
+{ TWEATHER_ADDON_LAYOUT }
+
+procedure TWEATHER_ADDON_LAYOUT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TWEATHER_ADDON_LAYOUT.OnMouseEnter(Sender: TObject);
+begin
+end;
+
+procedure TWEATHER_ADDON_LAYOUT.OnMouseLeave(Sender: TObject);
+begin
 end;
 
 initialization
 
+addons.weather.Input.mouse.Layout := TWEATHER_ADDON_LAYOUT.Create;
 addons.weather.Input.mouse.Image := TWEATHER_ADDON_IMAGE.Create;
 addons.weather.Input.mouse.Button := TWEATHER_ADDON_BUTTON.Create;
 addons.weather.Input.mouse.Panel := TWEATHER_ADDON_PANEL.Create;
@@ -445,6 +496,7 @@ addons.weather.Input.mouse.Timer := TWEATHER_ADDON_TIMER.Create;
 
 finalization
 
+addons.weather.Input.mouse.Layout.Free;
 addons.weather.Input.mouse.Image.Free;
 addons.weather.Input.mouse.Button.Free;
 addons.weather.Input.mouse.Panel.Free;

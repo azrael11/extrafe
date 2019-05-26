@@ -22,8 +22,10 @@ uses
   main,
   uWeather_AllTypes;
 
-procedure uWeather_SetComponentsToRightPlace;
+procedure Load;
 procedure uWeather_SetAll_Create_Control;
+
+procedure Config;
 
 implementation
 
@@ -40,9 +42,7 @@ uses
   uWeather_MenuActions,
   uWeather_Config_Towns;
 
-Procedure uWeather_SetComponentsToRightPlace;
-const
-  cLeft_Buttons_Names: array [0 .. 3] of string = ('Provider', 'Towns', 'Options', 'Iconsets');
+Procedure Load;
 var
   vComp: TComponent;
   vi, vl, vt: Integer;
@@ -91,8 +91,7 @@ begin
   vWeather.Scene.MiddleLine := TImage.Create(vWeather.Scene.Weather);
   vWeather.Scene.MiddleLine.Name := 'A_W_MiddleLine_Image';
   vWeather.Scene.MiddleLine.Parent := vWeather.Scene.Weather;
-  vWeather.Scene.MiddleLine.SetBounds(0, vWeather.Scene.Weather.Height - 162,
-    vWeather.Scene.Weather.Width, 10);
+  vWeather.Scene.MiddleLine.SetBounds(0, vWeather.Scene.Weather.Height - 162, vWeather.Scene.Weather.Width, 10);
   vWeather.Scene.MiddleLine.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_spot.png');
   vWeather.Scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.MiddleLine.Visible := True;
@@ -116,8 +115,7 @@ begin
   vWeather.Scene.Arrow_Right := TImage.Create(vWeather.Scene.Weather);
   vWeather.Scene.Arrow_Right.Name := 'A_W_ArrowRight_Image';
   vWeather.Scene.Arrow_Right.Parent := vWeather.Scene.Weather;
-  vWeather.Scene.Arrow_Right.SetBounds(vWeather.Scene.Back.Width - 84,
-    vWeather.Scene.Back.Height - 130, 64, 64);
+  vWeather.Scene.Arrow_Right.SetBounds(vWeather.Scene.Back.Width - 84, vWeather.Scene.Back.Height - 130, 64, 64);
   vWeather.Scene.Arrow_Right.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_arrow_right.png');
   vWeather.Scene.Arrow_Right.WrapMode := TImageWrapMode.Fit;
   vWeather.Scene.Arrow_Right.OnClick := addons.Weather.Input.mouse.Image.OnMouseClick;
@@ -171,69 +169,7 @@ begin
   vWeather.Scene.Settings_Glow.Softness := 0.4;
   vWeather.Scene.Settings_Glow.Enabled := False;
 
-  // Config Panel
-  vWeather.Config.Panel := Tpanel.Create(vWeather.Scene.Weather);
-  vWeather.Config.Panel.Name := 'A_W_Config';
-  vWeather.Config.Panel.Parent := vWeather.Scene.Weather;
-  vWeather.Config.Panel.Width := 705;
-  vWeather.Config.Panel.Height := 550;
-  vWeather.Config.Panel.Position.X := (vWeather.Scene.Back.Width / 2) - (vWeather.Config.Panel.Width / 2);
-  vWeather.Config.Panel.Position.Y := 90;
-  vWeather.Config.Panel.Visible := False;
-
-  vWeather.Config.Panel_Blur := TGaussianBlurEffect.Create(vWeather.Config.Panel);
-  vWeather.Config.Panel_Blur.Name := 'A_W_Config_Main_Blur';
-  vWeather.Config.Panel_Blur.Parent := vWeather.Config.Panel;
-  vWeather.Config.Panel_Blur.BlurAmount := 0.5;
-  vWeather.Config.Panel_Blur.Enabled := False;
-
-  uLoad_SetAll_CreateHeader(vWeather.Config.Panel, 'A_W_Config', addons.Weather.Path.Images +
-    'w_settings_blue.png', 'Weather configuration.');
-
-  vWeather.Config.main.Panel := Tpanel.Create(vWeather.Config.Panel);
-  vWeather.Config.main.Panel.Name := 'A_W_Config_Main';
-  vWeather.Config.main.Panel.Parent := vWeather.Config.Panel;
-  vWeather.Config.main.Panel.SetBounds(0, 30, vWeather.Config.Panel.Width, vWeather.Config.Panel.Height - 30);
-  vWeather.Config.main.Panel.Visible := True;
-
-  // Left Panel with action buttons
-  vWeather.Config.main.Left.Panel := Tpanel.Create(vWeather.Config.main.Panel);
-  vWeather.Config.main.Left.Panel.Name := 'Weather_Config_Left_Panel';
-  vWeather.Config.main.Left.Panel.Parent := vWeather.Config.main.Panel;
-  vWeather.Config.main.Left.Panel.SetBounds(0, 0, 210, vWeather.Config.main.Panel.Height);
-  vWeather.Config.main.Left.Panel.Visible := True;
-
-  for vi := 0 to 3 do
-  begin
-    vWeather.Config.main.Left.Buttons[vi] := TButton.Create(vWeather.Config.main.Left.Panel);
-    vWeather.Config.main.Left.Buttons[vi].Name := 'A_W_Config_Left_Button_' + vi.ToString;
-    vWeather.Config.main.Left.Buttons[vi].Parent := vWeather.Config.main.Left.Panel;
-    vWeather.Config.main.Left.Buttons[vi].SetBounds(10, 30 + (vi * 40), 190, 33);
-    vWeather.Config.main.Left.Buttons[vi].Text := cLeft_Buttons_Names[vi];
-    vWeather.Config.main.Left.Buttons[vi].OnClick := addons.Weather.Input.mouse.Button.OnMouseClick;
-    vWeather.Config.main.Left.Buttons[vi].Visible := True;
-  end;
-
-  addons.weather.Config.Active_Panel:= -1;
-
-  // Right panel
-  vWeather.Config.main.Right.Panel := Tpanel.Create(vWeather.Config.main.Panel);
-  vWeather.Config.main.Right.Panel.Name := 'Weather_Config_Right_Panel';
-  vWeather.Config.main.Right.Panel.Parent := vWeather.Config.main.Panel;
-  vWeather.Config.main.Right.Panel.SetBounds(210, 0, vWeather.Config.main.Panel.Width - 210,
-    vWeather.Config.main.Panel.Height);
-  vWeather.Config.main.Right.Panel.Visible := True;
-
-  vWeather.Config.Main.Right.NoProvider_Selected:= TText.Create(vWeather.Config.Main.Right.Panel);
-  vWeather.Config.Main.Right.NoProvider_Selected.Name:= 'Weather_Config_Right_Panel_Text';
-  vWeather.Config.Main.Right.NoProvider_Selected.Parent:=  vWeather.Config.Main.Right.Panel;
-  vWeather.Config.Main.Right.NoProvider_Selected.SetBounds((vWeather.Config.Main.Right.Panel.Width /2)- 150, 100, 300, 30);
-  vWeather.Config.Main.Right.NoProvider_Selected.TextSettings.FontColor:= TAlphaColorRec.White;
-  vWeather.Config.Main.Right.NoProvider_Selected.TextSettings.Font.Size:= 16;
-  vWeather.Config.Main.Right.NoProvider_Selected.TextSettings.HorzAlign:= TTextAlign.Center;
-  if addons.weather.Action.provider= '' then
-    vWeather.Config.Main.Right.NoProvider_Selected.Text:= 'Please select forecast provider first!!!';
-  vWeather.Config.Main.Right.NoProvider_Selected.Visible:= True;
+  Config;
 
   uWeather_Actions_Load;
 end;
@@ -257,6 +193,84 @@ begin
   vWeather.Scene.Control_Ani.PropertyName := 'Opacity';
   vWeather.Scene.Control_Ani.StartValue := 0;
   vWeather.Scene.Control_Ani.StopValue := 1;
+end;
+
+procedure Config;
+const
+  cLeft_Buttons_Names: array [0 .. 3] of string = ('Provider', 'Towns', 'Options', 'Iconsets');
+var
+  vi: Integer;
+begin
+  vWeather.Config.Panel := Tpanel.Create(vWeather.Scene.Weather);
+  vWeather.Config.Panel.Name := 'A_W_Config';
+  vWeather.Config.Panel.Parent := vWeather.Scene.Weather;
+  vWeather.Config.Panel.SetBounds((vWeather.Scene.Back.Width / 2) - (705 / 2), 90, 705, 550);
+  vWeather.Config.Panel.Visible := False;
+
+  vWeather.Config.Panel_Blur := TGaussianBlurEffect.Create(vWeather.Config.Panel);
+  vWeather.Config.Panel_Blur.Name := 'A_W_Config_Main_Blur';
+  vWeather.Config.Panel_Blur.Parent := vWeather.Config.Panel;
+  vWeather.Config.Panel_Blur.BlurAmount := 0.5;
+  vWeather.Config.Panel_Blur.Enabled := False;
+
+  uLoad_SetAll_CreateHeader(vWeather.Config.Panel, 'A_W_Config', addons.Weather.Path.Images + 'w_settings_blue.png', 'Weather configuration.');
+
+  vWeather.Config.main.Panel := Tpanel.Create(vWeather.Config.Panel);
+  vWeather.Config.main.Panel.Name := 'A_W_Config_Main';
+  vWeather.Config.main.Panel.Parent := vWeather.Config.Panel;
+  vWeather.Config.main.Panel.SetBounds(0, 30, vWeather.Config.Panel.Width, vWeather.Config.Panel.Height - 30);
+  vWeather.Config.main.Panel.Visible := True;
+
+  // Left Panel with action buttons
+  vWeather.Config.main.Left.Panel := Tpanel.Create(vWeather.Config.main.Panel);
+  vWeather.Config.main.Left.Panel.Name := 'Weather_Config_Left_Panel';
+  vWeather.Config.main.Left.Panel.Parent := vWeather.Config.main.Panel;
+  vWeather.Config.main.Left.Panel.SetBounds(0, 0, 210, vWeather.Config.main.Panel.Height);
+  vWeather.Config.main.Left.Panel.Visible := True;
+
+  for vi := 0 to 3 do
+  begin
+    vWeather.Config.main.Left.Buttons[vi] := TButton.Create(vWeather.Config.main.Left.Panel);
+    vWeather.Config.main.Left.Buttons[vi].Name := 'A_W_Config_Left_Button_' + vi.ToString;
+    vWeather.Config.main.Left.Buttons[vi].Parent := vWeather.Config.main.Left.Panel;
+    vWeather.Config.main.Left.Buttons[vi].SetBounds(10, 30 + (vi * 40), 190, 33);
+    vWeather.Config.main.Left.Buttons[vi].Text := cLeft_Buttons_Names[vi];
+    vWeather.Config.main.Left.Buttons[vi].OnClick := addons.Weather.Input.mouse_config.Button.OnMouseClick;
+    vWeather.Config.main.Left.Buttons[vi].OnMouseEnter := addons.Weather.Input.mouse_config.Button.OnMouseEnter;
+    vWeather.Config.main.Left.Buttons[vi].Tag := vi;
+    vWeather.Config.main.Left.Buttons[vi].Visible := True;
+  end;
+
+  vWeather.Config.Main.Left.Provider:= TImage.Create(vWeather.Config.Main.Left.Panel);
+  vWeather.Config.Main.Left.Provider.Name:= 'A_W_Config_Left_Panel_Image';
+  vWeather.Config.Main.Left.Provider.Parent:=  vWeather.Config.Main.Left.Panel;
+  vWeather.Config.Main.Left.Provider.SetBounds(5, vWeather.Config.Main.Left.Panel.Height- 95, 200, 90);
+  if addons.weather.Action.Provider = 'yahoo' then
+    vWeather.Config.Main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images+ 'w_provider_yahoo.png')
+  else if addons.weather.Action.Provider = 'openweathermap' then
+    vWeather.Config.Main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images+ 'w_provider_openweathermap.png');
+  vWeather.Config.Main.Left.Provider.WrapMode:= TImageWrapMode.Stretch;
+  vWeather.Config.Main.Left.Provider.Visible:= True;
+
+  addons.Weather.Config.Active_Panel := -1;
+
+  // Right panel
+  vWeather.Config.main.Right.Panel := Tpanel.Create(vWeather.Config.main.Panel);
+  vWeather.Config.main.Right.Panel.Name := 'Weather_Config_Right_Panel';
+  vWeather.Config.main.Right.Panel.Parent := vWeather.Config.main.Panel;
+  vWeather.Config.main.Right.Panel.SetBounds(210, 0, vWeather.Config.main.Panel.Width - 210, vWeather.Config.main.Panel.Height);
+  vWeather.Config.main.Right.Panel.Visible := True;
+
+  vWeather.Config.main.Right.NoProvider_Selected := TText.Create(vWeather.Config.main.Right.Panel);
+  vWeather.Config.main.Right.NoProvider_Selected.Name := 'Weather_Config_Right_Panel_Text';
+  vWeather.Config.main.Right.NoProvider_Selected.Parent := vWeather.Config.main.Right.Panel;
+  vWeather.Config.main.Right.NoProvider_Selected.SetBounds((vWeather.Config.main.Right.Panel.Width / 2) - 150, 100, 300, 30);
+  vWeather.Config.main.Right.NoProvider_Selected.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Config.main.Right.NoProvider_Selected.TextSettings.Font.Size := 16;
+  vWeather.Config.main.Right.NoProvider_Selected.TextSettings.HorzAlign := TTextAlign.Center;
+  if addons.Weather.Action.provider = '' then
+    vWeather.Config.main.Right.NoProvider_Selected.Text := 'Please select forecast provider first!!!';
+  vWeather.Config.main.Right.NoProvider_Selected.Visible := True;
 end;
 
 end.

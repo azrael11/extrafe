@@ -38,6 +38,8 @@ procedure HTML_Password_Forgat(vHTMLBuild: TIdMessageBuilderHtml);
 function Get_Image(vPath: String): TBitmap;
 function GetPage(aURL: string): string;
 
+function Get_JSONValue(vRestName: String; vBaseUrl: String): TJSONValue;
+
 type
   TIdHTTPProgress = class(TIdHTTP)
   private
@@ -141,8 +143,7 @@ const
   subdomain_chars = ['-', '0' .. '9', 'A' .. 'Z', 'a' .. 'z'];
 
 type
-  States = (STATE_BEGIN, STATE_ATOM, STATE_QTEXT, STATE_QCHAR, STATE_QUOTE, STATE_LOCAL_PERIOD,
-    STATE_EXPECTING_SUBDOMAIN, STATE_SUBDOMAIN, STATE_HYPHEN);
+  States = (STATE_BEGIN, STATE_ATOM, STATE_QTEXT, STATE_QCHAR, STATE_QUOTE, STATE_LOCAL_PERIOD, STATE_EXPECTING_SUBDOMAIN, STATE_SUBDOMAIN, STATE_HYPHEN);
 
 var
   State: States;
@@ -227,35 +228,13 @@ end;
 
 function GeoIP(out vCountry_Code: string; out vIP: string; out vLat, vLon: String): boolean;
 var
-  vRESTClient: TRESTClient;
-  vRESTRequest: TRESTRequest;
-  vRESTResponse: TRESTResponse;
   vJSONValue: TJSONValue;
   vPosition: String;
   vOutValue: String;
   vIpos: Integer;
 begin
-  vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'Ipinfo_RestClient';
-  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://ipinfo.io/json';
-  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
-
-  vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'Ipinfo_Response';
-
-  vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'Ipinfo_Request';
-  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTRequest.Client := vRESTClient;
-  vRESTRequest.Method := TRESTRequestMethod.rmGET;
-  vRESTRequest.Response := vRESTResponse;
-  vRESTRequest.Timeout := 30000;
-
-  vRESTRequest.Execute;
-  vJSONValue := vRESTResponse.JSONValue;
+  vJSONValue := TJSONValue.Create;
+  vJSONValue := Get_JSONValue('IpInfo', 'http://ipinfo.io/json');
 
   if vJSONValue.TryGetValue('ip', vOutValue) then
   begin
@@ -277,7 +256,6 @@ begin
   else
     Result := False;
   FreeAndNil(vJSONValue);
-  FreeAndNil(vRESTRequest);
 end;
 
 procedure Create_FTP_Folder(vFolder_Name: String);
@@ -312,8 +290,7 @@ begin
 
   vHTMLBuild.Html.Add('<html>');
   vHTMLBuild.Html.Add('<head>');
-  vHTMLBuild.Html.Add('<style>body {' + 'background-image: url("cid:back");' + 'background-repeat: repeat;' +
-    'background-color: #cccccc;' + '}</style>');
+  vHTMLBuild.Html.Add('<style>body {' + 'background-image: url("cid:back");' + 'background-repeat: repeat;' + 'background-color: #cccccc;' + '}</style>');
   vHTMLBuild.Html.Add('</head>');
   vHTMLBuild.Html.Add('<body>Congratulations on your enrollment in the ExtraFE world.<p>');
   vHTMLBuild.Html.Add('<p><img src="cid:logo" alt="Smiley face" height="260" width="500">');
@@ -347,17 +324,14 @@ begin
   vHTMLBuild.Html.Add('<html>');
   vHTMLBuild.Html.Add('<head>');
   vHTMLBuild.Html.Add('<style>');
-  vHTMLBuild.Html.Add('<style>body {' + 'background-image: url("cid:back");' + 'background-repeat: repeat;' +
-    'background-color: #cccccc;' + '}</style>');
+  vHTMLBuild.Html.Add('<style>body {' + 'background-image: url("cid:back");' + 'background-repeat: repeat;' + 'background-color: #cccccc;' + '}</style>');
   vHTMLBuild.Html.Add('</head>');
   vHTMLBuild.Html.Add('<body> You forgat your password.<p>');
   vHTMLBuild.Html.Add('<p><img src="cid:logo" alt="" height="260" width="500">');
-  vHTMLBuild.Html.Add
-    ('<p>This email was sent to you because you asked us to enter the password you forgot.<p>');
+  vHTMLBuild.Html.Add('<p>This email was sent to you because you asked us to enter the password you forgot.<p>');
   vHTMLBuild.Html.Add('<p><b>Username</b> : ' + user_Active.Username + '<br>');
   vHTMLBuild.Html.Add('<b>Password</b> : </b>' + uDatabase_SqlCommands.uDatabase_SQLCommands_Get_Password(user_Active.Database_Num) + '</b><p>');
-  vHTMLBuild.Html.Add
-    ('If you continue to have trouble accessing the ExtraFE please with your username send e-mail at: spoooky11@hotmail.gr.<p>');
+  vHTMLBuild.Html.Add('If you continue to have trouble accessing the ExtraFE please with your username send e-mail at: spoooky11@hotmail.gr.<p>');
   vHTMLBuild.Html.Add('<b>Homepage</b>      : <a href="http://extrafe.epizy.com">http://extrafe.epizy.com</a><br>');
   vHTMLBuild.Html.Add('<b>Documentation</b> : <a href="http://extrafe.epizy.com/doc/">http://extrafe.epizy.com/doc/</a><br>');
   vHTMLBuild.Html.Add('<b>Forum</b>         : <a href="http://extrafe.epizy.com/smf/">http://extrafe.epizy.com/smf/</a><p>');
@@ -373,7 +347,7 @@ var
   vIOHandlerSSL: TIdSSLIOHandlerSocketOpenSSL;
   Htmlbuilder: TIdMessageBuilderHtml;
 begin
-  Result:= False;
+  Result := False;
   vIdSMTP := TIdSMTP.Create(ex_load.Scene.Back);
   vIdMessage := TIdMessage.Create(ex_load.Scene.Back);
   vIOHandlerSSL := TIdSSLIOHandlerSocketOpenSSL.Create(ex_load.Scene.Back);
@@ -424,7 +398,7 @@ begin
       vIdSMTP.Connect();
       try
         vIdSMTP.Send(vIdMessage);
-        Result:= True;
+        Result := True;
       finally
         vIdSMTP.Disconnect();
       end;
@@ -441,15 +415,15 @@ end;
 
 function Get_Image(vPath: String): TBitmap;
 var
-  MS : TMemoryStream;
+  MS: TMemoryStream;
   vIdHTTP: TIdHTTP;
 begin
   MS := TMemoryStream.Create;
-  Result:= TBitmap.Create;
-  vIdHTTP:= TIdHTTP.Create(Main_Form);
+  Result := TBitmap.Create;
+  vIdHTTP := TIdHTTP.Create(Main_Form);
   try
-    vIdHTTP.get(vPath,MS);
-    Ms.Seek(0,soFromBeginning);
+    vIdHTTP.Get(vPath, MS);
+    MS.Seek(0, soFromBeginning);
     Result.LoadFromStream(MS);
   finally
     FreeAndNil(MS);
@@ -468,9 +442,12 @@ begin
     HTTP := TIdHTTP.Create(nil);
     try
       HTTP.Get(aURL, Response);
-      if HTTP.ResponseCode = HTTP_RESPONSE_OK then begin
+      if HTTP.ResponseCode = HTTP_RESPONSE_OK then
+      begin
         Result := Response.DataString;
-      end else begin
+      end
+      else
+      begin
         // TODO -cLogging: add some logging
       end;
     finally
@@ -479,6 +456,38 @@ begin
   finally
     Response.Free;
   end;
+end;
+
+function Get_JSONValue(vRestName: String; vBaseUrl: String): TJSONValue;
+var
+  vRESTClient: TRESTClient;
+  vRESTRequest: TRESTRequest;
+  vRESTResponse: TRESTResponse;
+begin
+  Result:= TJSONValue.Create;
+  vRESTClient := TRESTClient.Create('');
+  vRESTClient.Name := vRestName + '_RestClient';
+  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
+  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
+  vRESTClient.BaseURL := vBaseUrl;
+  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
+
+  vRESTResponse := TRESTResponse.Create(vRESTClient);
+  vRESTResponse.Name := vRestName +'_Response';
+
+  vRESTRequest := TRESTRequest.Create(vRESTClient);
+  vRESTRequest.Name := vRestName +'_Request';
+  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
+  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
+  vRESTRequest.Client := vRESTClient;
+  vRESTRequest.Method := TRESTRequestMethod.rmGET;
+  vRESTRequest.Response := vRESTResponse;
+  vRESTRequest.Timeout := 30000;
+
+  vRESTRequest.Execute;
+  Result:= vRESTResponse.JSONValue;
+
+  FreeAndNil(vRESTRequest)
 end;
 
 end.

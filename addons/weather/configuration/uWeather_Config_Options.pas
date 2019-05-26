@@ -227,9 +227,9 @@ begin
         vWeather.Scene.Tab[vi].General.Temprature.Text);
       vWeather.Scene.Tab[vi].General.Temprature.Width :=
         uSnippet_Text_ToPixels(vWeather.Scene.Tab[vi].General.Temprature);
-      vWeather.Scene.Tab[vi].General.Temprature_Unit.Text := vTempUnit;
-      vWeather.Scene.Tab[vi].General.Temprature_Unit.Position.X := vWeather.Scene.Tab[vi]
-        .General.Temprature.Position.X + vWeather.Scene.Tab[vi].General.Temprature.Width + 10;
+//      vWeather.Scene.Tab[vi].General.Temprature_Unit.Text := vTempUnit;
+//      vWeather.Scene.Tab[vi].General.Temprature_Unit.Position.X := vWeather.Scene.Tab[vi]
+//        .General.Temprature.Position.X + vWeather.Scene.Tab[vi].General.Temprature.Width + 10;
 
       vWeather.Scene.Tab[vi].Forcast.Current.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius,
         vWeather.Scene.Tab[vi].Forcast.Current.Low.Text);

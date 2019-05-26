@@ -35,7 +35,8 @@ uses
   uLoad_AllTypes,
   uWindows,
   uWeather_SetAll,
-  uAzHung_AllTypes;
+  uAzHung_AllTypes,
+  uWeather_Providers_Yahoo;
 
 procedure uLoad_Addons_FirstTime;
 begin
@@ -78,8 +79,7 @@ begin
           begin
             Addon_Name := addons.calendar.ini.ini.ReadString('CALENDAR', 'Addon_Name', Addon_Name);
             Addon_Active := addons.calendar.ini.ini.ReadBool('CALENDAR', 'Active', Addon_Active);
-            Addon_Position := addons.calendar.ini.ini.ReadInteger('CALENDAR', 'Menu_Position',
-              Addon_Position);
+            Addon_Position := addons.calendar.ini.ini.ReadInteger('CALENDAR', 'Menu_Position', Addon_Position);
           end;
         2:
           begin
@@ -91,8 +91,7 @@ begin
           begin
             Addon_Name := addons.soundplayer.ini.ini.ReadString('SOUNDPLAYER', 'Addon_Name', Addon_Name);
             Addon_Active := addons.soundplayer.ini.ini.ReadBool('SOUNDPLAYER', 'Active', Addon_Active);
-            Addon_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER', 'Menu_Position',
-              Addon_Position);
+            Addon_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER', 'Menu_Position', Addon_Position);
           end;
         4:
           begin
@@ -151,21 +150,15 @@ begin
   // P_Time
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Visible_Type', 'Analog');
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Circle', 'System');
-  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Hour_Image',
-    addons.time.Path.Clock + 'default\t_analog_hour_image.png');
+  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Hour_Image', addons.time.Path.Clock + 'default\t_analog_hour_image.png');
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Minutes_Image', 'System');
-  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Hour_Indicator',
-    addons.time.Path.Clock + 'default\t_analog_hour.png');
-  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Minutes_Indicator',
-    addons.time.Path.Clock + 'default\t_analog_minutes.png');
-  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Seconds_Indicator',
-    addons.time.Path.Clock + 'default\t_analog_seconds.png');
-  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Quarters',
-    addons.time.Path.Clock + 'default\t_analog_quarters.png');
+  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Hour_Indicator', addons.time.Path.Clock + 'default\t_analog_hour.png');
+  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Minutes_Indicator', addons.time.Path.Clock + 'default\t_analog_minutes.png');
+  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Seconds_Indicator', addons.time.Path.Clock + 'default\t_analog_seconds.png');
+  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Quarters', addons.time.Path.Clock + 'default\t_analog_quarters.png');
   addons.time.ini.ini.WriteBool('TIME_LOCAL', 'Analog_ShowQuarters', False);
   addons.time.ini.ini.WriteBool('TIME_LOCAL', 'Analog_ShowHours', False);
-  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Image_Minutes',
-    addons.time.Path.Clock + 'default\t_image_minutes.png');
+  addons.time.ini.ini.WriteString('TIME_LOCAL', 'Analog_Image_Minutes', addons.time.Path.Clock + 'default\t_image_minutes.png');
   addons.time.ini.ini.WriteBool('TIME_LOCAL', 'Analog_ShowMinutes', False);
   addons.time.ini.ini.WriteBool('TIME_LOCAL', 'Analog_ShowSecondsIndicator', True);
   addons.time.ini.ini.WriteString('TIME_LOCAL', 'Digital_Type', 'System');
@@ -191,56 +184,40 @@ begin
 
   addons.time.Name := addons.time.ini.ini.ReadString('TIME', 'Addon_Name', addons.time.Name);
   addons.time.Active := addons.time.ini.ini.ReadBool('TIME', 'Active', addons.time.Active);
-  addons.time.Main_Menu_Position := addons.time.ini.ini.ReadInteger('Addons', 'Menu_Position',
-    addons.time.Main_Menu_Position);
+  addons.time.Main_Menu_Position := addons.time.ini.ini.ReadInteger('Addons', 'Menu_Position', addons.time.Main_Menu_Position);
   addons.time.Path.Icon := addons.time.ini.Path + 'icon\';
   addons.time.Path.Images := addons.time.ini.Path + 'images\';
   addons.time.Path.Clock := addons.time.ini.Path + 'clock\';
   addons.time.Path.Sounds := addons.time.ini.Path + 'sounds\';
 
   // P_Local Time
-  addons.time.P_Time.Clock_Type := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Visible_Type',
-    addons.time.P_Time.Clock_Type);
-  addons.time.P_Time.Analog_Circle_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Circle',
-    addons.time.P_Time.Analog_Circle_Path);
-  addons.time.P_Time.Analog_Hour_Indicator_Path := addons.time.ini.ini.ReadString('TIME_LOCAL',
-    'Analog_Hour_Indicator', addons.time.P_Time.Analog_Hour_Indicator_Path);
-  addons.time.P_Time.Analog_Minutes_Indicator_Path := addons.time.ini.ini.ReadString('TIME_LOCAL',
-    'Analog_Minutes_Indicator', addons.time.P_Time.Analog_Minutes_Indicator_Path);
-  addons.time.P_Time.Analog_Seconds_Indicator_Path := addons.time.ini.ini.ReadString('TIME_LOCAL',
-    'Analog_Seconds_Indicator', addons.time.P_Time.Analog_Seconds_Indicator_Path);
-  addons.time.P_Time.Analog_Hour_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Hour_Image',
-    addons.time.P_Time.Analog_Hour_Path);
-  addons.time.P_Time.Analog_Minutes_Path := addons.time.ini.ini.ReadString('TIME_LOCAL',
-    'Analog_Minutes_Image', addons.time.P_Time.Analog_Minutes_Path);
-  addons.time.P_Time.Analog_Img_Quarters_Path := addons.time.ini.ini.ReadString('TIME_LOCAL',
-    'Analog_Quarters', addons.time.P_Time.Analog_Img_Quarters_Path);
-  addons.time.P_Time.Analog_Img_Quarters_Show := addons.time.ini.ini.ReadBool('TIME_LOCAL',
-    'Analog_ShowQuarters', addons.time.P_Time.Analog_Img_Quarters_Show);
-  addons.time.P_Time.Analog_Img_Hours_Show := addons.time.ini.ini.ReadBool('TIME_LOCAL', 'Analog_ShowHours',
-    addons.time.P_Time.Analog_Img_Hours_Show);
-  addons.time.P_Time.Analog_Img_Minutes_Path := addons.time.ini.ini.ReadString('TIME_LOCAL',
-    'Analog_Image_Minutes', addons.time.P_Time.Analog_Img_Minutes_Path);
-  addons.time.P_Time.Analog_Img_Minutes_Show := addons.time.ini.ini.ReadBool('TIME_LOCAL',
-    'Analog_ShowMinutes', addons.time.P_Time.Analog_Img_Minutes_Show);
-  addons.time.P_Time.Analog_Seconds_Indicator := addons.time.ini.ini.ReadBool('TIME_LOCAL',
-    'Analog_ShowSecondsIndicator', addons.time.P_Time.Analog_Seconds_Indicator);
-  addons.time.P_Time.Digital_Type := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Type',
-    addons.time.P_Time.Digital_Type);
-  addons.time.P_Time.Digital_Font := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Font',
-    addons.time.P_Time.Digital_Font);
-  addons.time.P_Time.Digital_Color := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color',
-    addons.time.P_Time.Digital_Color);
-  addons.time.P_Time.Digital_Sep := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Sep',
-    addons.time.P_Time.Digital_Sep);
-  addons.time.P_Time.Digital_Color_Back := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color_Back',
-    addons.time.P_Time.Digital_Color_Back);
-  addons.time.P_Time.Digital_Color_Back_Stroke := addons.time.ini.ini.ReadString('TIME_LOCAL',
-    'Digital_Color_Back_Stroke', addons.time.P_Time.Digital_Color_Back_Stroke);
-  addons.time.P_Time.Digital_Img_Folder := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_ImageFolder',
-    addons.time.P_Time.Digital_Img_Folder);
-  addons.time.P_Time.Digital_Matrix := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Matrix',
-    addons.time.P_Time.Digital_Matrix);
+  addons.time.P_Time.Clock_Type := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Visible_Type', addons.time.P_Time.Clock_Type);
+  addons.time.P_Time.Analog_Circle_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Circle', addons.time.P_Time.Analog_Circle_Path);
+  addons.time.P_Time.Analog_Hour_Indicator_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Hour_Indicator',
+    addons.time.P_Time.Analog_Hour_Indicator_Path);
+  addons.time.P_Time.Analog_Minutes_Indicator_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Minutes_Indicator',
+    addons.time.P_Time.Analog_Minutes_Indicator_Path);
+  addons.time.P_Time.Analog_Seconds_Indicator_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Seconds_Indicator',
+    addons.time.P_Time.Analog_Seconds_Indicator_Path);
+  addons.time.P_Time.Analog_Hour_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Hour_Image', addons.time.P_Time.Analog_Hour_Path);
+  addons.time.P_Time.Analog_Minutes_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Minutes_Image', addons.time.P_Time.Analog_Minutes_Path);
+  addons.time.P_Time.Analog_Img_Quarters_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Quarters', addons.time.P_Time.Analog_Img_Quarters_Path);
+  addons.time.P_Time.Analog_Img_Quarters_Show := addons.time.ini.ini.ReadBool('TIME_LOCAL', 'Analog_ShowQuarters', addons.time.P_Time.Analog_Img_Quarters_Show);
+  addons.time.P_Time.Analog_Img_Hours_Show := addons.time.ini.ini.ReadBool('TIME_LOCAL', 'Analog_ShowHours', addons.time.P_Time.Analog_Img_Hours_Show);
+  addons.time.P_Time.Analog_Img_Minutes_Path := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Analog_Image_Minutes',
+    addons.time.P_Time.Analog_Img_Minutes_Path);
+  addons.time.P_Time.Analog_Img_Minutes_Show := addons.time.ini.ini.ReadBool('TIME_LOCAL', 'Analog_ShowMinutes', addons.time.P_Time.Analog_Img_Minutes_Show);
+  addons.time.P_Time.Analog_Seconds_Indicator := addons.time.ini.ini.ReadBool('TIME_LOCAL', 'Analog_ShowSecondsIndicator',
+    addons.time.P_Time.Analog_Seconds_Indicator);
+  addons.time.P_Time.Digital_Type := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Type', addons.time.P_Time.Digital_Type);
+  addons.time.P_Time.Digital_Font := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Font', addons.time.P_Time.Digital_Font);
+  addons.time.P_Time.Digital_Color := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color', addons.time.P_Time.Digital_Color);
+  addons.time.P_Time.Digital_Sep := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Sep', addons.time.P_Time.Digital_Sep);
+  addons.time.P_Time.Digital_Color_Back := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color_Back', addons.time.P_Time.Digital_Color_Back);
+  addons.time.P_Time.Digital_Color_Back_Stroke := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color_Back_Stroke',
+    addons.time.P_Time.Digital_Color_Back_Stroke);
+  addons.time.P_Time.Digital_Img_Folder := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_ImageFolder', addons.time.P_Time.Digital_Img_Folder);
+  addons.time.P_Time.Digital_Matrix := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Matrix', addons.time.P_Time.Digital_Matrix);
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -277,8 +254,7 @@ begin
 
   addons.calendar.Name := addons.calendar.ini.ini.ReadString('CALENDAR', 'Addon_Name', addons.calendar.Name);
   addons.calendar.Active := addons.calendar.ini.ini.ReadBool('CALENDAR', 'Active', addons.calendar.Active);
-  addons.calendar.Main_Menu_Position := addons.calendar.ini.ini.ReadInteger('CALENDAR', 'Menu_Position',
-    addons.calendar.Main_Menu_Position);
+  addons.calendar.Main_Menu_Position := addons.calendar.ini.ini.ReadInteger('CALENDAR', 'Menu_Position', addons.calendar.Main_Menu_Position);
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -317,6 +293,10 @@ begin
   addons.weather.ini.ini.WriteString('Iconset', 'Name', 'pengui');
   addons.weather.ini.ini.WriteString('Provider', 'Name', '');
   addons.weather.ini.ini.WriteInteger('openweathermap', 'Total', -1);
+  // Yahoo specific
+  addons.weather.Action.Yahoo.Total_WoeID := -1;
+  addons.weather.Action.Yahoo.Selected_Unit:= 'imperial';
+
 end;
 
 procedure uLoad_Addons_Weather_Load;
@@ -327,33 +307,37 @@ begin
 
   addons.weather.Name := addons.weather.ini.ini.ReadString('WEATHER', 'Addon_Name', addons.weather.Name);
   addons.weather.Active := addons.weather.ini.ini.ReadBool('WEATHER', 'Active', addons.weather.Active);
-  addons.weather.Main_Menu_Position := addons.weather.ini.ini.ReadInteger('WEATHER', 'Menu_Position',
-    addons.weather.Main_Menu_Position);
+  addons.weather.Main_Menu_Position := addons.weather.ini.ini.ReadInteger('WEATHER', 'Menu_Position', addons.weather.Main_Menu_Position);
   addons.weather.Path.Icon := addons.weather.ini.Path + 'icon\';
   addons.weather.Path.Images := addons.weather.ini.Path + 'images\';
   addons.weather.Path.Iconsets := addons.weather.ini.Path + 'icons\';
   addons.weather.Path.Sounds := addons.weather.ini.Path + 'sounds\';
   addons.weather.Path.Temp := addons.weather.ini.Path + 'temp\';
 
-  addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First',
-    addons.weather.Action.First);
-  addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name',
-    addons.weather.Action.Provider);
-  addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger(addons.weather.Action.Provider,
-    'Total', addons.weather.Action.Provider_Total);
-  addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid',
-    addons.weather.Action.Active_WEOID);
-  addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total',
-    addons.weather.Action.Active_Total);
-  addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree',
-    addons.weather.Action.Degree);
-  addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh',
-    addons.weather.Config.Refresh_Once);
-  addons.weather.Config.Iconset.Name := addons.weather.ini.ini.ReadString('Iconset', 'Name',
-    addons.weather.Config.Iconset.Name);
+  addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First', addons.weather.Action.First);
+  addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name', addons.weather.Action.Provider);
+  addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger(addons.weather.Action.Provider, 'Total', addons.weather.Action.Provider_Total);
+  addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid', addons.weather.Action.Active_WEOID);
+  addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
+  addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree', addons.weather.Action.Degree);
+  addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh', addons.weather.Config.Refresh_Once);
+  addons.weather.Config.Iconset.Name := addons.weather.ini.ini.ReadString('Iconset', 'Name', addons.weather.Config.Iconset.Name);
 
-  addons.weather.Config.Iconset.Count := uWindows_CountFilesOrFolders(addons.weather.Path.Iconsets,
-    False, '');
+  // Yahoo specific
+  if addons.weather.Action.Provider = 'yahoo' then
+  begin
+    if addons.weather.ini.ini.ValueExists('yahoo', 'total') then
+      addons.weather.Action.Yahoo.Total_WoeID := addons.weather.ini.ini.ReadInteger('yahoo', 'total', addons.weather.Action.Yahoo.Total_WoeID)
+    else
+      addons.weather.Action.Yahoo.Total_WoeID := -1;
+    if addons.weather.ini.ini.ValueExists('yahoo', 'selected_unit') then
+      addons.weather.Action.Yahoo.Selected_Unit := addons.weather.Ini.Ini.ReadString('yahoo', 'Selected_Unit', addons.weather.Action.Yahoo.Selected_Unit)
+    else
+      addons.weather.Action.Yahoo.Selected_Unit:= 'imperial';
+    uWeather_Providers_Yahoo.Woeid_List;
+  end;
+
+  addons.weather.Config.Iconset.Count := uWindows_CountFilesOrFolders(addons.weather.Path.Iconsets, False, '');
   addons.weather.Config.Iconset.Names := TStringList.Create;
   addons.weather.Config.Iconset.Names := uWindows_GetFolderNames(addons.weather.Path.Iconsets);
 end;
@@ -417,69 +401,43 @@ begin
   addons.soundplayer.ini.Name := 'soundplayer.ini';
   addons.soundplayer.ini.ini := TIniFile.Create(addons.soundplayer.ini.Path + addons.soundplayer.ini.Name);
 
-  addons.soundplayer.Name := addons.soundplayer.ini.ini.ReadString('SOUNDPLAYER', 'Addon_Name',
-    addons.soundplayer.Name);
-  addons.soundplayer.Active := addons.soundplayer.ini.ini.ReadBool('SOUNDPLAYER', 'Active',
-    addons.soundplayer.Active);
-  addons.soundplayer.Main_Menu_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER',
-    'Menu_Position', addons.soundplayer.Main_Menu_Position);
+  addons.soundplayer.Name := addons.soundplayer.ini.ini.ReadString('SOUNDPLAYER', 'Addon_Name', addons.soundplayer.Name);
+  addons.soundplayer.Active := addons.soundplayer.ini.ini.ReadBool('SOUNDPLAYER', 'Active', addons.soundplayer.Active);
+  addons.soundplayer.Main_Menu_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER', 'Menu_Position', addons.soundplayer.Main_Menu_Position);
   addons.soundplayer.Path.Icon := addons.soundplayer.ini.Path + 'icon\';
   addons.soundplayer.Path.Images := addons.soundplayer.ini.Path + 'images\';
   addons.soundplayer.Path.Files := addons.soundplayer.ini.Path + 'files\';
   addons.soundplayer.Path.Playlists := addons.soundplayer.ini.Path + 'playlists\';
   addons.soundplayer.Path.Sounds := addons.soundplayer.ini.Path + 'sounds\';
 
-  addons.soundplayer.Actions.First := addons.soundplayer.ini.ini.ReadBool('General', 'First',
-    addons.soundplayer.Actions.First);
+  addons.soundplayer.Actions.First := addons.soundplayer.ini.ini.ReadBool('General', 'First', addons.soundplayer.Actions.First);
 
-  addons.soundplayer.Playlist.Total := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'TotalPlaylists',
-    addons.soundplayer.Playlist.Total);
-  addons.soundplayer.Playlist.Active := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'ActivePlaylist',
-    addons.soundplayer.Playlist.Active);
-  addons.soundplayer.Playlist.List.Name := addons.soundplayer.ini.ini.ReadString('Playlists',
-    'ActivePlaylistName', addons.soundplayer.Playlist.List.Name);
-  addons.soundplayer.Player.LastPlayed := addons.soundplayer.ini.ini.ReadInteger('Song', 'LastPlayed',
-    addons.soundplayer.Player.LastPlayed);
-  addons.soundplayer.Volume.State := addons.soundplayer.ini.ini.ReadString('Volume', 'State',
-    addons.soundplayer.Volume.State);
-  addons.soundplayer.Volume.Master := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Master',
-    addons.soundplayer.Volume.Master);
-  addons.soundplayer.Volume.Left := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Left',
-    addons.soundplayer.Volume.Left);
-  addons.soundplayer.Volume.Right := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Right',
-    addons.soundplayer.Volume.Right);
+  addons.soundplayer.Playlist.Total := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'TotalPlaylists', addons.soundplayer.Playlist.Total);
+  addons.soundplayer.Playlist.Active := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'ActivePlaylist', addons.soundplayer.Playlist.Active);
+  addons.soundplayer.Playlist.List.Name := addons.soundplayer.ini.ini.ReadString('Playlists', 'ActivePlaylistName', addons.soundplayer.Playlist.List.Name);
+  addons.soundplayer.Player.LastPlayed := addons.soundplayer.ini.ini.ReadInteger('Song', 'LastPlayed', addons.soundplayer.Player.LastPlayed);
+  addons.soundplayer.Volume.State := addons.soundplayer.ini.ini.ReadString('Volume', 'State', addons.soundplayer.Volume.State);
+  addons.soundplayer.Volume.Master := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Master', addons.soundplayer.Volume.Master);
+  addons.soundplayer.Volume.Left := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Left', addons.soundplayer.Volume.Left);
+  addons.soundplayer.Volume.Right := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Right', addons.soundplayer.Volume.Right);
 
-  addons.soundplayer.Equalizer.PreAmp := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'PreAMP',
-    addons.soundplayer.Equalizer.PreAmp);
-  addons.soundplayer.Equalizer.Pan := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Pan',
-    addons.soundplayer.Equalizer.Pan);
-  addons.soundplayer.Equalizer.Param[0] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_0',
-    addons.soundplayer.Equalizer.Param[0]);
-  addons.soundplayer.Equalizer.Param[1] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_1',
-    addons.soundplayer.Equalizer.Param[1]);
-  addons.soundplayer.Equalizer.Param[2] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_2',
-    addons.soundplayer.Equalizer.Param[2]);
-  addons.soundplayer.Equalizer.Param[3] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_3',
-    addons.soundplayer.Equalizer.Param[3]);
-  addons.soundplayer.Equalizer.Param[4] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_4',
-    addons.soundplayer.Equalizer.Param[4]);
-  addons.soundplayer.Equalizer.Param[5] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_5',
-    addons.soundplayer.Equalizer.Param[5]);
-  addons.soundplayer.Equalizer.Param[6] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_6',
-    addons.soundplayer.Equalizer.Param[6]);
-  addons.soundplayer.Equalizer.Param[7] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_7',
-    addons.soundplayer.Equalizer.Param[7]);
-  addons.soundplayer.Equalizer.Param[8] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_8',
-    addons.soundplayer.Equalizer.Param[8]);
-  addons.soundplayer.Equalizer.Param[9] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_9',
-    addons.soundplayer.Equalizer.Param[9]);
-  addons.soundplayer.Equalizer.Preset := addons.soundplayer.ini.ini.ReadString('Equalizer', 'Preset',
-    addons.soundplayer.Equalizer.Preset);
+  addons.soundplayer.Equalizer.PreAmp := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'PreAMP', addons.soundplayer.Equalizer.PreAmp);
+  addons.soundplayer.Equalizer.Pan := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Pan', addons.soundplayer.Equalizer.Pan);
+  addons.soundplayer.Equalizer.Param[0] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_0', addons.soundplayer.Equalizer.Param[0]);
+  addons.soundplayer.Equalizer.Param[1] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_1', addons.soundplayer.Equalizer.Param[1]);
+  addons.soundplayer.Equalizer.Param[2] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_2', addons.soundplayer.Equalizer.Param[2]);
+  addons.soundplayer.Equalizer.Param[3] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_3', addons.soundplayer.Equalizer.Param[3]);
+  addons.soundplayer.Equalizer.Param[4] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_4', addons.soundplayer.Equalizer.Param[4]);
+  addons.soundplayer.Equalizer.Param[5] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_5', addons.soundplayer.Equalizer.Param[5]);
+  addons.soundplayer.Equalizer.Param[6] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_6', addons.soundplayer.Equalizer.Param[6]);
+  addons.soundplayer.Equalizer.Param[7] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_7', addons.soundplayer.Equalizer.Param[7]);
+  addons.soundplayer.Equalizer.Param[8] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_8', addons.soundplayer.Equalizer.Param[8]);
+  addons.soundplayer.Equalizer.Param[9] := addons.soundplayer.ini.ini.ReadFloat('Equalizer', 'Param_9', addons.soundplayer.Equalizer.Param[9]);
+  addons.soundplayer.Equalizer.Preset := addons.soundplayer.ini.ini.ReadString('Equalizer', 'Preset', addons.soundplayer.Equalizer.Preset);
   addons.soundplayer.Equalizer.Live_Preview := False;
-  addons.soundplayer.Equalizer.Cross_Fade := addons.soundplayer.ini.ini.ReadBool('Equalizer', 'Cross_Fade',
-    addons.soundplayer.Equalizer.Cross_Fade);
-  addons.soundplayer.Equalizer.Cross_Fade_Sec := addons.soundplayer.ini.ini.ReadInteger('Equalizer',
-    'Cross_Fade_Secs', addons.soundplayer.Equalizer.Cross_Fade_Sec);
+  addons.soundplayer.Equalizer.Cross_Fade := addons.soundplayer.ini.ini.ReadBool('Equalizer', 'Cross_Fade', addons.soundplayer.Equalizer.Cross_Fade);
+  addons.soundplayer.Equalizer.Cross_Fade_Sec := addons.soundplayer.ini.ini.ReadInteger('Equalizer', 'Cross_Fade_Secs',
+    addons.soundplayer.Equalizer.Cross_Fade_Sec);
 end;
 
 /// //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -533,8 +491,7 @@ begin
 
   addons.play.Name := addons.play.ini.ini.ReadString('PLAY', 'Addon_Name', addons.play.Name);
   addons.play.Active := addons.play.ini.ini.ReadBool('PLAY', 'Active', addons.play.Active);
-  addons.play.Main_Menu_Position := addons.play.ini.ini.ReadInteger('PLAY', 'Menu_Position',
-    addons.play.Main_Menu_Position);
+  addons.play.Main_Menu_Position := addons.play.ini.ini.ReadInteger('PLAY', 'Menu_Position', addons.play.Main_Menu_Position);
   addons.play.Path.Icon := addons.play.ini.Path + 'icon\';
   addons.play.Path.Images := addons.play.ini.Path + 'images\';
   addons.play.Path.Sounds := addons.play.ini.Path + 'sounds\';

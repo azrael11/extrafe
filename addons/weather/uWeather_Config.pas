@@ -7,7 +7,7 @@ uses
 
 procedure uWeather_Config_ShowHide(mShow: Boolean);
 procedure uWeather_COnfig_ClearConfig;
-procedure uWeather_Config_ShowPanel(mPanel: Byte);
+procedure uWeather_Config_ShowPanel(mPanel: Integer);
 
 implementation
 
@@ -35,23 +35,23 @@ end;
 procedure uWeather_COnfig_ClearConfig;
 begin
   if Assigned(vWeather.Config.main.Right.Panels[0]) then
-    uWeather_Config_Provider_Free
+    uWeather_Config_Provider.Free
   else if Assigned(vWeather.Config.main.Right.Panels[1]) then
-    uWeather_Config_Towns_Free
+    uWeather_Config_Towns.Free
   else if Assigned(vWeather.Config.main.Right.Panels[2]) then
     uWeather_Config_Options_Free
   else if Assigned(vWeather.Config.main.Right.Panels[3]) then
     uWeather_Config_Iconsets_Free;
 end;
 
-procedure uWeather_Config_ShowPanel(mPanel: Byte);
+procedure uWeather_Config_ShowPanel(mPanel: Integer);
 begin
   if addons.weather.Config.Active_Panel <> mPanel then
   begin
     uWeather_COnfig_ClearConfig;
     case mPanel of
       0:
-        uWeather_Config_Provider_Show;
+        uWeather_Config_Provider.Load;
       1:
         uWeather_Config_Towns.Load;
       2:

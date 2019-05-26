@@ -207,7 +207,7 @@ begin
       else if extrafe.prog.State = 'addon_calendar' then
         uCalendar_SetComponentsToRightPlace
       else if extrafe.prog.State = 'addon_weather' then
-        uWeather_SetComponentsToRightPlace
+        uWeather_SetAll.Load
       else if extrafe.prog.State = 'addon_soundplayer' then
         uSoundPlayer_SetAll.Set_Scene
       else if extrafe.prog.State = 'addon_play' then

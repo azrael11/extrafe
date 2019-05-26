@@ -21,11 +21,24 @@ uses
   ALFMXTabControl,
   uWeather_AllTypes;
 
+  type
+  TWEATHER_PROVIDER_OPENWEATHERMAP_FIND_LIST = record
+    woeid: string;
+    lat: string;
+    lon: string;
+    country: string;
+    country_code: string;
+    city: string;
+    text: string;
+  end;
+
 const
   cOWM_APPID = '5f1cc9b837706de78648b1de3443ccce';
 
 procedure uWeather_Providers_OpenWeatherMap_Load;
 procedure uWeather_Providers_OpenWeatherMap_Load_Config;
+
+procedure Find_Woeid_Locations(vText: String);
 
 procedure uWeather_Providers_OpenWeatherMap_AddTown_Main(vTabNum: Integer; vTown_Day: TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP;
   vTown_Hour: TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS);
@@ -36,8 +49,7 @@ procedure uWeather_Providers_OpenWeatherMap_CreateConfigPanel(vNum: Integer);
 function uWeather_Providers_OpenWeatherMap_Unit: String;
 function uWeatehr_Providers_OpenWeatherMap_Unit_Word: String;
 function uWeather_Providers_OpenWeatherMap_GetForcast(vID: String): TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP;
-function uWeather_Providers_OpenWeatherMap_GetForecast_5Days(vID: String)
-  : TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS;
+function uWeather_Providers_OpenWeatherMap_GetForecast_5Days(vID: String): TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS;
 
 function uWeather_Providers_OpenWeatherMap_IconShow(vCode: String): String;
 function uWeather_Providers_OpenWeatherMap_ConvertHeadline_ConfigPanel(vUnixTime: String): String;
@@ -50,27 +62,60 @@ var
   vJSONValue: TJSONValue;
   vDay: TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP;
   vHours: TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS;
+  vOpenWeatherMap_Find_List: array [0..20] of TWEATHER_PROVIDER_OPENWEATHERMAP_FIND_LIST;
 
 implementation
 
 uses
-  uSnippet_Text,
   uLoad_AllTypes,
+  uSnippet_Text,
+  uInternet_Files,
   uWeather_Config_Towns,
   uWeather_Convert,
   uWeather_MenuActions,
   uWeather_Actions,
   uSnippet_Convert;
 
+procedure Find_Woeid_Locations(vText: String);
+var
+  vJSONValue: TJSONValue;
+  vOutValue, vCount: String;
+  vi: Integer;
+begin
+  vJSONValue := TJSONValue.Create;
+  vJSONValue:= uInternet_Files.Get_JSONValue('OpenWeatherMap', 'http://api.geonames.org/searchJSON?name_equals=' + vText + '&username=azrael11');
+
+  vCount := vJSONValue.GetValue<String>('totalResultsCount');
+
+  for vi := 0 to vCount.ToInteger - 1 do
+  begin
+    vOpenWeatherMap_Find_List[vi].city := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].name');
+    vOpenWeatherMap_Find_List[vi].country := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].countryName');
+    vOpenWeatherMap_Find_List[vi].country_code := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].countryCode');
+    vOpenWeatherMap_Find_List[vi].text := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].adminName1');
+//    vID.Add(vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].geonameId'));
+    vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[0, vi] := IntToStr(vi + 1);
+//    vCodeFlag := vCodes.IndexOf(LowerCase(vCode) + '.png');
+//    vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[1, vi] := vCodeFlag.ToString;
+//    vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[2, vi] := vName;
+//    vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[3, vi] := vState;
+//    vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[4, vi] := vCountry;
+  end;
+  vWeather.Config.main.Right.Towns.Add.main.Grid.Selected := 0;
+  DeleteFile(extrafe.prog.Path + cTemp_Towns);
+  vWeather.Config.main.Right.Towns.Add.main.Add.Enabled := True;
+  vWeather.Config.main.Right.Towns.Add.main.Add_Stay.Enabled := True;
+  FreeAndNil(vJSONValue);
+end;
+
 procedure uWeather_Providers_OpenWeatherMap_Load;
 var
   vi: Integer;
-  vId: String;
+  vID: String;
 begin
   for vi := 0 to addons.weather.Action.Active_Total do
   begin
-    vID := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider,
-      IntToStr(vi) + '_WoeID', vID);
+    vID := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider, IntToStr(vi) + '_WoeID', vID);
     vDay := uWeather_Providers_OpenWeatherMap_GetForcast(vID);
     vHours := uWeather_Providers_OpenWeatherMap_GetForecast_5Days(vID);
     uWeather_Providers_OpenWeatherMap_AddTown_Main(vi, vDay, vHours);
@@ -80,12 +125,11 @@ end;
 procedure uWeather_Providers_OpenWeatherMap_Load_Config;
 var
   vi: Integer;
-  vId: String;
+  vID: String;
 begin
-  for vi:= 0 to addons.weather.Action.Active_Total do
+  for vi := 0 to addons.weather.Action.Active_Total do
   begin
-    vID := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider,
-      IntToStr(vi) + '_WoeID', vID);
+    vID := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider, IntToStr(vi) + '_WoeID', vID);
     vDay := uWeather_Providers_OpenWeatherMap_GetForcast(vID);
     vHours := uWeather_Providers_OpenWeatherMap_GetForecast_5Days(vID);
     uWeather_Providers_OpenWeatherMap_CreateConfigPanel(vi);
@@ -103,8 +147,7 @@ begin
   end;
   inc(addons.weather.Action.Provider_Total, 1);
   addons.weather.Ini.Ini.WriteInteger('openweathermap', 'Total', addons.weather.Action.Provider_Total);
-  addons.weather.Ini.Ini.WriteString('openweathermap', addons.weather.Action.Provider_Total.ToString +
-    '_WOEID', vID);
+  addons.weather.Ini.Ini.WriteString('openweathermap', addons.weather.Action.Provider_Total.ToString + '_WOEID', vID);
   vDay := uWeather_Providers_OpenWeatherMap_GetForcast(vID);
   vHours := uWeather_Providers_OpenWeatherMap_GetForecast_5Days(vID);
 
@@ -124,7 +167,7 @@ begin
   vCreatePanel.Country_Name := vDay.Country;
   vCreatePanel.Country_Flag := vDay.Country_FlagCode;
   vCreatePanel.Last_Checked := vDay.Last_Checked;
-  uWeather_Config_Towns_CreateTown_Panel(vNum, vCreatePanel);
+//  uWeather_Config_Towns_CreateTown_Panel(vNum, vCreatePanel);
 end;
 
 function uWeatehr_Providers_OpenWeatherMap_Unit_Word: String;
@@ -153,18 +196,18 @@ var
 begin
 
   vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'OpenWeatherMap_RestClient';
+  vRESTClient.name := 'OpenWeatherMap_RestClient';
   vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/weather?id=' + vID + '&APPID=' + cOWM_APPID +
-    '&units=' + uWeather_Providers_OpenWeatherMap_Unit;
+  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/weather?id=' + vID + '&APPID=' + cOWM_APPID + '&units=' +
+    uWeather_Providers_OpenWeatherMap_Unit;
   vRESTClient.FallbackCharsetEncoding := 'UTF-8';
 
   vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'OpenWeatherMap_Response';
+  vRESTResponse.name := 'OpenWeatherMap_Response';
 
   vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'OpenWeatherMap_Request';
+  vRESTRequest.name := 'OpenWeatherMap_Request';
   vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
   vRESTRequest.Client := vRESTClient;
@@ -222,8 +265,7 @@ begin
   FreeAndNil(vRESTRequest);
 end;
 
-function uWeather_Providers_OpenWeatherMap_GetForecast_5Days(vID: String)
-  : TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS;
+function uWeather_Providers_OpenWeatherMap_GetForecast_5Days(vID: String): TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS;
 var
   vOutValue: String;
   vi: Integer;
@@ -232,18 +274,18 @@ begin
   vJSONValue := TJSONValue.Create;
 
   vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'OpenWeatherMap_RestClient';
+  vRESTClient.name := 'OpenWeatherMap_RestClient';
   vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/forecast?id=' + vID + '&APPID=' + cOWM_APPID
-    + '&units=' + uWeather_Providers_OpenWeatherMap_Unit;
+  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/forecast?id=' + vID + '&APPID=' + cOWM_APPID + '&units=' +
+    uWeather_Providers_OpenWeatherMap_Unit;
   vRESTClient.FallbackCharsetEncoding := 'UTF-8';
 
   vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'OpenWeatherMap_Response';
+  vRESTResponse.name := 'OpenWeatherMap_Response';
 
   vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'OpenWeatherMap_Request';
+  vRESTRequest.name := 'OpenWeatherMap_Request';
   vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
   vRESTRequest.Client := vRESTClient;
@@ -277,8 +319,7 @@ begin
     Result.Hour[vi].Humidity := vJSONValue.GetValue<String>('list[' + vi.ToString + '].main.humidity');
     Result.Hour[vi].Weather_ID := vJSONValue.GetValue<String>('list[' + vi.ToString + '].weather[0].id');
     Result.Hour[vi].Weather_Main := vJSONValue.GetValue<String>('list[' + vi.ToString + '].weather[0].main');
-    Result.Hour[vi].Weather_Desc := vJSONValue.GetValue<String>
-      ('list[' + vi.ToString + '].weather[0].description');
+    Result.Hour[vi].Weather_Desc := vJSONValue.GetValue<String>('list[' + vi.ToString + '].weather[0].description');
     Result.Hour[vi].Wetaher_Icon := vJSONValue.GetValue<String>('list[' + vi.ToString + '].weather[0].icon');
     Result.Hour[vi].Clouds := vJSONValue.GetValue<String>('list[' + vi.ToString + '].clouds.all');
     Result.Hour[vi].Wind_Speed := vJSONValue.GetValue<String>('list[' + vi.ToString + '].wind.speed');
@@ -425,23 +466,21 @@ procedure uWeather_Providers_OpenWeatherMap_AddTown_Main(vTabNum: Integer; vTown
   vTown_Hour: TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS);
 begin
   vWeather.Scene.Tab[vTabNum].Tab := TALTabItem.Create(vWeather.Scene.Control);
-  vWeather.Scene.Tab[vTabNum].Tab.Name := 'A_W_WeatherTab_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Tab.name := 'A_W_WeatherTab_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Tab.Parent := vWeather.Scene.Control;
   vWeather.Scene.Tab[vTabNum].Tab.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].General.Image := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].General.Image.Name := 'A_W_WeatherImage_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].General.Image.name := 'A_W_WeatherImage_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].General.Image.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].General.Image.SetBounds(50, 60, 150, 150);
-  vWeather.Scene.Tab[vTabNum].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets +
-    addons.weather.Config.Iconset.Name + '\w_w_' + uWeather_Providers_OpenWeatherMap_IconShow(vDay.Weather_ID)
-    + '.png');
+  vWeather.Scene.Tab[vTabNum].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Config.Iconset.name + '\w_w_' +
+    uWeather_Providers_OpenWeatherMap_IconShow(vDay.Weather_ID) + '.png');
   vWeather.Scene.Tab[vTabNum].General.Image.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Image.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Name := 'A_W_Weather_TownAndCountry_' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.name := 'A_W_Weather_TownAndCountry_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Font.Size := 42;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Color := TAlphaColorRec.White;
@@ -449,16 +488,13 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Visible := True;
-  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Town_and_Country);
-  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Position.X :=
-    (vWeather.Scene.Tab[vTabNum].Tab.Width / 2) -
+  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Town_and_Country);
+  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Position.X := (vWeather.Scene.Tab[vTabNum].Tab.Width / 2) -
     (vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Width / 2);
-  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Position.Y := vWeather.Scene.Tab[vTabNum]
-    .Tab.Height - 120;
+  vWeather.Scene.Tab[vTabNum].General.Town_and_Country.Position.Y := vWeather.Scene.Tab[vTabNum].Tab.Height - 120;
 
   vWeather.Scene.Tab[vTabNum].General.Temprature := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].General.Temprature.Name := 'A_W_WeatherTemprature_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].General.Temprature.name := 'A_W_WeatherTemprature_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].General.Temprature.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Font.Size := 56;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Color := TAlphaColorRec.White;
@@ -468,25 +504,22 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Temprature.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Temprature.Visible := True;
-  vWeather.Scene.Tab[vTabNum].General.Temprature.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Temprature);
+  vWeather.Scene.Tab[vTabNum].General.Temprature.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Temprature);
 
-  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Name := 'A_W_WeatherTempratureUnit_' +
-    IntToStr(vTabNum);
+{  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
+  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.name := 'A_W_WeatherTempratureUnit_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Font.Size := 18;
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Color := TAlphaColorRec.White;
-  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Position.X := 310 + vWeather.Scene.Tab[vTabNum]
-    .General.Temprature.Width;
+  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Position.X := 310 + vWeather.Scene.Tab[vTabNum].General.Temprature.Width;
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Position.Y := 40;
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Text := vDay.Temp_Unit;
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Tag := vTabNum;
-  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Visible := True;
+  vWeather.Scene.Tab[vTabNum].General.Temprature_Unit.Visible := True;}
 
   vWeather.Scene.Tab[vTabNum].General.Condtition := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].General.Condtition.Name := 'A_W_WeatherTextCondtition_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].General.Condtition.name := 'A_W_WeatherTextCondtition_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].General.Condtition.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Font.Size := 42;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Color := TAlphaColorRec.White;
@@ -496,11 +529,10 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Condtition.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Condtition.Visible := True;
-  vWeather.Scene.Tab[vTabNum].General.Condtition.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Condtition);
+  vWeather.Scene.Tab[vTabNum].General.Condtition.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].General.Condtition);
 
   vWeather.Scene.Tab[vTabNum].Wind.Text := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Text.Name := 'A_W_WeatherWind_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Text.name := 'A_W_WeatherWind_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Text.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Text.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Wind.Text.Color := TAlphaColorRec.Deepskyblue;
@@ -508,14 +540,13 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Text.Position.Y := 280;
   vWeather.Scene.Tab[vTabNum].Wind.Text.Text := 'Wind';
   vWeather.Scene.Tab[vTabNum].Wind.Text.TextSettings.HorzAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab[vTabNum].Wind.Text.Font.Style := vWeather.Scene.Tab[vTabNum].Wind.Text.Font.Style +
-    [TFontStyle.fsUnderline];
+  vWeather.Scene.Tab[vTabNum].Wind.Text.Font.Style := vWeather.Scene.Tab[vTabNum].Wind.Text.Font.Style + [TFontStyle.fsUnderline];
   vWeather.Scene.Tab[vTabNum].Wind.Text.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Text.Visible := True;
   vWeather.Scene.Tab[vTabNum].Wind.Text.Width := 80;
 
   vWeather.Scene.Tab[vTabNum].Wind.Speed := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Speed.Name := 'A_W_WeatherWindSpeed' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Speed.name := 'A_W_WeatherWindSpeed' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Color := TAlphaColorRec.White;
@@ -528,7 +559,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Speed.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Speed);
 
   vWeather.Scene.Tab[vTabNum].Wind.Direction := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Direction.Name := 'A_W_WeatherWindDiretion' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Direction.name := 'A_W_WeatherWindDiretion' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Color := TAlphaColorRec.White;
@@ -538,42 +569,22 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Direction.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Wind.Direction.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Direction);
+  vWeather.Scene.Tab[vTabNum].Wind.Direction.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Direction);
 
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree :=
-    TText.Create(vWeather.Scene.Tab[vTabNum].Wind.Direction);
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Name := 'A_W_WeatherWindDiretionDegree' +
-    IntToStr(vTabNum);
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Parent := vWeather.Scene.Tab[vTabNum].Wind.Direction;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Font.Size := 10;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Color := TAlphaColorRec.White;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Position.X := vWeather.Scene.Tab[vTabNum]
-    .Wind.Direction.Width + 3;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Position.Y := vWeather.Scene.Tab[vTabNum]
-    .Wind.Direction.Height - 44;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Text := 'o';
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.TextSettings.HorzAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.TextSettings.VertAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Tag := vTabNum;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Degree.Visible := True;
-
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Name := 'A_W_WeatherWindDirectionArrow' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
+  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.name := 'A_W_WeatherWindDirectionArrow' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Width := 64;
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Height := 64;
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Position.X := 280;
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Position.Y := 340;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_wind_arrow.png');
+//  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.WrapMode := TImageWrapMode.Fit;
+//  vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_wind_arrow.png');
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.RotationAngle := StrToFloat(vDay.Wind_Direction);
   vWeather.Scene.Tab[vTabNum].Wind.Direction_Arrow.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Wind.Chill := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Chill.Name := 'A_W_WeatherWindChill' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Chill.name := 'A_W_WeatherWindChill' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Color := TAlphaColorRec.White;
@@ -586,70 +597,61 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Chill.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Wind.Chill);
 
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Name := 'A_W_WeatherWindChillIcon' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.name := 'A_W_WeatherWindChillIcon' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Width := 24;
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Height := 24;
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Position.X := vWeather.Scene.Tab[vTabNum].Wind.Chill.Width + 70;
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Position.Y := 392;
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Bitmap.LoadFromFile(addons.weather.Path.Images +
-    'w_wind_chill.png');
+  vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_wind_chill.png');
   vWeather.Scene.Tab[vTabNum].Wind.Chill_Icon.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Name := 'A_W_WeatherWindTurbineSmallStand_' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.name := 'A_W_WeatherWindTurbineSmallStand_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Width := 43;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Height := 52;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Position.X := 318;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Position.Y := 270;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_stand.png');
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_stand.png');
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Stand.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Name := 'A_W_WeatherWindSmallTurbine_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.name := 'A_W_WeatherWindSmallTurbine_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Width := 54;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Height := 54;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Position.X := 312;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Position.Y := 245;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.WrapMode := TImageWrapMode.Stretch;
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_turbine.png');
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_turbine.png');
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small.Visible := True;
 
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation :=
-    TFloatAnimation.Create(vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small);
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.Name := 'A_W_WeatherWindSmallTurbineAnimation_' +
-    IntToStr(vTabNum);
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.Parent := vWeather.Scene.Tab[vTabNum]
-    .Wind.Turbine_Small;
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation := TFloatAnimation.Create(vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.name := 'A_W_WeatherWindSmallTurbineAnimation_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.Parent := vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.PropertyName := 'RotationAngle';
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.Duration :=
-    uWeather_Convert_WindSpeed(StrToFloat(vDay.Wind_Speed));
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.Duration := uWeather_Convert_WindSpeed(StrToFloat(vDay.Wind_Speed));
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.StartValue := 0;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.StopValue := 360;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.Loop := True;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Small_Animation.Enabled := True;
 
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Name := 'A_W_WeatherWindTurbineStand_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.name := 'A_W_WeatherWindTurbineStand_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Width := 53;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Height := 64;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Position.X := 278;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Position.Y := 280;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_stand.png');
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_stand.png');
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Stand.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Wind.Turbine := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine.Name := 'A_W_WeatherWindTurbine_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine.name := 'A_W_WeatherWindTurbine_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Turbine.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine.Width := 64;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine.Height := 64;
@@ -659,36 +661,18 @@ begin
   vWeather.Scene.Tab[vTabNum].Wind.Turbine.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_turbine.png');
   vWeather.Scene.Tab[vTabNum].Wind.Turbine.Visible := True;
 
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation :=
-    TFloatAnimation.Create(vWeather.Scene.Tab[vTabNum].Wind.Turbine);
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.Name := 'A_W_WeatherWindTurbineAnimation_' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation := TFloatAnimation.Create(vWeather.Scene.Tab[vTabNum].Wind.Turbine);
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.name := 'A_W_WeatherWindTurbineAnimation_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.Parent := vWeather.Scene.Tab[vTabNum].Wind.Turbine;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.PropertyName := 'RotationAngle';
-  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.Duration :=
-    uWeather_Convert_WindSpeed(StrToFloat(vDay.Wind_Speed));
+  vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.Duration := uWeather_Convert_WindSpeed(StrToFloat(vDay.Wind_Speed));
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.StartValue := 0;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.StopValue := 360;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.Loop := True;
   vWeather.Scene.Tab[vTabNum].Wind.Turbine_Animation.Enabled := True;
 
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Name := 'A_W_WeatherAtmosphere_' + IntToStr(vTabNum);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Parent := vWeather.Scene.Tab[vTabNum].Tab;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Font.Size := 22;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Color := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Position.X := 60;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Position.Y := 430;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Text := 'Atmosphere';
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.TextSettings.HorzAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Tag := vTabNum;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Font.Style := vWeather.Scene.Tab[vTabNum]
-    .Atmosphere.Text.Font.Style + [TFontStyle.fsUnderline];
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Text.Width := 120;
-
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Name := 'A_W_WeatherAtmospherePressure' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.name := 'A_W_WeatherAtmospherePressure' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Color := TAlphaColorRec.White;
@@ -699,26 +683,21 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure);
 
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Name := 'A_W_WeatherAtmospherePresureIcon' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.name := 'A_W_WeatherAtmospherePresureIcon' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Width := 24;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Height := 24;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Position.X := vWeather.Scene.Tab[vTabNum]
-    .Atmosphere.Pressure.Width + 70;
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Position.X := vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure.Width + 70;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Position.Y := 482;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_presure.png');
+//  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.WrapMode := TImageWrapMode.Fit;
+//  vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_presure.png');
   vWeather.Scene.Tab[vTabNum].Atmosphere.Pressure_Icon.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Name := 'A_W_WeatherAtmosphereVisibility' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.name := 'A_W_WeatherAtmosphereVisibility' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Color := TAlphaColorRec.White;
@@ -730,39 +709,19 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility);
 
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Name := 'A_W_WeatherAtmosphereVisibilityIcon' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.name := 'A_W_WeatherAtmosphereVisibilityIcon' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Width := 24;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Height := 24;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Position.X := vWeather.Scene.Tab[vTabNum]
-    .Atmosphere.Visibility.Width + 70;
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Position.X := vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility.Width + 70;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Position.Y := 512;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_visibility.png');
   vWeather.Scene.Tab[vTabNum].Atmosphere.Visibility_Icon.Visible := True;
 
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Name := 'A_W_WeatherAtmosphereRising' + IntToStr(vTabNum);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Parent := vWeather.Scene.Tab[vTabNum].Tab;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Font.Size := 22;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Color := TAlphaColorRec.White;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Position.X := 60;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Position.Y := 530;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Text := 'Rising : '; // + vTown.Atmosphere.Rising;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.TextSettings.HorzAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Tag := vTabNum;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Rising.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Rising);
-
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Name := 'A_W_WeatherAtmosphereHumidity' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.name := 'A_W_WeatherAtmosphereHumidity' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Color := TAlphaColorRec.White;
@@ -772,39 +731,21 @@ begin
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity);
 
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Name := 'A_W_WeatherAtmosphereHumidityIcon_' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
+  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.name := 'A_W_WeatherAtmosphereHumidityIcon_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Width := 24;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Height := 24;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Position.X := 220;
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Position.Y := 572;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_humidity.png');
+//  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.WrapMode := TImageWrapMode.Fit;
+//  vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_humidity.png');
   vWeather.Scene.Tab[vTabNum].Atmosphere.Humidity_Icon.Visible := True;
 
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Name := 'A_W_WeatherAstronomy_' + IntToStr(vTabNum);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Parent := vWeather.Scene.Tab[vTabNum].Tab;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Font.Size := 22;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Color := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Position.X := 60;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Position.Y := 610;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Text := 'Astronomy';
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.TextSettings.HorzAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Font.Style := vWeather.Scene.Tab[vTabNum]
-    .Astronomy.Text.Font.Style + [TFontStyle.fsUnderline];
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Tag := vTabNum;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Text.Width := 120;
-
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Name := 'A_W_WeatherAstronomySunrise_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.name := 'A_W_WeatherAstronomySunrise_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Color := TAlphaColorRec.White;
@@ -814,25 +755,20 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise);
 
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Name := 'A_W_WeatherAstronomySunriseImage_' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Name := 'A_W_WeatherAstronomySunriseImage_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Parent := vWeather.Scene.Tab[vTabNum].Tab;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Width := 64;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Height := 64;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Position.X := vWeather.Scene.Tab[vTabNum]
-    .Astronomy.Sunrise.Width + 100;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Position.Y := 670;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_sunrise.png');
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.SetBounds(60, 670, 42, 42);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Font.Family:= 'Weather Icons';
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Font.Size:= 36;
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Text:= #$f051;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise_Image.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Name := 'A_W_WeatherAstronomySunset_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.name := 'A_W_WeatherAstronomySunset_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Font.Size := 22;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Color := TAlphaColorRec.White;
@@ -842,38 +778,31 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunset);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Astronomy.Sunset);
 
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Name := 'A_W_WeatherAstronomySunsetImage_' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Name := 'A_W_WeatherAstronomySunsetImage_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Parent := vWeather.Scene.Tab[vTabNum].Tab;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Width := 64;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Height := 64;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Position.X := vWeather.Scene.Tab[vTabNum]
-    .Astronomy.Sunrise.Width + 400;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Position.Y := 670;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Bitmap.LoadFromFile
-    (addons.weather.Path.Images + 'w_sunset.png');
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.SetBounds(460, 670, 42, 42);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Font.Family := 'Weather Icons';
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Font.Size := 36;
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Text:= #$f052;
   vWeather.Scene.Tab[vTabNum].Astronomy.Sunset_Image.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Name := 'A_W_WeatherAstronomySpot_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Spot.name := 'A_W_WeatherAstronomySpot_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Width := 24;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Height := 24;
-  vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Position.X := vWeather.Scene.Tab[vTabNum]
-    .Astronomy.Sunrise.Width + 120;
+  vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Position.X := vWeather.Scene.Tab[vTabNum].Astronomy.Sunrise.Width + 120;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Position.Y := 670;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot.WrapMode := TImageWrapMode.Fit;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_sun.png');
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot.Visible := True;
 
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text := TText.Create(vWeather.Scene.Tab[vTabNum].Astronomy.Spot);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text.Name := 'A_W_Weather_Astronomy_Spot_Text_' +
-    vTabNum.ToString;
+  vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text.name := 'A_W_Weather_Astronomy_Spot_Text_' + vTabNum.ToString;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text.Parent := vWeather.Scene.Tab[vTabNum].Astronomy.Spot;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text.Width := 100;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text.Height := 18;
@@ -884,9 +813,8 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text.TextSettings.VertAlign := TTextAlign.Center;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Text.Visible := True;
 
-  vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani :=
-    TPathAnimation.Create(vWeather.Scene.Tab[vTabNum].Astronomy.Spot);
-  vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani.Name := 'A_W_Weather_Astronomy_Spot_Animation';
+  vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani := TPathAnimation.Create(vWeather.Scene.Tab[vTabNum].Astronomy.Spot);
+  vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani.name := 'A_W_Weather_Astronomy_Spot_Animation';
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani.Parent := vWeather.Scene.Tab[vTabNum].Astronomy.Spot;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani.Duration := 4;
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani.Delay := 0.5;
@@ -894,7 +822,7 @@ begin
   vWeather.Scene.Tab[vTabNum].Astronomy.Spot_Ani.Enabled := False;
 
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Name := 'A_W_WeatherLastUpDate_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Server.LastUpDate.name := 'A_W_WeatherLastUpDate_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Font.Size := 16;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Color := TAlphaColorRec.Deepskyblue;
@@ -903,11 +831,10 @@ begin
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Text := 'Last Update: ' + vDay.Last_Checked;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.LastUpDate);
+  vWeather.Scene.Tab[vTabNum].Server.LastUpDate.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.LastUpDate);
 
   vWeather.Scene.Tab[vTabNum].Server.Powered_By := TText.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Server.Powered_By.Name := 'A_W_WeatherPoweredBy_' + IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Server.Powered_By.name := 'A_W_WeatherPoweredBy_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Font.Size := 16;
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Color := TAlphaColorRec.Deepskyblue;
@@ -915,22 +842,19 @@ begin
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Text := 'Powered by : ';
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Visible := True;
-  vWeather.Scene.Tab[vTabNum].Server.Powered_By.Width :=
-    uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.Powered_By);
+  vWeather.Scene.Tab[vTabNum].Server.Powered_By.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab[vTabNum].Server.Powered_By);
   vWeather.Scene.Tab[vTabNum].Server.Powered_By.Position.X := vWeather.Scene.Tab[vTabNum].Tab.Width -
     (vWeather.Scene.Tab[vTabNum].Server.Powered_By.Width + 70);
 
   vWeather.Scene.Tab[vTabNum].Server.Icon := TImage.Create(vWeather.Scene.Tab[vTabNum].Tab);
-  vWeather.Scene.Tab[vTabNum].Server.Icon.Name := 'A_W_WeatherPoweredByOpenWeatherMap_Icon_' +
-    IntToStr(vTabNum);
+  vWeather.Scene.Tab[vTabNum].Server.Icon.name := 'A_W_WeatherPoweredByOpenWeatherMap_Icon_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].Server.Icon.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].Server.Icon.Width := 64;
   vWeather.Scene.Tab[vTabNum].Server.Icon.Height := 64;
   vWeather.Scene.Tab[vTabNum].Server.Icon.Position.X := vWeather.Scene.Tab[vTabNum].Tab.Width - 70;
   vWeather.Scene.Tab[vTabNum].Server.Icon.Position.Y := 700;
   vWeather.Scene.Tab[vTabNum].Server.Icon.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab[vTabNum].Server.Icon.Bitmap.LoadFromFile(addons.weather.Path.Images +
-    'w_openweathermap.png');
+  vWeather.Scene.Tab[vTabNum].Server.Icon.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_openweathermap.png');
   vWeather.Scene.Tab[vTabNum].Server.Icon.Visible := True;
 
   { vWeather.Scene.Tab[vTabNum].Forcast.Box := TVertScrollBox.Create(vWeather.Scene.Tab[vTabNum].Tab);

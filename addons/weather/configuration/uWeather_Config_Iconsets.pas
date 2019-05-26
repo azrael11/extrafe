@@ -182,33 +182,33 @@ var
   vSetPath: String;
   vi: Integer;
 begin
-  vSetPath := addons.weather.Path.Iconsets + vSet + '\';
-
-  for vi := 0 to addons.weather.Action.Active_Total do
-  begin
-    vWeather.Scene.Tab[vi].General.Image.Bitmap.LoadFromFile(vSetPath + 'w_w_' + addons.weather.Action.Choosen
-      [vi].Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Current.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Current.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_1.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_1.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_2.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_2.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_3.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_3.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_4.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_4.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_5.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_5.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_6.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_6.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_7.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_7.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_8.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_8.Code + '.png');
-    vWeather.Scene.Tab[vi].Forcast.Day_9.Image.Bitmap.LoadFromFile
-      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_9.Code + '.png');
-  end;
+//  vSetPath := addons.weather.Path.Iconsets + vSet + '\';
+//
+//  for vi := 0 to addons.weather.Action.Active_Total do
+//  begin
+//    vWeather.Scene.Tab[vi].General.Image.Bitmap.LoadFromFile(vSetPath + 'w_w_' + addons.weather.Action.Choosen
+//      [vi].Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Current.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Current.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_1.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_1.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_2.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_2.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_3.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_3.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_4.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_4.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_5.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_5.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_6.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_6.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_7.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_7.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_8.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_8.Code + '.png');
+//    vWeather.Scene.Tab[vi].Forcast.Day_9.Image.Bitmap.LoadFromFile
+//      (vSetPath + 'w_w_' + addons.weather.Action.Choosen[vi].Day_9.Code + '.png');
+//  end;
 end;
 
 procedure uWeather_Config_Iconsets_UseIconSet(vIconSet_Name: String);

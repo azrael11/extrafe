@@ -28,9 +28,9 @@ begin
   if extrafe.prog.State = 'addon_weather_config_towns_add' then
   begin
     if UpperCase(vKey) = 'ESC' then
-      uWeather_Config_Towns_Add_Free
+      uWeather_Config_Towns_Add.Free
     else if UpperCase(vKey) = 'ENTER' then
-      uWeather_Config_Towns_Add_FindTown(vWeather.Config.Main.Right.Towns.Add.Main.FindTown_V.Text);
+      uWeather_Config_Towns_Add.FindTown(vWeather.Config.Main.Right.Towns.Add.Main.FindTown_V.Text);
   end
   else if extrafe.prog.State = 'addon_weather_config' then
   begin

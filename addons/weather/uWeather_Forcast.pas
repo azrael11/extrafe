@@ -11,7 +11,7 @@ uses
 
 procedure Get_From;
 
-function Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
+//function Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
 
 var
   vNTXML: IXMLDocument;
@@ -36,7 +36,7 @@ begin
 end;
 
 
-function Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
+{function Get(vNum: Integer; vWoeid, vCountry_Code: String): TADDON_WEATHER_CHOOSENTOWN;
 const
   cTemp_Forcast = 'data\addons\weather\temp\ChoosenTown.xml';
 var
@@ -383,7 +383,7 @@ begin
       end;
 
   DeleteFile(extrafe.prog.Path + cTemp_Forcast);
-end;
+end;}
 
 end.
 

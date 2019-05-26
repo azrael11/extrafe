@@ -21,6 +21,7 @@ uses
   ALFmxObjects,
   uWeather_Mouse,
   uWeather_Config_Mouse,
+  Radiant.Shapes,
   Bass;
 
 type
@@ -90,19 +91,20 @@ type
     High: WideString;
   end;
 
-type TADDON_WEATHER_CONFIG_CREATE_PANEL= record
-  Temp: String;
-  Temp_Unit: String;
-  Temp_Icon: String;
-  Temp_Description: String;
-  City_Name: String;
-  Country_Name: String;
-  Country_Flag: String;
-  Last_Checked: String;
-end;
+type
+  TADDON_WEATHER_CONFIG_CREATE_PANEL = record
+    Temp: String;
+    Temp_Unit: String;
+    Temp_Icon: String;
+    Temp_Description: String;
+    City_Name: String;
+    Country_Name: String;
+    Country_Flag: String;
+    Last_Checked: String;
+  end;
 
 type
-  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS_HOUR= record
+  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS_HOUR = record
     Time: String;
     Temp: String;
     Temp_Min: String;
@@ -124,7 +126,7 @@ type
   end;
 
 type
-  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS= record
+  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS = record
     City_ID: String;
     City_Name: String;
     Longitude: String;
@@ -170,9 +172,9 @@ type
   end;
 
 type
-  TADDON_WEATHER_CHOOSENTOWN = record
-    Provider: WideString;
+  TADDON_WEATHER_PROVIDER_YAHOO2_DATATOWN = record
     WoeID: WideString;
+    vUnit: WideString;
     City: WideString;
     Country: WideString;
     Country_FlagCode: string;
@@ -197,6 +199,190 @@ type
     Day_9: TADDON_WEATHER_CHOOSENTOWN_DAY;
   end;
 
+  /// /Yahoo Weather Vars
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_LOCATION = record
+    WoeID: WideString;
+    Photo_WoeID: WideString;
+    Country_Name: WideString;
+    City_Name: WideString;
+    Latitude: WideString;
+    Longitude: WideString;
+    OffSetSecs: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME = record
+    Day: WideString;
+    Hour: WideString;
+    WeekDay: WideString;
+    TimeStamp: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_DAYPART = record
+    Desc: WideString;
+    Part: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_OBSERVATION_TEMPRETURE = record
+    Now: WideString;
+    Now_Metric: String;
+    High: WideString;
+    High_Metric: String;
+    Low: WideString;
+    Low_Metric: String;
+    FeelsLike: WideString;
+    FeelsLike_Metric: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_OBSERVATION = record
+    BarometricPressure: String;
+    BarometricPressure_Metric: String;
+    ConditionCode: WideString;
+    ConditionDescription: WideString;
+    Day_Part: array [0 .. 1] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_DAYPART;
+    Tempreture: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_OBSERVATION_TEMPRETURE;
+    Time: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME;
+    Humidity: WideString;
+    PrecipitationProbability: WideString;
+    UVDescription: WideString;
+    UVIndex: WideString;
+    Visibility: String;
+    Visibility_Metric: String;
+    WindDirection: WideString;
+    WindDirectionCode: WideString;
+    WindSpeed: WideString;
+    WindSpeed_Metric: String;
+    LocalTime: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_HOURLY_TEMPERATURE = record
+    Now: WideString;
+    Now_Metric: String;
+    FeelsLike: WideString;
+    FeelsLike_Metric: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_HOURLY = record
+    ConditionCode: WideString;
+    ConditionDescription: WideString;
+    Temperature: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_HOURLY_TEMPERATURE;
+    Time: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME;
+    Humidity: WideString;
+    PrecipitationProbability: WideString;
+    WindDirection: String;
+    WindDirectionCode: WideString;
+    WindSpeed: WideString;
+    WindSpeed_Metric: String;
+    LocalTime: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_DAILY_TEMPERATURE = record
+    High: WideString;
+    High_Metric: String;
+    Low: WideString;
+    Low_Metric: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_DAILY = record
+    ConditionCode: WideString;
+    ConditionDescription: WideString;
+    Parts: array [0 .. 1] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_DAYPART;
+    Temperature: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_DAILY_TEMPERATURE;
+    Time: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME;
+    Humidity: WideString;
+    PrecipitationProbability: WideString;
+    LocalTime: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS = record
+    Hourly: array [0 .. 24] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_HOURLY;
+    Daily: array [0 .. 10] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS_DAILY;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PRECIPITATIONs = record
+    TimeSlot: WideString;
+    Probability: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_SUNANDMOON = record
+    Sunrise: WideString;
+    Sunset: WideString;
+    MoonPhase: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PHOTOS_RESOLUTIONS = record
+    Height: WideString;
+    Width: WideString;
+    URL: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PHOTOS = record
+    ID: WideString;
+    DayOrNight: WideString;
+    Owner: WideString;
+    OwnerName: WideString;
+    resolutions: array [0 .. 5] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PHOTOS_RESOLUTIONS;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PROVIDER = record
+    Name: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_META_DATA = record
+    Number: WideString;
+    Text: WideString;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_META = record
+    Skycode: array [0 .. 255] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_META_DATA;
+    ConditionMap: array [0 .. 255] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_META_DATA;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN = record
+    WoeID: WideString;
+    vUnit: WideString;
+    Location: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_LOCATION;
+    Observation: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_OBSERVATION;
+    Forcasts: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_FORCASTS;
+    Precipitations: array [0 .. 6] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PRECIPITATIONs;
+    SunAndMoon: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_SUNANDMOON;
+    Photos: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PHOTOS;
+    Provider: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PROVIDER;
+    Meta: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_META;
+  end;
+  /// /
+
+type
+  TADDON_WEATHER_PROVIDER_YAHOO = record
+    Data_Town: array of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN;
+    Total_WoeID: Integer;
+    Selected_Unit: String;
+    WoeID_List: TStringList;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP = record
+
+  end;
+
 type
   TADDON_WEATHER_ACTIONS = record
     Provider: String;
@@ -207,9 +393,10 @@ type
     PathAni_Show: Boolean;
     Effect_Active_Num: Integer;
     First: Boolean;
+    Yahoo: TADDON_WEATHER_PROVIDER_YAHOO;
+    OWM: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP;
     WEOID_PER_Provider: array of array of Integer;
     Degree: String;
-    Choosen: array of TADDON_WEATHER_CHOOSENTOWN;
   end;
 
 type
@@ -262,11 +449,33 @@ type
 
 type
   TGENERAL_INFO = record
+    Background: TImage;
+    Blur: TGaussianBlurEffect;
+    Temprature_Unit_F: TText;
+    Temprature_Unit_F_Glow: TGlowEffect;
+    Temprature_Unit_C: TText;
+    Temprature_Unit_C_Glow: TGlowEffect;
+    Date: TText;
     Image: TImage;
     Town_and_Country: TText;
+    Latidute: TText;
+    Earth: TText;
+    Longidute: TText;
     Condtition: TText;
+    Day_Icon: TText;
+    Day: TText;
+    Night_Icon: TText;
+    Night: TText;
     Temprature: TText;
-    Temprature_Unit: TText;
+    Thermometer: TText;
+    Low: TText;
+    Low_Icon: TText;
+    High: TText;
+    High_Icon: TText;
+    FeelsLike: TText;
+    Moon: TText;
+    Moon_Phase: TText;
+
   end;
 
 type
@@ -280,31 +489,29 @@ type
     Turbine_Small_Animation: TFloatAnimation;
     Speed: TText;
     Direction: TText;
-    Direction_Degree: TText;
-    Direction_Arrow: TImage;
+    Direction_Arrow: TText;
     Chill: TText;
     Chill_Icon: TImage;
   end;
 
 type
   TATMOSPHERE_INFO = record
-    Text: TText;
+    UV: TText;
+    UV_Index: TText;
     Pressure: TText;
-    Pressure_Icon: TImage;
+    Pressure_Icon: TText;
     Visibility: TText;
-    Visibility_Icon: TImage;
-    Rising: TText;
+    Visibility_Icon: TText;
     Humidity: TText;
-    Humidity_Icon: TImage;
+    Humidity_Icon: TText;
   end;
 
 type
   TASTRONOMY_INFO = record
-    Text: TText;
     Sunset: TText;
     Sunrise: TText;
-    Sunset_Image: TImage;
-    Sunrise_Image: TImage;
+    Sunrise_Image: TText;
+    Sunset_Image: TText;
     Spot: TImage;
     Spot_Text: TText;
     Spot_Ani: TPathAnimation;
@@ -323,6 +530,62 @@ type
     High: TText;
     High_TU: TText;
     High_Image: TImage;
+  end;
+
+type
+  TFORECAST_HOURLY_PANEL_INFO = record
+    Layout: TLayout;
+    Glow: TInnerGlowEffect;
+    Icon: TImage;
+    Temperature: TText;
+    Condition: TText;
+    Humidity_Icon: TText;
+    Humidity: TText;
+    Wind_Icon: TText;
+    Wind: TText;
+    Wind_Description: TText;
+    Wind_Direction: TText;
+    Hour: TText;
+    Upper_Layout: TPanel;
+  end;
+
+type
+  TFORECAST_HOURLY_INFO = record
+    Title: TText;
+    Left: TText;
+    Left_Glow: TGlowEffect;
+    Right: TText;
+    Right_Glow: TGlowEffect;
+    Box: THorzScrollBox;
+    Hourly: array [0 .. 24] of TFORECAST_HOURLY_PANEL_INFO;
+  end;
+
+type
+  TFORECAST_DAILY_PANEL_INFO = record
+    Layout: TLayout;
+    Glow: TInnerGlowEffect;
+    Date: TText;
+    Icon: TImage;
+    Condition: TText;
+    Thermometre: TText;
+    Temp_Up: TText;
+    Temp_Up_Value: TText;
+    Temp_Down: TText;
+    Temp_Down_Value: TText;
+    Humidity: TText;
+    Humidity_Value: TText;
+    Line: TRadiantLine;
+    Day: TText;
+    Day_Value: TText;
+    Night: TText;
+    Night_Value: TText;
+  end;
+
+type
+  TFORECAST_DAILY_INFO = record
+    Title: TText;
+    Box: TVertScrollBox;
+    Daily: array [0 .. 10] of TFORECAST_DAILY_PANEL_INFO;
   end;
 
 type
@@ -354,6 +617,8 @@ type
     Wind: TWIND_INFO;
     Atmosphere: TATMOSPHERE_INFO;
     Astronomy: TASTRONOMY_INFO;
+    Forecast_Hourly: TFORECAST_HOURLY_INFO;
+    Forecast_Daily: TFORECAST_DAILY_INFO;
     Forcast: TFORCAST_INFO;
     Server: TSERVER_INFO;
   end;
@@ -404,9 +669,10 @@ type
   TWEATHER_CONFIG_TOWN_PANEL = record
     Panel: TPanel;
     Glow_Panel: TGlowEffect;
-    Image: TImage;
+    Image: TText;
     Date: TLabel;
     Temp: TLabel;
+    Temp_Unit: TText;
     Temp_Comment: TLabel;
     City_Name: TLabel;
     City_Name_V: TLabel;
@@ -436,7 +702,7 @@ type
     Panel: TPanel;
     FindTown: TLabel;
     FindTown_V: TEdit;
-    Search: TImage;
+    Search: TText;
     Search_Glow: TGlowEffect;
     Grid: TStringGrid;
     Add: TButton;
@@ -564,6 +830,7 @@ type
   TWEATHER_CONFIG_PANEL_LEFT = record
     Panel: TPanel;
     Buttons: array [0 .. 3] of TButton;
+    Provider: TImage;
   end;
 
 type
