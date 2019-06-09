@@ -255,7 +255,7 @@ type
     Visibility_Metric: String;
     WindDirection: WideString;
     WindDirectionCode: WideString;
-    WindSpeed: WideString;
+    WindSpeed: String;
     WindSpeed_Metric: String;
     LocalTime: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_TIME;
   end;
@@ -335,6 +335,7 @@ type
     DayOrNight: WideString;
     Owner: WideString;
     OwnerName: WideString;
+    Picture_Used_Num: Integer;
     resolutions: array [0 .. 5] of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PHOTOS_RESOLUTIONS;
   end;
 
@@ -376,6 +377,7 @@ type
     Total_WoeID: Integer;
     Selected_Unit: String;
     WoeID_List: TStringList;
+    Towns_List: TStringList;
   end;
 
 type
@@ -449,13 +451,23 @@ type
 
 type
   TGENERAL_INFO = record
-    Background: TImage;
-    Blur: TGaussianBlurEffect;
+    Town_Image_Left_Arrow: TText;
+    Town_Image_Left_Arrow_Glow: TGlowEffect;
+    Town_Image_Right_Arrow: TText;
+    Town_Image_Right_Arrow_Glow: TGlowEffect;
+    Town_Image_Resolution: TText;
+    Town_Image_Resolution_Value: TText;
+    Town_Image_Click_Fullscreen: TText;
+    Town_Image: TImage;
+    Town_Image_Blur: TGaussianBlurEffect;
+    Town_Image_Owner: TText;
     Temprature_Unit_F: TText;
     Temprature_Unit_F_Glow: TGlowEffect;
     Temprature_Unit_C: TText;
     Temprature_Unit_C_Glow: TGlowEffect;
     Date: TText;
+    Time: TText;
+    Time_Icon: TText;
     Image: TImage;
     Town_and_Country: TText;
     Latidute: TText;
@@ -475,7 +487,12 @@ type
     FeelsLike: TText;
     Moon: TText;
     Moon_Phase: TText;
-
+    Refresh_Text: TText;
+    Refresh: TText;
+    Refresh_Glow: TGlowEffect;
+    ShowImage: TText;
+    ShowImage_Blur: TGaussianBlurEffect;
+    ShowImage_Glow: TGlowEffect;
   end;
 
 type
@@ -546,7 +563,6 @@ type
     Wind_Description: TText;
     Wind_Direction: TText;
     Hour: TText;
-    Upper_Layout: TPanel;
   end;
 
 type
@@ -579,12 +595,17 @@ type
     Day_Value: TText;
     Night: TText;
     Night_Value: TText;
+    Both: TText;
   end;
 
 type
   TFORECAST_DAILY_INFO = record
-    Title: TText;
+    Line: TRadiantLine;
+    Up: TText;
+    Up_Glow: TGlowEffect;
     Box: TVertScrollBox;
+    Down: TText;
+    Down_Glow: TGlowEffect;
     Daily: array [0 .. 10] of TFORECAST_DAILY_PANEL_INFO;
   end;
 

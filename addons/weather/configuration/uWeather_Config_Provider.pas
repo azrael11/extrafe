@@ -27,7 +27,8 @@ uses
   uLoad_AllTypes,
   main,
   uWeather_AllTypes,
-  uWeather_SetAll;
+  uWeather_SetAll,
+  uWeather_Providers_Yahoo_Config;
 
 procedure Create(vName: String; vNum: Integer);
 begin
@@ -139,6 +140,7 @@ begin
     vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
     vWeather.Config.main.Left.Provider.Bitmap := nil;
   end;
+  uWeather_Providers_Yahoo_Config.Load;
 end;
 
 procedure Check_OpenWeatherMap;

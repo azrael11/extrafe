@@ -7,6 +7,7 @@ uses
   System.JSON,
   System.Sysutils,
   FMX.Graphics,
+  FMX.Dialogs,
   IdBaseComponent,
   IdComponent,
   IdTCPConnection,
@@ -422,12 +423,17 @@ begin
   Result := TBitmap.Create;
   vIdHTTP := TIdHTTP.Create(Main_Form);
   try
-    vIdHTTP.Get(vPath, MS);
-    MS.Seek(0, soFromBeginning);
-    Result.LoadFromStream(MS);
-  finally
-    FreeAndNil(MS);
-    FreeAndNil(vIdHTTP);
+    try
+      vIdHTTP.Get(vPath, MS);
+      MS.Seek(0, soFromBeginning);
+      Result.LoadFromStream(MS);
+    finally
+      FreeAndNil(MS);
+      FreeAndNil(vIdHTTP);
+    end;
+  except
+    on E: Exception do
+      ShowMessage('Something Wrong Going Here');
   end;
 end;
 
@@ -464,7 +470,7 @@ var
   vRESTRequest: TRESTRequest;
   vRESTResponse: TRESTResponse;
 begin
-  Result:= TJSONValue.Create;
+  Result := TJSONValue.Create;
   vRESTClient := TRESTClient.Create('');
   vRESTClient.Name := vRestName + '_RestClient';
   vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
@@ -473,10 +479,10 @@ begin
   vRESTClient.FallbackCharsetEncoding := 'UTF-8';
 
   vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := vRestName +'_Response';
+  vRESTResponse.Name := vRestName + '_Response';
 
   vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := vRestName +'_Request';
+  vRESTRequest.Name := vRestName + '_Request';
   vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
   vRESTRequest.Client := vRESTClient;
@@ -485,7 +491,7 @@ begin
   vRESTRequest.Timeout := 30000;
 
   vRESTRequest.Execute;
-  Result:= vRESTResponse.JSONValue;
+  Result := vRESTResponse.JSONValue;
 
   FreeAndNil(vRESTRequest)
 end;

@@ -267,8 +267,6 @@ end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseEnter(Sender: TObject);
 begin
-  if TPanel(Sender).Name = 'A_W_Hourly_Info_Upper_Layout_' + TPanel(Sender).TagString then
-    vWeather.Scene.Tab[TPanel(Sender).Tag].Forecast_Hourly.Hourly[(TPanel(Sender).TagString).ToInteger].Glow.Enabled := True;
   if extrafe.prog.state = 'addon_weather_config' then
   begin
     if TPanel(Sender).TagFloat = 1000 then
@@ -289,8 +287,6 @@ end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseLeave(Sender: TObject);
 begin
-  if TPanel(Sender).Name = 'A_W_Hourly_Info_Upper_Layout_' + TPanel(Sender).TagString then
-    vWeather.Scene.Tab[TPanel(Sender).Tag].Forecast_Hourly.Hourly[(TPanel(Sender).TagString).ToInteger].Glow.Enabled := False;
   if extrafe.prog.state = 'addon_weather_config' then
   begin
     if TPanel(Sender).TagFloat = 1000 then
@@ -327,6 +323,20 @@ begin
       uWeather_Providers_Yahoo.Use_Metric;
       BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
     end;
+  end
+  else if TText(Sender).Name = 'A_W_Yahoo_Weather_Refresh'  then
+    uWeather_Providers_Yahoo.Refresh_Town(vWeather.Scene.Control.TabIndex)
+  else if TText(Sender).Name = 'A_W_Yahoo_Provider_ShowImage' then
+    uWeather_Providers_Yahoo.Show_Image
+  else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Left_Arrow' then
+  begin
+    if TText(Sender).TextSettings.FontColor<> TAlphaColorRec.Grey then
+      uWeather_Providers_Yahoo.Show_Town_Image('previous');
+  end
+  else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Right_Arrow' then
+  begin
+    if TText(Sender).TextSettings.FontColor<> TAlphaColorRec.Grey then
+      uWeather_Providers_Yahoo.Show_Town_Image('next');
   end;
 end;
 
@@ -337,12 +347,22 @@ begin
     if TText(Sender).Name = 'A_W_Yahoo_Hourly_Left' then
     begin
       vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left_Glow.Enabled := True;
-      uWeather_Providers_Yahoo.Main_Hourly_Slide('left');
+      uWeather_Providers_Yahoo.Main_Slide('left');
     end
     else if TText(Sender).Name = 'A_W_Yahoo_Hourly_Right' then
     begin
       vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right_Glow.Enabled := True;
-      uWeather_Providers_Yahoo.Main_Hourly_Slide('right');
+      uWeather_Providers_Yahoo.Main_Slide('right');
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Daily_Up' then
+    begin
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Daily.Up_Glow.Enabled:= True;
+      uWeather_Providers_Yahoo.Main_Slide('up');
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Daily_Down' then
+    begin
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Daily.Down_Glow.Enabled:= True;
+      uWeather_Providers_Yahoo.Main_Slide('down');
     end
     else if TText(Sender).Name = 'A_W_WeatherTempratureUnit_F' then
     begin
@@ -359,6 +379,27 @@ begin
         TText(Sender).Cursor := crHandPoint;
         vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C_Glow.Enabled := True;
       end;
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Weather_Refresh'  then
+    begin
+      TText(Sender).Cursor:= crHandPoint;
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Refresh_Glow.Enabled:= True;
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Provider_ShowImage' then
+    begin
+      TText(Sender).Cursor:= crHandPoint;
+      if vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.ShowImage_Blur.Enabled= False then
+        vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.ShowImage_Glow.Enabled:= True;
+    end
+    else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Left_Arrow' then
+    begin
+      TText(Sender).Cursor:= crHandPoint;
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Town_Image_Left_Arrow_Glow.Enabled:= True;
+    end
+    else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Right_Arrow' then
+    begin
+      TText(Sender).Cursor:= crHandPoint;
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Town_Image_Right_Arrow_Glow.Enabled:= True;
     end;
   end;
 end;
@@ -369,13 +410,23 @@ begin
   begin
     if TText(Sender).Name = 'A_W_Yahoo_Hourly_Left' then
     begin
-      uWeather_Providers_Yahoo.Main_Hourly_Slide_Free;
+      uWeather_Providers_Yahoo.Main_Slide_Free;
       vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left_Glow.Enabled := False;
     end
     else if TText(Sender).Name = 'A_W_Yahoo_Hourly_Right' then
     begin
-      uWeather_Providers_Yahoo.Main_Hourly_Slide_Free;
+      uWeather_Providers_Yahoo.Main_Slide_Free;
       vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right_Glow.Enabled := False;
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Daily_Up' then
+    begin
+      uWeather_Providers_Yahoo.Main_Slide_Free;
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Daily.Up_Glow.Enabled:= False;
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Daily_Down' then
+    begin
+      uWeather_Providers_Yahoo.Main_Slide_Free;
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Forecast_Daily.Down_Glow.Enabled:= False;
     end
     else if TText(Sender).Name = 'A_W_WeatherTempratureUnit_F' then
     begin
@@ -386,7 +437,18 @@ begin
     begin
       if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
         vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C_Glow.Enabled := False;
-    end;
+    end
+    else if TText(Sender).Name = 'A_W_Yahoo_Weather_Refresh'  then
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Refresh_Glow.Enabled:= False
+    else if TText(Sender).Name = 'A_W_Yahoo_Provider_ShowImage' then
+    begin
+      if vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.ShowImage_Blur.Enabled= False then
+        vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.ShowImage_Glow.Enabled:= False;
+    end
+    else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Left_Arrow' then
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Town_Image_Left_Arrow_Glow.Enabled:= False
+    else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Right_Arrow' then
+      vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Town_Image_Right_Arrow_Glow.Enabled:= False
   end;
 end;
 
