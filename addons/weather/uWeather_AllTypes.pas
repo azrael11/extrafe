@@ -39,13 +39,6 @@ type
   end;
 
 type
-  TADDON_WEATHER_ICONSETS = record
-    Name: string;
-    Count: Integer;
-    Names: TStringList;
-  end;
-
-type
   TADDON_WEATHER_CONFIG = record
     Ini: TIniFile;
     Name: String;
@@ -376,6 +369,10 @@ type
     Data_Town: array of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN;
     Total_WoeID: Integer;
     Selected_Unit: String;
+    Iconset_Count: Integer;
+    Iconset_Selected: Integer;
+    Iconset_Name: String;
+    Iconset_Names: TStringList;
     WoeID_List: TStringList;
     Towns_List: TStringList;
   end;
@@ -406,7 +403,6 @@ type
     Edit_Lock: Boolean;
     Selected_Town: Integer;
     Refresh_Once: Boolean;
-    Iconset: TADDON_WEATHER_ICONSETS;
     Active_Panel: Integer;
   end;
 
@@ -469,9 +465,11 @@ type
     Time: TText;
     Time_Icon: TText;
     Image: TImage;
+    Text_Image: TText;
     Town_and_Country: TText;
     Latidute: TText;
     Earth: TText;
+    Earth_Glow: TGlowEffect;
     Longidute: TText;
     Condtition: TText;
     Day_Icon: TText;
@@ -554,6 +552,7 @@ type
     Layout: TLayout;
     Glow: TInnerGlowEffect;
     Icon: TImage;
+    Text_Icon: TText;
     Temperature: TText;
     Condition: TText;
     Humidity_Icon: TText;
@@ -582,6 +581,7 @@ type
     Glow: TInnerGlowEffect;
     Date: TText;
     Icon: TImage;
+    Text_Icon: TText;
     Condition: TText;
     Thermometre: TText;
     Temp_Up: TText;
@@ -795,11 +795,23 @@ type
   end;
 
 type
-  TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS = record
+  TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS_YAHOO = record
+    System_Type: TGroupBox;
+    Type_Text: TALText;
+    Metric: TCheckBox;
+    Imperial: TCheckBox;
+    Refresh: TGroupBox;
+    Refresh_Every: TCheckBox;
+    Refresh_Once: TCheckBox;
+  end;
+
+type
+  TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS_OWM = record
     Degree: TGroupBox;
-    Degree_C: TCheckBox; // Yahoo, OpenWeatherMap
-    Degree_F: TCheckBox; // Yahoo, OpenWeatherMap
-    Degree_K: TCheckBox; // OpenWeatherMap
+    Degree_Text: TALText;
+    Degree_C: TCheckBox;
+    Degree_F: TCheckBox;
+    Degree_K: TCheckBox;
     Refresh: TGroupBox;
     Refresh_Every: TCheckBox;
     Refresh_Once: TCheckBox;
@@ -815,7 +827,9 @@ type
     Name: TLabel;
     Panel: TPanel;
     Panel_Glow: TGlowEffect;
-    Image: array [0 .. 7] of TImage;
+    Text_Image: array [0 .. 8] of TText;
+    Text_Image_Glow: TGlowEffect;
+    Image: array [0 .. 8] of TImage;
     Preview: TImage;
     Preview_Glow: TGlowEffect;
   end;
@@ -824,7 +838,8 @@ type
   TWEATHER_CONFIG_PANEL_RIGHT_ICONSETS_ICONSET_FULL = record
     Panel: TPanel;
     Images: array [0 .. 48] of TImage;
-    Back: TImage;
+    Texts: array [0 ..48] of TText;
+    Back: TText;
     Back_Glow: TGlowEffect;
   end;
 
@@ -842,7 +857,8 @@ type
     Panels: array [0 .. 3] of TPanel;
     Provider: TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER;
     Towns: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS;
-    Options: TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS;
+    Options_Yahoo: TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS_YAHOO;
+    Options_OWM: TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS_OWM;
     Iconsets: TWEATHER_CONFIG_PANEL_RIGHT_ICONSETS;
     NoProvider_Selected: TText;
   end;

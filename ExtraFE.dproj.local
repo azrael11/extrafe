@@ -383,8 +383,8 @@
     <Transaction>2019/04/26 14:40:25.000.233,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\soundplayer\scrapers\uSoundplayer_Scrapers_AZLyrics.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/04/29 09:46:55.000.085,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/04/29 09:47:13.000.239,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Mouse.pas</Transaction>
-    <Transaction>2019/06/09 09:32:21.021,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
-    <Transaction>2019/06/09 09:32:38.642,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo_Config.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/06/09 09:32:21.000.021,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/06/09 09:32:38.000.642,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo_Config.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android=""/>
@@ -403,31 +403,31 @@
     <File Path="addons\calendar\uCalendar_SetAll.pas"/>
     <File Path="addons\play"/>
     <File Path="addons\play\azhung"/>
-    <File Path="addons\play\azhung\uAzHung_AllTypes.pas"/>
-    <File Path="addons\play\azhung\uAzHung_SetAll.pas"/>
     <File Path="addons\play\azhung\uAzHung_Actions.pas"/>
+    <File Path="addons\play\azhung\uAzHung_AllTypes.pas"/>
     <File Path="addons\play\azhung\uAzHung_Mouse.pas"/>
+    <File Path="addons\play\azhung\uAzHung_SetAll.pas"/>
     <File Path="addons\play\azhung\uAzHung_Sound.pas"/>
-    <File Path="addons\play\uPlay_AllTypes.pas"/>
-    <File Path="addons\play\uPlay_SetAll.pas"/>
-    <File Path="addons\play\uPlay_Mouse.pas"/>
     <File Path="addons\play\uPlay_Actions.pas"/>
+    <File Path="addons\play\uPlay_AllTypes.pas"/>
+    <File Path="addons\play\uPlay_Mouse.pas"/>
+    <File Path="addons\play\uPlay_SetAll.pas"/>
     <File Path="addons\play\uPlay_Sounds.pas"/>
     <File Path="addons\soundplayer"/>
     <File Path="addons\soundplayer\equalizer"/>
-    <File Path="addons\soundplayer\equalizer\uSoundplayer_Equalizer_SetAll.pas"/>
-    <File Path="addons\soundplayer\equalizer\uSoundplayer_Equalizer_Mouse.pas"/>
     <File Path="addons\soundplayer\equalizer\uSoundplayer_Equalizer.pas"/>
+    <File Path="addons\soundplayer\equalizer\uSoundplayer_Equalizer_Mouse.pas"/>
+    <File Path="addons\soundplayer\equalizer\uSoundplayer_Equalizer_SetAll.pas"/>
     <File Path="addons\soundplayer\player"/>
     <File Path="addons\soundplayer\player\uSoundplayer_Player_Volume.pas"/>
     <File Path="addons\soundplayer\playlist"/>
+    <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas"/>
+    <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Create.pas"/>
     <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Manage.pas"/>
     <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Remove.pas"/>
-    <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Create.pas"/>
-    <File Path="addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas"/>
     <File Path="addons\soundplayer\scrapers"/>
-    <File Path="addons\soundplayer\scrapers\uSoundplayer_Scrapers_Flicker.pas"/>
     <File Path="addons\soundplayer\scrapers\uSoundplayer_Scrapers_AZLyrics.pas"/>
+    <File Path="addons\soundplayer\scrapers\uSoundplayer_Scrapers_Flicker.pas"/>
     <File Path="addons\soundplayer\scrapers\uSoundplayer_Scrapers_Lastfm.pas"/>
     <File Path="addons\soundplayer\settings"/>
     <File Path="addons\soundplayer\settings\uSoundplayer_Settings_SetAll.pas"/>
@@ -467,10 +467,10 @@
     <File Path="addons\weather\configuration\towns\uWeather_Config_Towns_Delete.pas"/>
     <File Path="addons\weather\configuration\towns\uWeather_Config_Towns_Refresh.pas"/>
     <File Path="addons\weather\configuration\uWeather_Config_Iconsets.pas"/>
+    <File Path="addons\weather\configuration\uWeather_Config_Mouse.pas"/>
     <File Path="addons\weather\configuration\uWeather_Config_Options.pas"/>
     <File Path="addons\weather\configuration\uWeather_Config_Provider.pas"/>
     <File Path="addons\weather\configuration\uWeather_Config_Towns.pas"/>
-    <File Path="addons\weather\configuration\uWeather_Config_Mouse.pas"/>
     <File Path="addons\weather\providers"/>
     <File Path="addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas"/>
     <File Path="addons\weather\providers\uWeather_Providers_Yahoo.pas"/>

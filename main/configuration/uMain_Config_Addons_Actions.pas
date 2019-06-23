@@ -677,7 +677,6 @@ begin
     addons.weather.Action.Active_Total := -1;
     addons.weather.Action.Degree := 'Celcius';
     addons.weather.Config.Refresh_Once := False;
-    addons.weather.Config.Iconset.Name := 'pengui';
     addons.weather.Action.Provider := '';
   end
   else
@@ -694,8 +693,6 @@ begin
       addons.weather.Action.Degree);
     addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh',
       addons.weather.Config.Refresh_Once);
-    addons.weather.Config.Iconset.Name := addons.weather.ini.ini.ReadString('Iconset', 'Name',
-      addons.weather.Config.Iconset.Name);
   end;
 end;
 

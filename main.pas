@@ -4,36 +4,16 @@ interface
 
 uses
   System.Classes,
-  System.UITypes,
-  System.ImageList,
-  Winapi.Messages,
-  Winapi.Windows,
+  FMX.Forms,
+  FMX.Types,
+  FMX.Effects,
+  FMX.Ani,
+  FMX.Filter.Effects,
   IdBaseComponent,
   IdComponent,
   IdTCPConnection,
   IdTCPClient,
-  IdHTTP,
-  FireDAC.Stan.Intf,
-  FireDAC.Stan.Option,
-  FireDAC.Stan.Error,
-  FireDAC.UI.Intf,
-  FireDAC.Phys.Intf,
-  FireDAC.Stan.Def,
-  FireDAC.Stan.Pool,
-  FireDAC.Stan.Async,
-  FireDAC.Phys,
-  FireDAC.Phys.MySQL,
-  FireDAC.Phys.MySQLDef,
-  FireDAC.FMXUI.Wait,
-  Data.DB,
-  FireDAC.Comp.Client,
-  FMX.Forms,
-  FMX.Ani,
-  FMX.Types,
-  FMX.Effects,
-  FMX.Filter.Effects,
-  FMX.ImgList, FMX.Dialogs, FMX.Controls, FMX.Objects, System.Math.Vectors, FMX.Controls3D, FMX.Layers3D,
-  FMX.Layouts, FMX.Controls.Presentation, FMX.StdCtrls;
+  IdHTTP;
 
 type
   TMain_Form = class(TForm)

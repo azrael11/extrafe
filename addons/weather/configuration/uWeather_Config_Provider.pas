@@ -20,6 +20,8 @@ procedure Create(vName: String; vNum: Integer);
 procedure Check_Yahoo;
 procedure Check_OpenWeatherMap;
 
+procedure Clear_Weather_Addon;
+
 implementation
 
 uses
@@ -128,19 +130,10 @@ begin
   begin
     if vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked then
       vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := False;
-    addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'yahoo');
-    addons.weather.Action.Provider := 'yahoo';
-    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
-    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_provider_yahoo.png')
+    uWeather_Providers_Yahoo_Config.Load;
   end
   else
-  begin
-    addons.weather.Ini.Ini.WriteString('Provider', 'Name', '');
-    addons.weather.Action.Provider := '';
-    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
-    vWeather.Config.main.Left.Provider.Bitmap := nil;
-  end;
-  uWeather_Providers_Yahoo_Config.Load;
+    Clear_Weather_Addon;
 end;
 
 procedure Check_OpenWeatherMap;
@@ -155,12 +148,16 @@ begin
     vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_provider_openweathermap.png')
   end
   else
-  begin
-    addons.weather.Ini.Ini.WriteString('Provider', 'Name', '');
-    addons.weather.Action.Provider := '';
-    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
-    vWeather.Config.main.Left.Provider.Bitmap := nil;
-  end;
+    Clear_Weather_Addon;
+end;
+
+procedure Clear_Weather_Addon;
+begin
+  addons.weather.Ini.Ini.WriteString('Provider', 'Name', '');
+  addons.weather.Action.Provider := '';
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
+  vWeather.Config.main.Left.Provider.Bitmap := nil;
+  //Needs more Work;
 end;
 
 end.

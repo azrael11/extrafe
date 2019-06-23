@@ -433,7 +433,6 @@ begin
     end;
   except
     on E: Exception do
-      ShowMessage('Something Wrong Going Here');
   end;
 end;
 

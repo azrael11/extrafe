@@ -474,8 +474,8 @@ begin
   vWeather.Scene.Tab[vTabNum].General.Image.name := 'A_W_WeatherImage_' + IntToStr(vTabNum);
   vWeather.Scene.Tab[vTabNum].General.Image.Parent := vWeather.Scene.Tab[vTabNum].Tab;
   vWeather.Scene.Tab[vTabNum].General.Image.SetBounds(50, 60, 150, 150);
-  vWeather.Scene.Tab[vTabNum].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Config.Iconset.name + '\w_w_' +
-    uWeather_Providers_OpenWeatherMap_IconShow(vDay.Weather_ID) + '.png');
+//  vWeather.Scene.Tab[vTabNum].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Config.Iconset.name + '\w_w_' +
+//    uWeather_Providers_OpenWeatherMap_IconShow(vDay.Weather_ID) + '.png');
   vWeather.Scene.Tab[vTabNum].General.Image.Tag := vTabNum;
   vWeather.Scene.Tab[vTabNum].General.Image.Visible := True;
 

@@ -36,7 +36,8 @@ uses
   uWindows,
   uWeather_SetAll,
   uAzHung_AllTypes,
-  uWeather_Providers_Yahoo;
+  uWeather_Providers_Yahoo,
+  uWeather_Providers_Yahoo_Config;
 
 procedure uLoad_Addons_FirstTime;
 begin
@@ -294,8 +295,8 @@ begin
   addons.weather.ini.ini.WriteString('Provider', 'Name', '');
   addons.weather.ini.ini.WriteInteger('openweathermap', 'Total', -1);
   // Yahoo specific
-  addons.weather.Action.Yahoo.Total_WoeID := -1;
-  addons.weather.Action.Yahoo.Selected_Unit:= 'imperial';
+  uWeather_Providers_Yahoo_Config.Load_Default_Config;
+  
 
 end;
 
@@ -321,25 +322,9 @@ begin
   addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
   addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree', addons.weather.Action.Degree);
   addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh', addons.weather.Config.Refresh_Once);
-  addons.weather.Config.Iconset.Name := addons.weather.ini.ini.ReadString('Iconset', 'Name', addons.weather.Config.Iconset.Name);
 
   // Yahoo specific
-  if addons.weather.Action.Provider = 'yahoo' then
-  begin
-    if addons.weather.ini.ini.ValueExists('yahoo', 'total') then
-      addons.weather.Action.Yahoo.Total_WoeID := addons.weather.ini.ini.ReadInteger('yahoo', 'total', addons.weather.Action.Yahoo.Total_WoeID)
-    else
-      addons.weather.Action.Yahoo.Total_WoeID := -1;
-    if addons.weather.ini.ini.ValueExists('yahoo', 'selected_unit') then
-      addons.weather.Action.Yahoo.Selected_Unit := addons.weather.Ini.Ini.ReadString('yahoo', 'Selected_Unit', addons.weather.Action.Yahoo.Selected_Unit)
-    else
-      addons.weather.Action.Yahoo.Selected_Unit:= 'imperial';
-    uWeather_Providers_Yahoo.Woeid_List;
-  end;
-
-  addons.weather.Config.Iconset.Count := uWindows_CountFilesOrFolders(addons.weather.Path.Iconsets, False, '');
-  addons.weather.Config.Iconset.Names := TStringList.Create;
-  addons.weather.Config.Iconset.Names := uWindows_GetFolderNames(addons.weather.Path.Iconsets);
+  uWeather_Providers_Yahoo_Config.Load_Config;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
