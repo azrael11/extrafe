@@ -140,10 +140,10 @@ procedure uWeather_Providers_OpenWeatherMap_AddTown(vID: String);
 begin
   inc(addons.weather.Action.Active_Total, 1);
   addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
-  if addons.weather.Action.Active_WEOID = -1 then
+  if addons.weather.Action.Active_WOEID = -1 then
   begin
-    addons.weather.Action.Active_WEOID := 0;
-    addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WEOID);
+    addons.weather.Action.Active_WOEID := 0;
+    addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
   end;
   inc(addons.weather.Action.Provider_Total, 1);
   addons.weather.Ini.Ini.WriteInteger('openweathermap', 'Total', addons.weather.Action.Provider_Total);

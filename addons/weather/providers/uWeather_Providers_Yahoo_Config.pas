@@ -14,12 +14,22 @@ uses
   FMX.Edit,
   FMX.Effects,
   FMX.Layouts,
+  uWeather_Config_Towns,
   ALFmxObjects;
 
 procedure Load;
 
 procedure Load_Default_Config;
 procedure Load_Config;
+
+procedure Create_Towns;
+procedure Towns_Add_New_Town(vNumPanel: Integer; vNewTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL);
+procedure Towns_Update_Arrows;
+procedure Towns_Select(vSelected: Integer);
+procedure Towns_Go_To(vDirection: String);
+procedure Towns_Delete_Question;
+procedure Towns_Delete;
+procedure Towns_Delete_Cancel;
 
 procedure Create_Options;
 procedure Options_Check_System_Type(vType: String);
@@ -38,7 +48,8 @@ uses
   uLoad_AllTypes,
   uWindows,
   uWeather_AllTypes,
-  uWeather_Providers_Yahoo;
+  uWeather_Providers_Yahoo,
+  uSnippets;
 
 procedure Load;
 var
@@ -103,15 +114,403 @@ begin
   end;
 end;
 
+procedure Create_Towns;
+var
+  vi: Integer;
+  vTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL;
+begin
+  if addons.weather.Action.Active_Total <> -1 then
+  begin
+    if addons.weather.Action.Yahoo.Total_WoeID <> -1 then
+    begin
+      for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+      begin
+        // Get Data
+        vTown.Time_Results := Convert_Time(addons.weather.Action.Yahoo.Data_Town[vi].Observation.Time.TimeStamp,
+          addons.weather.Action.Yahoo.Data_Town[vi].Observation.Time.WeekDay).Full;
+        vTown.Forecast_Image := Get_Icon_From_Text(addons.weather.Action.Yahoo.Data_Town[vi].Observation.ConditionCode);
+        vTown.Temperature := addons.weather.Action.Yahoo.Data_Town[vi].Observation.Tempreture.Now;
+        vTown.Temrerature_Unit := Get_Unit(addons.weather.Action.Yahoo.Data_Town[vi].vUnit);
+        vTown.Temperature_Description := addons.weather.Action.Yahoo.Data_Town[vi].Observation.ConditionDescription;
+        vTown.City_Name := addons.weather.Action.Yahoo.Data_Town[vi].Location.City_Name;
+        vTown.Country_Name := addons.weather.Action.Yahoo.Data_Town[vi].Location.Country_Name;
+        vTown.Country_Flag := Get_Flag(addons.weather.Action.Yahoo.Data_Town[vi].Location.Country_Name);
+        // Set Data
+        Towns_Add_New_Town(vi, vTown);
+      end;
+    end;
+  end;
+end;
+
+procedure Towns_Update_Arrows;
+begin
+  vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+
+  if uWeather_Config_Towns.vSelectedTown = 0 then
+    vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
+  if uWeather_Config_Towns.vSelectedTown = addons.weather.Action.Yahoo.Total_WoeID then
+    vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
+end;
+
+procedure Towns_Select(vSelected: Integer);
+var
+  vi: Integer;
+begin
+  if vSelected <> uWeather_Config_Towns.vSelectedTown then
+  begin
+    for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+    begin
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
+    end;
+
+    vWeather.Config.main.Right.Towns.Town[vSelected].Glow_Panel.GlowColor := TAlphaColorRec.Red;
+    vWeather.Config.main.Right.Towns.Town[vSelected].Glow_Panel.Enabled := True;
+
+    uWeather_Config_Towns.vSelectedTown := vSelected;
+    Towns_Update_Arrows;
+  end;
+end;
+
+procedure Towns_Go_To(vDirection: String);
+var
+  vTemp_Pos: Integer;
+  vTemp_Data_Town_1, vTemp_Data_Town_2: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN;
+  vTemp_Ini_Town: String;
+  vi: Integer;
+  vCondition: Boolean;
+begin
+  if vDirection = 'up' then
+    if uWeather_Config_Towns.vSelectedTown <> 0 then
+      vCondition := True;
+
+  if vDirection = 'down' then
+    if uWeather_Config_Towns.vSelectedTown <> addons.weather.Action.Yahoo.Total_WoeID then
+      vCondition := True;
+
+  if vCondition then
+  begin
+    // Change the position in memory list
+    vTemp_Pos := uWeather_Config_Towns.vSelectedTown;
+    if vDirection = 'up' then
+      Dec(vTemp_Pos, 1)
+    else if vDirection = 'down' then
+      Inc(vTemp_Pos, 1);
+
+    vTemp_Data_Town_1 := addons.weather.Action.Yahoo.Data_Town[uWeather_Config_Towns.vSelectedTown];
+    vTemp_Data_Town_2 := addons.weather.Action.Yahoo.Data_Town[vTemp_Pos];
+
+    addons.weather.Action.Yahoo.Data_Town[uWeather_Config_Towns.vSelectedTown] := vTemp_Data_Town_2;
+    addons.weather.Action.Yahoo.Data_Town[vTemp_Pos] := vTemp_Data_Town_1;
+
+    // Change the position to ini
+    // Change Woeid List
+    vTemp_Ini_Town := addons.weather.Action.Yahoo.Woeid_List.Strings[uWeather_Config_Towns.vSelectedTown];
+    addons.weather.Action.Yahoo.Woeid_List.Delete(uWeather_Config_Towns.vSelectedTown);
+    addons.weather.Action.Yahoo.Woeid_List.Insert(vTemp_Pos, vTemp_Ini_Town);
+    // Change Town List
+    vTemp_Ini_Town := addons.weather.Action.Yahoo.Towns_List.Strings[uWeather_Config_Towns.vSelectedTown];
+    addons.weather.Action.Yahoo.Towns_List.Delete(uWeather_Config_Towns.vSelectedTown);
+    addons.weather.Action.Yahoo.Towns_List.Insert(vTemp_Pos, vTemp_Ini_Town);
+
+    for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+      addons.weather.Ini.Ini.DeleteKey('yahoo', 'woeid_' + vi.ToString);
+    for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+      addons.weather.Ini.Ini.WriteString('yahoo', 'woeid_' + vi.ToString, addons.weather.Action.Yahoo.Woeid_List[vi] + '_' +
+        addons.weather.Action.Yahoo.Towns_List[vi]);
+
+    // Change the position to main
+    uWeather_Providers_Yahoo.Apply_New_Forecast_To_Tonw(addons.weather.Action.Yahoo.Data_Town[vTemp_Pos], vTemp_Pos);
+    if vDirection = 'up' then
+      uWeather_Providers_Yahoo.Apply_New_Forecast_To_Tonw(addons.weather.Action.Yahoo.Data_Town[vTemp_Pos + 1], vTemp_Pos + 1)
+    else if vDirection = 'down' then
+      uWeather_Providers_Yahoo.Apply_New_Forecast_To_Tonw(addons.weather.Action.Yahoo.Data_Town[vTemp_Pos - 1], vTemp_Pos - 1);
+
+    // Change the panel position
+    for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+    begin
+      vWeather.Config.main.Right.Towns.Town[vi].Date.Text := Convert_Time(addons.weather.Action.Yahoo.Data_Town[vi].Observation.LocalTime.TimeStamp,
+        addons.weather.Action.Yahoo.Data_Town[vi].Observation.LocalTime.WeekDay).Full;
+      vWeather.Config.main.Right.Towns.Town[vi].Image.Text := Get_Icon_From_Text(addons.weather.Action.Yahoo.Data_Town[vi].Observation.ConditionCode);
+      vWeather.Config.main.Right.Towns.Town[vi].Temp.Text := addons.weather.Action.Yahoo.Data_Town[vi].Observation.Tempreture.Now;
+      vWeather.Config.main.Right.Towns.Town[vi].Temp_Unit.Text := Get_Unit(addons.weather.Action.Yahoo.Data_Town[vi].vUnit);
+      vWeather.Config.main.Right.Towns.Town[vi].Temp_Comment.Text := addons.weather.Action.Yahoo.Data_Town[vi].Observation.ConditionDescription;
+      vWeather.Config.main.Right.Towns.Town[vi].City_Name_V.Text := addons.weather.Action.Yahoo.Data_Town[vi].Location.City_Name;
+      vWeather.Config.main.Right.Towns.Town[vi].Country_Name_V.Text := addons.weather.Action.Yahoo.Data_Town[vi].Location.Country_Name;
+      vWeather.Config.main.Right.Towns.Town[vi].Country_Flag.Bitmap := Get_Flag(addons.weather.Action.Yahoo.Data_Town[vi].Location.Country_Name);
+    end;
+
+    // Show Results
+    vWeather.Scene.Blur.Enabled := False;
+    vWeather.Scene.Blur.Enabled := True;
+    uWeather_Config_Towns.vSelectedTown := vTemp_Pos;
+    for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+    begin
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
+    end;
+    vWeather.Config.main.Right.Towns.Town[uWeather_Config_Towns.vSelectedTown].Glow_Panel.Enabled := True;
+    vWeather.Config.main.Right.Towns.Town[uWeather_Config_Towns.vSelectedTown].Glow_Panel.GlowColor := TAlphaColorRec.Red;
+    Towns_Update_Arrows;
+  end;
+end;
+
+procedure Towns_Delete_Question;
+begin
+  vWeather.Config.Panel_Blur.Enabled := True;
+  extrafe.prog.State := 'addon_weather_config_delete_town';
+
+  vWeather.Config.main.Right.Towns.Delete.Panel := TPanel.Create(vWeather.Scene.weather);
+  vWeather.Config.main.Right.Towns.Delete.Panel.Name := 'A_W_Providers_Yahoo_Question_Delete_Town';
+  vWeather.Config.main.Right.Towns.Delete.Panel.Parent := vWeather.Scene.weather;
+  vWeather.Config.main.Right.Towns.Delete.Panel.SetBounds(vWeather.Config.Panel.Position.X + 100, vWeather.Config.Panel.Position.Y + 200, 500, 140);
+  vWeather.Config.main.Right.Towns.Delete.Panel.Visible := True;
+
+  uLoad_SetAll_CreateHeader(vWeather.Config.main.Right.Towns.Delete.Panel, 'A_W_Providers_Yahoo_Question_Delete_Town',
+    addons.weather.Path.Images + 'w_delete.png', 'Delete town "' + addons.weather.Action.Yahoo.Towns_List.Strings[uWeather_Config_Towns.vSelectedTown] + '"');
+
+  vWeather.Config.main.Right.Towns.Delete.main.Panel := TPanel.Create(vWeather.Config.main.Right.Towns.Delete.Panel);
+  vWeather.Config.main.Right.Towns.Delete.main.Panel.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Main';
+  vWeather.Config.main.Right.Towns.Delete.main.Panel.Parent := vWeather.Config.main.Right.Towns.Delete.Panel;
+  vWeather.Config.main.Right.Towns.Delete.main.Panel.SetBounds(0, 30, vWeather.Config.main.Right.Towns.Delete.Panel.Width,
+    vWeather.Config.main.Right.Towns.Delete.Panel.Height - 30);
+  vWeather.Config.main.Right.Towns.Delete.main.Panel.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Delete.main.Icon := TImage.Create(vWeather.Config.main.Right.Towns.Delete.main.Panel);
+  vWeather.Config.main.Right.Towns.Delete.main.Icon.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Main_Icon';
+  vWeather.Config.main.Right.Towns.Delete.main.Icon.Parent := vWeather.Config.main.Right.Towns.Delete.main.Panel;
+  vWeather.Config.main.Right.Towns.Delete.main.Icon.SetBounds(30, 14, 36, 36);
+  vWeather.Config.main.Right.Towns.Delete.main.Icon.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_warning.png');
+  vWeather.Config.main.Right.Towns.Delete.main.Icon.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Delete.main.Line_1 := TLabel.Create(vWeather.Config.main.Right.Towns.Delete.main.Panel);
+  vWeather.Config.main.Right.Towns.Delete.main.Line_1.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Line_1';
+  vWeather.Config.main.Right.Towns.Delete.main.Line_1.Parent := vWeather.Config.main.Right.Towns.Delete.main.Panel;
+  vWeather.Config.main.Right.Towns.Delete.main.Line_1.SetBounds(100, 10, 300, 24);
+  vWeather.Config.main.Right.Towns.Delete.main.Line_1.Text := 'This action will delete from the list the selected town';
+  vWeather.Config.main.Right.Towns.Delete.main.Line_1.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Delete.main.Line_2 := TLabel.Create(vWeather.Config.main.Right.Towns.Delete.main.Panel);
+  vWeather.Config.main.Right.Towns.Delete.main.Line_2.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Line_2';
+  vWeather.Config.main.Right.Towns.Delete.main.Line_2.Parent := vWeather.Config.main.Right.Towns.Delete.main.Panel;
+  vWeather.Config.main.Right.Towns.Delete.main.Line_2.SetBounds(100, 30, 300, 24);
+  vWeather.Config.main.Right.Towns.Delete.main.Line_2.Text := 'Do you want to delete town "' + addons.weather.Action.Yahoo.Towns_List.Strings
+    [uWeather_Config_Towns.vSelectedTown] + '"';
+  vWeather.Config.main.Right.Towns.Delete.main.Line_2.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Delete.main.Delete := TButton.Create(vWeather.Config.main.Right.Towns.Delete.main.Panel);
+  vWeather.Config.main.Right.Towns.Delete.main.Delete.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Delete';
+  vWeather.Config.main.Right.Towns.Delete.main.Delete.Parent := vWeather.Config.main.Right.Towns.Delete.main.Panel;
+  vWeather.Config.main.Right.Towns.Delete.main.Delete.SetBounds(100, vWeather.Config.main.Right.Towns.Delete.main.Panel.Height - 34, 100, 24);
+  vWeather.Config.main.Right.Towns.Delete.main.Delete.Text := 'Delete';
+  vWeather.Config.main.Right.Towns.Delete.main.Delete.OnClick := addons.weather.Input.mouse_config.Button.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Delete.main.Delete.OnMouseEnter := addons.weather.Input.mouse_config.Button.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Delete.main.Delete.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel := TButton.Create(vWeather.Config.main.Right.Towns.Delete.main.Panel);
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Cancel';
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel.Parent := vWeather.Config.main.Right.Towns.Delete.main.Panel;
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel.SetBounds(vWeather.Config.main.Right.Towns.Delete.main.Panel.Width - 200,
+    vWeather.Config.main.Right.Towns.Delete.main.Panel.Height - 34, 100, 24);
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel.Text := 'Cancel';
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel.OnClick := addons.weather.Input.mouse_config.Button.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel.OnMouseEnter := addons.weather.Input.mouse_config.Button.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Delete.main.Cancel.Visible := True;
+end;
+
+procedure Towns_Delete;
+var
+  vSelected: Integer;
+  vi: Integer;
+begin
+  vSelected := uWeather_Config_Towns.vSelectedTown;
+  // Delete woeid from list
+  addons.weather.Action.Yahoo.Woeid_List.Delete(vSelected);
+  // Delete town from list
+  addons.weather.Action.Yahoo.Towns_List.Delete(vSelected);
+  // Delete from ini reorganizend ini
+  for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+    addons.weather.Ini.Ini.DeleteKey('yahoo', 'woeid_' + vi.ToString);
+
+  Dec(addons.weather.Action.Yahoo.Total_WoeID, 1);
+  addons.weather.Ini.Ini.WriteInteger('yahoo', 'total', addons.weather.Action.Yahoo.Total_WoeID);
+  for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+    addons.weather.Ini.Ini.WriteString('yahoo', 'woeid_' + vi.ToString, addons.weather.Action.Yahoo.Woeid_List[vi] + '_' +
+      addons.weather.Action.Yahoo.Towns_List[vi]);
+  // Delete town form main reorganizend main
+//  uSnippets.FreeAllChilds(vWeather.Scene.Tab[vSelected].Tab, True);
+  vWeather.Scene.Control.Tabs[vSelected].DeleteChildren;
+  vWeather.Scene.Control.Tabs[vSelected].Free;
+//  FreeAndNil(vWeather.Scene.Tab[vSelected].Tab);
+  // Set selected first and blur color first red
+  for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID + 1 do
+    FreeAndNil(vWeather.Config.main.Right.Towns.Town[vi].Panel);
+//  FreeAndNil(addons.weather.Action.Yahoo.Data_Town[vSelected]);
+  Create_Towns;
+  // Check Arrows
+  uWeather_Config_Towns.vSelectedTown := 0;
+  vWeather.Config.main.Right.Towns.Town[0].Glow_Panel.GlowColor := TAlphaColorRec.Red;
+  vWeather.Config.main.Right.Towns.Town[0].Glow_Panel.Enabled := True;
+  Towns_Update_Arrows;
+  Towns_Delete_Cancel;
+end;
+
+procedure Towns_Delete_Cancel;
+begin
+  vWeather.Config.Panel_Blur.Enabled := False;
+  extrafe.prog.State := 'addon_weather_config';
+  FreeAndNil(vWeather.Config.main.Right.Towns.Delete.Panel);
+end;
+
+procedure Towns_Add_New_Town(vNumPanel: Integer; vNewTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL);
+begin
+  SetLength(vWeather.Config.main.Right.Towns.Town, vNumPanel + 1);
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel := TPanel.Create(vWeather.Config.main.Right.Towns.CityList);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Parent := vWeather.Config.main.Right.Towns.CityList;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.SetBounds(6, 6 + (vNumPanel * 86), vWeather.Config.main.Right.Towns.CityList.Width - 24, 80);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel := TGlowEffect.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString + '_Glow';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel.Opacity := 0.9;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel.Softness := 0.4;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel.Tag := vNumPanel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Glow_Panel.Enabled := False;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date := TLabel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString + '_Date';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.SetBounds(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Width - 410, 3, 400, 22);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.Text := vNewTown.Time_Results;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.StyledSettings := vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.StyledSettings -
+    [TStyledSetting.Size];
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.Font.Size := 14;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.TextSettings.HorzAlign := TTextAlign.Trailing;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Date.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image := TText.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString + '_Image';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.SetBounds(6, 6, 60, 60);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.Font.Family := 'Weather Icons';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.Font.Size := 36;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.Text := vNewTown.Forecast_Image;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Image.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp := TLabel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.Name := 'A_W_Provider_Yahoo_Config_CityNum_' + vNumPanel.ToString + '_Temp';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.SetBounds(60, 10, 60, 17);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.Font.Size := 18;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.Text := vNewTown.Temperature;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.StyledSettings := vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.StyledSettings -
+    [TStyledSetting.Size];
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit := TText.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.Name := 'A_W_Provider_Yahoo_Config_Tonws_CityNum_' + vNumPanel.ToString + '_Temp_Unit';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.SetBounds(80, 8, 18, 18);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.Font.Family := 'Weather Icons';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.Font.Size := 18;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.Text := vNewTown.Temrerature_Unit;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Unit.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment := TLabel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString + '_Temp_Comment';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.SetBounds(6, 56, 400, 22);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.Font.Size := 16;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.Text := vNewTown.Temperature_Description;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.StyledSettings := vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.StyledSettings -
+    [TStyledSetting.Size];
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Temp_Comment.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name := TLabel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString + '_CityName';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.SetBounds(106, 20, 100, 22);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.Text := 'Town : ';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.StyledSettings := vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.StyledSettings -
+    [TStyledSetting.FontColor, TStyledSetting.Size];
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.Font.Size := 16;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V := TLabel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_V_' + vNumPanel.ToString + '_CityName';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.SetBounds(174, 20, 400, 22);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.Text := vNewTown.City_Name;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.StyledSettings := vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.StyledSettings -
+    [TStyledSetting.Size];
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.Font.Size := 16;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].City_Name_V.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name := TLabel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString + '_CCountryName';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.SetBounds(106, 40, 100, 22);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.Text := 'Country : ';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.StyledSettings := vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.StyledSettings -
+    [TStyledSetting.FontColor, TStyledSetting.Size];
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.Font.Size := 16;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V := TLabel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_V_' + vNumPanel.ToString + '_CCountryName';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.SetBounds(174, 40, 400, 22);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.Text := vNewTown.Country_Name;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.StyledSettings := vWeather.Config.main.Right.Towns.Town[vNumPanel]
+    .Country_Name_V.StyledSettings - [TStyledSetting.Size];
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.Font.Size := 16;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Name_V.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Flag := TImage.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Flag.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_' + vNumPanel.ToString + '_CountryFlag';
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Flag.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Flag.SetBounds(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Width - 65,
+    vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Height - 55, 60, 50);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Flag.Bitmap := vNewTown.Country_Flag;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Country_Flag.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above := TPanel.Create(vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Name := 'A_W_Provider_Yahoo_Config_Towns_CityNum_Above_' + vNumPanel.ToString;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Parent := vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.SetBounds(0, 0, vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Width,
+    vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Height);
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Opacity := 0;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnClick := addons.weather.Input.mouse_config.Panel.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnMouseEnter := addons.weather.Input.mouse_config.Panel.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnMouseLeave := addons.weather.Input.mouse_config.Panel.OnMouseLeave;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Tag := vNumPanel;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Visible := True;
+end;
+
 procedure Options_Check_System_Type(vType: String);
 begin
   if vType <> addons.weather.Action.Yahoo.Selected_Unit then
   begin
     if vType = 'metric' then
     begin
-      if vWeather.Config.main.Right.Options_Yahoo.Metric.IsChecked = false then
+      if vWeather.Config.main.Right.Options_Yahoo.Metric.IsChecked = False then
       begin
-        vWeather.Config.main.Right.Options_Yahoo.Imperial.IsChecked := false;
+        vWeather.Config.main.Right.Options_Yahoo.Imperial.IsChecked := False;
         addons.weather.Action.Yahoo.Selected_Unit := 'metric';
         addons.weather.Ini.Ini.WriteString('yahoo', 'selected_unit', 'metric');
         uWeather_Providers_Yahoo.Use_Metric;
@@ -119,9 +518,9 @@ begin
     end
     else if vType = 'imperial' then
     begin
-      if vWeather.Config.main.Right.Options_Yahoo.Imperial.IsChecked = false then
+      if vWeather.Config.main.Right.Options_Yahoo.Imperial.IsChecked = False then
       begin
-        vWeather.Config.main.Right.Options_Yahoo.Metric.IsChecked := false;
+        vWeather.Config.main.Right.Options_Yahoo.Metric.IsChecked := False;
         addons.weather.Action.Yahoo.Selected_Unit := 'imperial';
         addons.weather.Ini.Ini.WriteString('yahoo', 'selected_unit', 'imperial');
         uWeather_Providers_Yahoo.Use_Imperial;
@@ -245,7 +644,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Full.Back.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
   vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
   vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
-  vWeather.Config.main.Right.Iconsets.Full.Back.Visible := false;
+  vWeather.Config.main.Right.Iconsets.Full.Back.Visible := False;
 
   vWeather.Config.main.Right.Iconsets.Full.Back_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Iconsets.Full.Back);
   vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Name := 'A_W_Provider_Yahoo_Config_Back_Glow';
@@ -253,7 +652,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Softness := 0.4;
   vWeather.Config.main.Right.Iconsets.Full.Back_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := false;
+  vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := False;
 
   vWeather.Config.main.Right.Iconsets.Box := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[3]);
   vWeather.Config.main.Right.Iconsets.Box.Name := 'A_W_Provider_Yahoo_Config_Iconsets_Box';
@@ -266,7 +665,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Full.Panel.Parent := vWeather.Config.main.Right.Panels[3];
   vWeather.Config.main.Right.Iconsets.Full.Panel.SetBounds(10, 40, vWeather.Config.main.Right.Panels[3].Width - 20,
     vWeather.Config.main.Right.Panels[3].Height - 60);
-  vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := false;
+  vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := False;
 
   vl := 0;
   vt := 0;
@@ -309,7 +708,7 @@ begin
     end;
     vWeather.Config.main.Right.Iconsets.Full.Images[vi].SetBounds((64 * vl), vt, 64, 64);
     vWeather.Config.main.Right.Iconsets.Full.Images[vi].Visible := True;
-    inc(vl, 1);
+    Inc(vl, 1);
   end;
 
   vl := 0;
@@ -357,7 +756,7 @@ begin
     vWeather.Config.main.Right.Iconsets.Full.Texts[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     vWeather.Config.main.Right.Iconsets.Full.Texts[vi].Text := '';
     vWeather.Config.main.Right.Iconsets.Full.Texts[vi].Visible := True;
-    inc(vl, 1);
+    Inc(vl, 1);
   end;
 
   for vi := 0 to addons.weather.Action.Yahoo.Iconset_Count do
@@ -392,7 +791,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel_Glow.Opacity := 0.9;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel_Glow.Enabled := false;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel_Glow.Enabled := False;
 
   if vNum = 0 then
   begin
@@ -427,7 +826,7 @@ begin
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Opacity := 0.9;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Softness := 0.4;
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Enabled := false;
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Enabled := False;
       end;
     end;
   end
@@ -464,7 +863,7 @@ begin
           vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
           vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Opacity := 0.9;
           vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Softness := 0.4;
-          vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Enabled := false;
+          vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image_Glow.Enabled := False;
         end;
       end
       else
@@ -495,7 +894,7 @@ var
   vi: Integer;
   vPath: String;
 begin
-  vWeather.Config.main.Right.Iconsets.Box.Visible := false;
+  vWeather.Config.main.Right.Iconsets.Box.Visible := False;
   vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := True;
   vWeather.Config.main.Right.Iconsets.Full.Back.Visible := True;
   vPath := addons.weather.Action.Yahoo.Iconset_Names.Strings[vPreview_Num];
@@ -503,7 +902,7 @@ begin
   if vPreview_Num <> 0 then
   begin
     for vi := 0 to 48 do
-      vWeather.Config.main.Right.Iconsets.Full.Texts[vi].Visible := false;
+      vWeather.Config.main.Right.Iconsets.Full.Texts[vi].Visible := False;
     for vi := 0 to 48 do
     begin
       vWeather.Config.main.Right.Iconsets.Full.Images[vi].Visible := True;
@@ -513,7 +912,7 @@ begin
   else
   begin
     for vi := 0 to 48 do
-      vWeather.Config.main.Right.Iconsets.Full.Images[vi].Visible := false;
+      vWeather.Config.main.Right.Iconsets.Full.Images[vi].Visible := False;
     for vi := 0 to 48 do
     begin
       vWeather.Config.main.Right.Iconsets.Full.Texts[vi].Visible := True;
@@ -528,8 +927,8 @@ end;
 procedure Close_Full_Iconset_Preview;
 begin
   vWeather.Config.main.Right.Iconsets.Box.Visible := True;
-  vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := false;
-  vWeather.Config.main.Right.Iconsets.Full.Back.Visible := false;
+  vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := False;
+  vWeather.Config.main.Right.Iconsets.Full.Back.Visible := False;
 end;
 
 procedure Set_New_Iconset_Check(vSelected: Integer);
@@ -690,8 +1089,8 @@ begin
       addons.weather.Action.Yahoo.Iconset_Name := addons.weather.Action.Yahoo.Iconset_Names.Strings[vSelected];
     addons.weather.Ini.Ini.WriteInteger('yahoo', 'iconset', addons.weather.Action.Yahoo.Iconset_Selected);
     addons.weather.Ini.Ini.WriteString('yahoo', 'iconset_name', addons.weather.Action.Yahoo.Iconset_Name);
-    vWeather.Scene.Blur.Enabled:= False;
-    vWeather.Scene.Blur.Enabled:= True;
+    vWeather.Scene.Blur.Enabled := False;
+    vWeather.Scene.Blur.Enabled := True;
   end;
 end;
 

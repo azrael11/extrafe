@@ -527,7 +527,6 @@
         <DCCReference Include="addons\weather\uWeather_Convert.pas"/>
         <DCCReference Include="addons\weather\configuration\towns\uWeather_Config_Towns_Add.pas"/>
         <DCCReference Include="addons\weather\configuration\towns\uWeather_Config_Towns_Delete.pas"/>
-        <DCCReference Include="addons\weather\configuration\towns\uWeather_Config_Towns_Refresh.pas"/>
         <DCCReference Include="addons\weather\uWeather_Sounds.pas"/>
         <DCCReference Include="main\configuration\uMain_Config_Mouse.pas"/>
         <DCCReference Include="main\uMain_AllTypes.pas"/>

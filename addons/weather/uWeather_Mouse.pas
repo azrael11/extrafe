@@ -105,7 +105,6 @@ uses
   uWeather_Config_Provider,
   uWeather_Config_Towns,
   uWeather_Config_Towns_Add,
-  uWeather_Config_Towns_Refresh,
   uWeather_Config_Towns_Delete,
   uWeather_Config_Options,
   uWeather_MenuActions,
@@ -194,13 +193,6 @@ begin
     else if TButton(Sender).Name = 'A_W_Config_Delete_Cancel' then
       uWeather_Config_Towns_Delete_Free;
   end
-  else if extrafe.prog.state = 'addon_weather_config_towns_refresh' then
-  begin
-    if TButton(Sender).Name = 'A_W_Config_Refresh_Refresh' then
-      uWeather_Config_Towns_Edit_Refresh(addons.weather.Config.Selected_Town)
-    else if TButton(Sender).Name = 'A_W_Config_Refresh_Cancel' then
-      uWeather_Config_Towns_Edit_Refresh_Free;
-  end;
 end;
 
 procedure TWEATHER_ADDON_BUTTON.OnMouseEnter(Sender: TObject);

@@ -63,7 +63,6 @@ uses
   uWeather_Config_Provider,
   uWeather_Config_Towns,
   uWeather_Config_Towns_Delete,
-  uWeather_Config_Towns_Refresh,
   uWeather_Config_Towns_Add,
   uWeather_Providers_Yahoo_Config;
 
@@ -86,13 +85,11 @@ begin
         else if TText(Sender).Name = 'A_W_Config_Towns_Lock' then
           uWeather_Config_Towns_Edit(not addons.weather.Config.Edit_Lock)
         else if TImage(Sender).Name = 'A_W_Config_Towns_PosUp' then
-          uWeather_Config_Towns_TownGoUp
+          uWeather_Providers_Yahoo_Config.Towns_Go_To('up')
         else if TImage(Sender).Name = 'A_W_Config_Towns_PosDown' then
-          uWeather_Config_Towns_TownGoDown
-        else if TImage(Sender).Name = 'A_W_Config_Towns_Refresh' then
-          uWeather_Config_Towns_Edit_Refresh_Show
+          uWeather_Providers_Yahoo_Config.Towns_Go_To('down')
         else if TImage(Sender).Name = 'A_W_Config_Towns_Delete' then
-          // uWeather_Config_Towns_Edit_Delete_Show
+          uWeather_Providers_Yahoo_Config.Towns_Delete_Question
         else if TText(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_TextImage_' + TText(Sender).TagString + '_' + TText(Sender).Tag.ToString then
         begin
           if TText(Sender).Tag = 8 then
@@ -135,8 +132,6 @@ begin
         vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := True
       else if TText(Sender).Name = 'A_W_Config_Towns_PosDown' then
         vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := True
-      else if TText(Sender).Name = 'A_W_Config_Towns_Refresh' then
-        vWeather.Config.main.Right.Towns.Refresh_Glow.Enabled := True
       else if TText(Sender).Name = 'A_W_Config_Towns_Delete' then
         vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := True
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_TextImage_' + TText(Sender).TagString + '_' + TText(Sender).Tag.ToString then
@@ -171,8 +166,6 @@ begin
       vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := False
     else if TText(Sender).Name = 'A_W_Config_Towns_PosDown' then
       vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := False
-    else if TImage(Sender).Name = 'A_W_Config_Towns_Refresh' then
-      vWeather.Config.main.Right.Towns.Refresh_Glow.Enabled := False
     else if TImage(Sender).Name = 'A_W_Config_Towns_Delete' then
       vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := False
     else if TText(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_TextImage_' + TText(Sender).TagString + '_' + TText(Sender).Tag.ToString then
@@ -200,16 +193,31 @@ begin
   begin
     if TButton(Sender).Name = 'A_W_Config_Left_Button_' + TButton(Sender).Tag.ToString then
       uWeather_Config_ShowPanel(TButton(Sender).Tag);
-  end
-  else if extrafe.prog.state = 'addon_weather_config_towns_add' then
+  end;
+  if addons.weather.Action.Provider = 'yahoo' then
   begin
-    if TButton(Sender).Name = 'A_W_Config_Towns_Add_Add' then
-      uWeather_Config_Towns_Add.New_Town(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, False)
-    else if TButton(Sender).Name = 'A_W_Config_Towns_Add_AddStay' then
-      uWeather_Config_Towns_Add.New_Town(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, True)
-    else if TButton(Sender).Name = 'A_W_Config_Towns_Add_Cancel' then
-      uWeather_Config_Towns_Add.Free;
+    if extrafe.prog.state = 'addon_weather_config_towns_add' then
+    begin
+      if TButton(Sender).Name = 'A_W_Config_Towns_Add_Add' then
+        uWeather_Config_Towns_Add.New_Town(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, False)
+      else if TButton(Sender).Name = 'A_W_Config_Towns_Add_AddStay' then
+        uWeather_Config_Towns_Add.New_Town(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, True)
+      else if TButton(Sender).Name = 'A_W_Config_Towns_Add_Cancel' then
+        uWeather_Config_Towns_Add.Free;
+    end
+    else if extrafe.prog.state = 'addon_weather_config_delete_town' then
+    begin
+      if TButton(Sender).Name = 'A_W_Providers_Yahoo_Question_Delete_Town_Delete' then
+        uWeather_Providers_Yahoo_Config.Towns_Delete
+      else if TButton(Sender).Name = 'A_W_Providers_Yahoo_Question_Delete_Town_Cancel' then
+        uWeather_Providers_Yahoo_Config.Towns_Delete_Cancel;
+    end;
+    BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
   end
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+
+  end;
 end;
 
 procedure TWEATHER_ADDON_CONFIG_BUTTON.OnMouseEnter(Sender: TObject);
@@ -263,26 +271,58 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_PANEL.OnMouseClick(Sender: TObject);
 begin
+  if addons.weather.Action.Provider = 'yahoo' then
+  begin
+    if TPanel(Sender).Name = 'A_W_Provider_Yahoo_Config_Towns_CityNum_Above_' + TPanel(Sender).Tag.ToString then
+    begin
+      if addons.weather.Config.Edit_Lock then
+        uWeather_Providers_Yahoo_Config.Towns_Select(TPanel(Sender).Tag);
+    end;
+  end
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
 
+  end;
 end;
 
 procedure TWEATHER_ADDON_CONFIG_PANEL.OnMouseEnter(Sender: TObject);
 var
   vi: Integer;
 begin
-  if TPanel(Sender).Name = 'A_W_Config_Provider_Yahoo_Iconsets_Mini_Preview_Panel_' + TPanel(Sender).TagString then
+  if addons.weather.Action.Provider = 'yahoo' then
   begin
-    TPanel(Sender).Cursor := crHandPoint;
-    for vi := 0 to addons.weather.Action.Yahoo.Iconset_Count do
-      vWeather.Config.main.Right.Iconsets.Mini[vi].Panel_Glow.Enabled := False;
-    vWeather.Config.main.Right.Iconsets.Mini[TPanel(Sender).TagString.ToInteger].Panel_Glow.Enabled := True;
+    if TPanel(Sender).Name = 'A_W_Provider_Yahoo_Config_Towns_CityNum_Above_' + TPanel(Sender).Tag.ToString then
+      vWeather.Config.main.Right.Towns.Town[TPanel(Sender).Tag].Glow_Panel.Enabled := True
+    else if TPanel(Sender).Name = 'A_W_Config_Provider_Yahoo_Iconsets_Mini_Preview_Panel_' + TPanel(Sender).TagString then
+    begin
+      for vi := 0 to addons.weather.Action.Yahoo.Iconset_Count do
+        vWeather.Config.main.Right.Iconsets.Mini[vi].Panel_Glow.Enabled := False;
+      vWeather.Config.main.Right.Iconsets.Mini[TPanel(Sender).TagString.ToInteger].Panel_Glow.Enabled := True;
+    end
+  end
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+
   end;
+  TPanel(Sender).Cursor := crHandPoint;
 end;
 
 procedure TWEATHER_ADDON_CONFIG_PANEL.OnMouseLeave(Sender: TObject);
 begin
-  if TPanel(Sender).Name = 'A_W_Config_Provider_Yahoo_Iconsets_Mini_Preview_Panel_' + TPanel(Sender).TagString then
-    vWeather.Config.main.Right.Iconsets.Mini[TPanel(Sender).TagString.ToInteger].Panel_Glow.Enabled := False;
+  if addons.weather.Action.Provider = 'yahoo' then
+  begin
+    if TPanel(Sender).Name = 'A_W_Provider_Yahoo_Config_Towns_CityNum_Above_' + TPanel(Sender).Tag.ToString then
+    begin
+      if vWeather.Config.main.Right.Towns.Town[TPanel(Sender).Tag].Glow_Panel.GlowColor = TAlphaColorRec.Deepskyblue then
+        vWeather.Config.main.Right.Towns.Town[TPanel(Sender).Tag].Glow_Panel.Enabled := False
+    end
+    else if TPanel(Sender).Name = 'A_W_Config_Provider_Yahoo_Iconsets_Mini_Preview_Panel_' + TPanel(Sender).TagString then
+      vWeather.Config.main.Right.Iconsets.Mini[TPanel(Sender).TagString.ToInteger].Panel_Glow.Enabled := False;
+  end
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+
+  end;
 end;
 
 { TWEATHER_ADDON_CONFIG_IMAGE }

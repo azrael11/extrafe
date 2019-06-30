@@ -96,12 +96,14 @@ begin
   vWeather.Scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.MiddleLine.Visible := True;
 
-  vWeather.Scene.Arrow_Left := TImage.Create(vWeather.Scene.Weather);
+  vWeather.Scene.Arrow_Left := TText.Create(vWeather.Scene.Weather);
   vWeather.Scene.Arrow_Left.Name := 'A_W_ArrowLeft_Image';
   vWeather.Scene.Arrow_Left.Parent := vWeather.Scene.Weather;
-  vWeather.Scene.Arrow_Left.SetBounds(20, vWeather.Scene.Back.Height - 130, 64, 64);
-  vWeather.Scene.Arrow_Left.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_arrow_left.png');
-  vWeather.Scene.Arrow_Left.WrapMode := TImageWrapMode.Fit;
+  vWeather.Scene.Arrow_Left.SetBounds(20, vWeather.Scene.Back.Height - 120, 64, 64);
+  vWeather.Scene.Arrow_Left.Font.Family := 'IcoMoon-Free';
+  vWeather.Scene.Arrow_Left.Font.Size := 48;
+  vWeather.Scene.Arrow_Left.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Arrow_Left.Text := #$ea38;
   vWeather.Scene.Arrow_Left.OnClick := addons.Weather.Input.mouse.Image.OnMouseClick;
   vWeather.Scene.Arrow_Left.OnMouseEnter := addons.Weather.Input.mouse.Image.OnMouseEnter;
   vWeather.Scene.Arrow_Left.OnMouseLeave := addons.Weather.Input.mouse.Image.OnMouseLeave;
@@ -110,14 +112,17 @@ begin
   vWeather.Scene.Arrow_Left_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Left);
   vWeather.Scene.Arrow_Left_Glow.Name := 'A_W_ArrowLeft_Glow';
   vWeather.Scene.Arrow_Left_Glow.Parent := vWeather.Scene.Arrow_Left;
+  vWeather.Scene.Arrow_Left_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Left_Glow.Enabled := False;
 
-  vWeather.Scene.Arrow_Right := TImage.Create(vWeather.Scene.Weather);
+  vWeather.Scene.Arrow_Right := TText.Create(vWeather.Scene.Weather);
   vWeather.Scene.Arrow_Right.Name := 'A_W_ArrowRight_Image';
   vWeather.Scene.Arrow_Right.Parent := vWeather.Scene.Weather;
-  vWeather.Scene.Arrow_Right.SetBounds(vWeather.Scene.Back.Width - 84, vWeather.Scene.Back.Height - 130, 64, 64);
-  vWeather.Scene.Arrow_Right.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_arrow_right.png');
-  vWeather.Scene.Arrow_Right.WrapMode := TImageWrapMode.Fit;
+  vWeather.Scene.Arrow_Right.SetBounds(vWeather.Scene.Back.Width - 84, vWeather.Scene.Back.Height - 120, 64, 64);
+  vWeather.Scene.Arrow_Right.Font.Family := 'IcoMoon-Free';
+  vWeather.Scene.Arrow_Right.Font.Size := 48;
+  vWeather.Scene.Arrow_Right.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Arrow_Right.Text := #$ea34;
   vWeather.Scene.Arrow_Right.OnClick := addons.Weather.Input.mouse.Image.OnMouseClick;
   vWeather.Scene.Arrow_Right.OnMouseEnter := addons.Weather.Input.mouse.Image.OnMouseEnter;
   vWeather.Scene.Arrow_Right.OnMouseLeave := addons.Weather.Input.mouse.Image.OnMouseLeave;
@@ -126,6 +131,7 @@ begin
   vWeather.Scene.Arrow_Right_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Right);
   vWeather.Scene.Arrow_Right_Glow.Name := 'A_W_ArrowRight_Glow';
   vWeather.Scene.Arrow_Right_Glow.Parent := vWeather.Scene.Arrow_Right;
+  vWeather.Scene.Arrow_Right_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Right_Glow.Enabled := False;
 
   vWeather.Scene.DownLine := TImage.Create(vWeather.Scene.Back);
@@ -172,6 +178,17 @@ begin
   Config;
 
   uWeather_Actions_Load;
+  if addons.weather.Action.Provider = 'yahoo' then
+  begin
+    if addons.weather.Action.Yahoo.Total_WoeID> 0 then
+      vWeather.Scene.Arrow_Right.Visible:= True;
+  end
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+
+  end;
+
+
 end;
 
 procedure uWeather_SetAll_Create_Control;
@@ -241,16 +258,16 @@ begin
     vWeather.Config.main.Left.Buttons[vi].Visible := True;
   end;
 
-  vWeather.Config.Main.Left.Provider:= TImage.Create(vWeather.Config.Main.Left.Panel);
-  vWeather.Config.Main.Left.Provider.Name:= 'A_W_Config_Left_Panel_Image';
-  vWeather.Config.Main.Left.Provider.Parent:=  vWeather.Config.Main.Left.Panel;
-  vWeather.Config.Main.Left.Provider.SetBounds(5, vWeather.Config.Main.Left.Panel.Height- 95, 200, 90);
-  if addons.weather.Action.Provider = 'yahoo' then
-    vWeather.Config.Main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images+ 'w_provider_yahoo.png')
-  else if addons.weather.Action.Provider = 'openweathermap' then
-    vWeather.Config.Main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images+ 'w_provider_openweathermap.png');
-  vWeather.Config.Main.Left.Provider.WrapMode:= TImageWrapMode.Stretch;
-  vWeather.Config.Main.Left.Provider.Visible:= True;
+  vWeather.Config.main.Left.Provider := TImage.Create(vWeather.Config.main.Left.Panel);
+  vWeather.Config.main.Left.Provider.Name := 'A_W_Config_Left_Panel_Image';
+  vWeather.Config.main.Left.Provider.Parent := vWeather.Config.main.Left.Panel;
+  vWeather.Config.main.Left.Provider.SetBounds(5, vWeather.Config.main.Left.Panel.Height - 95, 200, 90);
+  if addons.Weather.Action.Provider = 'yahoo' then
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_provider_yahoo.png')
+  else if addons.Weather.Action.Provider = 'openweathermap' then
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_provider_openweathermap.png');
+  vWeather.Config.main.Left.Provider.WrapMode := TImageWrapMode.Stretch;
+  vWeather.Config.main.Left.Provider.Visible := True;
 
   addons.Weather.Config.Active_Panel := -1;
 
@@ -268,7 +285,7 @@ begin
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.Font.Size := 16;
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.HorzAlign := TTextAlign.Center;
-  if addons.Weather.Action.provider = '' then
+  if addons.Weather.Action.Provider = '' then
     vWeather.Config.main.Right.NoProvider_Selected.Text := 'Please select forecast provider first!!!';
   vWeather.Config.main.Right.NoProvider_Selected.Visible := True;
 end;

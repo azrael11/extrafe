@@ -287,13 +287,8 @@ begin
 
   addons.weather.ini.ini.WriteBool('General', 'First', False);
   addons.weather.ini.ini.WriteInteger('Active', 'Active_Woeid', -1);
-  addons.weather.ini.ini.WriteInteger('Active', 'Active_Total', -1);
-  addons.weather.ini.ini.WriteString('Options', 'Degree', 'Celcius');
-  addons.weather.ini.ini.WriteInteger('Options', 'Refresh', 0);
-  addons.weather.ini.ini.WriteInteger('Iconset', 'Count', 2);
-  addons.weather.ini.ini.WriteString('Iconset', 'Name', 'pengui');
+  addons.weather.Ini.Ini.Writebool('widget', 'active', false);
   addons.weather.ini.ini.WriteString('Provider', 'Name', '');
-  addons.weather.ini.ini.WriteInteger('openweathermap', 'Total', -1);
   // Yahoo specific
   uWeather_Providers_Yahoo_Config.Load_Default_Config;
   
@@ -317,11 +312,8 @@ begin
 
   addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First', addons.weather.Action.First);
   addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name', addons.weather.Action.Provider);
-  addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger(addons.weather.Action.Provider, 'Total', addons.weather.Action.Provider_Total);
-  addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid', addons.weather.Action.Active_WEOID);
-  addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
-  addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree', addons.weather.Action.Degree);
-  addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh', addons.weather.Config.Refresh_Once);
+  addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger(addons.weather.Action.Provider, 'total', addons.weather.Action.Provider_Total);
+  addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
 
   // Yahoo specific
   uWeather_Providers_Yahoo_Config.Load_Config;

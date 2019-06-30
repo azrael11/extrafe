@@ -664,7 +664,7 @@ begin
   if vFresh then
   begin
     addons.weather.ini.ini.WriteBool('General', 'First', False);
-    addons.weather.ini.ini.WriteInteger('Active', 'Active_Weoid', -1);
+    addons.weather.ini.ini.WriteInteger('Active', 'Active_Woeid', -1);
     addons.weather.ini.ini.WriteInteger('Active', 'Active_Total', -1);
     addons.weather.ini.ini.WriteString('Options', 'Degree', 'Celcius');
     addons.weather.ini.ini.WriteInteger('Options', 'Refresh', 0);
@@ -673,7 +673,7 @@ begin
     addons.weather.ini.ini.WriteString('Provider', 'Name', '');
 
     addons.weather.Action.First := False;
-    addons.weather.Action.Active_WEOID := -1;
+    addons.weather.Action.Active_WOEID := -1;
     addons.weather.Action.Active_Total := -1;
     addons.weather.Action.Degree := 'Celcius';
     addons.weather.Config.Refresh_Once := False;
@@ -685,8 +685,8 @@ begin
       addons.weather.Action.First);
     addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name',
       addons.weather.Action.Provider);
-    addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Weoid',
-      addons.weather.Action.Active_WEOID);
+    addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid',
+      addons.weather.Action.Active_WOEID);
     addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total',
       addons.weather.Action.Active_Total);
     addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree',
@@ -891,7 +891,7 @@ begin
   if vFresh then
   begin
     { addons.weather.ini.ini.WriteBool('General', 'First', False);
-      addons.weather.ini.ini.WriteInteger('Active', 'Active_Weoid', -1);
+      addons.weather.ini.ini.WriteInteger('Active', 'Active_Woeid', -1);
       addons.weather.ini.ini.WriteInteger('Active', 'Active_Total', -1);
       addons.weather.ini.ini.WriteString('Options', 'Degree', 'Celcius');
       addons.weather.ini.ini.WriteInteger('Options', 'Refresh', 0);
@@ -913,7 +913,7 @@ begin
       addons.weather.Action.First);
       addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name',
       addons.weather.Action.Provider);
-      addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Weoid',
+      addons.weather.Action.Active_WEOID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid',
       addons.weather.Action.Active_WEOID);
       addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total',
       addons.weather.Action.Active_Total);

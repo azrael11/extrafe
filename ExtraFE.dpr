@@ -104,7 +104,6 @@ uses
   uWeather_Convert in 'addons\weather\uWeather_Convert.pas',
   uWeather_Config_Towns_Add in 'addons\weather\configuration\towns\uWeather_Config_Towns_Add.pas',
   uWeather_Config_Towns_Delete in 'addons\weather\configuration\towns\uWeather_Config_Towns_Delete.pas',
-  uWeather_Config_Towns_Refresh in 'addons\weather\configuration\towns\uWeather_Config_Towns_Refresh.pas',
   uWeather_Sounds in 'addons\weather\uWeather_Sounds.pas',
   uMain_Config_Mouse in 'main\configuration\uMain_Config_Mouse.pas',
   uMain_AllTypes in 'main\uMain_AllTypes.pas',

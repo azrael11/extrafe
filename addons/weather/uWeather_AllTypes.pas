@@ -386,7 +386,7 @@ type
   TADDON_WEATHER_ACTIONS = record
     Provider: String;
     Provider_Total: Integer;
-    Active_WEOID: Integer;
+    Active_WOEID: Integer;
     Active_Total: Integer;
     PathAni_Data: TPathData;
     PathAni_Show: Boolean;
@@ -483,6 +483,8 @@ type
     High: TText;
     High_Icon: TText;
     FeelsLike: TText;
+    Probability_Icon: TText;
+    Probability: TText;
     Moon: TText;
     Moon_Phase: TText;
     Refresh_Text: TText;
@@ -557,6 +559,8 @@ type
     Condition: TText;
     Humidity_Icon: TText;
     Humidity: TText;
+    Probability_Icon: TText;
+    Probability: TText;
     Wind_Icon: TText;
     Wind: TText;
     Wind_Description: TText;
@@ -590,6 +594,8 @@ type
     Temp_Down_Value: TText;
     Humidity: TText;
     Humidity_Value: TText;
+    Probability_Icon: TText;
+    Probability: TText;
     Line: TRadiantLine;
     Day: TText;
     Day_Value: TText;
@@ -676,9 +682,9 @@ type
     UpLine: TImage;
     MiddleLine: TImage;
     DownLine: TImage;
-    Arrow_Left: TImage;
+    Arrow_Left: TText;
     Arrow_Left_Glow: TGlowEffect;
-    Arrow_Right: TImage;
+    Arrow_Right: TText;
     Arrow_Right_Glow: TGlowEffect;
     Effect_Timer: TTimer;
     Timer: TADDON_WEATHER_MAINTIMER;
@@ -700,6 +706,7 @@ type
     Country_Name: TLabel;
     Country_Name_V: TLabel;
     Country_Flag: TImage;
+    Panel_Above: TPanel;
   end;
 
 type
@@ -785,8 +792,6 @@ type
     GoUp_Glow: TGlowEffect;
     GoDown: TText;
     GoDown_Glow: TGlowEffect;
-    Refresh_Icon: TText;
-    Refresh_Glow: TGlowEffect;
     Delete_Icon: TText;
     Delete_Glow: TGlowEffect;
     Add: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_ADD;
