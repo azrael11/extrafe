@@ -1108,8 +1108,16 @@ end;
 procedure uWeather_Config_Towns_Edit(vLock: Boolean);
 var
   vi: Integer;
+  vActive_Woeid: Integer;
 begin
-  if addons.weather.Action.Active_Total > -1 then
+  if addons.weather.Action.Provider = 'yahoo' then
+    vActive_Woeid := addons.weather.Action.Yahoo.Total_WoeID
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+
+  end;
+
+  if vActive_Woeid > -1 then
   begin
     if vLock then
     begin
@@ -1131,7 +1139,7 @@ begin
       vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
       vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
       vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
-      for vi := 0 to addons.weather.Action.Active_Total do
+      for vi := 0 to addons.weather.Action.Active_WOEID do
       begin
         vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
         vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;

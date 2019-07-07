@@ -46,8 +46,7 @@ begin
   vSoundplayer.tag.opus.Back_Blur.BlurAmount := 0.5;
   vSoundplayer.tag.opus.Back_Blur.Enabled := False;
 
-  uLoad_SetAll_CreateHeader(vSoundplayer.tag.opus.Back, 'A_SP_Tag_Opus', addons.Soundplayer.Path.Images +
-    'sp_tag_opus.png', 'Tag ogg,opus');
+  CreateHeader(vSoundplayer.tag.opus.Back, 'IcoMoon-Free', #$e935, 'Tag ogg,opus');
 
   // Prepei na balo ola se tab prota to opus/ogg meta to info
 
@@ -381,7 +380,6 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
   vSoundplayer.scene.Back_Blur.Enabled := False;
   FreeAndNil(vSoundplayer.tag.opus.Back);
-  uSoundplayer_Player.OnLeave(vSoundplayer.player.Song_Tag, vSoundplayer.player.Song_Tag_Glow);
 end;
 
 end.

@@ -193,7 +193,7 @@ begin
   vMame.Scene.Snap.Black_Image.Visible := True;
   vMame.Scene.Snap.Video.Visible := True;
   vMame.Scene.Snap.Image.Visible := True;
-  vMame.Scene.Gamelist.Search.Visible := True;
+//  vMame.Scene.Gamelist.Search.Visible := True;
   vMame.Scene.Gamelist.Filters.Visible := True;
   vMame.Scene.Gamelist.Up_Back_Image.Visible := True;
   vMame.Scene.Gamelist.Down_Back_Image.Visible := True;

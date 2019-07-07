@@ -846,7 +846,7 @@ var
   vText: TText;
   vProgress_Num: Single;
 begin
-  if addons.weather.Action.Active_Total <> -1 then
+  if addons.weather.Action.Active_WOEID <> -1 then
   begin
     if addons.weather.Action.Yahoo.Total_WoeID <> -1 then
     begin
@@ -872,7 +872,7 @@ begin
       vIcon := TText.Create(vWeather.Scene.Back);
       vIcon.Name := 'A_W_Providers_Yahoo_Loading_Icon';
       vIcon.Parent := vWeather.Scene.Back;
-      vIcon.SetBounds(extrafe.res.Half_Width - 40, vWeather.Scene.Back.Height - 400, 80, 80);
+      vIcon.SetBounds(extrafe.res.Half_Width - 40, vWeather.Scene.Back.Height - 400, 100, 100);
       vIcon.Font.Family := 'Weather Icons';
       vIcon.Font.Size := 72;
       vIcon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;

@@ -35,7 +35,7 @@ uses
 const
   cOWM_APPID = '5f1cc9b837706de78648b1de3443ccce';
 
-procedure uWeather_Providers_OpenWeatherMap_Load;
+procedure Load;
 procedure uWeather_Providers_OpenWeatherMap_Load_Config;
 
 procedure Find_Woeid_Locations(vText: String);
@@ -108,7 +108,7 @@ begin
   FreeAndNil(vJSONValue);
 end;
 
-procedure uWeather_Providers_OpenWeatherMap_Load;
+procedure Load;
 var
   vi: Integer;
   vID: String;

@@ -59,27 +59,9 @@ uses
   BASS;
 
 Procedure Set_Scene;
-const
-  cImgList: array [0 .. 9] of string = ('sp_play.png', 'sp_stop.png', 'sp_pause.png', 'sp_note.png', 'sp_edit.png', 'sp_up.png', 'sp_down.png', 'sp_delete.png',
-    'sp_tag_mp3.png', 'sp_tag_ogg.png');
 var
   vi: Integer;
-  vImage: Timage;
 begin
-  vSoundplayer.scene.Imglist := TImageList.Create(Main_Form);
-  vSoundplayer.scene.Imglist.Name := 'A_SP_Imagelist';
-
-  for vi := 0 to 9 do
-  begin
-    vImage := Timage.Create(Main_Form);
-    vImage.Width := 24;
-    vImage.Height := 24;
-    vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + cImgList[vi]);
-    vImage.WrapMode := TImageWrapMode.Fit;
-    vSoundplayer.scene.Imglist.Add(vImage.Bitmap);
-    FreeAndNil(vImage);
-  end;
-
   vSoundplayer.scene.soundplayer := Timage.Create(mainScene.main.Down_Level);
   vSoundplayer.scene.soundplayer.Name := 'A_Soundplayer';
   vSoundplayer.scene.soundplayer.Parent := mainScene.main.Down_Level;
@@ -941,7 +923,7 @@ begin
   vSoundplayer.Playlist.List.Name := 'A_SP_Playlist';
   vSoundplayer.Playlist.List.Parent := vSoundplayer.scene.Back_Playlist;
   vSoundplayer.Playlist.List.SetBounds(0, 0, vSoundplayer.scene.Back_Playlist.Width - 160, 260);
-  vSoundplayer.Playlist.List.Images := vSoundplayer.scene.Imglist;
+//  vSoundplayer.Playlist.List.Images := vSoundplayer.scene.Imglist;
   vSoundplayer.Playlist.List.Options := vSoundplayer.Playlist.List.Options + [TGridOption.AlternatingRowBackground, TGridOption.ColLines, TGridOption.RowLines,
     TGridOption.RowSelect, TGridOption.Tabs, TGridOption.Header, TGridOption.AutoDisplacement];
   vSoundplayer.Playlist.List.Options := vSoundplayer.Playlist.List.Options - [TGridOption.Editing];
@@ -972,7 +954,7 @@ begin
   vSoundplayer.Playlist.List_Popup_Memu := TPopupMenu.Create(vSoundplayer.Playlist.List);
   vSoundplayer.Playlist.List_Popup_Memu.Name := 'A_SP_Playlist_List_Popup_Menu';
   vSoundplayer.Playlist.List_Popup_Memu.Parent := vSoundplayer.Playlist.List;
-  vSoundplayer.Playlist.List_Popup_Memu.Images := vSoundplayer.scene.Imglist;
+//  vSoundplayer.Playlist.List_Popup_Memu.Images := vSoundplayer.scene.Imglist;
 
   for vi := 0 to 4 do
   begin
@@ -1304,8 +1286,7 @@ begin
   vSoundplayer.scene.First.Panel_Shadow.Direction := 90;
   vSoundplayer.scene.First.Panel_Shadow.Enabled := True;
 
-  uLoad_SetAll_CreateHeader(vSoundplayer.scene.First.Panel, 'A_SP_First', addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png',
-    'Welcome to "Soundplayer" addon.');
+  CreateHeader(vSoundplayer.scene.First.Panel, 'IcoMoon-Free', #$ea1c, 'Welcome to "Soundplayer" addon.');
 
   vSoundplayer.scene.First.main.Panel := TPanel.Create(vSoundplayer.scene.First.Panel);
   vSoundplayer.scene.First.main.Panel.Name := 'A_SP_Firt_Main';
@@ -1409,8 +1390,7 @@ begin
   vSoundplayer.Playlist.Remove_Song.Remove.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 75, 500, 140);
   vSoundplayer.Playlist.Remove_Song.Remove.Visible := True;
 
-  uLoad_SetAll_CreateHeader(vSoundplayer.Playlist.Remove_Song.Remove, 'A_SP_Playlist_Edit_Song_Remove', addons.soundplayer.Path.Images + 'sp_note.png',
-    'emove this song from the playlist?');
+  CreateHeader(vSoundplayer.Playlist.Remove_Song.Remove, 'IcoMoon-Free', #$ea0f, 'remove this song from the playlist?');
 
   vSoundplayer.Playlist.Remove_Song.main.Panel := TPanel.Create(vSoundplayer.Playlist.Remove_Song.Remove);
   vSoundplayer.Playlist.Remove_Song.main.Panel.Name := 'A_SP_Playlist_Edit_Song_Remove_Main';
@@ -1485,7 +1465,7 @@ begin
   vSoundplayer.Player.Band_Info_Press.Powered_By := TText.Create(vSoundplayer.scene.Back_Presentation);
   vSoundplayer.Player.Band_Info_Press.Powered_By.Name := 'A_SP_BandInfo_Powered_Text';
   vSoundplayer.Player.Band_Info_Press.Powered_By.Parent := vSoundplayer.scene.Back_Presentation;
-  vSoundplayer.Player.Band_Info_Press.Powered_By.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 190, 48, 160,30);
+  vSoundplayer.Player.Band_Info_Press.Powered_By.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 190, 48, 160, 30);
   vSoundplayer.Player.Band_Info_Press.Powered_By.Font.Family := 'Tahoma';
   vSoundplayer.Player.Band_Info_Press.Powered_By.TextSettings.FontColor := TAlphaColorRec.White;
   vSoundplayer.Player.Band_Info_Press.Powered_By.Font.Size := 18;
@@ -1497,8 +1477,8 @@ begin
   vSoundplayer.Player.Band_Info_Press.Powered_Img.Parent := vSoundplayer.scene.Back_Presentation;
   vSoundplayer.Player.Band_Info_Press.Powered_Img.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 48, 38, 36, 36);
   vSoundplayer.Player.Band_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
-  vSoundplayer.Player.Band_Info_Press.Powered_Img.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'scrapers/lastfm.png');
-  vSoundplayer.Player.Band_Info_Press.Powered_Img.WrapMode:= TImageWrapMode.Stretch;
+  vSoundplayer.Player.Band_Info_Press.Powered_Img.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'scrapers/lastfm.png');
+  vSoundplayer.Player.Band_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
   vSoundplayer.Player.Band_Info_Press.Powered_Img.Visible := True;
 
   vSoundplayer.Player.Band_Info_Press.Close := TText.Create(vSoundplayer.scene.Back_Presentation);
@@ -1630,7 +1610,7 @@ begin
   vSoundplayer.Player.Album_Info_Press.Powered_By := TText.Create(vSoundplayer.scene.Back_Presentation);
   vSoundplayer.Player.Album_Info_Press.Powered_By.Name := 'A_SP_Album_Powered_Text';
   vSoundplayer.Player.Album_Info_Press.Powered_By.Parent := vSoundplayer.scene.Back_Presentation;
-  vSoundplayer.Player.Album_Info_Press.Powered_By.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 190, 48, 160,30);
+  vSoundplayer.Player.Album_Info_Press.Powered_By.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 190, 48, 160, 30);
   vSoundplayer.Player.Album_Info_Press.Powered_By.Font.Family := 'Tahoma';
   vSoundplayer.Player.Album_Info_Press.Powered_By.TextSettings.FontColor := TAlphaColorRec.White;
   vSoundplayer.Player.Album_Info_Press.Powered_By.Font.Size := 18;
@@ -1642,8 +1622,8 @@ begin
   vSoundplayer.Player.Album_Info_Press.Powered_Img.Parent := vSoundplayer.scene.Back_Presentation;
   vSoundplayer.Player.Album_Info_Press.Powered_Img.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 48, 38, 36, 36);
   vSoundplayer.Player.Album_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
-  vSoundplayer.Player.Album_Info_Press.Powered_Img.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'scrapers/lastfm.png');
-  vSoundplayer.Player.Album_Info_Press.Powered_Img.WrapMode:= TImageWrapMode.Stretch;
+  vSoundplayer.Player.Album_Info_Press.Powered_Img.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'scrapers/lastfm.png');
+  vSoundplayer.Player.Album_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
   vSoundplayer.Player.Album_Info_Press.Powered_Img.Visible := True;
 
   vSoundplayer.Player.Album_Info_Press.Close := TText.Create(vSoundplayer.scene.Back_Presentation);

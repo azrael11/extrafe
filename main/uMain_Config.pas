@@ -40,8 +40,7 @@ uses
 
 procedure uMain_Config_Load;
 const
-  cButton_Names: array [0 .. 6] of string = ('Profile', 'General', 'Emulators', 'PC Games', 'Addons',
-    'Themes', 'Info');
+  cButton_Names: array [0 .. 6] of string = ('Profile', 'General', 'Emulators', 'PC Games', 'Addons', 'Themes', 'Info');
 var
   vi: Integer;
 begin
@@ -72,8 +71,7 @@ begin
   mainScene.Config.Panel_Ani.OnFinish := ex_main.input.mouse.Animation.OnFinish;
   mainScene.Config.Panel_Ani.Enabled := False;
 
-  uLoad_SetAll_CreateHeader(mainScene.Config.Panel, 'Main_Config_Panel',
-    ex_main.Paths.Config_Images + 'config_settings.png', 'Main configuration');
+  CreateHeader(mainScene.Config.Panel, 'IcoMoon-Free', #$e994, 'Main configuration');
 
   mainScene.Config.main.Left := TPanel.Create(mainScene.Config.Panel);
   mainScene.Config.main.Left.Name := 'Main_Config_Left_Panel';
@@ -101,7 +99,7 @@ begin
     mainScene.Config.main.L.Button[vi].SetBounds(10, 30 + (vi * 40), 190, 33);
     mainScene.Config.main.L.Button[vi].Text := cButton_Names[vi];
     mainScene.Config.main.L.Button[vi].OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
-    mainScene.Config.Main.L.Button[vi].OnMouseEnter:= ex_main.Input.mouse_config.Button.OnMouseEnter;
+    mainScene.Config.main.L.Button[vi].OnMouseEnter := ex_main.input.mouse_config.Button.OnMouseEnter;
     mainScene.Config.main.L.Button[vi].Tag := vi;
     mainScene.Config.main.L.Button[vi].Visible := True;
   end;
@@ -163,7 +161,7 @@ begin
     0:
       FreeAndNil(mainScene.Config.main.R.Profile.Panel);
     1:
-      FreeAndNil(mainScene.Config.Main.R.General.Panel) ;
+      FreeAndNil(mainScene.Config.main.R.General.Panel);
     2:
       begin
         for vi := 0 to 4 do

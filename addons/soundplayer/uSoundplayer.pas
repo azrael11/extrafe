@@ -65,7 +65,6 @@ begin
     if addons.soundplayer.Player.Play then
       uSoundplayer_Player_Volume.Adjust(True);
     uSoundplayer_Sounds.Free;
-    FreeAndNil(vSoundplayer.scene.ImgList);
     FreeAndNil(vSoundplayer.scene.Soundplayer);
   end;
 end;

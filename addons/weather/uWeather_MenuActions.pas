@@ -12,9 +12,6 @@ type
     procedure onANIStop(Sender: TObject);
   end;
 
-procedure uWeather_MenuActions_SlideRight;
-procedure uWeather_MenuActions_SlideLeft;
-
 var
   vWeather_Animation: TWEATHER_ANIMATION;
   vWeather_Ani_Stop: Boolean = True;
@@ -29,46 +26,6 @@ uses
   uWeather_Convert,
   uWeather_SetAll,
   uWeather_Sounds;
-
-procedure uWeather_MenuActions_SlideRight;
-begin
-  if vWeather_Ani_Stop then
-  begin
-    if vWeather.Scene.Control.TabIndex <> vWeather.Scene.Control.TabCount - 1 then
-    begin
-      vWeather_Ani_Stop := False;
-      uWeather_Sounds_PlayEffect('','', False);
-      uWeather_Sounds_PlayMouse('Slide');
-      if vWeather.Scene.Control.TabIndex = vWeather.Scene.Control.TabCount - 2 then
-        vWeather.Scene.Arrow_Right.Visible := False
-      else
-        vWeather.Scene.Arrow_Right.Visible := True;
-      vWeather.Scene.Arrow_Left.Visible := True;
-      vWeather.Scene.Arrow_Right_Glow.Enabled := True;
-      vWeather.Scene.Control.Next;
-    end;
-  end;
-end;
-
-procedure uWeather_MenuActions_SlideLeft;
-begin
-  if vWeather_Ani_Stop then
-  begin
-    if vWeather.Scene.Control.TabIndex <> 0 then
-    begin
-      vWeather_Ani_Stop := False;
-      uWeather_Sounds_PlayEffect('','', False);
-      uWeather_Sounds_PlayMouse('Slide');
-      if vWeather.Scene.Control.TabIndex = 1 then
-        vWeather.Scene.Arrow_Left.Visible := False
-      else
-        vWeather.Scene.Arrow_Left.Visible := True;
-      vWeather.Scene.Arrow_Right.Visible := True;
-      vWeather.Scene.Arrow_Left_Glow.Enabled := True;
-      vWeather.Scene.Control.Previous;
-    end;
-  end;
-end;
 
 { TWEATHER_ANIMATION }
 

@@ -88,8 +88,7 @@ begin
     vWeather.Config.main.Right.Towns.Add.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 400, 600, 450);
     vWeather.Config.main.Right.Towns.Add.Panel.Visible := True;
 
-    uLoad_SetAll_CreateHeader(vWeather.Config.main.Right.Towns.Add.Panel, 'A_W_Config_Towns_Add', addons.weather.Path.Images + 'w_add.png',
-      'Search and add new towns.');
+    CreateHeader(vWeather.Config.main.Right.Towns.Add.Panel, 'IcoMoon-Free', #$ea0a, 'Search and add new towns.');
 
     vWeather.Config.main.Right.Towns.Add.main.Panel := TPanel.Create(vWeather.Config.main.Right.Towns.Add.Panel);
     vWeather.Config.main.Right.Towns.Add.main.Panel.name := 'A_W_Config_Towns_Add_Main';

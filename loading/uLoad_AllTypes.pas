@@ -31,7 +31,7 @@ uses
 type
   TGLOBAL_HEADER = record
     Panel: TPanel;
-    Icon: TImage;
+    Icon_Text: TText;
     Text: Tlabel;
   end;
 
@@ -452,7 +452,7 @@ var
   emulation: TEMULATORS;
   ex_load: TLOADING;
 
-procedure uLoad_SetAll_CreateHeader(vPanel: TPanel; vName, vIcon, vText: String);
+procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String);
 
 implementation
 
@@ -461,9 +461,10 @@ uses
   Main,
   uMain;
 
-procedure uLoad_SetAll_CreateHeader(vPanel: TPanel; vName, vIcon, vText: String);
+procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String);
 var
   vHeader: TGLOBAL_HEADER;
+  vName: String;
 begin
   vHeader.Panel := TPanel.Create(vPanel);
   vHeader.Panel.Name := vName + '_Header';
@@ -471,13 +472,17 @@ begin
   vHeader.Panel.SetBounds(0, 0, vPanel.Width, 30);
   vHeader.Panel.Visible := True;
 
-  vHeader.Icon := TImage.Create(vHeader.Panel);
-  vHeader.Icon.Name := vName + '_Header_Icon';
-  vHeader.Icon.Parent := vHeader.Panel;
-  vHeader.Icon.SetBounds(6, 3, 24, 24);
-  vHeader.Icon.Bitmap.LoadFromFile(vIcon);
-  vHeader.Icon.WrapMode := TImageWrapMode.Fit;
-  vHeader.Icon.Visible := True;
+  vName:= vPanel.Name;
+
+  vHeader.Icon_Text := TText.Create(vHeader.Panel);
+  vHeader.Icon_Text.Name := vName + '_Header_Icon';
+  vHeader.Icon_Text.Parent:= vHeader.Panel;
+  vHeader.Icon_Text.SetBounds(6, 3, 24, 24);
+  vHeader.Icon_Text.Font.Family := vFamily;
+  vHeader.Icon_Text.Font.Size:= 18;
+  vHeader.Icon_Text.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vHeader.Icon_Text.Text:= vIcon;
+  vHeader.Icon_Text.Visible := True;
 
   vHeader.Text := Tlabel.Create(vHeader.Panel);
   vHeader.Text.Name := vName + '_Header_Text';

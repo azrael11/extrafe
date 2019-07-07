@@ -676,7 +676,7 @@ type
     Blur: TGaussianBlurEffect;
     Control: TALTabControl;
     Control_Ani: TFloatAnimation;
-    Settings: TImage;
+    Settings: TText;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
     UpLine: TImage;

@@ -156,9 +156,7 @@ begin
   begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
-      if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
-        uSoundplayer_Player.OnOver(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
-      else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
+      if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
         vSoundplayer.Player.Speaker_Left_Lock_Volume_Glow.Enabled := True
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Right_Volume' then
         vSoundplayer.Player.Speaker_Right_Lock_Volume_Glow.Enabled := True
@@ -217,9 +215,7 @@ begin
   begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
-      if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
-        uSoundplayer_Player.OnLeave(vSoundplayer.Player.Song_Tag, vSoundplayer.Player.Song_Tag_Glow)
-      else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
+      if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Left_Volume' then
         vSoundplayer.Player.Speaker_Left_Lock_Volume_Glow.Enabled := False
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Lock_Right_Volume' then
         vSoundplayer.Player.Speaker_Right_Lock_Volume_Glow.Enabled := False

@@ -17,19 +17,26 @@ uses
   uWeather_Config_Provider,
   uWeather_Config_Towns,
   uWeather_Config_Options,
-  uWeather_Config_Iconsets;
+  uWeather_Config_Iconsets,
+  uWeather_Providers_Yahoo;
 
 procedure uWeather_Config_ShowHide(mShow: Boolean);
 begin
   if mShow then
-    extrafe.prog.State := 'addon_weather_config'
+  begin
+    extrafe.prog.State := 'addon_weather_config';
+    if addons.weather.Action.Provider = 'yahoo' then
+      uWeather_Providers_Yahoo.vTime.Enabled := False;
+  end
   else
+  begin
     extrafe.prog.State := 'addon_weather';
+    uWeather_COnfig_ClearConfig;
+  end;
   vWeather.Scene.Blur.Enabled := mShow;
   vWeather.Config.Panel.Visible := mShow;
-  if mShow = False then
-    uWeather_COnfig_ClearConfig;
-  addons.weather.Config.Active_Panel:= -1;
+  addons.weather.Config.Active_Panel := -1;
+
 end;
 
 procedure uWeather_COnfig_ClearConfig;
@@ -42,6 +49,8 @@ begin
     uWeather_Config_Options_Free
   else if Assigned(vWeather.Config.main.Right.Panels[3]) then
     uWeather_Config_Iconsets_Free;
+  if addons.weather.Action.Provider = 'yahoo' then
+    uWeather_Providers_Yahoo.vTime.Enabled := True;
 end;
 
 procedure uWeather_Config_ShowPanel(mPanel: Integer);

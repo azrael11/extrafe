@@ -29,8 +29,7 @@ begin
   vSoundplayer.config.Panel.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Half_Height - 450, 800, 800);
   vSoundplayer.config.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(vSoundplayer.config.Panel, 'A_SP_Settings', addons.soundplayer.Path.Images +
-    'sp_settings_blue.png', 'Soundplayer configuration');
+  CreateHeader(vSoundplayer.config.Panel, 'IcoMoon-Free', #$e995, 'Soundplayer configuration');
 
   vSoundplayer.config.Main.Panel := TPanel.Create(vSoundplayer.config.Panel);
   vSoundplayer.config.Main.Panel.Name := 'A_SP_Settings_Main';

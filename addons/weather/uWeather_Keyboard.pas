@@ -14,6 +14,7 @@ uses
   uLoad,
   uLoad_AllTypes,
   uMain_Actions,
+  uWeather_Actions,
   uWeather_MenuActions,
   uWeather_Config,
   uWeather_Config_Towns,
@@ -53,9 +54,9 @@ begin
   begin
     vi := addons.weather.Main_Menu_Position;
     if UpperCase(vKey) = 'LEFT' then
-      uWeather_MenuActions_SlideLeft
+      uWeather_Actions.Control_Slide_Left
     else if UpperCase(vKey) = 'RIGHT' then
-      uWeather_MenuActions_SlideRight
+      uWeather_Actions.Control_Slide_Right
     else if UpperCase(vKey) = 'S' then
       uWeather_Config_ShowHide(True)
     else if UpperCase(vKey) = IntToStr(vi + 1) then

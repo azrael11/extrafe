@@ -55,8 +55,7 @@ uses
   uMain_Config_Addons;
 
 procedure uMain_Config_Addons_Actions_SetIconsToRightPosition(vDeletedIcon: integer);
-  procedure uMain_Config_Addons_Actions_SetIconsToRightPosition_addonPos(vAddon_Name: string;
-    vMenu_Position: integer);
+  procedure uMain_Config_Addons_Actions_SetIconsToRightPosition_addonPos(vAddon_Name: string; vMenu_Position: integer);
   begin
     if vAddon_Name = 'weather' then
       addons.weather.Main_Menu_Position := vMenu_Position
@@ -78,12 +77,10 @@ begin
       end
       else
       begin
-        mainScene.Header.Addon_Icons[(vDeletedIcon + vi) - 3].Bitmap := mainScene.Header.Addon_Icons
-          [vi].Bitmap;
+        mainScene.Header.Addon_Icons[(vDeletedIcon + vi) - 3].Bitmap := mainScene.Header.Addon_Icons[vi].Bitmap;
         mainScene.Header.Addon_Icons[vi].Bitmap := nil;
         addons.Active_PosNames[(vDeletedIcon + vi) - 3] := addons.Active_PosNames[vi];
-        uMain_Config_Addons_Actions_SetIconsToRightPosition_addonPos(addons.Active_PosNames[vi],
-          ((vDeletedIcon + vi) - 3));
+        uMain_Config_Addons_Actions_SetIconsToRightPosition_addonPos(addons.Active_PosNames[vi], ((vDeletedIcon + vi) - 3));
         addons.Active_PosNames[vi] := '';
       end;
 end;
@@ -159,15 +156,13 @@ begin
   extrafe.ini.ini.WriteInteger('Addons', 'Active_Num', addons.Active_Num);
   addons.soundplayer.ini.ini.WriteString('SOUNDPLAYER', 'Addon_Name', 'soundplayer');
   addons.soundplayer.ini.ini.WriteBool('SOUNDPLAYER', 'Active', True);
-  addons.soundplayer.ini.ini.WriteInteger('SOUNDPLAYER', 'Menu_Position',
-    addons.soundplayer.Main_Menu_Position);
+  addons.soundplayer.ini.ini.WriteInteger('SOUNDPLAYER', 'Menu_Position', addons.soundplayer.Main_Menu_Position);
   addons.Active_PosNames[addons.soundplayer.Main_Menu_Position] := 'soundplayer';
   mainScene.Config.main.R.addons.Icons_Info[3].Activeted.Text := 'Active';
   mainScene.Config.main.R.addons.Icons_Info[3].Activeted.Color := TAlphaColorRec.Lime;
   mainScene.Config.main.R.addons.Icons_Info[3].Action.Text := 'Deactivate';
   addons.Active_PosNames[addons.soundplayer.Main_Menu_Position] := 'soundplayer';
-  mainScene.Header.Addon_Icons[addons.soundplayer.Main_Menu_Position].Bitmap.LoadFromFile
-    (addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png');
+  mainScene.Header.Addon_Icons[addons.soundplayer.Main_Menu_Position].Bitmap.LoadFromFile(addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png');
   if vFresh then
   begin
     addons.soundplayer.ini.ini.WriteBool('General', 'First', False);
@@ -181,36 +176,24 @@ begin
     addons.soundplayer.ini.ini.WriteInteger('Volume', 'Right', 1);
   end;
 
-  addons.soundplayer.Name := addons.soundplayer.ini.ini.ReadString('SOUNDPLAYER', 'Addon_Name',
-    addons.soundplayer.Name);
-  addons.soundplayer.Active := addons.soundplayer.ini.ini.ReadBool('SOUNDPLAYER', 'Active',
-    addons.soundplayer.Active);
-  addons.soundplayer.Main_Menu_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER',
-    'Menu_Position', addons.soundplayer.Main_Menu_Position);
+  addons.soundplayer.Name := addons.soundplayer.ini.ini.ReadString('SOUNDPLAYER', 'Addon_Name', addons.soundplayer.Name);
+  addons.soundplayer.Active := addons.soundplayer.ini.ini.ReadBool('SOUNDPLAYER', 'Active', addons.soundplayer.Active);
+  addons.soundplayer.Main_Menu_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER', 'Menu_Position', addons.soundplayer.Main_Menu_Position);
   addons.soundplayer.Path.Icon := addons.soundplayer.ini.Path + 'icon\';
   addons.soundplayer.Path.Images := addons.soundplayer.ini.Path + 'images\';
   addons.soundplayer.Path.Files := addons.soundplayer.ini.Path + 'files\';
   addons.soundplayer.Path.Playlists := addons.soundplayer.ini.Path + 'playlists\';
 
-  addons.soundplayer.Actions.First := addons.soundplayer.ini.ini.ReadBool('General', 'First',
-    addons.soundplayer.Actions.First);
+  addons.soundplayer.Actions.First := addons.soundplayer.ini.ini.ReadBool('General', 'First', addons.soundplayer.Actions.First);
 
-  addons.soundplayer.Playlist.Total := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'TotalPlaylists',
-    addons.soundplayer.Playlist.Total);
-  addons.soundplayer.Playlist.Active := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'ActivePlaylist',
-    addons.soundplayer.Playlist.Active);
-  addons.soundplayer.Playlist.List.Name := addons.soundplayer.ini.ini.ReadString('Playlists',
-    'ActivePlaylistName', addons.soundplayer.Playlist.List.Name);
-  addons.soundplayer.Player.LastPlayed := addons.soundplayer.ini.ini.ReadInteger('Song', 'LastPlayed',
-    addons.soundplayer.Player.LastPlayed);
-  addons.soundplayer.Volume.State := addons.soundplayer.ini.ini.ReadString('Volume', 'State',
-    addons.soundplayer.Volume.State);
-  addons.soundplayer.Volume.Master := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Master',
-    addons.soundplayer.Volume.Master);
-  addons.soundplayer.Volume.Left := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Left',
-    addons.soundplayer.Volume.Left);
-  addons.soundplayer.Volume.Right := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Right',
-    addons.soundplayer.Volume.Right);
+  addons.soundplayer.Playlist.Total := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'TotalPlaylists', addons.soundplayer.Playlist.Total);
+  addons.soundplayer.Playlist.Active := addons.soundplayer.ini.ini.ReadInteger('Playlists', 'ActivePlaylist', addons.soundplayer.Playlist.Active);
+  addons.soundplayer.Playlist.List.Name := addons.soundplayer.ini.ini.ReadString('Playlists', 'ActivePlaylistName', addons.soundplayer.Playlist.List.Name);
+  addons.soundplayer.Player.LastPlayed := addons.soundplayer.ini.ini.ReadInteger('Song', 'LastPlayed', addons.soundplayer.Player.LastPlayed);
+  addons.soundplayer.Volume.State := addons.soundplayer.ini.ini.ReadString('Volume', 'State', addons.soundplayer.Volume.State);
+  addons.soundplayer.Volume.Master := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Master', addons.soundplayer.Volume.Master);
+  addons.soundplayer.Volume.Left := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Left', addons.soundplayer.Volume.Left);
+  addons.soundplayer.Volume.Right := addons.soundplayer.ini.ini.ReadFloat('Volume', 'Right', addons.soundplayer.Volume.Right);
 end;
 
 procedure uMain_Config_Addons_Actions_Activate_Soundplayer_Action;
@@ -232,113 +215,80 @@ begin
   mainScene.Config.main.R.addons.Panel_Blur.Enabled := True;
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel := TPanel.Create(mainScene.Config.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg';
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Parent := mainScene.Config.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Width := 500;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Height := 200;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Position.X :=
-    (mainScene.Config.Panel.Width / 2) - 150;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Position.Y :=
-    (mainScene.Config.Panel.Height / 2) - 100;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Position.X := (mainScene.Config.Panel.Width / 2) - 150;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel,
-    'Main_Config_Addons_Soundplayer_Activate_Msg', addons.soundplayer.Path.Icon +
-    'addons_soundplayer_icon.png', 'Activate Soundplayer addon');
+  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, 'Activate Soundplayer addon');
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Main';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Width :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Width;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Height :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Height - 30;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Width := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Width;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Height := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Height - 30;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Position.X := 0;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Position.Y := 30;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Text';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text := TLabel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Text';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Width := 400;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Height := 24;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Position.X := 50;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Position.Y := 30;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Text :=
-    'Found old configuration and playlists do you want to use this one?';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Font.Style :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Font.Style + [TFontStyle.fsBold];
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Text := 'Found old configuration and playlists do you want to use this one?';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Font.Style := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Font.Style +
+    [TFontStyle.fsBold];
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Text.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Radio_1';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1 := TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Radio_1';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Width := 300;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Height := 24;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Position.X := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Position.Y := 60;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Text := 'Yes load my old playlists.';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_1.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Radio_2';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2 := TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Radio_2';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Width := 300;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Height := 24;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Position.X := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Position.Y := 90;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Text := 'Lets create a new ones and rock.';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Radio_2.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK :=
-    TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Main_OK';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK := TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_OK';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Width := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Height := 26;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Position.X := 50;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Position.Y :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Position.Y := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Text := 'Activate';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Enabled := False;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.OK.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel :=
-    TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Name :=
-    'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Cancel';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel := TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Cancel';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Width := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Height := 26;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Position.X :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Width - 150;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Position.Y :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Position.X := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Width - 150;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Position.Y := mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Text := 'Cancel';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Cancel.Visible := True;
 end;
 
@@ -402,114 +352,80 @@ begin
   mainScene.Config.main.R.addons.Panel_Blur.Enabled := True;
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel := TPanel.Create(mainScene.Config.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg';
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Parent := mainScene.Config.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Width := 500;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Height := 200;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Position.X :=
-    (mainScene.Config.Panel.Width / 2) - 150;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Position.Y :=
-    (mainScene.Config.Panel.Height / 2) - 100;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Position.X := (mainScene.Config.Panel.Width / 2) - 150;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel,
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg', addons.soundplayer.Path.Icon +
-    'addons_soundplayer_icon.png', 'Deactivate Soundplayer addon');
+  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, 'Deactivate Soundplayer addon');
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Width :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Width;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Height :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Height - 30;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Width := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Width;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Height := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Height - 30;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Position.X := 0;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Position.Y := 30;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Text';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text := TLabel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Text';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Width := 400;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Height := 24;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Position.X := 50;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Position.Y := 30;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Text :=
-    'Do you want to keep the existance configuration and playlists?';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Font.Style :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Font.Style + [TFontStyle.fsBold];
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Text := 'Do you want to keep the existance configuration and playlists?';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Font.Style := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Font.Style +
+    [TFontStyle.fsBold];
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Text.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Radio_1';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1 := TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Radio_1';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Width := 300;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Height := 24;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Position.X := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Position.Y := 60;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Text := 'Yes keep it all.';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_1.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Radio_2';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2 := TRadioButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Radio_2';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Width := 300;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Height := 24;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Position.X := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Position.Y := 90;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Text :=
-    'I don''t want anything. Delete all.';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Text := 'I don''t want anything. Delete all.';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Radio_2.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK :=
-    TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_OK';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK := TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_OK';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Width := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Height := 26;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Position.X := 50;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Position.Y :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Position.Y := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Text := 'Deactivate';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Enabled := False;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.OK.Visible := True;
 
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel :=
-    TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Name :=
-    'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Cancel';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Parent :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel := TButton.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Cancel';
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Parent := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Width := 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Height := 26;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Position.X :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Width - 150;
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Position.Y :=
-    mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Position.X := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Width - 150;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Position.Y := mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Text := 'Cancel';
-  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Cancel.Visible := True;
 end;
 
@@ -533,108 +449,76 @@ begin
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Parent := mainScene.Config.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Width := 500;
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Height := 200;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Position.X :=
-    (mainScene.Config.Panel.Width / 2) - 150;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Position.Y :=
-    (mainScene.Config.Panel.Height / 2) - 100;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Position.X := (mainScene.Config.Panel.Width / 2) - 150;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel,
-    'Main_Config_Addons_Weather_Activate_Msg', addons.weather.Path.Icon + 'addons_weather_icon.png',
-    'Activate Weather addon');
+  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, 'Activate Weather addon');
 
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Main';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Width :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Width;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Height :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Height - 30;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main';
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Parent := mainScene.Config.main.R.addons.weather.Msg_Actv.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Width := mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Width;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Height := mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Height - 30;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Position.X := 0;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Position.Y := 30;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Main_Text';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text := TLabel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main_Text';
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Parent := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Width := 400;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Height := 24;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Position.X := 50;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Position.Y := 30;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Text :=
-    'Found old configuration do you want to use this one?';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Font.Style :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Font.Style + [TFontStyle.fsBold];
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Text := 'Found old configuration do you want to use this one?';
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Font.Style := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Font.Style +
+    [TFontStyle.fsBold];
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Text.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Main_Radio_1';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1 := TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main_Radio_1';
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Parent := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Width := 300;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Height := 24;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Position.X := 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Position.Y := 60;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Text := 'Yes i have some good places here.';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_1.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Main_Radio_2';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2 := TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main_Radio_2';
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Parent := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Width := 300;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Height := 24;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Position.X := 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Position.Y := 90;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Text := 'No let''s make a fresh new start.';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK :=
-    TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Main_OK';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK := TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main_OK';
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Parent := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Width := 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Height := 26;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Position.X := 50;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Position.Y :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Position.Y := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Text := 'Activate';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Enabled := False;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.OK.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel :=
-    TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Name :=
-    'Main_Config_Addons_Weather_Activate_Msg_Main_Cancel';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel := TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main_Cancel';
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Parent := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Width := 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Height := 26;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Position.X :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Width - 150;
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Position.Y :=
-    mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Position.X := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Width - 150;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Position.Y := mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Text := 'Cancel';
-  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Visible := True;
 end;
 
@@ -659,8 +543,7 @@ begin
   mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Lime;
   mainScene.Config.main.R.addons.Icons_Info[2].Action.Text := 'Deactivate';
   addons.Active_PosNames[addons.weather.Main_Menu_Position] := 'weather';
-  mainScene.Header.Addon_Icons[addons.weather.Main_Menu_Position].Bitmap.LoadFromFile
-    (addons.weather.Path.Icon + 'addons_weather_icon.png');
+  mainScene.Header.Addon_Icons[addons.weather.Main_Menu_Position].Bitmap.LoadFromFile(addons.weather.Path.Icon + 'addons_weather_icon.png');
   if vFresh then
   begin
     addons.weather.ini.ini.WriteBool('General', 'First', False);
@@ -681,18 +564,12 @@ begin
   end
   else
   begin
-    addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First',
-      addons.weather.Action.First);
-    addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name',
-      addons.weather.Action.Provider);
-    addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid',
-      addons.weather.Action.Active_WOEID);
-    addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total',
-      addons.weather.Action.Active_Total);
-    addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree',
-      addons.weather.Action.Degree);
-    addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh',
-      addons.weather.Config.Refresh_Once);
+    addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First', addons.weather.Action.First);
+    addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name', addons.weather.Action.Provider);
+    addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid', addons.weather.Action.Active_WOEID);
+    addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
+    addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree', addons.weather.Action.Degree);
+    addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh', addons.weather.Config.Refresh_Once);
   end;
 end;
 
@@ -724,109 +601,76 @@ begin
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Parent := mainScene.Config.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Width := 500;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Height := 200;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Position.X :=
-    (mainScene.Config.Panel.Width / 2) - 150;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Position.Y :=
-    (mainScene.Config.Panel.Height / 2) - 100;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Position.X := (mainScene.Config.Panel.Width / 2) - 150;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel,
-    'Main_Config_Addons_Weather_Deactivate_Msg', addons.weather.Path.Icon + 'addons_weather_icon.png',
-    'Deactivate Weather addon');
+  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, 'Deactivate Weather addon');
 
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel :=
-    TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Main';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Width :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Width;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Height :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Height - 30;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Parent := mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Width := mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Width;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Height := mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Height - 30;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Position.X := 0;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Position.Y := 30;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text :=
-    TLabel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Main_Text';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text := TLabel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Text';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Parent := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Width := 400;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Height := 24;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Position.X := 50;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Position.Y := 30;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Text :=
-    'Do you want to keep the existance configuration for future proposes?';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Font.Style :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Font.Style + [TFontStyle.fsBold];
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Text := 'Do you want to keep the existance configuration for future proposes?';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Font.Style := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Font.Style +
+    [TFontStyle.fsBold];
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Text.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Main_Radio_1';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1 := TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Radio_1';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Parent := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Width := 300;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Height := 24;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Position.X := 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Position.Y := 60;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Text := 'Yes please keep it.';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_1.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2 :=
-    TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Main_Radio_2';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2 := TRadioButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Radio_2';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Parent := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Width := 300;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Height := 24;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Position.X := 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Position.Y := 90;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Text :=
-    'Delete it, i start from the beginning.';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.OnClick :=
-    ex_main.Input.mouse_config.Radio.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Text := 'Delete it, i start from the beginning.';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.OnClick := ex_main.Input.mouse_config.Radio.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK :=
-    TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Main_OK';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK := TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main_OK';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Parent := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Width := 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Height := 26;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Position.X := 50;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Position.Y :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Position.Y := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Text := 'Deactivate';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Enabled := False;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.OK.Visible := True;
 
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel :=
-    TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Name :=
-    'Main_Config_Addons_Weather_Deactivate_Msg_Main_Cancel';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Parent :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel := TButton.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel);
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Cancel';
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Parent := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Width := 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Height := 26;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Position.X :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Width - 150;
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Position.Y :=
-    mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Height - 36;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Position.X := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Width - 150;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Position.Y := mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Height - 36;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Text := 'Cancel';
-  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.OnClick :=
-    ex_main.Input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.OnClick := ex_main.Input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Cancel.Visible := True;
 end;
 
@@ -886,8 +730,7 @@ begin
   mainScene.Config.main.R.addons.Icons_Info[4].Activeted.Color := TAlphaColorRec.Lime;
   mainScene.Config.main.R.addons.Icons_Info[4].Action.Text := 'Deactivate';
   addons.Active_PosNames[addons.play.Main_Menu_Position] := 'play';
-  mainScene.Header.Addon_Icons[addons.play.Main_Menu_Position].Bitmap.LoadFromFile
-    (addons.play.Path.Icon + 'addons_play_icon.png');
+  mainScene.Header.Addon_Icons[addons.play.Main_Menu_Position].Bitmap.LoadFromFile(addons.play.Path.Icon + 'addons_play_icon.png');
   if vFresh then
   begin
     { addons.weather.ini.ini.WriteBool('General', 'First', False);

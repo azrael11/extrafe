@@ -34,6 +34,10 @@ procedure uWeather_Actions_ShowTheForcast;
 
 procedure uWeather_Actions_Show_AstronomyAnimation;
 
+procedure Control_Slide_Right;
+procedure Control_Slide_Left;
+
+
 var
   vTaskTimer: TTimer;
 
@@ -72,7 +76,7 @@ begin
 
   // What
 
-  if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_Total <> -1) then
+  if (addons.weather.Action.Provider <> '') and (addons.weather.Action.Active_WOEID <> -1) then
   begin
 
     if uWindows_IsConected_ToInternet then
@@ -88,7 +92,7 @@ begin
       if addons.weather.Action.Provider = 'yahoo' then
         uWeather_Providers_Yahoo.Main_Create_Towns
       else if addons.weather.Action.Provider = 'openweathermap' then
-        uWeather_Providers_OpenWeatherMap_Load;
+        uWeather_Providers_OpenWeatherMap.Load;
       uWeather_Actions_ShowTheForcast;
     end
   end
@@ -184,8 +188,7 @@ begin
     vWeather.Scene.First.Panel_Shadow.Direction := 90;
     vWeather.Scene.First.Panel_Shadow.Enabled := True;
 
-    uLoad_SetAll_CreateHeader(vWeather.Scene.First.Panel, 'A_W_First_Header', addons.weather.Path.Icon + 'addons_weather_icon.png',
-      'Welcome to "Weather" Addon.');
+    CreateHeader(vWeather.Scene.First.Panel, 'Weather Icons', #$f002,'Welcome to "Weather" Addon.');
 
     vWeather.Scene.First.main.Panel := TPanel.Create(vWeather.Scene.First.Panel);
     vWeather.Scene.First.main.Panel.Name := 'A_W_First_Main';
@@ -290,5 +293,46 @@ begin
   addons.weather.Ini.Ini.WriteBool('General', 'First', vCheched);
   addons.weather.Action.First := vCheched;
 end;
+
+procedure Control_Slide_Right;
+begin
+  if vWeather_Ani_Stop then
+  begin
+    if vWeather.Scene.Control.TabIndex <> vWeather.Scene.Control.TabCount - 1 then
+    begin
+      vWeather_Ani_Stop := False;
+      uWeather_Sounds_PlayEffect('','', False);
+      uWeather_Sounds_PlayMouse('Slide');
+      if vWeather.Scene.Control.TabIndex = vWeather.Scene.Control.TabCount - 2 then
+        vWeather.Scene.Arrow_Right.Visible := False
+      else
+        vWeather.Scene.Arrow_Right.Visible := True;
+      vWeather.Scene.Arrow_Left.Visible := True;
+      vWeather.Scene.Arrow_Right_Glow.Enabled := True;
+      vWeather.Scene.Control.Next;
+    end;
+  end;
+end;
+
+procedure Control_Slide_Left;
+begin
+  if vWeather_Ani_Stop then
+  begin
+    if vWeather.Scene.Control.TabIndex <> 0 then
+    begin
+      vWeather_Ani_Stop := False;
+      uWeather_Sounds_PlayEffect('','', False);
+      uWeather_Sounds_PlayMouse('Slide');
+      if vWeather.Scene.Control.TabIndex = 1 then
+        vWeather.Scene.Arrow_Left.Visible := False
+      else
+        vWeather.Scene.Arrow_Left.Visible := True;
+      vWeather.Scene.Arrow_Right.Visible := True;
+      vWeather.Scene.Arrow_Left_Glow.Enabled := True;
+      vWeather.Scene.Control.Previous;
+    end;
+  end;
+end;
+
 
 end.

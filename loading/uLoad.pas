@@ -58,11 +58,10 @@ uses
 
 procedure uLoad_StartLoading;
 const
-  res_4_3: array [0 .. 10] of string = ('640x480', '800x600', '1024x768', '1152x864', '1280x960', '1400x1050',
-    '1600x1200', '2048x1536', '3200x2400', '4000x3000', '6400x4800');
+  res_4_3: array [0 .. 10] of string = ('640x480', '800x600', '1024x768', '1152x864', '1280x960', '1400x1050', '1600x1200', '2048x1536', '3200x2400',
+    '4000x3000', '6400x4800');
   res_16_9: array [0 .. 4] of string = ('852x480', '1280x720', '1365x768', '1600x900', '1920x1080');
-  res_16_10: array [0 .. 5] of string = ('1440x900', '1680x1050', '1920x1200', '2560x1600', '3840x2400',
-    '7680x4800');
+  res_16_10: array [0 .. 5] of string = ('1440x900', '1680x1050', '1920x1200', '2560x1600', '3840x2400', '7680x4800');
 begin
   vMonitor_Resolution := uWindows_GetCurrent_Monitor_Resolution;
   Loading_Form.Width := vMonitor_Resolution.Horizontal;
@@ -78,7 +77,7 @@ begin
 
   uDatabase_Create;
   uLoad_Start_ExtraFE;
-//  ex_load.Scene.Back.Visible := True;
+  // ex_load.Scene.Back.Visible := True;
   Play_Intro_Video;
 end;
 
@@ -93,22 +92,20 @@ begin
   extrafe.prog.Desc := 'Code name: Mnimi';
   extrafe.prog.Paths.History := extrafe.ini.Path + 'history\';
   extrafe.prog.Paths.Fonts := extrafe.ini.Path + 'fonts\';
-  extrafe.prog.Virtual_Keyboard := extrafe.ini.ini.ReadBool('Visual', 'Virtual_Keyboard',
-    extrafe.prog.Virtual_Keyboard);
+  extrafe.prog.Virtual_Keyboard := extrafe.ini.ini.ReadBool('Visual', 'Virtual_Keyboard', extrafe.prog.Virtual_Keyboard);
 
   ex_main.Paths.Flags_Images := extrafe.prog.Path + 'data\main\flags\';
   ex_main.Paths.Avatar_Images := extrafe.prog.Path + 'data\main\avatars\';
   ex_main.Paths.Images := extrafe.prog.Path + 'data\main\images\';
   ex_main.Paths.Config_Images := extrafe.prog.Path + 'data\main\config_images\';
-  ex_main.Paths.Sounds:= extrafe.prog.Path + 'data\main\sounds\';
+  ex_main.Paths.Sounds := extrafe.prog.Path + 'data\main\sounds\';
 
   // program graphics
   extrafe.res.Width := extrafe.ini.ini.ReadInteger('General_Graphics', 'Res_X', extrafe.res.Width);
   extrafe.res.Half_Width := extrafe.res.Width div 2;
   extrafe.res.Height := extrafe.ini.ini.ReadInteger('General_Graphics', 'Res_Y', extrafe.res.Height);
   extrafe.res.Half_Height := extrafe.res.Height div 2;
-  extrafe.res.FullScreen := extrafe.ini.ini.ReadBool('General_Graphics', 'Fullscreen',
-    extrafe.res.FullScreen);
+  extrafe.res.FullScreen := extrafe.ini.ini.ReadBool('General_Graphics', 'Fullscreen', extrafe.res.FullScreen);
 
   // program styles
   extrafe.style.Path := extrafe.ini.ini.ReadString('Themes', 'Path', extrafe.style.Path);
@@ -250,61 +247,61 @@ end;
 
 procedure Play_Intro_Video;
 begin
-  ex_load.Intro.Back:= TLayout.Create(Loading_Form);
-  ex_load.Intro.Back.Name:= 'Loading_Intro_Back';
-  ex_load.Intro.Back.Parent:= Loading_Form;
-  ex_load.Intro.Back.Align:= TAlignLayout.Client;
-  ex_load.Intro.Back.Cursor:= crDefault;
-  ex_load.Intro.Back.Visible:= True;
+  ex_load.Intro.Back := TLayout.Create(Loading_Form);
+  ex_load.Intro.Back.Name := 'Loading_Intro_Back';
+  ex_load.Intro.Back.Parent := Loading_Form;
+  ex_load.Intro.Back.Align := TAlignLayout.Client;
+  ex_load.Intro.Back.Cursor := crDefault;
+  ex_load.Intro.Back.Visible := True;
 
-  ex_load.Intro.Video:= TFmxPasLibVlcPlayer.Create(ex_load.Intro.Back);
-  ex_load.Intro.Video.Name:= 'Loading_Intro';
-  ex_load.Intro.Video.Parent:=  ex_load.Intro.Back;
-  ex_load.Intro.Video.Align:= TAlignLayout.Client;
+  ex_load.Intro.Video := TFmxPasLibVlcPlayer.Create(ex_load.Intro.Back);
+  ex_load.Intro.Video.Name := 'Loading_Intro';
+  ex_load.Intro.Video.Parent := ex_load.Intro.Back;
+  ex_load.Intro.Video.Align := TAlignLayout.Client;
 //  ex_load.Intro.Video.Play(ex_load.Path.Images + 'intro.mp4');
-  ex_load.Intro.Video.WrapMode:= TImageWrapMode.Stretch;
-  ex_load.Intro.Video.Cursor:= crDefault;
-  ex_load.Intro.Video.OnMouseMove:= ex_load.Input.mouse.Layout.OnMouseMove;
-  ex_load.Intro.Video.Visible:= True;
+  ex_load.Intro.Video.WrapMode := TImageWrapMode.Stretch;
+  ex_load.Intro.Video.Cursor := crDefault;
+  ex_load.Intro.Video.OnMouseMove := ex_load.Input.mouse.Layout.OnMouseMove;
+  ex_load.Intro.Video.Visible := True;
 
-  ex_load.Intro.Text:= TText.Create(ex_load.Intro.Video);
-  ex_load.Intro.Text.Name:= 'Loading_Intro_Text';
-  ex_load.Intro.Text.Parent:=  ex_load.Intro.Video;
-  ex_load.Intro.Text.SetBounds(extrafe.res.Width- 310, 10, 300, 30);
-  ex_load.Intro.Text.Font.Family:= 'IcoMoon-Free';
-  ex_load.Intro.Text.Text:= 'Skip Video '+ #$ea14;
-  ex_load.Intro.Text.TextSettings.FontColor:= TAlphaColorRec.White;
-  ex_load.Intro.Text.TextSettings.Font.Size:= 24;
-  ex_load.Intro.Text.Opacity:= 1;
-  ex_load.Intro.Text.TextSettings.HorzAlign:= TTextAlign.Trailing;
-  ex_load.Intro.Text.OnClick:= ex_load.Input.mouse.Text.OnMouseClick;
-  ex_load.Intro.Text.OnMouseEnter:= ex_load.Input.mouse.Text.OnMouseEnter;
-  ex_load.Intro.Text.OnMouseLeave:= ex_load.Input.mouse.Text.OnMouseLeave;
-  ex_load.Intro.Text.Visible:= True;
+  ex_load.Intro.Text := TText.Create(ex_load.Intro.Video);
+  ex_load.Intro.Text.Name := 'Loading_Intro_Text';
+  ex_load.Intro.Text.Parent := ex_load.Intro.Video;
+  ex_load.Intro.Text.SetBounds(extrafe.res.Width - 310, 10, 300, 30);
+  ex_load.Intro.Text.Font.Family := 'IcoMoon-Free';
+  ex_load.Intro.Text.Text := 'Skip Video ' + #$ea14;
+  ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.White;
+  ex_load.Intro.Text.TextSettings.Font.Size := 24;
+  ex_load.Intro.Text.Opacity := 1;
+  ex_load.Intro.Text.TextSettings.HorzAlign := TTextAlign.Trailing;
+  ex_load.Intro.Text.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Intro.Text.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Intro.Text.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
+  ex_load.Intro.Text.Visible := True;
 
-  ex_load.Intro.Text_Ani:= TFloatAnimation.Create(ex_load.Intro.Text);
-  ex_load.Intro.Text_Ani.Name:= 'Loading_Intro_Text_Ani';
-  ex_load.Intro.Text_Ani.Parent:=  ex_load.Intro.Text;
-  ex_load.Intro.Text_Ani.Duration:= 0.3;
-  ex_load.Intro.Text_Ani.StopValue:= 0;
-  ex_load.Intro.Text_Ani.PropertyName:= 'Opacity';
-  ex_load.Intro.Text_Ani.Enabled:= False;
+  ex_load.Intro.Text_Ani := TFloatAnimation.Create(ex_load.Intro.Text);
+  ex_load.Intro.Text_Ani.Name := 'Loading_Intro_Text_Ani';
+  ex_load.Intro.Text_Ani.Parent := ex_load.Intro.Text;
+  ex_load.Intro.Text_Ani.Duration := 0.3;
+  ex_load.Intro.Text_Ani.StopValue := 0;
+  ex_load.Intro.Text_Ani.PropertyName := 'Opacity';
+  ex_load.Intro.Text_Ani.Enabled := False;
 
-  ex_load.Intro.Timer:= TTimer.Create(Loading_Form);
-  ex_load.Intro.Timer.Name:= 'Loading_Intro_Timer';
-  ex_load.Intro.Timer.Parent:=  Loading_Form;
-  ex_load.Intro.Timer.Interval:= 1;
-  ex_load.Intro.Timer.OnTimer:= ex_load.Scene.Timer_Pros.OnTimer;
-  ex_load.Intro.Timer.Enabled:= True;
+  ex_load.Intro.Timer := TTimer.Create(Loading_Form);
+  ex_load.Intro.Timer.Name := 'Loading_Intro_Timer';
+  ex_load.Intro.Timer.Parent := Loading_Form;
+  ex_load.Intro.Timer.Interval := 1;
+  ex_load.Intro.Timer.OnTimer := ex_load.Scene.Timer_Pros.OnTimer;
+  ex_load.Intro.Timer.Enabled := True;
 
-  ex_load.Intro.Fade_Count:= 0;
+  ex_load.Intro.Fade_Count := 0;
 end;
 
 procedure Skip_Intro;
 begin
   ex_load.Intro.Video.Stop;
   FreeAndNil(ex_load.Intro.Back);
-  ex_load.Intro.Timer.Enabled:= False;
+  ex_load.Intro.Timer.Enabled := False;
   ex_load.Scene.Back.Visible := True;
 end;
 

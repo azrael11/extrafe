@@ -40,8 +40,7 @@ begin
       (vSoundplayer.scene.soundplayer.Height / 2) - 50, 500, 140);
     vSoundplayer.Playlist.Remove.Panel.Visible := True;
 
-    uLoad_SetAll_CreateHeader(vSoundplayer.Playlist.Remove.Panel, 'A_SP_Playlist_Remove_Panel',
-      addons.soundplayer.Path.Images + 'sp_remove.png', 'Warning!!! Remove playlist?');
+    CreateHeader(vSoundplayer.Playlist.Remove.Panel, 'IcoMoon-Free', #$ea0b, 'Warning!!! Remove playlist?');
 
     vSoundplayer.Playlist.Remove.main.Panel := TPanel.Create(vSoundplayer.Playlist.Remove.Panel);
     vSoundplayer.Playlist.Remove.main.Panel.Name := 'A_SP_Playlist_Remove_Main_Panel';

@@ -45,8 +45,7 @@ begin
   vSoundplayer.EQ.Panel.SetBounds((vSoundplayer.scene.soundplayer.Width / 2) - 500, 140, 1000, 450);
   vSoundplayer.EQ.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(vSoundplayer.EQ.Panel, 'A_SP_Equalizer', addons.soundplayer.Path.Images +
-    'sp_equalizer.png', 'Equalizer');
+  CreateHeader(vSoundplayer.EQ.Panel, 'IcoMoon-Free', #$e993, 'Equalizer');
 
   vSoundplayer.EQ.Main := TPanel.Create(vSoundplayer.EQ.Panel);
   vSoundplayer.EQ.Main.Name := 'A_SP_Equalizer_Main';
@@ -195,8 +194,7 @@ begin
     vSoundplayer.EQ.Main.Height - 70);
   vSoundplayer.EQ.Preset.Visible := True;
 
-  uLoad_SetAll_CreateHeader(vSoundplayer.EQ.Preset, 'A_SP_Equalizer_Preset', addons.soundplayer.Path.Images +
-    'sp_equalizer.png', 'Presets');
+  CreateHeader(vSoundplayer.EQ.Preset, 'IcoMoon-Free', #$e993, 'Presets');
 
   vSoundplayer.EQ.Presets := TListBox.Create(vSoundplayer.EQ.Preset);
   vSoundplayer.EQ.Presets.Name := 'A_SP_Equalizer_Preset_Presets';

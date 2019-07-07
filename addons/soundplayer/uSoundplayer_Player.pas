@@ -20,9 +20,6 @@ procedure Set_Play(vPlay, vPause, vStop, vMute: Boolean);
 procedure Refresh;
 procedure Refresh_GoTo(vGo: Integer; vPlay: Boolean);
 
-procedure OnOver(vImage: TImage; vGlow: TGlowEffect);
-procedure OnLeave(vImage: TImage; vGlow: TGlowEffect);
-
 procedure Text_OnOver(vText: TText; vGlow: TGlowEffect);
 procedure Text_OnLeave(vText: TText; vGlow: TGlowEffect);
 
@@ -1076,87 +1073,6 @@ begin
   end;
   Text_ScaleDown;
 end;
-
-procedure OnOver(vImage: TImage; vGlow: TGlowEffect);
-  procedure ScaleUp;
-  begin
-    vImage.Scale.X := 1.1;
-    vImage.Scale.Y := 1.1;
-    vImage.Position.X := vImage.Position.X - ((vImage.Width * 0.1) / 2);
-    vImage.Position.Y := vImage.Position.Y - ((vImage.Height * 0.1) / 2);
-    vGlow.Enabled := True;
-  end;
-
-begin
-  if vImage.Name = 'A_SP_Player_Play_Image' then
-  begin
-    if (addons.soundplayer.Player.Play) or (addons.soundplayer.Player.Pause) then
-    begin
-      if addons.soundplayer.Player.Pause then
-      begin
-        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-        vGlow.GlowColor := TAlphaColorRec.Blueviolet;
-        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
-      end
-      else
-      begin
-        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
-        vGlow.GlowColor := TAlphaColorRec.Greenyellow;
-        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
-      end;
-    end;
-    ScaleUp;
-  end
-  else if vImage.Name = 'A_SP_Player_Stop_Image' then
-  begin
-    if addons.soundplayer.Player.Stop = False then
-      ScaleUp;
-  end
-  else
-  begin
-    ScaleUp;
-  end;
-  BASS_ChannelPlay(addons.soundplayer.sound.Effects[2], False);
-end;
-
-procedure OnLeave(vImage: TImage; vGlow: TGlowEffect);
-  procedure ScaleDown;
-  begin
-    vImage.Scale.X := 1;
-    vImage.Scale.Y := 1;
-    vImage.Position.X := vImage.Position.X + ((vImage.Width * 0.1) / 2);
-    vImage.Position.Y := vImage.Position.Y + ((vImage.Height * 0.1) / 2);
-    vGlow.Enabled := False;
-  end;
-
-begin
-  if vImage.Name = 'A_SP_Player_Play_Image' then
-  begin
-    if (addons.soundplayer.Player.Play) or (addons.soundplayer.Player.Pause) then
-    begin
-      if addons.soundplayer.Player.Pause then
-      begin
-        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_pause.png');
-        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Greenyellow;
-      end
-      else
-      begin
-        vImage.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_play.png');
-        vSoundplayer.Player.Play.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
-      end;
-
-    end;
-    ScaleDown;
-  end
-  else if vImage.Name = 'A_SP_Player_Stop_Image' then
-  begin
-    if addons.soundplayer.Player.Stop = False then
-      ScaleDown;
-  end
-  else
-    ScaleDown;
-end;
-
 /// ///////////////////////////////////////////////////////////////////////////////////////////
 procedure Update_Last_Song(vNum: Integer);
 begin

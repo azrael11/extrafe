@@ -23,7 +23,7 @@ uses
   uWeather_AllTypes;
 
 procedure Load;
-procedure uWeather_SetAll_Create_Control;
+procedure Control;
 
 procedure Config;
 
@@ -97,35 +97,35 @@ begin
   vWeather.Scene.MiddleLine.Visible := True;
 
   vWeather.Scene.Arrow_Left := TText.Create(vWeather.Scene.Weather);
-  vWeather.Scene.Arrow_Left.Name := 'A_W_ArrowLeft_Image';
+  vWeather.Scene.Arrow_Left.Name := 'A_W_Arrow_Left';
   vWeather.Scene.Arrow_Left.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Arrow_Left.SetBounds(20, vWeather.Scene.Back.Height - 120, 64, 64);
   vWeather.Scene.Arrow_Left.Font.Family := 'IcoMoon-Free';
   vWeather.Scene.Arrow_Left.Font.Size := 48;
   vWeather.Scene.Arrow_Left.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Left.Text := #$ea38;
-  vWeather.Scene.Arrow_Left.OnClick := addons.Weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Scene.Arrow_Left.OnMouseEnter := addons.Weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Scene.Arrow_Left.OnMouseLeave := addons.Weather.Input.mouse.Image.OnMouseLeave;
+  vWeather.Scene.Arrow_Left.OnClick := addons.Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Arrow_Left.OnMouseEnter := addons.Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Arrow_Left.OnMouseLeave := addons.Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Arrow_Left.Visible := False;
 
   vWeather.Scene.Arrow_Left_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Left);
-  vWeather.Scene.Arrow_Left_Glow.Name := 'A_W_ArrowLeft_Glow';
+  vWeather.Scene.Arrow_Left_Glow.Name := 'A_W_Arrow_Left_Glow';
   vWeather.Scene.Arrow_Left_Glow.Parent := vWeather.Scene.Arrow_Left;
   vWeather.Scene.Arrow_Left_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Left_Glow.Enabled := False;
 
   vWeather.Scene.Arrow_Right := TText.Create(vWeather.Scene.Weather);
-  vWeather.Scene.Arrow_Right.Name := 'A_W_ArrowRight_Image';
+  vWeather.Scene.Arrow_Right.Name := 'A_W_Arrow_Right';
   vWeather.Scene.Arrow_Right.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Arrow_Right.SetBounds(vWeather.Scene.Back.Width - 84, vWeather.Scene.Back.Height - 120, 64, 64);
   vWeather.Scene.Arrow_Right.Font.Family := 'IcoMoon-Free';
   vWeather.Scene.Arrow_Right.Font.Size := 48;
   vWeather.Scene.Arrow_Right.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Right.Text := #$ea34;
-  vWeather.Scene.Arrow_Right.OnClick := addons.Weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Scene.Arrow_Right.OnMouseEnter := addons.Weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Scene.Arrow_Right.OnMouseLeave := addons.Weather.Input.mouse.Image.OnMouseLeave;
+  vWeather.Scene.Arrow_Right.OnClick := addons.Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Arrow_Right.OnMouseEnter := addons.Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Arrow_Right.OnMouseLeave := addons.Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Arrow_Right.Visible := False;
 
   vWeather.Scene.Arrow_Right_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Right);
@@ -143,18 +143,20 @@ begin
   vWeather.Scene.DownLine.Visible := True;
 
   // Control
-  uWeather_SetAll_Create_Control;
+  Control;
 
   // Settings
-  vWeather.Scene.Settings := TImage.Create(vWeather.Scene.Weather);
+  vWeather.Scene.Settings := TText.Create(vWeather.Scene.Weather);
   vWeather.Scene.Settings.Name := 'A_W_Settings_Image';
   vWeather.Scene.Settings.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Settings.SetBounds(vWeather.Scene.Weather.Width - 60, 20, 50, 50);
-  vWeather.Scene.Settings.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_settings_blue.png');
-  vWeather.Scene.Settings.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Settings.OnClick := addons.Weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Scene.Settings.OnMouseEnter := addons.Weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Scene.Settings.OnMouseLeave := addons.Weather.Input.mouse.Image.OnMouseLeave;
+  vWeather.Scene.Settings.Font.Family := 'IcoMoon-Free';
+  vWeather.Scene.Settings.Font.Size:= 48;
+  vWeather.Scene.Settings.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Settings.Text:= #$e994;
+  vWeather.Scene.Settings.OnClick := addons.Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Settings.OnMouseEnter := addons.Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Settings.OnMouseLeave := addons.Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Settings.Visible := False;
 
   vWeather.Scene.Settings_Ani := TFloatAnimation.Create(vWeather.Scene.Settings);
@@ -191,7 +193,7 @@ begin
 
 end;
 
-procedure uWeather_SetAll_Create_Control;
+procedure Control;
 begin
   vWeather.Scene.Control := TALTabControl.Create(vWeather.Scene.Back);
   vWeather.Scene.Control.Name := 'A_W_Control';
@@ -230,7 +232,7 @@ begin
   vWeather.Config.Panel_Blur.BlurAmount := 0.5;
   vWeather.Config.Panel_Blur.Enabled := False;
 
-  uLoad_SetAll_CreateHeader(vWeather.Config.Panel, 'A_W_Config', addons.Weather.Path.Images + 'w_settings_blue.png', 'Weather configuration.');
+  CreateHeader(vWeather.Config.Panel, 'IcoMoon-Free', #$e994, 'Weather configuration.');
 
   vWeather.Config.main.Panel := Tpanel.Create(vWeather.Config.Panel);
   vWeather.Config.main.Panel.Name := 'A_W_Config_Main';

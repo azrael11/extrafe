@@ -363,7 +363,6 @@ type
     DownLine: TImage;
     Dialog: TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG;
     OpenDialog: TOpenDialog;
-    Imglist: TImageList;
     Settings: TImage;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;

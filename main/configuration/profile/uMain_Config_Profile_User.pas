@@ -102,53 +102,42 @@ begin
   mainScene.Config.main.R.Profile.User.Password_V.Password := True;
   mainScene.Config.main.R.Profile.User.Password_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Password_Change :=
-    TText.Create(mainScene.Config.main.R.Profile.User.Panel);
+  mainScene.Config.main.R.Profile.User.Password_Change := TText.Create(mainScene.Config.main.R.Profile.User.Panel);
   mainScene.Config.main.R.Profile.User.Password_Change.Name := 'Main_Config_Profile_Main_Password_Change';
   mainScene.Config.main.R.Profile.User.Password_Change.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Password_Change.SetBounds(180, 120, 200, 24);
   mainScene.Config.main.R.Profile.User.Password_Change.Text := 'Change Password';
   mainScene.Config.main.R.Profile.User.Password_Change.HorzTextAlign := TTextAlign.Trailing;
   mainScene.Config.main.R.Profile.User.Password_Change.TextSettings.FontColor := TAlphaColorRec.White;
-  mainScene.Config.main.R.Profile.User.Password_Change.OnClick :=
-    ex_main.input.mouse_config.Text.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Password_Change.OnMouseEnter :=
-    ex_main.input.mouse_config.Text.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Password_Change.OnMouseLeave :=
-    ex_main.input.mouse_config.Text.OnMouseLeave;
+  mainScene.Config.main.R.Profile.User.Password_Change.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Password_Change.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+  mainScene.Config.main.R.Profile.User.Password_Change.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
   mainScene.Config.main.R.Profile.User.Password_Change.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar_Show :=
-    TImage.Create(mainScene.Config.main.R.Profile.User.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar_Show := TImage.Create(mainScene.Config.main.R.Profile.User.Panel);
   mainScene.Config.main.R.Profile.User.Avatar_Show.Name := 'Main_Config_Profile_Main_Avatar';
   mainScene.Config.main.R.Profile.User.Avatar_Show.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Avatar_Show.SetBounds(410, 10, 150, 150);
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images +
-    user_Active.Avatar + '.png');
+  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active.Avatar + '.png');
   mainScene.Config.main.R.Profile.User.Avatar_Show.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Avatar_Show.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar_Change :=
-    TText.Create(mainScene.Config.main.R.Profile.User.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar_Change := TText.Create(mainScene.Config.main.R.Profile.User.Panel);
   mainScene.Config.main.R.Profile.User.Avatar_Change.Name := 'Main_Config_Profile_Main_Avatar_Change';
   mainScene.Config.main.R.Profile.User.Avatar_Change.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Avatar_Change.SetBounds(410, 160, 150, 24);
   mainScene.Config.main.R.Profile.User.Avatar_Change.Text := 'Change Avatar';
   mainScene.Config.main.R.Profile.User.Avatar_Change.HorzTextAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Avatar_Change.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseEnter :=
-    ex_main.input.mouse_config.Text.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseLeave :=
-    ex_main.input.mouse_config.Text.OnMouseLeave;
+  mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+  mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
   mainScene.Config.main.R.Profile.User.Avatar_Change.TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.main.R.Profile.User.Avatar_Change.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Personal :=
-    TGroupBox.Create(mainScene.Config.main.R.Profile.User.Panel);
+  mainScene.Config.main.R.Profile.User.Personal := TGroupBox.Create(mainScene.Config.main.R.Profile.User.Panel);
   mainScene.Config.main.R.Profile.User.Personal.Name := 'Main_Config_Profile_Main_Personal';
   mainScene.Config.main.R.Profile.User.Personal.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Personal.SetBounds(10, 190,
-    mainScene.Config.main.R.Profile.User.Panel.Width - 20, 200);
+  mainScene.Config.main.R.Profile.User.Personal.SetBounds(10, 190, mainScene.Config.main.R.Profile.User.Panel.Width - 20, 200);
   mainScene.Config.main.R.Profile.User.Personal.Text := 'Personal';
   mainScene.Config.main.R.Profile.User.Personal.Visible := True;
 
@@ -168,16 +157,14 @@ begin
   mainScene.Config.main.R.Profile.User.Name_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Name_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Surname :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Personal);
+  mainScene.Config.main.R.Profile.User.Surname := TLabel.Create(mainScene.Config.main.R.Profile.User.Personal);
   mainScene.Config.main.R.Profile.User.Surname.Name := 'Main_Config_Profile_Main_Surname_Label';
   mainScene.Config.main.R.Profile.User.Surname.Parent := mainScene.Config.main.R.Profile.User.Personal;
   mainScene.Config.main.R.Profile.User.Surname.SetBounds(10, 90, 300, 24);
   mainScene.Config.main.R.Profile.User.Surname.Text := 'Surname : ';
   mainScene.Config.main.R.Profile.User.Surname.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Surname_V :=
-    TEdit.Create(mainScene.Config.main.R.Profile.User.Personal);
+  mainScene.Config.main.R.Profile.User.Surname_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Personal);
   mainScene.Config.main.R.Profile.User.Surname_V.Name := 'Main_Config_Profile_Main_Surname_Edit';
   mainScene.Config.main.R.Profile.User.Surname_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
   mainScene.Config.main.R.Profile.User.Surname_V.SetBounds(10, 110, 370, 24);
@@ -186,89 +173,65 @@ begin
   mainScene.Config.main.R.Profile.User.Surname_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Surname_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Gender_Male :=
-    TImage.Create(mainScene.Config.main.R.Profile.User.Personal);
+  mainScene.Config.main.R.Profile.User.Gender_Male := TImage.Create(mainScene.Config.main.R.Profile.User.Personal);
   mainScene.Config.main.R.Profile.User.Gender_Male.Name := 'Main_Config_Profile_Main_Gender_Male';
   mainScene.Config.main.R.Profile.User.Gender_Male.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Gender_Male.SetBounds
-    (mainScene.Config.main.R.Profile.User.Personal.Width - 62, 50, 32, 32);
-  mainScene.Config.main.R.Profile.User.Gender_Male.Bitmap.LoadFromFile(ex_main.Paths.Config_Images +
-    'config_male.png');
+  mainScene.Config.main.R.Profile.User.Gender_Male.SetBounds(mainScene.Config.main.R.Profile.User.Personal.Width - 62, 50, 32, 32);
+  mainScene.Config.main.R.Profile.User.Gender_Male.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_male.png');
   mainScene.Config.main.R.Profile.User.Gender_Male.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Gender_Male.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseEnter :=
-    ex_main.input.mouse_config.Image.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseLeave :=
-    ex_main.input.mouse_config.Image.OnMouseLeave;
+  mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
+  mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
   mainScene.Config.main.R.Profile.User.Gender_Male.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow :=
-    TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Male);
+  mainScene.Config.main.R.Profile.User.Gender_Male_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Male);
   mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Name := 'Main_Config_Profile_Main_Gender_Male_Glow';
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Parent :=
-    mainScene.Config.main.R.Profile.User.Gender_Male;
+  mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Parent := mainScene.Config.main.R.Profile.User.Gender_Male;
   mainScene.Config.main.R.Profile.User.Gender_Male_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Opacity := 0.9;
   mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Gender_Male_Grey :=
-    TMonochromeEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Male);
+  mainScene.Config.main.R.Profile.User.Gender_Male_Grey := TMonochromeEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Male);
   mainScene.Config.main.R.Profile.User.Gender_Male_Grey.Name := 'Main_Config_Profile_Main_Gender_Male_Grey';
-  mainScene.Config.main.R.Profile.User.Gender_Male_Grey.Parent :=
-    mainScene.Config.main.R.Profile.User.Gender_Male;
+  mainScene.Config.main.R.Profile.User.Gender_Male_Grey.Parent := mainScene.Config.main.R.Profile.User.Gender_Male;
   mainScene.Config.main.R.Profile.User.Gender_Male_Grey.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Gender_Female :=
-    TImage.Create(mainScene.Config.main.R.Profile.User.Personal);
+  mainScene.Config.main.R.Profile.User.Gender_Female := TImage.Create(mainScene.Config.main.R.Profile.User.Personal);
   mainScene.Config.main.R.Profile.User.Gender_Female.Name := 'Main_Config_Profile_Main_Gender_Female';
   mainScene.Config.main.R.Profile.User.Gender_Female.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Gender_Female.SetBounds
-    (mainScene.Config.main.R.Profile.User.Personal.Width - 152, 50, 32, 32);
-  mainScene.Config.main.R.Profile.User.Gender_Female.Bitmap.LoadFromFile
-    (ex_main.Paths.Config_Images + 'config_female.png');
+  mainScene.Config.main.R.Profile.User.Gender_Female.SetBounds(mainScene.Config.main.R.Profile.User.Personal.Width - 152, 50, 32, 32);
+  mainScene.Config.main.R.Profile.User.Gender_Female.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_female.png');
   mainScene.Config.main.R.Profile.User.Gender_Female.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Gender_Female.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseEnter :=
-    ex_main.input.mouse_config.Image.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseLeave :=
-    ex_main.input.mouse_config.Image.OnMouseLeave;
+  mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
+  mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
   mainScene.Config.main.R.Profile.User.Gender_Female.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow :=
-    TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Female);
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Name :=
-    'Main_Config_Profile_Main_Gender_Female_Glow';
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Parent :=
-    mainScene.Config.main.R.Profile.User.Gender_Female;
+  mainScene.Config.main.R.Profile.User.Gender_Female_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Female);
+  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Name := 'Main_Config_Profile_Main_Gender_Female_Glow';
+  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Parent := mainScene.Config.main.R.Profile.User.Gender_Female;
   mainScene.Config.main.R.Profile.User.Gender_Female_Glow.GlowColor := TAlphaColorRec.Pink;
   mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Opacity := 0.9;
   mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Gender_Female_Grey :=
-    TMonochromeEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Female);
-  mainScene.Config.main.R.Profile.User.Gender_Female_Grey.Name :=
-    'Main_Config_Profile_Main_Gender_Female_Grey';
-  mainScene.Config.main.R.Profile.User.Gender_Female_Grey.Parent :=
-    mainScene.Config.main.R.Profile.User.Gender_Female;
+  mainScene.Config.main.R.Profile.User.Gender_Female_Grey := TMonochromeEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Female);
+  mainScene.Config.main.R.Profile.User.Gender_Female_Grey.Name := 'Main_Config_Profile_Main_Gender_Female_Grey';
+  mainScene.Config.main.R.Profile.User.Gender_Female_Grey.Parent := mainScene.Config.main.R.Profile.User.Gender_Female;
   mainScene.Config.main.R.Profile.User.Gender_Female_Grey.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Apply_Changes :=
-    TButton.Create(mainScene.Config.main.R.Profile.User.Personal);
+  mainScene.Config.main.R.Profile.User.Apply_Changes := TButton.Create(mainScene.Config.main.R.Profile.User.Personal);
   mainScene.Config.main.R.Profile.User.Apply_Changes.Name := 'Main_Config_Profile_Main_Apply_Changes';
   mainScene.Config.main.R.Profile.User.Apply_Changes.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Apply_Changes.SetBounds
-    (mainScene.Config.main.R.Profile.User.Personal.Width - 170, 140, 150, 30);
+  mainScene.Config.main.R.Profile.User.Apply_Changes.SetBounds(mainScene.Config.main.R.Profile.User.Personal.Width - 170, 140, 150, 30);
   mainScene.Config.main.R.Profile.User.Apply_Changes.Text := 'Apply changes';
-  mainScene.Config.main.R.Profile.User.Apply_Changes.OnClick :=
-    ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Apply_Changes.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.Profile.User.Apply_Changes.Visible := True;
 
   mainScene.Config.main.R.Profile.User.Country := TImage.Create(mainScene.Config.main.R.Profile.User.Panel);
   mainScene.Config.main.R.Profile.User.Country.Name := 'Main_Config_Profile_Main_Country';
   mainScene.Config.main.R.Profile.User.Country.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Country.SetBounds(410, 410, 150, 120);
-  mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images +
-    user_Active.Country_Code + '.png');
+  mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images + user_Active.Country_Code + '.png');
   mainScene.Config.main.R.Profile.User.Country.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Country.Visible := True;
 
@@ -276,8 +239,7 @@ begin
   mainScene.Config.main.R.Profile.User.Email.Name := 'Main_Config_Profile_Main_EMail';
   mainScene.Config.main.R.Profile.User.Email.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Email.SetBounds(10, 410, 32, 32);
-  mainScene.Config.main.R.Profile.User.Email.Bitmap.LoadFromFile(ex_main.Paths.Config_Images +
-    'config_email.png');
+  mainScene.Config.main.R.Profile.User.Email.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_email.png');
   mainScene.Config.main.R.Profile.User.Email.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Email.Visible := True;
 
@@ -293,12 +255,10 @@ begin
   mainScene.Config.main.R.Profile.User.Created := TText.Create(mainScene.Config.main.R.Profile.User.Panel);
   mainScene.Config.main.R.Profile.User.Created.Name := 'Main_Config_Profile_Main_Created';
   mainScene.Config.main.R.Profile.User.Created.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Created.SetBounds(10, mainScene.Config.main.R.Profile.User.Panel.Height
-    - 46, 500, 24);
+  mainScene.Config.main.R.Profile.User.Created.SetBounds(10, mainScene.Config.main.R.Profile.User.Panel.Height - 46, 500, 24);
   mainScene.Config.main.R.Profile.User.Created.TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.main.R.Profile.User.Created.TextSettings.Font.Size := 12;
-  mainScene.Config.main.R.Profile.User.Created.Text := 'User : "' + user_Active.Username +
-    '"was created on : ' + user_Active.DateTime_Created;
+  mainScene.Config.main.R.Profile.User.Created.Text := 'User : "' + user_Active.Username + '"was created on : ' + user_Active.DateTime_Created;
   mainScene.Config.main.R.Profile.User.Created.TextSettings.HorzAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Created.Visible := True;
 
@@ -379,24 +339,17 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar.Panel.Parent := mainScene.Config.main.R.Panel[0];
   mainScene.Config.main.R.Profile.User.Avatar.Panel.Width := 560;
   mainScene.Config.main.R.Profile.User.Avatar.Panel.Height := 560;
-  mainScene.Config.main.R.Profile.User.Avatar.Panel.Position.X :=
-    (mainScene.Config.main.R.Panel[0].Width / 2) - 280;
-  mainScene.Config.main.R.Profile.User.Avatar.Panel.Position.Y :=
-    (mainScene.Config.main.R.Panel[0].Height / 2) - 280;
+  mainScene.Config.main.R.Profile.User.Avatar.Panel.Position.X := (mainScene.Config.main.R.Panel[0].Width / 2) - 280;
+  mainScene.Config.main.R.Profile.User.Avatar.Panel.Position.Y := (mainScene.Config.main.R.Panel[0].Height / 2) - 280;
   mainScene.Config.main.R.Profile.User.Avatar.Panel.Visible := False;
 
-  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.Profile.User.Avatar.Panel,
-    'Main_Config_Profile_Avatar_Panel', ex_main.Paths.Avatar_Images + '0.png', 'Change the avatar');
+  CreateHeader(mainScene.Config.main.R.Profile.User.Avatar.Panel, 'IcoMoon-Free', #$e976, 'Change the avatar');
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Panel :=
-    TPanel.Create(mainScene.Config.main.R.Profile.User.Avatar.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Panel := TPanel.Create(mainScene.Config.main.R.Profile.User.Avatar.Panel);
   mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Name := 'Main_Config_Profile_Avatar_Main_Panel';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.Panel;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width :=
-    mainScene.Config.main.R.Profile.User.Avatar.Panel.Width;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Height :=
-    mainScene.Config.main.R.Profile.User.Avatar.Panel.Height - 30;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Parent := mainScene.Config.main.R.Profile.User.Avatar.Panel;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width := mainScene.Config.main.R.Profile.User.Avatar.Panel.Width;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Height := mainScene.Config.main.R.Profile.User.Avatar.Panel.Height - 30;
   mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Position.X := 0;
   mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Position.Y := 30;
   mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Visible := True;
@@ -411,49 +364,35 @@ begin
     if li > 4 then
       li := 0;
 
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi] :=
-      TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Name := 'Main_Config_Profile_Avatar_Image_' +
-      IntToStr(vi);
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Parent :=
-      mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi] := TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Name := 'Main_Config_Profile_Avatar_Image_' + IntToStr(vi);
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Width := 100;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Height := 100;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Position.X := 10 + (li * 110);
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Position.Y := 10 + (ki * 110);
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Bitmap.LoadFromFile
-      (ex_main.Paths.Avatar_Images + '0.png');
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Tag := vi;
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].OnClick :=
-      ex_main.input.mouse_config.Image.OnMouseClick;
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].OnMouseEnter :=
-      ex_main.input.mouse_config.Image.OnMouseEnter;
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].OnMouseLeave :=
-      ex_main.input.mouse_config.Image.OnMouseLeave;
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Visible := True;
 
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi] :=
-      TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi]);
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Name :=
-      'Main_Config_Profile_Avatar_Image_' + IntToStr(vi);
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Parent :=
-      mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi];
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi] := TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi]);
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Name := 'Main_Config_Profile_Avatar_Image_' + IntToStr(vi);
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi];
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Width := 24;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Height := 24;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Position.X := 0;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Position.Y := 76;
-    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Bitmap.LoadFromFile
-      (ex_main.Paths.Config_Images + 'config_check.png');
+    mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_check.png');
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Visible := False;
 
-    mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi] :=
-      TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi]);
-    mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].Name :=
-      'Main_Config_Profile_Avatar_Image_Glow_' + IntToStr(vi);
-    mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].Parent :=
-      mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi];
+    mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi] := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi]);
+    mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].Name := 'Main_Config_Profile_Avatar_Image_Glow_' + IntToStr(vi);
+    mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi];
     mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].GlowColor := TAlphaColorRec.Deepskyblue;
     mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].Softness := 0.5;
     mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].Opacity := 0.9;
@@ -462,75 +401,53 @@ begin
     Inc(li, 1);
   end;
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left :=
-    TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left := TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Name := 'Main_Config_Profile_Avatar_Left';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Width := 24;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Height := 24;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Position.X :=
-    (mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width / 2) - 40;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Position.X := (mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width / 2) - 40;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Position.Y := 460;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Bitmap.LoadFromFile
-    (ex_main.Paths.Config_Images + 'config_previous.png');
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_previous.png');
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.OnClick :=
-    ex_main.input.mouse_config.Image.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.OnMouseEnter :=
-    ex_main.input.mouse_config.Image.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.OnMouseLeave :=
-    ex_main.input.mouse_config.Image.OnMouseLeave;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow :=
-    TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left);
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.Name :=
-    'Main_Config_Profile_Avatar_Left_Glow';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.Name := 'Main_Config_Profile_Avatar_Left_Glow';
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.Softness := 0.5;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.Opacity := 0.9;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Left_Glow.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right :=
-    TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right := TImage.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Name := 'Main_Config_Profile_Avatar_Right';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Width := 24;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Height := 24;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Position.X :=
-    (mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width / 2) + 20;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Position.X := (mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width / 2) + 20;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Position.Y := 460;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Bitmap.LoadFromFile
-    (ex_main.Paths.Config_Images + 'config_next.png');
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_next.png');
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.OnClick :=
-    ex_main.input.mouse_config.Image.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.OnMouseEnter :=
-    ex_main.input.mouse_config.Image.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.OnMouseLeave :=
-    ex_main.input.mouse_config.Image.OnMouseLeave;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow :=
-    TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right);
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.Name :=
-    'Main_Config_Profile_Avatar_Right_Glow';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.Name := 'Main_Config_Profile_Avatar_Right_Glow';
+  mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.Softness := 0.5;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.Opacity := 0.9;
   mainScene.Config.main.R.Profile.User.Avatar.main.Arrow_Right_Glow.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info := TLabel.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
   mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Name := 'Main_Config_Profile_Avatar_Page_Info';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
   mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Width := 300;
   mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Height := 24;
   mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Position.X := 10;
@@ -538,35 +455,26 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Text := 'Page 1 from 26 pages';
   mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Change :=
-    TButton.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Change := TButton.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
   mainScene.Config.main.R.Profile.User.Avatar.main.Change.Name := 'Main_Config_Profile_Avatar_Main_Change';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Change.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Change.Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
   mainScene.Config.main.R.Profile.User.Avatar.main.Change.Width := 100;
   mainScene.Config.main.R.Profile.User.Avatar.main.Change.Height := 30;
   mainScene.Config.main.R.Profile.User.Avatar.main.Change.Position.X := 50;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Change.Position.Y :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Height - 40;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Change.Position.Y := mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Height - 40;
   mainScene.Config.main.R.Profile.User.Avatar.main.Change.Text := 'Change';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Change.OnClick :=
-    ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Change.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.Profile.User.Avatar.main.Change.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel :=
-    TButton.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
+  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel := TButton.Create(mainScene.Config.main.R.Profile.User.Avatar.main.Panel);
   mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Name := 'Main_Config_Profile_Avatar_Main_Cancel';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Parent :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Parent := mainScene.Config.main.R.Profile.User.Avatar.main.Panel;
   mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Width := 100;
   mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Height := 30;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Position.X :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width - 150;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Position.Y :=
-    mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Height - 40;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Position.X := mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Width - 150;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Position.Y := mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Height - 40;
   mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Text := 'Cancel';
-  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.OnClick :=
-    ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Visible := True;
 
   Avatar_Page(1);
@@ -585,8 +493,7 @@ begin
     vAvatarPage_Num := (StrToInt(user_Active.Avatar) div 20) + 1;
     for vi := 0 to 19 do
     begin
-      mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Bitmap.LoadFromFile
-        (ex_main.Paths.Avatar_Images + IntToStr((20 * (vPage - 1)) + vi) + '.png');
+      mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr((20 * (vPage - 1)) + vi) + '.png');
       mainScene.Config.main.R.Profile.User.Avatar.main.AVatar_Glow[vi].Enabled := False;
       mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Visible := False;
       if (vAvatar.Page = vAvatarPage_Num) and ((vAvatar.Checked mod 20) = vi) then
@@ -596,8 +503,7 @@ begin
         mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[vi].Visible := True;
       end
     end;
-    mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Text := 'Page ' + IntToStr(vPage) +
-      ' of 26 pages';
+    mainScene.Config.main.R.Profile.User.Avatar.main.Page_Info.Text := 'Page ' + IntToStr(vPage) + ' of 26 pages';
   end;
 end;
 
@@ -620,10 +526,8 @@ end;
 procedure Avatar_Change;
 begin
   uDatabase_SqlCommands.Update_Avatar(vAvatar.Checked);
-  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked)
-    + '.png');
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images +
-    IntToStr(vAvatar.Checked) + '.png');
+  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');
+  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');
   Return;
 end;
 
@@ -641,35 +545,24 @@ begin
   mainScene.Config.main.R.Profile.User.Pass.Panel.Parent := mainScene.Config.main.R.Panel[0];
   mainScene.Config.main.R.Profile.User.Pass.Panel.Width := 430;
   mainScene.Config.main.R.Profile.User.Pass.Panel.Height := 260;
-  mainScene.Config.main.R.Profile.User.Pass.Panel.Position.X :=
-    (mainScene.Config.main.R.Panel[0].Width / 2) - 215;
-  mainScene.Config.main.R.Profile.User.Pass.Panel.Position.Y :=
-    (mainScene.Config.main.R.Panel[0].Height / 2) - 130;
+  mainScene.Config.main.R.Profile.User.Pass.Panel.Position.X := (mainScene.Config.main.R.Panel[0].Width / 2) - 215;
+  mainScene.Config.main.R.Profile.User.Pass.Panel.Position.Y := (mainScene.Config.main.R.Panel[0].Height / 2) - 130;
   mainScene.Config.main.R.Profile.User.Pass.Panel.Visible := False;
 
-  uLoad_SetAll_CreateHeader(mainScene.Config.main.R.Profile.User.Pass.Panel,
-    'Main_Config_Profile_Password_Panel', ex_main.Paths.Config_Images + 'config_pass.png',
-    'Change the password');
+  CreateHeader(mainScene.Config.main.R.Profile.User.Pass.Panel, 'IcoMoon-Free', #$e98d, 'Change the password');
 
-  mainScene.Config.main.R.Profile.User.Pass.main.Panel :=
-    TPanel.Create(mainScene.Config.main.R.Profile.User.Pass.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.Panel := TPanel.Create(mainScene.Config.main.R.Profile.User.Pass.Panel);
   mainScene.Config.main.R.Profile.User.Pass.main.Panel.Name := 'Main_Config_Profile_Password_Main_Panel';
-  mainScene.Config.main.R.Profile.User.Pass.main.Panel.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.Panel;
-  mainScene.Config.main.R.Profile.User.Pass.main.Panel.Width :=
-    mainScene.Config.main.R.Profile.User.Pass.Panel.Width;
-  mainScene.Config.main.R.Profile.User.Pass.main.Panel.Height :=
-    mainScene.Config.main.R.Profile.User.Pass.Panel.Height - 30;
+  mainScene.Config.main.R.Profile.User.Pass.main.Panel.Parent := mainScene.Config.main.R.Profile.User.Pass.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.Panel.Width := mainScene.Config.main.R.Profile.User.Pass.Panel.Width;
+  mainScene.Config.main.R.Profile.User.Pass.main.Panel.Height := mainScene.Config.main.R.Profile.User.Pass.Panel.Height - 30;
   mainScene.Config.main.R.Profile.User.Pass.main.Panel.Position.X := 0;
   mainScene.Config.main.R.Profile.User.Pass.main.Panel.Position.Y := 30;
   mainScene.Config.main.R.Profile.User.Pass.main.Panel.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.Current :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.main.Current.Name :=
-    'Main_Config_Profile_Password_Main_Current_Label';
-  mainScene.Config.main.R.Profile.User.Pass.main.Current.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.Current := TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.Current.Name := 'Main_Config_Profile_Password_Main_Current_Label';
+  mainScene.Config.main.R.Profile.User.Pass.main.Current.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.Current.Width := 430;
   mainScene.Config.main.R.Profile.User.Pass.main.Current.Height := 24;
   mainScene.Config.main.R.Profile.User.Pass.main.Current.Position.X := 10;
@@ -677,26 +570,20 @@ begin
   mainScene.Config.main.R.Profile.User.Pass.main.Current.Text := 'Current password';
   mainScene.Config.main.R.Profile.User.Pass.main.Current.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.Current_V :=
-    TEdit.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Name :=
-    'Main_Config_Profile_Password_Main_Current_V_Label';
-  mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.Current_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Name := 'Main_Config_Profile_Password_Main_Current_V_Label';
+  mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Width := 410;
   mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Height := 24;
   mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Position.X := 10;
   mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Position.Y := 34;
   mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text := '';
-  mainScene.Config.main.R.Profile.User.Pass.main.Current_V.OnTyping :=
-    ex_main.input.mouse_config.Edit.OnTyping;
+  mainScene.Config.main.R.Profile.User.Pass.main.Current_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.New :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.New := TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
   mainScene.Config.main.R.Profile.User.Pass.main.New.Name := 'Main_Config_Profile_Password_Main_New_Label';
-  mainScene.Config.main.R.Profile.User.Pass.main.New.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.New.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.New.Width := 430;
   mainScene.Config.main.R.Profile.User.Pass.main.New.Height := 24;
   mainScene.Config.main.R.Profile.User.Pass.main.New.Position.X := 10;
@@ -704,12 +591,9 @@ begin
   mainScene.Config.main.R.Profile.User.Pass.main.New.Text := 'New password';
   mainScene.Config.main.R.Profile.User.Pass.main.New.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.New_V :=
-    TEdit.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.main.New_V.Name :=
-    'Main_Config_Profile_Password_Main_New_V_Label';
-  mainScene.Config.main.R.Profile.User.Pass.main.New_V.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.New_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.New_V.Name := 'Main_Config_Profile_Password_Main_New_V_Label';
+  mainScene.Config.main.R.Profile.User.Pass.main.New_V.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.New_V.Width := 410;
   mainScene.Config.main.R.Profile.User.Pass.main.New_V.Height := 24;
   mainScene.Config.main.R.Profile.User.Pass.main.New_V.Position.X := 10;
@@ -718,12 +602,9 @@ begin
   mainScene.Config.main.R.Profile.User.Pass.main.New_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Pass.main.New_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Name :=
-    'Main_Config_Profile_Password_Main_NewRewrite_Label';
-  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite := TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Name := 'Main_Config_Profile_Password_Main_NewRewrite_Label';
+  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Width := 430;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Height := 24;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Position.X := 10;
@@ -731,29 +612,21 @@ begin
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Text := 'Rewrite new password';
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V :=
-    TEdit.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Name :=
-    'Main_Config_Profile_Password_Main_NewRewrite_V_Label';
-  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Name := 'Main_Config_Profile_Password_Main_NewRewrite_V_Label';
+  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Width := 410;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Height := 24;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Position.X := 10;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Position.Y := 142;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Text := '';
-  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.OnTyping :=
-    ex_main.input.mouse_config.Edit.OnTyping;
+  mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.Warning :=
-    TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
-  mainScene.Config.main.R.Profile.User.Pass.main.Warning.Name :=
-    'Main_Config_Profile_Password_Main_Current_Warning';
-  mainScene.Config.main.R.Profile.User.Pass.main.Warning.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
-  mainScene.Config.main.R.Profile.User.Pass.main.Warning.Width :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel.Width - 20;
+  mainScene.Config.main.R.Profile.User.Pass.main.Warning := TLabel.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.Warning.Name := 'Main_Config_Profile_Password_Main_Current_Warning';
+  mainScene.Config.main.R.Profile.User.Pass.main.Warning.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.Warning.Width := mainScene.Config.main.R.Profile.User.Pass.main.Panel.Width - 20;
   mainScene.Config.main.R.Profile.User.Pass.main.Warning.Height := 24;
   mainScene.Config.main.R.Profile.User.Pass.main.Warning.Position.X := 10;
   mainScene.Config.main.R.Profile.User.Pass.main.Warning.Position.Y := 164;
@@ -762,34 +635,25 @@ begin
   mainScene.Config.main.R.Profile.User.Pass.main.Warning.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Pass.main.Warning.Visible := False;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.Change :=
-    TButton.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.Change := TButton.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
   mainScene.Config.main.R.Profile.User.Pass.main.Change.Name := 'Main_Config_Profile_Password_Main_Change';
-  mainScene.Config.main.R.Profile.User.Pass.main.Change.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.Change.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.Change.Width := 100;
   mainScene.Config.main.R.Profile.User.Pass.main.Change.Height := 30;
   mainScene.Config.main.R.Profile.User.Pass.main.Change.Position.X := 50;
-  mainScene.Config.main.R.Profile.User.Pass.main.Change.Position.Y :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel.Height - 40;
+  mainScene.Config.main.R.Profile.User.Pass.main.Change.Position.Y := mainScene.Config.main.R.Profile.User.Pass.main.Panel.Height - 40;
   mainScene.Config.main.R.Profile.User.Pass.main.Change.Text := 'Change';
-  mainScene.Config.main.R.Profile.User.Pass.main.Change.OnClick :=
-    ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Pass.main.Change.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.Profile.User.Pass.main.Change.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Pass.main.Cancel :=
-    TButton.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
+  mainScene.Config.main.R.Profile.User.Pass.main.Cancel := TButton.Create(mainScene.Config.main.R.Profile.User.Pass.main.Panel);
   mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Name := 'Main_Config_Profile_Password_Main_Cancel';
-  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Parent :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel;
+  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Parent := mainScene.Config.main.R.Profile.User.Pass.main.Panel;
   mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Width := 100;
   mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Height := 30;
-  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Position.X :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel.Width - 150;
-  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Position.Y :=
-    mainScene.Config.main.R.Profile.User.Pass.main.Panel.Height - 40;
-  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.OnClick :=
-    ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Position.X := mainScene.Config.main.R.Profile.User.Pass.main.Panel.Width - 150;
+  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Position.Y := mainScene.Config.main.R.Profile.User.Pass.main.Panel.Height - 40;
+  mainScene.Config.main.R.Profile.User.Pass.main.Cancel.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Text := 'Cancel';
   mainScene.Config.main.R.Profile.User.Pass.main.Cancel.Visible := True;
 
@@ -801,22 +665,19 @@ begin
   Result := False;
   if mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text = user_Active.Password then
   begin
-    if mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text = mainScene.Config.main.R.Profile.User.Pass.
-      main.New_Rewrite_V.Text then
+    if mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text = mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Text then
     begin
       Result := True;
     end
     else
     begin
-      mainScene.Config.main.R.Profile.User.Pass.main.Warning.Text :=
-        'New passwords do not match please check them up.';
+      mainScene.Config.main.R.Profile.User.Pass.main.Warning.Text := 'New passwords do not match please check them up.';
       mainScene.Config.main.R.Profile.User.Pass.main.Warning.Visible := True;
     end;
   end
   else
   begin
-    mainScene.Config.main.R.Profile.User.Pass.main.Warning.Text :=
-      'This is not your current password please type the right one.';
+    mainScene.Config.main.R.Profile.User.Pass.main.Warning.Text := 'This is not your current password please type the right one.';
     mainScene.Config.main.R.Profile.User.Pass.main.Warning.Visible := True;
   end;
 end;
@@ -826,8 +687,7 @@ begin
   if Password_Check then
   begin
     uDatabase_SqlCommands.Update_Password(mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text);
-    mainScene.Config.main.R.Profile.User.Password_V.Text :=
-      mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
+    mainScene.Config.main.R.Profile.User.Password_V.Text := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
     Return;
   end;
 end;

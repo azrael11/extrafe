@@ -7,7 +7,8 @@ uses
   System.Classes,
   System.SysUtils,
   FMX.Forms,
-  FMX.Types;
+  FMX.Types, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Phys, FireDAC.Comp.Client,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys.IB, FireDAC.Phys.IBDef, FireDAC.FMXUI.Wait, Data.DB;
 
 {type
   TTIMER_LOADING_VIDEO = class(TTimer)

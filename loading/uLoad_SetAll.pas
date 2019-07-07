@@ -147,7 +147,7 @@ begin
   ex_load.Login.Panel_Login_Correct.StartValue := 0.2;
   ex_load.Login.Panel_Login_Correct.Enabled := False;
 
-  uLoad_SetAll_CreateHeader(ex_load.Login.Panel, 'Loading_Login', ex_load.Path.Images + 'login.png', 'Login');
+  CreateHeader(ex_load.Login.Panel, 'IcoMoon-Free', #$e971, 'Login');
 
   ex_load.Login.Main := TPanel.Create(ex_load.Login.Panel);
   ex_load.Login.Main.Name := 'Loading_Main';
@@ -346,7 +346,7 @@ begin
   ex_load.F_Pass.Panel.Opacity := 0.8;
   ex_load.F_Pass.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(ex_load.F_Pass.Panel, 'Loading_FPass', ex_load.Path.Images + 'pass.png', 'Forget my password');
+  CreateHeader(ex_load.F_Pass.Panel, 'IcoMoon-Free', #$e98d, 'Forget my password');
 
   ex_load.F_Pass.Main.Panel := TPanel.Create(ex_load.F_Pass.Panel);
   ex_load.F_Pass.Main.Panel.Name := 'Loading_FPass_Main';
@@ -431,7 +431,7 @@ begin
 
   uLoad_Register.Create_Help;
 
-  uLoad_SetAll_CreateHeader(ex_load.Reg.Panel, 'Loading_Register', ex_load.Path.Images + 'register.png', 'Register');
+  CreateHeader(ex_load.Reg.Panel, 'IcoMoon-Free', #$e907, 'Register');
 
   ex_load.Reg.Main.Panel := TPanel.Create(ex_load.Reg.Panel);
   ex_load.Reg.Main.Panel.Name := 'Loading_Register_Main';
@@ -575,10 +575,10 @@ begin
   ex_load.Reg.Main.Capt_Refresh.Name := 'Loading_Register_Capt_Refresh';
   ex_load.Reg.Main.Capt_Refresh.Parent := ex_load.Reg.Main.Panel;
   ex_load.Reg.Main.Capt_Refresh.SetBounds(266, 240, 24, 24);
-  ex_load.Reg.Main.Capt_Refresh.Font.Family:= 'IcoMoon-Free';
-  ex_load.Reg.Main.Capt_Refresh.Font.Size:= 24;
-  ex_load.Reg.Main.Capt_Refresh.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
-  ex_load.Reg.Main.Capt_Refresh.Text:= #$e982;
+  ex_load.Reg.Main.Capt_Refresh.Font.Family := 'IcoMoon-Free';
+  ex_load.Reg.Main.Capt_Refresh.Font.Size := 24;
+  ex_load.Reg.Main.Capt_Refresh.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  ex_load.Reg.Main.Capt_Refresh.Text := #$e982;
   ex_load.Reg.Main.Capt_Refresh.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
   ex_load.Reg.Main.Capt_Refresh.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
   ex_load.Reg.Main.Capt_Refresh.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
@@ -659,7 +659,7 @@ begin
   ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 520);
   ex_load.Terms.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(ex_load.Terms.Panel, 'Loading_Terms', ex_load.Path.Images + 'terms.png', 'Read the terms of ExtraFE.');
+  CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, 'Read the terms of ExtraFE.');
 
   ex_load.Terms.Main.Panel := TPanel.Create(ex_load.Terms.Panel);
   ex_load.Terms.Main.Panel.Name := 'Loading_Terms_Main';

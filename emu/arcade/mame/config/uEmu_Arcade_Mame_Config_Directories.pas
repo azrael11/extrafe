@@ -40,7 +40,7 @@ uses
 
 procedure uEmu_Arcade_Mame_Config_CheckAndDownload_Free;
 begin
-  vMame.Config.Scene.Main_Blur.Enabled:= False;
+  vMame.Config.Scene.Main_Blur.Enabled := False;
   FreeAndNil(vMame.Config.Panel.Dirs.Media.Check.Panel);
 end;
 
@@ -51,13 +51,11 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Panel := TPanel.Create(vMame.Scene.Main);
   vMame.Config.Panel.Dirs.Media.Check.Panel.Name := 'Mame_Dir_Check';
   vMame.Config.Panel.Dirs.Media.Check.Panel.Parent := vMame.Scene.Main;
-  vMame.Config.Panel.Dirs.Media.Check.Panel.SetBounds(((vMame.Scene.Main.Width / 2) - 400),
-    ((vMame.Scene.Main.Height / 2) - 200), 800, 600);
+  vMame.Config.Panel.Dirs.Media.Check.Panel.SetBounds(((vMame.Scene.Main.Width / 2) - 400), ((vMame.Scene.Main.Height / 2) - 200), 800, 600);
   vMame.Config.Panel.Dirs.Media.Check.Panel.Visible := True;
 
-  uLoad_SetAll_CreateHeader(vMame.Config.Panel.Dirs.Media.Check.Panel, 'Mame_Dir_Check',
-    ex_main.Paths.Config_Images + 'download.png', 'Check and download "' +
-    vMame.Config.Panel.Dirs.Media.Labels[vNum].Text + ' "');
+  CreateHeader(vMame.Config.Panel.Dirs.Media.Check.Panel, 'IcoMoon-Free', #$e933,
+    'Check and download "' + vMame.Config.Panel.Dirs.Media.Labels[vNum].Text + ' "');
 
   vMame.Config.Panel.Dirs.Media.Check.Main := TPanel.Create(vMame.Config.Panel.Dirs.Media.Check.Panel);
   vMame.Config.Panel.Dirs.Media.Check.Main.Name := 'Mame_Dir_Check_Main';
@@ -73,12 +71,10 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Info.Text := 'Now matching the versions between server and computer.';
   vMame.Config.Panel.Dirs.Media.Check.Info.Visible := True;
 
-  vMame.Config.Panel.Dirs.Media.Check.ProgressBar :=
-    TProgressBar.Create(vMame.Config.Panel.Dirs.Media.Check.Main);
+  vMame.Config.Panel.Dirs.Media.Check.ProgressBar := TProgressBar.Create(vMame.Config.Panel.Dirs.Media.Check.Main);
   vMame.Config.Panel.Dirs.Media.Check.ProgressBar.Name := 'Mame_Dir_Check_Progressbar';
   vMame.Config.Panel.Dirs.Media.Check.ProgressBar.Parent := vMame.Config.Panel.Dirs.Media.Check.Main;
-  vMame.Config.Panel.Dirs.Media.Check.ProgressBar.SetBounds(10, 110,
-    vMame.Config.Panel.Dirs.Media.Check.Panel.Width - 20, 20);
+  vMame.Config.Panel.Dirs.Media.Check.ProgressBar.SetBounds(10, 110, vMame.Config.Panel.Dirs.Media.Check.Panel.Width - 20, 20);
   vMame.Config.Panel.Dirs.Media.Check.ProgressBar.Value := 0;
   vMame.Config.Panel.Dirs.Media.Check.ProgressBar.Min := 0;
   vMame.Config.Panel.Dirs.Media.Check.ProgressBar.Max := 100;
@@ -87,18 +83,17 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Update := TButton.Create(vMame.Config.Panel.Dirs.Media.Check.Panel);
   vMame.Config.Panel.Dirs.Media.Check.Update.Name := 'Mame_Dir_Check_Update';
   vMame.Config.Panel.Dirs.Media.Check.Update.Parent := vMame.Config.Panel.Dirs.Media.Check.Panel;
-  vMame.Config.Panel.Dirs.Media.Check.Update.SetBounds(50, vMame.Config.Panel.Dirs.Media.Check.Panel.Height -
-    40, 100, 30);
+  vMame.Config.Panel.Dirs.Media.Check.Update.SetBounds(50, vMame.Config.Panel.Dirs.Media.Check.Panel.Height - 40, 100, 30);
   vMame.Config.Panel.Dirs.Media.Check.Update.Text := 'Update';
   vMame.Config.Panel.Dirs.Media.Check.Update.Visible := True;
 
   vMame.Config.Panel.Dirs.Media.Check.Cancel := TButton.Create(vMame.Config.Panel.Dirs.Media.Check.Panel);
   vMame.Config.Panel.Dirs.Media.Check.Cancel.Name := 'Mame_Dir_Check_Cancel';
   vMame.Config.Panel.Dirs.Media.Check.Cancel.Parent := vMame.Config.Panel.Dirs.Media.Check.Panel;
-  vMame.Config.Panel.Dirs.Media.Check.Cancel.SetBounds(vMame.Config.Panel.Dirs.Media.Check.Panel.Width - 150,
-    vMame.Config.Panel.Dirs.Media.Check.Panel.Height - 40, 100, 30);
+  vMame.Config.Panel.Dirs.Media.Check.Cancel.SetBounds(vMame.Config.Panel.Dirs.Media.Check.Panel.Width - 150, vMame.Config.Panel.Dirs.Media.Check.Panel.Height -
+    40, 100, 30);
   vMame.Config.Panel.Dirs.Media.Check.Cancel.Text := 'Cancel';
-  vMame.Config.Panel.Dirs.Media.Check.Cancel.OnClick:= mame.Config.Input.Mouse.Button.onMouseClick;
+  vMame.Config.Panel.Dirs.Media.Check.Cancel.OnClick := mame.Config.Input.Mouse.Button.onMouseClick;
   vMame.Config.Panel.Dirs.Media.Check.Cancel.Visible := True;
 end;
 
@@ -110,8 +105,7 @@ begin
   vMame.Config.Panel.Dirs.Roms.Box := TVertScrollBox.Create(vMame.Config.Panel.Dirs.Roms_Tab);
   vMame.Config.Panel.Dirs.Roms.Box.Name := 'Mame_Dir_Roms_VertScrollbox';
   vMame.Config.Panel.Dirs.Roms.Box.Parent := vMame.Config.Panel.Dirs.Roms_Tab;
-  vMame.Config.Panel.Dirs.Roms.Box.SetBounds(10, 34, vMame.Config.Panel.Dirs.TabControl.Width - 20,
-    vMame.Config.Panel.Dirs.TabControl.Height - 64);
+  vMame.Config.Panel.Dirs.Roms.Box.SetBounds(10, 34, vMame.Config.Panel.Dirs.TabControl.Width - 20, vMame.Config.Panel.Dirs.TabControl.Height - 64);
   vMame.Config.Panel.Dirs.Roms.Box.ShowScrollBars := True;
   vMame.Config.Panel.Dirs.Roms.Box.Visible := True;
 
@@ -120,8 +114,7 @@ begin
     vMame.Config.Panel.Dirs.Roms.Edit[vi] := TEdit.Create(vMame.Config.Panel.Dirs.Roms.Box);
     vMame.Config.Panel.Dirs.Roms.Edit[vi].Name := 'Mame_Dir_Roms_Dir_' + IntToStr(vi);
     vMame.Config.Panel.Dirs.Roms.Edit[vi].Parent := vMame.Config.Panel.Dirs.Roms.Box;
-    vMame.Config.Panel.Dirs.Roms.Edit[vi].SetBounds(5, (5 + ((vi * 30) + (vi * 10))),
-      vMame.Config.Panel.Dirs.Roms.Box.Width - 64, 30);
+    vMame.Config.Panel.Dirs.Roms.Edit[vi].SetBounds(5, (5 + ((vi * 30) + (vi * 10))), vMame.Config.Panel.Dirs.Roms.Box.Width - 64, 30);
     if mame.Emu.Ini.CORE_SEARCH_rompath.Strings[vi] = 'roms' then
       vRoms := mame.Emu.Path + 'roms'
     else
@@ -134,11 +127,9 @@ begin
       vMame.Config.Panel.Dirs.Roms.Del[vi] := TSpeedButton.Create(vMame.Config.Panel.Dirs.Roms.Box);
       vMame.Config.Panel.Dirs.Roms.Del[vi].Name := 'Mame_Dir_Roms_Del_' + IntToStr(vi);
       vMame.Config.Panel.Dirs.Roms.Del[vi].Parent := vMame.Config.Panel.Dirs.Roms.Box;
-      vMame.Config.Panel.Dirs.Roms.Del[vi].SetBounds((vMame.Config.Panel.Dirs.Roms.Box.Width - 50),
-        (5 + ((vi * 30) + (vi * 10))), 50, 30);
+      vMame.Config.Panel.Dirs.Roms.Del[vi].SetBounds((vMame.Config.Panel.Dirs.Roms.Box.Width - 50), (5 + ((vi * 30) + (vi * 10))), 50, 30);
       vMame.Config.Panel.Dirs.Roms.Del[vi].StyleLookup := 'delettoolbutton';
-      vMame.Config.Panel.Dirs.Roms.Del[vi].StyledSettings := vMame.Config.Panel.Dirs.Roms.Del[vi]
-        .StyledSettings - [TstyledSetting.FontColor];
+      vMame.Config.Panel.Dirs.Roms.Del[vi].StyledSettings := vMame.Config.Panel.Dirs.Roms.Del[vi].StyledSettings - [TstyledSetting.FontColor];
       vMame.Config.Panel.Dirs.Roms.Del[vi].TextSettings.FontColor := TAlphaColorRec.Red;
       vMame.Config.Panel.Dirs.Roms.Del[vi].Text := 'Delete';
       vMame.Config.Panel.Dirs.Roms.Del[vi].OnClick := mame.Config.Input.Mouse.SpeedButton.onMouseClick;
@@ -193,8 +184,7 @@ begin
   vMame.Config.Panel.Dirs.Media.Box := TVertScrollBox.Create(vMame.Config.Panel.Dirs.Media_Tab);
   vMame.Config.Panel.Dirs.Media.Box.Name := 'Mame_Dir_Media_VertScrollbox';
   vMame.Config.Panel.Dirs.Media.Box.Parent := vMame.Config.Panel.Dirs.Media_Tab;
-  vMame.Config.Panel.Dirs.Media.Box.SetBounds(10, 10, (vMame.Config.Panel.Dirs.TabControl.Width - 20),
-    (vMame.Config.Panel.Dirs.TabControl.Height - 60));
+  vMame.Config.Panel.Dirs.Media.Box.SetBounds(10, 10, (vMame.Config.Panel.Dirs.TabControl.Width - 20), (vMame.Config.Panel.Dirs.TabControl.Height - 60));
   vMame.Config.Panel.Dirs.Media.Box.ShowScrollBars := True;
   vMame.Config.Panel.Dirs.Media.Box.Visible := True;
 
@@ -207,8 +197,7 @@ begin
     vMame.Config.Panel.Dirs.Media.Labels[vi].TextSettings.FontColor := TAlphaColorRec.White;
     vMame.Config.Panel.Dirs.Media.Labels[vi].Text := cMame_Config_Media_dirs[vi];
     vMame.Config.Panel.Dirs.Media.Labels[vi].Visible := True;
-    vMame.Config.Panel.Dirs.Media.Labels[vi].Width :=
-      uSnippet_Text_ToPixels(vMame.Config.Panel.Dirs.Media.Labels[vi]);
+    vMame.Config.Panel.Dirs.Media.Labels[vi].Width := uSnippet_Text_ToPixels(vMame.Config.Panel.Dirs.Media.Labels[vi]);
 
     vMame.Config.Panel.Dirs.Media.Edit[vi] := TEdit.Create(vMame.Config.Panel.Dirs.Media.Box);
     vMame.Config.Panel.Dirs.Media.Edit[vi].Name := 'Mame_Dir_Media_Path_' + IntToStr(vi);
@@ -281,14 +270,12 @@ begin
     vMame.Config.Panel.Dirs.Media.Found[vi] := TText.Create(vMame.Config.Panel.Dirs.Media.Box);
     vMame.Config.Panel.Dirs.Media.Found[vi].Name := 'Mame_Dir_Media_Found_' + IntToStr(vi);
     vMame.Config.Panel.Dirs.Media.Found[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
-    vMame.Config.Panel.Dirs.Media.Found[vi].SetBounds
-      ((vMame.Config.Panel.Dirs.Media.Labels[vi].Position.X + vMame.Config.Panel.Dirs.Media.Labels[vi].Width +
+    vMame.Config.Panel.Dirs.Media.Found[vi].SetBounds((vMame.Config.Panel.Dirs.Media.Labels[vi].Position.X + vMame.Config.Panel.Dirs.Media.Labels[vi].Width +
       10), (5 + ((vi * 30) + (vi * 25))), 400, 24);
-    vMame.Config.Panel.Dirs.Media.Found[vi].Text := '(Found : ' + uWindows_CountFilesOrFolders
-      (vMame.Config.Panel.Dirs.Media.Edit[vi].Text, False, vType).ToString + ' files)';
+    vMame.Config.Panel.Dirs.Media.Found[vi].Text := '(Found : ' + uWindows_CountFilesOrFolders(vMame.Config.Panel.Dirs.Media.Edit[vi].Text, False, vType)
+      .ToString + ' files)';
     vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.FontColor := claDeepskyblue;
-    vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.Font.Style := vMame.Config.Panel.Dirs.Media.Found[vi]
-      .TextSettings.Font.Style + [TFontStyle.fsItalic];
+    vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.Font.Style := vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.Font.Style + [TFontStyle.fsItalic];
     vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.HorzAlign := TTextAlign.Leading;
     vMame.Config.Panel.Dirs.Media.Found[vi].Visible := True;
 
@@ -296,22 +283,17 @@ begin
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Name := 'Mame_Dir_Media_CAD_' + IntToStr(vi);
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].TextSettings.FontColor := claWhite;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Font.Style :=
-      vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Font.Style + [TFontStyle.fsBold];
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Font.Style := vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Font.Style + [TFontStyle.fsBold];
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].TextSettings.HorzAlign := TTextAlign.Trailing;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Text := 'Check and Download ' +
-      cMame_Config_Media_dirs[vi];
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Text := 'Check and Download ' + cMame_Config_Media_dirs[vi];
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Position.Y := 5 + ((vi * 30) + (vi * 25));
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Height := 22;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Visible := True;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width :=
-      uSnippet_Text_ToPixels(vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi]);
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Position.X := vMame.Config.Panel.Dirs.Media.Edit[vi]
-      .Width - vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnMouseEnter :=
-      mame.Config.Input.Mouse.Text.OnMouseEnter;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnMouseLeave :=
-      mame.Config.Input.Mouse.Text.OnMouseLeave;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width := uSnippet_Text_ToPixels(vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi]);
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Position.X := vMame.Config.Panel.Dirs.Media.Edit[vi].Width -
+      vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnMouseEnter := mame.Config.Input.Mouse.Text.OnMouseEnter;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnMouseLeave := mame.Config.Input.Mouse.Text.OnMouseLeave;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnClick := mame.Config.Input.Mouse.Text.onMouseClick;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Tag := vi;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Visible := True;
@@ -319,8 +301,7 @@ begin
     vMame.Config.Panel.Dirs.Media.Change[vi] := TSpeedButton.Create(vMame.Config.Panel.Dirs.Media.Box);
     vMame.Config.Panel.Dirs.Media.Change[vi].Name := 'Mame_Dir_Media_Change_' + IntToStr(vi);
     vMame.Config.Panel.Dirs.Media.Change[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
-    vMame.Config.Panel.Dirs.Media.Change[vi].SetBounds((vMame.Config.Panel.Dirs.Media.Box.Width - 50),
-      (25 + ((vi * 30) + (vi * 25))), 30, 30);
+    vMame.Config.Panel.Dirs.Media.Change[vi].SetBounds((vMame.Config.Panel.Dirs.Media.Box.Width - 50), (25 + ((vi * 30) + (vi * 25))), 30, 30);
     vMame.Config.Panel.Dirs.Media.Change[vi].StyleLookup := 'delettoolbutton';
     vMame.Config.Panel.Dirs.Media.Change[vi].Text := '...';
     vMame.Config.Panel.Dirs.Media.Change[vi].OnClick := mame.Config.Input.Mouse.SpeedButton.onMouseClick;
@@ -366,12 +347,11 @@ begin
   vdir := vMame.Config.Panel.Dirs.Media.Edit[vNum].Text;
   if SelectDirectory(vdir, [sdAllowCreate, sdPerformCreate, sdPrompt], m) = True then
   begin
-    if vNum= 1 then
-      vType:= '*.zip'
+    if vNum = 1 then
+      vType := '*.zip'
     else
-      vType:= '*.png';
-    vMame.Config.Panel.Dirs.Media.Found[vNum].Text:= '(Found : ' + uWindows_CountFilesOrFolders
-      (vdir, False, vType).ToString + ' files)';
+      vType := '*.png';
+    vMame.Config.Panel.Dirs.Media.Found[vNum].Text := '(Found : ' + uWindows_CountFilesOrFolders(vdir, False, vType).ToString + ' files)';
     vdir := vdir + '\';
     vMame.Config.Panel.Dirs.Media.Edit[vNum].Text := vdir;
     case vNum of
