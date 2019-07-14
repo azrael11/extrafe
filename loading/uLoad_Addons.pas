@@ -37,7 +37,8 @@ uses
   uWeather_SetAll,
   uAzHung_AllTypes,
   uWeather_Providers_Yahoo,
-  uWeather_Providers_Yahoo_Config;
+  uWeather_Providers_Yahoo_Config,
+  uWeather_Providers_OpenWeatherMap_Config;
 
 procedure uLoad_Addons_FirstTime;
 begin
@@ -291,7 +292,9 @@ begin
   addons.weather.ini.ini.WriteString('Provider', 'Name', '');
   // Yahoo specific
   uWeather_Providers_Yahoo_Config.Load_Default_Config;
-  
+  // OpenWeatherMap specific
+  uWeather_Providers_OpenWeatherMap_Config.Load_Default_Config;
+
 
 end;
 
@@ -317,6 +320,8 @@ begin
 
   // Yahoo specific
   uWeather_Providers_Yahoo_Config.Load_Config;
+  // OpenWeatherMap specific
+  uWeather_Providers_OpenWeatherMap_Config.Load_Config;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////

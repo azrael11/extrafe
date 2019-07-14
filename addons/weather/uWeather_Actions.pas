@@ -92,7 +92,7 @@ begin
       if addons.weather.Action.Provider = 'yahoo' then
         uWeather_Providers_Yahoo.Main_Create_Towns
       else if addons.weather.Action.Provider = 'openweathermap' then
-        uWeather_Providers_OpenWeatherMap.Load;
+        uWeather_Providers_OpenWeatherMap.Main_Create_Towns;
       uWeather_Actions_ShowTheForcast;
     end
   end

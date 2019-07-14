@@ -17,6 +17,7 @@ uses
   FMX.Controls,
   FMX.Graphics,
   FMX.Types,
+  FMX.ListBox,
   ALFmxTabControl,
   ALFmxObjects,
   uWeather_Mouse,
@@ -377,9 +378,215 @@ type
     Towns_List: TStringList;
   end;
 
+  /// /
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_COORD = record
+    lon: String;
+    lat: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_WEATHER = record
+    ID: String;
+    main: String;
+    description: String;
+    Icon: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_MAIN = record
+    Temp: String;
+    Pressure: String;
+    Humidity: String;
+    min: String;
+    max: String;
+    sea_level: String;
+    ground_level: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_WIND = record
+    Speed: String;
+    degree: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_CLOUDS = record
+    all: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_RAIN = record
+    one_hour: String;
+    three_hours: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_SHOW = record
+    one_hour: String;
+    three_hours: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_SYS = record
+    vtype: string;
+    ID: string;
+    vmessage: string;
+    Country: String;
+    sunrize: String;
+    Sunset: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT = record
+    coord: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_COORD;
+    weather: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_WEATHER;
+    base: String;
+    main: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_MAIN;
+    Wind: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_WIND;
+    Clounds: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_CLOUDS;
+    rain: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_RAIN;
+    snow: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_SHOW;
+    date_time: String;
+    sys: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_SYS;
+    timezone: string;
+    ID: string;
+    Name: string;
+    cod: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_CITY_COORD = record
+    lon: String;
+    lat: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_CITY = record
+    ID: String;
+    Name: String;
+    coord: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_CITY_COORD;
+    Country: string;
+    timezone: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_MAIN = record
+    Temp: string;
+    Temp_Min: string;
+    Temp_Max: string;
+    Pressure: string;
+    sea_level: string;
+    ground_level: string;
+    Humidity: string;
+    temp_kf: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WEATHER = record
+    ID: String;
+    main: String;
+    description: string;
+    Icon: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_CLOUDS = record
+    all: String;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WIND = record
+    speed: string;
+    degree: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_RAIN = record
+    three_hours: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SNOW = record
+    three_hours: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SYS = record
+    vType: string;
+    id : string;
+    vMessage: string;
+    country: string;
+    sunrise: string;
+    sunset : string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST = record
+    dt: string;
+    main: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_MAIN;
+    weather: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WEATHER;
+    clouds: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_CLOUDS;
+    wind: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WIND;
+    rain : TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_RAIN;
+    snow : TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SNOW;
+    date_time: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE = record
+    cod: string;
+    vmessage: string;
+    City: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_CITY;
+    cnt: String;
+    list: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV = record
+    lat: string;
+    lon: string;
+    date_iso: string;
+    date: string;
+    value: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_MAPS = record
+    layer: string;
+    zoom: string;
+    lat : string;
+    lon: string;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_ALERT = record
+
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN = record
+    Current: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT;
+    Five: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE;
+    UV: array [0..8] of TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV;
+    Maps: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_MAPS;
+    Alert: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_ALERT;
+  end;
+
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP = record
-
+    Data_Town: array of TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN;
+    Total_WoeID: Integer;
+    Selected_Unit: String;
+    WoeID_List: TStringList;
+    Towns_List: TStringList;
+    Iconset_Names: TStringList;
+    Iconset_Count: Integer;
+    Iconset_Selected: Integer;
+    Iconset_Name: String;
+    Options_Lock: Boolean;
+    Language: String;
   end;
 
 type
@@ -395,7 +602,6 @@ type
     Yahoo: TADDON_WEATHER_PROVIDER_YAHOO;
     OWM: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP;
     WEOID_PER_Provider: array of array of Integer;
-    Degree: String;
   end;
 
 type
@@ -665,12 +871,12 @@ type
   TWEATHER_SCENE_FIRST = record
     Panel: TPanel;
     Panel_Shadow: TShadowEffect;
-    Main: TWEATHER_SCENE_FIRST_MAIN;
+    main: TWEATHER_SCENE_FIRST_MAIN;
   end;
 
 type
   TWEATHER_SCENE = record
-    Weather: TImage;
+    weather: TImage;
     Weather_Ani: TFloatAnimation;
     Back: TImage;
     Blur: TGaussianBlurEffect;
@@ -715,6 +921,7 @@ type
     Check: TCheckBox;
     Icon: TImage;
     Desc: TALText;
+    Check_Old: TCheckBox;
   end;
 
 type
@@ -723,6 +930,7 @@ type
     Box: TVertScrollBox;
     Prov: array [0 .. 1] of TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV;
     Text: TLabel;
+    Text_No: TText;
   end;
 
 type
@@ -745,7 +953,7 @@ type
 type
   TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_ADD = record
     Panel: TPanel;
-    Main: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_ADD_MAIN;
+    main: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_ADD_MAIN;
   end;
 
 type
@@ -761,7 +969,7 @@ type
 type
   TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_DELETE = record
     Panel: TPanel;
-    Main: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_DELETE_MAIN;
+    main: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_DELETE_MAIN;
   end;
 
 type
@@ -776,7 +984,7 @@ type
 type
   TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_REFRESH = record
     Panel: TPanel;
-    Main: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_REFRESH_MAIN;
+    main: TWEATHER_CONFIG_PANEL_RIGHT_TOWNS_REFRESH_MAIN;
   end;
 
 type
@@ -812,19 +1020,22 @@ type
 
 type
   TWEATHER_CONFIG_PANEL_RIGHT_OPTIONS_OWM = record
-    Degree: TGroupBox;
-    Degree_Text: TALText;
-    Degree_C: TCheckBox;
-    Degree_F: TCheckBox;
-    Degree_K: TCheckBox;
-    Refresh: TGroupBox;
-    Refresh_Every: TCheckBox;
-    Refresh_Once: TCheckBox;
-    User_ID: TGroupBox;
-    Text: TLabel;
-    ID: TEdit;
-    Lock: TImage;
-    Desc: TALText;
+    System_Type: TGroupBox;
+    Type_Text: TALText;
+    Metric: TCheckBox;
+    Imperial: TCheckBox;
+    MultiLanguage: TGroupBox;
+    MultiLanguage_Text: TLabel;
+    MultiLanguage_Select: TComboBox;
+    API: TGroupBox;
+    API_Text: TLabel;
+    API_Key: TEdit;
+    API_Lock: TText;
+    API_Lock_Glow: TGlowEffect;
+    API_Desc: TALText;
+    API_Link: TText;
+    Selected_System_Type: TLabel;
+    Selected_Language: TLabel;
   end;
 
 type
@@ -843,7 +1054,7 @@ type
   TWEATHER_CONFIG_PANEL_RIGHT_ICONSETS_ICONSET_FULL = record
     Panel: TPanel;
     Images: array [0 .. 48] of TImage;
-    Texts: array [0 ..48] of TText;
+    Texts: array [0 .. 48] of TText;
     Back: TText;
     Back_Glow: TGlowEffect;
   end;
@@ -887,7 +1098,7 @@ type
     Panel: TPanel;
     Panel_Blur: TGaussianBlurEffect;
     Ani: TFloatAnimation;
-    Main: TWEATHER_CONFIG_MAIN;
+    main: TWEATHER_CONFIG_MAIN;
   end;
 
 type

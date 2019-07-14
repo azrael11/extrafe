@@ -558,7 +558,6 @@ begin
     addons.weather.Action.First := False;
     addons.weather.Action.Active_WOEID := -1;
     addons.weather.Action.Active_Total := -1;
-    addons.weather.Action.Degree := 'Celcius';
     addons.weather.Config.Refresh_Once := False;
     addons.weather.Action.Provider := '';
   end
@@ -568,7 +567,6 @@ begin
     addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name', addons.weather.Action.Provider);
     addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid', addons.weather.Action.Active_WOEID);
     addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
-    addons.weather.Action.Degree := addons.weather.ini.ini.ReadString('Options', 'Degree', addons.weather.Action.Degree);
     addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh', addons.weather.Config.Refresh_Once);
   end;
 end;

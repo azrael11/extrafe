@@ -16,8 +16,6 @@ uses
 
 procedure Load;
 
-procedure Open_Link(vLink: String);
-
 procedure Read_Build(mStable, mBuild: string);
 procedure Previous_Stable;
 procedure Next_Stable;
@@ -29,6 +27,7 @@ function Get_Max_Build_Num(mPath: string): Integer;
 implementation
 
 uses
+  uSnippets,
   uLoad_AllTypes,
   uMain_AllTypes;
 
@@ -241,11 +240,6 @@ begin
 end;
 
 //
-
-procedure Open_Link(vLink: String);
-begin
-  ShellExecute(0, 'open', PChar(vLink), nil, nil, SW_SHOWNORMAL);
-end;
 
 procedure Read_Build(mStable, mBuild: string);
 var

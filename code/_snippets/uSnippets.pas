@@ -4,6 +4,12 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  System.UiTypes,
+  System.UIConsts,
+  WinAPI.Windows,
+  WinAPI.ShellAPI,
+  FMX.Objects,
+  FMX.StdCtrls,
   FMX.Controls;
 
 // Free a control with all childs exept exeptions
@@ -13,6 +19,12 @@ function FreeChilds_Should_I(vChild: TControl): Boolean;
 // Delete an element from a dynamic or static array
 //procedure Array_Delete_Element(var vArray; vIndex: Cardinal);
 //procedure Array_Insert_Element(var vArray; vIndex: Cardinal);
+
+// Open a link to default browser
+procedure Open_Link_To_Browser(vLink: String);
+procedure HyperLink_OnMouseOver(Sender: TObject);
+procedure HyperLink_OnMouseLeave(Sender: TObject);
+
 
 implementation
 
@@ -75,4 +87,25 @@ end;
 //  A[Index] := Value;
 //end;
 
+// Open a link to default browser
+procedure Open_Link_To_Browser(vLink: String);
+begin
+  ShellExecute(0, 'open', PChar(vLink), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure HyperLink_OnMouseOver(Sender: TObject);
+begin
+  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style+ [TFontStyle.fsUnderline];
+  TText(Sender).TextSettings.FontColor:= claDeepskyblue;
+  TText(Sender).Cursor:= crHandPoint;
+end;
+
+procedure HyperLink_OnMouseLeave(Sender: TObject);
+begin
+  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style- [TFontStyle.fsUnderline];
+  TText(Sender).TextSettings.FontColor:= claWhite;
+  TText(Sender).Cursor:= crDefault;
+end;
+
 end.
+

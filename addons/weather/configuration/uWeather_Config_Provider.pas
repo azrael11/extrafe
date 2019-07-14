@@ -20,7 +20,7 @@ procedure Create(vName: String; vNum: Integer);
 procedure Check_Yahoo;
 procedure Check_OpenWeatherMap;
 
-procedure Clear_Weather_Addon;
+procedure Clear_Weather_Addon(vClear: Boolean);
 
 implementation
 
@@ -30,18 +30,20 @@ uses
   main,
   uWeather_AllTypes,
   uWeather_SetAll,
-  uWeather_Providers_Yahoo_Config;
+  uWeather_Providers_Yahoo,
+  uWeather_Providers_Yahoo_Config,
+  uWeather_Providers_OpenWeatherMap_Config;
 
 procedure Create(vName: String; vNum: Integer);
 begin
   vWeather.Config.main.Right.Provider.Prov[vNum].Panel := TPanel.Create(vWeather.Config.main.Right.Provider.Box);
-  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Name := 'Weather_Config_Provider_' + vName;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Name := 'A_W_Config_Provider_' + vName;
   vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Parent := vWeather.Config.main.Right.Provider.Box;
-  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.SetBounds(10, 10 + (vNum * 100), vWeather.Config.main.Right.Provider.Box.Width - 20, 90);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.SetBounds(10, 10 + (vNum * 125), vWeather.Config.main.Right.Provider.Box.Width - 20, 120);
   vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Visible := True;
 
   vWeather.Config.main.Right.Provider.Prov[vNum].Check := TCheckBox.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
-  vWeather.Config.main.Right.Provider.Prov[vNum].Check.Name := 'Weather_Config_Provider_' + vName + '_CheckBox';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check.Name := 'A_W_Config_Provider_' + vName + '_CheckBox';
   vWeather.Config.main.Right.Provider.Prov[vNum].Check.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
   vWeather.Config.main.Right.Provider.Prov[vNum].Check.SetBounds(5, 35, 20, 20);
   vWeather.Config.main.Right.Provider.Prov[vNum].Check.OnClick := addons.weather.Input.mouse_config.Checkbox.OnMouseClick;
@@ -50,14 +52,14 @@ begin
   vWeather.Config.main.Right.Provider.Prov[vNum].Check.Visible := True;
 
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon := TImage.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
-  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Name := 'Weather_Config_Provider_' + vName + '_Image';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Name := 'A_W_Config_Provider_' + vName + '_Image';
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.SetBounds(25, 10, 140, 70);
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_provider_' + vName + '.png');
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Visible := True;
 
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc := TALText.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
-  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Name := 'Weather_Config_Provider_' + vName + 'Desc';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Name := 'A_W_Config_Provider_' + vName + 'Desc';
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc.SetBounds(180, 5, vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Width - 180, 80);
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc.TextIsHtml := True;
@@ -71,6 +73,30 @@ begin
     vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text := 'OpenWeatherMap provides up to 255 towns and a 5 days/3 Hours forecast. ' + #13#10 +
       'Provides Units + (kelvin), wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.';
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Visible := True;
+
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old := TCheckBox.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.Name := 'A_W_Config_Provider_' + vName + '_CheckBox_Old';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.SetBounds(25, 35, 220, 130);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.Text := 'Save the current forecast selections';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.IsChecked := True;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.OnClick := addons.weather.Input.mouse_config.Checkbox.OnMouseClick;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.OnMouseEnter := addons.weather.Input.mouse_config.Checkbox.OnMouseEnter;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.OnMouseLeave := addons.weather.Input.mouse_config.Checkbox.OnMouseLeave;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.Visible := True;
+
+  if addons.weather.Action.Provider = 'yahoo' then
+  begin
+    if addons.weather.Action.Yahoo.Total_WoeID = -1 then
+    begin
+      vWeather.Config.main.Right.Provider.Prov[0].Check_Old.Enabled := False;
+      vWeather.Config.main.Right.Provider.Prov[0].Check_Old.IsChecked := False;
+    end;
+  end
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+
+  end;
 end;
 
 procedure Load;
@@ -78,45 +104,53 @@ var
   vi: Integer;
 begin
   vWeather.Config.main.Right.Panels[0] := TPanel.Create(vWeather.Config.main.Right.Panel);
-  vWeather.Config.main.Right.Panels[0].Name := 'Weather_Config_Panels_0';
+  vWeather.Config.main.Right.Panels[0].Name := 'A_W_Config_Provider_Panels_0';
   vWeather.Config.main.Right.Panels[0].Parent := vWeather.Config.main.Right.Panel;
   vWeather.Config.main.Right.Panels[0].Align := TAlignLayout.Client;
   vWeather.Config.main.Right.Panels[0].Visible := True;
-
-  vWeather.Config.main.Right.Provider.Choose := TLabel.Create(vWeather.Config.main.Right.Panels[0]);
-  vWeather.Config.main.Right.Provider.Choose.Name := 'Weather_Config_Provider_Choose_Label';
-  vWeather.Config.main.Right.Provider.Choose.Parent := vWeather.Config.main.Right.Panels[0];
-  vWeather.Config.main.Right.Provider.Choose.SetBounds(10, 10, 300, 20);
-  vWeather.Config.main.Right.Provider.Choose.Text := 'Choose "Provider" from the list below.';
-  vWeather.Config.main.Right.Provider.Choose.Font.Style := vWeather.Config.main.Right.Provider.Choose.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.main.Right.Provider.Choose.Visible := True;
-
-  vWeather.Config.main.Right.Provider.Box := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[0]);
-  vWeather.Config.main.Right.Provider.Box.Name := 'Weather_Config_Provider_Box';
-  vWeather.Config.main.Right.Provider.Box.Parent := vWeather.Config.main.Right.Panels[0];
-  vWeather.Config.main.Right.Provider.Box.SetBounds(10, 25, vWeather.Config.main.Right.Panels[0].Width - 20, vWeather.Config.main.Right.Panels[0].Height - 35);
-  vWeather.Config.main.Right.Provider.Box.Visible := True;
-
-  for vi := 0 to 1 do
+  if addons.weather.Action.Provider <> '' then
   begin
-    if vi = 0 then
-      Create('yahoo', vi)
+    vWeather.Config.main.Right.Provider.Choose := TLabel.Create(vWeather.Config.main.Right.Panels[0]);
+    vWeather.Config.main.Right.Provider.Choose.Name := 'A_W_Config_Provider_Choose_Label';
+    vWeather.Config.main.Right.Provider.Choose.Parent := vWeather.Config.main.Right.Panels[0];
+    vWeather.Config.main.Right.Provider.Choose.SetBounds(10, 10, 300, 20);
+    vWeather.Config.main.Right.Provider.Choose.Text := 'Choose "Provider" from the list below.';
+    vWeather.Config.main.Right.Provider.Choose.Font.Style := vWeather.Config.main.Right.Provider.Choose.Font.Style + [TFontStyle.fsBold];
+    vWeather.Config.main.Right.Provider.Choose.Visible := True;
+
+    vWeather.Config.main.Right.Provider.Box := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[0]);
+    vWeather.Config.main.Right.Provider.Box.Name := 'A_W_Config_Provider_Box';
+    vWeather.Config.main.Right.Provider.Box.Parent := vWeather.Config.main.Right.Panels[0];
+    vWeather.Config.main.Right.Provider.Box.SetBounds(10, 25, vWeather.Config.main.Right.Panels[0].Width - 20,
+      vWeather.Config.main.Right.Panels[0].Height - 35);
+    vWeather.Config.main.Right.Provider.Box.Visible := True;
+
+    for vi := 0 to 1 do
+    begin
+      if vi = 0 then
+        Create('yahoo', vi)
+      else
+        Create('openweathermap', vi)
+    end;
+
+    if addons.weather.Action.Provider = 'yahoo' then
+      vWeather.Config.main.Right.Provider.Prov[1].Check_Old.Text := 'Retrive old forecast selections'
     else
-      Create('openweathermap', vi)
+      vWeather.Config.main.Right.Provider.Prov[0].Check_Old.Text := 'Retrive old forecast selections';
+
+    vWeather.Config.main.Right.Provider.Text := TLabel.Create(vWeather.Config.main.Right.Panels[0]);
+    vWeather.Config.main.Right.Provider.Text.Name := 'A_W_Config_Provider_Label';
+    vWeather.Config.main.Right.Provider.Text.Parent := vWeather.Config.main.Right.Panels[0];
+    vWeather.Config.main.Right.Provider.Text.SetBounds(10, vWeather.Config.main.Right.Panels[0].Height - 30, 300, 20);
+    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
+    vWeather.Config.main.Right.Provider.Text.Font.Style := vWeather.Config.main.Right.Provider.Text.Font.Style + [TFontStyle.fsBold];
+    vWeather.Config.main.Right.Provider.Text.Visible := True;
+
+    if addons.weather.Action.Provider = 'yahoo' then
+      vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked := True
+    else if addons.weather.Action.Provider = 'openweathermap' then
+      vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := True;
   end;
-
-  vWeather.Config.main.Right.Provider.Text := TLabel.Create(vWeather.Config.main.Right.Panels[0]);
-  vWeather.Config.main.Right.Provider.Text.Name := 'Weather_Config_Provider_Label';
-  vWeather.Config.main.Right.Provider.Text.Parent := vWeather.Config.main.Right.Panels[0];
-  vWeather.Config.main.Right.Provider.Text.SetBounds(10, vWeather.Config.main.Right.Panels[0].Height - 30, 300, 20);
-  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
-  vWeather.Config.main.Right.Provider.Text.Font.Style := vWeather.Config.main.Right.Provider.Text.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.main.Right.Provider.Text.Visible := True;
-
-  if addons.weather.Action.Provider = 'yahoo' then
-    vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked := True
-  else if addons.weather.Action.Provider = 'openweathermap' then
-    vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := True;
 end;
 
 procedure Free;
@@ -125,15 +159,60 @@ begin
 end;
 
 procedure Check_Yahoo;
+var
+  vi: Integer;
 begin
   if vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked = False then
   begin
     if vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked then
       vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := False;
+    addons.weather.Action.Provider := 'yahoo';
+    addons.weather.Ini.Ini.WriteString('Provider', 'Name', addons.weather.Action.Provider);
+    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_provider_yahoo.png');
+    FreeAndNil(vWeather.Scene.Control);
+    uWeather_SetAll.Control;
     uWeather_Providers_Yahoo_Config.Load;
+    if vWeather.Config.main.Right.Provider.Prov[0].Check_Old.IsChecked = False then
+    begin
+      for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+        addons.weather.Ini.Ini.DeleteKey('yahoo', 'woeid_' + vi.ToString);
+      addons.weather.Ini.Ini.WriteInteger('yahoo', 'total', -1);
+      addons.weather.Action.Active_WOEID := addons.weather.Action.Active_WOEID - addons.weather.Action.Yahoo.Total_WoeID;
+      addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
+    end
+    else
+    begin
+      if addons.weather.Action.Yahoo.Total_WoeID <> -1 then
+      begin
+        vWeather.Scene.Back.Bitmap := nil;
+        for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+        begin
+          SetLength(addons.weather.Action.Yahoo.Data_Town, addons.weather.Action.Yahoo.Total_WoeID + 1);
+          addons.weather.Action.Yahoo.Data_Town[vi] := Get_Forecast(vi, addons.weather.Action.Yahoo.Woeid_List.Strings[vi]);
+          Main_Create_Town(addons.weather.Action.Yahoo.Data_Town[vi], vi);
+          addons.weather.Action.Yahoo.Data_Town[vi].Photos.Picture_Used_Num := vBest_Img_Num;
+        end;
+        vWeather.Scene.Control.TabIndex := 0;
+
+        vTime := TTimer.Create(vWeather.Scene.Back);
+        vTime.Name := 'A_W_Providers_Yahoo_Time';
+        vTime.Parent := vWeather.Scene.Back;
+        vTime.Interval := 1000;
+        vTime.OnTimer := vTime_Obj.OnTimer;
+        vTime.Enabled := False;
+
+        if addons.weather.Action.Yahoo.Total_WoeID > 0 then
+          vWeather.Scene.Arrow_Right.Visible := True;
+      end
+      else
+        vWeather.Scene.Back.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_addtowns.png');
+    end;
+    vWeather.Scene.Blur.Enabled := False;
+    vWeather.Scene.Blur.Enabled := True;
   end
   else
-    Clear_Weather_Addon;
+    Clear_Weather_Addon(not vWeather.Config.main.Right.Provider.Prov[0].Check_Old.IsChecked);
 end;
 
 procedure Check_OpenWeatherMap;
@@ -142,22 +221,55 @@ begin
   begin
     if vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked then
       vWeather.Config.main.Right.Provider.Prov[0].Check.IsChecked := False;
-    addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'openweathermap');
-    addons.weather.Action.Provider := 'openweathermap';
-    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
-    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_provider_openweathermap.png')
+    FreeAndNil(vWeather.Scene.Control);
+    uWeather_SetAll.Control;
+    if Assigned(vTime) then
+      FreeAndNil(vTime);
+    uWeather_Providers_OpenWeatherMap_Config.Load;
+    if addons.weather.Action.OWM.Total_WoeID <> -1 then
+    begin
+
+    end
+    else
+      vWeather.Scene.Back.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_addtowns.png');
   end
   else
-    Clear_Weather_Addon;
+    Clear_Weather_Addon(not vWeather.Config.main.Right.Provider.Prov[1].Check_Old.IsChecked);
 end;
 
-procedure Clear_Weather_Addon;
+procedure Clear_Weather_Addon(vClear: Boolean);
+var
+  vi: Integer;
 begin
+  if addons.weather.Action.Provider = 'yahoo' then
+  begin
+    FreeAndNil(uWeather_Providers_Yahoo.vTime);
+    if vClear then
+    begin
+      for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+        addons.weather.Ini.Ini.DeleteKey('yahoo', 'woeid_' + vi.ToString);
+      addons.weather.Ini.Ini.WriteInteger('yahoo', 'total', -1);
+      addons.weather.Action.Active_WOEID := addons.weather.Action.Active_WOEID - addons.weather.Action.Yahoo.Total_WoeID;
+      addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
+      vWeather.Config.main.Right.Provider.Prov[0].Check_Old.Enabled := False;
+      vWeather.Config.main.Right.Provider.Prov[0].Check_Old.IsChecked := False;
+    end;
+    vWeather.Config.main.Right.Provider.Prov[0].Check_Old.Text := 'Retrive old forecast selections';
+  end
+  else if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+    //
+  end;
+  FreeAndNil(vWeather.Scene.Control);
+  uWeather_SetAll.Control;
   addons.weather.Ini.Ini.WriteString('Provider', 'Name', '');
   addons.weather.Action.Provider := '';
   vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
   vWeather.Config.main.Left.Provider.Bitmap := nil;
-  //Needs more Work;
+  vWeather.Scene.Arrow_Left.Visible := False;
+  vWeather.Scene.Arrow_Right.Visible := False;
+  vWeather.Scene.Blur.Enabled := False;
+  vWeather.Scene.Blur.Enabled := True;
 end;
 
 end.

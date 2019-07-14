@@ -47,12 +47,18 @@ begin
   ExtraFE_DB.Database := 'extrafe_db_main';}
 
 
- //Free RemoteSQL Server
+{ //Free RemoteSQL Server
   ExtraFE_DB.HostName := 'remotemysql.com';
   ExtraFE_DB.Port := 3306;
   ExtraFE_DB.User := 'UOow2q7XU9';
   ExtraFE_DB.Password := 'YyZItsVz8v';
-  ExtraFE_DB.Database := 'UOow2q7XU9';
+  ExtraFE_DB.Database := 'UOow2q7XU9';}
+
+//  ExtraFE_DB.HostName := '95.154.242.75';
+//  ExtraFE_DB.Port := 3306;
+//  ExtraFE_DB.User := 'gynaikei_nikos';
+//  ExtraFE_DB.Password := 'lOsXMyD+PY$6';
+//  ExtraFE_DB.Database := 'gynaikei_nikos';
 
 
   ExtraFE_Query:= TZQuery.Create(Main_Form);

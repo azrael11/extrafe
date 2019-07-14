@@ -162,7 +162,8 @@ uses
   uSoundplayer_Scrapers_Flicker in 'addons\soundplayer\scrapers\uSoundplayer_Scrapers_Flicker.pas',
   uSoundplayer_Scrapers_AZLyrics in 'addons\soundplayer\scrapers\uSoundplayer_Scrapers_AZLyrics.pas',
   uWeather_Config_Mouse in 'addons\weather\configuration\uWeather_Config_Mouse.pas',
-  uWeather_Providers_Yahoo_Config in 'addons\weather\providers\uWeather_Providers_Yahoo_Config.pas';
+  uWeather_Providers_Yahoo_Config in 'addons\weather\providers\uWeather_Providers_Yahoo_Config.pas',
+  uWeather_Providers_OpenWeatherMap_Config in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap_Config.pas';
 
 {$R *.res}
 

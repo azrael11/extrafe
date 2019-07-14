@@ -15,10 +15,6 @@ uses
   function uSnippet_Text_ToPixels(vText: TText): single;
   function uSnippet_Text_SetInGivenPixels(vLength: Integer; vText: TText) : string;
 
-  //HyperLink Mouse events
-  procedure uSnippet_Text_HyperLink_OnMouseEnter(Sender: TObject);
-  procedure uSnippet_Text_HyperLink_OnMouseLeave(Sender: TObject);
-
   //Change Color events
   procedure uSnippet_Text_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
   procedure uSnippet_Text_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
@@ -88,22 +84,6 @@ begin
           Break;
         end;
     end;
-end;
-
-////////////////////////////////////////////////////////////////////////////////
-//HyperLink Mouse events
-procedure uSnippet_Text_HyperLink_OnMouseEnter(Sender: TObject);
-begin
-  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style+ [TFontStyle.fsUnderline];
-  TText(Sender).TextSettings.FontColor:= claDeepskyblue;
-  TText(Sender).Cursor:= crHandPoint;
-end;
-
-procedure uSnippet_Text_HyperLink_OnMouseLeave(Sender: TObject);
-begin
-  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style- [TFontStyle.fsUnderline];
-  TText(Sender).TextSettings.FontColor:= claWhite;
-  TText(Sender).Cursor:= crDefault;
 end;
 
 ////////////////////////////////////////////////////////////////////////////////

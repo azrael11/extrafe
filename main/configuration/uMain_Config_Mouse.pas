@@ -81,6 +81,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSnippet_Text,
+  uSnippets,
   uMain_SetAll,
   uMain_AllTypes,
   uMain_Config,
@@ -287,11 +288,11 @@ begin
   else if extrafe.prog.State = 'main_config_info' then
   begin
     if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Homepage_V' then
-      uMain_Config_Info_Extrafe.Open_Link(TText(Sender).Text)
+      uSnippets.Open_Link_To_Browser(TText(Sender).Text)
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Documentation_V' then
-      uMain_Config_Info_Extrafe.Open_Link(TText(Sender).Text)
+      uSnippets.Open_Link_To_Browser(TText(Sender).Text)
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
-      uMain_Config_Info_Extrafe.Open_Link(TText(Sender).Text);
+      uSnippets.Open_Link_To_Browser(TText(Sender).Text);
   end;
 end;
 
@@ -300,18 +301,18 @@ begin
   if extrafe.prog.State = 'main_config_profile_user' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+      uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
-      uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+      uSnippets.HyperLink_OnMouseOver(TText(Sender))
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
     if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Homepage_V' then
-      uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+      uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Documentation_V' then
-      uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+      uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
-      uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender));
+      uSnippets.HyperLink_OnMouseOver(TText(Sender));
   end;
 end;
 
@@ -320,18 +321,18 @@ begin
   if extrafe.prog.State = 'main_config_profile_user' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uSnippet_Text_HyperLink_OnMouseLeave(TImage(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TImage(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
-      uSnippet_Text_HyperLink_OnMouseLeave(TImage(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TImage(Sender))
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
     if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Homepage_V' then
-      uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Documentation_V' then
-      uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
-      uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender));
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender));
   end;
 end;
 

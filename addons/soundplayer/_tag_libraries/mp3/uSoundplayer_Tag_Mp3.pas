@@ -248,7 +248,6 @@ end;
 
 procedure Set_Tag_ID3v2(vPath: String);
 var
-  vi: Integer;
   vDescription: String;
   vImage: TBitmap;
   vTextFile: TextFile;

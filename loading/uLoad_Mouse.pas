@@ -69,7 +69,7 @@ implementation
 
 uses
   uLoad,
-  uSnippet_Text,
+  uSnippets,
   uKeyboard,
   uLoad_AllTypes,
   uLoad_SetAll,
@@ -219,9 +219,9 @@ begin
   if TText(Sender).Name = 'Loading_Intro_Text' then
     ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
   else if TText(Sender).Name = 'Loading_Login_Register' then
-    uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+    uSnippets.HyperLink_OnMouseOver(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-    uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender))
+    uSnippets.HyperLink_OnMouseOver(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
   begin
     ex_load.Login.Pass_Show_Glow.Enabled := True;
@@ -234,7 +234,7 @@ begin
   end
   else if TText(Sender).Name = 'Loading_Register_Terms' then
   begin
-    uSnippet_Text_HyperLink_OnMouseEnter(TText(Sender));
+    uSnippets.HyperLink_OnMouseOver(TText(Sender));
     uLoad_Register.Enable_Help(5);
   end
   else if TText(Sender).Name = 'Loading_Register_Pass_Show' then
@@ -254,15 +254,15 @@ begin
   if TText(Sender).Name = 'Loading_Intro_Text' then
     ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.White
   else if TText(Sender).Name = 'Loading_Login_Register' then
-    uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
+    uSnippets.HyperLink_OnMouseLeave(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-    uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
+    uSnippets.HyperLink_OnMouseLeave(TText(Sender))
   else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
     ex_load.Login.Pass_Show_Glow.Enabled := False
   else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
     ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := False
   else if TText(Sender).Name = 'Loading_Register_Terms' then
-    uSnippet_Text_HyperLink_OnMouseLeave(TText(Sender))
+    uSnippets.HyperLink_OnMouseLeave(TText(Sender))
   else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
     ex_load.Reg.Main.Pass_Show_Glow.Enabled := False
   else if TText(Sender).Name = 'Loading_Register_RePass_Show' then

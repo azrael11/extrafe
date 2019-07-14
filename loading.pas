@@ -7,13 +7,12 @@ uses
   System.Classes,
   System.SysUtils,
   FMX.Forms,
-  FMX.Types, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Phys, FireDAC.Comp.Client,
-  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys.IB, FireDAC.Phys.IBDef, FireDAC.FMXUI.Wait, Data.DB;
+  FMX.Types;
 
-{type
+{ type
   TTIMER_LOADING_VIDEO = class(TTimer)
-    procedure OnTimer(Sender: TObject);
-  end;}
+  procedure OnTimer(Sender: TObject);
+  end; }
 
 type
   TLoading_Form = class(TForm)
@@ -28,7 +27,6 @@ type
 
 var
   Loading_Form: TLoading_Form;
-
 
 implementation
 

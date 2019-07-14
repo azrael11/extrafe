@@ -46,17 +46,24 @@ type
   end;
 
 type
+  TWEATHER_ADDON_CONFIG_COMBOBOX = class(TObject)
+    procedure OnChange(Sender: TObject);
+  end;
+
+type
   TWEATHER_CONFIG_MOUSE = record
     Text: TWEATHER_ADDON_CONFIG_TEXT;
     Button: TWEATHER_ADDON_CONFIG_BUTTON;
     Checkbox: TWEATHER_ADDON_CONFIG_CHECKBOX;
     Panel: TWEATHER_ADDON_CONFIG_PANEL;
     Image: TWEATHER_ADDON_CONFIG_IMAGE;
+    Combobox: TWEATHER_ADDON_CONFIG_COMBOBOX;
   end;
 
 implementation
 
 uses
+  uSnippets,
   uLoad_AllTypes,
   uWeather_AllTypes,
   uWeather_Config,
@@ -64,7 +71,8 @@ uses
   uWeather_Config_Towns,
   uWeather_Config_Towns_Delete,
   uWeather_Config_Towns_Add,
-  uWeather_Providers_Yahoo_Config;
+  uWeather_Providers_Yahoo_Config,
+  uWeather_Providers_OpenWeatherMap_Config;
 
 { TWEATHER_ADDON_TEXT }
 
@@ -112,7 +120,30 @@ begin
   end
   else if addons.weather.Action.Provider = 'openweathermap' then
   begin
-
+    if TText(Sender).TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
+    begin
+      if extrafe.prog.state = 'addon_weather_config' then
+      begin
+        if TText(Sender).Name = 'A_W_Config_Towns_Add' then
+        begin
+          TText(Sender).Cursor := crHourGlass;
+          uWeather_Config_Towns_Add.Load;
+          TText(Sender).Cursor := crDefault;
+        end
+        else if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Link' then
+          uSnippets.Open_Link_To_Browser(TText(Sender).Text)
+        else if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Lock' then
+          uWeather_Providers_OpenWeatherMap_Config.Options_Lock(addons.weather.Action.OWM.Options_Lock);
+      end
+      else if extrafe.prog.state = 'addon_weather_config_towns_add' then
+      begin
+        TText(Sender).Cursor := crHourGlass;
+        if TText(Sender).Name = 'A_W_Config_Towns_Add_Search' then
+          uWeather_Config_Towns_Add.FindTown(vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text);
+        TText(Sender).Cursor := crDefault;
+      end;
+      BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+    end;
   end;
 end;
 
@@ -143,7 +174,9 @@ begin
         vWeather.Config.main.Right.Iconsets.Mini[TText(Sender).TagString.ToInteger].Panel_Glow.Enabled := True;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Back' then
-        vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := True;
+        vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := True
+      else if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Lock' then
+        vWeather.Config.main.Right.Options_OWM.API_Lock_Glow.Enabled := True;
     end
     else if extrafe.prog.state = 'addon_weather_config_towns_add' then
     begin
@@ -152,6 +185,8 @@ begin
     end;
     TText(Sender).Cursor := crHandPoint;
   end;
+  if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Link' then
+    uSnippets.HyperLink_OnMouseOver(TText(Sender));
 end;
 
 procedure TWEATHER_ADDON_CONFIG_TEXT.OnMouseLeave(Sender: TObject);
@@ -174,13 +209,17 @@ begin
         vWeather.Config.main.Right.Iconsets.Mini[TText(Sender).TagString.ToInteger].Text_Image_Glow.Enabled := False;
     end
     else if TText(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Back' then
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := False;
+      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := False
+    else if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Lock' then
+      vWeather.Config.main.Right.Options_OWM.API_Lock_Glow.Enabled := False;
   end
   else if extrafe.prog.state = 'addon_weather_config_towns_add' then
   begin
     if TText(Sender).Name = 'A_W_Config_Towns_Add_Search' then
       vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Enabled := False;
   end;
+  if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Link' then
+    uSnippets.HyperLink_OnMouseLeave(TText(Sender));
 end;
 
 ///
@@ -216,7 +255,15 @@ begin
   end
   else if addons.weather.Action.Provider = 'openweathermap' then
   begin
-
+    if extrafe.prog.state = 'addon_weather_config_towns_add' then
+    begin
+      if TButton(Sender).Name = 'A_W_Config_Towns_Add_Add' then
+        uWeather_Config_Towns_Add.New_Town(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, False)
+      else if TButton(Sender).Name = 'A_W_Config_Towns_Add_AddStay' then
+        uWeather_Config_Towns_Add.New_Town(vWeather.Config.main.Right.Towns.Add.main.Grid.Selected, True)
+      else if TButton(Sender).Name = 'A_W_Config_Towns_Add_Cancel' then
+        uWeather_Config_Towns_Add.Free;
+    end
   end;
 end;
 
@@ -234,26 +281,23 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
+  if TCheckBox(Sender).Name = 'A_W_Config_Provider_yahoo_CheckBox' then
+    uWeather_Config_Provider.Check_Yahoo
+  else if TCheckBox(Sender).Name = 'A_W_Config_Provider_openweathermap_CheckBox' then
+    uWeather_Config_Provider.Check_OpenWeatherMap;
   if addons.weather.Action.Provider = 'yahoo' then
   begin
-    if TCheckBox(Sender).Name = 'A_W_Provider_Yahoo_Config_CheckBox' then
-      uWeather_Config_Provider.Check_Yahoo
-    else if TCheckBox(Sender).Name = 'A_W_Provider_OpenWeatherMap_Config_CheckBox' then
-      uWeather_Config_Provider.Check_OpenWeatherMap
-    else if TCheckBox(Sender).Name = 'A_W_Provider_Yahoo_Config_Metric' then
+    if TCheckBox(Sender).Name = 'A_W_Provider_Yahoo_Config_Metric' then
       uWeather_Providers_Yahoo_Config.Options_Check_System_Type('metric')
     else if TCheckBox(Sender).Name = 'A_W_Provider_Yahoo_Config_Imperial' then
-      uWeather_Providers_Yahoo_Config.Options_Check_System_Type('imperial')
-      { else if TCheckBox(Sender).Name = 'Weather_Config_Options_Refresh_Every_Checkbox' then
-        uWeather_Config_Options_Refresh(False)
-        else if TCheckBox(Sender).Name = 'Weather_Config_Options_Refresh_Once_Checkbox' then
-        uWeather_Config_Options_Refresh(True)
-        else if TCheckBox(Sender).Name = 'A_W_First_Main_Check' then
-        uWeather_Actions_CheckFirst(not addons.weather.Action.First); }
+      uWeather_Providers_Yahoo_Config.Options_Check_System_Type('imperial');
   end
   else if addons.weather.Action.Provider = 'openweathermap' then
   begin
-
+    if TCheckBox(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_Metric_Checkbox' then
+      uWeather_Providers_OpenWeatherMap_Config.Options_Check_System_Type('metric')
+    else if TCheckBox(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_Imperial_Checkbox' then
+      uWeather_Providers_OpenWeatherMap_Config.Options_Check_System_Type('imperial');
   end;
 end;
 
@@ -366,6 +410,13 @@ begin
 
 end;
 
+{ TWEATHER_ADDON_CONFIG_COMBOBOX }
+
+procedure TWEATHER_ADDON_CONFIG_COMBOBOX.OnChange(Sender: TObject);
+begin
+
+end;
+
 initialization
 
 addons.weather.Input.mouse_config.Text := TWEATHER_ADDON_CONFIG_TEXT.Create;
@@ -373,6 +424,7 @@ addons.weather.Input.mouse_config.Button := TWEATHER_ADDON_CONFIG_BUTTON.Create;
 addons.weather.Input.mouse_config.Checkbox := TWEATHER_ADDON_CONFIG_CHECKBOX.Create;
 addons.weather.Input.mouse_config.Panel := TWEATHER_ADDON_CONFIG_PANEL.Create;
 addons.weather.Input.mouse_config.Image := TWEATHER_ADDON_CONFIG_IMAGE.Create;
+addons.weather.Input.mouse_config.Combobox := TWEATHER_ADDON_CONFIG_COMBOBOX.Create;
 
 finalization
 
@@ -381,5 +433,6 @@ addons.weather.Input.mouse_config.Button.Free;
 addons.weather.Input.mouse_config.Checkbox.Free;
 addons.weather.Input.mouse_config.Panel.Free;
 addons.weather.Input.mouse_config.Image.Free;
+addons.weather.Input.mouse_config.Combobox.Free;
 
 end.

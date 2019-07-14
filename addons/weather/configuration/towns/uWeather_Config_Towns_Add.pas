@@ -277,8 +277,6 @@ begin
 
   if mTown <> '' then
   begin
-//    FreeAndNil(vWeather.Config.main.Right.Towns.Add.main.Grid);
-//  uWeather_Config_Towns_Add_CreateGrid;
     for vi := 0 to vWeather.Config.main.Right.Towns.Add.main.Grid.ColumnCount - 1 do
       for vk := 0 to vWeather.Config.main.Right.Towns.Add.main.Grid.RowCount - 1 do
         vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[vi, vk] := '';
@@ -296,9 +294,6 @@ begin
     begin
       uWeather_Providers_OpenWeatherMap.Find_Woeid_Locations(mTown);
     end;
-
-    /// now create grid with the results
-
   end
   else
     ShowMessage('Please write a town fist');

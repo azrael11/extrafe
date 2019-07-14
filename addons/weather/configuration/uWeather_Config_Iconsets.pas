@@ -224,9 +224,9 @@ begin
   vWeather.Config.main.Right.Iconsets.Box.Visible := False;
   vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := True;
   vWeather.Config.main.Right.Iconsets.Full.Back.Visible := True;
-  vSetPath := addons.weather.Path.Iconsets + vIconSet_Name + '\';
-  for vi := 0 to 48 do
-    vWeather.Config.main.Right.Iconsets.Full.Images[vi].Bitmap.LoadFromFile(vSetPath + 'w_w_' + IntToStr(vi) + '.png');
+//  vSetPath := addons.weather.Path.Iconsets + vIconSet_Name + '\';
+//  for vi := 0 to 48 do
+//    vWeather.Config.main.Right.Iconsets.Full.Images[vi].Bitmap.LoadFromFile(vSetPath + 'w_w_' + IntToStr(vi) + '.png');
 end;
 
 procedure uWeather_Config_Iconsets_ReturnToPreview;

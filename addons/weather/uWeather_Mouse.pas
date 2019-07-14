@@ -203,25 +203,24 @@ begin
       if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
         uWeather_Providers_Yahoo.Show_Town_Image('next');
     end;
-
-    if extrafe.prog.state = 'addon_weather' then
-    begin
-      if TText(Sender).Name = 'A_W_Settings_Image' then
-      begin
-        if not Assigned(vWeather.Scene.First.Panel) then
-          uWeather_Config_ShowHide(True)
-      end
-    end
-    else if extrafe.prog.state = 'addon_weather_config' then
-    begin
-      if TText(Sender).Name = 'A_W_Settings_Image' then
-        uWeather_Config_ShowHide(False)
-    end
   end
   else if addons.weather.Action.Provider = 'openweathermap' then
   begin
 
   end;
+  if extrafe.prog.state = 'addon_weather' then
+  begin
+    if TText(Sender).Name = 'A_W_Settings_Image' then
+    begin
+      if not Assigned(vWeather.Scene.First.Panel) then
+        uWeather_Config_ShowHide(True)
+    end
+  end
+  else if extrafe.prog.state = 'addon_weather_config' then
+  begin
+    if TText(Sender).Name = 'A_W_Settings_Image' then
+      uWeather_Config_ShowHide(False)
+  end
 end;
 
 procedure TWEATHER_ADDON_TEXT.OnMouseEnter(Sender: TObject);
@@ -302,22 +301,22 @@ begin
         TText(Sender).Cursor := crHandPoint;
         vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Earth_Glow.Enabled := True;
       end;
-      if extrafe.prog.state = 'addon_weather' then
-      begin
-        if TText(Sender).Name = 'A_W_Settings_Image' then
-          vWeather.Scene.Settings_Glow.Enabled := True;
-        TText(Sender).Cursor := crHandPoint;
-      end
-      else if extrafe.prog.state = 'addon_weather_config' then
-      begin
-        if TText(Sender).Name = 'A_W_Settings_Image' then
-          vWeather.Scene.Settings_Glow.Enabled := True;
-        TText(Sender).Cursor := crHandPoint;
-      end;
     end
     else if addons.weather.Action.Provider = 'openweathermap' then
     begin
 
+    end;
+    if extrafe.prog.state = 'addon_weather' then
+    begin
+      if TText(Sender).Name = 'A_W_Settings_Image' then
+        vWeather.Scene.Settings_Glow.Enabled := True;
+      TText(Sender).Cursor := crHandPoint;
+    end
+    else if extrafe.prog.state = 'addon_weather_config' then
+    begin
+      if TText(Sender).Name = 'A_W_Settings_Image' then
+        vWeather.Scene.Settings_Glow.Enabled := True;
+      TText(Sender).Cursor := crHandPoint;
     end;
   end;
 end;
@@ -381,21 +380,21 @@ begin
         vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Town_Image_Right_Arrow_Glow.Enabled := False
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Earth_' + TText(Sender).TagString then
         vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].General.Earth_Glow.Enabled := False;
-      if extrafe.prog.state = 'addon_weather' then
-      begin
-        if TText(Sender).Name = 'A_W_Settings_Image' then
-          vWeather.Scene.Settings_Glow.Enabled := False;
-      end
-      else if extrafe.prog.state = 'addon_weather_config' then
-      begin
-        if TText(Sender).Name = 'A_W_Settings_Image' then
-          vWeather.Scene.Settings_Glow.Enabled := False
-      end
     end
     else if addons.weather.Action.Provider = 'openweathermap' then
     begin
 
     end;
+    if extrafe.prog.state = 'addon_weather' then
+    begin
+      if TText(Sender).Name = 'A_W_Settings_Image' then
+        vWeather.Scene.Settings_Glow.Enabled := False;
+    end
+    else if extrafe.prog.state = 'addon_weather_config' then
+    begin
+      if TText(Sender).Name = 'A_W_Settings_Image' then
+        vWeather.Scene.Settings_Glow.Enabled := False
+    end
   end;
 end;
 

@@ -854,7 +854,7 @@ begin
       vBackground.Name := 'A_W_Providers_Yahoo_Loading_Background';
       vBackground.Parent := vWeather.Scene.Back;
       vBackground.SetBounds(0, 10, vWeather.Scene.Back.Width, vWeather.Scene.Back.Height);
-      vBackground.Bitmap.LoadFromFile(addons.weather.Path.Images + 'yahoo_loading.png');
+      vBackground.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_yahoo_loading.png');
       vBackground.WrapMode := TImageWrapMode.Original;
       vBackground.Visible := True;
 
@@ -926,7 +926,9 @@ begin
       FreeAndNil(vIcon);
       FreeAndNil(vBackground);
     end;
-  end;
+  end
+  else
+    vWeather.Scene.Back.Bitmap.LoadFromFile(addons.weather.Path.Images+ 'w_addtowns.png');
 end;
 
 procedure Main_Create_Hourly(vTown: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN; vTab: Integer);
@@ -1036,7 +1038,7 @@ begin
       vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Icon.Name := 'A_W_Provider_Yahoo_Hourly_Info_Image';
       vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Icon.Parent := vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Layout;
       vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Icon.SetBounds(15, 25, 90, 90);
-      vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Action.Yahoo.Iconset_Name +
+      vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets+ 'yahoo\' + addons.weather.Action.Yahoo.Iconset_Name +
         '\w_w_' + vTown.Forcasts.Hourly[vi].ConditionCode + '.png');
       vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Icon.WrapMode := TImageWrapMode.Fit;
       vWeather.Scene.Tab[vTab].Forecast_Hourly.Hourly[vi].Icon.Visible := True;
@@ -1256,7 +1258,7 @@ begin
       vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Icon.Name := 'A_W_Provider_Yahoo_Daily_Icon_' + vi.ToString;
       vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Icon.Parent := vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Layout;
       vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Icon.SetBounds(5, 5, 100, 100);
-      vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Action.Yahoo.Iconset_Name +
+      vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets+'yahoo\' + addons.weather.Action.Yahoo.Iconset_Name +
         '\w_w_' + vTown.Forcasts.Daily[vi].ConditionCode + '.png');
       vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Icon.WrapMode := TImageWrapMode.Fit;
       vWeather.Scene.Tab[vTab].Forecast_Daily.Daily[vi].Icon.Visible := True;
@@ -1713,7 +1715,7 @@ begin
     vWeather.Scene.Tab[vTab].General.Image.Name := 'A_W_Provider_Yahoo_Image_' + IntToStr(vTab);
     vWeather.Scene.Tab[vTab].General.Image.Parent := vWeather.Scene.Tab[vTab].Tab;
     vWeather.Scene.Tab[vTab].General.Image.SetBounds(50, 60, 150, 150);
-    vWeather.Scene.Tab[vTab].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Action.Yahoo.Iconset_Name + '\w_w_' +
+    vWeather.Scene.Tab[vTab].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets+ 'yahoo\' + addons.weather.Action.Yahoo.Iconset_Name + '\w_w_' +
       vTown.Observation.ConditionCode + '.png');
     vWeather.Scene.Tab[vTab].General.Image.Tag := vTab;
     vWeather.Scene.Tab[vTab].General.Image.Visible := True;
@@ -2328,7 +2330,7 @@ begin
   if addons.weather.Action.Yahoo.Iconset_Selected = 0 then
     vWeather.Scene.Tab[vIndex].General.Text_Image.Text := Get_Icon_From_Text(addons.weather.Action.Yahoo.Data_Town[vIndex].Observation.ConditionCode)
   else
-    vWeather.Scene.Tab[vIndex].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Action.Yahoo.Iconset_Name + '\w_w_' +
+    vWeather.Scene.Tab[vIndex].General.Image.Bitmap.LoadFromFile(addons.weather.Path.Iconsets+ 'yahoo\' + addons.weather.Action.Yahoo.Iconset_Name + '\w_w_' +
       vRefreshed_Data.Observation.ConditionCode + '.png');
   vWeather.Scene.Tab[vIndex].General.Condtition.Text := vRefreshed_Data.Observation.ConditionDescription;
   vWeather.Scene.Tab[vIndex].General.Day.Text := vRefreshed_Data.Observation.Day_Part[0].Desc;
@@ -2386,7 +2388,7 @@ begin
       vWeather.Scene.Tab[vIndex].Forecast_Hourly.Hourly[vi].Text_Icon.Text :=
         Get_Icon_From_Text(addons.weather.Action.Yahoo.Data_Town[vIndex].Forcasts.Hourly[vi].ConditionCode)
     else
-      vWeather.Scene.Tab[vIndex].Forecast_Hourly.Hourly[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Action.Yahoo.Iconset_Name +
+      vWeather.Scene.Tab[vIndex].Forecast_Hourly.Hourly[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets+ 'yahoo\' + addons.weather.Action.Yahoo.Iconset_Name +
         '\w_w_' + vRefreshed_Data.Forcasts.Hourly[vi].ConditionCode + '.png');
     if addons.weather.Action.Yahoo.Selected_Unit = 'imperial' then
       vWeather.Scene.Tab[vIndex].Forecast_Hourly.Hourly[vi].Temperature.Text := vRefreshed_Data.Forcasts.Hourly[vi].Temperature.Now + #$f042
@@ -2411,7 +2413,7 @@ begin
       vWeather.Scene.Tab[vIndex].Forecast_Daily.Daily[vi].Text_Icon.Text :=
         Get_Icon_From_Text(addons.weather.Action.Yahoo.Data_Town[vIndex].Forcasts.Daily[vi].ConditionCode)
     else
-      vWeather.Scene.Tab[vIndex].Forecast_Daily.Daily[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets + addons.weather.Action.Yahoo.Iconset_Name +
+      vWeather.Scene.Tab[vIndex].Forecast_Daily.Daily[vi].Icon.Bitmap.LoadFromFile(addons.weather.Path.Iconsets+ 'yahoo\' + addons.weather.Action.Yahoo.Iconset_Name +
         '\w_w_' + vRefreshed_Data.Forcasts.Daily[vi].ConditionCode + '.png');
     vWeather.Scene.Tab[vIndex].Forecast_Daily.Daily[vi].Condition.Text := vRefreshed_Data.Forcasts.Daily[vi].ConditionDescription;
     if addons.weather.Action.Yahoo.Selected_Unit = 'imperial' then

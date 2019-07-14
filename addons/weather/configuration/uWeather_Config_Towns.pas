@@ -98,11 +98,10 @@ uses
   uWeather_Providers_Yahoo,
   uWeather_Providers_Yahoo_Config,
   uWeather_Providers_OpenWeatherMap,
+  uWeather_Providers_OpenWeatherMap_Config,
   main;
 
 procedure Load;
-var
-  vi: Integer;
 begin
   vWeather.Config.main.Right.Panels[1] := TPanel.Create(vWeather.Config.main.Right.Panel);
   vWeather.Config.main.Right.Panels[1].name := 'A_W_Config_Panels_1';
@@ -238,13 +237,11 @@ begin
 end;
 
 procedure Show;
-var
-  vi: Integer;
 begin
   if addons.weather.Action.Provider = 'yahoo' then
     uWeather_Providers_Yahoo_Config.Create_Towns
-  else
-    uWeather_Providers_OpenWeatherMap_Load_Config;
+  else if addons.weather.Action.Provider = 'openweathermap' then
+    uWeather_Providers_OpenWeatherMap_Config.Create_Towns;
 end;
 
 procedure Add_New_Town(vNumPanel: Integer; vNewTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL);
@@ -1113,9 +1110,7 @@ begin
   if addons.weather.Action.Provider = 'yahoo' then
     vActive_Woeid := addons.weather.Action.Yahoo.Total_WoeID
   else if addons.weather.Action.Provider = 'openweathermap' then
-  begin
-
-  end;
+    vActive_Woeid := addons.weather.Action.OWM.Total_WoeID;
 
   if vActive_Woeid > -1 then
   begin
