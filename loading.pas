@@ -7,7 +7,8 @@ uses
   System.Classes,
   System.SysUtils,
   FMX.Forms,
-  FMX.Types;
+  FMX.Types,
+  JCLSysInfo;
 
 { type
   TTIMER_LOADING_VIDEO = class(TTimer)
@@ -45,7 +46,21 @@ begin
 end;
 
 procedure TLoading_Form.FormCreate(Sender: TObject);
+var
+  iRetCode: Integer;
 begin
+//  if CPUID.CpuType <> CPU_TYPE_INTEL then
+//    SetEnvironmentVar('KMP_AFFINITY', 'disabled');
+
+
+//  if kmp then
+
+//  iRetCode = _putenv( "KMP_AFFINITY=disabled" );
+//	if( iRetCode == 0 )
+//	    printf( "KMP_AFFINITY=%sn", getenv( "KMP_AFFINITY" ) )
+//	else
+//	    printf( "Error: Failed to Set Environment Variable KMP_AFFINITYn" );
+
   Default_Load := False;
   uLoad_StartLoading;
 end;

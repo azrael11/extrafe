@@ -3,6 +3,7 @@ program ExtraFE;
 uses
   System.StartUpCopy,
   FMX.Forms,
+  JCLSysInfo,
   main in 'main.pas' {Main_Form},
   loading in 'loading.pas' {Loading_Form},
   uLoad in 'loading\uLoad.pas',
@@ -169,6 +170,9 @@ uses
 
 begin
   Application.Initialize;
+  //Disable the KMP_AFFINITY for non Intel CPUS
+  if CPUID.CpuType <> CPU_TYPE_INTEL then
+    SetEnvironmentVar('KMP_AFFINITY', 'disabled');
   Application.CreateForm(TLoading_Form, Loading_Form);
   Application.CreateForm(TMain_Form, Main_Form);
   Application.CreateForm(TEmu_Form, Emu_Form);

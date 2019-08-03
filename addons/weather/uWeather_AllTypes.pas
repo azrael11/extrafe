@@ -98,104 +98,6 @@ type
   end;
 
 type
-  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS_HOUR = record
-    Time: String;
-    Temp: String;
-    Temp_Min: String;
-    Temp_Max: String;
-    Pressure: String;
-    Pressure_Sea: String;
-    Pressure_Ground: String;
-    Humidity: String;
-    Weather_ID: String;
-    Weather_Main: String;
-    Weather_Desc: String;
-    Wetaher_Icon: String;
-    Clouds: String;
-    Wind_Speed: String;
-    Wind_Direction: String;
-    Rain_3H: String;
-    Snow_3H: String;
-    Last_Checked: String;
-  end;
-
-type
-  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS = record
-    City_ID: String;
-    City_Name: String;
-    Longitude: String;
-    Latitude: String;
-    Country: String;
-    Count: String;
-    Hour: array of TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP_DAYS_HOUR;
-  end;
-
-type
-  TADDON_WEATHER_CHOOSENTOWN_OPENWEATHERMAP = record
-    Provider: WideString;
-    WoeID: WideString;
-    Longitude: String;
-    Latitude: String;
-    Weather_ID: String;
-    Weather_Main: String;
-    Weather_Desc: String;
-    Weather_Icon: String;
-    Weather_Build_Icon: String;
-    Temp: String;
-    Temp_Unit: String;
-    Pressure: String;
-    Pressure_Sea: String;
-    Pressure_Ground: String;
-    Humidity: String;
-    Now_Temp_Max: String;
-    Now_Temp_Min: String;
-    Visibility: String;
-    Wind_Speed: String;
-    Wind_Direction: String;
-    Clounds: String;
-    Rain_1H: String;
-    Rain_3H: String;
-    Snow_1H: String;
-    Snow_3H: String;
-    Last_Checked: String;
-    Sunrise: String;
-    Sunset: String;
-    City: WideString;
-    Country_FlagCode: string;
-    Country: String;
-  end;
-
-type
-  TADDON_WEATHER_PROVIDER_YAHOO2_DATATOWN = record
-    WoeID: WideString;
-    vUnit: WideString;
-    City: WideString;
-    Country: WideString;
-    Country_FlagCode: string;
-    Temp_Condition: WideString;
-    Text_Condtition: WideString;
-    Code: WideString;
-    LastChecked: WideString;
-    LastUpdate: WideString;
-    UnitV: TADDON_WEATHER_CHOOSENTOWN_UNIT;
-    Wind: TADDON_WEATHER_CHOOSENTOWN_WIND;
-    Atmosphere: TADDON_WEATHER_CHOOSENTOWN_ATMOSPHERE;
-    Astronomy: TADDON_WEATHER_CHOOSENTOWN_ASTRONOMY;
-    Current: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_1: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_2: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_3: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_4: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_5: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_6: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_7: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_8: TADDON_WEATHER_CHOOSENTOWN_DAY;
-    Day_9: TADDON_WEATHER_CHOOSENTOWN_DAY;
-  end;
-
-  /// /Yahoo Weather Vars
-
-type
   TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_LOCATION = record
     WoeID: WideString;
     Photo_WoeID: WideString;
@@ -433,7 +335,7 @@ type
     vtype: string;
     ID: string;
     vmessage: string;
-    Country: String;
+    country: String;
     sunrize: String;
     Sunset: String;
   end;
@@ -445,7 +347,7 @@ type
     base: String;
     main: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_MAIN;
     Wind: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_WIND;
-    Clounds: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_CLOUDS;
+    Clouds: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_CLOUDS;
     rain: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_RAIN;
     snow: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_SHOW;
     date_time: String;
@@ -467,7 +369,7 @@ type
     ID: String;
     Name: String;
     coord: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_CITY_COORD;
-    Country: string;
+    country: string;
     timezone: string;
   end;
 
@@ -498,7 +400,7 @@ type
 
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WIND = record
-    speed: string;
+    Speed: string;
     degree: string;
   end;
 
@@ -514,12 +416,12 @@ type
 
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SYS = record
-    vType: string;
-    id : string;
-    vMessage: string;
+    vtype: string;
+    ID: string;
+    vmessage: string;
     country: string;
-    sunrise: string;
-    sunset : string;
+    Sunrise: string;
+    Sunset: string;
   end;
 
 type
@@ -527,10 +429,10 @@ type
     dt: string;
     main: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_MAIN;
     weather: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WEATHER;
-    clouds: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_CLOUDS;
-    wind: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WIND;
-    rain : TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_RAIN;
-    snow : TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SNOW;
+    Clouds: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_CLOUDS;
+    Wind: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WIND;
+    rain: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_RAIN;
+    snow: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SNOW;
     date_time: string;
   end;
 
@@ -538,25 +440,32 @@ type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE = record
     cod: string;
     vmessage: string;
-    City: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_CITY;
     cnt: String;
-    list: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST;
+    list: array [0 .. 40] of TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST;
+    city: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_CITY;
+  end;
+
+type
+  TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV_RETURN = record
+    lat: string;
+    lon: string;
+    date_iso: string;
+    Date: string;
+    value: string;
   end;
 
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV = record
-    lat: string;
-    lon: string;
-    date_iso: string;
-    date: string;
-    value: string;
+    current: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV_RETURN;
+    ahead: array [0 .. 7] of TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV_RETURN;
+    historical: array of TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV_RETURN;
   end;
 
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_MAPS = record
     layer: string;
     zoom: string;
-    lat : string;
+    lat: string;
     lon: string;
   end;
 
@@ -567,9 +476,9 @@ type
 
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN = record
-    Current: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT;
+    current: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT;
     Five: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE;
-    UV: array [0..8] of TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV;
+    UV: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_UV;
     Maps: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_MAPS;
     Alert: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_ALERT;
   end;
@@ -822,9 +731,9 @@ type
   end;
 
 type
-  TFORCAST_INFO = record
+  TFORECAST_INFO = record
     Box: TVertScrollBox;
-    Current: TFORCAST_DAY_INFO;
+    current: TFORCAST_DAY_INFO;
     Day_1: TFORCAST_DAY_INFO;
     Day_2: TFORCAST_DAY_INFO;
     Day_3: TFORCAST_DAY_INFO;
@@ -844,7 +753,7 @@ type
   end;
 
 type
-  TTAB_PANEL = record
+  TTAB_YAHOO_PANEL = record
     Tab: TALTabItem;
     General: TGENERAL_INFO;
     Wind: TWIND_INFO;
@@ -852,8 +761,90 @@ type
     Astronomy: TASTRONOMY_INFO;
     Forecast_Hourly: TFORECAST_HOURLY_INFO;
     Forecast_Daily: TFORECAST_DAILY_INFO;
-    Forcast: TFORCAST_INFO;
+    Forcast: TFORECAST_INFO;
     Server: TSERVER_INFO;
+  end;
+
+  // END OF YAHOO ERA
+
+  // START OF OpenWeatherMap
+
+type
+  TGENERAL_OWP_INFO = record
+    Temprature_Unit_F: TText;
+    Temprature_Unit_F_Glow: TGlowEffect;
+    Temprature_Unit_C: TText;
+    Temprature_Unit_C_Glow: TGlowEffect;
+    Date: TText;
+    Time: TText;
+    Time_Icon: TText;
+    Text_Image: TText;
+    Temprature: TText;
+    Thermometer: TText;
+    Low_Icon: TText;
+    Low: TText;
+    High_Icon: TText;
+    High: TText;
+    Condtition: TText;
+  end;
+
+type
+  TWIND_OWP_INFO = record
+    Text: TText;
+    Speed: TText;
+    Direction: TText;
+    Direction_Arrow: TText;
+    Turbine_Small_Stand: TImage;
+    Turbine_Small: TImage;
+    Turbine_Small_Animation: TFloatAnimation;
+    Turbine_Stand: TImage;
+    Turbine: TImage;
+    Turbine_Animation: TFloatAnimation;
+  end;
+
+type
+  TATMOSPHERE_OWP_INFO = record
+    Pressure_Icon: TText;
+    Pressure: TText;
+    Humidity_Icon: TText;
+    Humidity: TText;
+    UV: TText;
+    UV_Index: TText;
+  end;
+
+type
+  TASTRONOMY_OWP_INFO = record
+    Sunrise_Image: TText;
+    Sunrise: TText;
+    Sunset_Image: TText;
+    Sunset: TText;
+  end;
+
+type
+  TSERVER_OWP_INFO = record
+    Powered_By: TText;
+    Icon: TImage;
+  end;
+
+type
+  TCOUNTRY_OWP_INFO= record
+    LastUpDate: TText;
+    Town_and_Country: TText;
+    Latidute: TText;
+    Earth: TText;
+    Earth_Glow: TGlowEffect;
+    Longidute: TText;
+  end;
+
+type
+  TTAB_OWP_PANEL = record
+    Tab: TALTabItem;
+    General: TGENERAL_OWP_INFO;
+    Wind: TWIND_OWP_INFO;
+    Atmosphere: TATMOSPHERE_OWP_INFO;
+    Astronomy: TASTRONOMY_OWP_INFO;
+    Server: TSERVER_OWP_INFO;
+    Country: TCOUNTRY_OWP_INFO;
   end;
 
 type
@@ -894,7 +885,8 @@ type
     Arrow_Right_Glow: TGlowEffect;
     Effect_Timer: TTimer;
     Timer: TADDON_WEATHER_MAINTIMER;
-    Tab: array [0 .. 255] of TTAB_PANEL;
+    Tab_Yahoo: array [0 .. 255] of TTAB_YAHOO_PANEL;
+    Tab_OMP: array [0 .. 255] of TTAB_OWP_PANEL;
     First: TWEATHER_SCENE_FIRST;
   end;
 

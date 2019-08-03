@@ -17,6 +17,7 @@ uses
   FMX.StdCtrls,
   FMX.TabControl,
   FMX.Listbox,
+  FMX.ILAnalogClock,
   Radiant.Shapes;
 
 procedure uTime_Time_SetAll_Set;
@@ -540,6 +541,12 @@ begin
   vTime.P_Time.Config.Analog.Options_ShowSecondsIndicator.IsChecked := addons.time.P_Time.Analog_Seconds_Indicator;
   vTime.P_Time.Config.Analog.Options_ShowSecondsIndicator.OnClick := addons.time.Input.mouse_time.Checkbox.OnMouseClick;
   vTime.P_Time.Config.Analog.Options_ShowSecondsIndicator.Visible := True;
+
+//  vTime.P_Time.Config.Analog.Analog_Full := TILAnalogClock.Create(vTime.P_Time.Config.Analog.Panel);
+//  vTime.P_Time.Config.Analog.Analog_Full.Name := 'A_T_P_Time_Analog_Full';
+//  vTime.P_Time.Config.Analog.Analog_Full.Parent:=   vTime.P_Time.Config.Analog.Panel;
+//  vTime.P_Time.Config.Analog.Analog_Full.SetBounds(100, 100, 100, 100);
+//  vTime.P_Time.Config.Analog.Analog_Full.Visible := True;
 
   vTime.P_Time.Config.Analog.Analog := TGroupBox.Create(vTime.P_Time.Config.Analog.Panel);
   vTime.P_Time.Config.Analog.Analog.Name := 'A_T_P_Time_Analog_Images';

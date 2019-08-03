@@ -38,119 +38,17 @@ uses
   uWeather_AllTypes,
   uWeather_SetAll,
   uWeather_Actions,
-  uWeather_Providers_Yahoo_Config;
+  uWeather_Providers_Yahoo_Config,
+  uWeather_Providers_OpenWeatherMap_Config;
 
 procedure uWeather_Config_Iconsets_Show;
-var
-  vi, vl, vt: Integer;
 begin
   if addons.weather.Action.Provider <> '' then
   begin
     if addons.weather.Action.Provider = 'yahoo' then
       uWeather_Providers_Yahoo_Config.Create_Iconsets
     else if addons.weather.Action.Provider = 'openweathermap' then
-    begin
-      vWeather.Config.main.Right.Panels[3] := TPanel.Create(vWeather.Config.main.Right.Panel);
-      vWeather.Config.main.Right.Panels[3].Name := 'Weather_Config_Panels_3';
-      vWeather.Config.main.Right.Panels[3].Parent := vWeather.Config.main.Right.Panel;
-      vWeather.Config.main.Right.Panels[3].Align := TAlignLayout.Client;
-      vWeather.Config.main.Right.Panels[3].Visible := True;
-
-      vWeather.Config.main.Right.Iconsets.Text := TLabel.Create(vWeather.Config.main.Right.Panels[3]);
-      vWeather.Config.main.Right.Iconsets.Text.Name := 'A_W_Config_Iconsets_Text';
-      vWeather.Config.main.Right.Iconsets.Text.Parent := vWeather.Config.main.Right.Panels[3];
-      vWeather.Config.main.Right.Iconsets.Text.Width := 300;
-      vWeather.Config.main.Right.Iconsets.Text.Position.X := 10;
-      vWeather.Config.main.Right.Iconsets.Text.Position.Y := 10;
-      vWeather.Config.main.Right.Iconsets.Text.Text := 'Iconsets preview';
-      vWeather.Config.main.Right.Iconsets.Text.Font.Style := vWeather.Config.main.Right.Iconsets.Text.Font.Style + [TFontStyle.fsBold];
-      vWeather.Config.main.Right.Iconsets.Text.Visible := True;
-
-      vWeather.Config.main.Right.Iconsets.Full.Back := TText.Create(vWeather.Config.main.Right.Panels[3]);
-      vWeather.Config.main.Right.Iconsets.Full.Back.Name := 'A_W_Config_Iconsets_Back';
-      vWeather.Config.main.Right.Iconsets.Full.Back.Parent := vWeather.Config.main.Right.Panels[3];
-      vWeather.Config.main.Right.Iconsets.Full.Back.SetBounds(vWeather.Config.main.Right.Panels[3].Width - 60, 7, 32, 32);
-      vWeather.Config.main.Right.Iconsets.Full.Back.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
-      vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;
-      vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseLeave := addons.weather.Input.mouse.Image.OnMouseLeave;
-      vWeather.Config.main.Right.Iconsets.Full.Back.Visible := False;
-
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Iconsets.Full.Back);
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Name := 'A_W_Config_Iconsets_Back_Glow';
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Parent := vWeather.Config.main.Right.Iconsets.Full.Back;
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Softness := 0.4;
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Opacity := 0.9;
-      vWeather.Config.main.Right.Iconsets.Full.Back_Glow.Enabled := False;
-
-      vWeather.Config.main.Right.Iconsets.Box := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[3]);
-      vWeather.Config.main.Right.Iconsets.Box.Name := 'A_W_Config_Iconsets_Box';
-      vWeather.Config.main.Right.Iconsets.Box.Parent := vWeather.Config.main.Right.Panels[3];
-      vWeather.Config.main.Right.Iconsets.Box.Width := vWeather.Config.main.Right.Panels[3].Width - 20;
-      vWeather.Config.main.Right.Iconsets.Box.Height := vWeather.Config.main.Right.Panels[3].Height - 80;
-      vWeather.Config.main.Right.Iconsets.Box.Position.X := 10;
-      vWeather.Config.main.Right.Iconsets.Box.Position.Y := 50;
-      vWeather.Config.main.Right.Iconsets.Box.Visible := True;
-
-      vWeather.Config.main.Right.Iconsets.Full.Panel := TPanel.Create(vWeather.Config.main.Right.Panels[3]);
-      vWeather.Config.main.Right.Iconsets.Full.Panel.Name := 'A_W_Config_Iconsets_Full';
-      vWeather.Config.main.Right.Iconsets.Full.Panel.Parent := vWeather.Config.main.Right.Panels[3];
-      vWeather.Config.main.Right.Iconsets.Full.Panel.Width := vWeather.Config.main.Right.Panels[3].Width - 20;
-      vWeather.Config.main.Right.Iconsets.Full.Panel.Height := vWeather.Config.main.Right.Panels[3].Height - 60;
-      vWeather.Config.main.Right.Iconsets.Full.Panel.Position.X := 10;
-      vWeather.Config.main.Right.Iconsets.Full.Panel.Position.Y := 60;
-      vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := False;
-
-      vl := 0;
-      vt := 0;
-      for vi := 0 to 48 do
-      begin
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi] := TImage.Create(vWeather.Config.main.Right.Iconsets.Full.Panel);
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi].Name := 'A_W_Config_Iconsets_Full_Image_' + IntToStr(vi);
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi].Parent := vWeather.Config.main.Right.Iconsets.Full.Panel;
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi].Width := 64;
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi].Height := 64;
-        case vi of
-          7:
-            begin
-              vt := 64;
-              vl := 0;
-            end;
-          14:
-            begin
-              vt := 128;
-              vl := 0;
-            end;
-          21:
-            begin
-              vt := 192;
-              vl := 0;
-            end;
-          28:
-            begin
-              vt := 256;
-              vl := 0;
-            end;
-          35:
-            begin
-              vt := 320;
-              vl := 0;
-            end;
-          42:
-            begin
-              vt := 384;
-              vl := 0;
-            end;
-        end;
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi].Position.X := (64 * vl);
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi].Position.Y := vt;
-        vWeather.Config.main.Right.Iconsets.Full.Images[vi].Visible := True;
-        inc(vl, 1);
-      end;
-
-//      for vi := 0 to addons.weather.Config.Iconset.Count - 1 do
-//        uWeather_SetAll_Iconsets_CreateMiniPreview(vi);
-    end;
+      uWeather_Providers_OpenWeatherMap_Config.Create_Iconsets;
   end;
 end;
 

@@ -419,11 +419,9 @@
         </DelphiCompile>
         <DCCReference Include="main.pas">
             <Form>Main_Form</Form>
-            <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="loading.pas">
             <Form>Loading_Form</Form>
-            <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="loading\uLoad.pas"/>
         <DCCReference Include="code\_os\uWindows.pas"/>
@@ -455,7 +453,6 @@
         <DCCReference Include="addons\weather\configuration\uWeather_Config_Options.pas"/>
         <DCCReference Include="emu.pas">
             <Form>Emu_Form</Form>
-            <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="emu\uEmu_SetAll.pas"/>
         <DCCReference Include="emu\uEmu_Actions.pas"/>

@@ -293,6 +293,7 @@ begin
     else
     begin
       uWeather_Providers_OpenWeatherMap.Find_Woeid_Locations(mTown);
+      uWeather_Providers_OpenWeatherMap.Show_Locations;
     end;
   end
   else
@@ -306,38 +307,9 @@ begin
   if addons.weather.Action.Provider= 'yahoo' then
     uWeather_Providers_Yahoo.Add_NewTown(vSelectedTown)
   else if addons.weather.Action.Provider= 'openweathermap' then
-    uWeather_Providers_OpenWeatherMap_AddTown(vID.Strings[vSelectedTown]);
+    uWeather_Providers_OpenWeatherMap.Add_NewTown(vSelectedTown);
   if vStay= False then
     Free;
-
-//  if uWeather_Config_Towns_Add_IsTownAlReadyExists(vID.Strings[vSelectedTown]) = False then
-//  begin
-//    if addons.weather.Action.Provider = 'yahoo' then
-////       uWeather_Providers_Yahoo_GetForecast(vSelectedTown)
-//    else if addons.weather.Action.Provider = 'openweathermap' then
-//      uWeather_Providers_OpenWeatherMap_AddTown(vID.Strings[vSelectedTown]);
-//    vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := True;
-//    vStayToADD := vStay;
-//    vWeather.Config.main.Right.Towns.Add.main.Ani.Start;
-//
-//    { if vTown_HasData then
-//      begin }
-//    vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text := '" ' + vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
-//      [2, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "  from " ' + vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
-//      [4, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' " added successfully.';
-//    for vi := 0 to vWeather.Config.main.Right.Towns.Add.main.Grid.RowCount - 1 do
-//      TStringGrid(vWeather.Config.main.Right.Towns.Add.main.Grid).myDeleteRow(vi);
-//    vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text := '';
-//    { end
-//      else
-//      vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text := 'Can''t get forcast data for " ' +
-//      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
-//      [2, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "  from " ' +
-//      vWeather.Config.main.Right.Towns.Add.main.Grid.Cells
-//      [4, vWeather.Config.main.Right.Towns.Add.main.Grid.Selected] + ' "'; }
-//  end
-//  else
-//    ShowMessage('This town already exists in your list');
 end;
 
 { TWEATHER_CONFIG_TOWNS_DELETE_FLOATANIMATION }
