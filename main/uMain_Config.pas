@@ -71,7 +71,7 @@ begin
   mainScene.Config.Panel_Ani.OnFinish := ex_main.input.mouse.Animation.OnFinish;
   mainScene.Config.Panel_Ani.Enabled := False;
 
-  CreateHeader(mainScene.Config.Panel, 'IcoMoon-Free', #$e994, 'Main configuration');
+  CreateHeader(mainScene.Config.Panel, 'IcoMoon-Free', #$e994, 'Main configuration', False, nil);
 
   mainScene.Config.main.Left := TPanel.Create(mainScene.Config.Panel);
   mainScene.Config.main.Left.Name := 'Main_Config_Left_Panel';

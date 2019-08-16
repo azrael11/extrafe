@@ -343,7 +343,7 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar.Panel.Position.Y := (mainScene.Config.main.R.Panel[0].Height / 2) - 280;
   mainScene.Config.main.R.Profile.User.Avatar.Panel.Visible := False;
 
-  CreateHeader(mainScene.Config.main.R.Profile.User.Avatar.Panel, 'IcoMoon-Free', #$e976, 'Change the avatar');
+  CreateHeader(mainScene.Config.main.R.Profile.User.Avatar.Panel, 'IcoMoon-Free', #$e976, 'Change the avatar', False, nil);
 
   mainScene.Config.main.R.Profile.User.Avatar.main.Panel := TPanel.Create(mainScene.Config.main.R.Profile.User.Avatar.Panel);
   mainScene.Config.main.R.Profile.User.Avatar.main.Panel.Name := 'Main_Config_Profile_Avatar_Main_Panel';
@@ -549,7 +549,7 @@ begin
   mainScene.Config.main.R.Profile.User.Pass.Panel.Position.Y := (mainScene.Config.main.R.Panel[0].Height / 2) - 130;
   mainScene.Config.main.R.Profile.User.Pass.Panel.Visible := False;
 
-  CreateHeader(mainScene.Config.main.R.Profile.User.Pass.Panel, 'IcoMoon-Free', #$e98d, 'Change the password');
+  CreateHeader(mainScene.Config.main.R.Profile.User.Pass.Panel, 'IcoMoon-Free', #$e98d, 'Change the password', False, nil);
 
   mainScene.Config.main.R.Profile.User.Pass.main.Panel := TPanel.Create(mainScene.Config.main.R.Profile.User.Pass.Panel);
   mainScene.Config.main.R.Profile.User.Pass.main.Panel.Name := 'Main_Config_Profile_Password_Main_Panel';

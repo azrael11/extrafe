@@ -385,7 +385,7 @@ begin
   mainScene.main.Prog_Exit.Panel_Shadow.Distance := 3;
   mainScene.main.Prog_Exit.Panel_Shadow.Enabled := True;
 
-  CreateHeader(mainScene.main.Prog_Exit.Panel, 'IcoMoon-Free', #$ea0f, 'Exit ExtrFE?');
+  CreateHeader(mainScene.main.Prog_Exit.Panel, 'IcoMoon-Free', #$ea0f, 'Exit ExtrFE?', False, nil);
 
   mainScene.main.Prog_Exit.main.Panel := TPanel.Create(mainScene.main.Prog_Exit.Panel);
   mainScene.main.Prog_Exit.main.Panel.Name := 'Main_Exit_Main';

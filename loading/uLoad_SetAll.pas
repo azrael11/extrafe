@@ -147,7 +147,7 @@ begin
   ex_load.Login.Panel_Login_Correct.StartValue := 0.2;
   ex_load.Login.Panel_Login_Correct.Enabled := False;
 
-  CreateHeader(ex_load.Login.Panel, 'IcoMoon-Free', #$e971, 'Login');
+  CreateHeader(ex_load.Login.Panel, 'IcoMoon-Free', #$e971, 'Login', False, nil);
 
   ex_load.Login.Main := TPanel.Create(ex_load.Login.Panel);
   ex_load.Login.Main.Name := 'Loading_Main';
@@ -346,7 +346,7 @@ begin
   ex_load.F_Pass.Panel.Opacity := 0.8;
   ex_load.F_Pass.Panel.Visible := True;
 
-  CreateHeader(ex_load.F_Pass.Panel, 'IcoMoon-Free', #$e98d, 'Forget my password');
+  CreateHeader(ex_load.F_Pass.Panel, 'IcoMoon-Free', #$e98d, 'Forget my password', False, nil);
 
   ex_load.F_Pass.Main.Panel := TPanel.Create(ex_load.F_Pass.Panel);
   ex_load.F_Pass.Main.Panel.Name := 'Loading_FPass_Main';
@@ -431,7 +431,7 @@ begin
 
   uLoad_Register.Create_Help;
 
-  CreateHeader(ex_load.Reg.Panel, 'IcoMoon-Free', #$e907, 'Register');
+  CreateHeader(ex_load.Reg.Panel, 'IcoMoon-Free', #$e907, 'Register', False, nil);
 
   ex_load.Reg.Main.Panel := TPanel.Create(ex_load.Reg.Panel);
   ex_load.Reg.Main.Panel.Name := 'Loading_Register_Main';
@@ -659,7 +659,7 @@ begin
   ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 520);
   ex_load.Terms.Panel.Visible := True;
 
-  CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, 'Read the terms of ExtraFE.');
+  CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, 'Read the terms of ExtraFE.', False, nil);
 
   ex_load.Terms.Main.Panel := TPanel.Create(ex_load.Terms.Panel);
   ex_load.Terms.Main.Panel.Name := 'Loading_Terms_Main';

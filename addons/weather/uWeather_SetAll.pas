@@ -232,7 +232,7 @@ begin
   vWeather.Config.Panel_Blur.BlurAmount := 0.5;
   vWeather.Config.Panel_Blur.Enabled := False;
 
-  CreateHeader(vWeather.Config.Panel, 'IcoMoon-Free', #$e994, 'Weather configuration.');
+  CreateHeader(vWeather.Config.Panel, 'IcoMoon-Free', #$e994, 'Weather configuration.', False, nil);
 
   vWeather.Config.main.Panel := Tpanel.Create(vWeather.Config.Panel);
   vWeather.Config.main.Panel.Name := 'A_W_Config_Main';

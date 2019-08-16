@@ -55,7 +55,7 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Panel.Visible := True;
 
   CreateHeader(vMame.Config.Panel.Dirs.Media.Check.Panel, 'IcoMoon-Free', #$e933,
-    'Check and download "' + vMame.Config.Panel.Dirs.Media.Labels[vNum].Text + ' "');
+    'Check and download "' + vMame.Config.Panel.Dirs.Media.Labels[vNum].Text + ' "', False, nil);
 
   vMame.Config.Panel.Dirs.Media.Check.Main := TPanel.Create(vMame.Config.Panel.Dirs.Media.Check.Panel);
   vMame.Config.Panel.Dirs.Media.Check.Main.Name := 'Mame_Dir_Check_Main';

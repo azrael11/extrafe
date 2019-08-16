@@ -223,7 +223,7 @@ begin
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, 'Activate Soundplayer addon');
+  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, 'Activate Soundplayer addon', False, nil);
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel);
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main';
@@ -360,7 +360,7 @@ begin
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, 'Deactivate Soundplayer addon');
+  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, 'Deactivate Soundplayer addon', False, nil);
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel);
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main';
@@ -453,7 +453,7 @@ begin
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, 'Activate Weather addon');
+  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, 'Activate Weather addon', False, nil);
 
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel);
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main';
@@ -603,7 +603,7 @@ begin
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, 'Deactivate Weather addon');
+  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, 'Deactivate Weather addon', False, nil);
 
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel);
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main';

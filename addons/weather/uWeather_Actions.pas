@@ -106,11 +106,6 @@ var
 begin
   FreeAndNil(vTaskTimer);
 
-  if (addons.weather.Action.Active_Total = 0) or (addons.weather.Action.Active_Total = -1) then
-    vWeather.Scene.Arrow_Right.Visible := False
-  else
-    vWeather.Scene.Arrow_Right.Visible := True;
-
   vWeather.Scene.Control.TabIndex := 0;
   vWeather.Scene.Control.AnimationEnabled := False;
   vWeather.Scene.Settings.Visible := True;
@@ -121,7 +116,7 @@ begin
   addons.weather.Loaded := True;
 
   vWeather.Scene.Control_Ani.Start;
-  uWeather_Actions_Show_AstronomyAnimation;
+//  uWeather_Actions_Show_AstronomyAnimation;
 end;
 
 procedure uWeather_Actions_ReturnToMain(vIconsNum: Integer);
@@ -152,19 +147,19 @@ end;
 
 procedure uWeather_Actions_Show_AstronomyAnimation;
 begin
-  { vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := False;
-    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X := vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex]
-    .Astronomy.Sunrise.Width + 120;
-    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.Y := 670;
-    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Path :=
-    uWeather_Convert_SunSpot(addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunrise,
-    addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunset);
-    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := False;
-    if addons.weather.Action.PathAni_Show then
-    begin
-    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := True;
-    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Start;
-    end; }
+//   vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := False;
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X := vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex]
+//    .Astronomy.Sunrise.Width + 120;
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.Y := 670;
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Path :=
+//    uWeather_Convert_SunSpot(addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunrise,
+//    addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunset);
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := False;
+//    if addons.weather.Action.PathAni_Show then
+//    begin
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := True;
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Start;
+//    end;
 end;
 
 procedure uWeather_Actions_ShowFirstTimeScene(vFirst: Boolean);
@@ -188,7 +183,7 @@ begin
     vWeather.Scene.First.Panel_Shadow.Direction := 90;
     vWeather.Scene.First.Panel_Shadow.Enabled := True;
 
-    CreateHeader(vWeather.Scene.First.Panel, 'Weather Icons', #$f002,'Welcome to "Weather" Addon.');
+    CreateHeader(vWeather.Scene.First.Panel, 'Weather Icons', #$f002,'Welcome to "Weather" Addon.', False, nil);
 
     vWeather.Scene.First.main.Panel := TPanel.Create(vWeather.Scene.First.Panel);
     vWeather.Scene.First.main.Panel.Name := 'A_W_First_Main';

@@ -336,7 +336,7 @@ type
     ID: string;
     vmessage: string;
     country: String;
-    sunrize: String;
+    Sunrise: String;
     Sunset: String;
   end;
 
@@ -416,12 +416,7 @@ type
 
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SYS = record
-    vtype: string;
-    ID: string;
-    vmessage: string;
-    country: string;
-    Sunrise: string;
-    Sunset: string;
+    pod: String;
   end;
 
 type
@@ -433,6 +428,7 @@ type
     Wind: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_WIND;
     rain: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_RAIN;
     snow: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SNOW;
+    sys: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_FIVE_LIST_SYS;
     date_time: string;
   end;
 
@@ -770,7 +766,7 @@ type
   // START OF OpenWeatherMap
 
 type
-  TGENERAL_OWP_INFO = record
+  TGENERAL_OWM_INFO = record
     Temprature_Unit_F: TText;
     Temprature_Unit_F_Glow: TGlowEffect;
     Temprature_Unit_C: TText;
@@ -789,7 +785,7 @@ type
   end;
 
 type
-  TWIND_OWP_INFO = record
+  TWIND_OWM_INFO = record
     Text: TText;
     Speed: TText;
     Direction: TText;
@@ -803,7 +799,7 @@ type
   end;
 
 type
-  TATMOSPHERE_OWP_INFO = record
+  TATMOSPHERE_OWM_INFO = record
     Pressure_Icon: TText;
     Pressure: TText;
     Humidity_Icon: TText;
@@ -813,7 +809,7 @@ type
   end;
 
 type
-  TASTRONOMY_OWP_INFO = record
+  TASTRONOMY_OWM_INFO = record
     Sunrise_Image: TText;
     Sunrise: TText;
     Sunset_Image: TText;
@@ -821,14 +817,14 @@ type
   end;
 
 type
-  TSERVER_OWP_INFO = record
+  TSERVER_OWM_INFO = record
     Powered_By: TText;
     Icon: TImage;
   end;
 
 type
-  TCOUNTRY_OWP_INFO= record
-    LastUpDate: TText;
+  TCOUNTRY_OWM_INFO = record
+    LastUpdate: TText;
     Town_and_Country: TText;
     Latidute: TText;
     Earth: TText;
@@ -837,14 +833,84 @@ type
   end;
 
 type
-  TTAB_OWP_PANEL = record
+  TMOON_OWM_INFO = record
+    Text: TText;
+    Icon: TText;
+  end;
+
+type
+  TREFRESH_OWM_INFO = record
+    Text: TText;
+    Icon: TText;
+    Glow: TGlowEffect;
+  end;
+
+type
+  TFIVE_DAY_FORECAST_OWM_DAY_HOUR = record
+    Panel: TLayout;
+    Panel_Glow: TGlowEffect;
+    Time: TText;
+    Temp: TText;
+    description: TText;
+    Icon: TText;
+    Panel_Over: TPanel;
+  end;
+
+type
+  TFIVE_DAY_FORECAST_OWM_DAY = record
+    Panel: TLayout;
+    Line: TRadiantLine;
+    Box_Date: TText;
+    Hour: array [0 .. 7] of TFIVE_DAY_FORECAST_OWM_DAY_HOUR;
+  end;
+
+type
+  TFIVE_DAY_FORECAST_OWM_DAY_INFO = record
+    Panel: TPanel;
+    Date_Time: TText;
+    Temp: TText;
+    Thermo: TText;
+    Temp_Min_Arrow: TText;
+    Temp_Min: TText;
+    Temp_Max_Arrow: TText;
+    Temp_Max: TText;
+    Humidity_Icon: TText;
+    Humidity: TText;
+    Pressure_Icon: TText;
+    Pressure: TText;
+    Sea_level: TText;
+    Ground_level: TText;
+    Temp_kf: TText;
+    Description: TText;
+    Icon: TText;
+    Wind_Icon: TText;
+    Wind_speed: TText;
+    Wind_degree: TText;
+    Clouds_Icon: TText;
+    Clouds: TText;
+    Day: TText;
+    Night: TText;
+  end;
+
+type
+  TFIVE_DAY_FORECAST_OWM_INFO = record
+    Box: TVertScrollBox;
+    Day: array [0 .. 5] of TFIVE_DAY_FORECAST_OWM_DAY;
+    Info: TFIVE_DAY_FORECAST_OWM_DAY_INFO;
+  end;
+
+type
+  TTAB_OWM_PANEL = record
     Tab: TALTabItem;
-    General: TGENERAL_OWP_INFO;
-    Wind: TWIND_OWP_INFO;
-    Atmosphere: TATMOSPHERE_OWP_INFO;
-    Astronomy: TASTRONOMY_OWP_INFO;
-    Server: TSERVER_OWP_INFO;
-    Country: TCOUNTRY_OWP_INFO;
+    General: TGENERAL_OWM_INFO;
+    Wind: TWIND_OWM_INFO;
+    Atmosphere: TATMOSPHERE_OWM_INFO;
+    Astronomy: TASTRONOMY_OWM_INFO;
+    Server: TSERVER_OWM_INFO;
+    country: TCOUNTRY_OWM_INFO;
+    Moon: TMOON_OWM_INFO;
+    Refresh: TREFRESH_OWM_INFO;
+    Five: TFIVE_DAY_FORECAST_OWM_INFO;
   end;
 
 type
@@ -886,7 +952,7 @@ type
     Effect_Timer: TTimer;
     Timer: TADDON_WEATHER_MAINTIMER;
     Tab_Yahoo: array [0 .. 255] of TTAB_YAHOO_PANEL;
-    Tab_OMP: array [0 .. 255] of TTAB_OWP_PANEL;
+    Tab_OWM: array [0 .. 255] of TTAB_OWM_PANEL;
     First: TWEATHER_SCENE_FIRST;
   end;
 

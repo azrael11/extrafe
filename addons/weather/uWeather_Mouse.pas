@@ -109,7 +109,8 @@ uses
   uWeather_Config_Options,
   uWeather_MenuActions,
   uWeather_Config_Iconsets,
-  uWeather_Providers_Yahoo;
+  uWeather_Providers_Yahoo,
+  uWeather_Providers_OpenWeatherMap;
 
 { TWEATHER_ADDON_IMAGE }
 
@@ -153,14 +154,42 @@ end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseClick(Sender: TObject);
 begin
+  if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+    if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
+      uWeather_Providers_OpenWeatherMap.Show_Selected_Time_Forecast(TPanel(Sender).Tag, TPanel(Sender).TagString.ToInteger);
+  end;
 end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseEnter(Sender: TObject);
 begin
+  if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+    if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
+    begin
+      if TPanel(Sender).Locked = False then
+      begin
+        vWeather.Scene.Tab_OWM[TPanel(Sender).TagFloat.ToString.ToInteger].Five.Day[TPanel(Sender).Tag].Hour[TPanel(Sender).TagString.ToInteger]
+          .Panel_Glow.Enabled := True;
+        TPanel(Sender).Cursor := crHandPoint;
+      end;
+    end;
+  end;
 end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseLeave(Sender: TObject);
 begin
+  if addons.weather.Action.Provider = 'openweathermap' then
+  begin
+    if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
+    begin
+      if TPanel(Sender).Locked = False then
+      begin
+        vWeather.Scene.Tab_OWM[TPanel(Sender).TagFloat.ToString.ToInteger].Five.Day[TPanel(Sender).Tag].Hour[TPanel(Sender).TagString.ToInteger]
+          .Panel_Glow.Enabled := False;
+      end;
+    end;
+  end;
 end;
 
 { TWEATHER_ADDON_TEXT }
@@ -463,10 +492,12 @@ end;
 
 procedure TWEATHER_ADDON_LAYOUT.OnMouseEnter(Sender: TObject);
 begin
+
 end;
 
 procedure TWEATHER_ADDON_LAYOUT.OnMouseLeave(Sender: TObject);
 begin
+
 end;
 
 initialization

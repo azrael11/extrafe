@@ -32,6 +32,7 @@ uses
   uWeather_SetAll,
   uWeather_Providers_Yahoo,
   uWeather_Providers_Yahoo_Config,
+  uWeather_Providers_OpenWeatherMap,
   uWeather_Providers_OpenWeatherMap_Config;
 
 procedure Create(vName: String; vNum: Integer);
@@ -189,8 +190,8 @@ begin
         for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
         begin
           SetLength(addons.weather.Action.Yahoo.Data_Town, addons.weather.Action.Yahoo.Total_WoeID + 1);
-          addons.weather.Action.Yahoo.Data_Town[vi] := Get_Forecast(vi, addons.weather.Action.Yahoo.Woeid_List.Strings[vi]);
-          Main_Create_Town(addons.weather.Action.Yahoo.Data_Town[vi], vi);
+          addons.weather.Action.Yahoo.Data_Town[vi] := uWeather_Providers_Yahoo.Get_Forecast(vi, addons.weather.Action.Yahoo.Woeid_List.Strings[vi]);
+          uWeather_Providers_Yahoo.Main_Create_Town(addons.weather.Action.Yahoo.Data_Town[vi], vi);
           addons.weather.Action.Yahoo.Data_Town[vi].Photos.Picture_Used_Num := vBest_Img_Num;
         end;
         vWeather.Scene.Control.TabIndex := 0;
@@ -201,6 +202,9 @@ begin
         vTime.Interval := 1000;
         vTime.OnTimer := vTime_Obj.OnTimer;
         vTime.Enabled := False;
+
+        vWeather.Scene.Arrow_Right.Visible:= False;
+        vWeather.Scene.Arrow_Left.Visible := False;
 
         if addons.weather.Action.Yahoo.Total_WoeID > 0 then
           vWeather.Scene.Arrow_Right.Visible := True;
@@ -216,6 +220,8 @@ begin
 end;
 
 procedure Check_OpenWeatherMap;
+var
+  vi: Integer;
 begin
   if vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked = False then
   begin
@@ -228,7 +234,20 @@ begin
     uWeather_Providers_OpenWeatherMap_Config.Load;
     if addons.weather.Action.OWM.Total_WoeID <> -1 then
     begin
+      vWeather.Scene.Back.Bitmap := nil;
+      for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
+      begin
+        SetLength(addons.weather.Action.OWM.Data_Town, addons.weather.Action.OWM.Total_WoeID + 1);
+        addons.weather.Action.OWM.Data_Town[vi] := uWeather_Providers_OpenWeatherMap.Get_Forecast(vi, addons.weather.Action.OWM.Woeid_List.Strings[vi]);
+        uWeather_Providers_OpenWeatherMap.Main_Create_Town(addons.weather.Action.OWM.Data_Town[vi], vi);
+      end;
+      vWeather.Scene.Control.TabIndex := 0;
 
+      vWeather.Scene.Arrow_Right.Visible:= False;
+      vWeather.Scene.Arrow_Left.Visible := False;
+
+      if addons.weather.Action.OWM.Total_WoeID > 0 then
+        vWeather.Scene.Arrow_Right.Visible := True;
     end
     else
       vWeather.Scene.Back.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_addtowns.png');

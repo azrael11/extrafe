@@ -262,7 +262,7 @@ begin
   vWeather.Config.main.Right.Towns.Delete.Panel.Visible := True;
 
   CreateHeader(vWeather.Config.main.Right.Towns.Delete.Panel, 'IcoMoon-Free', #$e9ac, 'Delete town "' + addons.weather.Action.Yahoo.Towns_List.Strings
-    [uWeather_Config_Towns.vSelectedTown] + '"');
+    [uWeather_Config_Towns.vSelectedTown] + '"', False, nil);
 
   vWeather.Config.main.Right.Towns.Delete.main.Panel := TPanel.Create(vWeather.Config.main.Right.Towns.Delete.Panel);
   vWeather.Config.main.Right.Towns.Delete.main.Panel.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Main';

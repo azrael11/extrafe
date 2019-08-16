@@ -28,11 +28,25 @@ uses
 
 /// Global Window Header
 ///
+
+type
+  TGLOBAL_MOUSE_CLOSE = class(TObject)
+    procedure OnClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
 type
   TGLOBAL_HEADER = record
     Panel: TPanel;
+    Incoming_Panel: TPanel;
+    Incoming_Blur: TGaussianBlurEffect;
+
     Icon_Text: TText;
     Text: Tlabel;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Close_Mouse: TGLOBAL_MOUSE_CLOSE;
   end;
 
   /// /////////////////////////////////////////////////////////////////////////////
@@ -451,8 +465,9 @@ var
   addons: TADDON;
   emulation: TEMULATORS;
   ex_load: TLOADING;
+  vHeader: TGLOBAL_HEADER;
 
-procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String);
+procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String; vHas_Close: Boolean; vBlur: TGaussianBlurEffect);
 
 implementation
 
@@ -461,27 +476,30 @@ uses
   Main,
   uMain;
 
-procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String);
+procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String; vHas_Close: Boolean; vBlur: TGaussianBlurEffect);
 var
-  vHeader: TGLOBAL_HEADER;
   vName: String;
 begin
+  vHeader.Incoming_Panel := vPanel;
+  if vBlur <> nil then
+    vHeader.Incoming_Blur := vBlur;
+
   vHeader.Panel := TPanel.Create(vPanel);
   vHeader.Panel.Name := vName + '_Header';
   vHeader.Panel.Parent := vPanel;
   vHeader.Panel.SetBounds(0, 0, vPanel.Width, 30);
   vHeader.Panel.Visible := True;
 
-  vName:= vPanel.Name;
+  vName := vPanel.Name;
 
   vHeader.Icon_Text := TText.Create(vHeader.Panel);
   vHeader.Icon_Text.Name := vName + '_Header_Icon';
-  vHeader.Icon_Text.Parent:= vHeader.Panel;
+  vHeader.Icon_Text.Parent := vHeader.Panel;
   vHeader.Icon_Text.SetBounds(6, 3, 24, 24);
   vHeader.Icon_Text.Font.Family := vFamily;
-  vHeader.Icon_Text.Font.Size:= 18;
-  vHeader.Icon_Text.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
-  vHeader.Icon_Text.Text:= vIcon;
+  vHeader.Icon_Text.Font.Size := 18;
+  vHeader.Icon_Text.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vHeader.Icon_Text.Text := vIcon;
   vHeader.Icon_Text.Visible := True;
 
   vHeader.Text := Tlabel.Create(vHeader.Panel);
@@ -491,6 +509,30 @@ begin
   vHeader.Text.Text := vText;
   vHeader.Text.Font.style := vHeader.Text.Font.style + [TFontStyle.fsBold];
   vHeader.Text.Visible := True;
+
+  if vHas_Close then
+  begin
+    vHeader.Close := TText.Create(vHeader.Panel);
+    vHeader.Close.Name := 'Global_Header_Close';
+    vHeader.Close.Parent := vHeader.Panel;
+    vHeader.Close.SetBounds(vHeader.Panel.Width - 30, 2, 28, 28);
+    vHeader.Close.Font.Family := 'IcoMoon-Free';
+    vHeader.Close.Font.Size := 18;
+    vHeader.Close.Text := #$ea0f;
+    vHeader.Close.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vHeader.Close.OnClick := vHeader.Close_Mouse.OnClick;
+    vHeader.Close.OnMouseEnter := vHeader.Close_Mouse.OnMouseEnter;
+    vHeader.Close.OnMouseLeave := vHeader.Close_Mouse.OnMouseLeave;
+    vHeader.Close.Visible := True;
+
+    vHeader.Close_Glow := TGlowEffect.Create(vHeader.Close);
+    vHeader.Close_Glow.Name := 'Global_Heade_Close_Glow';
+    vHeader.Close_Glow.Parent := vHeader.Close;
+    vHeader.Close_Glow.Softness := 0.9;
+    vHeader.Close_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vHeader.Close_Glow.Enabled := False;
+  end;
+
 end;
 
 { TLOADING_FLOATANIMATION }
@@ -514,7 +556,7 @@ begin
     if ex_load.Intro.Fade_Count > 150 then
     begin
       ex_load.Intro.Video.Cursor := crNone;
-      ex_load.Intro.Text.Cursor:= crNone;
+      ex_load.Intro.Text.Cursor := crNone;
       ex_load.Intro.Text_Ani.Start;
     end;
     if ex_load.Intro.Video.IsPlay = False then
@@ -526,6 +568,29 @@ begin
     if ex_load.Intro.Video.Cursor = crDefault then
       Inc(ex_load.Intro.Fade_Count, 1);
   end;
+end;
+
+{ TGLOBAL_MOUSE_CLOSE }
+
+procedure TGLOBAL_MOUSE_CLOSE.OnClick(Sender: TObject);
+begin
+  extrafe.prog.State := vHeader.Incoming_Blur.TagString;
+  vHeader.Incoming_Blur.Enabled := False;
+  FreeAndNil(vHeader.Panel);
+  FreeAndNil(vHeader.Incoming_Panel);
+end;
+
+procedure TGLOBAL_MOUSE_CLOSE.OnMouseEnter(Sender: TObject);
+begin
+  if TText(Sender).Name = 'Global_Header_Close' then
+    vHeader.Close_Glow.Enabled := True;
+  TText(Sender).Cursor := crHandPoint;
+end;
+
+procedure TGLOBAL_MOUSE_CLOSE.OnMouseLeave(Sender: TObject);
+begin
+  if TText(Sender).Name = 'Global_Header_Close' then
+    vHeader.Close_Glow.Enabled := False;
 end;
 
 initialization
