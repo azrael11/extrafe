@@ -26,11 +26,19 @@ type
     procedure OnMouseClick(Sender: TObject);
   end;
 
+type
+  TEMULATOR_IMAGES_TYPES = record
+
+    Background: TBitmap;
+    Logo: TBitmap;
+
+  end;
+
 procedure uMain_Emulation_Clear_Selection_Control;
 
 procedure uMain_Emulation_Create_Selection_Control;
 procedure uMain_Emulation_Create_Selection_Tab(vTab, vLevel: Integer; isActive: Boolean);
-function uMain_Emulation_GetBitmap(vNum, vLevel: Integer): TBitmap;
+function uMain_Emulation_GetBitmap(vNum, vLevel: Integer): TEMULATOR_IMAGES_TYPES;
 
 procedure uMain_Emulation_TriggerEmulator;
 
@@ -64,31 +72,35 @@ begin
   FreeAndNil(emulation.Selection);
 end;
 
-function uMain_Emulation_GetBitmap(vNum, vLevel: Integer): TBitmap;
+function uMain_Emulation_GetBitmap(vNum, vLevel: Integer): TEMULATOR_IMAGES_TYPES;
 begin
-  Result := TBitmap.Create;
-  if vLevel = 0 then
-  begin
-    case vNum of
-      0:
-        Result.LoadFromFile(emulation.Category[0].Menu_Image_Path + emulation.Category[0].Menu_Image);
-      1:
-        Result.LoadFromFile(emulation.Category[1].Menu_Image_Path + emulation.Category[1].Menu_Image);
-      2:
-        Result.LoadFromFile(emulation.Category[2].Menu_Image_Path + emulation.Category[2].Menu_Image);
-      3:
-        Result.LoadFromFile(emulation.Category[3].Menu_Image_Path + emulation.Category[3].Menu_Image);
-      4:
-        Result.LoadFromFile(emulation.Category[4].Menu_Image_Path + emulation.Category[4].Menu_Image);
-    end;
-  end
-  else if vLevel = 1 then
-  begin
-    Case vNum of
-      0:
-        Result.LoadFromFile(emulation.Arcade[0].Menu_Image_Path + emulation.Arcade[0].Menu_Image);
-    end;
-  end;
+//  Result.Logo := TBitmap.Create;
+//  Result.Background := TBitmap.Create;
+//  if vLevel = 0 then
+//  begin
+//    case vNum of
+//      0:
+//        begin
+//          Result.Logo.LoadFromFile(emulation.Category[0].Menu_Image_Path + emulation.Category[0].Logo);
+////          Result.Background.LoadFromFile(emulation.Category[0].Menu_Image_Path + );
+//        end;
+//      1:
+//        Result.Logo.LoadFromFile(emulation.Category[1].Menu_Image_Path + emulation.Category[1].Logo);
+//      2:
+//        Result.Logo.LoadFromFile(emulation.Category[2].Menu_Image_Path + emulation.Category[2].Logo);
+//      3:
+//        Result.Logo.LoadFromFile(emulation.Category[3].Menu_Image_Path + emulation.Category[3].Logo);
+//      4:
+//        Result.Logo.LoadFromFile(emulation.Category[4].Menu_Image_Path + emulation.Category[4].Logo);
+//    end;
+//  end
+//  else if vLevel = 1 then
+//  begin
+//    Case vNum of
+//      0:
+//        Result.Logo.LoadFromFile(emulation.Arcade[0].Menu_Image_Path + emulation.Arcade[0].Logo);
+//    end;
+//  end;
 end;
 
 procedure uMain_Emulation_Create_Selection_Control;
@@ -120,14 +132,21 @@ begin
   emulation.Selection_Tab[vTab].Tab.Parent := emulation.Selection;
   emulation.Selection_Tab[vTab].Tab.Visible := True;
 
+  emulation.Selection_Tab[vTab].Background := TImage.Create(emulation.Selection_Tab[vTab].Tab);
+  emulation.Selection_Tab[vTab].Background.Name := 'Emulator_Back_' + vTab.ToString;
+  emulation.Selection_Tab[vTab].Background.Parent := emulation.Selection_Tab[vTab].Tab;
+  emulation.Selection_Tab[vTab].Background.SetBounds(0, 4, emulation.Selection_Tab[vTab].Tab.Width, emulation.Selection_Tab[vTab].Tab.Height);
+  emulation.Selection_Tab[vTab].Background.Bitmap := emulation.Category[vTab].Background;
+  emulation.Selection_Tab[vTab].Background.Visible := True;
+
   emulation.Selection_Tab[vTab].Logo := TImage.Create(emulation.Selection_Tab[vTab].Tab);
-  emulation.Selection_Tab[vTab].Logo.Name := 'Emulator_Logo_' + IntToStr(vTab);
+  emulation.Selection_Tab[vTab].Logo.Name := 'Emulator_Logo_' + vTab.ToString;
   emulation.Selection_Tab[vTab].Logo.Parent := emulation.Selection_Tab[vTab].Tab;
   emulation.Selection_Tab[vTab].Logo.Width := 600;
   emulation.Selection_Tab[vTab].Logo.Height := 186;
   emulation.Selection_Tab[vTab].Logo.Position.X := (emulation.Selection.Width / 2) - 300;
   emulation.Selection_Tab[vTab].Logo.Position.Y := (emulation.Selection.Height / 2) - 93;
-  emulation.Selection_Tab[vTab].Logo.Bitmap := uMain_Emulation_GetBitmap(vTab, vLevel);
+  emulation.Selection_Tab[vTab].Logo.Bitmap := emulation.Category[vTab].Logo;
   emulation.Selection_Tab[vTab].Logo.OnMouseEnter := vEmulator_Image.OnMouseEnter;
   emulation.Selection_Tab[vTab].Logo.OnMouseLeave := vEmulator_Image.OnMouseLeave;
   emulation.Selection_Tab[vTab].Logo.OnClick := vEmulator_Image.OnMouseClick;
@@ -236,14 +255,14 @@ begin
       4:
         vEmu_Num := 1;
     end;
-    vActive:= False;
+    vActive := False;
     for ki := 0 to vEmu_Num do
     begin
       if emulation.emu[vi, ki] <> 'nil' then
-        begin
-          vActive := True;
-          Break;
-        end;
+      begin
+        vActive := True;
+        Break;
+      end;
     end;
     uMain_Emulation_Create_Selection_Tab(vi, emulation.Level, vActive);
   end;
@@ -282,6 +301,7 @@ begin
   if extrafe.prog.State = 'main' then
   begin
     emulation.Selection_Tab[TImage(Sender).Tag].Logo_Glow.Enabled := True;
+    emulation.Selection_Tab[TImage(Sender).Tag].Logo.Cursor := crHandPoint;
   end;
 end;
 

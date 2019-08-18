@@ -57,7 +57,7 @@ procedure uWindows_DeleteDirectory(const DirName: string; vFileMask: String; vDe
 function IsFileInUse(FileName: TFileName): Boolean;
 // internet
 function uWindows_IsConected_ToInternet: Boolean;
-function uWindows_GetIPAddress: String;
+function GetIPAddress: String;
 // machine info
 function uWindows_OsArchitectureToStr(Const vOsArch: TOSVersion.TArchitecture): String;
 function uWindows_OsPlatformToStr(Const vOsPlatform: TOSVersion.TPlatform): String;
@@ -324,24 +324,30 @@ end;
 
 /// /////////////////////////////////////////////////////////////////////////////
 // Internet
-function uWindows_GetIPAddress: String;
+function GetIPAddress: String;
 type
-  pu_long = ^u_long;
+  TaPInAddr = array [0..10] of PInAddr;
+  PaPInAddr = ^TaPInAddr;
 var
-  varTWSAData: TWSAData;
-  varPHostEnt: PHostEnt;
-  varTInAddr: TInAddr;
-  namebuf: Array [0 .. 255] of ansichar;
+  phe: PHostEnt;
+  pptr: PaPInAddr;
+  Buffer: array [0..63] of Ansichar;
+  i: Integer;
+  GInitData: TWSADATA;
 begin
-  If WSAStartup($101, varTWSAData) <> 0 Then
-    Result := 'No ip found'
-  Else
-  Begin
-    gethostname(namebuf, sizeof(namebuf));
-    varPHostEnt := gethostbyname(namebuf);
-    varTInAddr.S_addr := u_long(pu_long(varPHostEnt^.h_addr_list^)^);
-    Result := PChar(inet_ntoa(varTInAddr));
-  End;
+  WSAStartup($101, GInitData);
+  Result := '';
+  GetHostName(Buffer, SizeOf(Buffer));
+  phe := GetHostByName(Buffer);
+  if phe = nil then
+    Exit;
+  pptr := PaPInAddr(phe^.h_addr_list);
+  i := 0;
+  while pptr^[i] <> nil do
+  begin
+    Result := StrPas(inet_ntoa(pptr^[i]^));
+    Inc(i);
+  end;
   WSACleanup;
 end;
 

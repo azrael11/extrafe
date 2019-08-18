@@ -33,13 +33,13 @@ uses
 
 procedure Login;
 begin
-  if uDatabase_Connect then
+  if uDatabase.Online_Connect then
   begin
     if ex_load.Login.User_V.Text <> '' then
     begin
-      if uDatabase_Is_User_Exists(ex_load.Login.User_V.Text) = True then
+      if Is_User_Exists(ex_load.Login.User_V.Text) = True then
       begin
-        if uDatabase_Is_Password_Correct_For_User(ex_load.Login.User_V.Text, ex_load.Login.Pass_V.Text) = True then
+        if Is_Password_Correct_For_User(ex_load.Login.User_V.Text, ex_load.Login.Pass_V.Text) = True then
         begin
           uDatabase_Active_User_Collect_Info_From_Database;
           ex_load.Login.Panel_Login_Correct.Start;

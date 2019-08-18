@@ -6,7 +6,8 @@ uses
   System.Classes,
   System.SysUtils,
   System.Inifiles,
-  FMX.Forms;
+  FMX.Forms,
+  FMX.Graphics;
 
 type TLOAD_EMU_TAB_DATA= record
   Prog_Path: String;
@@ -114,8 +115,11 @@ begin
   emulation.Category[0].Active := true;
   emulation.Category[0].Active_Place := 0;
   emulation.Category[0].Name := 'Arcade';
-  emulation.Category[0].Menu_Image_Path := emulation.Path + 'arcade\';
-  emulation.Category[0].Menu_Image := 'arcade.png';
+  emulation.Category[0].Menu_Image_Path := emulation.Path + 'arcade\images\';
+  emulation.Category[0].Logo:= TBitmap.Create;
+  emulation.Category[0].Logo.LoadFromFile(emulation.Category[0].Menu_Image_Path +  'arcade.png');
+  emulation.Category[0].Background := TBitmap.Create;
+  emulation.Category[0].Background.LoadFromFile(emulation.Category[0].Menu_Image_Path + 'background.png');
   emulation.Category[0].Second_Level := -1;
   emulation.Category[0].Installed := False;
   emulation.Category[0].Unique_Num := -1;
@@ -123,8 +127,11 @@ begin
   emulation.Category[1].Active := true;
   emulation.Category[1].Active_Place := 1;
   emulation.Category[1].Name := 'Computers';
-  emulation.Category[1].Menu_Image_Path := emulation.Path + 'computers\';
-  emulation.Category[1].Menu_Image := 'computers.png';
+  emulation.Category[1].Menu_Image_Path := emulation.Path + 'computers\images\';
+  emulation.Category[1].Logo:= TBitmap.Create;
+  emulation.Category[1].Logo.LoadFromFile(emulation.Category[1].Menu_Image_Path + 'computers.png');
+  emulation.Category[1].Background := TBitmap.Create;
+  emulation.Category[1].Background.LoadFromFile(emulation.Category[1].Menu_Image_Path + 'background.png');
   emulation.Category[1].Second_Level := -1;
   emulation.Category[1].Installed := False;
   emulation.Category[1].Unique_Num := -1;
@@ -132,8 +139,11 @@ begin
   emulation.Category[2].Active := true;
   emulation.Category[2].Active_Place := 2;
   emulation.Category[2].Name := 'Consoles';
-  emulation.Category[2].Menu_Image_Path := emulation.Path + 'consoles\';
-  emulation.Category[2].Menu_Image := 'consoles.png';
+  emulation.Category[2].Menu_Image_Path := emulation.Path + 'consoles\images\';
+  emulation.Category[2].Logo:= TBitmap.Create;
+  emulation.Category[2].Logo.LoadFromFile(emulation.Category[2].Menu_Image_Path + 'consoles.png');
+  emulation.Category[2].Background := TBitmap.Create;
+  emulation.Category[2].Background.LoadFromFile(emulation.Category[2].Menu_Image_Path + 'background.png');
   emulation.Category[2].Second_Level := -1;
   emulation.Category[2].Installed := False;
   emulation.Category[2].Unique_Num := -1;
@@ -141,8 +151,11 @@ begin
   emulation.Category[3].Active := true;
   emulation.Category[3].Active_Place := 3;
   emulation.Category[3].Name := 'Handhelds';
-  emulation.Category[3].Menu_Image_Path := emulation.Path + 'handhelds\';
-  emulation.Category[3].Menu_Image := 'handhelds.png';
+  emulation.Category[3].Menu_Image_Path := emulation.Path + 'handhelds\images\';
+  emulation.Category[3].Logo:= TBitmap.Create;
+  emulation.Category[3].Logo.LoadFromFile(emulation.Category[3].Menu_Image_Path + 'handhelds.png');
+  emulation.Category[3].Background := TBitmap.Create;
+  emulation.Category[3].Background.LoadFromFile(emulation.Category[3].Menu_Image_Path + 'background.png');
   emulation.Category[3].Second_Level := -1;
   emulation.Category[3].Installed := False;
   emulation.Category[3].Unique_Num := -1;
@@ -150,8 +163,11 @@ begin
   emulation.Category[4].Active := true;
   emulation.Category[4].Active_Place := 4;
   emulation.Category[4].Name := 'Pinball';
-  emulation.Category[4].Menu_Image_Path := emulation.Path + 'pinball\';
-  emulation.Category[4].Menu_Image := 'pinballs.png';
+  emulation.Category[4].Menu_Image_Path := emulation.Path + 'pinball\images\';
+  emulation.Category[4].Logo:= TBitmap.Create;
+  emulation.Category[4].Logo.LoadFromFile(emulation.Category[4].Menu_Image_Path + 'pinballs.png');
+  emulation.Category[4].Background := TBitmap.Create;
+  emulation.Category[4].Background.LoadFromFile(emulation.Category[4].Menu_Image_Path + 'background.png');
   emulation.Category[4].Second_Level := -1;
   emulation.Category[4].Installed := False;
   emulation.Category[4].Unique_Num := -1;
@@ -203,7 +219,7 @@ procedure uLoad_Emulation_Collect_Arcade_Mame;
 var
   vtempIni: TInifile;
   isActive: Boolean;
-  vMenu_Image: String;
+  vLogo, vBack: String;
   vEmu: TLOAD_EMU_TAB_DATA;
 
 begin
@@ -219,7 +235,7 @@ begin
       vEmu.Place_Num := vtempIni.ReadInteger('Emulation', 'Place_Num', vEmu.Place_Num);
       vEmu.Images_Path:= vtempIni.ReadString('Emulation', 'TabPath', vEmu.Images_Path);
       vEmu.Tab_Images_Path:= vtempIni.ReadString('Emulation', 'TabPath', vEmu.Tab_Images_Path);
-      vMenu_Image := vtempIni.ReadString('Emulation', 'Images', vMenu_Image);
+      vLogo := vtempIni.ReadString('Emulation', 'Images', vLogo);
       vEmu.Unique_Num := vtempIni.ReadInteger('Emulation', 'Unique_Num', vEmu.Unique_Num);
       vEmu.Installed := vtempIni.ReadBool('Emulation', 'Installed', vEmu.Installed);
       vEmu.Prog_Path := vtempIni.ReadString('PROG', 'Path', vEmu.Prog_Path);
@@ -231,8 +247,9 @@ begin
       emulation.Arcade[0].Active_Place := vEmu.Place_Num;
       emulation.Arcade[0].Name := vEmu.Emu_Name;
       emulation.Arcade[0].Name_Exe:= vEmu.Emu_Name_Exe;
-      emulation.Arcade[0].Menu_Image := vMenu_Image;
       emulation.Arcade[0].Menu_Image_Path := vEmu.Tab_Images_Path;
+      emulation.Arcade[0].Logo:= TBitmap.Create;
+      emulation.Arcade[0].Logo.LoadFromFile(emulation.Arcade[0].Menu_Image_Path + vLogo);
       emulation.Arcade[0].Second_Level := -1;
       emulation.Arcade[0].Unique_Num := vEmu.Unique_Num;
       emulation.Arcade[0].Installed := vEmu.Installed;

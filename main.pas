@@ -43,7 +43,7 @@ uses
 
 procedure TMain_Form.FormDestroy(Sender: TObject);
 begin
-  uDatabase_Disconnect;
+  uDatabase.Online_Disconnect;
   ReportMemoryLeaksOnShutdown:= False;
 end;
 

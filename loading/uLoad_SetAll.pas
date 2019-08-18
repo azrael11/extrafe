@@ -190,7 +190,7 @@ begin
   ex_load.Login.User_V.TextSettings.Font.Size := 18;
   ex_load.Login.User_V.TextSettings.HorzAlign := TTextAlign.Leading;
   ex_load.Login.User_V.TextSettings.VertAlign := TTextAlign.Center;
-  ex_load.Login.User_V.Text := 'azrael11';
+  ex_load.Login.User_V.Text := 'Azrael_11';
   ex_load.Login.User_V.StyledSettings := ex_load.Login.User_V.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor, TStyledSetting.Other];
   ex_load.Login.User_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Login.User_V.Visible := True;
@@ -260,7 +260,7 @@ begin
   ex_load.Login.Int_Icon := TText.Create(ex_load.Login.Main);
   ex_load.Login.Int_Icon.Name := 'Loading_Login_Internet_Icon';
   ex_load.Login.Int_Icon.Parent := ex_load.Login.Main;
-  ex_load.Login.Int_Icon.SetBounds(16, 248, 24, 24);
+  ex_load.Login.Int_Icon.SetBounds(16, 216, 24, 24);
   ex_load.Login.Int_Icon.Font.Family := 'IcoMoon-Free';
   ex_load.Login.Int_Icon.Font.Size := 24;
   ex_load.Login.Int_Icon.Text := #$e9c9;
@@ -270,26 +270,43 @@ begin
   ex_load.Login.Internet := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Internet.Name := 'Loading_Login_Internet';
   ex_load.Login.Internet.Parent := ex_load.Login.Main;
-  ex_load.Login.Internet.SetBounds(48, 256, 200, 17);
+  ex_load.Login.Internet.SetBounds(48, 224, 200, 17);
   ex_load.Login.Internet.Text := 'Not Connected';
   ex_load.Login.Internet.Visible := True;
 
-  ex_load.Login.Data_Icon := TText.Create(ex_load.Login.Main);
-  ex_load.Login.Data_Icon.Name := 'Loading_Login_Database_Icon';
-  ex_load.Login.Data_Icon.Parent := ex_load.Login.Main;
-  ex_load.Login.Data_Icon.SetBounds(16, 280, 24, 24);
-  ex_load.Login.Data_Icon.Font.Family := 'IcoMoon-Free';
-  ex_load.Login.Data_Icon.Font.Size := 24;
-  ex_load.Login.Data_Icon.Text := #$e964;
-  ex_load.Login.Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  ex_load.Login.Data_Icon.Visible := True;
+  ex_load.Login.Online_Data_Icon := TText.Create(ex_load.Login.Main);
+  ex_load.Login.Online_Data_Icon.Name := 'Loading_Login_Online_Database_Icon';
+  ex_load.Login.Online_Data_Icon.Parent := ex_load.Login.Main;
+  ex_load.Login.Online_Data_Icon.SetBounds(16, 248, 24, 24);
+  ex_load.Login.Online_Data_Icon.Font.Family := 'IcoMoon-Free';
+  ex_load.Login.Online_Data_Icon.Font.Size := 24;
+  ex_load.Login.Online_Data_Icon.Text := #$e964;
+  ex_load.Login.Online_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  ex_load.Login.Online_Data_Icon.Visible := True;
 
-  ex_load.Login.Database := TLabel.Create(ex_load.Login.Main);
-  ex_load.Login.Database.Name := 'Loading_Login_Database';
-  ex_load.Login.Database.Parent := ex_load.Login.Main;
-  ex_load.Login.Database.SetBounds(48, 288, 200, 17);
-  ex_load.Login.Database.Text := 'Not Connected';
-  ex_load.Login.Database.Visible := True;
+  ex_load.Login.Online_Database := TLabel.Create(ex_load.Login.Main);
+  ex_load.Login.Online_Database.Name := 'Loading_Login_Online_Database';
+  ex_load.Login.Online_Database.Parent := ex_load.Login.Main;
+  ex_load.Login.Online_Database.SetBounds(48, 256, 200, 17);
+  ex_load.Login.Online_Database.Text := 'Not Connected';
+  ex_load.Login.Online_Database.Visible := True;
+
+  ex_load.Login.Local_Data_Icon := TText.Create(ex_load.Login.Main);
+  ex_load.Login.Local_Data_Icon.Name := 'Loading_Login_Local_Database_Icon';
+  ex_load.Login.Local_Data_Icon.Parent := ex_load.Login.Main;
+  ex_load.Login.Local_Data_Icon.SetBounds(16, 280, 24, 24);
+  ex_load.Login.Local_Data_Icon.Font.Family := 'IcoMoon-Free';
+  ex_load.Login.Local_Data_Icon.Font.Size := 24;
+  ex_load.Login.Local_Data_Icon.Text := #$e963;
+  ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  ex_load.Login.Local_Data_Icon.Visible := True;
+
+  ex_load.Login.Local_Database := TLabel.Create(ex_load.Login.Main);
+  ex_load.Login.Local_Database.Name := 'Loading_Login_Local_Database';
+  ex_load.Login.Local_Database.Parent := ex_load.Login.Main;
+  ex_load.Login.Local_Database.SetBounds(48, 288, 200, 17);
+  ex_load.Login.Local_Database.Text := 'Not Connected';
+  ex_load.Login.Local_Database.Visible := True;
 
   ex_load.Login.NotRegister := TText.Create(ex_load.Login.Main);
   ex_load.Login.NotRegister.Name := 'Loading_Login_Register';

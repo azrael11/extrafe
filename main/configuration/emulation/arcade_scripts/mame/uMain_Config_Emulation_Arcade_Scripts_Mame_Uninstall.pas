@@ -325,7 +325,8 @@ begin
   emulation.Arcade[0].Active:= False;
   emulation.Arcade[0].Active_Place:= -1;
   emulation.Arcade[0].Name:= '';
-  emulation.Arcade[0].Menu_Image:= '';
+  emulation.Arcade[0].Logo:= nil;
+  emulation.Arcade[0].Background:= nil;
   emulation.Arcade[0].Menu_Image_Path:= '';
   emulation.Arcade[0].Second_Level:= -1;
   emulation.Arcade[0].Installed:= False;

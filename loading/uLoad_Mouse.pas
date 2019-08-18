@@ -82,7 +82,10 @@ uses
 procedure TLOADING_BUTTON.OnMouseClick(Sender: TObject);
 begin
   if TButton(Sender).Name = 'Loading_Login_Login' then
-    uLoad_Login.Login
+  begin
+    TButton(Sender).Cursor := crHourGlass;
+    uLoad_Login.Login;
+  end
   else if TButton(Sender).Name = 'Loading_Login_Exit' then
     uLoad_Login.Exit_Program
   else if TButton(Sender).Name = 'Loading_Reg_Register' then
@@ -281,6 +284,7 @@ procedure TLOADING_CHECKBOX.OnMouseEnter(Sender: TObject);
 begin
   if TCheckBox(Sender).Name = 'Loading_Register_Terms_Check' then
     uLoad_Register.Enable_Help(6);
+  TCheckBox(Sender).Cursor := crHandPoint;
 end;
 
 procedure TLOADING_CHECKBOX.OnMouseLeave(Sender: TObject);

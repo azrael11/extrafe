@@ -6,6 +6,8 @@ uses
   System.Classes,
   System.SysUtils,
   System.UiTypes,
+  System.JSON,
+  System.DateUtils,
   FMX.Types,
   FMX.Objects,
   FMX.Dialogs,
@@ -14,23 +16,17 @@ uses
 
 type
   TUSER_ACOUNT_DATABASE = record
-    Database_Num: WideString;
-    Username: WideString;
-    Password: WideString;
-    Email: WideString;
-    IP: WideString;
-    Name: WideString;
-    Surname: WideString;
-    Avatar: WideString;
-    DateTime_Created: WideString;
-    Last_DateTime_Visit: WideString;
-    Country: WideString;
-    Country_Code: WideString;
-    Genre: WideString;
-    Last_Game_Play: WideString;
-    Last_Emulator: WideString;
-    Total_Time_Play: WideString;
-    Server_Folder: WideString;
+    Database_Num: String;
+    Username: String;
+    Password: String;
+    Email: String;
+    IP: String;
+    Name: String;
+    Surname: String;
+    Avatar: String;
+    Registered: string;
+    Last_Visit: String;
+    Genre: String;
   end;
 
 type
@@ -85,6 +81,7 @@ var
   User: TUSER_ACCOUNT_REGISTER;
   User_Reg: TUSER_ACOUNT_DATABASE;
   vCaptcha: String;
+  Is_user_registered: Boolean;
 
 implementation
 
@@ -161,9 +158,7 @@ end;
 
 function Register_User: Boolean;
 var
-  vCountry_Code: String;
-  vIp: String;
-  vLat, vLon: String;
+  vIp: TJSONValue;
 
   function create_server_folder_name: String;
   var
@@ -176,29 +171,24 @@ var
 
 begin
   Result := False;
+  Is_user_registered := False;
   if Check_Data then
   begin
-    uInternet_Files.GeoIP(vCountry_Code, vIp, vLat, vLon);
-    User_Reg.Database_Num := (uDatabase_SQLCommands_Count_Records).ToString;
+    vIp:= uInternet_Files.Get_JSONValue('Register_IP_', 'http://ipinfo.io/json');
+    User_Reg.Database_Num := uDatabase_SQLCommands.Get_Query(-1, 'count_records');
     User_Reg.Username := ex_load.Reg.Main.User_V.Text;
     User_Reg.Password := ex_load.Reg.Main.Pass_V.Text;
     User_Reg.Email := ex_load.Reg.Main.Email_V.Text;
-    User_Reg.IP := vIp;
-    User_Reg.Name := 'Unknown';
-    User_Reg.Surname := 'Unknown';
+    User_Reg.IP := vIP.GetValue<String>('ip');
+    User_Reg.Name := '';
+    User_Reg.Surname := '';
     User_Reg.Avatar := '0';
-    User_Reg.DateTime_Created := FormatDateTime('YYYY-MM-DD HH:MM:SS.000000', now);
-    User_Reg.Last_DateTime_Visit := User_Reg.DateTime_Created;
-    User_Reg.Country := uSnippet_Convert.Code_To_Country(LowerCase(vCountry_Code));
-    User_Reg.Country_Code := LowerCase(vCountry_Code);
-    User_Reg.Genre := '-1';
-    User_Reg.Last_Game_Play := 'Unknown';
-    User_Reg.Last_Emulator := 'Unknown';
-    User_Reg.Total_Time_Play := '00:00:00';
-    User_Reg.Server_Folder := create_server_folder_name;
-    uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
-    uInternet_Files.Create_FTP_Folder(User_Reg.Server_Folder); // Ready
-    uDatabase_SQLCommands.New_User;
+    User_Reg.Registered := DateTimeToUnix(Now).ToString;
+    User_Reg.Last_Visit := User_Reg.Registered;
+    User_Reg.Genre := '0';
+    if uDatabase_SQLCommands.Add_New_User then
+      uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
+    Is_user_registered := True;
     Result := True;
   end;
 end;
@@ -935,20 +925,21 @@ begin
   ex_load.Reg.Main.RePass_V.Password := not ex_load.Reg.Main.RePass_V.Password;
 end;
 
-// The two action buttons
-
+{The two action buttons}
 procedure Apply;
 begin
   if Register_User then
-  begin
-    ex_load.Login.User_V.Text := User_Reg.Username;
     Cancel;
-  end;
 end;
 
 procedure Cancel;
 begin
   uLoad_SetAll_Login;
+  if Is_user_registered then
+  begin
+    ex_load.Login.User_V.Text := User_Reg.Username;
+    ex_load.Login.Pass_V.Text := '';
+  end;
   FreeAndNil(ex_load.Reg.Panel);
 end;
 

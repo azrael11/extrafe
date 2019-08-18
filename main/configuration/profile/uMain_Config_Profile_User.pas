@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.SysUtils,
   System.UiTypes,
+  System.DateUtils,
   FMX.StdCtrls,
   FMX.Types,
   FMX.Objects,
@@ -80,7 +81,7 @@ begin
   mainScene.Config.main.R.Profile.User.Username_V.Name := 'Main_Config_Profile_Main_Username_Edit';
   mainScene.Config.main.R.Profile.User.Username_V.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Username_V.SetBounds(10, 30, 370, 24);
-  mainScene.Config.main.R.Profile.User.Username_V.Text := user_Active.Username;
+  mainScene.Config.main.R.Profile.User.Username_V.Text := user_Active_Online.Username;
   mainScene.Config.main.R.Profile.User.Username_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Username_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Username_V.Visible := True;
@@ -96,7 +97,7 @@ begin
   mainScene.Config.main.R.Profile.User.Password_V.Name := 'Main_Config_Profile_Main_Password_Edit';
   mainScene.Config.main.R.Profile.User.Password_V.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Password_V.SetBounds(10, 90, 370, 24);
-  mainScene.Config.main.R.Profile.User.Password_V.Text := user_Active.Password;
+  mainScene.Config.main.R.Profile.User.Password_V.Text := user_Active_Online.Password;
   mainScene.Config.main.R.Profile.User.Password_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Password_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Password_V.Password := True;
@@ -118,7 +119,7 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar_Show.Name := 'Main_Config_Profile_Main_Avatar';
   mainScene.Config.main.R.Profile.User.Avatar_Show.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Avatar_Show.SetBounds(410, 10, 150, 150);
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active.Avatar + '.png');
+  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active_Online.Avatar + '.png');
   mainScene.Config.main.R.Profile.User.Avatar_Show.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Avatar_Show.Visible := True;
 
@@ -152,7 +153,7 @@ begin
   mainScene.Config.main.R.Profile.User.Name_V.Name := 'Main_Config_Profile_Main_Name_Edit';
   mainScene.Config.main.R.Profile.User.Name_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
   mainScene.Config.main.R.Profile.User.Name_V.SetBounds(10, 60, 370, 24);
-  mainScene.Config.main.R.Profile.User.Name_V.Text := user_Active.Name;
+  mainScene.Config.main.R.Profile.User.Name_V.Text := user_Active_Online.Name;
   mainScene.Config.main.R.Profile.User.Name_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Name_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Name_V.Visible := True;
@@ -168,7 +169,7 @@ begin
   mainScene.Config.main.R.Profile.User.Surname_V.Name := 'Main_Config_Profile_Main_Surname_Edit';
   mainScene.Config.main.R.Profile.User.Surname_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
   mainScene.Config.main.R.Profile.User.Surname_V.SetBounds(10, 110, 370, 24);
-  mainScene.Config.main.R.Profile.User.Surname_V.Text := user_Active.Surname;
+  mainScene.Config.main.R.Profile.User.Surname_V.Text := user_Active_Online.Surname;
   mainScene.Config.main.R.Profile.User.Surname_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Surname_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Surname_V.Visible := True;
@@ -231,7 +232,7 @@ begin
   mainScene.Config.main.R.Profile.User.Country.Name := 'Main_Config_Profile_Main_Country';
   mainScene.Config.main.R.Profile.User.Country.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Country.SetBounds(410, 410, 150, 120);
-  mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images + user_Active.Country_Code + '.png');
+//  mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images + user_Active.Country_Code + '.png');
   mainScene.Config.main.R.Profile.User.Country.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Country.Visible := True;
 
@@ -247,7 +248,7 @@ begin
   mainScene.Config.main.R.Profile.User.Email_Dir.Name := 'Main_Config_Profile_Main_EMail_Dir';
   mainScene.Config.main.R.Profile.User.Email_Dir.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Email_Dir.SetBounds(56, 416, 400, 24);
-  mainScene.Config.main.R.Profile.User.Email_Dir.Text := user_Active.Email;
+  mainScene.Config.main.R.Profile.User.Email_Dir.Text := user_Active_Online.Email;
   mainScene.Config.main.R.Profile.User.Email_Dir.HorzTextAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Email_Dir.TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.main.R.Profile.User.Email_Dir.Visible := True;
@@ -258,13 +259,13 @@ begin
   mainScene.Config.main.R.Profile.User.Created.SetBounds(10, mainScene.Config.main.R.Profile.User.Panel.Height - 46, 500, 24);
   mainScene.Config.main.R.Profile.User.Created.TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.main.R.Profile.User.Created.TextSettings.Font.Size := 12;
-  mainScene.Config.main.R.Profile.User.Created.Text := 'User : "' + user_Active.Username + '"was created on : ' + user_Active.DateTime_Created;
+  mainScene.Config.main.R.Profile.User.Created.Text := 'User : "' + user_Active_Online.Username + '"was created on : ' +  DateToStr(UnixToDateTime(user_Active_Online.Registered.ToInt64));
   mainScene.Config.main.R.Profile.User.Created.TextSettings.HorzAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Created.Visible := True;
 
-  vTemp_Personal.Name := user_Active.Name;
-  vTemp_Personal.Surname := user_Active.Surname;
-  vTemp_Personal.Genre := user_Active.Genre;
+  vTemp_Personal.Name := user_Active_Online.Name;
+  vTemp_Personal.Surname := user_Active_Online.Surname;
+  vTemp_Personal.Genre := user_Active_Online.Genre;
 
   Genre(vTemp_Personal.Genre);
 end;
@@ -315,12 +316,12 @@ end;
 
 procedure Apply_Changes;
 begin
-  if vTemp_Personal.Name <> user_Active.Name then
-    uDatabase_SqlCommands.Update_Name(vTemp_Personal.Name);
-  if vTemp_Personal.Surname <> user_Active.Surname then
-    uDatabase_SqlCommands.Update_Surename(vTemp_Personal.Surname);
-  if vTemp_Personal.Genre <> user_Active.Genre then
-    uDatabase_SqlCommands.Update_Genre(vTemp_Personal.Genre);
+  if vTemp_Personal.Name <> user_Active_Online.Name then
+    user_Active_Online.Name := uDatabase_SqlCommands.Update_Query('name', vTemp_Personal.Name);
+  if vTemp_Personal.Surname <> user_Active_Online.Surname then
+    user_Active_Online.Surname := uDatabase_SqlCommands.Update_Query('surname', vTemp_Personal.Surname);
+  if vTemp_Personal.Genre <> user_Active_Online.Genre then
+    user_Active_Online.Genre:= uDatabase_SqlCommands.Update_Query('gender', vTemp_Personal.Genre);
 end;
 ///
 
@@ -489,8 +490,8 @@ begin
   if (vPage >= 1) and (vPage <= 26) then
   begin
     vAvatar.Page := vPage;
-    vAvatar.Checked := StrToInt(user_Active.Avatar);
-    vAvatarPage_Num := (StrToInt(user_Active.Avatar) div 20) + 1;
+    vAvatar.Checked := StrToInt(user_Active_Online.Avatar);
+    vAvatarPage_Num := (StrToInt(user_Active_Online.Avatar) div 20) + 1;
     for vi := 0 to 19 do
     begin
       mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr((20 * (vPage - 1)) + vi) + '.png');
@@ -525,7 +526,7 @@ end;
 
 procedure Avatar_Change;
 begin
-  uDatabase_SqlCommands.Update_Avatar(vAvatar.Checked);
+  user_Active_Online.Avatar:= uDatabase_SqlCommands.Update_Query('avatar', vAvatar.Checked.ToString);
   mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');
   mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');
   Return;
@@ -663,7 +664,7 @@ end;
 function Password_Check: Boolean;
 begin
   Result := False;
-  if mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text = user_Active.Password then
+  if mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text = user_Active_Online.Password then
   begin
     if mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text = mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Text then
     begin
@@ -686,7 +687,7 @@ procedure Password_Change;
 begin
   if Password_Check then
   begin
-    uDatabase_SqlCommands.Update_Password(mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text);
+    uDatabase_SqlCommands.Update_Query('password', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text);
     mainScene.Config.main.R.Profile.User.Password_V.Text := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
     Return;
   end;

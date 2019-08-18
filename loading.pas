@@ -8,7 +8,7 @@ uses
   System.SysUtils,
   FMX.Forms,
   FMX.Types,
-  JCLSysInfo;
+  JCLSysInfo, Data.DB, Data.SqlExpr, Data.FMTBcd, Data.DBXInterBase;
 
 { type
   TTIMER_LOADING_VIDEO = class(TTimer)
@@ -17,6 +17,7 @@ uses
 
 type
   TLoading_Form = class(TForm)
+    SQLConnection1: TSQLConnection;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
@@ -49,20 +50,21 @@ procedure TLoading_Form.FormCreate(Sender: TObject);
 var
   iRetCode: Integer;
 begin
-//  if CPUID.CpuType <> CPU_TYPE_INTEL then
-//    SetEnvironmentVar('KMP_AFFINITY', 'disabled');
+  // if CPUID.CpuType <> CPU_TYPE_INTEL then
+  // SetEnvironmentVar('KMP_AFFINITY', 'disabled');
 
 
-//  if kmp then
+  // if kmp then
 
-//  iRetCode = _putenv( "KMP_AFFINITY=disabled" );
-//	if( iRetCode == 0 )
-//	    printf( "KMP_AFFINITY=%sn", getenv( "KMP_AFFINITY" ) )
-//	else
-//	    printf( "Error: Failed to Set Environment Variable KMP_AFFINITYn" );
-
+  // iRetCode = _putenv( "KMP_AFFINITY=disabled" );
+  // if( iRetCode == 0 )
+  // printf( "KMP_AFFINITY=%sn", getenv( "KMP_AFFINITY" ) )
+  // else
+  // printf( "Error: Failed to Set Environment Variable KMP_AFFINITYn" );
+//  SQLConnection1.Connected:= True;
+//  SQLConnection1.Params.Add('Database=' + extrafe.prog.Path + 'data\database\extrafe.ib');
   Default_Load := False;
-  uLoad_StartLoading;
+  uLoad.StartLoading;
 end;
 
 end.

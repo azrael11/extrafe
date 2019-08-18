@@ -141,9 +141,8 @@ begin
       uMain_Config_Info_Extrafe.Next_Build
     else if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
     begin
-      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or
-         (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
-          uMain_Config_Info_Credits_ShowBrand((TImage(Sender).TagString).ToInteger, TImage(Sender).Tag);
+      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
+        uMain_Config_Info_Credits_ShowBrand((TImage(Sender).TagString).ToInteger, TImage(Sender).Tag);
     end;
   end;
 end;
@@ -165,8 +164,7 @@ begin
       mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Right_Glow.Enabled := True
     else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + IntToStr(TImage(Sender).Tag) then
     begin
-      if mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].GlowColor <>
-        TAlphaColorRec.White then
+      if mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].GlowColor <> TAlphaColorRec.White then
         mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].Enabled := True;
     end;
   end
@@ -174,8 +172,7 @@ begin
   begin
     if TImage(Sender).Name = 'Main_Config_Emulators_Image_' + IntToStr(TImage(Sender).Tag) then
       mainScene.Config.Main.R.Emulators.Images_Glow[TImage(Sender).Tag].Enabled := True
-    else if (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo') or
-      (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo_Check') then
+    else if (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo') or (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo_Check') then
     begin
       if mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Gray.Enabled = False then
         mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Glow.Enabled := True
@@ -200,10 +197,8 @@ begin
   begin
     if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
     begin
-      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or
-        (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
-        mainScene.Config.Main.R.Info.Credits.Brand_Glow[(TImage(Sender).TagString).ToInteger,
-          TImage(Sender).Tag].Enabled := True;
+      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
+        mainScene.Config.Main.R.Info.Credits.Brand_Glow[(TImage(Sender).TagString).ToInteger, TImage(Sender).Tag].Enabled := True;
     end;
   end;
 end;
@@ -231,8 +226,7 @@ begin
       mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Right_Glow.Enabled := False
     else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + IntToStr(TImage(Sender).Tag) then
     begin
-      if mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].GlowColor <>
-        TAlphaColorRec.White then
+      if mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].GlowColor <> TAlphaColorRec.White then
         mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].Enabled := False;
     end;
   end
@@ -240,8 +234,7 @@ begin
   begin
     if TImage(Sender).Name = 'Main_Config_Emulators_Image_' + IntToStr(TImage(Sender).Tag) then
       mainScene.Config.Main.R.Emulators.Images_Glow[TImage(Sender).Tag].Enabled := False
-    else if (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo') or
-      (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo_Check') then
+    else if (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo') or (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo_Check') then
     begin
       if mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Gray.Enabled = False then
         mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Glow.Enabled := False
@@ -266,10 +259,8 @@ begin
   begin
     if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
     begin
-      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or
-        (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
-          mainScene.Config.Main.R.Info.Credits.Brand_Glow[(TImage(Sender).TagString).ToInteger,
-            TImage(Sender).Tag].Enabled := False;
+      if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
+        mainScene.Config.Main.R.Info.Credits.Brand_Glow[(TImage(Sender).TagString).ToInteger, TImage(Sender).Tag].Enabled := False;
     end;
   end
 end;
@@ -381,58 +372,59 @@ begin
   begin
     if TButton(Sender).Name = 'Main_Config_Button_' + IntToStr(TButton(Sender).Tag) then
       uMain_Config_ShowPanel(TButton(Sender).Tag)
-  end
-  else if extrafe.prog.State = 'main_config_emulators' then
-  begin
-    if TButton(Sender).TagFloat = 1000 then
-      uMain_Config_Emulators_Start_Emu_Wizard(TButton(Sender))
-  end
-  else if extrafe.prog.State = 'main_config_emulators' then
-  begin
-    if TButton(Sender).Name = 'Main_Config_Addons_Addon_Weather_Action' then
-      uMain_Config_Addons_Actions_AddonActivation(2)
-    else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Soundplayer_Action' then
-      uMain_Config_Addons_Actions_AddonActivation(3)
-    else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Play_Action' then
-      uMain_Config_Addons_Actions_AddonActivation(4);
-  end
-  else if extrafe.prog.State = 'main_config_profile_user' then
-  begin
-    if TButton(Sender).Name = 'Main_Config_Profile_Main_Apply_Changes' then
-      uMain_Config_Profile_User.Apply_Changes
-  end
-  else if extrafe.prog.State = 'main_config_profile_avatar' then
-  begin
-    if TButton(Sender).Name = 'Main_Config_Profile_Avatar_Main_Cancel' then
-      uMain_Config_Profile_User.Return
-    else if TButton(Sender).Name = 'Main_Config_Profile_Avatar_Main_Change' then
-      uMain_Config_Profile_User.Avatar_Change
-  end
-  else if extrafe.prog.State = 'main_config_profile_password' then
-  begin
-    if TButton(Sender).Name = 'Main_Config_Profile_Password_Main_Cancel' then
-      uMain_Config_Profile_User.Return
-    else if TButton(Sender).Name = 'Main_Config_Profile_Password_Main_Change' then
-      uMain_Config_Profile_User.Password_Change
-  end
-  else if extrafe.prog.State = 'main_config_addons_actions' then
-  begin
-    if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_OK' then
-      uMain_Config_Addons_Actions_Deactivate_Weather_Action
-    else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Cancel' then
-      uMain_Config_Addons_Actions_Deactivate_Weather_FreeMessage
-    else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_OK' then
-      uMain_Config_Addons_Actions_Activate_Weather_Action
-    else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_Cancel' then
-      uMain_Config_Addons_Actions_Activate_Weather_FreeMessage
-    else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_OK' then
-      uMain_Config_Addons_Actions_Deactivate_Soundplayer_Action
-    else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Cancel' then
-      uMain_Config_Addons_Actions_Deactivate_Soundplayer_FreeMessage
-    else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_OK' then
-      uMain_Config_Addons_Actions_Activate_Soundplayer_Action
-    else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Cancel' then
-      uMain_Config_Addons_Actions_Activate_Soundplayer_FreeMessage
+
+    else if extrafe.prog.State = 'main_config_emulators' then
+    begin
+      if TButton(Sender).TagFloat = 1000 then
+        uMain_Config_Emulators_Start_Emu_Wizard(TButton(Sender))
+    end
+    else if extrafe.prog.State = 'main_config_emulators' then
+    begin
+      if TButton(Sender).Name = 'Main_Config_Addons_Addon_Weather_Action' then
+        uMain_Config_Addons_Actions_AddonActivation(2)
+      else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Soundplayer_Action' then
+        uMain_Config_Addons_Actions_AddonActivation(3)
+      else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Play_Action' then
+        uMain_Config_Addons_Actions_AddonActivation(4);
+    end
+    else if extrafe.prog.State = 'main_config_profile_user' then
+    begin
+      if TButton(Sender).Name = 'Main_Config_Profile_Main_Apply_Changes' then
+        uMain_Config_Profile_User.Apply_Changes
+    end
+    else if extrafe.prog.State = 'main_config_profile_avatar' then
+    begin
+      if TButton(Sender).Name = 'Main_Config_Profile_Avatar_Main_Cancel' then
+        uMain_Config_Profile_User.Return
+      else if TButton(Sender).Name = 'Main_Config_Profile_Avatar_Main_Change' then
+        uMain_Config_Profile_User.Avatar_Change
+    end
+    else if extrafe.prog.State = 'main_config_profile_password' then
+    begin
+      if TButton(Sender).Name = 'Main_Config_Profile_Password_Main_Cancel' then
+        uMain_Config_Profile_User.Return
+      else if TButton(Sender).Name = 'Main_Config_Profile_Password_Main_Change' then
+        uMain_Config_Profile_User.Password_Change
+    end
+    else if extrafe.prog.State = 'main_config_addons_actions' then
+    begin
+      if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_OK' then
+        uMain_Config_Addons_Actions_Deactivate_Weather_Action
+      else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Cancel' then
+        uMain_Config_Addons_Actions_Deactivate_Weather_FreeMessage
+      else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_OK' then
+        uMain_Config_Addons_Actions_Activate_Weather_Action
+      else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_Cancel' then
+        uMain_Config_Addons_Actions_Activate_Weather_FreeMessage
+      else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_OK' then
+        uMain_Config_Addons_Actions_Deactivate_Soundplayer_Action
+      else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Cancel' then
+        uMain_Config_Addons_Actions_Deactivate_Soundplayer_FreeMessage
+      else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_OK' then
+        uMain_Config_Addons_Actions_Activate_Soundplayer_Action
+      else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Cancel' then
+        uMain_Config_Addons_Actions_Activate_Soundplayer_FreeMessage
+    end;
   end;
   BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
 end;
@@ -511,9 +503,9 @@ end;
 procedure TMAIN_CONFIG_TABITEM.OnMouseClick(Sender: TObject);
 begin
   if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_0' then
-    vTab_Selected:= 0
+    vTab_Selected := 0
   else if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_1' then
-    vTab_Selected:= 1;
+    vTab_Selected := 1;
 end;
 
 initialization

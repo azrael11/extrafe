@@ -256,10 +256,10 @@ type
     Interner: TGroupBox;
     Interner_Internet: TLabel;
     Interner_Internet_V: TLabel;
-    Interner_IPAddress: TLabel;
-    Interner_IPAddress_V: TLabel;
-    Interner_DNSServers: TLabel;
-    Interner_DNSServers_V: TLabel;
+    Interner_Local_IP: TLabel;
+    Interner_Local_IP_V: TLabel;
+    Interner_Public_IP: TLabel;
+    Interner_Public_IP_V: TLabel;
   end;
 
 type

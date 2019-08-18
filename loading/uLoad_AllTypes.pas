@@ -16,6 +16,7 @@ uses
   FMX.Types,
   FMX.Memo,
   FMX.Layouts,
+  FMX.Graphics,
   ALFmxTabControl,
   BASS,
   FmxPasLibVlcPlayerUnit,
@@ -154,7 +155,8 @@ type
     user_login: Boolean;
     res: TEXTRAFE_RESOLUTION;
     style: TEXTRAFE_STYLES;
-    database_is_connected: Boolean;
+    online_database_is_connected: Boolean;
+    local_database_is_connected: Boolean;
     stats: TEXTRAFE_STATISTICS;
   end;
   /// /////////////////////////////////////////////////////////////////////////////
@@ -232,8 +234,9 @@ type
     Active_Place: Integer;
     Name: String;
     Name_Exe: String;
-    Menu_Image: String;
     Menu_Image_Path: String;
+    Logo: TBitmap;
+    Background: TBitmap;
     Second_Level: Integer;
     Installed: Boolean;
     Unique_Num: Integer;
@@ -243,6 +246,7 @@ type
   TEXTRAFE_MAIN_MENU_EMULATOR_TAB = record
     IsMainActive: Boolean;
     Tab: TALTabItem;
+    Background: TImage;
     Logo: TImage;
     Logo_Gray: TMonochromeEffect;
     Logo_Glow: TGlowEffect;
@@ -347,8 +351,10 @@ type
     Exit_ExtraFE: TButton;
     Internet: Tlabel;
     Int_Icon: TText;
-    Database: Tlabel;
-    Data_Icon: TText;
+    Online_Database: Tlabel;
+    Online_Data_Icon: TText;
+    Local_Database: Tlabel;
+    Local_Data_Icon: TText;
   end;
 
 type

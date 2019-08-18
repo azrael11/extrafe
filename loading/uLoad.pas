@@ -21,7 +21,7 @@ uses
   FmxPasLibVlcPlayerUnit,
   BASS;
 
-procedure uLoad_StartLoading;
+procedure StartLoading;
 procedure uLoad_SetDefaults;
 procedure uLoad_FirstTimeLoading;
 procedure uLoad_SetLoadingScreen;
@@ -56,7 +56,7 @@ uses
   uLoad_Stats,
   uDatabase;
 
-procedure uLoad_StartLoading;
+procedure StartLoading;
 const
   res_4_3: array [0 .. 10] of string = ('640x480', '800x600', '1024x768', '1152x864', '1280x960', '1400x1050', '1600x1200', '2048x1536', '3200x2400',
     '4000x3000', '6400x4800');
@@ -75,7 +75,8 @@ begin
   extrafe.ini.Path := extrafe.prog.Path + 'config\';
   extrafe.ini.Name := 'config.ini';
 
-  uDatabase_Create;
+  uDatabase.Online_Create;
+  uDatabase.Local_Create;
   uLoad_Start_ExtraFE;
   // ex_load.Scene.Back.Visible := True;
   Play_Intro_Video;
@@ -219,29 +220,42 @@ end;
 
 procedure IsDatabaseInternet;
 begin
+//  if uDatabase.Local_Connect then
+//  begin
+//    extrafe.local_database_is_connected := True;
+//    ex_load.Login.Local_Database.Text := 'Connected';
+//    ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+//  end
+//  else
+//  begin
+//    extrafe.local_database_is_connected := False;
+//    ex_load.Login.Local_Database.Text := 'Not Connected';
+//    ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
+//  end;
+
   if uWindows_IsConected_ToInternet then
   begin
     ex_load.Login.Internet.Text := 'Connected';
-    if uDatabase_Connect then
+    if uDatabase.Online_Connect then
     begin
-      ex_load.Login.Database.Text := 'Connected';
-      extrafe.database_is_connected := True;
+      ex_load.Login.Online_Database.Text := 'Connected';
+      extrafe.online_database_is_connected := True;
     end
     else
     begin
-      ex_load.Login.Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
-      ex_load.Login.Database.Text := 'Not Connected';
-      extrafe.database_is_connected := False;
+      ex_load.Login.Online_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
+      ex_load.Login.Online_Database.Text := 'Not Connected';
+      extrafe.online_database_is_connected := False;
     end;
   end
   else
   begin
     ex_load.Login.Int_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
     ex_load.Login.Internet.Text := 'Not Connected';
-    extrafe.database_is_connected := False;
-    ex_load.Login.Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
-    ex_load.Login.Database.Text := 'Not Connected';
-    extrafe.database_is_connected := False;
+    extrafe.online_database_is_connected := False;
+    ex_load.Login.Online_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
+    ex_load.Login.Online_Database.Text := 'Not Connected';
+    extrafe.online_database_is_connected := False;
   end;
 end;
 
@@ -258,7 +272,7 @@ begin
   ex_load.Intro.Video.Name := 'Loading_Intro';
   ex_load.Intro.Video.Parent := ex_load.Intro.Back;
   ex_load.Intro.Video.Align := TAlignLayout.Client;
-//  ex_load.Intro.Video.Play(ex_load.Path.Images + 'intro.mp4');
+  // ex_load.Intro.Video.Play(ex_load.Path.Images + 'intro.mp4');
   ex_load.Intro.Video.WrapMode := TImageWrapMode.Stretch;
   ex_load.Intro.Video.Cursor := crDefault;
   ex_load.Intro.Video.OnMouseMove := ex_load.Input.mouse.Layout.OnMouseMove;
