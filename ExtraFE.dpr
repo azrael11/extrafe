@@ -112,7 +112,6 @@ uses
   uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall in 'main\configuration\emulation\arcade_scripts\mame\uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall.pas',
   uMain_Config_Emulation_Arcade_Scripts_Mouse in 'main\configuration\emulation\arcade_scripts\uMain_Config_Emulation_Arcade_Scripts_Mouse.pas',
   uSnippet_StringGrid in 'code\_snippets\uSnippet_StringGrid.pas',
-  uWeather_Forcast in 'addons\weather\uWeather_Forcast.pas',
   uEmu_Arcade_Mame_Ini in 'emu\arcade\mame\uEmu_Arcade_Mame_Ini.pas',
   uLoad_SetAll in 'loading\uLoad_SetAll.pas',
   uLoad_Login in 'loading\uLoad_Login.pas',

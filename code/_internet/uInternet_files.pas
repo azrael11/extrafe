@@ -39,7 +39,7 @@ procedure HTML_Password_Forgat(vHTMLBuild: TIdMessageBuilderHtml);
 function Get_Image(vPath: String): TBitmap;
 function GetPage(aURL: string): string;
 
-function Get_JSONValue(vRestName: String; vBaseUrl: String): TJSONValue;
+function JSONValue(vRestName: String; vBaseUrl: String; vMethod: TRESTRequestMethod): TJSONValue;
 
 type
   TIdHTTPProgress = class(TIdHTTP)
@@ -234,8 +234,7 @@ var
   vOutValue: String;
   vIpos: Integer;
 begin
-  vJSONValue := TJSONValue.Create;
-  vJSONValue := Get_JSONValue('IpInfo', 'http://ipinfo.io/json');
+  vJSONValue := JSONValue('IpInfo', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
 
   if vJSONValue.TryGetValue('ip', vOutValue) then
   begin
@@ -463,7 +462,7 @@ begin
   end;
 end;
 
-function Get_JSONValue(vRestName: String; vBaseUrl: String): TJSONValue;
+function JSONValue(vRestName: String; vBaseUrl: String; vMethod: TRESTRequestMethod): TJSONValue;
 var
   vRESTClient: TRESTClient;
   vRESTRequest: TRESTRequest;
@@ -485,7 +484,7 @@ begin
   vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
   vRESTRequest.Client := vRESTClient;
-  vRESTRequest.Method := TRESTRequestMethod.rmGET;
+  vRESTRequest.Method := vMethod;
   vRESTRequest.Response := vRESTResponse;
   vRESTRequest.Timeout := 30000;
 

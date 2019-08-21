@@ -8,7 +8,12 @@ uses
   System.SysUtils,
   FMX.Forms,
   FMX.Types,
-  JCLSysInfo, Data.DB, Data.SqlExpr, Data.FMTBcd, Data.DBXInterBase;
+  JCLSysInfo,
+  FireDAC.UI.Intf,
+  FireDAC.FMXUI.Wait,
+  FireDAC.Stan.Intf,
+  FireDAC.Comp.UI,
+  FireDAC.Comp.Client;
 
 { type
   TTIMER_LOADING_VIDEO = class(TTimer)
@@ -17,7 +22,8 @@ uses
 
 type
   TLoading_Form = class(TForm)
-    SQLConnection1: TSQLConnection;
+    FDGUIxWaitCursor: TFDGUIxWaitCursor;
+    FDTransaction: TFDTransaction;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
@@ -61,7 +67,6 @@ begin
   // printf( "KMP_AFFINITY=%sn", getenv( "KMP_AFFINITY" ) )
   // else
   // printf( "Error: Failed to Set Environment Variable KMP_AFFINITYn" );
-//  SQLConnection1.Connected:= True;
 //  SQLConnection1.Params.Add('Database=' + extrafe.prog.Path + 'data\database\extrafe.ib');
   Default_Load := False;
   uLoad.StartLoading;

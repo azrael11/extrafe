@@ -17,26 +17,29 @@ uses
   FMX.Controls,
   FMX.Graphics,
   FMX.Effects,
+  FMX.WebBrowser,
   ALFmxTabControl,
   ALFmxObjects,
   uWeather_AllTypes,
   uWeather_Config_Towns,
-  OXmlPDOM;
+  Radiant.Shapes;
 
-procedure uWeather_Actions_Load;
-procedure uWeather_Actions_ReturnToMain(vIconsNum: Integer);
-procedure uWeather_Actions_Free;
+procedure Load;
+procedure ReturnToMain(vIconsNum: Integer);
+procedure Free;
 
-procedure uWeather_Actions_ShowFirstTimeScene(vFirst: Boolean);
-procedure uWeather_Actions_CheckFirst(vCheched: Boolean);
+procedure ShowFirstTimeScene(vFirst: Boolean);
+procedure CheckFirst(vCheched: Boolean);
 
-procedure uWeather_Actions_ShowTheForcast;
+procedure ShowTheForcast;
 
-procedure uWeather_Actions_Show_AstronomyAnimation;
+procedure Show_AstronomyAnimation;
 
 procedure Control_Slide_Right;
 procedure Control_Slide_Left;
 
+procedure Show_Map(vProvider, vLat, vLon: String);
+procedure Close_Map;
 
 var
   vTaskTimer: TTimer;
@@ -56,11 +59,10 @@ uses
   uWeather_Convert,
   uWeather_MenuActions,
   uWeather_Sounds,
-  uWeather_Forcast,
   uWeather_Providers_Yahoo,
   uWeather_Providers_OpenWeatherMap;
 
-procedure uWeather_Actions_Load;
+procedure Load;
 var
   ki: Integer;
 begin
@@ -93,14 +95,14 @@ begin
         uWeather_Providers_Yahoo.Main_Create_Towns
       else if addons.weather.Action.Provider = 'openweathermap' then
         uWeather_Providers_OpenWeatherMap.Main_Create_Towns;
-      uWeather_Actions_ShowTheForcast;
+      ShowTheForcast;
     end
   end
   else
-    uWeather_Actions_ShowFirstTimeScene(addons.weather.Action.First);
+    uWeather_Actions.ShowFirstTimeScene(addons.weather.Action.First);
 end;
 
-procedure uWeather_Actions_ShowTheForcast;
+procedure ShowTheForcast;
 var
   ki: Integer;
 begin
@@ -116,13 +118,14 @@ begin
   addons.weather.Loaded := True;
 
   vWeather.Scene.Control_Ani.Start;
-//  uWeather_Actions_Show_AstronomyAnimation;
+  // uWeather_Actions_Show_AstronomyAnimation;
 end;
 
-procedure uWeather_Actions_ReturnToMain(vIconsNum: Integer);
+procedure ReturnToMain(vIconsNum: Integer);
 begin
   if addons.weather.Loaded then
   begin
+    Close_Map;
     emulation.Selection_Ani.StartValue := extrafe.res.Height;
     emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
     mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
@@ -135,7 +138,7 @@ begin
   end;
 end;
 
-procedure uWeather_Actions_Free;
+procedure Free;
 var
   vi: Integer;
 begin
@@ -145,24 +148,24 @@ begin
   addons.weather.Loaded := False;
 end;
 
-procedure uWeather_Actions_Show_AstronomyAnimation;
+procedure Show_AstronomyAnimation;
 begin
-//   vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := False;
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X := vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex]
-//    .Astronomy.Sunrise.Width + 120;
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.Y := 670;
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Path :=
-//    uWeather_Convert_SunSpot(addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunrise,
-//    addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunset);
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := False;
-//    if addons.weather.Action.PathAni_Show then
-//    begin
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := True;
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Start;
-//    end;
+  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := False;
+  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X := vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex]
+  // .Astronomy.Sunrise.Width + 120;
+  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.Y := 670;
+  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Path :=
+  // uWeather_Convert_SunSpot(addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunrise,
+  // addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunset);
+  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := False;
+  // if addons.weather.Action.PathAni_Show then
+  // begin
+  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := True;
+  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Start;
+  // end;
 end;
 
-procedure uWeather_Actions_ShowFirstTimeScene(vFirst: Boolean);
+procedure ShowFirstTimeScene(vFirst: Boolean);
 begin
   vWeather.Scene.Settings.Visible := True;
   vWeather.Scene.Settings_Ani.Enabled := True;
@@ -183,7 +186,7 @@ begin
     vWeather.Scene.First.Panel_Shadow.Direction := 90;
     vWeather.Scene.First.Panel_Shadow.Enabled := True;
 
-    CreateHeader(vWeather.Scene.First.Panel, 'Weather Icons', #$f002,'Welcome to "Weather" Addon.', False, nil);
+    CreateHeader(vWeather.Scene.First.Panel, 'Weather Icons', #$f002, 'Welcome to "Weather" Addon.', False, nil);
 
     vWeather.Scene.First.main.Panel := TPanel.Create(vWeather.Scene.First.Panel);
     vWeather.Scene.First.main.Panel.Name := 'A_W_First_Main';
@@ -283,7 +286,7 @@ begin
   addons.weather.Loaded := True;
 end;
 
-procedure uWeather_Actions_CheckFirst(vCheched: Boolean);
+procedure CheckFirst(vCheched: Boolean);
 begin
   addons.weather.Ini.Ini.WriteBool('General', 'First', vCheched);
   addons.weather.Action.First := vCheched;
@@ -296,7 +299,7 @@ begin
     if vWeather.Scene.Control.TabIndex <> vWeather.Scene.Control.TabCount - 1 then
     begin
       vWeather_Ani_Stop := False;
-      uWeather_Sounds_PlayEffect('','', False);
+      uWeather_Sounds_PlayEffect('', '', False);
       uWeather_Sounds_PlayMouse('Slide');
       if vWeather.Scene.Control.TabIndex = vWeather.Scene.Control.TabCount - 2 then
         vWeather.Scene.Arrow_Right.Visible := False
@@ -305,6 +308,7 @@ begin
       vWeather.Scene.Arrow_Left.Visible := True;
       vWeather.Scene.Arrow_Right_Glow.Enabled := True;
       vWeather.Scene.Control.Next;
+      Close_Map;
     end;
   end;
 end;
@@ -316,7 +320,7 @@ begin
     if vWeather.Scene.Control.TabIndex <> 0 then
     begin
       vWeather_Ani_Stop := False;
-      uWeather_Sounds_PlayEffect('','', False);
+      uWeather_Sounds_PlayEffect('', '', False);
       uWeather_Sounds_PlayMouse('Slide');
       if vWeather.Scene.Control.TabIndex = 1 then
         vWeather.Scene.Arrow_Left.Visible := False
@@ -325,9 +329,69 @@ begin
       vWeather.Scene.Arrow_Right.Visible := True;
       vWeather.Scene.Arrow_Left_Glow.Enabled := True;
       vWeather.Scene.Control.Previous;
+      Close_Map;
     end;
   end;
 end;
 
+procedure Show_Map(vProvider, vLat, vLon: String);
+begin
+  vWeather.Scene.Map.Rect := TRadiantRectangle.Create(vWeather.Scene.weather);
+  vWeather.Scene.Map.Rect.Name := 'A_W_Map';
+  vWeather.Scene.Map.Rect.Parent := vWeather.Scene.weather;
+  vWeather.Scene.Map.Rect.SetBounds(extrafe.res.Width + 10, 10, extrafe.res.Width - 500, 778);
+  vWeather.Scene.Map.Rect.Fill.Kind := TBrushKind.Solid;
+  vWeather.Scene.Map.Rect.Fill.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Map.Rect.Visible := True;
+
+  vWeather.Scene.Map.Close := TText.Create(vWeather.Scene.Map.Rect);
+  vWeather.Scene.Map.Close.Name := 'A_W_Map_Close';
+  vWeather.Scene.Map.Close.Parent := vWeather.Scene.Map.Rect;
+  vWeather.Scene.Map.Close.SetBounds(vWeather.Scene.Map.Rect.Width - 40, 6, 28, 28);
+  vWeather.Scene.Map.Close.Font.Family := 'IcoMoon-Free';
+  vWeather.Scene.Map.Close.Font.Size := 24;
+  vWeather.Scene.Map.Close.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Map.Close.Text := #$ea0f;
+  vWeather.Scene.Map.Close.OnClick := addons.weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Map.Close.OnMouseEnter := addons.weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Map.Close.OnMouseLeave := addons.weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Map.Close.Visible := True;
+
+  vWeather.Scene.Map.Close_Glow := TGlowEffect.Create(vWeather.Scene.Map.Close);
+  vWeather.Scene.Map.Close_Glow.Name := 'A_W_Map_Close_Glow';
+  vWeather.Scene.Map.Close_Glow.Parent := vWeather.Scene.Map.Close;
+  vWeather.Scene.Map.Close_Glow.Softness := 0.9;
+  vWeather.Scene.Map.Close_Glow.GlowColor := TAlphaColorRec.White;
+  vWeather.Scene.Map.Close_Glow.Enabled := False;
+
+  vWeather.Scene.Map.Info_Line := TText.Create(vWeather.Scene.Map.Rect);
+  vWeather.Scene.Map.Info_Line.Name := 'A_W_Map_Info_Line';
+  vWeather.Scene.Map.Info_Line.Parent := vWeather.Scene.Map.Rect;
+  vWeather.Scene.Map.Info_Line.SetBounds(15, 6, vWeather.Scene.Map.Rect.Width - 55, 28);
+  vWeather.Scene.Map.Info_Line.Font.Size := 24;
+  vWeather.Scene.Map.Info_Line.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Map.Info_Line.Text := 'Provider : ' + vProvider + ' , Coordinates = Lat : ' + vLat + ' Lon : ' + vLon;
+  vWeather.Scene.Map.Info_Line.Visible := True;
+
+  //Πρέπει να φτιάξω στο config μενου επιλογή χαρτών και επιλογή γλώσσας χαρτών και να μπει και στα settings addons του user
+
+  vWeather.Scene.Map.Map_Url := 'https://bing.com/maps/default.aspx?cp=' + vLat + '~' + vLon + '&lvl=12&style=r&setlang=el';
+
+  vWeather.Scene.Map.Ani := TFloatAnimation.Create(vWeather.Scene.Map.Rect);
+  vWeather.Scene.Map.Ani.Name := 'A_W_Map_Animation';
+  vWeather.Scene.Map.Ani.Parent := vWeather.Scene.Map.Rect;
+  vWeather.Scene.Map.Ani.PropertyName := 'Position.X';
+  vWeather.Scene.Map.Ani.Duration := 0.6;
+  vWeather.Scene.Map.Ani.StartValue := vWeather.Scene.Map.Rect.Position.X;
+  vWeather.Scene.Map.Ani.StopValue := 500;
+  vWeather.Scene.Map.Ani.Enabled := True;
+  vWeather.Scene.Map.Ani.OnFinish := vWeather.Scene.Map.Ani_On_Finish;
+end;
+
+procedure Close_Map;
+begin
+  if Assigned(vWeather.Scene.Map.Rect) then
+    FreeAndNil(vWeather.Scene.Map.Rect);
+end;
 
 end.

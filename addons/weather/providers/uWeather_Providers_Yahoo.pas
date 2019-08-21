@@ -102,6 +102,8 @@ procedure Show_Image;
 
 procedure Show_Town_Image(vState: String);
 
+procedure Show_Map(vTab_Num: String);
+
 var
   vYahoo_Find_List: array [0 .. 100] of TWEATHER_PROVIDER_YAHOO_FIND_LIST;
   vFound_Locations: Integer;
@@ -121,6 +123,7 @@ uses
   uSnippet_Text,
   uSnippet_Convert,
   uInternet_Files,
+  uWeather_Actions,
   uWeather_Config_Towns,
   uWeather_Config_Towns_Add,
   uWeather_Convert,
@@ -166,7 +169,7 @@ var
   end;
 
 begin
-  vJSONValue := uInternet_Files.Get_JSONValue('Yahoo', 'https://www.yahoo.com/news/_tdnews/api/resource/WeatherSearch;text=' + vText);
+  vJSONValue := uInternet_Files.JSONValue('Yahoo', 'https://www.yahoo.com/news/_tdnews/api/resource/WeatherSearch;text=' + vText, TRESTRequestMethod.rmGET);
   vi := -1;
   repeat
     if vJSONValue.TryGetValue('[' + (vi + 1).ToString + '].woeid', vOutValue) then
@@ -270,7 +273,8 @@ var
   vi: Integer;
   vOutValue: String;
 begin
-  vJSONValue := uInternet_Files.Get_JSONValue('Yahoo_Town', 'https://www.yahoo.com/news/_tdnews/api/resource/WeatherService;woeids=%20[' + vWoeid + ']');
+  vJSONValue := uInternet_Files.JSONValue('Yahoo_Town', 'https://www.yahoo.com/news/_tdnews/api/resource/WeatherService;woeids=%20[' + vWoeid + ']',
+    TRESTRequestMethod.rmGET);
 
   Result.Woeid := vJSONValue.GetValue<String>('weathers[0].woeid');
   Result.vUnit := vJSONValue.GetValue<String>('weathers[0].unit');
@@ -918,7 +922,7 @@ begin
       vTime.OnTimer := vTime_Obj.OnTimer;
       vTime.Enabled := True;
 
-      if addons.weather.Action.Yahoo.Total_WoeID> 0 then
+      if addons.weather.Action.Yahoo.Total_WoeID > 0 then
         vWeather.Scene.Arrow_Right.Visible := True;
 
       FreeAndNil(vProgress);
@@ -2566,6 +2570,12 @@ begin
     end;
     vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Town_Image_Right_Arrow.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   end;
+end;
+
+procedure Show_Map(vTab_Num: String);
+begin
+  uWeather_Actions.Show_Map('yahoo', addons.weather.Action.Yahoo.Data_Town[vTab_Num.ToInteger].Location.Latitude,
+    addons.weather.Action.Yahoo.Data_Town[vTab_Num.ToInteger].Location.Longitude);
 end;
 
 { TWEATHER_PROVIDER_YAHOO_SLIDE }

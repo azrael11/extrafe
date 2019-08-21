@@ -6,13 +6,16 @@ uses
   System.Classes,
   System.SysUtils,
   System.UiTypes,
+  System.DateUtils,
+  System.JSON,
   FMX.Forms,
   FMX.Types,
   IdExplicitTLSClientServerBase,
   IdSMTP,
   IdSSLOpenSSL,
   IdMessage,
-  IdGlobal;
+  IdGlobal,
+  Rest.Types;
 
 procedure Login;
 procedure Exit_Program;
@@ -29,9 +32,12 @@ uses
   uLoad_SetAll,
   uDatabase,
   uDatabase_SqlCommands,
-  uDatabase_ActiveUser;
+  uDatabase_ActiveUser,
+  uInternet_Files;
 
 procedure Login;
+var
+  vIP: TJSONValue;
 begin
   if uDatabase.Online_Connect then
   begin
@@ -41,9 +47,13 @@ begin
       begin
         if Is_Password_Correct_For_User(ex_load.Login.User_V.Text, ex_load.Login.Pass_V.Text) = True then
         begin
-          uDatabase_Active_User_Collect_Info_From_Database;
           ex_load.Login.Panel_Login_Correct.Start;
           uLoad_Start_ExtraFE;
+          vIp:= uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
+          uDatabase_SqlCommands.Update_Query('active', '1');
+          uDatabase_SqlCommands.Update_Query('lastvisit', DateTimeToUnix(Now).ToString);
+          uDatabase_SqlCommands.Update_Query('ip', vIP.GetValue<String>('ip'));
+          uDatabase_Active_User_Collect_Info_From_Database;
         end
         else
         begin

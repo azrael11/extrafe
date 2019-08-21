@@ -179,18 +179,7 @@ begin
 
   Config;
 
-  uWeather_Actions_Load;
-  if addons.weather.Action.Provider = 'yahoo' then
-  begin
-    if addons.weather.Action.Yahoo.Total_WoeID> 0 then
-      vWeather.Scene.Arrow_Right.Visible:= True;
-  end
-  else if addons.weather.Action.Provider = 'openweathermap' then
-  begin
-
-  end;
-
-
+  uWeather_Actions.Load;
 end;
 
 procedure Control;

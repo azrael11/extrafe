@@ -17,6 +17,7 @@ type TDATABASE_ACTIVEUSER= record
   Registered: String;
   Last_Visit: String;
   Genre: String;
+  Active: String;
 end;
 
 procedure uDatabase_Active_User_Collect_Info_From_Database;
@@ -41,6 +42,7 @@ begin
   user_Active_Online.Registered:= uDatabase_SQLCommands.Get_Query(user_Active_Online.Database_Num, 'registered');
   user_Active_Online.Last_Visit:= uDatabase_SQLCommands.Get_Query(user_Active_Online.Database_Num, 'lastvisit');
   user_Active_Online.Genre:= uDatabase_SQLCommands.Get_Query(user_Active_Online.Database_Num, 'gender');
+  user_Active_Online.Active:= uDatabase_SQLCommands.Get_Query(user_Active_Online.Database_Num, 'active');
 end;
 
 procedure Temp_User;

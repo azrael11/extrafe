@@ -65,7 +65,6 @@ uses
   uWeather_Convert,
   uWeather_Config_Towns,
   uWeather_Providers_Yahoo,
-  uWeather_Forcast,
   uWeather_Providers_OpenWeatherMap,
   uSnippet_Image,
   uSnippet_StringGrid;

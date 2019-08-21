@@ -12,7 +12,8 @@ uses
   FMX.Objects,
   FMX.Dialogs,
   FMX.Forms,
-  FMX.StdCtrls;
+  FMX.StdCtrls,
+  REST.Types;
 
 type
   TUSER_ACOUNT_DATABASE = record
@@ -174,7 +175,7 @@ begin
   Is_user_registered := False;
   if Check_Data then
   begin
-    vIp:= uInternet_Files.Get_JSONValue('Register_IP_', 'http://ipinfo.io/json');
+    vIp:= uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
     User_Reg.Database_Num := uDatabase_SQLCommands.Get_Query(-1, 'count_records');
     User_Reg.Username := ex_load.Reg.Main.User_V.Text;
     User_Reg.Password := ex_load.Reg.Main.Pass_V.Text;
@@ -187,7 +188,10 @@ begin
     User_Reg.Last_Visit := User_Reg.Registered;
     User_Reg.Genre := '0';
     if uDatabase_SQLCommands.Add_New_User then
+    begin
+      uDatabase_SQLCommands.Add_User_Local;
       uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
+    end;
     Is_user_registered := True;
     Result := True;
   end;

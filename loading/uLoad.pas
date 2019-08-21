@@ -29,7 +29,7 @@ procedure uLoad_SetLoadingScreen;
 procedure uLoad_Start_ExtraFE;
 procedure Play_Intro_Video;
 procedure Skip_Intro;
-procedure IsDatabaseInternet;
+procedure Connect_Databases;
 
 var
 
@@ -200,7 +200,7 @@ begin
     uLoad_SetLoadingScreen;
     extrafe.user_login := False;
     extrafe.users_active := -1;
-    IsDatabaseInternet;
+    Connect_Databases;
     Default_Load := True;
   end
   else
@@ -218,20 +218,20 @@ begin
   end;
 end;
 
-procedure IsDatabaseInternet;
+procedure Connect_Databases;
 begin
-//  if uDatabase.Local_Connect then
-//  begin
-//    extrafe.local_database_is_connected := True;
-//    ex_load.Login.Local_Database.Text := 'Connected';
-//    ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-//  end
-//  else
-//  begin
-//    extrafe.local_database_is_connected := False;
-//    ex_load.Login.Local_Database.Text := 'Not Connected';
-//    ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
-//  end;
+  if uDatabase.Local_Connect then
+  begin
+    extrafe.local_database_is_connected := True;
+    ex_load.Login.Local_Database.Text := 'Connected';
+    ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  end
+  else
+  begin
+    extrafe.local_database_is_connected := False;
+    ex_load.Login.Local_Database.Text := 'Not Connected';
+    ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Red;
+  end;
 
   if uWindows_IsConected_ToInternet then
   begin

@@ -79,6 +79,8 @@ function Is_Town_Exists(vWoeid: String): Boolean;
 
 procedure Add_NewTown(vNum: Integer);
 
+procedure Show_Map(vTab_Num: String);
+
 var
   vRESTClient: TRESTClient;
   vRESTRequest: TRESTRequest;
@@ -111,7 +113,8 @@ var
   vi: Integer;
 begin
   vJSONValue := TJSONValue.Create;
-  vJSONValue := uInternet_Files.Get_JSONValue('OpenWeatherMap', 'http://api.geonames.org/searchJSON?name_equals=' + vText + '&username=azrael11');
+  vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.geonames.org/searchJSON?name_equals=' + vText + '&username=azrael11',
+    TRESTRequestMethod.rmGET);
 
   vCount := vJSONValue.GetValue<String>('totalResultsCount');
   vFound_Locations := vCount.ToInteger;
@@ -124,6 +127,20 @@ begin
     vOpenWeatherMap_Find_List[vi].country_code := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].countryCode');
     vOpenWeatherMap_Find_List[vi].text := vJSONValue.GetValue<String>('geonames[' + vi.ToString + '].adminName1');
   end;
+
+  // vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/find?q=' + vText + '&APPID=' + cAuthor_OWM_APPID, TRESTRequestMethod.rmGET);
+  //
+  // vFound_Locations := vJSONValue.GetValue<Integer>('count');
+  //
+  // for vi := 0 to vFound_Locations - 1 do
+  // begin
+  // vOpenWeatherMap_Find_List[vi].woeid := vJSONValue.GetValue<String>('list[' + vi.ToString + '].id');
+  // vOpenWeatherMap_Find_List[vi].city := vJSONValue.GetValue<String>('list[' + vi.ToString + '].name');
+  // vOpenWeatherMap_Find_List[vi].country := vJSONValue.GetValue<String>('list[' + vi.ToString + '].sys.country');
+  // vOpenWeatherMap_Find_List[vi].country_code := vJSONValue.GetValue<String>('list[' + vi.ToString + '].sys.country');
+  // vOpenWeatherMap_Find_List[vi].text := vJSONValue.GetValue<String>('list[' + vi.ToString + '].sys.country');
+  // end;
+
 end;
 
 procedure Show_Locations;
@@ -229,7 +246,7 @@ begin
       Application.ProcessMessages;
     end;
 
-    if addons.weather.Action.OWM.Total_WoeID> 0 then
+    if addons.weather.Action.OWM.Total_WoeID > 0 then
       vWeather.Scene.Arrow_Right.Visible := True;
 
     FreeAndNil(vProgress);
@@ -1888,29 +1905,9 @@ var
   vLat, vLon: String;
   vStart_Time, vEnd_Time: String;
 begin
-  // Get the current day forecast data
-  vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'OpenWeatherMap_RestClient';
-  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/weather?id=' + vWoeid + '&APPID=' + cAuthor_OWM_APPID + '&units=' +
-    addons.weather.Action.OWM.Selected_Unit + '&lang=' + addons.weather.Action.OWM.Language;
-  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
-
-  vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'OpenWeatherMap_Response';
-
-  vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'OpenWeatherMap_Request';
-  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTRequest.Client := vRESTClient;
-  vRESTRequest.Method := TRESTRequestMethod.rmGET;
-  vRESTRequest.Response := vRESTResponse;
-  vRESTRequest.Timeout := 30000;
-
-  vRESTRequest.Execute;
-  vJSONValue := vRESTResponse.JSONValue;
+  { Get the current day forecast data }
+  vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/weather?id=' + vWoeid + '&APPID=' + cAuthor_OWM_APPID +
+    '&units=' + addons.weather.Action.OWM.Selected_Unit + '&lang=' + addons.weather.Action.OWM.Language, TRESTRequestMethod.rmGET);
 
   Result.Current.coord.lon := vJSONValue.GetValue<String>('coord.lon');
   Result.Current.coord.lat := vJSONValue.GetValue<String>('coord.lat');
@@ -1956,29 +1953,9 @@ begin
   FreeAndNil(vJSONValue);
   FreeAndNil(vRESTRequest);
 
-  // Get the 5 days forecast data
-  vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'OpenWeatherMap_RestClient';
-  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/forecast?id=' + vWoeid + '&APPID=' + cAuthor_OWM_APPID + '&units=' +
-    addons.weather.Action.OWM.Selected_Unit + '&lang=' + addons.weather.Action.OWM.Language;
-  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
-
-  vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'OpenWeatherMap_Response';
-
-  vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'OpenWeatherMap_Request';
-  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTRequest.Client := vRESTClient;
-  vRESTRequest.Method := TRESTRequestMethod.rmGET;
-  vRESTRequest.Response := vRESTResponse;
-  vRESTRequest.Timeout := 30000;
-
-  vRESTRequest.Execute;
-  vJSONValue := vRESTResponse.JSONValue;
+  { Get the 5 days forecast data }
+  vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/forecast?id=' + vWoeid + '&APPID=' + cAuthor_OWM_APPID +
+    '&units=' + addons.weather.Action.OWM.Selected_Unit + '&lang=' + addons.weather.Action.OWM.Language, TRESTRequestMethod.rmGET);
 
   Result.Five.cod := vJSONValue.GetValue<String>('cod');
   Result.Five.vmessage := vJSONValue.GetValue<String>('message');
@@ -2028,34 +2005,13 @@ begin
   FreeAndNil(vJSONValue);
   FreeAndNil(vRESTRequest);
 
-  // Get UV forecast Data
+  { Get UV forecast Data }
   vLat := Result.Current.coord.lat;
   vLon := Result.Current.coord.lon;
   vStart_Time := '';
   vEnd_Time := '';
-
-  // Get the Current UV Index forecast data
-  vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'OpenWeatherMap_RestClient';
-  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/uvi?lat=' + vLat + '&lon=' + vLon + '&APPID=' + cAuthor_OWM_APPID;
-  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
-
-  vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'OpenWeatherMap_Response';
-
-  vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'OpenWeatherMap_Request';
-  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTRequest.Client := vRESTClient;
-  vRESTRequest.Method := TRESTRequestMethod.rmGET;
-  vRESTRequest.Response := vRESTResponse;
-  vRESTRequest.Timeout := 30000;
-
-  vRESTRequest.Execute;
-  vJSONValue := vRESTResponse.JSONValue;
+  vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/uvi?lat=' + vLat + '&lon=' + vLon + '&APPID=' +
+    cAuthor_OWM_APPID, TRESTRequestMethod.rmGET);
 
   Result.UV.Current.lat := vJSONValue.GetValue<String>('lat');
   Result.UV.Current.lon := vJSONValue.GetValue<String>('lon');
@@ -2066,28 +2022,9 @@ begin
   FreeAndNil(vJSONValue);
   FreeAndNil(vRESTRequest);
 
-  // Get the 8 days ahead UV Index forecast data
-  vRESTClient := TRESTClient.Create('');
-  vRESTClient.Name := 'OpenWeatherMap_RestClient';
-  vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/uvi/forecast?lat=' + vLat + '&lon=' + vLon + '&APPID=' + cAuthor_OWM_APPID;
-  vRESTClient.FallbackCharsetEncoding := 'UTF-8';
-
-  vRESTResponse := TRESTResponse.Create(vRESTClient);
-  vRESTResponse.Name := 'OpenWeatherMap_Response';
-
-  vRESTRequest := TRESTRequest.Create(vRESTClient);
-  vRESTRequest.Name := 'OpenWeatherMap_Request';
-  vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
-  vRESTRequest.Client := vRESTClient;
-  vRESTRequest.Method := TRESTRequestMethod.rmGET;
-  vRESTRequest.Response := vRESTResponse;
-  vRESTRequest.Timeout := 30000;
-
-  vRESTRequest.Execute;
-  vJSONValue := vRESTResponse.JSONValue;
+  { Get the 8 days ahead UV Index forecast data }
+  vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/uvi/forecast?lat=' + vLat + '&lon=' + vLon + '&APPID=' +
+    cAuthor_OWM_APPID, TRESTRequestMethod.rmGET);
 
   for vi := 0 to 7 do
   begin
@@ -2107,28 +2044,8 @@ begin
   FreeAndNil(vRESTRequest);
 
   // Get the Historical UV Index forecast data (dates back = ?)
-  // vRESTClient := TRESTClient.Create('');
-  // vRESTClient.Name := 'OpenWeatherMap_RestClient';
-  // vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  // vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
-  // vRESTClient.BaseURL := 'http://api.openweathermap.org/data/2.5/uvi/history?lat=' + vLat + '&lon=' + vLon + '&start=' + vStart_Time + '&end=' + vEnd_Time +
-  // '&APPID=' + cAuthor_OWM_APPID;
-  // vRESTClient.FallbackCharsetEncoding := 'UTF-8';
-  //
-  // vRESTResponse := TRESTResponse.Create(vRESTClient);
-  // vRESTResponse.Name := 'OpenWeatherMap_Response';
-  //
-  // vRESTRequest := TRESTRequest.Create(vRESTClient);
-  // vRESTRequest.Name := 'OpenWeatherMap_Request';
-  // vRESTRequest.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
-  // vRESTRequest.AcceptCharset := 'UTF-8, *;q=0.8';
-  // vRESTRequest.Client := vRESTClient;
-  // vRESTRequest.Method := TRESTRequestMethod.rmGET;
-  // vRESTRequest.Response := vRESTResponse;
-  // vRESTRequest.Timeout := 30000;
-  //
-  // vRESTRequest.Execute;
-  // vJSONValue := vRESTResponse.JSONValue;
+  // vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/uvi/history?lat=' + vLat + '&lon=' + vLon + '&start=' +
+  // vStart_Time + '&end=' + vEnd_Time + '&APPID=' + cAuthor_OWM_APPID, TRESTRequestMethod.rmGET);
   //
   // for vi := 0 to 10 do
   // begin
@@ -2269,6 +2186,12 @@ begin
     89 .. 102:
       Result := 0.2;
   end;
+end;
+
+procedure Show_Map(vTab_Num: String);
+begin
+  uWeather_Actions.Show_Map('openweathermap', addons.weather.Action.OWM.Data_Town[vTab_Num.ToInteger].Current.coord.lat,
+    addons.weather.Action.OWM.Data_Town[vTab_Num.ToInteger].Current.coord.lon);
 end;
 
 end.

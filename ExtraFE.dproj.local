@@ -53,8 +53,8 @@
     <Transaction>2018/02/12 15:48:27.000.742,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\sql_commands.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\uActive_User.pas</Transaction>
     <Transaction>2018/02/12 15:48:47.000.597,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\uActive_User.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\sql_commands.pas</Transaction>
     <Transaction>2018/02/18 09:42:45.000.333,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
-    <Transaction>2018/02/18 09:43:23.000.473,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Iconsets.pas</Transaction>
     <Transaction>2018/02/18 09:43:23.000.493,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Options.pas</Transaction>
+    <Transaction>2018/02/18 09:43:23.000.473,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Iconsets.pas</Transaction>
     <Transaction>2018/02/24 12:13:26.000.442,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/24 12:13:43.000.555,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/24 12:13:43.000.555,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.fmx</Transaction>
@@ -388,6 +388,7 @@
     <Transaction>2019/06/23 08:12:59.000.829,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\towns\uWeather_Config_Towns_Refresh.pas=</Transaction>
     <Transaction>2019/07/07 11:49:30.000.767,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/07/07 11:49:48.000.092,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_OpenWeatherMap_Config.pas</Transaction>
+    <Transaction>2019/08/21 07:44:41.000.883,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\uWeather_Forcast.pas=</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android=""/>
@@ -482,7 +483,6 @@
     <File Path="addons\weather\uWeather_AllTypes.pas"/>
     <File Path="addons\weather\uWeather_Config.pas"/>
     <File Path="addons\weather\uWeather_Convert.pas"/>
-    <File Path="addons\weather\uWeather_Forcast.pas"/>
     <File Path="addons\weather\uWeather_Keyboard.pas"/>
     <File Path="addons\weather\uWeather_MenuActions.pas"/>
     <File Path="addons\weather\uWeather_Mouse.pas"/>

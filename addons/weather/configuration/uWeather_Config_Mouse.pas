@@ -130,6 +130,14 @@ begin
           uWeather_Config_Towns_Add.Load;
           TText(Sender).Cursor := crDefault;
         end
+        else if TText(Sender).Name = 'A_W_Config_Towns_Lock' then
+          uWeather_Config_Towns_Edit(not addons.weather.Config.Edit_Lock)
+        else if TImage(Sender).Name = 'A_W_Config_Towns_PosUp' then
+          uWeather_Providers_Yahoo_Config.Towns_Go_To('up')
+        else if TImage(Sender).Name = 'A_W_Config_Towns_PosDown' then
+          uWeather_Providers_Yahoo_Config.Towns_Go_To('down')
+        else if TImage(Sender).Name = 'A_W_Config_Towns_Delete' then
+          uWeather_Providers_Yahoo_Config.Towns_Delete_Question
         else if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Link' then
           uSnippets.Open_Link_To_Browser(TText(Sender).Text)
         else if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Lock' then

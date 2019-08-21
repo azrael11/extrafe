@@ -93,7 +93,7 @@ begin
     else
     begin
       if mAddonName = 'weather' then
-        uWeather_Actions_ReturnToMain(vNum)
+        uWeather_Actions.ReturnToMain(vNum)
       else if mAddonName = 'play' then
         uPlay_Actions_ReturnToMain(vNum)
       else

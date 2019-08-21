@@ -15,6 +15,7 @@ uses
   FMX.Grid,
   FMX.ImgList,
   FMX.Controls,
+  FMX.WebBrowser,
   FMX.Graphics,
   FMX.Types,
   FMX.ListBox,
@@ -932,6 +933,18 @@ type
   end;
 
 type
+  TADDON_WEATHER_MAP = record
+    Ani: TFloatAnimation;
+    Rect: TRadiantRectangle;
+    Browser: TWebBrowser;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Info_Line: TText;
+    Map_Url: String;
+    procedure Ani_On_Finish(Sender: TObject);
+  end;
+
+type
   TWEATHER_SCENE = record
     weather: TImage;
     Weather_Ani: TFloatAnimation;
@@ -945,6 +958,7 @@ type
     UpLine: TImage;
     MiddleLine: TImage;
     DownLine: TImage;
+    Map: TADDON_WEATHER_MAP;
     Arrow_Left: TText;
     Arrow_Left_Glow: TGlowEffect;
     Arrow_Right: TText;
@@ -1180,6 +1194,18 @@ procedure TADDON_WEATHER_MAINTIMER.OnTimer(Sender: TObject);
 begin
   if TTimer(Sender).Name = 'A_W_Effect_Timer' then
     uWeather_Sounds_Refresh_Effect;
+end;
+
+{ TADDON_WEATHER_MAP }
+
+procedure TADDON_WEATHER_MAP.Ani_On_Finish(Sender: TObject);
+begin
+  vWeather.Scene.Map.Browser := TWebBrowser.Create(vWeather.Scene.Map.Rect);
+  vWeather.Scene.Map.Browser.Name := 'A_W_Map_Browser';
+  vWeather.Scene.Map.Browser.Parent:= vWeather.Scene.Map.Rect;
+  vWeather.Scene.Map.Browser.SetBounds(15, 50, vWeather.Scene.Map.Rect.Width - 30, vWeather.Scene.Map.Rect.Height - 65);
+  vWeather.Scene.Map.Browser.URL := vWeather.Scene.Map.Map_Url;
+  vWeather.Scene.Map.Browser.Visible := True;
 end;
 
 initialization
