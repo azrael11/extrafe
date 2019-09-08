@@ -11,7 +11,8 @@ uses
   FMX.Forms,
   FMX.Edit,
   FMX.Layouts,
-  FmxPasLibVlcPlayerUnit;
+  FmxPasLibVlcPlayerUnit,
+  BASS;
 
 type
   TLOADING_BUTTON = class(TObject)
@@ -81,6 +82,7 @@ uses
 
 procedure TLOADING_BUTTON.OnMouseClick(Sender: TObject);
 begin
+  BASS_ChannelPlay(sound.str_fx.general[0], false);
   if TButton(Sender).Name = 'Loading_Login_Login' then
   begin
     TButton(Sender).Cursor := crHourGlass;
@@ -132,13 +134,18 @@ begin
 end;
 
 { TLOADING_EDIT }
-
 procedure TLOADING_EDIT.OnChange(Sender: TObject);
 begin
 
 end;
 
+
 procedure TLOADING_EDIT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TLOADING_EDIT.OnMouseEnter(Sender: TObject);
 begin
   if TEdit(Sender).Name = 'Loading_Register_User_V' then
     uLoad_Register.Enable_Help(0)
@@ -154,11 +161,6 @@ begin
     uLoad_Register.Enable_Help(7)
 end;
 
-procedure TLOADING_EDIT.OnMouseEnter(Sender: TObject);
-begin
-
-end;
-
 procedure TLOADING_EDIT.OnMouseLeave(Sender: TObject);
 begin
 
@@ -166,6 +168,7 @@ end;
 
 procedure TLOADING_EDIT.OnTyping(Sender: TObject);
 begin
+  TEdit(Sender).Text := TrimRight(TEdit(Sender).Text);
   if TEdit(Sender).Name = 'Loading_Login_User_V' then
   begin
     if ex_load.Login.Warning.Visible then
@@ -200,7 +203,10 @@ end;
 procedure TLOADING_TEXT.OnMouseClick(Sender: TObject);
 begin
   if TText(Sender).Name = 'Loading_Login_Register' then
-    uLoad_SetAll_Register
+  begin
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
+    uLoad_SetAll_Register;
+  end
   else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
     uLoad_SetAll_Forget_Password
   else if TText(Sender).Name = 'Loading_Login_Pass_Show' then

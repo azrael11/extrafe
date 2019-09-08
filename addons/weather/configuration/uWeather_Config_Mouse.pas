@@ -115,7 +115,7 @@ begin
           uWeather_Config_Towns_Add.FindTown(vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text);
         TText(Sender).Cursor := crDefault;
       end;
-      BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+      BASS_ChannelPlay(sound.str_fx.general[0], False);
     end;
   end
   else if addons.weather.Action.Provider = 'openweathermap' then
@@ -150,7 +150,7 @@ begin
           uWeather_Config_Towns_Add.FindTown(vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text);
         TText(Sender).Cursor := crDefault;
       end;
-      BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+      BASS_ChannelPlay(sound.str_fx.general[0], False);
     end;
   end;
 end;
@@ -259,7 +259,7 @@ begin
       else if TButton(Sender).Name = 'A_W_Providers_Yahoo_Question_Delete_Town_Cancel' then
         uWeather_Providers_Yahoo_Config.Towns_Delete_Cancel;
     end;
-    BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
   end
   else if addons.weather.Action.Provider = 'openweathermap' then
   begin
@@ -385,7 +385,7 @@ begin
   begin
     if TImage(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Mini_Preview_Image_' + TImage(Sender).TagString + '_' + TImage(Sender).Tag.ToString then
       uWeather_Providers_Yahoo_Config.Select_Iconset(TImage(Sender).TagString.ToInteger);
-    BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
   end
   else if addons.weather.Action.Provider = 'openweathermap' then
   begin

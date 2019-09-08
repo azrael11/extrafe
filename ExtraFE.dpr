@@ -156,14 +156,19 @@ uses
   uPlay_Sounds in 'addons\play\uPlay_Sounds.pas',
   uSnippet_Search in 'code\_snippets\uSnippet_Search.pas',
   uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas',
-  uMain_Sounds in 'main\uMain_Sounds.pas',
   uSoundplayer_Playlist_Const in 'addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas',
   uSoundplayer_Scrapers_Lastfm in 'addons\soundplayer\scrapers\uSoundplayer_Scrapers_Lastfm.pas',
   uSoundplayer_Scrapers_Flicker in 'addons\soundplayer\scrapers\uSoundplayer_Scrapers_Flicker.pas',
   uSoundplayer_Scrapers_AZLyrics in 'addons\soundplayer\scrapers\uSoundplayer_Scrapers_AZLyrics.pas',
   uWeather_Config_Mouse in 'addons\weather\configuration\uWeather_Config_Mouse.pas',
   uWeather_Providers_Yahoo_Config in 'addons\weather\providers\uWeather_Providers_Yahoo_Config.pas',
-  uWeather_Providers_OpenWeatherMap_Config in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap_Config.pas';
+  uWeather_Providers_OpenWeatherMap_Config in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap_Config.pas',
+  uMain_Config_Emulation_Consoles_Scripts_Mouse in 'main\configuration\emulation\console_scritps\uMain_Config_Emulation_Consoles_Scripts_Mouse.pas',
+  uMain_Config_Emulation_Consoles_Scripts_Nes_Install in 'main\configuration\emulation\console_scritps\nes\uMain_Config_Emulation_Consoles_Scripts_Nes_Install.pas',
+  uEmu_Consoles_Nes_AllTypes in 'emu\consoles\nes\uEmu_Consoles_Nes_AllTypes.pas',
+  uEmu_Consoles_Snes_AllTypes in 'emu\consoles\snes\uEmu_Consoles_Snes_AllTypes.pas',
+  uEmu_Consoles_MasterSystem_AllTypes in 'emu\consoles\master_system\uEmu_Consoles_MasterSystem_AllTypes.pas',
+  uEmu_Consoles_MegaDrive_AllTypes in 'emu\consoles\mega_drive\uEmu_Consoles_MegaDrive_AllTypes.pas';
 
 {$R *.res}
 

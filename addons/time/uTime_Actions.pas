@@ -6,10 +6,10 @@ uses
   System.Classes,
   System.SysUtils;
 
-procedure uTime_Actions_Load;
-procedure uTime_Actions_Free;
+procedure Load;
+procedure Free;
 
-procedure uTime_Actions_ShowTab(vTab: Integer);
+procedure ShowTab(vTab: Integer);
 
 implementation
 
@@ -21,13 +21,13 @@ uses
   uTime_Time_SetAll,
   uTime_Sounds;
 
-procedure uTime_Actions_Load;
+procedure Load;
 begin
   uTime_Sounds_Load;
   uTime_SetAll_Set;
 end;
 
-procedure uTime_Actions_ShowTab(vTab: Integer);
+procedure ShowTab(vTab: Integer);
 var
   vi: Integer;
 begin
@@ -46,7 +46,7 @@ begin
   vTime.Tab_Selected := vTab;
 end;
 
-procedure uTime_Actions_Free;
+procedure Free;
 var
   vi: Integer;
 begin

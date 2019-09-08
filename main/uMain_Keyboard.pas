@@ -42,9 +42,9 @@ begin
     else if UpperCase(vKey) = 'S' then
       uMain_Config_ShowHide(extrafe.prog.State)
     else if UpperCase(vKey) = '1' then
-      uMain_Actions_ShowHide_Addons(1000)
+      uMain_Actions.ShowHide_Addon(1000, extrafe.prog.State,'time')
     else if UpperCase(vKey) = '2' then
-      uMain_Actions_ShowHide_Addons(1001)
+      uMain_Actions.ShowHide_Addon(1001, extrafe.prog.State,'calendar')
   end
   else if  ContainsText(extrafe.prog.State, 'main_config') then
     uMain_Config_Keyboard.Set_Key(vKey);

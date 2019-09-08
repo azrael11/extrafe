@@ -51,7 +51,7 @@ begin
   emulation.Selection_Ani.Enabled := True;
   vPlay.Main_Ani.Start;
   mainScene.Footer.Back_Ani.Start;
-  uMain_Actions_All_Icons_Active(vIconsNum);
+  uMain_Actions.All_Icons_Active(vIconsNum);
   extrafe.prog.State := 'main';
 end;
 

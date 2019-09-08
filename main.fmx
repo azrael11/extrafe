@@ -36,4 +36,13 @@ object Main_Form: TMain_Form
     Left = 64
     Top = 8
   end
+  object FDGUIxWaitCursor: TFDGUIxWaitCursor
+    Provider = 'FMX'
+    Left = 152
+    Top = 8
+  end
+  object FDTransaction: TFDTransaction
+    Left = 152
+    Top = 72
+  end
 end

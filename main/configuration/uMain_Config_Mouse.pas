@@ -99,14 +99,7 @@ uses
 
 procedure TMAIN_CONFIG_IMAGE.OnMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'main_config_profile_user' then
-  begin
-    if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
-      uMain_Config_Profile_User.Genre('1')
-    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Female' then
-      uMain_Config_Profile_User.Genre('0')
-  end
-  else if extrafe.prog.State = 'main_config_profile_avatar' then
+  if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
     if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
       uMain_Config_Profile_User.Avatar_Page(vAvatar.Page - 1)
@@ -118,16 +111,18 @@ begin
   else if extrafe.prog.State = 'main_config_addons' then
   begin
     if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
-      uMain_Config_Addons_ShowInfo(TImage(Sender).Tag)
+      uMain_Config_Addons.ShowInfo(TImage(Sender).Tag)
     else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
-      uMain_Config_Addons_Actions_LeftArrow
+      uMain_Config_Addons_Actions.LeftArrow
     else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
-      uMain_Config_Addons_Actions_RightArrow
+      uMain_Config_Addons_Actions.RightArrow;
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
   end
   else if extrafe.prog.State = 'main_config_emulators' then
   begin
     if TImage(Sender).Name = 'Main_Config_Emulators_Image_' + IntToStr(TImage(Sender).Tag) then
-      uMain_Config_Emulators_ShowCategory(TImage(Sender).Tag)
+      uMain_Config_Emulators.ShowCategory(TImage(Sender).Tag);
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
@@ -149,14 +144,7 @@ end;
 
 procedure TMAIN_CONFIG_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-  if extrafe.prog.State = 'main_config_profile_user' then
-  begin
-    if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
-      mainScene.Config.Main.R.Profile.User.Gender_Male_Glow.Enabled := True
-    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Female' then
-      mainScene.Config.Main.R.Profile.User.Gender_Female_Glow.Enabled := True
-  end
-  else if extrafe.prog.State = 'main_config_profile_avatar' then
+  if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
     if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
       mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Left_Glow.Enabled := True
@@ -171,27 +159,46 @@ begin
   else if extrafe.prog.State = 'main_config_emulators' then
   begin
     if TImage(Sender).Name = 'Main_Config_Emulators_Image_' + IntToStr(TImage(Sender).Tag) then
-      mainScene.Config.Main.R.Emulators.Images_Glow[TImage(Sender).Tag].Enabled := True
+    begin
+      mainScene.Config.Main.R.Emulators.Images_Glow[TImage(Sender).Tag].Enabled := True;
+      TImage(Sender).Cursor := crHandPoint;
+    end
     else if (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo') or (TImage(Sender).Name = 'Main_Config_Emulators_Arcade_MAME_Logo_Check') then
     begin
       if mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Gray.Enabled = False then
-        mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Glow.Enabled := True
+      begin
+        mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Glow.Enabled := True;
+        TImage(Sender).Cursor := crHandPoint;
+      end;
     end
   end
   else if extrafe.prog.State = 'main_config_addons' then
   begin
     if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
-      mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True
+    begin
+      mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True;
+      TImage(Sender).Cursor := crHandPoint;
+    end
     else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
     begin
       if mainScene.Config.Main.R.Addons.Arrow_Left_Gray.Enabled = False then
+      begin
         mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := True;
+        TImage(Sender).Cursor := crHandPoint;
+      end
+      else
+        TImage(Sender).Cursor := crDefault;
     end
     else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
     begin
       if mainScene.Config.Main.R.Addons.Arrow_Right_Gray.Enabled = False then
+      begin
         mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := True;
-    end
+        TImage(Sender).Cursor := crHandPoint;
+      end
+      else
+        TImage(Sender).Cursor := crDefault;
+    end;
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
@@ -205,20 +212,7 @@ end;
 
 procedure TMAIN_CONFIG_IMAGE.OnMouseLeave(Sender: TObject);
 begin
-  if extrafe.prog.State = 'main_config_profile_user' then
-  begin
-    if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
-    begin
-      if vTemp_Personal.Genre <> '1' then
-        mainScene.Config.Main.R.Profile.User.Gender_Male_Glow.Enabled := False
-    end
-    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Female' then
-    begin
-      if vTemp_Personal.Genre <> '0' then
-        mainScene.Config.Main.R.Profile.User.Gender_Female_Glow.Enabled := False
-    end
-  end
-  else if extrafe.prog.State = 'main_config_profile_avatar' then
+  if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
     if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
       mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Left_Glow.Enabled := False
@@ -275,6 +269,10 @@ begin
       uMain_Config_Profile_User.Avatar
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
       uMain_Config_Profile_User.Password
+    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
+      uMain_Config_Profile_User.Genre('1')
+    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Female' then
+      uMain_Config_Profile_User.Genre('0');
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
@@ -285,6 +283,7 @@ begin
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
       uSnippets.Open_Link_To_Browser(TText(Sender).Text);
   end;
+  BASS_ChannelPlay(sound.str_fx.general[0], False);
 end;
 
 procedure TMAIN_CONFIG_TEXT.OnMouseEnter(Sender: TObject);
@@ -295,6 +294,16 @@ begin
       uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
       uSnippets.HyperLink_OnMouseOver(TText(Sender))
+    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
+    begin
+      TText(Sender).Cursor := crHandPoint;
+      mainScene.Config.Main.R.Profile.User.Gender_Male_Glow.Enabled := True;
+    end
+    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Female' then
+    begin
+      TText(Sender).Cursor := crHandPoint;
+      mainScene.Config.Main.R.Profile.User.Gender_Female_Glow.Enabled := True;
+    end;
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
@@ -315,6 +324,16 @@ begin
       uSnippets.HyperLink_OnMouseLeave(TImage(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
       uSnippets.HyperLink_OnMouseLeave(TImage(Sender))
+    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
+    begin
+      if vTemp_Personal.Genre <> True then
+        mainScene.Config.Main.R.Profile.User.Gender_Male_Glow.Enabled := False
+    end
+    else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Female' then
+    begin
+      if vTemp_Personal.Genre <> False then
+        mainScene.Config.Main.R.Profile.User.Gender_Female_Glow.Enabled := False
+    end
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
@@ -372,11 +391,10 @@ begin
   begin
     if TButton(Sender).Name = 'Main_Config_Button_' + IntToStr(TButton(Sender).Tag) then
       uMain_Config_ShowPanel(TButton(Sender).Tag)
-
     else if extrafe.prog.State = 'main_config_emulators' then
     begin
       if TButton(Sender).TagFloat = 1000 then
-        uMain_Config_Emulators_Start_Emu_Wizard(TButton(Sender))
+        uMain_Config_Emulators.Start_Emu_Wizard(TButton(Sender))
     end
     else if extrafe.prog.State = 'main_config_emulators' then
     begin
@@ -413,9 +431,9 @@ begin
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Cancel' then
         uMain_Config_Addons_Actions_Deactivate_Weather_FreeMessage
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_OK' then
-        uMain_Config_Addons_Actions_Activate_Weather_Action
+        uMain_Config_Addons_Actions.Activate_Weather_Action
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_Cancel' then
-        uMain_Config_Addons_Actions_Activate_Weather_FreeMessage
+        uMain_Config_Addons_Actions.Activate_Weather_FreeMessage
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_OK' then
         uMain_Config_Addons_Actions_Deactivate_Soundplayer_Action
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Cancel' then
@@ -426,7 +444,7 @@ begin
         uMain_Config_Addons_Actions_Activate_Soundplayer_FreeMessage
     end;
   end;
-  BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+  BASS_ChannelPlay(sound.str_fx.general[0], False);
 end;
 
 procedure TMAIN_CONFIG_BUTTON.OnMouseEnter(Sender: TObject);

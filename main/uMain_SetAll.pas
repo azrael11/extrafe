@@ -151,16 +151,55 @@ begin
   mainScene.Header.Avatar_Glow.Softness := 0.4;
   mainScene.Header.Avatar_Glow.Enabled := False;
 
-  for vi := 0 to addons.Total_Num do
+  for vi := 0 to user_Active_Local.ADDONS.Active do
   begin
-    mainScene.Header.Addon_Icons[vi] := TImage.Create(mainScene.Header.Back);
+    mainScene.Header.Addon_Icons[vi] := TText.Create(mainScene.Header.Back);
     mainScene.Header.Addon_Icons[vi].Name := 'Main_Header_Addon_Icon_' + IntToStr(vi);
     mainScene.Header.Addon_Icons[vi].Parent := mainScene.Header.Back;
     mainScene.Header.Addon_Icons[vi].SetBounds(50 + (vi * 55), mainScene.Header.Back.Height - 60, 50, 50);
-    mainScene.Header.Addon_Icons[vi].WrapMode := TImageWrapMode.Fit;
-    mainScene.Header.Addon_Icons[vi].OnClick := ex_main.input.mouse.Image.OnMouseClick;
-    mainScene.Header.Addon_Icons[vi].OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;
-    mainScene.Header.Addon_Icons[vi].OnMouseLeave := ex_main.input.mouse.Image.OnMouseLeave;
+    mainScene.Header.Addon_Icons[vi].Font.Family := 'IcoMoon-Free';
+    mainScene.Header.Addon_Icons[vi].Font.Size := 48;
+    mainScene.Header.Addon_Icons[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    if vi = 0 then
+    begin
+      mainScene.Header.Addon_Icons[vi].Text := #$e94e;
+      mainScene.Header.Addon_Icons[vi].TagString := 'time';
+    end
+    else if vi = 1 then
+    begin
+      mainScene.Header.Addon_Icons[vi].Text := #$e953;
+      mainScene.Header.Addon_Icons[vi].TagString := 'calendar';
+    end
+    else if vi > 1 then
+    begin
+      if user_Active_Local.ADDONS.Weather then
+      begin
+        if vi = user_Active_Local.ADDONS.Weather_D.Menu_Position then
+        begin
+          mainScene.Header.Addon_Icons[vi].Text := #$e9c1;
+          mainScene.Header.Addon_Icons[vi].TagString := 'weather';
+        end;
+      end
+      // else if user_Active_Local.ADDONS.Soundplayer then
+      // begin
+      // if vi= user_Active_Local.ADDONS.Soundplayer_D.Menu_Position then
+      // begin
+      // mainScene.Header.Addon_Icons[vi].Text := #$ea15;
+      // mainScene.Header.Addon_Icons[vi].TagString := 'soundplayer';
+      // end;
+      // end
+      // else if user_Active_Local.ADDONS.Azplay then
+      // begin
+      // if vi= user_Active_Local.ADDONS.Azplay_D.Menu_Position then
+      // begin
+      // mainScene.Header.Addon_Icons[vi].Text := #$e915;
+      // mainScene.Header.Addon_Icons[vi].TagString := 'azplay';
+      // end;
+      // end
+    end;
+    mainScene.Header.Addon_Icons[vi].OnClick := ex_main.input.mouse.Text.OnMouseClick;
+    mainScene.Header.Addon_Icons[vi].OnMouseEnter := ex_main.input.mouse.Text.OnMouseEnter;
+    mainScene.Header.Addon_Icons[vi].OnMouseLeave := ex_main.input.mouse.Text.OnMouseLeave;
     mainScene.Header.Addon_Icons[vi].Tag := vi;
     mainScene.Header.Addon_Icons[vi].Visible := True;
 
@@ -178,22 +217,7 @@ begin
     mainScene.Header.Addon_Icons_GaussianBlur[vi].BlurAmount := 0.2;
     mainScene.Header.Addon_Icons_GaussianBlur[vi].Enabled := False;
   end;
-
-  // Addons Default
-  addons.Active_Now_Num := -1;
-  // time
-  mainScene.Header.Addon_Icons[0].Bitmap.LoadFromFile(addons.time.Path.Icon + 'addons_time_icon.png');
-  // calendar
-  mainScene.Header.Addon_Icons[1].Bitmap.LoadFromFile(addons.calendar.Path.Icon + 'addons_calendar_icon.png');
-  // Weather
-  if addons.weather.Active then
-    mainScene.Header.Addon_Icons[addons.weather.Main_Menu_Position].Bitmap.LoadFromFile(addons.weather.Path.Icon + 'addons_weather_icon.png');
-  // Soundplayer
-  if addons.soundplayer.Active then
-    mainScene.Header.Addon_Icons[addons.soundplayer.Main_Menu_Position].Bitmap.LoadFromFile(addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png');
-  // Play
-  if addons.play.Active then
-    mainScene.Header.Addon_Icons[addons.play.Main_Menu_Position].Bitmap.LoadFromFile(addons.play.Path.Icon + 'addons_play_icon.png');
+  ADDONS.Active_Now_Num := -1;
 
   // Footer
   mainScene.Footer.Back := TImage.Create(mainScene.main.Down_Level);
@@ -254,7 +278,7 @@ begin
   mainScene.Footer.Settings.Name := 'Main_Footer_Settings';
   mainScene.Footer.Settings.Parent := mainScene.Footer.Back;
   mainScene.Footer.Settings.SetBounds(mainScene.Footer.Back.Width - 100, (mainScene.Footer.Back.Height / 2) - 40, 80, 80);
-  mainScene.Footer.Settings.Bitmap.LoadFromFile(ex_main.Paths.Images + 'settings_blue.png');
+  mainScene.Footer.Settings.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
   mainScene.Footer.Settings.WrapMode := TImageWrapMode.Fit;
   mainScene.Footer.Settings.OnClick := ex_main.input.mouse.Image.OnMouseClick;
   mainScene.Footer.Settings.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;
@@ -357,7 +381,7 @@ begin
   mainScene.Selection.Blur.BlurAmount := 0.5;
   mainScene.Selection.Blur.Enabled := False;
 
-  uMain_Emulation_Create_Selection_Control;
+  uMain_Emulation.Create_Selection_Control;
 
 end;
 

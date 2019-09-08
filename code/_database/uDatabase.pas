@@ -124,7 +124,6 @@ end;
 
 procedure Local_Create;
 begin
-
   ExtraFE_DB_Local := TFDConnection.Create(main.Main_Form);
   ExtraFE_DB_Local.Name := 'ExtraFE_Local_Database';
   with ExtraFE_DB_Local do
@@ -132,11 +131,8 @@ begin
     Close;
     with Params do
     begin
-      Add('DriverID=IBLITE');
-      Add('Server=localhost');
-      Add('Database='+ extrafe.prog.Path + 'data\database\EXTRAFE.IB');
-      Add('User_Name=azrael11');
-      Add('Password=arcazrael11');
+      Add('DriverID=SQLITE');
+      Add('Database='+ extrafe.prog.Path + 'data\database\EXTRAFE.DB');
     end;
     Open;
   end;
@@ -146,7 +142,7 @@ end;
 function Local_Connect: Boolean;
 begin
   Result := False;
-  ExtraFE_DB_Local.Connected := True;
+   ExtraFE_DB_Local.Connected := True;
 
   if ExtraFE_DB_Local.Connected then
     Result := True;
@@ -154,6 +150,7 @@ begin
   ExtraFE_Query_Local := TFDQuery.Create(main.Main_Form);
   ExtraFE_Query_Local.Name := 'ExtraFE_Local_Query';
   ExtraFE_Query_Local.Connection := ExtraFE_DB_Local;
+//  ExtraFE_Query_Local.Transaction:= Main_Form.FDTransaction;
   ExtraFE_Query_Local.Active := False;
 
   ExtraFE_FDGUIxWaitCursor:= TFDGUIxWaitCursor.Create(loading.Loading_Form);
@@ -167,7 +164,6 @@ begin
 
   ExtraFE_MemTable_JSON := TFDStanStorageJSONLink.Create(main.Main_Form);
   ExtraFE_MemTable_JSON.Name := 'ExtraFE_Local_JSON_Storage_Link';
-
 end;
 
 function Local_Disconnect: Boolean;

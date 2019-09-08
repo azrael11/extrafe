@@ -20,6 +20,7 @@ uses
   FMX.Layouts,
   FMX.Controls,
   FMX.Listbox,
+  FMX.ILLed,
   ALFMXObjects,
   IdHTTP,
   IdComponent,
@@ -72,7 +73,6 @@ type
     Settings: TMAIN_SETTINGS;
     Input: TMAIN_INPUT;
     Config: TMAIN_CONFIG;
-    Sounds: TMAIN_SOUNDS;
   end;
 
   /// /////////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ type
     Minimize_Grey: TMonochromeEffect;
     Avatar: TImage;
     Avatar_Glow: TGlowEffect;
-    Addon_Icons: array [0 .. 9] of TImage;
+    Addon_Icons: array [0 .. 9] of TText;
     Addon_Icons_Glow: array [0 .. 9] of TGlowEffect;
     Addon_Icons_GaussianBlur: array [0 .. 9] of TGaussianBlurEffect;
   end;
@@ -216,15 +216,17 @@ type
     Surname_V: TEdit;
     Country: TImage;
     Country_Name: TLabel;
-    Email: TImage;
+    Email: TText;
     Email_Dir: TText;
-    Gender_Male: TImage;
+    Gender_Male: TText;
     Gender_Male_Glow: TGlowEffect;
-    Gender_Male_Grey: TMonochromeEffect;
-    Gender_Female: TImage;
+    Gender_Female: TText;
     Gender_Female_Glow: TGlowEffect;
-    Gender_Female_Grey: TMonochromeEffect;
     Apply_Changes: TButton;
+    Status: TGroupBox;
+    Active_Led: TILLed;
+    Active_Text: TText;
+    Last_Active_Online: TText;
     Created: TText;
     Avatar: TMAIN_CONFIG_PROFILE_USER_AVATAR;
     Pass: TMAIN_CONFIG_PROFILE_USER_PASSWORD;
@@ -236,30 +238,40 @@ type
   end;
 
 type
+  TCONFIG_PROFILE_MACHINE_OS = record
+    Box: TGroupBox;
+    Info: TLabel;
+    Info_V: TLabel;
+    Architecture: TLabel;
+    Architecture_V: TLabel;
+    VPlatform: TLabel;
+    VPlatform_V: TLabel;
+    Operating_System: TLabel;
+    Operating_System_V: TLabel;
+    Major: TLabel;
+    Major_V: TLabel;
+    Minor: TLabel;
+    Minor_V: TLabel;
+    Build: TLabel;
+    Build_V: TLabel;
+  end;
+
+type
+  TCONFIG_PROFILE_MACHINE_INTERNET = record
+    Box: TGroupBox;
+    Internet: TLabel;
+    Internet_V: TLabel;
+    Local_IP: TLabel;
+    Local_IP_V: TLabel;
+    Public_IP: TLabel;
+    Public_IP_V: TLabel;
+  end;
+
+type
   TMAIN_CONFIG_PROFILE_MACHINE = record
     Panel: TPanel;
-    Computer: TGroupBox;
-    Computer_Info: TLabel;
-    Computer_Info_V: TLabel;
-    Computer_Architecture: TLabel;
-    Computer_Architecture_V: TLabel;
-    Computer_Platform: TLabel;
-    Computer_Platform_V: TLabel;
-    Computer_Operating_System: TLabel;
-    Computer_Operating_System_V: TLabel;
-    Computer_Major: TLabel;
-    Computer_Major_V: TLabel;
-    Computer_Minor: TLabel;
-    Computer_Minor_V: TLabel;
-    Computer_Build: TLabel;
-    Computer_Build_V: TLabel;
-    Interner: TGroupBox;
-    Interner_Internet: TLabel;
-    Interner_Internet_V: TLabel;
-    Interner_Local_IP: TLabel;
-    Interner_Local_IP_V: TLabel;
-    Interner_Public_IP: TLabel;
-    Interner_Public_IP_V: TLabel;
+    OS : TCONFIG_PROFILE_MACHINE_OS;
+    Net: TCONFIG_PROFILE_MACHINE_INTERNET;
   end;
 
 type
@@ -313,6 +325,7 @@ type
     Logo_Check: TImage;
     Info: TALText;
     Action: TButton;
+    Add_New: TButton;
   end;
 
 type

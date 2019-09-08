@@ -26,14 +26,22 @@ procedure HideShow_Video_Scene(vShow: Boolean);
 procedure Create_Image_Scene;
 procedure HideShow_Image_Scene(vShow: Boolean);
 
+procedure Get_Set_Mame_Data;
+procedure Set_Mame_Data;
+
 implementation
 
 uses
+  uDatabase,
+  uDatabase_SqlCommands,
+  uDatabase_ActiveUser,
   uLoad,
+  uLoad_AllTypes,
   emu,
   uSnippet_Search,
   uEmu_SetAll,
   uEmu_Commands,
+  uEmu_Arcade_Mame,
   uEmu_Arcade_Mame_Mouse,
   uEmu_Arcade_Mame_Ini,
   uEmu_Arcade_Mame_Support_Files,
@@ -67,8 +75,7 @@ begin
   vMame.Config.Scene.Main := TPanel.Create(vMame.Scene.Main);
   vMame.Config.Scene.Main.Name := 'Mame_Config';
   vMame.Config.Scene.Main.Parent := vMame.Scene.Main;
-  vMame.Config.Scene.Main.SetBounds(((vMame.Scene.Main.Width / 2) - 350),
-    ((vMame.Scene.Main.Height / 2) - 300), 700, 630);
+  vMame.Config.Scene.Main.SetBounds(((vMame.Scene.Main.Width / 2) - 350), ((vMame.Scene.Main.Height / 2) - 300), 700, 630);
   vMame.Config.Scene.Main.Visible := True;
 
   vMame.Config.Scene.Main_Blur := TGaussianBlurEffect.Create(vMame.Config.Scene.Main);
@@ -114,9 +121,8 @@ begin
   vMame.Scene.Right := TImage.Create(vMame.Scene.Main);
   vMame.Scene.Right.Name := 'Mame_Right';
   vMame.Scene.Right.Parent := vMame.Scene.Main;
-  vMame.Scene.Right.SetBounds((vMame.Scene.Main.Width / 2), 0, (vMame.Scene.Main.Width / 2),
-    (vMame.Scene.Main.Height));
-  vMame.Scene.Right.Bitmap.LoadFromFile(mame.Prog.Images + 'background.png');
+  vMame.Scene.Right.SetBounds((vMame.Scene.Main.Width / 2), 0, (vMame.Scene.Main.Width / 2), (vMame.Scene.Main.Height));
+  vMame.Scene.Right.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'background.png');
   vMame.Scene.Right.WrapMode := TImageWrapMode.Original;
   vMame.Scene.Right.BitmapMargins.Left := -(vMame.Scene.Main.Width / 2);
   vMame.Scene.Right.Visible := True;
@@ -139,7 +145,7 @@ begin
   vMame.Scene.Left.Name := 'Mame_Left';
   vMame.Scene.Left.Parent := vMame.Scene.Main;
   vMame.Scene.Left.SetBounds(0, 0, (vMame.Scene.Main.Width / 2), (vMame.Scene.Main.Height));
-  vMame.Scene.Left.Bitmap.LoadFromFile(mame.Prog.Images + 'background.png');
+  vMame.Scene.Left.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'background.png');
   vMame.Scene.Left.WrapMode := TImageWrapMode.Original;
   vMame.Scene.Left.Visible := True;
 
@@ -162,7 +168,7 @@ begin
   vMame.Scene.Exit_Mame.Name := 'Mame_Exit';
   vMame.Scene.Exit_Mame.Parent := vMame.Scene.Right;
   vMame.Scene.Exit_Mame.SetBounds((vMame.Scene.Right.Width - 29), 5, 24, 24);
-  vMame.Scene.Exit_Mame.Bitmap.LoadFromFile(mame.Prog.Images + 'exit_mame.png');
+  vMame.Scene.Exit_Mame.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'exit_mame.png');
   vMame.Scene.Exit_Mame.WrapMode := TImageWrapMode.Fit;
   vMame.Scene.Exit_Mame.OnClick := mame.Input.Mouse.Image.OnMouseClick;
   vMame.Scene.Exit_Mame.OnMouseEnter := mame.Input.Mouse.Image.OnMouseEnter;
@@ -181,7 +187,7 @@ begin
   vMame.Scene.Settings.Name := 'Mame_Settings';
   vMame.Scene.Settings.Parent := vMame.Scene.Main;
   vMame.Scene.Settings.SetBounds(((vMame.Scene.Main.Width / 2) - 25), (vMame.Scene.Main.Height - 60), 50, 50);
-  vMame.Scene.Settings.Bitmap.LoadFromFile(mame.Prog.Images + 'settings_blue.png');
+  vMame.Scene.Settings.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
   vMame.Scene.Settings.WrapMode := TImageWrapMode.Fit;
   vMame.Scene.Settings.OnClick := mame.Input.Mouse.Image.OnMouseClick;
   vMame.Scene.Settings.OnMouseEnter := mame.Input.Mouse.Image.OnMouseEnter;
@@ -213,7 +219,7 @@ begin
   vMame.Scene.Gamelist.List.Parent := vMame.Scene.Left;
   vMame.Scene.Gamelist.List.SetBounds(50, 50, 750, (vMame.Scene.Left.Height - 180));
   vMame.Scene.Gamelist.List.WrapMode := TImageWrapMode.Tile;
-  vMame.Scene.Gamelist.List.Bitmap.LoadFromFile(mame.Prog.Images + 'black_menu.png');
+  vMame.Scene.Gamelist.List.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
   vMame.Scene.Gamelist.List.Visible := True;
 
   vMame.Scene.Gamelist.Listbox := TVertScrollBox.Create(vMame.Scene.Gamelist.List);
@@ -228,8 +234,7 @@ begin
     vMame.Scene.Gamelist.List_Line[vi].Back := TImage.Create(vMame.Scene.Gamelist.Listbox);
     vMame.Scene.Gamelist.List_Line[vi].Back.Name := 'Mame_Gamelist_Back_' + IntToStr(vi);
     vMame.Scene.Gamelist.List_Line[vi].Back.Parent := vMame.Scene.Gamelist.Listbox;
-    vMame.Scene.Gamelist.List_Line[vi].Back.SetBounds(0, ((vi * 40) + (vi + 10)),
-      (vMame.Scene.Gamelist.Listbox.Width - 10), 40);
+    vMame.Scene.Gamelist.List_Line[vi].Back.SetBounds(0, ((vi * 40) + (vi + 10)), (vMame.Scene.Gamelist.Listbox.Width - 10), 40);
     vMame.Scene.Gamelist.List_Line[vi].Back.Tag := vi;
     vMame.Scene.Gamelist.List_Line[vi].Back.Visible := True;
 
@@ -247,8 +252,7 @@ begin
     vMame.Scene.Gamelist.List_Line[vi].Text.Text := IntToStr(vi);
     vMame.Scene.Gamelist.List_Line[vi].Text.Font.Family := 'Tahoma';
     vMame.Scene.Gamelist.List_Line[vi].Text.Color := TAlphaColorRec.White;
-    vMame.Scene.Gamelist.List_Line[vi].Text.Font.Style := vMame.Scene.Gamelist.List_Line[vi].Text.Font.Style +
-      [TFontStyle.fsBold];
+    vMame.Scene.Gamelist.List_Line[vi].Text.Font.Style := vMame.Scene.Gamelist.List_Line[vi].Text.Font.Style + [TFontStyle.fsBold];
     if vi = 10 then
       vMame.Scene.Gamelist.List_Line[vi].Text.Font.Size := 24
     else
@@ -266,7 +270,7 @@ begin
   vMame.Scene.Gamelist.List_Selection_Glow.Softness := 0.4;
   vMame.Scene.Gamelist.List_Selection_Glow.Enabled := True;
 
-  vMame.Scene.Gamelist.List_Line[10].Back.Bitmap.LoadFromFile(mame.Prog.Images + 'selection.png');
+  vMame.Scene.Gamelist.List_Line[10].Back.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'selection.png');
 
   // Create all the other components
   vMame.Scene.Gamelist.Up_Back_Image := TImage.Create(vMame.Scene.Left);
@@ -274,7 +278,7 @@ begin
   vMame.Scene.Gamelist.Up_Back_Image.Parent := vMame.Scene.Left;
   vMame.Scene.Gamelist.Up_Back_Image.SetBounds(50, 18, 750, 26);
   vMame.Scene.Gamelist.Up_Back_Image.WrapMode := TImageWrapMode.Tile;
-  vMame.Scene.Gamelist.Up_Back_Image.Bitmap.LoadFromFile(mame.Prog.Images + 'black_menu.png');
+  vMame.Scene.Gamelist.Up_Back_Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
   vMame.Scene.Gamelist.Up_Back_Image.Visible := True;
 
   vMame.Scene.Gamelist.Filters := TImage.Create(vMame.Scene.Left);
@@ -282,7 +286,7 @@ begin
   vMame.Scene.Gamelist.Filters.Parent := vMame.Scene.Left;
   vMame.Scene.Gamelist.Filters.SetBounds(4, 62, 24, 24);
   vMame.Scene.Gamelist.Filters.WrapMode := TImageWrapMode.Fit;
-  vMame.Scene.Gamelist.Filters.Bitmap.LoadFromFile(mame.Prog.Images + 'filters.png');
+  vMame.Scene.Gamelist.Filters.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'filters.png');
   vMame.Scene.Gamelist.Filters.OnClick := mame.Input.Mouse.Image.OnMouseClick;
   vMame.Scene.Gamelist.Filters.OnMouseEnter := mame.Input.Mouse.Image.OnMouseEnter;
   vMame.Scene.Gamelist.Filters.OnMouseLeave := mame.Input.Mouse.Image.OnMouseLeave;
@@ -300,19 +304,18 @@ begin
   vMame.Scene.Gamelist.T_Games_Count_Info.Text := '';
   vMame.Scene.Gamelist.T_Games_Count_Info.Color := TAlphaColorRec.White;
   vMame.Scene.Gamelist.T_Games_Count_Info.Font.Family := 'Tahoma';
-  vMame.Scene.Gamelist.T_Games_Count_Info.Font.Style := vMame.Scene.Gamelist.T_Games_Count_Info.Font.Style +
-    [TFontStyle.fsBold];
+  vMame.Scene.Gamelist.T_Games_Count_Info.Font.Style := vMame.Scene.Gamelist.T_Games_Count_Info.Font.Style + [TFontStyle.fsBold];
   vMame.Scene.Gamelist.T_Games_Count_Info.Font.Size := 20;
   vMame.Scene.Gamelist.T_Games_Count_Info.TextSettings.HorzAlign := TTextAlign.Trailing;
   vMame.Scene.Gamelist.T_Games_Count_Info.Visible := True;
 
-  mame.emu.MameVer := mame.Prog.Ini.ReadString('MAME', 'mame_version', mame.emu.MameVer);
-  if mame.emu.MameVer = '' then
+  if user_Active_Local.EMULATORS.Arcade_D.Mame_D.Version = '' then
   begin
-    vList.LoadFromFile(mame.Prog.Data_Path + 'version.txt');
+    vList.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Database + 'version.txt');
     viPos := Pos('(', vList.Strings[0]);
-    mame.emu.MameVer := Trim(Copy(vList.Strings[0], 0, viPos - 1));
-    mame.Prog.Ini.WriteString('MAME', 'mame_version', mame.emu.MameVer);
+    user_Active_Local.EMULATORS.Arcade_D.Mame_D.Version := Trim(Copy(vList.Strings[0], 0, viPos - 1));
+    uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'MAME_VERSION', user_Active_Local.EMULATORS.Arcade_D.Mame_D.Version,
+      user_Active_Local.Num.ToString);
     DeleteFile(PChar(mame.Prog.Data_Path + 'version.txt'));
     vList.Free;
   end;
@@ -324,8 +327,7 @@ begin
   vMame.Scene.Gamelist.T_MameVersion.Color := TAlphaColorRec.White;
   vMame.Scene.Gamelist.T_MameVersion.Text := mame.emu.MameVer;
   vMame.Scene.Gamelist.T_MameVersion.Font.Family := 'Tahoma';
-  vMame.Scene.Gamelist.T_MameVersion.Font.Style := vMame.Scene.Gamelist.T_MameVersion.Font.Style +
-    [TFontStyle.fsBold];
+  vMame.Scene.Gamelist.T_MameVersion.Font.Style := vMame.Scene.Gamelist.T_MameVersion.Font.Style + [TFontStyle.fsBold];
   vMame.Scene.Gamelist.T_MameVersion.Font.Size := 20;
   vMame.Scene.Gamelist.T_MameVersion.TextSettings.HorzAlign := TTextAlign.Leading;
   vMame.Scene.Gamelist.T_MameVersion.Visible := True;
@@ -347,14 +349,14 @@ begin
   Create_Image_Scene;
   HideShow_Image_Scene(False);
 
-  mame.Actions.Video_Scene_Show:= True;
+  mame.Actions.Video_Scene_Show := True;
 
   vMame.Scene.Gamelist.Down_Back_Image := TImage.Create(vMame.Scene.Left);
   vMame.Scene.Gamelist.Down_Back_Image.Name := 'Mame_Gamelist_Down_Back_Image';
   vMame.Scene.Gamelist.Down_Back_Image.Parent := vMame.Scene.Left;
   vMame.Scene.Gamelist.Down_Back_Image.SetBounds(50, 958, 750, 26);
   vMame.Scene.Gamelist.Down_Back_Image.WrapMode := TImageWrapMode.Tile;
-  vMame.Scene.Gamelist.Down_Back_Image.Bitmap.LoadFromFile(mame.Prog.Images + 'black_menu.png');
+  vMame.Scene.Gamelist.Down_Back_Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
   vMame.Scene.Gamelist.Down_Back_Image.Visible := True;
 
   vMame.Scene.Gamelist.T_GamePlayers := TText.Create(vMame.Scene.Gamelist.Down_Back_Image);
@@ -363,8 +365,7 @@ begin
   vMame.Scene.Gamelist.T_GamePlayers.SetBounds(0, 1, 750, 22);
   vMame.Scene.Gamelist.T_GamePlayers.Color := TAlphaColorRec.White;
   vMame.Scene.Gamelist.T_GamePlayers.Font.Family := 'Tahoma';
-  vMame.Scene.Gamelist.T_GamePlayers.Font.Style := vMame.Scene.Gamelist.T_GamePlayers.Font.Style +
-    [TFontStyle.fsBold];
+  vMame.Scene.Gamelist.T_GamePlayers.Font.Style := vMame.Scene.Gamelist.T_GamePlayers.Font.Style + [TFontStyle.fsBold];
   vMame.Scene.Gamelist.T_GamePlayers.Font.Size := 20;
   vMame.Scene.Gamelist.T_GamePlayers.TextSettings.HorzAlign := TTextAlign.Trailing;
   vMame.Scene.Gamelist.T_GamePlayers.Visible := True;
@@ -375,8 +376,7 @@ begin
   vMame.Scene.Gamelist.T_GameCategory.SetBounds(0, 1, 750, 22);
   vMame.Scene.Gamelist.T_GameCategory.Color := TAlphaColorRec.White;
   vMame.Scene.Gamelist.T_GameCategory.Font.Family := 'Tahoma';
-  vMame.Scene.Gamelist.T_GameCategory.Font.Style := vMame.Scene.Gamelist.T_GameCategory.Font.Style +
-    [TFontStyle.fsBold];
+  vMame.Scene.Gamelist.T_GameCategory.Font.Style := vMame.Scene.Gamelist.T_GameCategory.Font.Style + [TFontStyle.fsBold];
   vMame.Scene.Gamelist.T_GameCategory.Font.Size := 20;
   vMame.Scene.Gamelist.T_GameCategory.TextSettings.HorzAlign := TTextAlign.Leading;
   vMame.Scene.Gamelist.T_GameCategory.Visible := True;
@@ -386,7 +386,7 @@ begin
   vMame.Scene.Gamelist.Filters_Back_Image.Parent := vMame.Scene.Left;
   vMame.Scene.Gamelist.Filters_Back_Image.SetBounds(50, 992, 750, 26);
   vMame.Scene.Gamelist.Filters_Back_Image.WrapMode := TImageWrapMode.Tile;
-  vMame.Scene.Gamelist.Filters_Back_Image.Bitmap.LoadFromFile(mame.Prog.Images + 'black_menu.png');
+  vMame.Scene.Gamelist.Filters_Back_Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
   vMame.Scene.Gamelist.Filters_Back_Image.Visible := True;
 
   vMame.Scene.Gamelist.T_Filters := TText.Create(vMame.Scene.Gamelist.Filters_Back_Image);
@@ -397,8 +397,7 @@ begin
   vFilter_Selected_Name := mame.Prog.Ini_Filters.ReadString('MASTER', 'Selected', vFilter_Selected_Name);
   vMame.Scene.Gamelist.T_Filters.Text := 'Filter : ' + vFilter_Selected_Name;
   vMame.Scene.Gamelist.T_Filters.Font.Family := 'Tahoma';
-  vMame.Scene.Gamelist.T_Filters.Font.Style := vMame.Scene.Gamelist.T_MameVersion.Font.Style +
-    [TFontStyle.fsBold];
+  vMame.Scene.Gamelist.T_Filters.Font.Style := vMame.Scene.Gamelist.T_MameVersion.Font.Style + [TFontStyle.fsBold];
   vMame.Scene.Gamelist.T_Filters.Font.Size := 20;
   vMame.Scene.Gamelist.T_Filters.TextSettings.HorzAlign := TTextAlign.Leading;
   vMame.Scene.Gamelist.T_Filters.Visible := True;
@@ -452,9 +451,8 @@ begin
   vMame.Scene.Load_Game := TImage.Create(vMame.Scene.Main);
   vMame.Scene.Load_Game.Name := 'Mame_Loading_Game';
   vMame.Scene.Load_Game.Parent := vMame.Scene.Main;
-  vMame.Scene.Load_Game.SetBounds(((vMame.Scene.Main.Width / 2) - 250), ((vMame.Scene.Main.Height / 2) - 150),
-    500, 300);
-  vMame.Scene.Load_Game.Bitmap.LoadFromFile(mame.Prog.Images + 'black_menu.png');
+  vMame.Scene.Load_Game.SetBounds(((vMame.Scene.Main.Width / 2) - 250), ((vMame.Scene.Main.Height / 2) - 150), 500, 300);
+  vMame.Scene.Load_Game.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
   vMame.Scene.Load_Game.WrapMode := TImageWrapMode.Tile;
   vMame.Scene.Load_Game.Visible := False;
 
@@ -490,7 +488,7 @@ begin
   vMame.Scene.Snap.Black_Image.Parent := vMame.Scene.Right;
   vMame.Scene.Snap.Black_Image.SetBounds(((vMame.Scene.Right.Width / 2) - 196), 278, 416, 226);
   vMame.Scene.Snap.Black_Image.WrapMode := TImageWrapMode.Tile;
-  vMame.Scene.Snap.Black_Image.Bitmap.LoadFromFile(mame.Prog.Images + 'black.png');
+  vMame.Scene.Snap.Black_Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black.png');
   vMame.Scene.Snap.Black_Image.Visible := True;
 
   vMame.Scene.Snap.Black_Reflection := TReflectionEffect.Create(vMame.Scene.Snap.Black_Image);
@@ -514,7 +512,7 @@ begin
   vMame.Scene.Snap.Video.Name := 'Mame_Snap_Video';
   vMame.Scene.Snap.Video.Parent := vMame.Scene.Snap.Black_Image;
   vMame.Scene.Snap.Video.Align := TAlignLayout.Client;
-  vMame.Scene.Snap.Video.WrapMode:= TImageWrapMode.Stretch;
+  vMame.Scene.Snap.Video.WrapMode := TImageWrapMode.Stretch;
 
   vMame.Scene.Snap.Video_Reflaction := TReflectionEffect.Create(vMame.Scene.Snap.Video);
   vMame.Scene.Snap.Video_Reflaction.Name := 'Mame_Snap_Video_Reflaction';
@@ -529,7 +527,7 @@ begin
   vMame.Scene.Snap.Type_Arcade.Parent := vMame.Scene.Right;
   vMame.Scene.Snap.Type_Arcade.SetBounds(((vMame.Scene.Right.Width / 2) - 270), 148, 560, 560);
   vMame.Scene.Snap.Type_Arcade.WrapMode := TImageWrapMode.Fit;
-  vMame.Scene.Snap.Type_Arcade.Bitmap.LoadFromFile(mame.Prog.Images + 'arcade.png');
+  vMame.Scene.Snap.Type_Arcade.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'arcade.png');
   vMame.Scene.Snap.Type_Arcade.Visible := True;
 
   vMame.Scene.Snap.Type_Arcade_Reflection := TReflectionEffect.Create(vMame.Scene.Snap.Type_Arcade);
@@ -586,10 +584,59 @@ end;
 
 procedure HideShow_Image_Scene(vShow: Boolean);
 begin
-  vMame.Scene.Snap.Image.Visible:= vShow;
-  vMame.Scene.Snap.Image_Reflaction.Enabled:= vShow;
-  vMame.Scene.Snap.Image_Fade.Enabled:= vShow;
-  vMame.Scene.Snap.Image_Fade_Ani.Enabled:= vShow;
+  vMame.Scene.Snap.Image.Visible := vShow;
+  vMame.Scene.Snap.Image_Reflaction.Enabled := vShow;
+  vMame.Scene.Snap.Image_Fade.Enabled := vShow;
+  vMame.Scene.Snap.Image_Fade_Ani.Enabled := vShow;
+end;
+
+procedure Get_Set_Mame_Data;
+var
+  vQuery: String;
+begin
+  vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Add(vQuery);
+  ExtraFE_Query_Local.Open;
+  ExtraFE_Query_Local.First;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Installed := ExtraFE_Query_Local.FieldByName('INSTALLED').AsBoolean;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Active := ExtraFE_Query_Local.FieldByName('EMU_ACTIVE').AsBoolean;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Position := ExtraFE_Query_Local.FieldByName('EMU_POSITION').AsInteger;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Unique := ExtraFE_Query_Local.FieldByName('EMU_UNIQUE').AsInteger;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Path := ExtraFE_Query_Local.FieldByName('MAME_PATH').AsString;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name := ExtraFE_Query_Local.FieldByName('MAME_NAME').AsString;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Ini := ExtraFE_Query_Local.FieldByName('MAME_INI').AsString;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Version := ExtraFE_Query_Local.FieldByName('MAME_VERSION').AsString;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Path := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_PATH').AsString;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Database := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_DATABASE').AsString;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_IMAGES').AsString;
+  user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Sounds := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_SOUNDS').AsString;
+  ExtraFE_Query_Local.Close;
+
+  Set_Mame_Data;
+end;
+
+procedure Set_Mame_Data;
+begin
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Mame_D.Ini) then
+  begin
+    emulation.emu[0, 0] := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name;
+    emulation.Arcade[0].Prog_Path := user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Path;
+    emulation.Arcade[0].Emu_Path := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Path;
+    emulation.Arcade[0].Active := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Active;
+    emulation.Arcade[0].Active_Place := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Position;
+    emulation.Arcade[0].Name := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name;
+    emulation.Arcade[0].Name_Exe := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name;
+    emulation.Arcade[0].Menu_Image_Path := user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images;
+    emulation.Arcade[0].Background := user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'main_background.png';
+    emulation.Arcade[0].Logo := user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'mame.png';
+    emulation.Arcade[0].Second_Level := -1;
+    emulation.Arcade[0].Unique_Num := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Unique;
+    emulation.Arcade[0].Installed := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Installed;
+
+    uEmu_Arcade_Mame_Loading;
+  end;
 end;
 
 end.

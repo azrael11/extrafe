@@ -5,34 +5,27 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  System.UIConsts,
   System.UiTypes,
   IniFiles,
   Winapi.Windows,
-  FMX.Forms,
   FMX.Objects,
-  FMX.Effects,
-  FMX.Dialogs,
   FMX.Controls,
   FMX.Types,
   FMX.Layouts,
   FMX.Ani,
-  ALFmxTabControl,
-  FmxPasLibVlcPlayerUnit,
-  BASS;
+  FmxPasLibVlcPlayerUnit;
 
 procedure StartLoading;
 procedure uLoad_SetDefaults;
 procedure uLoad_FirstTimeLoading;
 procedure uLoad_SetLoadingScreen;
 
-procedure uLoad_Start_ExtraFE;
+procedure Start_ExtraFE;
 procedure Play_Intro_Video;
 procedure Skip_Intro;
 procedure Connect_Databases;
 
 var
-
   Default_Load: Boolean;
   KBHook: HHook;
 
@@ -43,31 +36,29 @@ uses
   uKeyboard,
   loading,
   main,
+  uMain,
   uMain_AllTypes,
   uMain_Config_Themes,
-  uMain_Emulation,
-  uWeather_SetAll,
   uLoad_SetAll,
   uLoad_AllTypes,
-  uLoad_Login,
   uLoad_Addons,
   uLoad_Emulation,
   uLoad_Sound,
   uLoad_Stats,
-  uDatabase;
+  uDatabase,
+  uDatabase_ActiveUser;
 
 procedure StartLoading;
 const
-  res_4_3: array [0 .. 10] of string = ('640x480', '800x600', '1024x768', '1152x864', '1280x960', '1400x1050', '1600x1200', '2048x1536', '3200x2400',
-    '4000x3000', '6400x4800');
-  res_16_9: array [0 .. 4] of string = ('852x480', '1280x720', '1365x768', '1600x900', '1920x1080');
+  res_4_3: array [0 .. 8] of string = ('1024x768', '1152x864', '1280x960', '1400x1050', '1600x1200', '2048x1536', '3200x2400', '4000x3000', '6400x4800');
+  res_16_9: array [0 .. 7] of string = ('852x480', '1280x720', '1365x768', '1600x900', '1920x1080', '2560x1440', '3840x2160', '4096x2160');
   res_16_10: array [0 .. 5] of string = ('1440x900', '1680x1050', '1920x1200', '2560x1600', '3840x2400', '7680x4800');
 begin
   vMonitor_Resolution := uWindows_GetCurrent_Monitor_Resolution;
   Loading_Form.Width := vMonitor_Resolution.Horizontal;
   Loading_Form.Height := vMonitor_Resolution.Vertical;
   Loading_Form.FullScreen := True;
-  // Program
+  { Program }
   extrafe.prog.Path := ExtractFilePath(ParamStr(0));
   extrafe.prog.Name := ExtractFileName(ParamStr(0));
 
@@ -77,8 +68,7 @@ begin
 
   uDatabase.Online_Create;
   uDatabase.Local_Create;
-  uLoad_Start_ExtraFE;
-  // ex_load.Scene.Back.Visible := True;
+  Start_ExtraFE;
   Play_Intro_Video;
 end;
 
@@ -188,7 +178,7 @@ end;
 /// /////////////////////////////////////////////////////////////////////////////
 
 /// /////////////////////////////////////////////////////////////////////////////
-procedure uLoad_Start_ExtraFE;
+procedure Start_ExtraFE;
 begin
   if Default_Load = False then
   begin
@@ -205,15 +195,13 @@ begin
   end
   else
   begin
-    if (emulation.Active = False) and (addons.Active = False) then
     begin
-      ex_load.Scene.Progress.Value := 100;
-    end
-    else
-    begin
-      uLoad_Emulation_Load;
+      uLoad_Emulation.Load;
+      ex_load.Scene.Progress.Value := 70;
       uLoad_Addons_Load;
+      ex_load.Scene.Progress.Value := 90;
     end;
+    ex_load.Scene.Progress.Value := 100;
     ex_load.Scene.Back_Fade.Start;
   end;
 end;

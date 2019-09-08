@@ -13,13 +13,15 @@ uses
   IdComponent,
   IdTCPConnection,
   IdTCPClient,
-  IdHTTP;
+  IdHTTP, FireDAC.UI.Intf, FireDAC.FMXUI.Wait, FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Comp.UI;
 
 type
   TMain_Form = class(TForm)
     Main_IdHttp: TIdHTTP;
     FadeTransitionEffect1: TFadeTransitionEffect;
     FloatAnimation1: TFloatAnimation;
+    FDGUIxWaitCursor: TFDGUIxWaitCursor;
+    FDTransaction: TFDTransaction;
     procedure FormDestroy(Sender: TObject);
 
   private

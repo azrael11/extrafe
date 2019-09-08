@@ -34,6 +34,8 @@ var
 implementation
 
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
   uLoad_AllTypes,
   uSnippet_Search,
   uEmu_Arcade_Mame,
@@ -203,7 +205,7 @@ begin
   vMame.Scene.Left.Bitmap.LoadFromFile(mame.Prog.Images + 'background.png');
   vMame.Scene.Right.Bitmap.LoadFromFile(mame.Prog.Images + 'background.png');
   vMame.Scene.Right.BitmapMargins.Left := -960;
-  vMame.Scene.Settings.Bitmap.LoadFromFile(mame.Prog.Images + 'settings_blue.png');
+  vMame.Scene.Settings.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
 
   uEmu_Arcade_Mame_Actions_ShowData;
 end;

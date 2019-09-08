@@ -64,7 +64,7 @@ begin
 //
 //  vlist:= fEmu_Commands_CaptureOutput(emulation.Arcade[0].Emu_Path+ emulation.Arcade[0].Name_Exe,  ' '+vRomName + ' -lx');
 //
-  fEmu_Commands_CaptureOutput1('E:\', emulation.Arcade[0].Emu_Path, emulation.Arcade[0].Name_Exe+ ' '+vRomName + ' -lx', '');
+//  fEmu_Commands_CaptureOutput1('E:\', emulation.Arcade[0].Emu_Path, emulation.Arcade[0].Name_Exe+ ' '+vRomName + ' -lx', '');
 
 {  vTask:= TTask.Run(
     procedure

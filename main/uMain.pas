@@ -33,7 +33,6 @@ uses
   uMain_SetAll,
   uMain_AllTypes,
   uMain_Actions,
-  uMain_Sounds,
   uMain_Config_Info,
   uMain_Config_Themes,
   uMain_Config_Profile,
@@ -47,7 +46,6 @@ begin
   Main_Form.FullScreen:= True;
   //Set all the components
   uMain_SetAll_Set;
-  uMain_Sounds.Load;
   //Set the standard values
   //Header
   ex_main.Settings.Header_Pos.X:= 0;
@@ -82,7 +80,6 @@ end;
 procedure uMain_Exit_Exit;
 begin
   uMain_Exit_SaveProgress;
-  uMain_Sounds.Free;
   //  ReportMemoryLeaksOnShutdown:= True;
   Application.Terminate;
 end;

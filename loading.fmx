@@ -11,13 +11,8 @@ object Loading_Form: TLoading_Form
   OnCreate = FormCreate
   OnClose = FormClose
   DesignerMasterStyle = 0
-  object FDGUIxWaitCursor: TFDGUIxWaitCursor
-    Provider = 'FMX'
-    Left = 96
-    Top = 32
-  end
-  object FDTransaction: TFDTransaction
-    Left = 96
-    Top = 96
+  object SQLite_DriverLink: TFDPhysSQLiteDriverLink
+    Left = 32
+    Top = 16
   end
 end

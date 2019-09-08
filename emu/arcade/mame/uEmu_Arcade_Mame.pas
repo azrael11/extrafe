@@ -33,9 +33,9 @@ uses
 
 procedure uEmu_Arcade_Mame_Loading;
 begin
-  Application.ProcessMessages;
+//  Application.ProcessMessages;
   uEmu_Arcade_Mame_Ini_Load;
-  uEmu_Arcade_Mame_Ini_GetMediaPaths;
+//  uEmu_Arcade_Mame_Ini_GetMediaPaths;
   // mame.Gamelist.Games:= CreateXMLDoc;
   // mame.Gamelist.Games.LoadFromFile(mame.Prog.Data_Path+ mame.Prog.Games_XML);
 end;
@@ -45,7 +45,7 @@ var
   vi: integer;
 begin
   extrafe.prog.State := 'mame';
-  emulation.Active_Num := 0;
+//  emulation.Active_Num := 0;
 
   // Timers
   mame.Timers.Gamelist := TEMU_GAMELISTS_TIMER.Create(vMame.Scene.Main);
@@ -62,7 +62,7 @@ begin
 
   // Create Main Scene
   uEmu_Arcade_Mame_Filters_Ini;
-  uEmu_Arcade_Mame_Filters_Load_Filter(mame.Prog.Filter);
+  uEmu_Arcade_Mame_Filters_Load_Filter('All_Unfiltered');
 
   uEmu_Arcade_Mame_Support_Load;
 

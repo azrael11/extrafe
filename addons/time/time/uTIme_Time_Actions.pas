@@ -9,10 +9,10 @@ uses
   System.UiConsts,
   BASS;
 
-procedure uTime_Time_Actions_Update_Analog;
-procedure uTime_Time_Actions_Update_Digital;
+procedure Update_Analog;
+procedure Update_Digital;
 
-procedure uTime_Time_Actions_ShowType(vType: String);
+procedure General_ShowType(vType: String);
 procedure uTime_Time_Actions_ShowAnalog;
 procedure uTime_Time_Actions_ShowDigital;
 procedure uTime_Time_Actions_ShowBoth;
@@ -37,8 +37,9 @@ procedure uTime_Time_Actions_Digital_SetBackStrokeColor(vBack_Color: TAlphaColor
 procedure uTime_Time_Actions_ChangeSep(vSep: String);
 
 implementation
-
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SqlCommands,
   uLoad_AllTypes,
   uSnippet_Text,
   uTime_SetAll,
@@ -47,7 +48,7 @@ uses
 var
   vLast_Time_Check: TTime;
 
-procedure uTime_Time_Actions_Update_Analog;
+procedure Update_Analog;
 var
   vActuall_Time: TTime;
   vHour: Word;
@@ -71,7 +72,7 @@ begin
   vTime.P_Time.Analog.Seconds.RotationAngle := StrToInt(FormatFloat('0', (360 * vSeconds) / 60));
 end;
 
-procedure uTime_Time_Actions_Update_Digital;
+procedure Update_Digital;
 var
   vActuall_Time: TTime;
   vHour, vMinutes, vSeconds, vMilliseconds: Word;
@@ -129,16 +130,19 @@ begin
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
-procedure uTime_Time_Actions_ShowType(vType: String);
+procedure General_ShowType(vType: String);
 begin
-  if vType = 'Analog' then
+  if vType = 'analog' then
     uTime_Time_Actions_ShowAnalog
-  else if vType = 'Digital' then
+  else if vType = 'digital' then
     uTime_Time_Actions_ShowDigital
-  else if vType = 'Both' then
+  else if vType = 'both' then
     uTime_Time_Actions_ShowBoth;
-  addons.time.P_Time.Clock_Type := vType;
-  addons.time.Ini.Ini.WriteString('TIME_LOCAL', 'Visible_Type', vType);
+
+  user_Active_Local.ADDONS.Time_D.Time.vType := vType;
+  uDatabase_SqlCommands.Update_Local_Query('ADDON_TIME_TIME', 'TIME_CLOCK_TYPE', vType, user_Active_Local.Num.ToString);
+//  addons.time.P_Time.Clock_Type := vType;
+//  user_Active_Local.ADDONS.Time_D.Time.vType:= vType;
 end;
 
 procedure uTime_Time_Actions_ShowAnalog;

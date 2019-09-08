@@ -32,21 +32,29 @@ uses
 procedure uLoad_SetAll_Load;
 begin
   // Back
-  ex_load.Scene.Back := TImage.Create(Loading_Form);
+  ex_load.Scene.Back_Back := TImage.Create(Loading_Form);
+  ex_load.Scene.Back_Back.Name := 'Loading_Back_Back';
+  ex_load.Scene.Back_Back.Parent := Loading_Form;
+  ex_load.Scene.Back_Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
+  ex_load.Scene.Back_Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
+  ex_load.Scene.Back_Back.WrapMode := TImageWrapMode.Fit;
+  ex_load.Scene.Back_Back.Visible := True;
+
+  ex_load.Scene.Back := TImage.Create(ex_load.Scene.Back_Back);
   ex_load.Scene.Back.Name := 'Loading_Back';
-  ex_load.Scene.Back.Parent := Loading_Form;
+  ex_load.Scene.Back.Parent := ex_load.Scene.Back_Back;
   ex_load.Scene.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
   ex_load.Scene.Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back.WrapMode := TImageWrapMode.Fit;
   ex_load.Scene.Back.Visible := False;
 
-  ex_load.Scene.Back_Fade := TFloatAnimation.Create(ex_load.Scene.Back);
+  ex_load.Scene.Back_Fade := TFloatAnimation.Create(ex_load.Scene.Back_Back);
   ex_load.Scene.Back_Fade.Name := 'Loading_FadeOut';
-  ex_load.Scene.Back_Fade.Parent := ex_load.Scene.Back;
+  ex_load.Scene.Back_Fade.Parent := ex_load.Scene.Back_back;
   ex_load.Scene.Back_Fade.PropertyName := 'Opacity';
   ex_load.Scene.Back_Fade.StartValue := 1;
   ex_load.Scene.Back_Fade.StopValue := 0.3;
-  ex_load.Scene.Back_Fade.Duration := 2;
+  ex_load.Scene.Back_Fade.Duration := 1;
   ex_load.Scene.Back_Fade.OnFinish := ex_load.Scene.Back_Fade_Float.OnFinish;
   ex_load.Scene.Back_Fade.Enabled := False;
 
@@ -442,9 +450,18 @@ begin
   ex_load.Reg.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.Reg.Panel.Name := 'Loading_Register';
   ex_load.Reg.Panel.Parent := ex_load.Scene.Back;
-  ex_load.Reg.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 520);
+  ex_load.Reg.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 600);
   ex_load.Reg.Panel.Opacity := 0.8;
   ex_load.Reg.Panel.Visible := True;
+
+  ex_load.Reg.Panel_Error := TFloatAnimation.Create(ex_load.Reg.Panel);
+  ex_load.Reg.Panel_Error.Name := 'Loading_Register_Ani_Error';
+  ex_load.Reg.Panel_Error.Parent := ex_load.Reg.Panel;
+  ex_load.Reg.Panel_Error.PropertyName := 'Position.X';
+  ex_load.Reg.Panel_Error.Duration := 0.3;
+  ex_load.Reg.Panel_Error.Interpolation := TInterpolationType.Bounce;
+  ex_load.Reg.Panel_Error.AnimationType := TAnimationType.&In;
+  ex_load.Reg.Panel_Error.Enabled := False;
 
   uLoad_Register.Create_Help;
 
@@ -466,25 +483,29 @@ begin
   ex_load.Reg.Main.User_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.User_V.Name := 'Loading_Register_User_V';
   ex_load.Reg.Main.User_V.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.User_V.SetBounds(20, 30, ex_load.Reg.Main.Panel.Width - 40, 20);
+  ex_load.Reg.Main.User_V.SetBounds(20, 30, ex_load.Reg.Main.Panel.Width - 40, 30);
   ex_load.Reg.Main.User_V.Text := '';
-  ex_load.Reg.Main.User_V.OnClick := ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.User_V.Font.Size := 18;
+  ex_load.Reg.Main.User_V.StyledSettings := ex_load.Reg.Main.User_V.StyledSettings - [TStyledSetting.Size];
+  ex_load.Reg.Main.User_V.OnMouseEnter := ex_load.Input.mouse.Edit.OnMouseEnter;
   ex_load.Reg.Main.User_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.User_V.Visible := True;
 
   ex_load.Reg.Main.Pass := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Pass.Name := 'Loading_Register_Pass';
   ex_load.Reg.Main.Pass.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Pass.SetBounds(20, 55, 200, 20);
+  ex_load.Reg.Main.Pass.SetBounds(20, 65, 200, 20);
   ex_load.Reg.Main.Pass.Text := 'Password :';
   ex_load.Reg.Main.Pass.Visible := True;
 
   ex_load.Reg.Main.Pass_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Pass_V.Name := 'Loading_Register_Pass_V';
   ex_load.Reg.Main.Pass_V.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Pass_V.SetBounds(20, 75, ex_load.Reg.Main.Panel.Width - 40, 20);
+  ex_load.Reg.Main.Pass_V.SetBounds(20, 85, ex_load.Reg.Main.Panel.Width - 40, 30);
   ex_load.Reg.Main.Pass_V.Text := '';
-  ex_load.Reg.Main.Pass_V.OnClick := ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.Pass_V.Font.Size := 18;
+  ex_load.Reg.Main.Pass_V.StyledSettings := ex_load.Reg.Main.Pass_V.StyledSettings - [TStyledSetting.Size];
+  ex_load.Reg.Main.Pass_V.OnMouseEnter := ex_load.Input.mouse.Edit.OnMouseEnter;
   ex_load.Reg.Main.Pass_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.Pass_V.Password := True;
   ex_load.Reg.Main.Pass_V.Visible := True;
@@ -492,7 +513,7 @@ begin
   ex_load.Reg.Main.Pass_Show := TText.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Pass_Show.Name := 'Loading_Register_Pass_Show';
   ex_load.Reg.Main.Pass_Show.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Pass_Show.SetBounds(ex_load.Reg.Main.Pass_V.Width - 2, 75, 20, 20);
+  ex_load.Reg.Main.Pass_Show.SetBounds(ex_load.Reg.Main.Pass_V.Width - 2, 90, 20, 20);
   ex_load.Reg.Main.Pass_Show.Font.Family := 'IcoMoon-Free';
   ex_load.Reg.Main.Pass_Show.Font.Size := 18;
   ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
@@ -512,16 +533,18 @@ begin
   ex_load.Reg.Main.RePass := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.RePass.Name := 'Loading_Register_RePass';
   ex_load.Reg.Main.RePass.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.RePass.SetBounds(20, 100, 200, 20);
+  ex_load.Reg.Main.RePass.SetBounds(20, 120, 200, 20);
   ex_load.Reg.Main.RePass.Text := 'Retype password :';
   ex_load.Reg.Main.RePass.Visible := True;
 
   ex_load.Reg.Main.RePass_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.RePass_V.Name := 'Loading_Register_RePass_V';
   ex_load.Reg.Main.RePass_V.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.RePass_V.SetBounds(20, 120, ex_load.Reg.Main.Panel.Width - 40, 20);
+  ex_load.Reg.Main.RePass_V.SetBounds(20, 140, ex_load.Reg.Main.Panel.Width - 40, 30);
   ex_load.Reg.Main.RePass_V.Text := '';
-  ex_load.Reg.Main.RePass_V.OnClick := ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.RePass_V.Font.Size := 18;
+  ex_load.Reg.Main.RePass_V.StyledSettings := ex_load.Reg.Main.RePass_V.StyledSettings - [TStyledSetting.Size];
+  ex_load.Reg.Main.RePass_V.OnMouseEnter := ex_load.Input.mouse.Edit.OnMouseEnter;
   ex_load.Reg.Main.RePass_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.RePass_V.Password := True;
   ex_load.Reg.Main.RePass_V.Visible := True;
@@ -529,7 +552,7 @@ begin
   ex_load.Reg.Main.RePass_Show := TText.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.RePass_Show.Name := 'Loading_Register_RePass_Show';
   ex_load.Reg.Main.RePass_Show.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.RePass_Show.SetBounds(ex_load.Reg.Main.RePass_V.Width - 2, 120, 20, 20);
+  ex_load.Reg.Main.RePass_Show.SetBounds(ex_load.Reg.Main.RePass_V.Width - 2, 145, 20, 20);
   ex_load.Reg.Main.RePass_Show.Font.Family := 'IcoMoon-Free';
   ex_load.Reg.Main.RePass_Show.Font.Size := 18;
   ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
@@ -549,39 +572,43 @@ begin
   ex_load.Reg.Main.Email := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Email.Name := 'Loading_Register_Email';
   ex_load.Reg.Main.Email.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Email.SetBounds(20, 145, 200, 20);
+  ex_load.Reg.Main.Email.SetBounds(20, 175, 200, 20);
   ex_load.Reg.Main.Email.Text := 'Email :';
   ex_load.Reg.Main.Email.Visible := True;
 
   ex_load.Reg.Main.Email_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Email_V.Name := 'Loading_Register_Email_V';
   ex_load.Reg.Main.Email_V.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Email_V.SetBounds(20, 165, ex_load.Reg.Main.Panel.Width - 40, 20);
+  ex_load.Reg.Main.Email_V.SetBounds(20, 195, ex_load.Reg.Main.Panel.Width - 40, 30);
   ex_load.Reg.Main.Email_V.Text := '';
-  ex_load.Reg.Main.Email_V.OnClick := ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.Email_V.Font.Size := 18;
+  ex_load.Reg.Main.Email_V.StyledSettings := ex_load.Reg.Main.Email_V.StyledSettings - [TStyledSetting.Size];
+  ex_load.Reg.Main.Email_V.OnMouseEnter := ex_load.Input.mouse.Edit.OnMouseEnter;
   ex_load.Reg.Main.Email_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.Email_V.Visible := True;
 
   ex_load.Reg.Main.ReEmail := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.ReEmail.Name := 'Loading_Register_ReEmail';
   ex_load.Reg.Main.ReEmail.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.ReEmail.SetBounds(20, 190, 200, 20);
+  ex_load.Reg.Main.ReEmail.SetBounds(20, 230, 200, 20);
   ex_load.Reg.Main.ReEmail.Text := 'Retype Email :';
   ex_load.Reg.Main.ReEmail.Visible := True;
 
   ex_load.Reg.Main.ReEmail_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.ReEmail_V.Name := 'Loading_Register_ReEmail_V';
   ex_load.Reg.Main.ReEmail_V.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.ReEmail_V.SetBounds(20, 210, ex_load.Reg.Main.Panel.Width - 40, 20);
+  ex_load.Reg.Main.ReEmail_V.SetBounds(20, 250, ex_load.Reg.Main.Panel.Width - 40, 30);
   ex_load.Reg.Main.ReEmail_V.Text := '';
-  ex_load.Reg.Main.ReEmail_V.OnClick := ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.ReEmail_V.Font.Size := 18;
+  ex_load.Reg.Main.ReEmail_V.StyledSettings := ex_load.Reg.Main.ReEmail_V.StyledSettings - [TStyledSetting.Size];
+  ex_load.Reg.Main.ReEmail_V.OnMouseEnter := ex_load.Input.mouse.Edit.OnMouseEnter;
   ex_load.Reg.Main.ReEmail_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.ReEmail_V.Visible := True;
 
   ex_load.Reg.Main.Capt_Img := TImage.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt_Img.Name := 'Loading_Register_Capt_Img';
   ex_load.Reg.Main.Capt_Img.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Capt_Img.SetBounds(20, 240, 240, 150);
+  ex_load.Reg.Main.Capt_Img.SetBounds(20, 300, 240, 150);
   ex_load.Reg.Main.Capt_Img.Bitmap.LoadFromFile(ex_load.Path.Images + 'captcha.png');
   ex_load.Reg.Main.Capt_Img.WrapMode := TImageWrapMode.Fit;
   ex_load.Reg.Main.Capt_Img.Visible := True;
@@ -591,7 +618,7 @@ begin
   ex_load.Reg.Main.Capt_Refresh := TText.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt_Refresh.Name := 'Loading_Register_Capt_Refresh';
   ex_load.Reg.Main.Capt_Refresh.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Capt_Refresh.SetBounds(266, 240, 24, 24);
+  ex_load.Reg.Main.Capt_Refresh.SetBounds(266, 300, 24, 24);
   ex_load.Reg.Main.Capt_Refresh.Font.Family := 'IcoMoon-Free';
   ex_load.Reg.Main.Capt_Refresh.Font.Size := 24;
   ex_load.Reg.Main.Capt_Refresh.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -611,23 +638,25 @@ begin
   ex_load.Reg.Main.Capt := TLabel.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt.Name := 'Loading_Register_Capt';
   ex_load.Reg.Main.Capt.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Capt.SetBounds(20, 390, 200, 20);
+  ex_load.Reg.Main.Capt.SetBounds(20, 450, 200, 20);
   ex_load.Reg.Main.Capt.Text := 'Type captcha letters :';
   ex_load.Reg.Main.Capt.Visible := True;
 
   ex_load.Reg.Main.Capt_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Capt_V.Name := 'Loading_Register_Capt_V';
   ex_load.Reg.Main.Capt_V.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Capt_V.SetBounds(20, 410, 240, 20);
+  ex_load.Reg.Main.Capt_V.SetBounds(20, 470, 240, 30);
   ex_load.Reg.Main.Capt_V.Text := '';
-  ex_load.Reg.Main.Capt_V.OnClick := ex_load.Input.mouse.Edit.OnMouseClick;
+  ex_load.Reg.Main.Capt_V.Font.Size := 18;
+  ex_load.Reg.Main.Capt_V.StyledSettings := ex_load.Reg.Main.Capt_V.StyledSettings - [TStyledSetting.Size];
+  ex_load.Reg.Main.Capt_V.OnMouseEnter := ex_load.Input.mouse.Edit.OnMouseEnter;
   ex_load.Reg.Main.Capt_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Reg.Main.Capt_V.Visible := True;
 
   ex_load.Reg.Main.Terms := TText.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Terms.Name := 'Loading_Register_Terms';
   ex_load.Reg.Main.Terms.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Terms.SetBounds(270, 290, 200, 20);
+  ex_load.Reg.Main.Terms.SetBounds(270, 375, 200, 20);
   ex_load.Reg.Main.Terms.Text := '<< Read the Terms >>';
   ex_load.Reg.Main.Terms.TextSettings.FontColor := TAlphaColorRec.White;
   ex_load.Reg.Main.Terms.TextSettings.Font.Size := 16;
@@ -639,7 +668,7 @@ begin
   ex_load.Reg.Main.Terms_Check := TCheckBox.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Terms_Check.Name := 'Loading_Register_Terms_Check';
   ex_load.Reg.Main.Terms_Check.Parent := ex_load.Reg.Main.Panel;
-  ex_load.Reg.Main.Terms_Check.SetBounds(310, 320, 200, 17);
+  ex_load.Reg.Main.Terms_Check.SetBounds(310, 400, 200, 17);
   ex_load.Reg.Main.Terms_Check.Text := 'I accept the terms';
   ex_load.Reg.Main.Terms_Check.Enabled := False;
   ex_load.Reg.Main.Terms_Check.OnClick := ex_load.Input.mouse.Checkbox.OnMouseClick;
@@ -673,7 +702,7 @@ begin
   ex_load.Terms.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.Terms.Panel.Name := 'Loading_Terms';
   ex_load.Terms.Panel.Parent := ex_load.Scene.Back;
-  ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 520);
+  ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 600);
   ex_load.Terms.Panel.Visible := True;
 
   CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, 'Read the terms of ExtraFE.', False, nil);

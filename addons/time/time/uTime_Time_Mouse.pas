@@ -5,6 +5,7 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  System.UiTypes,
   FMX.TabControl,
   FMX.Controls,
   FMX.Listbox,
@@ -14,6 +15,13 @@ uses
 
 type
   TTIME_ADDON_TIME_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TTIME_ADDON_TIME_TEXT = class(TObject)
     procedure OnMouseClick(Sender: TObject);
     procedure OnMouseEnter(Sender: TObject);
     procedure OnMouseLeave(Sender: TObject);
@@ -42,6 +50,7 @@ type
 type
   TTIME_TIME_MOUSE_ACTIONS = record
     Image: TTIME_ADDON_TIME_IMAGE;
+    Text: TTIME_ADDON_TIME_TEXT;
     TabItem: TTIME_ADDON_TIME_TABITEM;
     Combobox: TTIME_ADDON_TIME_COMBOBOX;
     Checkbox: TTIME_ADDON_TIME_CHECKBOX;
@@ -59,28 +68,17 @@ uses
 
 procedure TTIME_ADDON_TIME_IMAGE.OnMouseClick(Sender: TObject);
 begin
-  if TImage(Sender).Name = 'A_T_P_Time_Settings' then
-  begin
-    if not Assigned(vTime.P_Time.Config.Panel) then
-    begin
-      uTime_Time_SetAll_Set_Config;
-      uTime_Time_SetAll_Set_General;
-    end
-    else
-      uTime_Time_SetAll_Config_Free;
-  end;
+
 end;
 
 procedure TTIME_ADDON_TIME_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-  if TImage(Sender).Name = 'A_T_P_Time_Settings' then
-    vTime.P_Time.Settings_Glow.Enabled := True;
+
 end;
 
 procedure TTIME_ADDON_TIME_IMAGE.OnMouseLeave(Sender: TObject);
 begin
-  if TImage(Sender).Name = 'A_T_P_Time_Settings' then
-    vTime.P_Time.Settings_Glow.Enabled := False;
+
 end;
 
 { TTIME_ADDON_TIME_TABITEM }
@@ -128,7 +126,7 @@ end;
 procedure TTIME_ADDON_TIME_COMBOBOX.OnChange(Sender: TObject);
 begin
   if TComboBox(Sender).Name = 'A_T_P_Time_General_Type' then
-    uTime_Time_Actions_ShowType(TComboBox(Sender).Items.Strings[TComboBox(Sender).ItemIndex])
+    uTime_Time_Actions.General_ShowType(TComboBox(Sender).Items.Strings[TComboBox(Sender).ItemIndex])
   else if TComboBox(Sender).Name = 'A_T_P_Time_General_Both_Type' then
     uTime_Time_Actions_ShowBothType(TComboBox(Sender).Items.Strings[TComboBox(Sender).ItemIndex])
   else if TComboBox(Sender).Name = 'A_T_P_Time_Digital_Sep_Symbol' then
@@ -161,9 +159,39 @@ begin
     uTime_Time_Actions_Digital_SetBackStrokeColor(TColorComboBox(Sender).Color)
 end;
 
+{ TTIME_ADDON_TIME_TEXT }
+
+procedure TTIME_ADDON_TIME_TEXT.OnMouseClick(Sender: TObject);
+begin
+if TText(Sender).Name = 'A_T_P_Time_Settings' then
+  begin
+    if not Assigned(vTime.P_Time.Config.Panel) then
+    begin
+      uTime_Time_SetAll_Set_Config;
+      uTime_Time_SetAll_Set_General;
+    end
+    else
+      uTime_Time_SetAll_Config_Free;
+  end;
+end;
+
+procedure TTIME_ADDON_TIME_TEXT.OnMouseEnter(Sender: TObject);
+begin
+  TText(Sender).Cursor := crHandPoint;
+  if TText(Sender).Name = 'A_T_P_Time_Settings' then
+    vTime.P_Time.Settings_Glow.Enabled := True;
+end;
+
+procedure TTIME_ADDON_TIME_TEXT.OnMouseLeave(Sender: TObject);
+begin
+  if TText(Sender).Name = 'A_T_P_Time_Settings' then
+    vTime.P_Time.Settings_Glow.Enabled := False;
+end;
+
 initialization
 
 addons.time.Input.mouse_time.Image := TTIME_ADDON_TIME_IMAGE.Create;
+addons.time.Input.mouse_time.Text := TTIME_ADDON_TIME_TEXT.Create;
 addons.time.Input.mouse_time.TabItem := TTIME_ADDON_TIME_TABITEM.Create;
 addons.time.Input.mouse_time.Combobox := TTIME_ADDON_TIME_COMBOBOX.Create;
 addons.time.Input.mouse_time.Checkbox := TTIME_ADDON_TIME_CHECKBOX.Create;
@@ -172,6 +200,7 @@ addons.time.Input.mouse_time.ColorCombobox := TTIME_ADDON_TIME_COLORCOMBOBOX.Cre
 finalization
 
 addons.time.Input.mouse_time.Image.Free;
+addons.time.Input.mouse_time.Text.Free;
 addons.time.Input.mouse_time.TabItem.Free;
 addons.time.Input.mouse_time.Combobox.Free;
 addons.time.Input.mouse_time.Checkbox.Free;

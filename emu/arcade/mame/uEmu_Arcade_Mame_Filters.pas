@@ -96,6 +96,8 @@ procedure uEmu_Arcade_Mame_Filters_Info(vItem: Integer; vFilterName: String);
 implementation
 
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
   uLoad_AllTypes,
   emu,
   uWindows,
@@ -136,7 +138,7 @@ end;
 
 procedure uEmu_Arcade_Mame_Filters_Ini;
 begin
-  mame.Prog.Ini_Filters := TIniFile.Create(mame.Prog.Data_Path + 'gamelist_filters.ini');
+  mame.Prog.Ini_Filters := TIniFile.Create(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Database + 'gamelist_filters.ini');
   mame.Prog.Filter := mame.Prog.Ini_Filters.ReadString('MASTER', 'Selected', mame.Prog.Filter);
 end;
 
@@ -166,7 +168,7 @@ var
 begin
   vList := Tstringlist.Create;
   if vFilterName = 'All_Unfiltered' then
-    vList.LoadFromFile(mame.Prog.Data_Path + mame.Prog.Games_List);
+    vList.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Database+ 'gamelist.txt');
 
   SetLength(mame.Gamelist.List, 31);
   for vi := 0 to 30 do

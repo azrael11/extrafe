@@ -60,7 +60,7 @@ begin
     else if UpperCase(vKey) = 'S' then
       uWeather_Config_ShowHide(True)
     else if UpperCase(vKey) = IntToStr(vi + 1) then
-      uMain_Actions_ShowHide_Addons(1000 + vi);
+      uMain_Actions.ShowHide_Addon(1000 + vi, extrafe.prog.state, 'weather');
   end;
 end;
 

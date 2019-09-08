@@ -133,7 +133,7 @@ begin
     emulation.Selection_Ani.Enabled := True;
     vWeather.Scene.Weather_Ani.Start;
     mainScene.Footer.Back_Ani.Start;
-    uMain_Actions_All_Icons_Active(vIconsNum);
+    uMain_Actions.All_Icons_Active(vIconsNum);
     extrafe.prog.State := 'main';
   end;
 end;
@@ -336,56 +336,61 @@ end;
 
 procedure Show_Map(vProvider, vLat, vLon: String);
 begin
-  vWeather.Scene.Map.Rect := TRadiantRectangle.Create(vWeather.Scene.weather);
-  vWeather.Scene.Map.Rect.Name := 'A_W_Map';
-  vWeather.Scene.Map.Rect.Parent := vWeather.Scene.weather;
-  vWeather.Scene.Map.Rect.SetBounds(extrafe.res.Width + 10, 10, extrafe.res.Width - 500, 778);
-  vWeather.Scene.Map.Rect.Fill.Kind := TBrushKind.Solid;
-  vWeather.Scene.Map.Rect.Fill.Color := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Map.Rect.Visible := True;
+  if Assigned(vWeather.Scene.Map.Rect) then
+    Close_Map
+  else
+  begin
+    vWeather.Scene.Map.Rect := TRadiantRectangle.Create(vWeather.Scene.weather);
+    vWeather.Scene.Map.Rect.Name := 'A_W_Map';
+    vWeather.Scene.Map.Rect.Parent := vWeather.Scene.weather;
+    vWeather.Scene.Map.Rect.SetBounds(extrafe.res.Width + 10, 10, extrafe.res.Width - 500, 778);
+    vWeather.Scene.Map.Rect.Fill.Kind := TBrushKind.Solid;
+    vWeather.Scene.Map.Rect.Fill.Color := TAlphaColorRec.Deepskyblue;
+    vWeather.Scene.Map.Rect.Visible := True;
 
-  vWeather.Scene.Map.Close := TText.Create(vWeather.Scene.Map.Rect);
-  vWeather.Scene.Map.Close.Name := 'A_W_Map_Close';
-  vWeather.Scene.Map.Close.Parent := vWeather.Scene.Map.Rect;
-  vWeather.Scene.Map.Close.SetBounds(vWeather.Scene.Map.Rect.Width - 40, 6, 28, 28);
-  vWeather.Scene.Map.Close.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Map.Close.Font.Size := 24;
-  vWeather.Scene.Map.Close.TextSettings.FontColor := TAlphaColorRec.White;
-  vWeather.Scene.Map.Close.Text := #$ea0f;
-  vWeather.Scene.Map.Close.OnClick := addons.weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Map.Close.OnMouseEnter := addons.weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Map.Close.OnMouseLeave := addons.weather.Input.mouse.Text.OnMouseLeave;
-  vWeather.Scene.Map.Close.Visible := True;
+    vWeather.Scene.Map.Close := TText.Create(vWeather.Scene.Map.Rect);
+    vWeather.Scene.Map.Close.Name := 'A_W_Map_Close';
+    vWeather.Scene.Map.Close.Parent := vWeather.Scene.Map.Rect;
+    vWeather.Scene.Map.Close.SetBounds(vWeather.Scene.Map.Rect.Width - 40, 6, 28, 28);
+    vWeather.Scene.Map.Close.Font.Family := 'IcoMoon-Free';
+    vWeather.Scene.Map.Close.Font.Size := 24;
+    vWeather.Scene.Map.Close.TextSettings.FontColor := TAlphaColorRec.White;
+    vWeather.Scene.Map.Close.Text := #$ea0f;
+    vWeather.Scene.Map.Close.OnClick := addons.weather.Input.mouse.Text.OnMouseClick;
+    vWeather.Scene.Map.Close.OnMouseEnter := addons.weather.Input.mouse.Text.OnMouseEnter;
+    vWeather.Scene.Map.Close.OnMouseLeave := addons.weather.Input.mouse.Text.OnMouseLeave;
+    vWeather.Scene.Map.Close.Visible := True;
 
-  vWeather.Scene.Map.Close_Glow := TGlowEffect.Create(vWeather.Scene.Map.Close);
-  vWeather.Scene.Map.Close_Glow.Name := 'A_W_Map_Close_Glow';
-  vWeather.Scene.Map.Close_Glow.Parent := vWeather.Scene.Map.Close;
-  vWeather.Scene.Map.Close_Glow.Softness := 0.9;
-  vWeather.Scene.Map.Close_Glow.GlowColor := TAlphaColorRec.White;
-  vWeather.Scene.Map.Close_Glow.Enabled := False;
+    vWeather.Scene.Map.Close_Glow := TGlowEffect.Create(vWeather.Scene.Map.Close);
+    vWeather.Scene.Map.Close_Glow.Name := 'A_W_Map_Close_Glow';
+    vWeather.Scene.Map.Close_Glow.Parent := vWeather.Scene.Map.Close;
+    vWeather.Scene.Map.Close_Glow.Softness := 0.9;
+    vWeather.Scene.Map.Close_Glow.GlowColor := TAlphaColorRec.White;
+    vWeather.Scene.Map.Close_Glow.Enabled := False;
 
-  vWeather.Scene.Map.Info_Line := TText.Create(vWeather.Scene.Map.Rect);
-  vWeather.Scene.Map.Info_Line.Name := 'A_W_Map_Info_Line';
-  vWeather.Scene.Map.Info_Line.Parent := vWeather.Scene.Map.Rect;
-  vWeather.Scene.Map.Info_Line.SetBounds(15, 6, vWeather.Scene.Map.Rect.Width - 55, 28);
-  vWeather.Scene.Map.Info_Line.Font.Size := 24;
-  vWeather.Scene.Map.Info_Line.TextSettings.FontColor := TAlphaColorRec.White;
-  vWeather.Scene.Map.Info_Line.Text := 'Provider : ' + vProvider + ' , Coordinates = Lat : ' + vLat + ' Lon : ' + vLon;
-  vWeather.Scene.Map.Info_Line.Visible := True;
+    vWeather.Scene.Map.Info_Line := TText.Create(vWeather.Scene.Map.Rect);
+    vWeather.Scene.Map.Info_Line.Name := 'A_W_Map_Info_Line';
+    vWeather.Scene.Map.Info_Line.Parent := vWeather.Scene.Map.Rect;
+    vWeather.Scene.Map.Info_Line.SetBounds(15, 6, vWeather.Scene.Map.Rect.Width - 55, 28);
+    vWeather.Scene.Map.Info_Line.Font.Size := 24;
+    vWeather.Scene.Map.Info_Line.TextSettings.FontColor := TAlphaColorRec.White;
+    vWeather.Scene.Map.Info_Line.Text := 'Provider : ' + vProvider + ' , Coordinates = Lat : ' + vLat + ' Lon : ' + vLon;
+    vWeather.Scene.Map.Info_Line.Visible := True;
 
-  //Πρέπει να φτιάξω στο config μενου επιλογή χαρτών και επιλογή γλώσσας χαρτών και να μπει και στα settings addons του user
+    // Πρέπει να φτιάξω στο config μενου επιλογή χαρτών και επιλογή γλώσσας χαρτών και να μπει και στα settings addons του user
 
-  vWeather.Scene.Map.Map_Url := 'https://bing.com/maps/default.aspx?cp=' + vLat + '~' + vLon + '&lvl=12&style=r&setlang=el';
+    vWeather.Scene.Map.Map_Url := 'https://bing.com/maps/default.aspx?cp=' + vLat + '~' + vLon + '&lvl=12&style=r&setlang=el';
 
-  vWeather.Scene.Map.Ani := TFloatAnimation.Create(vWeather.Scene.Map.Rect);
-  vWeather.Scene.Map.Ani.Name := 'A_W_Map_Animation';
-  vWeather.Scene.Map.Ani.Parent := vWeather.Scene.Map.Rect;
-  vWeather.Scene.Map.Ani.PropertyName := 'Position.X';
-  vWeather.Scene.Map.Ani.Duration := 0.6;
-  vWeather.Scene.Map.Ani.StartValue := vWeather.Scene.Map.Rect.Position.X;
-  vWeather.Scene.Map.Ani.StopValue := 500;
-  vWeather.Scene.Map.Ani.Enabled := True;
-  vWeather.Scene.Map.Ani.OnFinish := vWeather.Scene.Map.Ani_On_Finish;
+    vWeather.Scene.Map.Ani := TFloatAnimation.Create(vWeather.Scene.Map.Rect);
+    vWeather.Scene.Map.Ani.Name := 'A_W_Map_Animation';
+    vWeather.Scene.Map.Ani.Parent := vWeather.Scene.Map.Rect;
+    vWeather.Scene.Map.Ani.PropertyName := 'Position.X';
+    vWeather.Scene.Map.Ani.Duration := 0.6;
+    vWeather.Scene.Map.Ani.StartValue := vWeather.Scene.Map.Rect.Position.X;
+    vWeather.Scene.Map.Ani.StopValue := 500;
+    vWeather.Scene.Map.Ani.Enabled := True;
+    vWeather.Scene.Map.Ani.OnFinish := vWeather.Scene.Map.Ani_On_Finish;
+  end;
 end;
 
 procedure Close_Map;

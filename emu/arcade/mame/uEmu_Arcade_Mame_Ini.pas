@@ -11,11 +11,9 @@ uses
   procedure uEmu_Arcade_Mame_Ini_Save;
   procedure uEmu_Arcade_Mame_Ini_Free;
 
-  procedure uEmu_Arcade_Mame_Ini_GetMediaPaths;
-  procedure uEmu_Arcade_Mame_Ini_SaveMediaPaths;
-
 implementation
 uses
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   uEmu_SetAll,
   uEmu_Arcade_Mame_AllTypes;
@@ -733,23 +731,23 @@ begin
 //DONE 1 -oNikos Kordas -cuEmu_Arcade_Mame: Get from ini all data and tranfer it to TEMU_MAME_INI for farther manipulation
   mame.Emu.Ini.CORE_SEARCH_rompath:= TStringList.Create;
   mame.Emu.Ini.CORE_SEARCH_inipath:= TStringList.Create;
-  mame.Prog.Path:= extrafe.prog.Path+ 'emu\arcade\mame\config\';
-  mame.Prog.Ini:= TIniFile.Create(mame.Prog.Path+ 'prog_mame.ini');
-  mame.Prog.Data_Path:= mame.Prog.Ini.ReadString('PROG', 'Data_Path', mame.Prog.Data_Path);
-  mame.Prog.Games_List:= mame.Prog.Ini.ReadString('PROG', 'Games_List', mame.Prog.Games_List);
-  mame.Prog.Games_XML:= mame.Prog.Ini.ReadString('PROG', 'Games_XML', mame.Prog.Games_XML);
-  mame.Prog.Images:= mame.Prog.Ini.ReadString('PROG', 'Images', mame.Prog.Images);
-  mame.Prog.Sounds:= mame.Prog.Ini.ReadString('PROG', 'Sounds', mame.Prog.Sounds);
-
-  mame.Emu.Name:= mame.Prog.Ini.ReadString('MAME', 'mame_name', mame.Emu.Name);
-  mame.Emu.Path:= mame.Prog.Ini.ReadString('MAME', 'mame_path', mame.Emu.Path);
-  mame.Emu.Ini_Path:= mame.Prog.Ini.ReadString('MAME', 'mame_ini_path', mame.Emu.Ini_Path);
+//  mame.Prog.Path:= extrafe.prog.Path+ 'emu\arcade\mame\config\';
+//  mame.Prog.Ini:= TIniFile.Create(mame.Prog.Path+ 'prog_mame.ini');
+//  mame.Prog.Data_Path:= mame.Prog.Ini.ReadString('PROG', 'Data_Path', mame.Prog.Data_Path);
+//  mame.Prog.Games_List:= mame.Prog.Ini.ReadString('PROG', 'Games_List', mame.Prog.Games_List);
+//  mame.Prog.Games_XML:= mame.Prog.Ini.ReadString('PROG', 'Games_XML', mame.Prog.Games_XML);
+//  mame.Prog.Images:= mame.Prog.Ini.ReadString('PROG', 'Images', mame.Prog.Images);
+//  mame.Prog.Sounds:= mame.Prog.Ini.ReadString('PROG', 'Sounds', mame.Prog.Sounds);
+//
+//  mame.Emu.Name:= mame.Prog.Ini.ReadString('MAME', 'mame_name', mame.Emu.Name);
+//  mame.Emu.Path:= mame.Prog.Ini.ReadString('MAME', 'mame_path', mame.Emu.Path);
+//  mame.Emu.Ini_Path:= mame.Prog.Ini.ReadString('MAME', 'mame_ini_path', mame.Emu.Ini_Path);
 
   
   //Gameinit support
   mame.Support.GameInit:= TStringList.Create;
 
-  AssignFile(vText, mame.Emu.Ini_Path+ 'mame.ini');
+  AssignFile(vText, user_Active_Local.EMULATORS.Arcade_D.Mame_D.Ini);
   Reset(vText);
   while not Eof(vText) do
     begin
@@ -1297,67 +1295,6 @@ end;
 procedure uEmu_Arcade_Mame_Ini_Free;
 begin
 
-end;
-
-procedure uEmu_Arcade_Mame_Ini_GetMediaPaths;
-begin
-//DONE 1 -oNikos Kordas -cuEmu_Arcade_Mame: Get Media paths before entering emu scene
-  mame.Emu.Media.Artworks:= mame.Prog.Ini.ReadString('MEDIA', 'Artworks_Path', mame.Emu.Media.Artworks);
-  mame.Emu.Media.Cabinets:= mame.Prog.Ini.ReadString('MEDIA', 'Cabinets_Path', mame.Emu.Media.Cabinets);
-  mame.Emu.Media.Control_Panels:= mame.Prog.Ini.ReadString('MEDIA', 'Control_Panels_Path', mame.Emu.Media.Control_Panels);
-  mame.Emu.Media.Covers:= mame.Prog.Ini.ReadString('MEDIA', 'Covers_Path', mame.Emu.Media.Covers);
-  mame.Emu.Media.Flyers:= mame.Prog.Ini.ReadString('MEDIA', 'Flyers_Path', mame.Emu.Media.Flyers);
-  mame.Emu.Media.Fanart:= mame.Prog.Ini.ReadString('MEDIA', 'Fanart_Path', mame.Emu.Media.Fanart);
-  mame.Emu.Media.Game_Over:= mame.Prog.Ini.ReadString('MEDIA', 'Game_Over_Path', mame.Emu.Media.Game_Over);
-  mame.Emu.Media.Icons:= mame.Prog.Ini.ReadString('MEDIA', 'Icons_Path', mame.Emu.Media.Icons);
-  mame.Emu.Media.Manuals:= mame.Prog.Ini.ReadString('MEDIA', 'Manuals_Path', mame.Emu.Media.Manuals);
-  mame.Emu.Media.Marquees:= mame.Prog.Ini.ReadString('MEDIA', 'Marquees_Path', mame.Emu.Media.Marquees);
-  mame.Emu.Media.Pcbs:= mame.Prog.Ini.ReadString('MEDIA', 'Pcbs_Path', mame.Emu.Media.Pcbs);
-  mame.Emu.Media.Snapshots:= mame.Prog.Ini.ReadString('MEDIA', 'Snapshots_Path', mame.Emu.Media.Snapshots);
-  mame.Emu.Media.Titles:= mame.Prog.Ini.ReadString('MEDIA', 'Titles_Path', mame.Emu.Media.Titles);
-  mame.Emu.Media.Artwork_Preview:= mame.Prog.Ini.ReadString('MEDIA', 'Artwork_Preview_Path', mame.Emu.Media.Artwork_Preview);
-  mame.Emu.Media.Bosses:= mame.Prog.Ini.ReadString('MEDIA', 'Bosses_Path', mame.Emu.Media.Bosses);
-  mame.Emu.Media.Ends:= mame.Prog.Ini.ReadString('MEDIA', 'Ends_Path', mame.Emu.Media.Ends);
-  mame.Emu.Media.How_To:= mame.Prog.Ini.ReadString('MEDIA', 'How_To_Path', mame.Emu.Media.How_To);
-  mame.Emu.Media.Logos:= mame.Prog.Ini.ReadString('MEDIA', 'Logos_Path', mame.Emu.Media.Logos);
-  mame.Emu.Media.Scores:= mame.Prog.Ini.ReadString('MEDIA', 'Scores_Path', mame.Emu.Media.Scores);
-  mame.Emu.Media.Selects:= mame.Prog.Ini.ReadString('MEDIA', 'Selects_Path', mame.Emu.Media.Selects);
-  mame.Emu.Media.Stamps:= mame.Prog.Ini.ReadString('MEDIA', 'Stamps_Path', mame.Emu.Media.Stamps);
-  mame.Emu.Media.Versus:= mame.Prog.Ini.ReadString('MEDIA', 'Versus_Path', mame.Emu.Media.Versus);
-  mame.Emu.Media.Warnings:= mame.Prog.Ini.ReadString('MEDIA', 'Warnings_Path', mame.Emu.Media.Warnings);
-  mame.Emu.Media.Soundtracks:= mame.Prog.Ini.ReadString('MEDIA', 'Soundtracks_Path', mame.Emu.Media.Soundtracks);
-  mame.Emu.Media.Support_Files:= mame.Prog.Ini.ReadString('MEDIA', 'Support_Files_Path', mame.Emu.Media.Support_Files);
-  mame.Emu.Media.Videos:= mame.Prog.Ini.ReadString('MEDIA', 'Videos_Path', mame.Emu.Media.Videos);
-end;
-
-procedure uEmu_Arcade_Mame_Ini_SaveMediaPaths;
-begin
-  mame.Prog.Ini.WriteString('MEDIA', 'Artworks_Path', mame.Emu.Media.Artworks);
-  mame.Prog.Ini.WriteString('MEDIA', 'Cabinets_Path', mame.Emu.Media.Cabinets);
-  mame.Prog.Ini.WriteString('MEDIA', 'Control_Panels_Path', mame.Emu.Media.Control_Panels);
-  mame.Prog.Ini.WriteString('MEDIA', 'Covers_Path', mame.Emu.Media.Covers);
-  mame.Prog.Ini.WriteString('MEDIA', 'Flyers_Path', mame.Emu.Media.Flyers);
-  mame.Prog.Ini.WriteString('MEDIA', 'Fanart_Path', mame.Emu.Media.Fanart);
-  mame.Prog.Ini.WriteString('MEDIA', 'Game_Over_Path', mame.Emu.Media.Game_Over);
-  mame.Prog.Ini.WriteString('MEDIA', 'Icons_Path', mame.Emu.Media.Icons);
-  mame.Prog.Ini.WriteString('MEDIA', 'Manuals_Path', mame.Emu.Media.Manuals);
-  mame.Prog.Ini.WriteString('MEDIA', 'Marquees_Path', mame.Emu.Media.Marquees);
-  mame.Prog.Ini.WriteString('MEDIA', 'Pcbs_Path', mame.Emu.Media.Pcbs);
-  mame.Prog.Ini.WriteString('MEDIA', 'Snapshots_Path', mame.Emu.Media.Snapshots);
-  mame.Prog.Ini.WriteString('MEDIA', 'Titles_Path', mame.Emu.Media.Titles);
-  mame.Prog.Ini.WriteString('MEDIA', 'Artwork_Preview_Path', mame.Emu.Media.Artwork_Preview);
-  mame.Prog.Ini.WriteString('MEDIA', 'Bosses_Path', mame.Emu.Media.Bosses);
-  mame.Prog.Ini.WriteString('MEDIA', 'Ends_Path', mame.Emu.Media.Ends);
-  mame.Prog.Ini.WriteString('MEDIA', 'How_To_Path', mame.Emu.Media.How_To);
-  mame.Prog.Ini.WriteString('MEDIA', 'Logos_Path', mame.Emu.Media.Logos);
-  mame.Prog.Ini.WriteString('MEDIA', 'Scores_Path', mame.Emu.Media.Scores);
-  mame.Prog.Ini.WriteString('MEDIA', 'Selects_Path', mame.Emu.Media.Selects);
-  mame.Prog.Ini.WriteString('MEDIA', 'Stamps_Path', mame.Emu.Media.Stamps);
-  mame.Prog.Ini.WriteString('MEDIA', 'Versus_Path', mame.Emu.Media.Versus);
-  mame.Prog.Ini.WriteString('MEDIA', 'Warnings_Path', mame.Emu.Media.Warnings);
-  mame.Prog.Ini.WriteString('MEDIA', 'Soundtracks_Path', mame.Emu.Media.Soundtracks);
-  mame.Prog.Ini.WriteString('MEDIA', 'Support_Files_Path', mame.Emu.Media.Support_Files);
-  mame.Prog.Ini.WriteString('MEDIA', 'Videos_Path', mame.Emu.Media.Videos);
 end;
 
 end.

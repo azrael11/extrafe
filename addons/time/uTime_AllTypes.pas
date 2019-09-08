@@ -105,8 +105,9 @@ type
   TTIME_TAB = record
     Back: Timage;
     Back_Glow: TInnerGlowEffect;
-    Icon: Timage;
+    Icon: TText;
     Text: TText;
+    UpPanel: TPanel;
   end;
 
 type

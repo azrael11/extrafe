@@ -12,16 +12,16 @@ uses
 
 procedure uMain_Config_Addons_Actions_AddonActivation(vAddonNum: integer);
 
-procedure uMain_Config_Addons_Actions_LeftArrow;
-procedure uMain_Config_Addons_Actions_RightArrow;
+procedure LeftArrow;
+procedure RightArrow;
 
 // Addons activations deactivations
 // Weather
-procedure uMain_Config_Addons_Actions_Activate_Weather;
-procedure uMain_Config_Addons_Actions_Activate_Weather_FreshStart(vFresh: Boolean);
-procedure uMain_Config_Addons_Actions_Activate_Weather_Action;
-procedure uMain_Config_Addons_Actions_Activate_Weather_ShowMessage;
-procedure uMain_Config_Addons_Actions_Activate_Weather_FreeMessage;
+procedure Activate_Weather;
+procedure Activate_Weather_FreshStart(vFresh: Boolean);
+procedure Activate_Weather_Action;
+procedure Activate_Weather_ShowMessage;
+procedure Activate_Weather_FreeMessage;
 procedure uMain_Config_Addons_Actions_Deactivate_Weather;
 procedure uMain_Config_Addons_Actions_Deactivate_Weather_Action;
 procedure uMain_Config_Addons_Actions_Deactivate_Weather_ShowMessage;
@@ -49,6 +49,8 @@ implementation
 uses
   uLoad_AllTypes,
   main,
+  uDatabase,
+  uDatabase_ActiveUser,
   uWindows,
   uMain_SetAll,
   uMain_AllTypes,
@@ -72,13 +74,13 @@ begin
     if vDeletedIcon <= vi then
       if vDeletedIcon = vi then
       begin
-        mainScene.Header.Addon_Icons[vi].Bitmap := nil;
+//        mainScene.Header.Addon_Icons[vi].Bitmap := nil;
         addons.Active_PosNames[vi] := '';
       end
       else
       begin
-        mainScene.Header.Addon_Icons[(vDeletedIcon + vi) - 3].Bitmap := mainScene.Header.Addon_Icons[vi].Bitmap;
-        mainScene.Header.Addon_Icons[vi].Bitmap := nil;
+//        mainScene.Header.Addon_Icons[(vDeletedIcon + vi) - 3].Bitmap := mainScene.Header.Addon_Icons[vi].Bitmap;
+//        mainScene.Header.Addon_Icons[vi].Bitmap := nil;
         addons.Active_PosNames[(vDeletedIcon + vi) - 3] := addons.Active_PosNames[vi];
         uMain_Config_Addons_Actions_SetIconsToRightPosition_addonPos(addons.Active_PosNames[vi], ((vDeletedIcon + vi) - 3));
         addons.Active_PosNames[vi] := '';
@@ -86,7 +88,7 @@ begin
 end;
 
 /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-procedure uMain_Config_Addons_Actions_LeftArrow;
+procedure LeftArrow;
 begin
   if mainScene.Config.main.R.addons.Arrow_Left_Gray.Enabled = False then
   begin
@@ -104,19 +106,19 @@ begin
       mainScene.Config.main.R.addons.Right_Num.Text := (ex_main.Config.Addons_Tab_Last - 2).ToString;
     end;
     mainScene.Config.main.R.addons.Left_Num.Text := ex_main.Config.Addons_Tab_First.ToString;
-    uMain_Config_Addons_Icons_Free;
-    uMain_Config_Addons_Icons(ex_main.Config.Addons_Tab_First);
+    uMain_Config_Addons.Icons_Free;
+    uMain_Config_Addons.Icons(ex_main.Config.Addons_Tab_First);
     if ex_main.Config.Addons_Active_Tab <> -1 then
     begin
       if ex_main.Config.Addons_Active_Tab = addons.Total_Num then
         FreeAndNil(mainScene.Config.main.R.addons.Icons_Panel[addons.Total_Num])
       else
-        uMain_Config_Addons_ShowInfo(ex_main.Config.Addons_Active_Tab);
+        uMain_Config_Addons.ShowInfo(ex_main.Config.Addons_Active_Tab);
     end;
   end;
 end;
 
-procedure uMain_Config_Addons_Actions_RightArrow;
+procedure RightArrow;
 begin
   if mainScene.Config.main.R.addons.Arrow_Right_Gray.Enabled = False then
   begin
@@ -135,14 +137,14 @@ begin
       mainScene.Config.main.R.addons.Right_Num.Text := '0';
     end;
     mainScene.Config.main.R.addons.Right_Num.Text := (ex_main.Config.Addons_Tab_Last - 4).ToString;
-    uMain_Config_Addons_Icons_Free;
-    uMain_Config_Addons_Icons(ex_main.Config.Addons_Tab_First);
+    uMain_Config_Addons.Icons_Free;
+    uMain_Config_Addons.Icons(ex_main.Config.Addons_Tab_First);
     if ex_main.Config.Addons_Active_Tab <> -1 then
     begin
       if ex_main.Config.Addons_Active_Tab = 0 then
         FreeAndNil(mainScene.Config.main.R.addons.Icons_Panel[0])
       else
-        uMain_Config_Addons_ShowInfo(ex_main.Config.Addons_Active_Tab);
+        uMain_Config_Addons.ShowInfo(ex_main.Config.Addons_Active_Tab);
     end;
   end;
 end;
@@ -162,7 +164,7 @@ begin
   mainScene.Config.main.R.addons.Icons_Info[3].Activeted.Color := TAlphaColorRec.Lime;
   mainScene.Config.main.R.addons.Icons_Info[3].Action.Text := 'Deactivate';
   addons.Active_PosNames[addons.soundplayer.Main_Menu_Position] := 'soundplayer';
-  mainScene.Header.Addon_Icons[addons.soundplayer.Main_Menu_Position].Bitmap.LoadFromFile(addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png');
+//  mainScene.Header.Addon_Icons[addons.soundplayer.Main_Menu_Position].Bitmap.LoadFromFile(addons.soundplayer.Path.Icon + 'addons_soundplayer_icon.png');
   if vFresh then
   begin
     addons.soundplayer.ini.ini.WriteBool('General', 'First', False);
@@ -318,7 +320,7 @@ procedure uMain_Config_Addons_Actions_Deactivate_Soundplayer_Action;
 begin
   if addons.Active_Num = addons.soundplayer.Main_Menu_Position then
   begin
-    mainScene.Header.Addon_Icons[addons.Active_Num].Bitmap := nil;
+//    mainScene.Header.Addon_Icons[addons.Active_Num].Bitmap := nil;
     addons.Active_PosNames[addons.soundplayer.Main_Menu_Position] := '';
   end
   else
@@ -438,7 +440,7 @@ begin
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
-procedure uMain_Config_Addons_Actions_Activate_Weather_ShowMessage;
+procedure Activate_Weather_ShowMessage;
 begin
   extrafe.prog.State := 'main_config_addons_actions';
   mainScene.Config.main.Left_Blur.Enabled := True;
@@ -522,7 +524,7 @@ begin
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Cancel.Visible := True;
 end;
 
-procedure uMain_Config_Addons_Actions_Activate_Weather_FreeMessage;
+procedure Activate_Weather_FreeMessage;
 begin
   extrafe.prog.State := 'main_config';
   mainScene.Config.main.Left_Blur.Enabled := False;
@@ -530,62 +532,105 @@ begin
   FreeAndNil(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel)
 end;
 
-procedure uMain_Config_Addons_Actions_Activate_Weather_FreshStart(vFresh: Boolean);
+procedure Activate_Weather_FreshStart(vFresh: Boolean);
+var
+  vQuery: String;
+  vUser_Exists: Boolean;
 begin
-  Inc(addons.Active_Num, 1);
-  addons.weather.Active := True;
-  addons.weather.Main_Menu_Position := addons.Active_Num;
-  extrafe.ini.ini.WriteInteger('Addons', 'Active_Num', addons.Active_Num);
-  addons.weather.ini.ini.WriteString('WEATHER', 'Addon_Name', 'weather');
-  addons.weather.ini.ini.WriteBool('WEATHER', 'Active', True);
-  addons.weather.ini.ini.WriteInteger('WEATHER', 'Menu_Position', addons.weather.Main_Menu_Position);
-  mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Text := 'Active';
-  mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Lime;
-  mainScene.Config.main.R.addons.Icons_Info[2].Action.Text := 'Deactivate';
-  addons.Active_PosNames[addons.weather.Main_Menu_Position] := 'weather';
-  mainScene.Header.Addon_Icons[addons.weather.Main_Menu_Position].Bitmap.LoadFromFile(addons.weather.Path.Icon + 'addons_weather_icon.png');
-  if vFresh then
-  begin
-    addons.weather.ini.ini.WriteBool('General', 'First', False);
-    addons.weather.ini.ini.WriteInteger('Active', 'Active_Woeid', -1);
-    addons.weather.ini.ini.WriteInteger('Active', 'Active_Total', -1);
-    addons.weather.ini.ini.WriteString('Options', 'Degree', 'Celcius');
-    addons.weather.ini.ini.WriteInteger('Options', 'Refresh', 0);
-    addons.weather.ini.ini.WriteInteger('Iconset', 'Count', 2);
-    addons.weather.ini.ini.WriteString('Iconset', 'Name', 'pengui');
-    addons.weather.ini.ini.WriteString('Provider', 'Name', '');
+  Inc(user_Active_Local.addons.Active, 1);
+  user_Active_Local.addons.weather := True;
+  user_Active_Local.addons.Weather_D.Menu_Position := user_Active_Local.addons.Active;
+  vQuery := 'SELECT * FROM addon_weather WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Add(vQuery);
+  ExtraFE_Query_Local.Open;
+  ExtraFE_Query_Local.First;
+  if ExtraFE_Query_Local.FieldByName('USER_ID').AsString <> '' then
+    vUser_Exists := True
+  else
+    vUser_Exists := False;
 
-    addons.weather.Action.First := False;
-    addons.weather.Action.Active_WOEID := -1;
-    addons.weather.Action.Active_Total := -1;
-    addons.weather.Config.Refresh_Once := False;
-    addons.weather.Action.Provider := '';
+  if vUser_Exists then
+  begin
+    ExtraFE_Query_Local.Close;
+    ExtraFE_Query_Local.SQL.Clear;
+    ExtraFE_Query_Local.SQL.Add('UPDATE ADDON_WEATHER SET ' + '"MENU_POSITION"= ' + user_Active_Local.addons.Weather_D.Menu_Position.ToString + ', "FIRST_POP"='
+      + user_Active_Local.addons.Weather_D.First_Pop.ToString + ',' + ' "OLD_BACKUP"=' + user_Active_Local.addons.Weather_D.Old_Backup.ToString +
+      ', "PROVIDERS_COUNT"=' + user_Active_Local.addons.Weather_D.Provider_Count.ToString + ',' + ' "PROVIDER"=' + user_Active_Local.addons.Weather_D.Provider +
+      ', "YAHOO_ICONSET_COUNT"=' + user_Active_Local.addons.Weather_D.Yahoo.Iconset_Count.ToString + ',' + ' "YAHOO_ICONSET"=' +
+      user_Active_Local.addons.Weather_D.Yahoo.Iconset + ', "YAHOO_TOWNS"=' + user_Active_Local.addons.Weather_D.Yahoo.Towns_Count.ToString + ',' +
+      ' "YAHOO_SYSTEM"=' + user_Active_Local.addons.Weather_D.Yahoo.System + ', "YAHOO_DEGREE_TYPE"=' + user_Active_Local.addons.Weather_D.Yahoo.Degree + ',' +
+      ' "OWM_ICONSET_COUNT"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.Iconset_Count.ToString + ',' + ' "OWM_ICONSET"=' +
+      user_Active_Local.addons.Weather_D.OpenWeatherMap.Iconset + ', "OWM_TOWNS"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.Towns_Count.ToString +
+      ',' + ' "OWM_SYSTEM"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.System + ', "OWM_DEGREE_TYPE="' +
+      user_Active_Local.addons.Weather_D.OpenWeatherMap.Degree + ',' + ' "OWM_APIKEY"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.API +
+      ', "OWM_LANGUAGE"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.Language +'WHERE USER_ID=' + user_Active_Online.Num.ToString);
+    ExtraFE_Query_Local.ExecSQL;
   end
   else
   begin
-    addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First', addons.weather.Action.First);
-    addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name', addons.weather.Action.Provider);
-    addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid', addons.weather.Action.Active_WOEID);
-    addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
-    addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh', addons.weather.Config.Refresh_Once);
+    ExtraFE_Query_Local.Close;
+    ExtraFE_Query_Local.SQL.Clear;
+    ExtraFE_Query_Local.SQL.Add
+      ('INSERT INTO ADDON_WEATHER (USER_ID, MENU_POSITION, FIRST_POP, OLD_BACKUP, PROVIDERS_COUNT, PROVIDER, YAHOO_ICONSET_COUNT, YAHOO_ICONSET, YAHOO_TOWNS,' +
+      'YAHOO_SYSTEM, YAHOO_DEGREE_TYPE, OWM_ICONSET_COUNT, OWM_ICONSET, OWM_TOWNS, OWM_SYSTEM, OWM_DEGREE_TYPE, OWM_APIKEY, OWM_LANGUAGE) VALUES (''' +
+      user_Active_Online.Num.ToString + ''',''' + user_Active_Local.addons.Weather_D.Menu_Position.ToString +
+      ''' ,TRUE, FALSE, FALSE, 1, , 3, default, -1, metric, celcius, 0, , -1, metric, celcius, 5f1cc9b837706de78648b1de3443ccce, en');
+    ExtraFE_Query_Local.ExecSQL;
   end;
+
+  // extrafe.ini.ini.WriteInteger('Addons', 'Active_Num', addons.Active_Num);
+  // addons.weather.ini.ini.WriteString('WEATHER', 'Addon_Name', 'weather');
+  // addons.weather.ini.ini.WriteBool('WEATHER', 'Active', True);
+  // addons.weather.ini.ini.WriteInteger('WEATHER', 'Menu_Position', addons.weather.Main_Menu_Position);
+  mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Text := 'Active';
+  mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Lime;
+  mainScene.Config.main.R.addons.Icons_Info[2].Action.Text := 'Deactivate';
+  // addons.Active_PosNames[addons.weather.Main_Menu_Position] := 'weather';
+//  mainScene.Header.Addon_Icons[user_Active_Local.addons.Weather_D.Menu_Position].Bitmap.LoadFromFile(addons.weather.Path.Icon + 'addons_weather_icon.png');
+  // if vFresh then
+  // begin
+  // addons.weather.ini.ini.WriteBool('General', 'First', False);
+  // addons.weather.ini.ini.WriteInteger('Active', 'Active_Woeid', -1);
+  // addons.weather.ini.ini.WriteInteger('Active', 'Active_Total', -1);
+  // addons.weather.ini.ini.WriteString('Options', 'Degree', 'Celcius');
+  // addons.weather.ini.ini.WriteInteger('Options', 'Refresh', 0);
+  // addons.weather.ini.ini.WriteInteger('Iconset', 'Count', 2);
+  // addons.weather.ini.ini.WriteString('Iconset', 'Name', 'pengui');
+  // addons.weather.ini.ini.WriteString('Provider', 'Name', '');
+  //
+  // addons.weather.Action.First := False;
+  // addons.weather.Action.Active_WOEID := -1;
+  // addons.weather.Action.Active_Total := -1;
+  // addons.weather.Config.Refresh_Once := False;
+  // addons.weather.Action.Provider := '';
+  // end
+  // else
+  // begin
+  // addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First', addons.weather.Action.First);
+  // addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name', addons.weather.Action.Provider);
+  // addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Provider', 'Active_Woeid', addons.weather.Action.Active_WOEID);
+  // addons.weather.Action.Active_Total := addons.weather.ini.ini.ReadInteger('Active', 'Active_Total', addons.weather.Action.Active_Total);
+  // addons.weather.Config.Refresh_Once := addons.weather.ini.ini.ReadBool('Options', 'Refresh', addons.weather.Config.Refresh_Once);
+  // end;
 end;
 
-procedure uMain_Config_Addons_Actions_Activate_Weather_Action;
+procedure Activate_Weather_Action;
 begin
   if mainScene.Config.main.R.addons.weather.Msg_Actv.main.Radio_2.IsChecked then
-    uMain_Config_Addons_Actions_Activate_Weather_FreshStart(True)
+    Activate_Weather_FreshStart(True)
   else
-    uMain_Config_Addons_Actions_Activate_Weather_FreshStart(False);
-  uMain_Config_Addons_Actions_Activate_Weather_FreeMessage;
+    Activate_Weather_FreshStart(False);
+  Activate_Weather_FreeMessage;
 end;
 
-procedure uMain_Config_Addons_Actions_Activate_Weather;
+procedure Activate_Weather;
 begin
-  if FileExists(addons.weather.ini.Path + addons.weather.ini.Name) then
-    uMain_Config_Addons_Actions_Activate_Weather_ShowMessage
+  if user_Active_Local.addons.Weather_D.Old_Backup then
+    Activate_Weather_ShowMessage
   else
-    uMain_Config_Addons_Actions_Activate_Weather_FreshStart(True);
+    Activate_Weather_FreshStart(True);
 end;
 
 procedure uMain_Config_Addons_Actions_Deactivate_Weather_ShowMessage;
@@ -676,7 +721,7 @@ procedure uMain_Config_Addons_Actions_Deactivate_Weather_Action;
 begin
   if addons.Active_Num = addons.weather.Main_Menu_Position then
   begin
-    mainScene.Header.Addon_Icons[addons.Active_Num].Bitmap := nil;
+//    mainScene.Header.Addon_Icons[addons.Active_Num].Bitmap := nil;
     addons.Active_PosNames[addons.weather.Main_Menu_Position] := '';
   end
   else
@@ -728,7 +773,7 @@ begin
   mainScene.Config.main.R.addons.Icons_Info[4].Activeted.Color := TAlphaColorRec.Lime;
   mainScene.Config.main.R.addons.Icons_Info[4].Action.Text := 'Deactivate';
   addons.Active_PosNames[addons.play.Main_Menu_Position] := 'play';
-  mainScene.Header.Addon_Icons[addons.play.Main_Menu_Position].Bitmap.LoadFromFile(addons.play.Path.Icon + 'addons_play_icon.png');
+//  mainScene.Header.Addon_Icons[addons.play.Main_Menu_Position].Bitmap.LoadFromFile(addons.play.Path.Icon + 'addons_play_icon.png');
   if vFresh then
   begin
     { addons.weather.ini.ini.WriteBool('General', 'First', False);
@@ -798,7 +843,7 @@ begin
       True:
         uMain_Config_Addons_Actions_Deactivate_Weather;
       False:
-        uMain_Config_Addons_Actions_Activate_Weather;
+        Activate_Weather;
     end;
   end
   else if vAddonNum = 3 then

@@ -31,6 +31,8 @@ procedure uEmu_Arcade_Mame_Config_Directories_TabItemClick(vName: String);
 implementation
 
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
   uLoad_AllTypes,
   uWindows,
   uSnippet_Text,
@@ -54,8 +56,8 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Panel.SetBounds(((vMame.Scene.Main.Width / 2) - 400), ((vMame.Scene.Main.Height / 2) - 200), 800, 600);
   vMame.Config.Panel.Dirs.Media.Check.Panel.Visible := True;
 
-  CreateHeader(vMame.Config.Panel.Dirs.Media.Check.Panel, 'IcoMoon-Free', #$e933,
-    'Check and download "' + vMame.Config.Panel.Dirs.Media.Labels[vNum].Text + ' "', False, nil);
+  CreateHeader(vMame.Config.Panel.Dirs.Media.Check.Panel, 'IcoMoon-Free', #$e933, 'Check and download "' + vMame.Config.Panel.Dirs.Media.Labels[vNum].Text +
+    ' "', False, nil);
 
   vMame.Config.Panel.Dirs.Media.Check.Main := TPanel.Create(vMame.Config.Panel.Dirs.Media.Check.Panel);
   vMame.Config.Panel.Dirs.Media.Check.Main.Name := 'Mame_Dir_Check_Main';
@@ -208,57 +210,57 @@ begin
     vMame.Config.Panel.Dirs.Media.Edit[vi].Position.Y := 25 + ((vi * 30) + (vi * 25));
     case vi of
       0:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Artworks;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Artworks;
       1:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Cabinets;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Cabinets;
       2:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Control_Panels;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Control_Panels;
       3:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Covers;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Covers;
       4:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Flyers;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Flyers;
       5:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Fanart;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Fanart;
       6:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Icons;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Icons;
       7:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Manuals;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Manuals;
       8:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Marquees;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Marquees;
       9:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Pcbs;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Pcbs;
       10:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Snapshots;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots;
       11:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Titles;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Titles;
       12:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Artwork_Preview;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Artwork_Preview;
       13:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Bosses;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Bosses;
       14:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Ends;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Ends;
       15:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.How_To;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.How_To;
       16:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Logos;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Logos;
       17:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Scores;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Scores;
       18:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Selects;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Selects;
       19:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Versus;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Versus;
       20:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Game_Over;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Game_Over;
       21:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Warnings;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Warnings;
       22:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Stamps;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Stamps;
       23:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Soundtracks;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks;
       24:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Support_Files;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files;
       25:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := mame.Emu.Media.Videos;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Videos;
     end;
     vMame.Config.Panel.Dirs.Media.Edit[vi].Visible := True;
 
@@ -356,57 +358,161 @@ begin
     vMame.Config.Panel.Dirs.Media.Edit[vNum].Text := vdir;
     case vNum of
       0:
-        mame.Emu.Media.Artworks := vdir;
+        begin
+          mame.Emu.Media.Artworks := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ARTWORKS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Artworks;
+        end;
       1:
-        mame.Emu.Media.Cabinets := vdir;
+        begin
+          mame.Emu.Media.Cabinets := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'CABINETS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Cabinets;
+        end;
       2:
-        mame.Emu.Media.Control_Panels := vdir;
+        begin
+          mame.Emu.Media.Control_Panels := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'CONTROL_PANELS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Control_Panels;
+        end;
       3:
-        mame.Emu.Media.Covers := vdir;
+        begin
+          mame.Emu.Media.Covers := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'COVERS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Covers;
+        end;
       4:
-        mame.Emu.Media.Flyers := vdir;
+        begin
+          mame.Emu.Media.Flyers := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'FLYERS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Flyers;
+        end;
       5:
-        mame.Emu.Media.Fanart := vdir;
+        begin
+          mame.Emu.Media.Fanart := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'FANART', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Fanart;
+        end;
       6:
-        mame.Emu.Media.Icons := vdir;
+        begin
+          mame.Emu.Media.Icons := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ICONS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Icons;
+        end;
       7:
-        mame.Emu.Media.Manuals := vdir;
+        begin
+          mame.Emu.Media.Manuals := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'MANUALS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Manuals;
+        end;
       8:
-        mame.Emu.Media.Marquees := vdir;
+        begin
+          mame.Emu.Media.Marquees := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'MARQUEES', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Marquees;
+        end;
       9:
-        mame.Emu.Media.Pcbs := vdir;
+        begin
+          mame.Emu.Media.Pcbs := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'PCBS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Pcbs;
+        end;
       10:
-        mame.Emu.Media.Snapshots := vdir;
+        begin
+          mame.Emu.Media.Snapshots := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SNAPSHOTS', vdir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots;
+        end;
       11:
-        mame.Emu.Media.Titles := vdir;
+        begin
+          mame.Emu.Media.Titles := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'TITLES', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Titles;
+        end;
       12:
-        mame.Emu.Media.Artwork_Preview := vdir;
+        begin
+          mame.Emu.Media.Artwork_Preview := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ARTWORK_PREVIEW', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Artwork_Preview;
+        end;
       13:
-        mame.Emu.Media.Bosses := vdir;
+        begin
+          mame.Emu.Media.Bosses := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'BOSSES', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Bosses;
+        end;
       14:
-        mame.Emu.Media.Ends := vdir;
+        begin
+          mame.Emu.Media.Ends := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ENDS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Ends;
+        end;
       15:
-        mame.Emu.Media.How_To := vdir;
+        begin
+          mame.Emu.Media.How_To := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'HOW_TO', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.How_To;
+        end;
       16:
-        mame.Emu.Media.Logos := vdir;
+        begin
+          mame.Emu.Media.Logos := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'LOGOS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Logos;
+        end;
       17:
-        mame.Emu.Media.Scores := vdir;
+        begin
+          mame.Emu.Media.Scores := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SCORES', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Scores;
+        end;
       18:
-        mame.Emu.Media.Selects := vdir;
+        begin
+          mame.Emu.Media.Selects := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SELECTS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Selects;
+        end;
       19:
-        mame.Emu.Media.Versus := vdir;
+        begin
+          mame.Emu.Media.Versus := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'VERSUS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Versus;
+        end;
       20:
-        mame.Emu.Media.Game_Over := vdir;
+        begin
+          mame.Emu.Media.Game_Over := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'GAME_OVER', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Game_Over;
+        end;
       21:
-        mame.Emu.Media.Warnings := vdir;
+        begin
+          mame.Emu.Media.Warnings := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'WARNINGS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Warnings;
+        end;
       22:
-        mame.Emu.Media.Stamps := vdir;
+        begin
+          mame.Emu.Media.Stamps := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'STAMPS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Stamps;
+        end;
       23:
-        mame.Emu.Media.Soundtracks := vdir;
+        begin
+          mame.Emu.Media.Soundtracks := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SOUNDTRACKS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks;
+        end;
       24:
-        mame.Emu.Media.Support_Files := vdir;
+        begin
+          mame.Emu.Media.Support_Files := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SUPPORT_FILES', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files;
+        end;
       25:
-        mame.Emu.Media.Videos := vdir;
+        begin
+          mame.Emu.Media.Videos := vdir;
+          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'VIDEOS', vDir, user_Active_Local.Num.ToString);
+          user_Active_Local.EMULATORS.Arcade_D.Media.Videos;
+        end;
     end;
   end;
 end;

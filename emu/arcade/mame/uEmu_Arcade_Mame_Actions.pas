@@ -39,6 +39,8 @@ var
 implementation
 
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
   emu,
   uLoad_AllTypes,
   uEmu_Commands,
@@ -69,28 +71,28 @@ begin
     if Assigned(vMameVideoTimer) then
       FreeAndNil(vMameVideoTimer);
     vMame.Scene.Snap.Video.Stop;
-    if FileExists(mame.emu.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.mp4') then
+    if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.mp4') then
     begin
       vMameVideoTimer := TTimer.Create(vMame.Scene.Main);
       vMameVideoTimer.Enabled := True;
       vMameVideoTimer.OnTimer := mame.Timers.Video.OnTimer;
       vMame.Scene.Snap.Video.Visible := True;
-      if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Video.PlayNormal(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
       end
     end
     else
     begin
-      if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Video.PlayNormal(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
       end
       else
       begin
-        vMame.Scene.Snap.Video.PlayNormal(mame.emu.Media.Snapshots + 'imagenotfound.png');
+        vMame.Scene.Snap.Video.PlayNormal(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + 'imagenotfound.png');
       end;
     end;
   end
@@ -106,11 +108,11 @@ begin
     vMame.Scene.Snap.Image_Reflaction.Enabled := False;
     if mame.Main.SnapCategory = 'Snapshots' then
     begin
-      uEmu_Arcade_Mame_Actions_PlayGameMusic(mame.emu.Media.Soundtracks + mame.Gamelist.List[0,
+      uEmu_Arcade_Mame_Actions_PlayGameMusic(user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks + mame.Gamelist.List[0,
         mame.Gamelist.Selected, 0] + '.zip');
-      if FileExists(mame.emu.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image_Fade.Target.LoadFromFile(mame.emu.Media.Snapshots + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image_Fade.Target.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vMame.Scene.Snap.Image_Fade_Ani.Enabled := True;
         vImageExists := True;
@@ -118,153 +120,153 @@ begin
     end
     else if mame.Main.SnapCategory = 'Cabinets' then
     begin
-      if FileExists(mame.emu.Media.Cabinets + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Cabinets + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Cabinets + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Cabinets + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Control Panels' then
     begin
-      if FileExists(mame.emu.Media.Control_Panels + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Control_Panels + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
       then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Control_Panels + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Control_Panels + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Flyers' then
     begin
-      if FileExists(mame.emu.Media.Flyers + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Flyers + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Flyers + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Flyers + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Marquees' then
     begin
-      if FileExists(mame.emu.Media.Marquees + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Marquees + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Marquees + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Marquees + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Pcbs' then
     begin
-      if FileExists(mame.emu.Media.Pcbs + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Pcbs + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Pcbs + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Pcbs + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Artwork Preview' then
     begin
-      if FileExists(mame.emu.Media.Artwork_Preview + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Artwork_Preview + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png')
       then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Artwork_Preview + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Artwork_Preview + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end;
     end
     else if mame.Main.SnapCategory = 'Bosses' then
     begin
-      if FileExists(mame.emu.Media.Bosses + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Bosses + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Bosses + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Bosses + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'How To' then
     begin
-      if FileExists(mame.emu.Media.How_To + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.How_To + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.How_To + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.How_To + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Logos' then
     begin
-      if FileExists(mame.emu.Media.Logos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Logos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Logos + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Logos + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Scores' then
     begin
-      if FileExists(mame.emu.Media.Scores + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Scores + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Scores + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Scores + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Selects' then
     begin
-      if FileExists(mame.emu.Media.Selects + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Selects + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Selects + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Selects + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Titles' then
     begin
-      if FileExists(mame.emu.Media.Titles + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Titles + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Titles + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Titles + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Versus' then
     begin
-      if FileExists(mame.emu.Media.Versus + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Versus + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Versus + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Versus + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Game Over' then
     begin
-      if FileExists(mame.emu.Media.Game_Over + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Game_Over + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Game_Over + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Game_Over + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end
     else if mame.Main.SnapCategory = 'Ends' then
     begin
-      if FileExists(mame.emu.Media.Ends + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Ends + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Ends + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Ends + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end;
     end
     else if mame.Main.SnapCategory = 'Warnings' then
     begin
-      if FileExists(mame.emu.Media.Warnings + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+      if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Warnings + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
       begin
-        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Warnings + mame.Gamelist.List[0,
+        vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Warnings + mame.Gamelist.List[0,
           mame.Gamelist.Selected, 0] + '.png');
         vImageExists := True;
       end
     end;
 
     if vImageExists = False then
-      vMame.Scene.Snap.Image.Bitmap.LoadFromFile(mame.emu.Media.Snapshots + 'imagenotfound.png');
+      vMame.Scene.Snap.Image.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots + 'imagenotfound.png');
   end;
 
   if mame.Main.SnapCategory = 'Video Snaps' then
@@ -422,7 +424,7 @@ begin
     end
     else
     begin
-      vMame.Config.Scene.Header_Icon.Bitmap.LoadFromFile(mame.Prog.Images + 'settings_blue.png');
+      vMame.Config.Scene.Header_Icon.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
       vMame.Config.Scene.Header_Label.Text := 'Mame Global configuratin file';
     end;
 
@@ -440,7 +442,6 @@ begin
     vMame.Scene.Right_Anim.Enabled := True;
 
     uEmu_Arcade_Mame_Ini_Save;
-    uEmu_Arcade_Mame_Ini_SaveMediaPaths;
 
     vMame.Scene.Left_Blur.Enabled := False;
     vMame.Scene.Right_Blur.Enabled := False;

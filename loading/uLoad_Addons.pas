@@ -35,6 +35,7 @@ uses
   uLoad_AllTypes,
   uWindows,
   uWeather_SetAll,
+  uDatabase_ActiveUser,
   uAzHung_AllTypes,
   uWeather_Providers_Yahoo,
   uWeather_Providers_Yahoo_Config,
@@ -60,11 +61,16 @@ var
   Addon_Position: Integer;
   Addon_Name: String;
 begin
-  uLoad_Addons_Time_Load;
-  uLoad_Addons_Calendar_Load;
-  uLoad_Addons_Weather_Load;
-  uLoad_Addons_Soundplayer_Load;
-  uLoad_Addons_Play_Load;
+  if user_Active_Local.ADDONS.Time then
+    uLoad_Addons_Time_Load;
+  if user_Active_Local.ADDONS.Calendar then
+    uLoad_Addons_Calendar_Load;
+  if user_Active_Local.ADDONS.Weather then
+    uLoad_Addons_Weather_Load;
+  if user_Active_Local.ADDONS.Soundplayer then
+    uLoad_Addons_Soundplayer_Load;
+  if user_Active_Local.ADDONS.Azplay then
+    uLoad_Addons_Play_Load;
 
   if addons.Active then
   begin
@@ -73,33 +79,33 @@ begin
       case vi of
         0:
           begin
-            Addon_Name := addons.time.ini.ini.ReadString('TIME', 'Addon_Name', Addon_Name);
-            Addon_Active := addons.time.ini.ini.ReadBool('TIME', 'Active', Addon_Active);
-            Addon_Position := addons.time.ini.ini.ReadInteger('TIME', 'Menu_Position', Addon_Position);
+//            Addon_Name := addons.time.ini.ini.ReadString('TIME', 'Addon_Name', Addon_Name);
+//            Addon_Active := addons.time.ini.ini.ReadBool('TIME', 'Active', Addon_Active);
+//            Addon_Position := addons.time.ini.ini.ReadInteger('TIME', 'Menu_Position', Addon_Position);
           end;
         1:
           begin
-            Addon_Name := addons.calendar.ini.ini.ReadString('CALENDAR', 'Addon_Name', Addon_Name);
-            Addon_Active := addons.calendar.ini.ini.ReadBool('CALENDAR', 'Active', Addon_Active);
-            Addon_Position := addons.calendar.ini.ini.ReadInteger('CALENDAR', 'Menu_Position', Addon_Position);
+//            Addon_Name := addons.calendar.ini.ini.ReadString('CALENDAR', 'Addon_Name', Addon_Name);
+//            Addon_Active := addons.calendar.ini.ini.ReadBool('CALENDAR', 'Active', Addon_Active);
+//            Addon_Position := addons.calendar.ini.ini.ReadInteger('CALENDAR', 'Menu_Position', Addon_Position);
           end;
         2:
           begin
-            Addon_Name := addons.weather.ini.ini.ReadString('WEATHER', 'Addon_Name', Addon_Name);
-            Addon_Active := addons.weather.ini.ini.ReadBool('WEATHER', 'Active', Addon_Active);
-            Addon_Position := addons.weather.ini.ini.ReadInteger('WEATHER', 'Menu_Position', Addon_Position);
+//            Addon_Name := addons.weather.ini.ini.ReadString('WEATHER', 'Addon_Name', Addon_Name);
+//            Addon_Active := addons.weather.ini.ini.ReadBool('WEATHER', 'Active', Addon_Active);
+//            Addon_Position := addons.weather.ini.ini.ReadInteger('WEATHER', 'Menu_Position', Addon_Position);
           end;
         3:
           begin
-            Addon_Name := addons.soundplayer.ini.ini.ReadString('SOUNDPLAYER', 'Addon_Name', Addon_Name);
-            Addon_Active := addons.soundplayer.ini.ini.ReadBool('SOUNDPLAYER', 'Active', Addon_Active);
-            Addon_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER', 'Menu_Position', Addon_Position);
+//            Addon_Name := addons.soundplayer.ini.ini.ReadString('SOUNDPLAYER', 'Addon_Name', Addon_Name);
+//            Addon_Active := addons.soundplayer.ini.ini.ReadBool('SOUNDPLAYER', 'Active', Addon_Active);
+//            Addon_Position := addons.soundplayer.ini.ini.ReadInteger('SOUNDPLAYER', 'Menu_Position', Addon_Position);
           end;
         4:
           begin
-            Addon_Name := addons.play.ini.ini.ReadString('PLAY', 'Addon_Name', Addon_Name);
-            Addon_Active := addons.play.ini.ini.ReadBool('PLAY', 'Active', Addon_Active);
-            Addon_Position := addons.play.ini.ini.ReadInteger('PLAY', 'Menu_Position', Addon_Position);
+//            Addon_Name := addons.play.ini.ini.ReadString('PLAY', 'Addon_Name', Addon_Name);
+//            Addon_Active := addons.play.ini.ini.ReadBool('PLAY', 'Active', Addon_Active);
+//            Addon_Position := addons.play.ini.ini.ReadInteger('PLAY', 'Menu_Position', Addon_Position);
           end;
       end;
 
@@ -112,7 +118,6 @@ begin
           uLoad_Addons_Weather_Load;
       end;
     end;
-    ex_load.Scene.Progress.Value := 100;
   end;
 end;
 
@@ -128,7 +133,7 @@ end;
 // Addon Time
 procedure uLoad_Addons_Time_FirstTime;
 begin
-  CreateDir(extrafe.prog.Path + 'data');
+{  CreateDir(extrafe.prog.Path + 'data');
   CreateDir(extrafe.prog.Path + 'data\addons');
   CreateDir(extrafe.prog.Path + 'data\addons\time');
   CreateDir(extrafe.prog.Path + 'data\addons\time\images');
@@ -175,11 +180,14 @@ begin
   addons.time.ini.ini.WriteString('ALARM', 'Set_0', '');
   addons.time.ini.ini.WriteString('COUNTDWN', 'Last', '');
   addons.time.ini.ini.WriteString('COUNTTIME', 'Lap_0', '');
-  addons.time.ini.ini.WriteString('WORLD_TIME', 'Time_0', '');
+  addons.time.ini.ini.WriteString('WORLD_TIME', 'Time_0', '');   }
 end;
 
 procedure uLoad_Addons_Time_Load;
 begin
+{
+
+
   addons.time.ini.Path := extrafe.prog.Path + 'data\addons\time\';
   addons.time.ini.Name := 'time.ini';
   addons.time.ini.ini := TIniFile.Create(addons.time.ini.Path + addons.time.ini.Name);
@@ -219,7 +227,7 @@ begin
   addons.time.P_Time.Digital_Color_Back_Stroke := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Color_Back_Stroke',
     addons.time.P_Time.Digital_Color_Back_Stroke);
   addons.time.P_Time.Digital_Img_Folder := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_ImageFolder', addons.time.P_Time.Digital_Img_Folder);
-  addons.time.P_Time.Digital_Matrix := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Matrix', addons.time.P_Time.Digital_Matrix);
+  addons.time.P_Time.Digital_Matrix := addons.time.ini.ini.ReadString('TIME_LOCAL', 'Digital_Matrix', addons.time.P_Time.Digital_Matrix);}
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////

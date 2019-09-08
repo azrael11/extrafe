@@ -14,6 +14,7 @@ uses
   FMX.StdCtrls,
   uMain_Config_Mouse,
   uMain_Config_Emulation_Arcade_Scripts_Mouse,
+  uMain_Config_Emulation_Consoles_Scripts_Mouse,
   BASS;
 
 type
@@ -64,6 +65,7 @@ type
     mouse: TMAIN_MOUSE_ACTIONS;
     mouse_config: TMAIN_MOUSE_CONFIG_ACTIONS;
     mouse_script_arcade: TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_ACTIONS;
+    mouse_script_consoles: TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_ACTIONS;
   end;
 
 implementation
@@ -72,6 +74,7 @@ uses
   uLoad_AllTypes,
   uMain,
   uMain_Actions,
+  uMain_Emulation,
   uMain_Config,
   uMain_SetAll,
   uMain_AllTypes,
@@ -104,12 +107,7 @@ begin
       else if TImage(Sender).Name = 'Main_Header_Avatar' then
       begin
         if extrafe.prog.State = 'main' then
-          uMain_Actions_ShowAvatar;
-      end
-      else if TImage(Sender).Name = 'Main_Header_Addon_Icon_' + IntToStr(TImage(Sender).Tag) then
-      begin
-        if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TImage(Sender).Tag) then
-          uMain_Actions_ShowHide_Addons(TImage(Sender).Tag)
+          uMain_Actions.ShowAvatar;
       end;
     end;
     if TImage(Sender).Name = 'Main_Footer_Settings' then
@@ -117,13 +115,11 @@ begin
       if mainScene.Footer.Back_Blur.Enabled = False then
         uMain_Config_ShowHide(extrafe.prog.State);
     end;
-    BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
   end;
 end;
 
 procedure TMAIN_IMAGE.OnMouseEnter(Sender: TObject);
-var
-  vComp: TComponent;
 begin
   if extrafe.prog.State <> 'main_exit' then
   begin
@@ -138,28 +134,17 @@ begin
         if extrafe.prog.State = 'main' then
           mainScene.Header.Avatar_Glow.Enabled := True
       end
-      else if TImage(Sender).Name = 'Main_Header_Addon_Icon_' + IntToStr(TImage(Sender).Tag) then
-      begin
-        if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TImage(Sender).Tag) then
-        begin
-          vComp := mainScene.Header.Addon_Icons[TImage(Sender).Tag].FindComponent
-            ('Main_Header_Addon_Icon_Glow_' + IntToStr(TImage(Sender).Tag));
-          TGlowEffect(vComp).Enabled := True;
-        end;
-      end;
     end;
     if TImage(Sender).Name = 'Main_Footer_Settings' then
     begin
       if mainScene.Footer.Back_Blur.Enabled = False then
         mainScene.Footer.Settings_Glow.Enabled := True;
     end;
-    TImage(Sender).Cursor:= crHandPoint;
+    TImage(Sender).Cursor := crHandPoint;
   end;
 end;
 
 procedure TMAIN_IMAGE.OnMouseLeave(Sender: TObject);
-var
-  vComp: TComponent;
 begin
   if extrafe.prog.State <> 'main_exit' then
   begin
@@ -174,15 +159,6 @@ begin
         if extrafe.prog.State = 'main' then
           mainScene.Header.Avatar_Glow.Enabled := False
       end
-      else if TImage(Sender).Name = 'Main_Header_Addon_Icon_' + IntToStr(TImage(Sender).Tag) then
-      begin
-        if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TImage(Sender).Tag) then
-        begin
-          vComp := mainScene.Header.Addon_Icons[TImage(Sender).Tag].FindComponent
-            ('Main_Header_Addon_Icon_Glow_' + IntToStr(TImage(Sender).Tag));
-          TGlowEffect(vComp).Enabled := False;
-        end;
-      end;
     end;
     if TImage(Sender).Name = 'Main_Footer_Settings' then
     begin
@@ -203,30 +179,30 @@ begin
     if extrafe.prog.State <> 'main' then
     begin
       if extrafe.prog.State = 'addon_time' then
-        uTime_Actions_Load
+        uTime_Actions.Load
       else if extrafe.prog.State = 'addon_calendar' then
         uCalendar_SetComponentsToRightPlace
       else if extrafe.prog.State = 'addon_weather' then
         uWeather_SetAll.Load
       else if extrafe.prog.State = 'addon_soundplayer' then
-        uSoundPlayer_SetAll.Set_Scene
+        uSoundplayer_SetAll.Set_Scene
       else if extrafe.prog.State = 'addon_play' then
         uPlay_SetAll_Set;
     end
     else
     begin
-      uTime_Actions_Free;
+      uTime_Actions.Free;
       if Assigned(vTime.Time_Ani) then
         vTime.Time_Ani.Enabled := False;
       uWeather_Actions.Free;
       if Assigned(vWeather.Scene.Weather_Ani) then
         vWeather.Scene.Weather_Ani.Enabled := False;
-      uSoundPlayer.Free;
+      uSoundplayer.Free;
       if Assigned(vSoundplayer.Scene.Soundplayer_Ani) then
         vSoundplayer.Scene.Soundplayer_Ani.Enabled := False;
       uPlay_Actions_Free;
       if Assigned(vPlay.Main_Ani) then
-        vPlay.Main_Ani.Enabled:= False;
+        vPlay.Main_Ani.Enabled := False;
     end;
   end
   else if TFloatAnimation(Sender).Name = 'Main_Config_Ani' then
@@ -268,17 +244,43 @@ end;
 
 procedure TMAIN_TEXT.OnMouseClick(Sender: TObject);
 begin
-
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
+    begin
+      if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
+        uMain_Actions.ShowHide_Addon(TText(Sender).Tag, extrafe.prog.State, TText(Sender).TagString)
+    end;
+  end;
 end;
 
 procedure TMAIN_TEXT.OnMouseEnter(Sender: TObject);
 begin
-
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if TText(Sender).Name = 'Emulator_Back_Level' + TText(Sender).Tag.ToString then
+      emulation.Selection_Tab[TText(Sender).Tag].Back_Glow.Enabled := True
+    else if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
+    begin
+      if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
+        mainScene.Header.Addon_Icons_Glow[TText(Sender).Tag].Enabled := True;
+    end;
+  end;
+  TText(Sender).Cursor := crHandPoint;
 end;
 
 procedure TMAIN_TEXT.OnMouseLeave(Sender: TObject);
 begin
-
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if TText(Sender).Name = 'Emulator_Back_Level' + TText(Sender).Tag.ToString then
+      emulation.Selection_Tab[TText(Sender).Tag].Back_Glow.Enabled := False
+    else if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
+    begin
+      if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
+        mainScene.Header.Addon_Icons_Glow[TText(Sender).Tag].Enabled := False;
+    end;
+  end;
 end;
 
 { TMAIN_EDIT }

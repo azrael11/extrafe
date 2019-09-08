@@ -15,7 +15,8 @@ uses
   IdSSLOpenSSL,
   IdMessage,
   IdGlobal,
-  Rest.Types;
+  Rest.Types,
+  BASS;
 
 procedure Login;
 procedure Exit_Program;
@@ -39,6 +40,10 @@ procedure Login;
 var
   vIP: TJSONValue;
 begin
+//  uDatabase_ActiveUser.Get_Online_Data;
+//  ex_load.Scene.Progress.Value := 10;
+  uDatabase_ActiveUser.Get_Local_Data;
+  ex_load.Scene.Progress.Value := 20;
   if uDatabase.Online_Connect then
   begin
     if ex_load.Login.User_V.Text <> '' then
@@ -48,12 +53,11 @@ begin
         if Is_Password_Correct_For_User(ex_load.Login.User_V.Text, ex_load.Login.Pass_V.Text) = True then
         begin
           ex_load.Login.Panel_Login_Correct.Start;
-          uLoad_Start_ExtraFE;
-          vIp:= uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
+          uLoad.Start_ExtraFE;
+          vIP := uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
           uDatabase_SqlCommands.Update_Query('active', '1');
           uDatabase_SqlCommands.Update_Query('lastvisit', DateTimeToUnix(Now).ToString);
           uDatabase_SqlCommands.Update_Query('ip', vIP.GetValue<String>('ip'));
-          uDatabase_Active_User_Collect_Info_From_Database;
         end
         else
         begin
@@ -80,11 +84,10 @@ begin
   end
   else
   begin
-    //This needs more work and configuration
+    // This needs more work and configuration
     uDatabase_ActiveUser.Temp_User;
-    uLoad_Start_ExtraFE;
+    uLoad.Start_ExtraFE;
   end;
-
 end;
 
 procedure Exit_Program;
@@ -98,11 +101,17 @@ begin
   begin
     ex_load.Login.Pass_Show.Text := #$e9ce;
     ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    BASS_ChannelStop(sound.str_fx.general[5]);
+    BASS_ChannelSetPosition(sound.str_fx.general[5], 0, 0);
+    BASS_ChannelPlay(sound.str_fx.general[4], false);
   end
   else
   begin
     ex_load.Login.Pass_Show.Text := #$e9d1;
     ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+    BASS_ChannelStop(sound.str_fx.general[4]);
+    BASS_ChannelSetPosition(sound.str_fx.general[4], 0, 0);
+    BASS_ChannelPlay(sound.str_fx.general[5], false);
   end;
   ex_load.Login.Pass_V.Password := not ex_load.Login.Pass_V.Password;
 end;

@@ -126,7 +126,7 @@ type
 type
   TTIME_PANEL_TIME = record
     Back: Timage;
-    Settings: Timage;
+    Settings: TText;
     Settings_Glow: TGlowEffect;
     Settings_Ani: TFloatAnimation;
     Timer: TTimer;

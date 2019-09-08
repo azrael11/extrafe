@@ -235,8 +235,8 @@ type
     Name: String;
     Name_Exe: String;
     Menu_Image_Path: String;
-    Logo: TBitmap;
-    Background: TBitmap;
+    Logo: String;
+    Background: String;
     Second_Level: Integer;
     Installed: Boolean;
     Unique_Num: Integer;
@@ -252,6 +252,8 @@ type
     Logo_Glow: TGlowEffect;
     Story: TText;
     Long_Icons: TImage;
+    Back: TText;
+    Back_Glow: TGlowEffect;
   end;
 
 type
@@ -280,10 +282,16 @@ type
   /// Sound variables types
 
 type
+  TSOUND_FX= record
+    general: array [0 .. 128] of HSAMPLE;
+    virtual_keyboard: array [0 .. 128] of HSAMPLE;
+  end;
+
+type
   TSOUND = record
     bass_ver: string;
     str_music: array [0 .. 128] of HSAMPLE;
-    str_fx: array [0 .. 1024] of HSAMPLE;
+    str_fx: TSOUND_FX;
   end;
 
   /// /////////////////////////////////////////////////////////////////////////////
@@ -307,6 +315,7 @@ type
 type
   TLOADING_SCENE = record
     Back: TImage;
+    Back_Back: TImage;
     Back_Fade: TFloatAnimation;
     Back_Fade_Float: TLOADING_FLOATANIMATION;
     Logo: TImage;
@@ -423,6 +432,7 @@ type
 type
   TLOADING_REGISTER = record
     Panel: TPanel;
+    Panel_Error: TFloatAnimation;
     Main: TLOADING_REGISTER_MAIN;
     Edit_Select: String;
   end;

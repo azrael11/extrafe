@@ -325,8 +325,8 @@ begin
   emulation.Arcade[0].Active:= False;
   emulation.Arcade[0].Active_Place:= -1;
   emulation.Arcade[0].Name:= '';
-  emulation.Arcade[0].Logo:= nil;
-  emulation.Arcade[0].Background:= nil;
+  emulation.Arcade[0].Logo:= '';
+  emulation.Arcade[0].Background:= '';
   emulation.Arcade[0].Menu_Image_Path:= '';
   emulation.Arcade[0].Second_Level:= -1;
   emulation.Arcade[0].Installed:= False;
@@ -334,12 +334,12 @@ begin
 
   uLoad_Emulation_SetTabs;
 
-  uMain_Emulation_Clear_Selection_Control;
-  uMain_Emulation_Create_Selection_Control;
+  uMain_Emulation.Clear_Selection_Control;
+  uMain_Emulation.Create_Selection_Control;
   uMain_Emulation_Category(0);
 
   FreeAndNil(mainScene.Config.main.R.Emulators.Arcade[0].Panel);
-  uMain_Config_Emulators_CreateArcadePanel(0);
+  uMain_Config_Emulators.CreateArcadePanel(0);
 
   uEmulation_Arcade_Mame_Uninstall_Free;
 end;

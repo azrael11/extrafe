@@ -199,11 +199,11 @@ begin
       1:
         uMain_Config_General.Create;
       2:
-        uMain_Config_Emulators_Create;
+        uMain_Config_Emulators.Create;
       3:
         ;
       4:
-        uMain_Config_Addons_Create;
+        uMain_Config_Addons.Create;
       5:
         uMain_Config_Themes_Create;
       6:

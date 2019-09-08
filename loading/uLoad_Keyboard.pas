@@ -5,7 +5,8 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  FMX.Objects;
+  FMX.Objects,
+  BASS;
 
 procedure SetKey(vKey: String);
 
@@ -21,6 +22,14 @@ procedure SetKey(vKey: String);
 var
   vStr: String;
 begin
+  BASS_ChannelStop(sound.str_fx.general[1]);
+  BASS_ChannelSetPosition(sound.str_fx.general[1], 0, 0);
+  BASS_ChannelStop(sound.str_fx.general[2]);
+  BASS_ChannelSetPosition(sound.str_fx.general[2], 0, 0);
+  if UpperCase(vKey) = 'SPACE' then
+    BASS_ChannelPlay(sound.str_fx.general[1], false)
+  else
+    BASS_ChannelPlay(sound.str_fx.general[2], false);
   if extrafe.prog.State = 'load_login' then
   begin
     if UpperCase(vKey) = 'ENTER' then
@@ -31,19 +40,12 @@ begin
         uLoad_Login.Login;
     end
     else if UpperCase(vKey) = 'CAPS LOCK' then
-      ex_load.Login.CapsLock.Visible := not ex_load.Login.CapsLock.Visible;
+      ex_load.Login.CapsLock.Visible := not ex_load.Login.CapsLock.Visible
+    else
   end
   else if extrafe.prog.State = 'load_register' then
   begin
-    if UpperCase(vKey)= 'SPACE' then
-    begin
-      if ex_load.Reg.Edit_Select= 'username' then
-      begin
-        vStr:= ex_load.Reg.Main.User_V.Text;
-        Delete(vStr, length(vStr), 1);
-        ex_load.Reg.Main.User_V.Text:= vStr;
-      end;
-    end
+
   end
   else if extrafe.prog.State = 'load_forgat' then
   begin

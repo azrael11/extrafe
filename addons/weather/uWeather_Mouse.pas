@@ -209,7 +209,7 @@ begin
       if TText(Sender).TextSettings.FontColor = TAlphaColorRec.White then
       begin
         uWeather_Providers_Yahoo.Use_Imperial;
-        BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+        BASS_ChannelPlay(sound.str_fx.general[0], False);
       end;
     end
     else if TText(Sender).Name = 'A_W_Provider_Yahoo_Unit_C' then
@@ -217,7 +217,7 @@ begin
       if TText(Sender).TextSettings.FontColor = TAlphaColorRec.White then
       begin
         uWeather_Providers_Yahoo.Use_Metric;
-        BASS_ChannelPlay(ex_main.Sounds.mouse[0], False);
+        BASS_ChannelPlay(sound.str_fx.general[0], False);
       end;
     end
     else if TText(Sender).Name = 'A_W_Provider_Yahoo_Refresh' then

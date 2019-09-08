@@ -10,10 +10,7 @@ uses
   FMX.Types,
   JCLSysInfo,
   FireDAC.UI.Intf,
-  FireDAC.FMXUI.Wait,
-  FireDAC.Stan.Intf,
-  FireDAC.Comp.UI,
-  FireDAC.Comp.Client;
+  FireDAC.FMXUI.Wait, FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteDef, FireDAC.Stan.Intf, FireDAC.Phys, FireDAC.Phys.SQLite;
 
 { type
   TTIMER_LOADING_VIDEO = class(TTimer)
@@ -22,8 +19,7 @@ uses
 
 type
   TLoading_Form = class(TForm)
-    FDGUIxWaitCursor: TFDGUIxWaitCursor;
-    FDTransaction: TFDTransaction;
+    SQLite_DriverLink: TFDPhysSQLiteDriverLink;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
