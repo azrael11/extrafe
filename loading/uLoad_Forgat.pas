@@ -44,6 +44,7 @@ begin
     ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.White
   else
     ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.Red;}
+
 end;
 
 end.
