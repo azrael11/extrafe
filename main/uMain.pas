@@ -26,9 +26,10 @@ implementation
 uses
   main,
   uLoad_AllTypes,
-  loading,
+  load,
   uEmu_SetAll,
   emu,
+  uDatabase,
   uMain_Emulation,
   uMain_SetAll,
   uMain_AllTypes,
@@ -43,7 +44,7 @@ begin
   //Set the form state
   Main_Form.Width:= extrafe.res.Width;
   Main_Form.Height:= extrafe.res.Height;
-  Main_Form.FullScreen:= True;
+  Main_Form.FullScreen:= extrafe.res.Fullscreen;
   //Set all the components
   uMain_SetAll_Set;
   //Set the standard values
@@ -59,9 +60,10 @@ begin
 
   //Emulators Default
   uEmu_SetComponentsToRightPlace;
-  if emulation.Active then
-    if emulation.ShowCat then
-      uMain_Emulation_Category(0);
+//  if emulation.Active then
+//    if emulation.ShowCat then
+
+  uMain_Emulation_Category(0);
 
   //extrafe state
   extrafe.prog.State:= 'main';
@@ -74,7 +76,14 @@ end;
 
 procedure uMain_Exit_SaveProgress;
 begin
-
+  if extrafe.databases.online_connected then
+  begin
+    uDatabase.ExtraFE_DB.Disconnect;
+    FreeAndNil(uDatabase.ExtraFE_DB);
+  end;
+  uDatabase.ExtraFE_Query_Local.Close;
+  uDatabase.ExtraFE_DB_Local.Connected:= False;
+  FreeAndNil(uDatabase.ExtraFE_DB_Local);
 end;
 
 procedure uMain_Exit_Exit;

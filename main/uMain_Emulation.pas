@@ -201,9 +201,12 @@ end;
 
 procedure Trigger_Emulator;
 begin
-  Main_Form.Visible := False;
   uEmu_LoadEmulator(emulation.Number);
-  Emu_Form.Show;
+  mainScene.Main.Down_Level_Ani.Name := 'Main_Down_Animation';
+  mainScene.Main.Down_Level_Ani.Duration := 1.8;
+  mainScene.Main.Down_Level_Ani.StartValue:= 1;
+  mainScene.Main.Down_Level_Ani.StopValue := 0.1;
+  mainScene.Main.Down_Level_Ani.Start;
 end;
 
 procedure uMain_Emulation_Arcade_Category;

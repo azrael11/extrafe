@@ -17,6 +17,7 @@ uses
   FMX.Memo,
   FMX.Layouts,
   FMX.Graphics,
+  FMX.ListBox,
   ALFmxTabControl,
   BASS,
   FmxPasLibVlcPlayerUnit,
@@ -61,20 +62,15 @@ type
   end;
 
 type
-  TEXTRAFE_PROGRAM_PATHS = record
-    Lib: String;
-    History: String;
-    Fonts: String;
-  end;
-
-type
   TEXTRAFE_PROGRAM = record
     State: String;
     Path: String;
     Name: String;
     Desc: String;
+    Lib_Path: String;
+    History_Path: String;
+    Fonts_Path: String;
     Virtual_Keyboard: Boolean;
-    Paths: TEXTRAFE_PROGRAM_PATHS;
     Version: TEXTRAFE_BUILD_INFO;
   end;
 
@@ -86,7 +82,16 @@ type
   end;
 
 type
+  TEXTRAFE_RESOLUTION_MONITOR = record
+    Horizontal: Integer;
+    Vertical: Integer;
+    Refresh_Rate: Integer;
+    Bits_Per_Pixel: Integer;
+  end;
+
+type
   TEXTRAFE_RESOLUTION = Record
+    Monitor: TEXTRAFE_RESOLUTION_MONITOR;
     Fullscreen: Boolean;
     Width: Integer;
     Half_Width: Integer;
@@ -147,16 +152,22 @@ type
   end;
 
 type
+  TEXTRAFE_DATABASES = record
+    local_connected: Boolean;
+    online_connected: Boolean;
+  end;
+
+type
   TEXTRAFE = record
     prog: TEXTRAFE_PROGRAM;
     Ini: TEXTRAFE_INI;
+    databases: TEXTRAFE_DATABASES;
+    Internet_Active: Boolean;
     users_active: Integer;
     users_total: Integer;
     user_login: Boolean;
     res: TEXTRAFE_RESOLUTION;
     style: TEXTRAFE_STYLES;
-    online_database_is_connected: Boolean;
-    local_database_is_connected: Boolean;
     stats: TEXTRAFE_STATISTICS;
   end;
   /// /////////////////////////////////////////////////////////////////////////////
@@ -345,10 +356,10 @@ type
     Panel_Login_Error: TFloatAnimation;
     Panel_Login_Correct: TFloatAnimation;
     Panel_Shadow: TShadowEffect;
+    Last_Visit: TLabel;
     Avatar: TImage;
-    CapsLock: TText;
     User: Tlabel;
-    User_V: TEdit;
+    User_V: TComboBox;
     Pass: Tlabel;
     Pass_V: TEdit;
     Pass_Show: TText;
@@ -358,6 +369,8 @@ type
     Forget_Pass: TText;
     Login: TButton;
     Exit_ExtraFE: TButton;
+    CapsLock_Icon: TText;
+    CapsLock: TLabel;
     Internet: Tlabel;
     Int_Icon: TText;
     Online_Database: Tlabel;
@@ -404,8 +417,11 @@ type
     Panel: TPanel;
     Data: TLOADING_REGISTER_MAIN_DATA;
     User: Tlabel;
+    User_Max: TLabel;
+    User_Online: TLabel;
     User_V: TEdit;
     Pass: Tlabel;
+    Pass_Max: TLabel;
     Pass_V: TEdit;
     Pass_Show: TText;
     Pass_Show_Glow: TGlowEffect;
@@ -414,6 +430,7 @@ type
     RePass_Show: TText;
     RePass_Show_Glow: TGlowEffect;
     Email: Tlabel;
+    Email_Online: TLabel;
     Email_V: TEdit;
     ReEmail: Tlabel;
     ReEmail_V: TEdit;
@@ -488,7 +505,7 @@ procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String; vHas_Close
 implementation
 
 uses
-  loading,
+  load,
   Main,
   uMain;
 
@@ -559,7 +576,7 @@ begin
   begin
     uMain_Load;
     Main_Form.Show;
-    FreeAndNil(Loading_Form);
+    FreeAndNil(load.loading);
   end;
 end;
 

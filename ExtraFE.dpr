@@ -5,7 +5,6 @@ uses
   FMX.Forms,
   JCLSysInfo,
   main in 'main.pas' {Main_Form},
-  loading in 'loading.pas' {Loading_Form},
   uLoad in 'loading\uLoad.pas',
   uWindows in 'code\_os\uWindows.pas',
   uMain in 'main\uMain.pas',
@@ -168,7 +167,8 @@ uses
   uEmu_Consoles_Nes_AllTypes in 'emu\consoles\nes\uEmu_Consoles_Nes_AllTypes.pas',
   uEmu_Consoles_Snes_AllTypes in 'emu\consoles\snes\uEmu_Consoles_Snes_AllTypes.pas',
   uEmu_Consoles_MasterSystem_AllTypes in 'emu\consoles\master_system\uEmu_Consoles_MasterSystem_AllTypes.pas',
-  uEmu_Consoles_MegaDrive_AllTypes in 'emu\consoles\mega_drive\uEmu_Consoles_MegaDrive_AllTypes.pas';
+  uEmu_Consoles_MegaDrive_AllTypes in 'emu\consoles\mega_drive\uEmu_Consoles_MegaDrive_AllTypes.pas',
+  load in 'load.pas' {Loading};
 
 {$R *.res}
 
@@ -177,9 +177,9 @@ begin
   //Disable the KMP_AFFINITY for non Intel CPUS
   if CPUID.CpuType <> CPU_TYPE_INTEL then
     SetEnvironmentVar('KMP_AFFINITY', 'disabled');
-  Application.CreateForm(TLoading_Form, Loading_Form);
+  Application.CreateForm(TLoading, Loading);
   Application.CreateForm(TMain_Form, Main_Form);
   Application.CreateForm(TEmu_Form, Emu_Form);
-  Application.MainForm:= Loading_Form;
+  Application.MainForm:= load.Loading;
   Application.Run;
 end.

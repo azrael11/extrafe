@@ -227,7 +227,7 @@ begin
       vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Enabled := False;
   end;
   if TText(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_API_Link' then
-    uSnippets.HyperLink_OnMouseLeave(TText(Sender));
+    uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White);
 end;
 
 ///

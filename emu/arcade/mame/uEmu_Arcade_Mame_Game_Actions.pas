@@ -20,6 +20,8 @@ procedure uEmu_Arcade_Mame_Game_Actions_ArrowDown;
 implementation
 
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
   emu,
   uLoad_AllTypes,
   uEmu_Commands,
@@ -38,9 +40,9 @@ begin
     vMame.Scene.Gamelist.List_Line[vi].Text.Text := cShowGamePanelMenu[ri];
     inc(ri, 1);
   end;
-  if not FileExists(mame.Emu.Media.Manuals + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.pdf') then
+  if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Manuals + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.pdf') then
     vMame.Scene.Gamelist.List_Line[11 - (mame.Game.Menu_Selected)].Text.Color := TAlphaColorRec.Red;
-  if not FileExists(mame.Emu.Media.Soundtracks + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.zip')
+  if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.zip')
   then
     vMame.Scene.Gamelist.List_Line[14 - (mame.Game.Menu_Selected)].Text.Color := TAlphaColorRec.Red;
 

@@ -13,7 +13,7 @@ procedure SetKey(vKey: String);
 implementation
 
 uses
-  loading,
+  load,
   uLoad,
   uLoad_AllTypes,
   uLoad_Login;
@@ -22,14 +22,18 @@ procedure SetKey(vKey: String);
 var
   vStr: String;
 begin
-  BASS_ChannelStop(sound.str_fx.general[1]);
-  BASS_ChannelSetPosition(sound.str_fx.general[1], 0, 0);
-  BASS_ChannelStop(sound.str_fx.general[2]);
-  BASS_ChannelSetPosition(sound.str_fx.general[2], 0, 0);
-  if UpperCase(vKey) = 'SPACE' then
-    BASS_ChannelPlay(sound.str_fx.general[1], false)
-  else
-    BASS_ChannelPlay(sound.str_fx.general[2], false);
+  if (UpperCase(vKey) <> 'SHIFT') and (UpperCase(vKey) <> '') then
+  begin
+    BASS_ChannelStop(sound.str_fx.general[1]);
+    BASS_ChannelSetPosition(sound.str_fx.general[1], 0, 0);
+    BASS_ChannelStop(sound.str_fx.general[2]);
+    BASS_ChannelSetPosition(sound.str_fx.general[2], 0, 0);
+
+    if UpperCase(vKey) = 'SPACE' then
+      BASS_ChannelPlay(sound.str_fx.general[1], false)
+    else
+      BASS_ChannelPlay(sound.str_fx.general[2], false);
+  end;
   if extrafe.prog.State = 'load_login' then
   begin
     if UpperCase(vKey) = 'ENTER' then
@@ -40,8 +44,7 @@ begin
         uLoad_Login.Login;
     end
     else if UpperCase(vKey) = 'CAPS LOCK' then
-      ex_load.Login.CapsLock.Visible := not ex_load.Login.CapsLock.Visible
-    else
+      uLoad_Login.CapsLock(ex_load.Login.CapsLock_Icon.Locked)
   end
   else if extrafe.prog.State = 'load_register' then
   begin

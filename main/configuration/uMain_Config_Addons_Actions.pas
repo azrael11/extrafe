@@ -540,7 +540,7 @@ begin
   Inc(user_Active_Local.addons.Active, 1);
   user_Active_Local.addons.weather := True;
   user_Active_Local.addons.Weather_D.Menu_Position := user_Active_Local.addons.Active;
-  vQuery := 'SELECT * FROM addon_weather WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM addon_weather WHERE USER_ID=' + user_Active_Local.Num.ToString;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -565,7 +565,7 @@ begin
       user_Active_Local.addons.Weather_D.OpenWeatherMap.Iconset + ', "OWM_TOWNS"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.Towns_Count.ToString +
       ',' + ' "OWM_SYSTEM"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.System + ', "OWM_DEGREE_TYPE="' +
       user_Active_Local.addons.Weather_D.OpenWeatherMap.Degree + ',' + ' "OWM_APIKEY"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.API +
-      ', "OWM_LANGUAGE"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.Language +'WHERE USER_ID=' + user_Active_Online.Num.ToString);
+      ', "OWM_LANGUAGE"=' + user_Active_Local.addons.Weather_D.OpenWeatherMap.Language +'WHERE USER_ID=' + user_Active_Local.Num.ToString);
     ExtraFE_Query_Local.ExecSQL;
   end
   else
@@ -575,7 +575,7 @@ begin
     ExtraFE_Query_Local.SQL.Add
       ('INSERT INTO ADDON_WEATHER (USER_ID, MENU_POSITION, FIRST_POP, OLD_BACKUP, PROVIDERS_COUNT, PROVIDER, YAHOO_ICONSET_COUNT, YAHOO_ICONSET, YAHOO_TOWNS,' +
       'YAHOO_SYSTEM, YAHOO_DEGREE_TYPE, OWM_ICONSET_COUNT, OWM_ICONSET, OWM_TOWNS, OWM_SYSTEM, OWM_DEGREE_TYPE, OWM_APIKEY, OWM_LANGUAGE) VALUES (''' +
-      user_Active_Online.Num.ToString + ''',''' + user_Active_Local.addons.Weather_D.Menu_Position.ToString +
+      user_Active_Local.Num.ToString + ''',''' + user_Active_Local.addons.Weather_D.Menu_Position.ToString +
       ''' ,TRUE, FALSE, FALSE, 1, , 3, default, -1, metric, celcius, 0, , -1, metric, celcius, 5f1cc9b837706de78648b1de3443ccce, en');
     ExtraFE_Query_Local.ExecSQL;
   end;

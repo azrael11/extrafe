@@ -479,6 +479,7 @@ end;
 
 procedure uEmu_Arcade_Mame_Actions_Enter;
 begin
+
   uEmu_Arcade_Mame_Game_SetAll_Set;
   extrafe.Prog.State := 'mame_game';
   vMame.Scene.Settings.Tag := 2;

@@ -11,7 +11,8 @@ uses
   FMX.Edit,
   FMX.Ani,
   FMX.Types,
-  FMX.Effects;
+  FMX.Effects,
+  BASS;
 
 type
   TSEARCH_ANIMATION = class(TObject)
@@ -20,6 +21,13 @@ type
 
 type
   TSEARCH_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TSEARCH_TEXT = class(TObject)
     procedure OnMouseClick(Sender: TObject);
     procedure OnMouseEnter(Sender: TObject);
     procedure OnMouseLeave(Sender: TObject);
@@ -36,13 +44,14 @@ type
 type
   TSEARCH_MOUSE = record
     Image: TSEARCH_IMAGE;
+    Text: TSEARCH_TEXT;
     Edit: TSEARCH_EDIT;
   end;
 
 type
   TSEARCH_CONSTRUCT = record
     Back: TImage;
-    Icon: TImage;
+    Icon: TText;
     Icon_Glow: TGlowEffect;
     Edit: TEdit;
     Edit_Ani: TFloatAnimation;
@@ -95,15 +104,17 @@ begin
   vSearch.Scene.Back.WrapMode := TImageWrapMode.Tile;
   vSearch.Scene.Back.Visible := True;
 
-  vSearch.Scene.Icon := TImage.Create(vSearch.Scene.Back);
+  vSearch.Scene.Icon := TText.Create(vSearch.Scene.Back);
   vSearch.Scene.Icon.Name := 'Search_Icon';
   vSearch.Scene.Icon.Parent := vSearch.Scene.Back;
-  vSearch.Scene.Icon.SetBounds(1, 1, 24, 24);
-  vSearch.Scene.Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'vk_search.png');
-  vSearch.Scene.Icon.WrapMode := TImageWrapMode.Fit;
-  vSearch.Scene.Icon.OnClick := vSearch.Mouse.Image.OnMouseClick;
-  vSearch.Scene.Icon.OnMouseEnter := vSearch.Mouse.Image.OnMouseEnter;
-  vSearch.Scene.Icon.OnMouseLeave := vSearch.Mouse.Image.OnMouseLeave;
+  vSearch.Scene.Icon.SetBounds(1, 1, 28, 28);
+  vSearch.Scene.Icon.Font.Family := 'IcoMoon-Free';
+  vSearch.Scene.Icon.Font.Size := 28;
+  vSearch.Scene.Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vSearch.Scene.Icon.Text := #$e986;
+  vSearch.Scene.Icon.OnClick := vSearch.Mouse.Text.OnMouseClick;
+  vSearch.Scene.Icon.OnMouseEnter := vSearch.Mouse.Text.OnMouseEnter;
+  vSearch.Scene.Icon.OnMouseLeave := vSearch.Mouse.Text.OnMouseLeave;
   vSearch.Scene.Icon.Visible := True;
 
   vSearch.Scene.Icon_Glow := TGlowEffect.Create(vSearch.Scene.Icon);
@@ -116,9 +127,8 @@ begin
   vSearch.Scene.Edit := TEdit.Create(vSearch.Scene.Back);
   vSearch.Scene.Edit.Name := 'Search_Edit';
   vSearch.Scene.Edit.Parent := vSearch.Scene.Back;
-  vSearch.Scene.Edit.SetBounds(28, 1, 0, 24);
-  vSearch.Scene.Edit.StyledSettings := vSearch.Scene.Edit.StyledSettings -
-    [TStyledSetting.Size, TStyledSetting.FontColor];
+  vSearch.Scene.Edit.SetBounds(34, 1, 0, 30);
+  vSearch.Scene.Edit.StyledSettings := vSearch.Scene.Edit.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor];
   vSearch.Scene.Edit.Text := '';
   vSearch.Scene.Edit.TextSettings.FontColor := TAlphaColorRec.White;
   vSearch.Scene.Edit.TextSettings.Font.Size := 16;
@@ -132,7 +142,7 @@ begin
   vSearch.Scene.Edit_Ani.PropertyName := 'Width';
   vSearch.Scene.Edit_Ani.Duration := 0.4;
   vSearch.Scene.Edit_Ani.StartValue := 0;
-  vSearch.Scene.Edit_Ani.StopValue := vWidth - 38;
+  vSearch.Scene.Edit_Ani.StopValue := vWidth - 44;
   vSearch.Scene.Edit_Ani.OnFinish := vSearch.Actions.Anim.OnFinish;
   vSearch.Scene.Edit_Ani.Enabled := False;
 
@@ -163,7 +173,7 @@ begin
   else if UpperCase(vKey) = 'BACKSPACE' then
     Delete(vSearch.Actions.Search_Str, Length(vSearch.Actions.Search_Str), 1)
   else if UpperCase(vKey) = 'SPACE' then
-    vSearch.Actions.Search_Str:= vSearch.Actions.Search_Str+ ' '   
+    vSearch.Actions.Search_Str := vSearch.Actions.Search_Str + ' '
   else
     vSearch.Actions.Search_Str := Search_String(vSearch.Actions.Search_Str + UpperCase(vKey));
 end;
@@ -172,18 +182,17 @@ end;
 
 procedure TSEARCH_IMAGE.OnMouseClick(Sender: TObject);
 begin
-  if vSearch.Scene.Edit.Width = 0 then
-    vSearch.Scene.Edit_Ani.Start;
+
 end;
 
 procedure TSEARCH_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-  vSearch.Scene.Icon_Glow.Enabled := True;
+
 end;
 
 procedure TSEARCH_IMAGE.OnMouseLeave(Sender: TObject);
 begin
-  vSearch.Scene.Icon_Glow.Enabled := False;
+
 end;
 
 { TSEARCH_EDIT }
@@ -208,7 +217,7 @@ begin
   if vSearch.Actions.Str_Error = False then
     vSearch.Actions.Search_Str_Clear := TEdit(Sender).Text
   else
-    TEdit(Sender).Text:= vSearch.Actions.Search_Str_Clear;
+    TEdit(Sender).Text := vSearch.Actions.Search_Str_Clear;
   vSearch.Actions.Str_Error := False;
 end;
 
@@ -222,15 +231,37 @@ begin
   vSearch.Scene.Edit.Text := '';
 end;
 
+{ TSEARCH_TEXT }
+
+procedure TSEARCH_TEXT.OnMouseClick(Sender: TObject);
+begin
+  if vSearch.Scene.Edit.Width = 0 then
+    vSearch.Scene.Edit_Ani.Start;
+  BASS_ChannelPlay(sound.str_fx.general[0], False);
+end;
+
+procedure TSEARCH_TEXT.OnMouseEnter(Sender: TObject);
+begin
+  TText(Sender).Cursor := crHandPoint;
+  vSearch.Scene.Icon_Glow.Enabled := True;
+end;
+
+procedure TSEARCH_TEXT.OnMouseLeave(Sender: TObject);
+begin
+  vSearch.Scene.Icon_Glow.Enabled := False;
+end;
+
 initialization
 
 vSearch.Mouse.Image := TSEARCH_IMAGE.Create;
+vSearch.Mouse.Text := TSEARCH_TEXT.Create;
 vSearch.Mouse.Edit := TSEARCH_EDIT.Create;
 vSearch.Actions.Anim := TSEARCH_ANIMATION.Create;
 
 finalization
 
 vSearch.Mouse.Image.Free;
+vSearch.Mouse.Text.Free;
 vSearch.Mouse.Edit.Free;
 vSearch.Actions.Anim.Free;
 

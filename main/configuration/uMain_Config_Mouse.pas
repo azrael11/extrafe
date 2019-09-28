@@ -321,9 +321,9 @@ begin
   if extrafe.prog.State = 'main_config_profile_user' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uSnippets.HyperLink_OnMouseLeave(TImage(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TImage(Sender), TAlphaColorRec.White)
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
-      uSnippets.HyperLink_OnMouseLeave(TImage(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TImage(Sender), TAlphaColorRec.White)
     else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
     begin
       if vTemp_Personal.Genre <> True then
@@ -338,11 +338,11 @@ begin
   else if extrafe.prog.State = 'main_config_info' then
   begin
     if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Homepage_V' then
-      uSnippets.HyperLink_OnMouseLeave(TText(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Documentation_V' then
-      uSnippets.HyperLink_OnMouseLeave(TText(Sender))
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
-      uSnippets.HyperLink_OnMouseLeave(TText(Sender));
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White);
   end;
 end;
 

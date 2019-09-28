@@ -4,11 +4,14 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  System.Inifiles;
+  System.Inifiles,
+  System.DateUtils,
+  WinApi.Windows;
 
 function Code_To_Country(vCode: String): String;
 function Country_To_Code(vCountry: String): String;
 
+function Time_To_TimeStamp: Int64;
 
 
 implementation
@@ -49,6 +52,20 @@ begin
     end;
   end;
   CloseFile(vTextFile);
+end;
+
+function Time_To_TimeStamp: Int64;
+var
+  SystemTime: TSystemTime;
+  NowUTC: TDateTime;
+begin
+  // get current time in UTC as a TDateTime...
+  GetSystemTime(SystemTime);
+  with SystemTime do
+    NowUTC := EncodeDateTime(wYear, wMonth, wDay, wHour, wMinute, wSecond, wMilliseconds);
+
+  // now calculate the difference from Jan 1 1970 UTC in seconds...
+  Result := DateTimeToUnix(NowUTC);
 end;
 
 end.

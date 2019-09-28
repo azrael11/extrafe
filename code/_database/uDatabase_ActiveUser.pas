@@ -4,11 +4,13 @@ interface
 
 uses
   System.Classes,
-  System.SysUtils;
+  System.SysUtils,
+  System.DateUtils;
 
 type
   TDATABASE_ACTIVE_USER_ONLINE = record
     Num: Integer;
+    User_ID: String;
     Username: String;
     Password: String;
     Email: String;
@@ -16,11 +18,11 @@ type
     Country: String;
     Name: String;
     Surname: String;
-    Avatar: String;
+    Avatar: Integer;
     Registered: String;
     Last_Visit: String;
-    Genre: String;
-    Active: String;
+    Genre: Integer;
+    Active: Integer;
   end;
 
 type
@@ -350,8 +352,10 @@ type
     EMULATORS: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS;
   end;
 
-procedure Get_Online_Data;
-procedure Get_Local_Data;
+procedure Get_Online_Data(vUser_Num: String);
+procedure Get_Local_Data(vUser_Num: String);
+
+function Find_User_Online_Num(vUser_ID: String): Integer;
 
 procedure Temp_User;
 
@@ -362,39 +366,50 @@ var
 implementation
 
 uses
-  loading,
+  load,
   uLoad,
   uDatabase,
   uDatabase_SQLCommands;
 
-procedure Get_Online_Data;
+procedure Get_Online_Data(vUser_Num: String);
 begin
-  user_Active_Online.Email := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'email');
-  user_Active_Online.IP := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'ip');
-  user_Active_Online.Avatar := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'avatar');
-  user_Active_Online.Country := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'country');
-  user_Active_Online.Name := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'name');
-  user_Active_Online.Surname := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'surname');
-  user_Active_Online.Registered := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'registered');
-  user_Active_Online.Last_Visit := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'lastvisit');
-  user_Active_Online.Genre := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'gender');
-  user_Active_Online.Active := uDatabase_SQLCommands.Get_Query(user_Active_Online.Num, 'active');
+  vQuery :=  'SELECT * FROM USERS WHERE NUM=' + vUser_Num;
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add(vQuery);
+  ExtraFE_Query.ExecSQL;
+  ExtraFE_Query.Open;
+  ExtraFE_Query.First;
+  user_Active_Online.Num:= ExtraFE_Query.FieldByName('NUM').AsInteger;
+  user_Active_Online.User_ID:= ExtraFE_Query.FieldByName('USER_ID').AsString;
+  user_Active_Online.Username := ExtraFE_Query.FieldByName('USERNAME').AsString;
+  user_Active_Online.Password := ExtraFE_Query.FieldByName('PASSWORD').AsString;
+  user_Active_Online.Email := ExtraFE_Query.FieldByName('EMAIL').AsString;
+  user_Active_Online.IP := ExtraFE_Query.FieldByName('IP').AsString;
+  user_Active_Online.Avatar := ExtraFE_Query.FieldByName('AVATAR').AsInteger;
+  user_Active_Online.Country := ExtraFE_Query.FieldByName('COUNTRY').AsString;
+  user_Active_Online.Name := ExtraFE_Query.FieldByName('NAME').AsString;
+  user_Active_Online.Surname := ExtraFE_Query.FieldByName('SURNAME').AsString;
+  user_Active_Online.Registered := ExtraFE_Query.FieldByName('REGISTERED').AsString;
+  user_Active_Online.Last_Visit := ExtraFE_Query.FieldByName('LAST_VISIT').AsString;
+  user_Active_Online.Genre := ExtraFE_Query.FieldByName('GENDER').AsInteger;
+  user_Active_Online.Active := ExtraFE_Query.FieldByName('ACTIVE').AsInteger;
 end;
 
-procedure Get_Local_Data;
+procedure Get_Local_Data(vUser_Num: String);
 var
   all: string;
 begin
-  vQuery := 'SELECT * FROM USERS WHERE ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM USERS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
   ExtraFE_Query_Local.Open;
   ExtraFE_Query_Local.First;
-  user_Active_Local.Num := ExtraFE_Query_Local.FieldByName('ID').AsInteger;
-  user_Active_Local.ID := ExtraFE_Query_Local.FieldByName('ID_UNIQUE').AsInteger;
+  user_Active_Local.Num := ExtraFE_Query_Local.FieldByName('USER_ID').AsInteger;
+  user_Active_Local.ID := ExtraFE_Query_Local.FieldByName('UNIQUE_ID').AsInteger;
   user_Active_Local.Username := ExtraFE_Query_Local.FieldByName('USERNAME').AsString;
-  user_Active_Local.Password := ExtraFE_Query_Local.FieldByName('PASSWORD_LOCAL').AsString;
+  user_Active_Local.Password := ExtraFE_Query_Local.FieldByName('PASSWORD').AsString;
   user_Active_Local.Email := ExtraFE_Query_Local.FieldByName('EMAIL').AsString;
   user_Active_Local.IP := ExtraFE_Query_Local.FieldByName('IP').AsString;
   user_Active_Local.Country := ExtraFE_Query_Local.FieldByName('COUNTRY').AsString;
@@ -408,7 +423,7 @@ begin
   user_Active_Local.Active := ExtraFE_Query_Local.FieldByName('ACTIVE_ONLINE').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM EMULATORS WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM EMULATORS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -422,7 +437,7 @@ begin
   user_Active_Local.EMULATORS.Pinballs := ExtraFE_Query_Local.FieldByName('PINBALLS').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM ARCADE WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM ARCADE WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -439,7 +454,7 @@ begin
   user_Active_Local.EMULATORS.Arcade_D.Demul := ExtraFE_Query_Local.FieldByName('DEMUL').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM COMPUTERS WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM COMPUTERS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -458,7 +473,7 @@ begin
   user_Active_Local.EMULATORS.Computers_D.X68000 := ExtraFE_Query_Local.FieldByName('X68000').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM CONSOLES WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM CONSOLES WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -496,7 +511,7 @@ begin
   user_Active_Local.EMULATORS.Consoles_D.XBOX_ONE := ExtraFE_Query_Local.FieldByName('XBOX_ONE').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM HANDHELDS WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM HANDHELDS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -517,7 +532,7 @@ begin
   user_Active_Local.EMULATORS.Handhelds_D.Wonderswan := ExtraFE_Query_Local.FieldByName('WONDERSWAN').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM PINBALLS WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM PINBALLS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -527,7 +542,7 @@ begin
   user_Active_Local.EMULATORS.Pinballs_D.Future_Pinball := ExtraFE_Query_Local.FieldByName('FUTURE_PINBALL').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM ADDONS WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM ADDONS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -542,7 +557,7 @@ begin
   user_Active_Local.ADDONS.Azplay := ExtraFE_Query_Local.FieldByName('AZPLAY').AsBoolean;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM ADDON_TIME WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM ADDON_TIME WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -555,7 +570,7 @@ begin
   user_Active_Local.ADDONS.Time_D.Path.Clocks := ExtraFE_Query_Local.FieldByName('PATH_CLOCKS').AsString;
   ExtraFE_Query_Local.Close;
 
-  vQuery := 'SELECT * FROM ADDON_TIME_TIME WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM ADDON_TIME_TIME WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -594,9 +609,20 @@ begin
 
 end;
 
+function Find_User_Online_Num(vUser_ID: String): Integer;
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('SELECT * FROM USERS WHERE USER_ID='+ vUser_ID);
+  ExtraFE_Query.ExecSQL;
+  ExtraFE_Query.Open;
+  ExtraFE_Query.First;
+  Result := ExtraFE_Query.FieldByName('NUM').AsInteger;
+end;
+
 procedure Temp_User;
 begin
-  user_Active_Online.Num := 0;
+{  user_Active_Online.Num := 0;
   user_Active_Online.Username := 'JohnDoe';
   user_Active_Online.Password := '123456';
   user_Active_Online.Email := 'JohnDoe@temp.com';
@@ -605,7 +631,7 @@ begin
   user_Active_Online.Surname := 'Doe';
   user_Active_Online.Avatar := '0';
   user_Active_Online.Registered := '00:00:00:00';
-  user_Active_Online.Last_Visit := '00:00:00:00';
+  user_Active_Online.Last_Visit := '00:00:00:00';}
 end;
 
 end.

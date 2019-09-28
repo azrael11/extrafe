@@ -45,8 +45,8 @@ var
   ExtraFE_DB: TZConnection; { Online MySQL }
   ExtraFE_Query: TZQuery; { Online MySQL }
 
-  ExtraFE_DB_Local: TFDConnection; { Local Interbase }
-  ExtraFE_Query_Local: TFDQuery; { Local Interbase }
+  ExtraFE_DB_Local: TFDConnection; { Local SQLite }
+  ExtraFE_Query_Local: TFDQuery; { Local SQLite }
 
   ExtraFE_FDGUIxWaitCursor: TFDGUIxWaitCursor;
 
@@ -58,7 +58,8 @@ implementation
 uses
   uLoad_AllTypes,
   main,
-  loading,
+  load,
+  uDatabase_ActiveUser,
   uDatabase_SqlCommands;
 
 procedure Online_Create;
@@ -66,27 +67,13 @@ begin
   ExtraFE_DB := TZConnection.Create(Main_Form);
   ExtraFE_DB.Name := 'ExtraFE_Database';
   ExtraFE_DB.Protocol := 'mysql';
-  ExtraFE_DB.LibraryLocation := extrafe.prog.Paths.Lib + 'libmysql.dll';
+  ExtraFE_DB.LibraryLocation := extrafe.prog.Lib_Path + 'libmysql.dll';
   { epizy.com
     //  ExtraFE_DB.HostName := 'sql210.epizy.com'; epizy.com needs premium plan cheap but premium
     //  ExtraFE_DB.User := 'epiz_23299538';
     //  ExtraFE_DB.Password := 'u4fbISfU';
     //  ExtraFE_DB.Database := 'epiz_23299538_extrafe';
     //  ExtraFE_DB.Port := 3306; }
-
-  { //My raspberrypi server
-    ExtraFE_DB.HostName := '192.168.2.4'; // http://az-creations.ddns.net/
-    ExtraFE_DB.Port := 3306;
-    ExtraFE_DB.User := 'Nikos_Azrael11';
-    ExtraFE_DB.Password := '11azrael!';
-    ExtraFE_DB.Database := 'extrafe_db_main'; }
-
-  { //Free RemoteSQL Server
-    ExtraFE_DB.HostName := 'remotemysql.com';
-    ExtraFE_DB.Port := 3306;
-    ExtraFE_DB.User := 'UOow2q7XU9';
-    ExtraFE_DB.Password := 'YyZItsVz8v';
-    ExtraFE_DB.Database := 'UOow2q7XU9'; }
 
   ExtraFE_DB.HostName := 'db4free.net';
   ExtraFE_DB.Port := 3306;
@@ -106,7 +93,7 @@ begin
   except
     on E: Exception do
     begin
-      // ShowMessage('Something Wrong with the server click to continue');
+//      ShowMessage(E.ToString);
     end;
   end;
   Result := ExtraFE_DB.Connected;
@@ -114,9 +101,9 @@ end;
 
 function Online_Disconnect: Boolean;
 begin
-  uDatabase_SqlCommands.Update_Query('active', '0');
-  ExtraFE_DB.Disconnect;
-  Result := ExtraFE_DB.Connected;
+//  uDatabase_SqlCommands.Update_Query('USERS', 'ACTIVE', 'FALSE', user_Active_Local.Num.ToString);
+//  ExtraFE_DB.Disconnect;
+//  Result := ExtraFE_DB.Connected;
 end;
 
 /// ////////////////
@@ -150,18 +137,15 @@ begin
   ExtraFE_Query_Local := TFDQuery.Create(main.Main_Form);
   ExtraFE_Query_Local.Name := 'ExtraFE_Local_Query';
   ExtraFE_Query_Local.Connection := ExtraFE_DB_Local;
-//  ExtraFE_Query_Local.Transaction:= Main_Form.FDTransaction;
   ExtraFE_Query_Local.Active := False;
 
-  ExtraFE_FDGUIxWaitCursor:= TFDGUIxWaitCursor.Create(loading.Loading_Form);
+  ExtraFE_FDGUIxWaitCursor:= TFDGUIxWaitCursor.Create(load.Loading);
   ExtraFE_FDGUIxWaitCursor.Name := 'ExtraFE_Local_GUIxWaitCursor';
 
   {Create a mem table for manipulation mem big lists not added in database}
-
   ExtraFE_MemTable := TFDMemTable.Create(main.Main_Form);
   ExtraFE_MemTable.Name := 'ExtraFE_Local_MemTable';
   ExtraFE_MemTable.Active := False;
-
   ExtraFE_MemTable_JSON := TFDStanStorageJSONLink.Create(main.Main_Form);
   ExtraFE_MemTable_JSON.Name := 'ExtraFE_Local_JSON_Storage_Link';
 end;

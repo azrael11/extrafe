@@ -20,7 +20,7 @@ var
 implementation
 
 uses
-  loading,
+  load,
   main,
   uload,
   uLoad_Keyboard,

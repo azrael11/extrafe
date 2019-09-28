@@ -10,7 +10,6 @@ uses
 procedure uLoad_Addons_FirstTime;
 procedure uLoad_Addons_Load;
 
-procedure uLoad_Addons_LoadDefaults;
 
 // Addon Time
 procedure uLoad_Addons_Time_FirstTime;
@@ -31,7 +30,7 @@ procedure uLoad_Addons_Play_Load;
 implementation
 
 uses
-  loading,
+  load,
   uLoad_AllTypes,
   uWindows,
   uWeather_SetAll,
@@ -61,6 +60,7 @@ var
   Addon_Position: Integer;
   Addon_Name: String;
 begin
+  ex_load.Scene.Progress_Text.Text := 'Configurate and loading "Addons" ...';
   if user_Active_Local.ADDONS.Time then
     uLoad_Addons_Time_Load;
   if user_Active_Local.ADDONS.Calendar then
@@ -119,14 +119,7 @@ begin
       end;
     end;
   end;
-end;
-
-procedure uLoad_Addons_LoadDefaults;
-begin
-  // Addons
-  addons.Active := extrafe.ini.ini.ReadBool('Addons', 'Active', addons.Active);
-  addons.Active_Num := extrafe.ini.ini.ReadInteger('Addons', 'Active_num', addons.Active_Num);
-  addons.Total_Num := extrafe.ini.ini.ReadInteger('Addons', 'Total_Num', addons.Total_Num);
+  ex_load.Scene.Progress.Value := 90;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////

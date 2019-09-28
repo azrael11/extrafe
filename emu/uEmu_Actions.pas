@@ -19,6 +19,7 @@ uses
   uLoad,
   uLoad_AllTypes,
   main,
+  uMain_AllTypes,
   //Mame
   uEmu_Arcade_Mame,
   uEmu_Arcade_Mame_Actions,
@@ -48,6 +49,11 @@ end;
 
 procedure uEmu_Actions_Exit;
 begin
+  mainScene.Main.Down_Level_Ani.Name := 'Main_Down_Animation_Back';
+  mainScene.Main.Down_Level_Ani.StartValue := 0.1;
+  mainScene.Main.Down_Level_Ani.StopValue := 1;
+  mainScene.Main.Down_Level_Ani.Duration := 1;
+  mainScene.Main.Down_Level_Ani.Start;
   Emu_Form.Close;
   Main_Form.ShowModal;
 end;

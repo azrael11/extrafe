@@ -85,8 +85,9 @@ begin
   BASS_ChannelPlay(sound.str_fx.general[0], false);
   if TButton(Sender).Name = 'Loading_Login_Login' then
   begin
-    TButton(Sender).Cursor := crHourGlass;
     uLoad_Login.Login;
+    if ex_load.Login.Warning.Visible = false then
+      TButton(Sender).Cursor := crHourGlass;
   end
   else if TButton(Sender).Name = 'Loading_Login_Exit' then
     uLoad_Login.Exit_Program
@@ -139,7 +140,6 @@ begin
 
 end;
 
-
 procedure TLOADING_EDIT.OnMouseClick(Sender: TObject);
 begin
 
@@ -169,23 +169,22 @@ end;
 procedure TLOADING_EDIT.OnTyping(Sender: TObject);
 begin
   TEdit(Sender).Text := TrimRight(TEdit(Sender).Text);
-  if TEdit(Sender).Name = 'Loading_Login_User_V' then
-  begin
-    if ex_load.Login.Warning.Visible then
-      ex_load.Login.Warning.Visible := False;
-  end
-  else if TEdit(Sender).Name = 'Loading_Login_Pass_V' then
-  begin
-    if ex_load.Login.Warning.Visible then
-    begin
-      ex_load.Login.Warning.Visible := False;
-      ex_load.Login.Forget_Pass.Visible := False;
-    end;
-  end
+  if TEdit(Sender).Name = 'Loading_Login_Pass_V' then
+    uLoad_Login.Update_Password(TEdit(Sender).Text)
   else if TEdit(Sender).Name = 'Loading_Register_User_V' then
-    uLoad_Register.Update_Username(TEdit(Sender).Text)
+  begin
+    if User.User_Total < 20 then
+      uLoad_Register.Update_Username(TEdit(Sender).Text)
+    else
+      uLoad_Register.Update_Username_Limits(TEdit(Sender).Text);
+  end
   else if TEdit(Sender).Name = 'Loading_Register_Pass_V' then
-    uLoad_Register.Update_Password(TEdit(Sender).Text)
+  begin
+    if User.Pass_Total < 20 then
+      uLoad_Register.Update_Password(TEdit(Sender).Text)
+    else
+      uLoad_Register.Update_Password_Limits(TEdit(Sender).Text);
+  end
   else if TEdit(Sender).Name = 'Loading_Register_RePass_V' then
     uLoad_Register.Update_RePassword(TEdit(Sender).Text)
   else if TEdit(Sender).Name = 'Loading_Register_Email_V' then
@@ -202,80 +201,90 @@ end;
 
 procedure TLOADING_TEXT.OnMouseClick(Sender: TObject);
 begin
-  if TText(Sender).Name = 'Loading_Login_Register' then
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
   begin
-    BASS_ChannelPlay(sound.str_fx.general[0], False);
-    uLoad_SetAll_Register;
-  end
-  else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-    uLoad_SetAll_Forget_Password
-  else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
-    uLoad_Login.Show_Password
-  else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
-    uLoad_Register.Refresh_Captcha
-  else if TText(Sender).Name = 'Loading_Register_Terms' then
-    uLoad_SetAll_Terms
-  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
-    uLoad_Register.Show_Password
-  else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
-    uLoad_Register.Show_RePassword
-  else if TText(Sender).Name = 'Loading_Intro_Text' then
-    uLoad.Skip_Intro
+    if TText(Sender).Name = 'Loading_Login_Register' then
+    begin
+      BASS_ChannelPlay(sound.str_fx.general[0], false);
+      uLoad_SetAll_Register;
+    end
+    else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
+      uLoad_SetAll_Forget_Password
+    else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
+      uLoad_Login.Show_Password
+    else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
+      uLoad_Register.Refresh_Captcha
+    else if TText(Sender).Name = 'Loading_Register_Terms' then
+      uLoad_SetAll_Terms
+    else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
+      uLoad_Register.Show_Password
+    else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then
+      uLoad_Register.Show_RePassword
+    else if TText(Sender).Name = 'Loading_Intro_Text' then
+      uLoad.Skip_Intro
+  end;
 end;
 
 procedure TLOADING_TEXT.OnMouseEnter(Sender: TObject);
 begin
-  if TText(Sender).Name = 'Loading_Intro_Text' then
-    ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
-  else if TText(Sender).Name = 'Loading_Login_Register' then
-    uSnippets.HyperLink_OnMouseOver(TText(Sender))
-  else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-    uSnippets.HyperLink_OnMouseOver(TText(Sender))
-  else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
   begin
-    ex_load.Login.Pass_Show_Glow.Enabled := True;
-    TText(Sender).Cursor := crHandPoint;
-  end
-  else if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
-  begin
-    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := True;
-    TText(Sender).Cursor := crHandPoint;
-  end
-  else if TText(Sender).Name = 'Loading_Register_Terms' then
-  begin
-    uSnippets.HyperLink_OnMouseOver(TText(Sender));
-    uLoad_Register.Enable_Help(5);
-  end
-  else if TText(Sender).Name = 'Loading_Register_Pass_Show' then
-  begin
-    ex_load.Reg.Main.Pass_Show_Glow.Enabled := True;
-    TText(Sender).Cursor := crHandPoint;
-  end
-  else if TText(Sender).Name = 'Loading_Register_RePass_Show' then
-  begin
-    ex_load.Reg.Main.RePass_Show_Glow.Enabled := True;
-    TText(Sender).Cursor := crHandPoint;
-  end
+    if TText(Sender).Name = 'Loading_Intro_Text' then
+      ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
+    else if TText(Sender).Name = 'Loading_Login_Register' then
+      uSnippets.HyperLink_OnMouseOver(TText(Sender))
+    else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
+      uSnippets.HyperLink_OnMouseOver(TText(Sender))
+    else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
+    begin
+      ex_load.Login.Pass_Show_Glow.Enabled := True;
+      TText(Sender).Cursor := crHandPoint;
+    end
+    else if TImage(Sender).Name = 'Loading_Register_Capt_Refresh' then
+    begin
+      ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := True;
+      TText(Sender).Cursor := crHandPoint;
+    end
+    else if TText(Sender).Name = 'Loading_Register_Terms' then
+    begin
+      uSnippets.HyperLink_OnMouseOver(TText(Sender));
+      uLoad_Register.Enable_Help(5);
+    end
+    else if TText(Sender).Name = 'Loading_Register_Pass_Show' then
+    begin
+
+      ex_load.Reg.Main.Pass_Show_Glow.Enabled := True;
+      TText(Sender).Cursor := crHandPoint;
+    end
+    else if TText(Sender).Name = 'Loading_Register_RePass_Show' then
+    begin
+      ex_load.Reg.Main.RePass_Show_Glow.Enabled := True;
+      TText(Sender).Cursor := crHandPoint;
+    end
+  end;
 end;
 
 procedure TLOADING_TEXT.OnMouseLeave(Sender: TObject);
 begin
-  if TText(Sender).Name = 'Loading_Intro_Text' then
-    ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.White
-  else if TText(Sender).Name = 'Loading_Login_Register' then
-    uSnippets.HyperLink_OnMouseLeave(TText(Sender))
-  else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-    uSnippets.HyperLink_OnMouseLeave(TText(Sender))
-  else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
-    ex_load.Login.Pass_Show_Glow.Enabled := False
-  else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
-    ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := False
-  else if TText(Sender).Name = 'Loading_Register_Terms' then
-    uSnippets.HyperLink_OnMouseLeave(TText(Sender))
-  else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
-    ex_load.Reg.Main.Pass_Show_Glow.Enabled := False
-  else if TText(Sender).Name = 'Loading_Register_RePass_Show' then
-    ex_load.Reg.Main.RePass_Show_Glow.Enabled := False;
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
+    if TText(Sender).Name = 'Loading_Intro_Text' then
+      ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.White
+    else if TText(Sender).Name = 'Loading_Login_Register' then
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
+    else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.Red)
+    else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
+      ex_load.Login.Pass_Show_Glow.Enabled := false
+    else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
+      ex_load.Reg.Main.Capt_Refresh_Glow.Enabled := false
+    else if TText(Sender).Name = 'Loading_Register_Terms' then
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
+    else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
+      ex_load.Reg.Main.Pass_Show_Glow.Enabled := false
+    else if TText(Sender).Name = 'Loading_Register_RePass_Show' then
+      ex_load.Reg.Main.RePass_Show_Glow.Enabled := false;
+  end;
 end;
 
 { TLOADING_CHECKBOX }

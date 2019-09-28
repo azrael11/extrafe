@@ -113,36 +113,15 @@ end;
 procedure uMain_Config_Themes_ApplyTheme(mThemeName: string);
 begin
   if mThemeName = 'Air' then
-  begin
-    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Air.Style');
-    extrafe.ini.ini.WriteString('Themes', 'Name', 'Air');
-    extrafe.style.Name := 'Air';
-  end
+    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Air.Style')
   else if mThemeName = 'Amakrits' then
-  begin
-    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Amakrits.Style');
-    extrafe.ini.ini.WriteString('Themes', 'Name', 'Amakrits');
-    extrafe.style.Name := 'Amakrits';
-  end
+    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Amakrits.Style')
   else if mThemeName = 'Dark' then
-  begin
-    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Dark.Style');
-    extrafe.ini.ini.WriteString('Themes', 'Name', 'Dark');
-    extrafe.style.Name := 'Dark';
-  end
+    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Dark.Style')
   else if mThemeName = 'Light' then
-  begin
-    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Light.Style');
-    extrafe.ini.ini.WriteString('Themes', 'Name', 'Light');
-    extrafe.style.Name := 'Light';
-  end
+    mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Light.Style')
   else
-  begin
     mainScene.main.style := nil;
-    extrafe.ini.ini.WriteString('Themes', 'Name', '');
-    extrafe.style.Name := '';
-  end;
-  // Main_Form.StyleName:= extrafe.style.Name;
 end;
 
 end.

@@ -19,7 +19,8 @@ uses
 
 type
   TUSER_ACOUNT_DATABASE = record
-    Database_Num: String;
+    Online_Num: String;
+    User_ID: String;
     Username: String;
     Password: String;
     Email: String;
@@ -40,11 +41,14 @@ type
     User_Num: Boolean;
     User_Symbol: Boolean;
     User_Cap: Boolean;
+    User_Online_Free: Boolean;
     Pass_Empty: Boolean;
     Pass_Total: Integer;
     RePass_Empty: Boolean;
     RePass_Match: Boolean;
+    RePass_Total: Integer;
     Email_Empty: Boolean;
+    Email_Online_Free: Boolean;
     Email_Correct: Boolean;
     ReEmail_Empty: Boolean;
     ReEmail_Match: Boolean;
@@ -64,7 +68,9 @@ procedure OK(vTNum: TLabel; vCNum: Integer);
 procedure Wrong(vTNum: TLabel; vCNum: Integer);
 
 procedure Update_Username(vValue: String);
+procedure Update_Username_Limits(vValue: String);
 procedure Update_Password(vValue: String);
+procedure Update_Password_Limits(vValue: String);
 procedure Update_RePassword(vValue: String);
 procedure Update_Email(vValue: String);
 procedure Update_ReEmail(vValue: String);
@@ -74,6 +80,8 @@ procedure Update_Captcha(vValue: String);
 
 procedure Show_Password;
 procedure Show_RePassword;
+
+procedure Create_User_ID;
 
 procedure Apply;
 procedure Cancel;
@@ -94,6 +102,7 @@ uses
   uLoad_AllTypes,
   ULoad_SetAll,
   uInternet_Files,
+  uDatabase,
   uDatabase_SQLCommands,
   uSnippet_Convert;
 
@@ -153,10 +162,10 @@ end;
 
 function Check_Data: Boolean;
 begin
-  if (User.User_Empty = false) and (User.User_Total > 7) and (User.User_Num) and (User.User_Symbol) and (User.User_Cap) and (User.Pass_Empty = false) and
-    (User.Pass_Total > 5) and (User.RePass_Empty = false) and (User.RePass_Match) and (User.Email_Empty = false) and (User.Email_Correct) and
-    (User.ReEmail_Empty = false) and (User.ReEmail_Match) and (User.Terms) and (User.Accept_Terms) and (User.Captcha_Empty = false) and (User.Captcha_Match)
-  then
+  if (User.User_Empty = false) and (User.User_Total > 7) and (User.User_Total < 21) and (User.User_Num) and (User.User_Symbol) and (User.User_Cap) and
+    (User.User_Online_Free) and (User.Pass_Empty = false) and (User.Pass_Total > 5) and (User.Pass_Total < 21) and (User.RePass_Empty = false) and
+    (User.RePass_Match) and (User.Email_Empty = false) and (User.Email_Correct) and (User.Email_Online_Free) and (User.ReEmail_Empty = false) and
+    (User.ReEmail_Match) and (User.Terms) and (User.Accept_Terms) and (User.Captcha_Empty = false) and (User.Captcha_Match) then
     Result := True
   else
     Result := false;
@@ -171,7 +180,7 @@ begin
   if Check_Data then
   begin
     vIp := uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
-    User_Reg.Database_Num := uDatabase_SQLCommands.Get_Query(-1, 'count_records');
+    Create_User_ID;
     User_Reg.Username := ex_load.Reg.Main.User_V.Text;
     User_Reg.Password := ex_load.Reg.Main.Pass_V.Text;
     User_Reg.Email := ex_load.Reg.Main.Email_V.Text;
@@ -180,11 +189,18 @@ begin
     User_Reg.Name := '';
     User_Reg.Surname := '';
     User_Reg.Avatar := '0';
-    User_Reg.Registered := DateTimeToUnix(Now).ToString;
-    User_Reg.Last_Visit := User_Reg.Registered;
+    User_Reg.Registered := DateTimeToStr(now);
+    User_Reg.Last_Visit := DateTimeToStr(now);
     User_Reg.Genre := '0';
     if uDatabase_SQLCommands.Add_New_User then
     begin
+      vQuery := 'SELECT * FROM USERS';
+      ExtraFE_Query.Close;
+      ExtraFE_Query.SQL.Clear;
+      ExtraFE_Query.SQL.Add(vQuery);
+      ExtraFE_Query.Open;
+
+      User_Reg.Online_Num := ExtraFE_Query.RecordCount.ToString;
       uDatabase_SQLCommands.Add_User_Local;
       uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
     end;
@@ -698,6 +714,12 @@ begin
   ex_load.Reg.Main.Data.Check[vCNum].IsChecked := false;
 end;
 
+procedure Update_Username_Limits(vValue: String);
+begin
+  User.User_Total := Length(vValue);
+  ex_load.Reg.Main.User_Max.Text := 'Max characters (Limits were exceeded)';
+end;
+
 procedure Update_Username(vValue: String);
 const
   cNumbers = ['0' .. '9'];
@@ -705,7 +727,9 @@ const
   cCapitals = ['A' .. 'Z'];
 var
   vi: Integer;
+  vOnLine_Username: String;
 begin
+  User.User_Online_Free := false;
   if vValue <> '' then
   begin
     OK(ex_load.Reg.Main.Data.User[0], 0);
@@ -772,6 +796,49 @@ begin
       User.User_Cap := false;
     end;
   end;
+
+  if (User.User_Empty = false) and (User.User_Total > 7) and (User.User_Num) and (User.User_Symbol) and (User.User_Cap) then
+  begin
+    vQuery := 'SELECT USERNAME FROM USERS';
+    uDatabase.ExtraFE_Query.Close;
+    uDatabase.ExtraFE_Query.SQL.Clear;
+    uDatabase.ExtraFE_Query.SQL.Add(vQuery);
+    uDatabase.ExtraFE_Query.ExecSQL;
+    uDatabase.ExtraFE_Query.Open;
+    uDatabase.ExtraFE_Query.First;
+
+    for vi := 0 to uDatabase.ExtraFE_Query.RecordCount do
+    begin
+      vOnLine_Username := uDatabase.ExtraFE_Query.FieldByName('USERNAME').AsString;
+      if vOnLine_Username = vValue then
+      begin
+        ex_load.Reg.Main.User_Online.Text := 'This username already exists';
+        ex_load.Reg.Main.User_Online.TextSettings.FontColor := TAlphaColorRec.Red;
+        User.User_Online_Free := false;
+      end
+      else
+      begin
+        ex_load.Reg.Main.User_Online.Text := 'This username is free';
+        ex_load.Reg.Main.User_Online.TextSettings.FontColor := TAlphaColorRec.Limegreen;
+        User.User_Online_Free := True;
+      end;
+    end;
+
+    uDatabase.ExtraFE_Query.Next;
+  end;
+
+  if User.User_Total > 0 then
+    ex_load.Reg.Main.User_Max.Text := 'Max characters (' + User.User_Total.ToString + ' from 20)'
+  else
+    ex_load.Reg.Main.User_Max.Text := 'Max characters (20)';
+
+  ex_load.Reg.Main.User_Max.TextSettings.FontColor := TAlphaColorRec.White;
+end;
+
+procedure Update_Password_Limits(vValue: String);
+begin
+  User.Pass_Total := Length(vValue);
+  ex_load.Reg.Main.Pass_Max.Text := 'Max characters (Limits were exceeded)';
 end;
 
 procedure Update_Password(vValue: String);
@@ -797,6 +864,22 @@ begin
     Wrong(ex_load.Reg.Main.Data.Pass[1], 6);
     User.Pass_Total := Length(vValue);
   end;
+
+  if User.Pass_Total > 0 then
+  begin
+    ex_load.Reg.Main.Pass_Max.Text := 'Max characters (' + User.Pass_Total.ToString + ' from 20)';
+    if ex_load.Reg.Main.Pass_V.Password then
+      ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet
+    else
+      ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  end
+  else
+  begin
+    ex_load.Reg.Main.Pass_Max.Text := 'Max characters (20)';
+    ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Grey;
+  end;
+
+  ex_load.Reg.Main.Pass_Max.TextSettings.FontColor := TAlphaColorRec.White;
 end;
 
 procedure Update_RePassword(vValue: String);
@@ -822,9 +905,25 @@ begin
     Wrong(ex_load.Reg.Main.Data.RePass[1], 8);
     User.RePass_Match := false;
   end;
+
+  User.RePass_Total := Length(vValue);
+
+  if User.RePass_Total > 0 then
+  begin
+    if ex_load.Reg.Main.RePass_V.Password then
+      ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet
+    else
+      ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  end
+  else
+    ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Grey;
+
 end;
 
 procedure Update_Email(vValue: String);
+var
+  vi: Integer;
+  vEmail_Online: String;
 begin
   if vValue <> '' then
   begin
@@ -846,6 +945,36 @@ begin
   begin
     Wrong(ex_load.Reg.Main.Data.Email[1], 10);
     User.Email_Correct := false;
+  end;
+
+  if (User.Email_Empty = false) and (User.Email_Correct) then
+  begin
+    vQuery := 'SELECT EMAIL FROM USERS';
+    uDatabase.ExtraFE_Query.Close;
+    uDatabase.ExtraFE_Query.SQL.Clear;
+    uDatabase.ExtraFE_Query.SQL.Add(vQuery);
+    uDatabase.ExtraFE_Query.ExecSQL;
+    uDatabase.ExtraFE_Query.Open;
+    uDatabase.ExtraFE_Query.First;
+
+    for vi := 0 to uDatabase.ExtraFE_Query.RecordCount do
+    begin
+      vEmail_Online := uDatabase.ExtraFE_Query.FieldByName('EMAIL').AsString;
+
+      if vEmail_Online = vValue then
+      begin
+        ex_load.Reg.Main.Email_Online.Text := 'This Email is used';
+        ex_load.Reg.Main.Email_Online.TextSettings.FontColor := TAlphaColorRec.Red;
+        User.Email_Online_Free := false;
+      end
+      else
+      begin
+        ex_load.Reg.Main.Email_Online.Text := 'This Email is free';
+        ex_load.Reg.Main.Email_Online.TextSettings.FontColor := TAlphaColorRec.Limegreen;
+        User.Email_Online_Free := True;
+      end;
+      uDatabase.ExtraFE_Query.Next;
+    end;
   end;
 end;
 
@@ -971,7 +1100,7 @@ begin
   uLoad_SetAll_Login;
   if Is_user_registered then
   begin
-    ex_load.Login.User_V.Text := User_Reg.Username;
+    // ex_load.Login.User_V.Text := User_Reg.Username;
     ex_load.Login.Pass_V.Text := '';
   end;
   FreeAndNil(ex_load.Reg.Panel);
@@ -985,6 +1114,11 @@ begin
   ex_load.Reg.Panel_Error.StartValue := extrafe.res.Half_Width - ((ex_load.Reg.Panel.Width / 2) - 10);
   ex_load.Reg.Panel_Error.StopValue := extrafe.res.Half_Width - (ex_load.Reg.Panel.Width / 2);
   ex_load.Reg.Panel_Error.Start;
+  if User.User_Total > 20 then
+    ex_load.Reg.Main.User_Max.TextSettings.FontColor := TAlphaColorRec.Red;
+  if User.Pass_Total > 20 then
+    ex_load.Reg.Main.Pass_Max.TextSettings.FontColor := TAlphaColorRec.Red;
+
   for vi := 0 to 4 do
   begin
     if ex_load.Reg.Main.Data.User[vi].FontColor <> TAlphaColorRec.Lime then
@@ -1019,6 +1153,63 @@ begin
     if ex_load.Reg.Main.Data.Captcha[vi].FontColor <> TAlphaColorRec.Lime then
       ex_load.Reg.Main.Data.Captcha[vi].FontColor := TAlphaColorRec.Red;
   end;
+end;
+
+procedure Create_User_ID;
+var
+  vNum: Integer;
+  vi: Integer;
+  vTemp: String;
+  vTemp_Online: String;
+  vOK: Boolean;
+
+  procedure Create_Unique_Number;
+  var
+    vk: Integer;
+  begin
+    vTemp := '';
+    for vk := 0 to 63 do
+    begin
+      vNum := Random(3);
+      case vNum of
+        0:
+          vTemp := vTemp + Chr(ord('A') + Random(26));
+        1:
+          vTemp := vTemp + Chr(ord('a') + Random(26));
+        2:
+          vTemp := vTemp + Random(9).ToString;
+      end;
+    end;
+  end;
+
+begin
+  vOK := True;
+
+  vQuery := 'SELECT USER_ID FROM USERS';
+  uDatabase.ExtraFE_Query.Close;
+  uDatabase.ExtraFE_Query.SQL.Clear;
+  uDatabase.ExtraFE_Query.SQL.Add(vQuery);
+  uDatabase.ExtraFE_Query.ExecSQL;
+  uDatabase.ExtraFE_Query.Open;
+  uDatabase.ExtraFE_Query.First;
+
+  repeat
+    Create_Unique_Number;
+    uDatabase.ExtraFE_Query.First;
+    for vi := 0 to ExtraFE_Query.RecordCount do
+    begin
+      vTemp_Online := ExtraFE_Query.FieldByName('USER_ID').AsString;
+      if vTemp_Online = vTemp then
+      begin
+        vOK := false;
+        Break
+      end;
+      ExtraFE_Query.Next;
+    end;
+  until vOK = True;
+
+  if vOK then
+    User_Reg.User_ID := vTemp;
 end;
 
 end.

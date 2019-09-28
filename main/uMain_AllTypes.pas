@@ -95,7 +95,9 @@ type
 
 type
   TMAIN_MAIN = record
+    Back: TImage;
     Down_Level: TImage;
+    Down_Level_Ani: TFloatAnimation;
     Up_Level: TImage;
     Style: TStyleBook;
     Timer: TTimer;
@@ -138,7 +140,7 @@ type
     Back_Blur: TGaussianBlurEffect;
     Back_Line: TImage;
     GridPanel: TGridPanelLayout;
-    Settings: TImage;
+    Settings: TText;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
     Addon_Calendar: TMAIN_ADDON_CALENDAR;
@@ -516,18 +518,29 @@ type
   end;
 
 type
+  TMAIN_ANIMATION= class(TObject)
+    procedure OnFinish(Sender: TOBject);
+  end;
+
+type
   TMAIN_SCENE = record
     Main: TMAIN_MAIN;
     Header: TMAIN_HEADER;
     Selection: TMAIN_SELECTION;
     Footer: TMAIN_FOOTER;
     Config: TMAIN_CONFIGURATION;
+    Animation: TMAIN_ANIMATION;
   end;
 
 var
   mainScene: TMAIN_SCENE;
 
 implementation
+uses
+  emu,
+  main,
+  uEmu_Actions,
+  uLoad_AllTypes;
 
 { TMAIN_CONFIG_R_EMULATORS_OPENDIALOG }
 
@@ -542,6 +555,17 @@ procedure TMAIN_CONFIG_EMULATORS.Clear_Config_Emulators_Panel;
 begin
   Self := Default (TMAIN_CONFIG_EMULATORS);
   // FreeAndNil(Self.Panel);
+end;
+
+{ TMAIN_ANIMATION }
+
+procedure TMAIN_ANIMATION.OnFinish(Sender: TOBject);
+begin
+  if TFloatAnimation(Sender).Name = 'Main_Down_Animation' then
+  begin
+    Emu_Form.Show;
+    Main_Form.Visible := False;
+  end;
 end;
 
 initialization

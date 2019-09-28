@@ -10,8 +10,8 @@ uses
   Bass,
   Bass_FX;
 
-procedure uLoad_Sound_StartSoundSystem;
-procedure uLoad_Sound_LoadSounds;
+procedure Start_Sound_System;
+procedure Load_Sounds;
 
 implementation
 
@@ -19,7 +19,7 @@ uses
   main,
   uLoad_AllTypes;
 
-procedure uLoad_Sound_StartSoundSystem;
+procedure Start_Sound_System;
 begin
   // Edo ola prepei na mpoune se katastasi try with expections.
   if (HiWord(BASS_GetVersion)) <> BASSVERSION then
@@ -39,9 +39,11 @@ begin
     ShowMessage('Plug in : BASS_FX not loading : incorrect version (Bass = ' + BASSVERSIONTEXT + ' <> ' + BASS_FX_GetVersion.ToString + ' (Bass error : ' +
       Bass_ErrorGetCode.ToString + ')');
   end;
+
+  Load_Sounds;
 end;
 
-procedure uLoad_Sound_LoadSounds;
+procedure Load_Sounds;
 begin
   // Add Sound Effects
   // General

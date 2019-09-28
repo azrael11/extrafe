@@ -21,25 +21,15 @@ uses
   FMX.Platform.Win,
   FMX.Graphics,
   FMX.Forms,
-  scktComp;
+  scktComp,
 {$ENDIF}
+  uLoad_AllTypes;
 
-// Resolutions Type
-type
-  TMONITOR_RESOLUTION = record
-    Horizontal: Integer;
-    Vertical: Integer;
-    Refresh_Rate: Integer;
-    Bits_Per_Pixel: Integer;
-  end;
 
-  // program info build
+// program info build
 function uWindows_GetVersionInfo(mFileName: string): TStringlist;
 // windows monitor resolutions
-function uWindows_GetCurrent_Monitor_Resolution: TMONITOR_RESOLUTION;
-
-var
-  vMonitor_Resolution: TMONITOR_RESOLUTION;
+function Get_Monitor_Resolution: TEXTRAFE_RESOLUTION_MONITOR;
 function uWindows_GetMonitor_Available_Resolutions: TStringlist;
 function uWindows_GetMOnitor_Available_Refreshs: TStringlist;
 // Convertions
@@ -71,7 +61,7 @@ implementation
 
 uses
   main,
-  Loading;
+  load;
 
 // Dns server list const dll
 const
@@ -106,7 +96,7 @@ begin
   end;
 end;
 
-function uWindows_GetCurrent_Monitor_Resolution: TMONITOR_RESOLUTION;
+function Get_Monitor_Resolution: TEXTRAFE_RESOLUTION_MONITOR;
 var
   DC: THandle;
   Bits: Integer;
@@ -116,7 +106,7 @@ var
   // DM: TDevMode;
   // ModeNum: LongInt;
 begin
-  DC := GetDC(FmxHandleToHWND(Loading_Form.Handle));
+  DC := GetDC(FmxHandleToHWND(load.Loading.Handle));
   Bits := GetDeviceCaps(DC, BITSPIXEL);
   Hor := GetDeviceCaps(DC, HORZRES);
   Ver := GetDeviceCaps(DC, VERTRES);
@@ -125,7 +115,7 @@ begin
   Result.Vertical := Ver;
   Result.Refresh_Rate := RR;
   Result.Bits_Per_Pixel := Bits;
-  ReleaseDC(FmxHandleToHWND(Loading_Form.Handle), DC);
+  ReleaseDC(FmxHandleToHWND(load.Loading.Handle), DC);
   {
     // Show Current Resolution
     Edit1.Text := Format('%d bit, %d x %d', [Bits, HRes, VRes]);

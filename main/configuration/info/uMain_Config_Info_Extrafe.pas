@@ -252,7 +252,7 @@ begin
   mainScene.Config.Main.R.Info.Extrafe.History_Info.Lines.Clear;
   vStr_1 := 'nothing';
   vFullPath := StringReplace(mStable, '.', '_', [rfReplaceAll, rfIgnoreCase]);
-  vFullPath := Extrafe.prog.Paths.History + 'history_' + vFullPath + '.txt';
+  vFullPath := Extrafe.prog.History_Path + 'history_' + vFullPath + '.txt';
   AssignFile(vTextFile, vFullPath);
   Reset(vTextFile);
   while not Eof(vTextFile) do
@@ -278,7 +278,7 @@ begin
   Dec(Realeash, 1);
   vPath := Extrafe.prog.Version.Major + '.' + Extrafe.prog.Version.Minor + '.' + IntToStr(Realeash);
   vFullPath := StringReplace(vPath, '.', '_', [rfReplaceAll, rfIgnoreCase]);
-  vFullPath := Extrafe.prog.Paths.History + 'history_' + vFullPath + '.txt';
+  vFullPath := Extrafe.prog.History_Path + 'history_' + vFullPath + '.txt';
   if FileExists(vFullPath, True) then
   begin
     if Realeash > -1 then
@@ -304,7 +304,7 @@ begin
   Inc(Realeash, 1);
   mPath := Extrafe.prog.Version.Major + '.' + Extrafe.prog.Version.Minor + '.' + IntToStr(Realeash);
   mPath := StringReplace(mPath, '.', '_', [rfReplaceAll, rfIgnoreCase]);
-  mPath := Extrafe.prog.Paths.History + 'history_' + mPath + '.txt';
+  mPath := Extrafe.prog.History_Path + 'history_' + mPath + '.txt';
   if FileExists(mPath, False) then
   begin
     if Realeash <= StrToInt(Extrafe.prog.Version.Realeash) then
@@ -357,7 +357,7 @@ var
 begin
   vStr_1 := 'nothing';
   vFullPath := StringReplace(mPath, '.', '_', [rfReplaceAll, rfIgnoreCase]);
-  vFullPath := Extrafe.prog.Paths.History + 'history_' + vFullPath + '.txt';
+  vFullPath := Extrafe.prog.History_Path + 'history_' + vFullPath + '.txt';
   AssignFile(vTextFile, vFullPath);
   Reset(vTextFile);
   while not Eof(vTextFile) do

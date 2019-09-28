@@ -52,13 +52,32 @@ var
   vRow: TGridPanelLayout.TRowItem;
 begin
   // Main
-  mainScene.main.Down_Level := TImage.Create(Main_Form);
+  mainScene.main.Back := TImage.Create(Main_Form);
+  mainScene.main.Back.Name := 'Main_Down_Back';
+  mainScene.main.Back.Parent := Main_Form;
+  mainScene.main.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
+  mainScene.main.Back.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
+  mainScene.main.Back.WrapMode := TImageWrapMode.Tile;
+  mainScene.main.Back.Visible := True;
+
+  mainScene.main.Down_Level := TImage.Create(mainScene.main.Back);
   mainScene.main.Down_Level.Name := 'Main_Down';
-  mainScene.main.Down_Level.Parent := Main_Form;
+  mainScene.main.Down_Level.Parent := mainScene.main.Back;
   mainScene.main.Down_Level.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
   mainScene.main.Down_Level.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
   mainScene.main.Down_Level.WrapMode := TImageWrapMode.Tile;
   mainScene.main.Down_Level.Visible := True;
+
+  mainScene.Main.Down_Level_Ani := TFloatAnimation.Create(mainScene.Main.Down_Level);
+  mainScene.Main.Down_Level_Ani.Name := 'Main_Down_Animation';
+  mainScene.Main.Down_Level_Ani.Parent:=   mainScene.Main.Down_Level;
+  mainScene.Main.Down_Level_Ani.PropertyName:= 'Opacity';
+  mainScene.Main.Down_Level_Ani.Duration := 1.8;
+  mainScene.Main.Down_Level_Ani.Interpolation := TInterpolationType.Linear;
+  mainScene.Main.Down_Level_Ani.StartValue := 1;
+  mainScene.Main.Down_Level_Ani.StopValue := 0.1;
+  mainScene.Main.Down_Level_Ani.OnFinish := mainScene.Animation.OnFinish;
+  mainScene.Main.Down_Level_Ani.Enabled := False;
 
   mainScene.main.Up_Level := TImage.Create(mainScene.main.Down_Level);
   mainScene.main.Up_Level.Name := 'Main_Up';
@@ -136,7 +155,7 @@ begin
   mainScene.Header.Avatar.Name := 'Main_Header_Avatar';
   mainScene.Header.Avatar.Parent := mainScene.Header.Back;
   mainScene.Header.Avatar.SetBounds(mainScene.Header.Back.Width - 179, 5, 120, 120);
-  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active_Online.Avatar + '.png');
+  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active_Local.Avatar + '.png');
   mainScene.Header.Avatar.WrapMode := TImageWrapMode.Fit;
   mainScene.Header.Avatar.OnClick := ex_main.input.mouse.Image.OnMouseClick;
   mainScene.Header.Avatar.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;
@@ -274,15 +293,17 @@ begin
     vRow.Value := 36;
   end;
 
-  mainScene.Footer.Settings := TImage.Create(mainScene.Footer.Back);
+  mainScene.Footer.Settings := TText.Create(mainScene.Footer.Back);
   mainScene.Footer.Settings.Name := 'Main_Footer_Settings';
   mainScene.Footer.Settings.Parent := mainScene.Footer.Back;
   mainScene.Footer.Settings.SetBounds(mainScene.Footer.Back.Width - 100, (mainScene.Footer.Back.Height / 2) - 40, 80, 80);
-  mainScene.Footer.Settings.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
-  mainScene.Footer.Settings.WrapMode := TImageWrapMode.Fit;
-  mainScene.Footer.Settings.OnClick := ex_main.input.mouse.Image.OnMouseClick;
-  mainScene.Footer.Settings.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;
-  mainScene.Footer.Settings.OnMouseLeave := ex_main.input.mouse.Image.OnMouseLeave;
+  mainScene.Footer.Settings.Font.Family := 'IcoMoon-Free';
+  mainScene.Footer.Settings.Font.Size := 72;
+  mainScene.Footer.Settings.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  mainScene.Footer.Settings.Text := #$e994;
+  mainScene.Footer.Settings.OnClick := ex_main.input.mouse.Text.OnMouseClick;
+  mainScene.Footer.Settings.OnMouseEnter := ex_main.input.mouse.Text.OnMouseEnter;
+  mainScene.Footer.Settings.OnMouseLeave := ex_main.input.mouse.Text.OnMouseLeave;
   mainScene.Footer.Settings.Visible := True;
 
   mainScene.Footer.Settings_Ani := TFloatAnimation.Create(mainScene.Footer.Settings);

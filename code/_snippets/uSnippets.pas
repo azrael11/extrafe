@@ -23,7 +23,7 @@ function FreeChilds_Should_I(vChild: TControl): Boolean;
 // Open a link to default browser
 procedure Open_Link_To_Browser(vLink: String);
 procedure HyperLink_OnMouseOver(Sender: TObject);
-procedure HyperLink_OnMouseLeave(Sender: TObject);
+procedure HyperLink_OnMouseLeave(Sender: TObject; vColor: TAlphaColor);
 
 
 implementation
@@ -100,10 +100,10 @@ begin
   TText(Sender).Cursor:= crHandPoint;
 end;
 
-procedure HyperLink_OnMouseLeave(Sender: TObject);
+procedure HyperLink_OnMouseLeave(Sender: TObject; vColor: TAlphaColor);
 begin
   TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style- [TFontStyle.fsUnderline];
-  TText(Sender).TextSettings.FontColor:= claWhite;
+  TText(Sender).TextSettings.FontColor:= vColor;
   TText(Sender).Cursor:= crDefault;
 end;
 

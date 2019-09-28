@@ -110,11 +110,6 @@ begin
           uMain_Actions.ShowAvatar;
       end;
     end;
-    if TImage(Sender).Name = 'Main_Footer_Settings' then
-    begin
-      if mainScene.Footer.Back_Blur.Enabled = False then
-        uMain_Config_ShowHide(extrafe.prog.State);
-    end;
     BASS_ChannelPlay(sound.str_fx.general[0], False);
   end;
 end;
@@ -135,11 +130,6 @@ begin
           mainScene.Header.Avatar_Glow.Enabled := True
       end
     end;
-    if TImage(Sender).Name = 'Main_Footer_Settings' then
-    begin
-      if mainScene.Footer.Back_Blur.Enabled = False then
-        mainScene.Footer.Settings_Glow.Enabled := True;
-    end;
     TImage(Sender).Cursor := crHandPoint;
   end;
 end;
@@ -159,11 +149,6 @@ begin
         if extrafe.prog.State = 'main' then
           mainScene.Header.Avatar_Glow.Enabled := False
       end
-    end;
-    if TImage(Sender).Name = 'Main_Footer_Settings' then
-    begin
-      if mainScene.Footer.Back_Blur.Enabled = False then
-        mainScene.Footer.Settings_Glow.Enabled := False;
     end;
   end;
 end;
@@ -250,6 +235,11 @@ begin
     begin
       if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
         uMain_Actions.ShowHide_Addon(TText(Sender).Tag, extrafe.prog.State, TText(Sender).TagString)
+    end
+    else if TText(Sender).Name = 'Main_Footer_Settings' then
+    begin
+      if mainScene.Footer.Back_Blur.Enabled = False then
+        uMain_Config_ShowHide(extrafe.prog.State);
     end;
   end;
 end;
@@ -264,6 +254,11 @@ begin
     begin
       if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
         mainScene.Header.Addon_Icons_Glow[TText(Sender).Tag].Enabled := True;
+    end
+    else if TImage(Sender).Name = 'Main_Footer_Settings' then
+    begin
+      if mainScene.Footer.Back_Blur.Enabled = False then
+        mainScene.Footer.Settings_Glow.Enabled := True;
     end;
   end;
   TText(Sender).Cursor := crHandPoint;
@@ -279,6 +274,11 @@ begin
     begin
       if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
         mainScene.Header.Addon_Icons_Glow[TText(Sender).Tag].Enabled := False;
+    end
+    else if TImage(Sender).Name = 'Main_Footer_Settings' then
+    begin
+      if mainScene.Footer.Back_Blur.Enabled = False then
+        mainScene.Footer.Settings_Glow.Enabled := False;
     end;
   end;
 end;

@@ -24,7 +24,7 @@ uses
 
 implementation
 uses
-  loading,
+  load,
   uload,
   uLoad_AllTypes;
 

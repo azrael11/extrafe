@@ -345,9 +345,9 @@ begin
       (TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_' + TText(Sender).TagString) then
       uSoundplayer_Tag_MP3.Rating_Stars(addons.soundplayer.Player.Tag.mp3.Rating, True)
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v1_Transfer' then
-      uSnippets.HyperLink_OnMouseLeave(Sender)
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Transfer' then
-      uSnippets.HyperLink_OnMouseLeave(Sender)
+      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Covers_Cover_ArrowLeft' then
     begin
       if vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft.TextSettings.FontColor <> TAlphaColorRec.Grey then

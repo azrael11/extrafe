@@ -330,7 +330,7 @@ begin
   vHTMLBuild.Html.Add('<p><img src="cid:logo" alt="" height="260" width="500">');
   vHTMLBuild.Html.Add('<p>This email was sent to you because you asked us to enter the password you forgot.<p>');
   vHTMLBuild.Html.Add('<p><b>Username</b> : ' + user_Active_Online.Username + '<br>');
-  vHTMLBuild.Html.Add('<b>Password</b> : </b>' + uDatabase_SqlCommands.Get_Query(user_Active_Online.Num, 'password') + '</b><p>');
+  vHTMLBuild.Html.Add('<b>Password</b> : </b>' + uDatabase_SqlCommands.Get_Query('NUM', 'USERS', user_Active_Local.Num.ToString) + '</b><p>');
   vHTMLBuild.Html.Add('If you continue to have trouble accessing the ExtraFE please with your username send e-mail at: spoooky11@hotmail.gr.<p>');
   vHTMLBuild.Html.Add('<b>Homepage</b>      : <a href="http://extrafe.epizy.com">http://extrafe.epizy.com</a><br>');
   vHTMLBuild.Html.Add('<b>Documentation</b> : <a href="http://extrafe.epizy.com/doc/">http://extrafe.epizy.com/doc/</a><br>');

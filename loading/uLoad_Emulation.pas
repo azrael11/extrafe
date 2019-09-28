@@ -26,7 +26,6 @@ type
 procedure uLoad_Emulation_FirstTime;
 procedure Load;
 
-procedure uLoad_Emulation_LoadDefaults;
 procedure uLoad_Emulation_SetTabs;
 
 procedure Get_Arcade_Data;
@@ -38,7 +37,7 @@ procedure Get_Pinballs_Data;
 implementation
 
 uses
-  loading,
+  load,
   uLoad,
   uLoad_AllTypes,
   uDatabase,
@@ -106,13 +105,7 @@ end;
 
 procedure Load;
 begin
-
-  emulation.Active := extrafe.ini.ini.ReadBool('Emulation', 'Active', emulation.Active);
-  emulation.Active_Num := extrafe.ini.ini.ReadInteger('Emulation', 'Active_Num', emulation.Active_Num);
-  emulation.Unique_Num := extrafe.ini.ini.ReadInteger('Emulation', 'Unique_Num', emulation.Unique_Num);
-  emulation.ShowCat := extrafe.ini.ini.ReadBool('Emulation', 'ShowCat', emulation.ShowCat);
-  emulation.Path := extrafe.prog.Path + 'emu\';
-
+  ex_load.Scene.Progress_Text.Text := 'Configurate and loading "Emulators" ...';
   // Create the emulators string multi array
   SetLength(emulation.Emu, 5);
 
@@ -197,21 +190,15 @@ begin
     Get_Handhelds_Data;
   if user_Active_Local.EMULATORS.Pinballs then
     Get_Pinballs_Data;
-end;
 
-procedure uLoad_Emulation_LoadDefaults;
-begin
-  emulation.Active := extrafe.ini.ini.ReadBool('Emulators', 'Active', emulation.Active);
-  emulation.Active_Num := extrafe.ini.ini.ReadInteger('Emulators', 'Active_Num', emulation.Active_Num);
-  emulation.Unique_Num := extrafe.ini.ini.ReadInteger('Emulators', 'Unique_Num', emulation.Unique_Num);
-  emulation.ShowCat := extrafe.ini.ini.ReadBool('Emulators', 'ShowCat', emulation.ShowCat);
+  ex_load.Scene.Progress.Value := 70;
 end;
 
 procedure Get_Arcade_Data;
 var
   vQuery : String;
 begin
-  vQuery := 'SELECT * FROM ARCADE_MEDIA WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM ARCADE_MEDIA WHERE USER_ID=' + user_Active_Local.Num.ToString;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);

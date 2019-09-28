@@ -4,9 +4,11 @@ interface
 
 uses
   System.Classes,
+  System.UiTypes,
   FMX.Objects,
   FMX.StdCtrls,
-  FMX.TabControl;
+  FMX.TabControl,
+  BASS;
 
 type
   TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON = class(TObject)
@@ -40,36 +42,39 @@ uses
 
 procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON.OnMouseClick(Sender: TObject);
 begin
-  if (TButton(Sender).Name = 'Script_Mame_Install_Main_Tab1_Cancel') or (TButton(Sender).Name = 'Script_Mame_Install_Main_Tab2_Cancel') or
-    (TButton(Sender).Name = 'Script_Mame_Install_Main_Tab3_Cancel') or (TButton(Sender).Name = 'Script_Mame_Install_Main_Tab4_Close') then
+  BASS_ChannelPlay(sound.str_fx.general[0], False);
+
+{Mame Actions}
+  {Mame Install Actions}
+  if TButton(Sender).Name = 'Script_Mame_Install_Main_Cancel' then
     uEmulation_Arcade_Mame_Install_Free
-  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab1_Next' then
-    Script_Mame_Install.Main.Control.SetActiveTabWithTransition(Script_Mame_Install.Main.Tabs[1], TTabTransition.Slide)
-  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab2_Back' then
-    Script_Mame_Install.Main.Control.SetActiveTabWithTransition(Script_Mame_Install.Main.Tabs[0], TTabTransition.Slide, TTabTransitionDirection.Reversed)
-  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab2_Next' then
-    uEmulation_Arcade_Mame_Install_ChooseInstallationType_ShowTab3
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Next' then
+    uEmulation_Arcade_Mame_Install_Slide_To_Next
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Back' then
+    uEmulation_Arcade_Mame_Install_Slide_To_Previous
   else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab3_Find' then
     Script_Mame_Install.Main.Tab3.Open_Dialog.Execute
-  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab3_Start' then
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Start_Computer' then
     uEmulation_Arcade_Mame_Install_Start_FromComputer
-  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab3_Next' then
-    Script_Mame_Install.Main.Control.SetActiveTabWithTransition(Script_Mame_Install.Main.Tabs[3], TTabTransition.Slide)
-  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab3_Back' then
-    Script_Mame_Install.Main.Control.SetActiveTabWithTransition(Script_Mame_Install.Main.Tabs[1], TTabTransition.Slide, TTabTransitionDirection.Reversed)
-  else if (TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Tab1_Cancel') or (TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Tab2_Cancel') then
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Final' then
+    uEmulation_Arcade_Mame_Install_Final
+  {Mame UnInstall Actions}
+  else if (TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Cancel') or (TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Tab2_Cancel') then
     uEmulation_Arcade_Mame_Uninstall_Free
-  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Tab1_Next' then
-    Script_Mame_Uninstall.Main.Control.SetActiveTabWithTransition(Script_Mame_Uninstall.Main.Tabs[1], TTabTransition.Slide)
-  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Tab2_Back' then
-    Script_Mame_Uninstall.Main.Control.SetActiveTabWithTransition(Script_Mame_Uninstall.Main.Tabs[0], TTabTransition.Slide, TTabTransitionDirection.Reversed)
-  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Tab2_Next' then
-    uEmulation_Arcade_Mame_Uninstall_Remove;
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Next' then
+    uEmulation_Arcade_Mame_Uninstall_Slide_To_Next
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Back' then
+    uEmulation_Arcade_Mame_Uninstall_Slide_To_Previous
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Remove' then
+    uEmulation_Arcade_Mame_Uninstall_Remove
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Final' then
+    uEmulation_Arcade_Mame_Uninstall_Final;
+{End Of Mame Actions}
 end;
 
 procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON.OnMouseEnter(Sender: TObject);
 begin
-
+  TButton(Sender).Cursor := crHandPoint;
 end;
 
 procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON.OnMouseLeave(Sender: TObject);
@@ -81,8 +86,7 @@ end;
 
 procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO.OnMouseClick(Sender: TObject);
 begin
-  if (TRadioButton(Sender).Name = 'Script_Mame_Install_Main_Tab2_Radio_1') or (TRadioButton(Sender).Name = 'Script_Mame_Install_Main_Tab2_Radio_2') then
-    Script_Mame_Install.Main.Tab2.Next.Visible := True;
+
 end;
 
 procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO.OnMouseEnter(Sender: TObject);

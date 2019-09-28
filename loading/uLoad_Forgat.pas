@@ -40,10 +40,10 @@ end;
 
 procedure Update_Email(vEmail: String);
 begin
-  if uInternet_Files.ValidEmail(vEmail) then
+  {if uInternet_Files.ValidEmail(vEmail) then
     ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.White
   else
-    ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.Red;
+    ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.Red;}
 end;
 
 end.

@@ -14,7 +14,16 @@ uses
   FMX.Types,
   FMX.Edit,
   FMX.Memo,
-  FMX.Filter.Effects;
+  FMX.Filter.Effects,
+  FMX.ListBox;
+
+type
+  TLOGIN_USER = record
+    Username: String;
+    Password: String;
+    Avatar: String;
+    Last_Visit: String;
+  end;
 
 procedure uLoad_SetAll_Load;
 procedure uLoad_SetAll_Login;
@@ -22,39 +31,48 @@ procedure uLoad_SetAll_Forget_Password;
 procedure uLoad_SetAll_Register;
 procedure uLoad_SetAll_Terms;
 
+var
+  vLogin_User: array of TLOGIN_USER;
+  vListBox_Item: array of TListBoxItem;
+
 implementation
 
 uses
-  loading,
+  load,
+  uDatabase,
+  uDatabase_SQLCommands,
+  uDatabase_ActiveUser,
+  uWindows,
+  uLoad_Login,
   uLoad_AllTypes,
   uLoad_Register;
 
 procedure uLoad_SetAll_Load;
 begin
   // Back
-  ex_load.Scene.Back_Back := TImage.Create(Loading_Form);
+  ex_load.Scene.Back_Back := TImage.Create(load.Loading);
   ex_load.Scene.Back_Back.Name := 'Loading_Back_Back';
-  ex_load.Scene.Back_Back.Parent := Loading_Form;
+  ex_load.Scene.Back_Back.Parent := load.Loading;
   ex_load.Scene.Back_Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
   ex_load.Scene.Back_Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back_Back.WrapMode := TImageWrapMode.Fit;
   ex_load.Scene.Back_Back.Visible := True;
 
-  ex_load.Scene.Back := TImage.Create(ex_load.Scene.Back_Back);
+  ex_load.Scene.Back := TImage.Create(load.Loading);
   ex_load.Scene.Back.Name := 'Loading_Back';
-  ex_load.Scene.Back.Parent := ex_load.Scene.Back_Back;
+  ex_load.Scene.Back.Parent := load.Loading;
   ex_load.Scene.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
   ex_load.Scene.Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back.WrapMode := TImageWrapMode.Fit;
-  ex_load.Scene.Back.Visible := False;
+  ex_load.Scene.Back.Visible := True;
 
-  ex_load.Scene.Back_Fade := TFloatAnimation.Create(ex_load.Scene.Back_Back);
+  ex_load.Scene.Back_Fade := TFloatAnimation.Create(ex_load.Scene.Back);
   ex_load.Scene.Back_Fade.Name := 'Loading_FadeOut';
-  ex_load.Scene.Back_Fade.Parent := ex_load.Scene.Back_back;
+  ex_load.Scene.Back_Fade.Parent := ex_load.Scene.Back;
   ex_load.Scene.Back_Fade.PropertyName := 'Opacity';
   ex_load.Scene.Back_Fade.StartValue := 1;
-  ex_load.Scene.Back_Fade.StopValue := 0.3;
-  ex_load.Scene.Back_Fade.Duration := 1;
+  ex_load.Scene.Back_Fade.StopValue := 0.1;
+  ex_load.Scene.Back_Fade.Duration := 1.8;
   ex_load.Scene.Back_Fade.OnFinish := ex_load.Scene.Back_Fade_Float.OnFinish;
   ex_load.Scene.Back_Fade.Enabled := False;
 
@@ -87,8 +105,10 @@ begin
   ex_load.Scene.Progress_Text := TLabel.Create(ex_load.Scene.Back);
   ex_load.Scene.Progress_Text.Name := 'Loading_Progress_Text';
   ex_load.Scene.Progress_Text.Parent := ex_load.Scene.Back;
-  ex_load.Scene.Progress_Text.SetBounds(20, ex_load.Scene.Back.Height - 70, 300, 17);
-  ex_load.Scene.Progress_Text.Text := 'Loading...';
+  ex_load.Scene.Progress_Text.SetBounds(20, ex_load.Scene.Back.Height - 74, 1000, 22);
+  ex_load.Scene.Progress_Text.StyledSettings :=  ex_load.Scene.Progress_Text.StyledSettings - [TStyledSetting.Size];
+  ex_load.Scene.Progress_Text.Font.Size := 18;
+  ex_load.Scene.Progress_Text.Text := 'Waiting for Login.';
   ex_load.Scene.Progress_Text.Visible := True;
 
   ex_load.Scene.Code_Name := TText.Create(ex_load.Scene.Back);
@@ -114,9 +134,9 @@ begin
   ex_load.Scene.Ver.TextSettings.Font.Size := 16;
   ex_load.Scene.Ver.Visible := True;
 
-  ex_load.Scene.Timer := TTimer.Create(Loading_Form);
+  ex_load.Scene.Timer := TTimer.Create(load.Loading);
   ex_load.Scene.Timer.Name := 'Loading_Timer';
-  ex_load.Scene.Timer.Parent := Loading_Form;
+  ex_load.Scene.Timer.Parent := load.Loading;
   ex_load.Scene.Timer.Interval := 1000;
   ex_load.Scene.Timer.Enabled := False;
 
@@ -126,6 +146,7 @@ end;
 procedure uLoad_SetAll_Login;
 var
   vkState: TKeyboardState;
+  vi: Integer;
 begin
   extrafe.prog.State := 'load_login';
 
@@ -143,6 +164,8 @@ begin
   ex_load.Login.Panel_Login_Error.Duration := 0.3;
   ex_load.Login.Panel_Login_Error.Interpolation := TInterpolationType.Bounce;
   ex_load.Login.Panel_Login_Error.AnimationType := TAnimationType.&In;
+  ex_load.Login.Panel_Login_Error.StartValue := ex_load.Login.Panel.Position.X - 40;
+  ex_load.Login.Panel_Login_Error.StopValue := ex_load.Login.Panel.Position.X;
   ex_load.Login.Panel_Login_Error.Enabled := False;
 
   ex_load.Login.Panel_Login_Correct := TFloatAnimation.Create(ex_load.Login.Panel);
@@ -163,64 +186,76 @@ begin
   ex_load.Login.Main.SetBounds(0, 30, ex_load.Login.Panel.Width, ex_load.Login.Panel.Height - 30);
   ex_load.Login.Main.Visible := True;
 
+  ex_load.Login.Last_Visit := TLabel.Create(ex_load.Login.Main);
+  ex_load.Login.Last_Visit.Name := 'Loading_Login_Last_Visit';
+  ex_load.Login.Last_Visit.Parent := ex_load.Login.Main;
+  ex_load.Login.Last_Visit.SetBounds(ex_load.Login.Main.Width - 210, -22, 200, 17);
+  ex_load.Login.Last_Visit.TextSettings.HorzAlign := TTextAlign.Trailing;
+  ex_load.Login.Last_Visit.Text := 'Last visit : ';
+  ex_load.Login.Last_Visit.Visible := True;
+
   ex_load.Login.Avatar := TImage.Create(ex_load.Login.Main);
   ex_load.Login.Avatar.Name := 'Loading_Login_Avatar';
   ex_load.Login.Avatar.Parent := ex_load.Login.Main;
-  ex_load.Login.Avatar.SetBounds(16, 24, 100, 100);
+  ex_load.Login.Avatar.SetBounds(24, 28, 120, 120);
   ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
   ex_load.Login.Avatar.WrapMode := TImageWrapMode.Fit;
   ex_load.Login.Avatar.Visible := True;
 
-  ex_load.Login.CapsLock := TText.Create(ex_load.Login.Main);
-  ex_load.Login.CapsLock.Name := 'Loading_Login_CapsLock';
-  ex_load.Login.CapsLock.Parent := ex_load.Login.Main;
-  ex_load.Login.CapsLock.SetBounds(328, 90, 150, 17);
-  ex_load.Login.CapsLock.Font.Family := 'IcoMoon-Free';
-  ex_load.Login.CapsLock.Text := #$e900;
-  ex_load.Login.CapsLock.TextSettings.Font.Size := 16;
-  ex_load.Login.CapsLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  ex_load.Login.CapsLock.TextSettings.HorzAlign := TTextAlign.Trailing;
-  ex_load.Login.CapsLock.Visible := False;
+  ex_load.Login.Warning := TLabel.Create(ex_load.Login.Main);
+  ex_load.Login.Warning.Name := 'Loading_Login_Warning';
+  ex_load.Login.Warning.Parent := ex_load.Login.Main;
+  ex_load.Login.Warning.SetBounds(ex_load.Login.Main.Width - 519, 8, 500, 22);
+  ex_load.Login.Warning.TextSettings.FontColor := TAlphaColorRec.Red;
+  ex_load.Login.Warning.Font.Size := 18;
+  ex_load.Login.Warning.Text := 'OK ola kala';
+  ex_load.Login.Warning.TextAlign := TTextAlign.Trailing;
+  ex_load.Login.Warning.StyledSettings := ex_load.Login.Warning.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
+  ex_load.Login.Warning.Visible := False;
 
   ex_load.Login.User := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.User.Name := 'Loading_Login_User';
   ex_load.Login.User.Parent := ex_load.Login.Main;
-  ex_load.Login.User.SetBounds(152, 24, 200, 17);
+  ex_load.Login.User.SetBounds(182, 22, 200, 17);
   ex_load.Login.User.Text := 'Username :';
   ex_load.Login.User.Visible := True;
 
-  ex_load.Login.User_V := TEdit.Create(ex_load.Login.Main);
+  ex_load.Login.User_V := TComboBox.Create(ex_load.Login.Main);
   ex_load.Login.User_V.Name := 'Loading_Login_User_V';
   ex_load.Login.User_V.Parent := ex_load.Login.Main;
-  ex_load.Login.User_V.SetBounds(152, 40, 329, 36);
-  ex_load.Login.User_V.HitTest := True;
-  ex_load.Login.User_V.TextSettings.FontColor := TAlphaColorRec.White;
-  ex_load.Login.User_V.TextSettings.Font.Size := 18;
-  ex_load.Login.User_V.TextSettings.HorzAlign := TTextAlign.Leading;
-  ex_load.Login.User_V.TextSettings.VertAlign := TTextAlign.Center;
-  ex_load.Login.User_V.Text := 'Azrael_11';
-  ex_load.Login.User_V.StyledSettings := ex_load.Login.User_V.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor, TStyledSetting.Other];
-  ex_load.Login.User_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
+  ex_load.Login.User_V.SetBounds(182, 40, 329, 36);
   ex_load.Login.User_V.Visible := True;
 
   ex_load.Login.Pass := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Pass.Name := 'Loading_Login_Pass';
   ex_load.Login.Pass.Parent := ex_load.Login.Main;
-  ex_load.Login.Pass.SetBounds(152, 96, 200, 17);
+  ex_load.Login.Pass.SetBounds(182, 94, 200, 17);
   ex_load.Login.Pass.Text := 'Password :';
   ex_load.Login.Pass.Visible := True;
+
+  ex_load.Login.Forget_Pass := TText.Create(ex_load.Login.Main);
+  ex_load.Login.Forget_Pass.Name := 'Loading_Login_Forget_Pass';
+  ex_load.Login.Forget_Pass.Parent := ex_load.Login.Main;
+  ex_load.Login.Forget_Pass.SetBounds(331, 94, 180, 17);
+  ex_load.Login.Forget_Pass.Text := 'Forgot your password? Click here';
+  ex_load.Login.Forget_Pass.TextSettings.FontColor := TAlphaColorRec.Red;
+  ex_load.Login.Forget_Pass.TextSettings.HorzAlign := TTextAlign.Trailing;
+  ex_load.Login.Forget_Pass.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Login.Forget_Pass.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Login.Forget_Pass.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
+  ex_load.Login.Forget_Pass.Visible := False;
 
   ex_load.Login.Pass_V := TEdit.Create(ex_load.Login.Main);
   ex_load.Login.Pass_V.Name := 'Loading_Login_Pass_V';
   ex_load.Login.Pass_V.Parent := ex_load.Login.Main;
-  ex_load.Login.Pass_V.SetBounds(152, 112, 329, 36);
+  ex_load.Login.Pass_V.SetBounds(182, 112, 329, 36);
   ex_load.Login.Pass_V.HitTest := True;
   ex_load.Login.Pass_V.TextSettings.FontColor := TAlphaColorRec.White;
   ex_load.Login.Pass_V.TextSettings.Font.Size := 18;
   ex_load.Login.Pass_V.TextSettings.HorzAlign := TTextAlign.Leading;
   ex_load.Login.Pass_V.TextSettings.VertAlign := TTextAlign.Center;
   ex_load.Login.Pass_V.Password := True;
-  ex_load.Login.Pass_V.Text := '11azrael';
+  ex_load.Login.Pass_V.Text := '';
   ex_load.Login.Pass_V.StyledSettings := ex_load.Login.Pass_V.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor, TStyledSetting.Other];
   ex_load.Login.Pass_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.Login.Pass_V.Visible := True;
@@ -228,13 +263,12 @@ begin
   ex_load.Login.Pass_Show := TText.Create(ex_load.Login.Main);
   ex_load.Login.Pass_Show.Name := 'Loading_Login_Pass_Show';
   ex_load.Login.Pass_Show.Parent := ex_load.Login.Main;
-  ex_load.Login.Pass_Show.SetBounds(443, 112, 36, 36);
+  ex_load.Login.Pass_Show.SetBounds(473, 112, 36, 36);
   ex_load.Login.Pass_Show.Font.Family := 'IcoMoon-Free';
   ex_load.Login.Pass_Show.Font.Size := 24;
   ex_load.Login.Pass_Show.Text := #$e9d1;
-  ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Grey;
   ex_load.Login.Pass_Show.TextSettings.HorzAlign := TTextAlign.Center;
-  ex_load.Login.Pass_Show.TextSettings.VertAlign := TTextAlign.Center;
   ex_load.Login.Pass_Show.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
   ex_load.Login.Pass_Show.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
   ex_load.Login.Pass_Show.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
@@ -250,7 +284,7 @@ begin
   ex_load.Login.Login := TButton.Create(ex_load.Login.Main);
   ex_load.Login.Login.Name := 'Loading_Login_Login';
   ex_load.Login.Login.Parent := ex_load.Login.Main;
-  ex_load.Login.Login.SetBounds(400, 184, 80, 22);
+  ex_load.Login.Login.SetBounds(330, 174, 180, 40);
   ex_load.Login.Login.Text := 'Login';
   ex_load.Login.Login.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.Login.Login.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
@@ -259,67 +293,83 @@ begin
   ex_load.Login.Exit_ExtraFE := TButton.Create(ex_load.Login.Main);
   ex_load.Login.Exit_ExtraFE.Name := 'Loading_Login_Exit';
   ex_load.Login.Exit_ExtraFE.Parent := ex_load.Login.Main;
-  ex_load.Login.Exit_ExtraFE.SetBounds(400, 216, 80, 22);
+  ex_load.Login.Exit_ExtraFE.SetBounds(330, 228, 180, 40);
   ex_load.Login.Exit_ExtraFE.Text := 'Exit';
   ex_load.Login.Exit_ExtraFE.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.Login.Exit_ExtraFE.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.Login.Exit_ExtraFE.Visible := True;
 
+  ex_load.Login.CapsLock_Icon := TText.Create(ex_load.Login.Main);
+  ex_load.Login.CapsLock_Icon.Name := 'Loading_Login_CapsLock_Icon';
+  ex_load.Login.CapsLock_Icon.Parent := ex_load.Login.Main;
+  ex_load.Login.CapsLock_Icon.SetBounds(12, 166, 32, 32);
+  ex_load.Login.CapsLock_Icon.Font.Family := 'IcoMoon-Free';
+  ex_load.Login.CapsLock_Icon.Text := #$ea6d;
+  ex_load.Login.CapsLock_Icon.TextSettings.Font.Size := 36;
+  ex_load.Login.CapsLock_Icon.Visible := True;
+
+  ex_load.Login.CapsLock := TLabel.Create(ex_load.Login.Main);
+  ex_load.Login.CapsLock.Name := 'Loading_Login_Capslock';
+  ex_load.Login.CapsLock.Parent := ex_load.Login.Main;
+  ex_load.Login.CapsLock.SetBounds(48, 174, 200, 17);
+  ex_load.Login.CapsLock.Text := 'CapsLock';
+  ex_load.Login.CapsLock.Visible := True;
+
   ex_load.Login.Int_Icon := TText.Create(ex_load.Login.Main);
   ex_load.Login.Int_Icon.Name := 'Loading_Login_Internet_Icon';
   ex_load.Login.Int_Icon.Parent := ex_load.Login.Main;
-  ex_load.Login.Int_Icon.SetBounds(16, 216, 24, 24);
+  ex_load.Login.Int_Icon.SetBounds(16, 200, 24, 24);
   ex_load.Login.Int_Icon.Font.Family := 'IcoMoon-Free';
   ex_load.Login.Int_Icon.Font.Size := 24;
   ex_load.Login.Int_Icon.Text := #$e9c9;
-  ex_load.Login.Int_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  ex_load.Login.Int_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
   ex_load.Login.Int_Icon.Visible := True;
 
   ex_load.Login.Internet := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Internet.Name := 'Loading_Login_Internet';
   ex_load.Login.Internet.Parent := ex_load.Login.Main;
-  ex_load.Login.Internet.SetBounds(48, 224, 200, 17);
-  ex_load.Login.Internet.Text := 'Not Connected';
+  ex_load.Login.Internet.SetBounds(48, 208, 200, 17);
+  ex_load.Login.Internet.Text := 'Internet not Connected';
   ex_load.Login.Internet.Visible := True;
 
   ex_load.Login.Online_Data_Icon := TText.Create(ex_load.Login.Main);
   ex_load.Login.Online_Data_Icon.Name := 'Loading_Login_Online_Database_Icon';
   ex_load.Login.Online_Data_Icon.Parent := ex_load.Login.Main;
-  ex_load.Login.Online_Data_Icon.SetBounds(16, 248, 24, 24);
+  ex_load.Login.Online_Data_Icon.SetBounds(16, 234, 24, 24);
   ex_load.Login.Online_Data_Icon.Font.Family := 'IcoMoon-Free';
   ex_load.Login.Online_Data_Icon.Font.Size := 24;
   ex_load.Login.Online_Data_Icon.Text := #$e964;
-  ex_load.Login.Online_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  ex_load.Login.Online_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
   ex_load.Login.Online_Data_Icon.Visible := True;
 
   ex_load.Login.Online_Database := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Online_Database.Name := 'Loading_Login_Online_Database';
   ex_load.Login.Online_Database.Parent := ex_load.Login.Main;
-  ex_load.Login.Online_Database.SetBounds(48, 256, 200, 17);
-  ex_load.Login.Online_Database.Text := 'Not Connected';
+  ex_load.Login.Online_Database.SetBounds(48, 242, 200, 17);
+  ex_load.Login.Online_Database.Text := 'Online database not connected';
   ex_load.Login.Online_Database.Visible := True;
 
   ex_load.Login.Local_Data_Icon := TText.Create(ex_load.Login.Main);
   ex_load.Login.Local_Data_Icon.Name := 'Loading_Login_Local_Database_Icon';
   ex_load.Login.Local_Data_Icon.Parent := ex_load.Login.Main;
-  ex_load.Login.Local_Data_Icon.SetBounds(16, 280, 24, 24);
+  ex_load.Login.Local_Data_Icon.SetBounds(16, 268, 24, 24);
   ex_load.Login.Local_Data_Icon.Font.Family := 'IcoMoon-Free';
   ex_load.Login.Local_Data_Icon.Font.Size := 24;
   ex_load.Login.Local_Data_Icon.Text := #$e963;
-  ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
   ex_load.Login.Local_Data_Icon.Visible := True;
 
   ex_load.Login.Local_Database := TLabel.Create(ex_load.Login.Main);
   ex_load.Login.Local_Database.Name := 'Loading_Login_Local_Database';
   ex_load.Login.Local_Database.Parent := ex_load.Login.Main;
-  ex_load.Login.Local_Database.SetBounds(48, 288, 200, 17);
-  ex_load.Login.Local_Database.Text := 'Not Connected';
+  ex_load.Login.Local_Database.SetBounds(48, 276, 200, 17);
+  ex_load.Login.Local_Database.Text := 'Local database not connected';
   ex_load.Login.Local_Database.Visible := True;
 
   ex_load.Login.NotRegister := TText.Create(ex_load.Login.Main);
   ex_load.Login.NotRegister.Name := 'Loading_Login_Register';
   ex_load.Login.NotRegister.Parent := ex_load.Login.Main;
-  ex_load.Login.NotRegister.SetBounds(288, 288, 193, 17);
+  ex_load.Login.NotRegister.SetBounds(300, 276, 208, 17);
   ex_load.Login.NotRegister.TextSettings.HorzAlign := TTextAlign.Trailing;
   ex_load.Login.NotRegister.Text := 'Not registered yet? Click here';
   ex_load.Login.NotRegister.TextSettings.FontColor := TAlphaColorRec.White;
@@ -328,36 +378,82 @@ begin
   ex_load.Login.NotRegister.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
   ex_load.Login.NotRegister.Visible := True;
 
-  ex_load.Login.Forget_Pass := TText.Create(ex_load.Login.Main);
-  ex_load.Login.Forget_Pass.Name := 'Loading_Login_Forget_Pass';
-  ex_load.Login.Forget_Pass.Parent := ex_load.Login.Main;
-  ex_load.Login.Forget_Pass.SetBounds(152, 154, 300, 17);
-  ex_load.Login.Forget_Pass.Text := 'Forgot your password? Click here';
-  ex_load.Login.Forget_Pass.TextSettings.FontColor := TAlphaColorRec.White;
-  ex_load.Login.Forget_Pass.TextSettings.HorzAlign := TTextAlign.Leading;
-  ex_load.Login.Forget_Pass.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
-  ex_load.Login.Forget_Pass.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
-  ex_load.Login.Forget_Pass.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
-  ex_load.Login.Forget_Pass.Visible := False;
-
-  ex_load.Login.Warning := TLabel.Create(ex_load.Login.Main);
-  ex_load.Login.Warning.Name := 'Loading_Login_Warning';
-  ex_load.Login.Warning.Parent := ex_load.Login.Main;
-  ex_load.Login.Warning.SetBounds(ex_load.Login.Main.Width - 550, 8, 500, 22);
-  ex_load.Login.Warning.TextSettings.FontColor := TAlphaColorRec.Red;
-  ex_load.Login.Warning.Text := 'OK ola kala';
-  ex_load.Login.Warning.TextAlign := TTextAlign.Trailing;
-  ex_load.Login.Warning.StyledSettings := ex_load.Login.Warning.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
-  ex_load.Login.Warning.Visible := False;
-
   ex_load.Scene.Logo.Position.X := ex_load.Login.Panel.Position.X;
   ex_load.Scene.Logo.Position.Y := ex_load.Login.Panel.Position.Y - 340;
 
+  SetLength(vLogin_User, extrafe.users_total + 1);
+  SetLength(vListBox_Item, extrafe.users_total + 1);
+
+  if extrafe.users_total > 0 then
+  begin
+    for vi := 1 to extrafe.users_total do
+    begin
+      vLogin_User[vi].Username := uDatabase_SQLCommands.Get_Local_Query('USERNAME', 'USERS', vi.ToString);
+      vLogin_User[vi].Password := uDatabase_SQLCommands.Get_Local_Query('PASSWORD', 'USERS', vi.ToString);
+      vLogin_User[vi].Avatar := uDatabase_SQLCommands.Get_Local_Query('AVATAR', 'USERS', vi.ToString);
+      vLogin_User[vi].Last_Visit := uDatabase_SQLCommands.Get_Local_Query('LAST_VISIT', 'USERS', vi.ToString);
+
+      vListBox_Item[vi] := TListBoxItem.Create(ex_load.Login.User_V);
+      vListBox_Item[vi].Name := 'Load_ListItem_' + vi.ToString;
+      vListBox_Item[vi].Parent := ex_load.Login.User_V;
+      vListBox_Item[vi].StyledSettings := vListBox_Item[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
+      vListBox_Item[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      vListBox_Item[vi].Font.Size := 18;
+      vListBox_Item[vi].Text := vLogin_User[vi].Username;
+      vListBox_Item[vi].Visible := True;
+      ex_load.Login.User_V.AddObject(vListBox_Item[vi]);
+    end;
+  end
+  else
+  begin
+    vListBox_Item[0] := TListBoxItem.Create(ex_load.Login.User_V);
+    vListBox_Item[0].Name := 'Load_ListItem_0';
+    vListBox_Item[0].Parent := ex_load.Login.User_V;
+    vListBox_Item[0].StyledSettings := vListBox_Item[0].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
+    vListBox_Item[0].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vListBox_Item[0].Font.Size := 18;
+    vListBox_Item[0].Text := 'Please Register';
+    vListBox_Item[0].Visible := True;
+    ex_load.Login.User_V.AddObject(vListBox_Item[0]);
+  end;
+
+  ex_load.Login.User_V.ItemIndex := 0;
+
+  if extrafe.users_total > 0 then
+  begin
+    ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + vLogin_User[1].Avatar + '.png');
+    ex_load.Login.Last_Visit.Text := 'Last Visit : ' + vLogin_User[1].Last_Visit;
+  end
+  else
+  begin
+    ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
+    ex_load.Login.Last_Visit.Text := 'Last Visti :  Not Yet';
+  end;
+
   GetKeyboardState(vkState);
   if (vkState[VK_CAPITAL] = 0) then
-    ex_load.Login.CapsLock.Visible := False
+    ex_load.Login.CapsLock_Icon.Locked := False
   else
-    ex_load.Login.CapsLock.Visible := True;
+    ex_load.Login.CapsLock_Icon.Locked := True;
+
+  uLoad_Login.CapsLock(not ex_load.Login.CapsLock_Icon.Locked);
+
+  if extrafe.databases.local_connected then
+  begin
+    ex_load.Login.Local_Database.Text := 'Local database is connected';
+    ex_load.Login.Local_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  end;
+
+  if extrafe.Internet_Active then
+  begin
+    ex_load.Login.Int_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    ex_load.Login.Internet.Text := 'Internet is connected';
+    if extrafe.databases.online_connected then
+    begin
+      ex_load.Login.Online_Database.Text := 'Online database is connected';
+      ex_load.Login.Online_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    end;
+  end;
 end;
 
 procedure uLoad_SetAll_Forget_Password;
@@ -382,16 +478,17 @@ begin
   ex_load.F_Pass.Main.User := TText.Create(ex_load.F_Pass.Panel);
   ex_load.F_Pass.Main.User.Name := 'Loading_FPass_User';
   ex_load.F_Pass.Main.User.Parent := ex_load.F_Pass.Panel;
-  ex_load.F_Pass.Main.User.SetBounds(10, 40, 300, 26);
+  ex_load.F_Pass.Main.User.SetBounds(10, 60, ex_load.F_Pass.Main.Panel.Width - 110, 26);
   ex_load.F_Pass.Main.User.TextSettings.FontColor := TAlphaColorRec.White;
-  ex_load.F_Pass.Main.User.TextSettings.HorzAlign := TTextAlign.Leading;
-  ex_load.F_Pass.Main.User.Text := 'User " ' + ex_load.Login.User_V.Text + ' "';
+  ex_load.F_Pass.Main.User.TextSettings.HorzAlign := TTextAlign.Center;
+  ex_load.F_Pass.Main.User.Font.Size := 18;
+  ex_load.F_Pass.Main.User.Text := 'User " ' + ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] + ' "';
   ex_load.F_Pass.Main.User.Visible := True;
 
   ex_load.F_Pass.Main.Avatar := TImage.Create(ex_load.F_Pass.Main.Panel);
   ex_load.F_Pass.Main.Avatar.Name := 'Loading_FPass_Avatar';
   ex_load.F_Pass.Main.Avatar.Parent := ex_load.F_Pass.Main.Panel;
-  ex_load.F_Pass.Main.Avatar.SetBounds(((ex_load.F_Pass.Main.Panel.Width) - 70), 5, 50, 50);
+  ex_load.F_Pass.Main.Avatar.SetBounds(((ex_load.F_Pass.Main.Panel.Width) - 90), 5, 70, 70);
   ex_load.F_Pass.Main.Avatar.Bitmap := ex_load.Login.Avatar.Bitmap;
   ex_load.F_Pass.Main.Avatar.WrapMode := TImageWrapMode.Fit;
   ex_load.F_Pass.Main.Avatar.Visible := True;
@@ -406,9 +503,11 @@ begin
   ex_load.F_Pass.Main.Email_V := TEdit.Create(ex_load.F_Pass.Main.Panel);
   ex_load.F_Pass.Main.Email_V.Name := 'Loading_FPass_Email_V';
   ex_load.F_Pass.Main.Email_V.Parent := ex_load.F_Pass.Main.Panel;
-  ex_load.F_Pass.Main.Email_V.SetBounds(10, 90, ex_load.F_Pass.Main.Panel.Width - 20, 20);
+  ex_load.F_Pass.Main.Email_V.SetBounds(10, 90, ex_load.F_Pass.Main.Panel.Width - 20, 36);
   ex_load.F_Pass.Main.Email_V.Text := '';
-  ex_load.F_Pass.Main.Email_V.StyledSettings := ex_load.F_Pass.Main.Email_V.StyledSettings - [TStyledSetting.FontColor];
+  ex_load.F_Pass.Main.Email_V.Font.Size := 18;
+  ex_load.F_Pass.Main.Email_V.TextSettings.FontColor := TAlphaColorRec.White;
+  ex_load.F_Pass.Main.Email_V.StyledSettings := ex_load.F_Pass.Main.Email_V.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
   ex_load.F_Pass.Main.Email_V.OnTyping := ex_load.Input.mouse.Edit.OnTyping;
   ex_load.F_Pass.Main.Email_V.Visible := True;
 
@@ -418,6 +517,7 @@ begin
   ex_load.F_Pass.Main.Send.SetBounds(50, ex_load.F_Pass.Main.Panel.Height - 40, 100, 30);
   ex_load.F_Pass.Main.Send.Text := 'Send';
   ex_load.F_Pass.Main.Send.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
+  ex_load.F_Pass.Main.Send.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.F_Pass.Main.Send.Visible := True;
 
   ex_load.F_Pass.Main.Cancel := TButton.Create(ex_load.F_Pass.Main.Panel);
@@ -426,6 +526,7 @@ begin
   ex_load.F_Pass.Main.Cancel.SetBounds(ex_load.F_Pass.Main.Panel.Width - 150, ex_load.F_Pass.Main.Panel.Height - 40, 100, 30);
   ex_load.F_Pass.Main.Cancel.Text := 'Cancel';
   ex_load.F_Pass.Main.Cancel.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
+  ex_load.F_Pass.Main.Cancel.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.F_Pass.Main.Cancel.Visible := True;
 
   ex_load.F_Pass.Main.Warning := TLabel.Create(ex_load.F_Pass.Panel);
@@ -480,6 +581,25 @@ begin
   ex_load.Reg.Main.User.Text := 'Username :';
   ex_load.Reg.Main.User.Visible := True;
 
+  ex_load.Reg.Main.User_Max := TLabel.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.User_Max.Name := 'Loading_Register_User_Max';
+  ex_load.Reg.Main.User_Max.Parent := ex_load.Reg.Main.Panel;
+  ex_load.Reg.Main.User_Max.SetBounds(80, 10, 300, 20);
+  ex_load.Reg.Main.User_Max.Text := 'Max characters (20)';
+  ex_load.Reg.Main.User_Max.StyledSettings := ex_load.Reg.Main.User_Max.StyledSettings - [TStyledSetting.Style, TStyledSetting.FontColor];
+  ex_load.Reg.Main.User_Max.TextSettings.Font.Style := ex_load.Reg.Main.User_Max.TextSettings.Font.Style + [TFontstyle.fsItalic];
+  ex_load.Reg.Main.User_Max.Visible := True;
+
+  ex_load.Reg.Main.User_Online := TLabel.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.User_Online.Name := 'Loading_Register_User_Online';
+  ex_load.Reg.Main.User_Online.Parent := ex_load.Reg.Main.Panel;
+  ex_load.Reg.Main.User_Online.SetBounds(ex_load.Reg.Main.Panel.Width - 220, 10, 200, 20);
+  ex_load.Reg.Main.User_Online.Text := '';
+  ex_load.Reg.Main.User_Online.StyledSettings := ex_load.Reg.Main.User_Online.StyledSettings - [TStyledSetting.Style, TStyledSetting.FontColor];
+  ex_load.Reg.Main.User_Online.TextSettings.Font.Style := ex_load.Reg.Main.User_Online.TextSettings.Font.Style + [TFontstyle.fsItalic];
+  ex_load.Reg.Main.User_Online.TextSettings.HorzAlign := TTextAlign.Trailing;
+  ex_load.Reg.Main.User_Online.Visible := True;
+
   ex_load.Reg.Main.User_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.User_V.Name := 'Loading_Register_User_V';
   ex_load.Reg.Main.User_V.Parent := ex_load.Reg.Main.Panel;
@@ -497,6 +617,15 @@ begin
   ex_load.Reg.Main.Pass.SetBounds(20, 65, 200, 20);
   ex_load.Reg.Main.Pass.Text := 'Password :';
   ex_load.Reg.Main.Pass.Visible := True;
+
+  ex_load.Reg.Main.Pass_Max := TLabel.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.Pass_Max.Name := 'Loading_Register_Pass_Max';
+  ex_load.Reg.Main.Pass_Max.Parent := ex_load.Reg.Main.Panel;
+  ex_load.Reg.Main.Pass_Max.SetBounds(80, 65, 300, 20);
+  ex_load.Reg.Main.Pass_Max.Text := 'Max characters (20) ';
+  ex_load.Reg.Main.Pass_Max.StyledSettings := ex_load.Reg.Main.Pass_Max.StyledSettings - [TStyledSetting.Style, TStyledSetting.FontColor];
+  ex_load.Reg.Main.Pass_Max.TextSettings.Font.Style := ex_load.Reg.Main.Pass_Max.TextSettings.Font.Style + [TFontstyle.fsItalic];
+  ex_load.Reg.Main.Pass_Max.Visible := True;
 
   ex_load.Reg.Main.Pass_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Pass_V.Name := 'Loading_Register_Pass_V';
@@ -516,7 +645,7 @@ begin
   ex_load.Reg.Main.Pass_Show.SetBounds(ex_load.Reg.Main.Pass_V.Width - 2, 90, 20, 20);
   ex_load.Reg.Main.Pass_Show.Font.Family := 'IcoMoon-Free';
   ex_load.Reg.Main.Pass_Show.Font.Size := 18;
-  ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  ex_load.Reg.Main.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Grey;
   ex_load.Reg.Main.Pass_Show.Text := #$e9d1;
   ex_load.Reg.Main.Pass_Show.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
   ex_load.Reg.Main.Pass_Show.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
@@ -555,7 +684,7 @@ begin
   ex_load.Reg.Main.RePass_Show.SetBounds(ex_load.Reg.Main.RePass_V.Width - 2, 145, 20, 20);
   ex_load.Reg.Main.RePass_Show.Font.Family := 'IcoMoon-Free';
   ex_load.Reg.Main.RePass_Show.Font.Size := 18;
-  ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet;
+  ex_load.Reg.Main.RePass_Show.TextSettings.FontColor := TAlphaColorRec.Grey;
   ex_load.Reg.Main.RePass_Show.Text := #$e9d1;
   ex_load.Reg.Main.RePass_Show.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
   ex_load.Reg.Main.RePass_Show.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
@@ -575,6 +704,16 @@ begin
   ex_load.Reg.Main.Email.SetBounds(20, 175, 200, 20);
   ex_load.Reg.Main.Email.Text := 'Email :';
   ex_load.Reg.Main.Email.Visible := True;
+
+  ex_load.Reg.Main.Email_Online := TLabel.Create(ex_load.Reg.Main.Panel);
+  ex_load.Reg.Main.Email_Online.Name := 'Loading_Register_Email_Online';
+  ex_load.Reg.Main.Email_Online.Parent := ex_load.Reg.Main.Panel;
+  ex_load.Reg.Main.Email_Online.SetBounds(ex_load.Reg.Main.Panel.Width - 220, 175, 200, 20);
+  ex_load.Reg.Main.Email_Online.Text := '';
+  ex_load.Reg.Main.Email_Online.StyledSettings := ex_load.Reg.Main.Email_Online.StyledSettings - [TStyledSetting.Style, TStyledSetting.FontColor];
+  ex_load.Reg.Main.Email_Online.TextSettings.Font.Style := ex_load.Reg.Main.Email_Online.TextSettings.Font.Style + [TFontstyle.fsItalic];
+  ex_load.Reg.Main.Email_Online.TextSettings.HorzAlign := TTextAlign.Trailing;
+  ex_load.Reg.Main.Email_Online.Visible := True;
 
   ex_load.Reg.Main.Email_V := TEdit.Create(ex_load.Reg.Main.Panel);
   ex_load.Reg.Main.Email_V.Name := 'Loading_Register_Email_V';

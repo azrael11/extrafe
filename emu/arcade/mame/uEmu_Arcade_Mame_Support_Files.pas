@@ -26,6 +26,8 @@ procedure uEmu_Arcade_Mame_Support_Files_Gameinit_Load;
 implementation
 
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
   uLoad_AllTypes,
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Commands;
@@ -158,11 +160,11 @@ var
   vRom, vName: String;
 begin
   mame.Support.List_Active[0] := False;
-  if FileExists(mame.Emu.Media.Support_Files + 'nplayers.ini') then
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini') then
   begin
     vi := 0;
     mame.Support.List_Active[0] := True;
-    AssignFile(vTextFile, mame.Emu.Media.Support_Files + 'nplayers.ini');
+    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini');
     Reset(vTextFile);
     while not Eof(vTextFile) do
     begin
@@ -212,12 +214,12 @@ var
   vRom_Found: String;
 begin
   mame.Support.List_Active[1] := False;
-  if FileExists(mame.Emu.Media.Support_Files + 'catver.ini') then
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'catver.ini') then
   begin
     vi := 0;
     vAdded_now := False;
     mame.Support.List_Active[1] := True;
-    AssignFile(vTextFile, mame.Emu.Media.Support_Files + ('catver.ini'));
+    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + ('catver.ini'));
     Reset(vTextFile);
     while not Eof(vTextFile) do
     begin
@@ -276,10 +278,10 @@ var
   vString: String;
   vAdded_now: Boolean;
 begin
-  if FileExists(mame.Emu.Media.Support_Files + 'gameinit.ini') then
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'gameinit.ini') then
   begin
     vAdded_now := False;
-    AssignFile(vTextFile, mame.Emu.Media.Support_Files + ('gameinit.ini'));
+    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + ('gameinit.ini'));
     Reset(vTextFile);
     while not Eof(vTextFile) do
     begin

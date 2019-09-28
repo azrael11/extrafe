@@ -287,7 +287,7 @@ begin
   mainScene.Config.main.R.Profile.User.Created.SetBounds(10, 55, 500, 20);
   mainScene.Config.main.R.Profile.User.Created.TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.main.R.Profile.User.Created.TextSettings.Font.Size := 12;
-  mainScene.Config.main.R.Profile.User.Created.Text := 'User : was created on : ' + DateToStr(UnixToDateTime(user_Active_Local.Registered.ToInt64));
+//  mainScene.Config.main.R.Profile.User.Created.Text := 'User : was created on : ' + DateToStr(UnixToDateTime(user_Active_Local.Registered.ToInt64));
   mainScene.Config.main.R.Profile.User.Created.TextSettings.HorzAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Created.Visible := True;
 
@@ -347,11 +347,26 @@ end;
 procedure Apply_Changes;
 begin
   if vTemp_Personal.Name <> user_Active_Online.Name then
-    user_Active_Online.Name := uDatabase_SqlCommands.Update_Query('name', vTemp_Personal.Name);
+  begin
+    user_Active_Online.Name := vTemp_Personal.Name;
+    uDatabase_SqlCommands.Update_Query('USERS', 'NAME', vTemp_Personal.Name, user_Active_Online.Num.ToString);
+    user_Active_Local.Name := vTemp_Personal.Name;
+    uDatabase_SqlCommands.Update_Local_Query('USERS', 'NAME', vTemp_Personal.Name, user_Active_Local.Num.ToString);
+  end;
   if vTemp_Personal.Surname <> user_Active_Online.Surname then
-    user_Active_Online.Surname := uDatabase_SqlCommands.Update_Query('surname', vTemp_Personal.Surname);
+  begin
+    user_Active_Online.Surname := vTemp_Personal.Surname;
+    uDatabase_SqlCommands.Update_Query('USERS', 'SURNAME', vTemp_Personal.Surname, user_Active_Online.Num.ToString);
+    user_Active_Local.Surname := vTemp_Personal.Surname;
+    uDatabase_SqlCommands.Update_Local_Query('USERS', 'SURNAME', vTemp_Personal.Surname, user_Active_Local.Num.ToString);
+  end;
   if vTemp_Personal.Genre <> user_Active_Online.Genre.ToBoolean then
-    user_Active_Online.Genre := uDatabase_SqlCommands.Update_Query('gender', vTemp_Personal.Genre.ToString);
+  begin
+    user_Active_Online.Genre := vTemp_Personal.Genre.ToInteger;
+    uDatabase_SqlCommands.Update_Query('USERS', 'GENDER', vTemp_Personal.Genre.ToString, user_Active_Online.Num.ToString);
+    user_Active_Local.Genre := vTemp_Personal.Genre;
+    uDatabase_SqlCommands.Update_Local_Query('USERS', 'GENDER', vTemp_Personal.Genre.ToString, user_Active_Local.Num.ToString);
+  end;
 end;
 ///
 
@@ -520,8 +535,8 @@ begin
   if (vPage >= 1) and (vPage <= 26) then
   begin
     vAvatar.Page := vPage;
-    vAvatar.Checked := StrToInt(user_Active_Online.Avatar);
-    vAvatarPage_Num := (StrToInt(user_Active_Online.Avatar) div 20) + 1;
+    vAvatar.Checked := user_Active_Online.Avatar;
+    vAvatarPage_Num := (user_Active_Online.Avatar div 20) + 1;
     for vi := 0 to 19 do
     begin
       mainScene.Config.main.R.Profile.User.Avatar.main.Avatar[vi].Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr((20 * (vPage - 1)) + vi) + '.png');
@@ -556,7 +571,10 @@ end;
 
 procedure Avatar_Change;
 begin
-  user_Active_Online.Avatar := uDatabase_SqlCommands.Update_Query('avatar', vAvatar.Checked.ToString);
+  user_Active_Online.Avatar := vAvatar.Checked;
+  uDatabase_SqlCommands.Update_Query('USERS', 'AVATAR', vAvatar.Checked.ToString, user_Active_Online.Num.ToString);
+  user_Active_Local.Avatar := vAvatar.Checked.ToString;
+  uDatabase_SqlCommands.Update_Local_Query('USERS', 'AVATAR', vAvatar.Checked.ToString, user_Active_Local.Num.ToString);
   mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');
   mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');
   Return;
@@ -717,7 +735,10 @@ procedure Password_Change;
 begin
   if Password_Check then
   begin
-    uDatabase_SqlCommands.Update_Query('password', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text);
+    uDatabase_SqlCommands.Update_Query('USERS', 'PASSWORD', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text, user_Active_Online.Num.ToString);
+    user_Active_Online.Password := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
+    uDatabase_SqlCommands.Update_Local_Query('USERS', 'PASSWORD', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text, user_Active_Local.Num.ToString);
+    user_Active_Local.Password := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
     mainScene.Config.main.R.Profile.User.Password_V.Text := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
     Return;
   end;

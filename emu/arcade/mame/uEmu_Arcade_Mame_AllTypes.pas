@@ -288,7 +288,7 @@ type
     Load_Game: TImage;
     Load_Game_Line1: TText;
     Load_Game_Line2: TText;
-    Settings: TImage;
+    Settings: TText;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
     Exit_Mame: TImage;
@@ -702,37 +702,6 @@ type
   end;
 
 type
-  TEMU_MAME_MEDIA = record
-    Artworks: WideString;
-    Snapshots: WideString;
-    Cabinets: WideString;
-    Marquees: WideString;
-    Flyers: WideString;
-    Fanart: WideString;
-    Videos: WideString;
-    Control_Panels: WideString;
-    Pcbs: WideString;
-    Covers: WideString;
-    Devices: WideString;
-    Icons: WideString;
-    Manuals: WideString;
-    Titles: WideString;
-    Artwork_Preview: WideString;
-    Bosses: WideString;
-    Ends: WideString;
-    Game_Over: WideString;
-    How_To: WideString;
-    Logos: WideString;
-    Scores: WideString;
-    Selects: WideString;
-    Stamps: WideString;
-    Versus: WideString;
-    Warnings: WideString;
-    Soundtracks: WideString;
-    Support_Files: WideString;
-  end;
-
-type
   TEMU_GAMELISTS_SET = record
     Roms: TStringList;
     Names: TStringList;
@@ -808,7 +777,6 @@ type
     MameVer: String;
     Ini_Path: WideString;
     Ini: TEMU_MAME_INI;
-    Media: TEMU_MAME_MEDIA;
   end;
 
 type
@@ -951,6 +919,8 @@ var
 implementation
 
 uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
   uEmu_Arcade_Mame_Actions;
 
 { TEMU_GAMELISTS_TIMER }
@@ -975,7 +945,7 @@ end;
 
 procedure TEMU_VIDEO_TIMER.OnTimer(Sender: TObject);
 begin
-  vMame.Scene.Snap.Video.Play(mame.Emu.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0]
+  vMame.Scene.Snap.Video.Play(user_Active_Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0]
     + '.mp4');
   vMameVideoTimer.Enabled := False;
   vMame.Scene.Snap.Video.Visible := True;

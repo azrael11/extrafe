@@ -21,12 +21,15 @@ uses
 procedure Login;
 procedure Exit_Program;
 
+procedure Update_Password(vValue: String);
+
 procedure Show_Password;
+procedure CapsLock(vActive: Boolean);
 
 implementation
 
 uses
-  loading,
+  load,
   uWindows,
   uLoad,
   uLoad_AllTypes,
@@ -36,63 +39,39 @@ uses
   uDatabase_ActiveUser,
   uInternet_Files;
 
+var
+  vPassword_Count: Integer;
+
 procedure Login;
 var
   vIP: TJSONValue;
 begin
-//  uDatabase_ActiveUser.Get_Online_Data;
-//  ex_load.Scene.Progress.Value := 10;
-  uDatabase_ActiveUser.Get_Local_Data;
-  ex_load.Scene.Progress.Value := 20;
-  if uDatabase.Online_Connect then
-  begin
-    if ex_load.Login.User_V.Text <> '' then
-    begin
-      if Is_User_Exists(ex_load.Login.User_V.Text) = True then
-      begin
-        if Is_Password_Correct_For_User(ex_load.Login.User_V.Text, ex_load.Login.Pass_V.Text) = True then
-        begin
-          ex_load.Login.Panel_Login_Correct.Start;
-          uLoad.Start_ExtraFE;
-          vIP := uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
-          uDatabase_SqlCommands.Update_Query('active', '1');
-          uDatabase_SqlCommands.Update_Query('lastvisit', DateTimeToUnix(Now).ToString);
-          uDatabase_SqlCommands.Update_Query('ip', vIP.GetValue<String>('ip'));
-        end
-        else
-        begin
-          Application.ProcessMessages;
-          ex_load.Login.Warning.Visible := True;
-          ex_load.Login.Warning.Text := 'Wrong Password for ' + ex_load.Login.User_V.Text;
-          ex_load.Login.Panel_Login_Error.StartValue := extrafe.res.Half_Width - ((ex_load.Login.Panel.Width / 2) - 10);
-          ex_load.Login.Panel_Login_Error.StopValue := extrafe.res.Half_Width - (ex_load.Login.Panel.Width / 2);
-          ex_load.Login.Panel_Login_Error.Start;
-          ex_load.Login.Pass_V.Text := '';
-          ex_load.Login.Forget_Pass.Visible := True;
-        end;
-      end
-      else
-      begin
-        ex_load.Login.Warning.Visible := True;
-        ex_load.Login.Warning.Text := ' Can''t find " ' + ex_load.Login.User_V.Text + ' " in database.';
-        ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
-        ex_load.Login.Panel_Login_Error.StartValue := extrafe.res.Half_Width - ((ex_load.Login.Panel.Width / 2) - 10);
-        ex_load.Login.Panel_Login_Error.StopValue := extrafe.res.Half_Width - (ex_load.Login.Panel.Width / 2);
-        ex_load.Login.Panel_Login_Error.Start;
-      end;
-    end;
-  end
+  if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = user_Active_Local.Username) and
+    (ex_load.Login.Pass_V.Text = user_Active_Local.Password) then
+    uLoad.Start_ExtraFE
   else
   begin
-    // This needs more work and configuration
-    uDatabase_ActiveUser.Temp_User;
-    uLoad.Start_ExtraFE;
+    if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = user_Active_Local.Username) then
+      ex_load.Login.Warning.Text := 'Password is incorrect';
+    ex_load.Login.Warning.Visible := True;
+    ex_load.Login.Forget_Pass.Visible := True;
+    ex_load.Login.Panel_Login_Error.Start;
+    BASS_ChannelStop(sound.str_fx.general[0]);
+    BASS_ChannelSetPosition(sound.str_fx.general[0], 0, 0);
+    BASS_ChannelPlay(sound.str_fx.general[1], false);
   end;
 end;
 
 procedure Exit_Program;
 begin
-  Application.Terminate
+  if extrafe.databases.online_connected then
+  begin
+    uDatabase.ExtraFE_DB.Disconnect;
+    FreeAndNil(uDatabase.ExtraFE_DB);
+  end;
+  uDatabase.ExtraFE_DB_Local.Connected := false;
+  FreeAndNil(uDatabase.ExtraFE_DB_Local);
+  load.loading.Close;
 end;
 
 procedure Show_Password;
@@ -114,6 +93,46 @@ begin
     BASS_ChannelPlay(sound.str_fx.general[5], false);
   end;
   ex_load.Login.Pass_V.Password := not ex_load.Login.Pass_V.Password;
+end;
+
+procedure CapsLock(vActive: Boolean);
+begin
+  vActive := not vActive;
+  if vActive then
+  begin
+    ex_load.Login.CapsLock_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    ex_load.Login.CapsLock_Icon.Font.Size := 36;
+    ex_load.Login.CapsLock.Text := 'Caps lock is Active';
+  end
+  else
+  begin
+    ex_load.Login.CapsLock_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
+    ex_load.Login.CapsLock_Icon.Font.Size := 24;
+    ex_load.Login.CapsLock.Text := 'Caps lock is Inactive';
+  end;
+  ex_load.Login.CapsLock_Icon.Locked := vActive;
+end;
+
+procedure Update_Password(vValue: String);
+begin
+  vPassword_Count := Length(vValue);
+
+  if ex_load.Login.Warning.Visible then
+  begin
+    ex_load.Login.Warning.Visible := false;
+    ex_load.Login.Forget_Pass.Visible := false;
+  end;
+
+  if vPassword_Count > 0 then
+  begin
+    if ex_load.Login.Pass_V.Password then
+      ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Blueviolet
+    else
+      ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  end
+  else
+    ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Grey;
+
 end;
 
 end.

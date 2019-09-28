@@ -183,15 +183,17 @@ begin
   vMame.Scene.Exit_Mame_Glow.Softness := 0.4;
   vMame.Scene.Exit_Mame_Glow.Enabled := False;
 
-  vMame.Scene.Settings := TImage.Create(vMame.Scene.Main);
+  vMame.Scene.Settings := TText.Create(vMame.Scene.Main);
   vMame.Scene.Settings.Name := 'Mame_Settings';
   vMame.Scene.Settings.Parent := vMame.Scene.Main;
-  vMame.Scene.Settings.SetBounds(((vMame.Scene.Main.Width / 2) - 25), (vMame.Scene.Main.Height - 60), 50, 50);
-  vMame.Scene.Settings.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
-  vMame.Scene.Settings.WrapMode := TImageWrapMode.Fit;
-  vMame.Scene.Settings.OnClick := mame.Input.Mouse.Image.OnMouseClick;
-  vMame.Scene.Settings.OnMouseEnter := mame.Input.Mouse.Image.OnMouseEnter;
-  vMame.Scene.Settings.OnMouseLeave := mame.Input.Mouse.Image.OnMouseLeave;
+  vMame.Scene.Settings.SetBounds(((vMame.Scene.Main.Width / 2) - 25), (vMame.Scene.Main.Height - 60), 48, 48);
+  vMame.Scene.Settings.Font.Family := 'IcoMoon-Free';
+  vMame.Scene.Settings.Font.Size := 48;
+  vMame.Scene.Settings.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vMame.Scene.Settings.Text:= #$e994;
+  vMame.Scene.Settings.OnClick := mame.Input.Mouse.Text.OnMouseClick;
+  vMame.Scene.Settings.OnMouseEnter := mame.Input.Mouse.Text.OnMouseEnter;
+  vMame.Scene.Settings.OnMouseLeave := mame.Input.Mouse.Text.OnMouseLeave;
   vMame.Scene.Settings.Tag := 1;
   vMame.Scene.Settings.Visible := True;
 
@@ -404,50 +406,6 @@ begin
 
   uSnippet_Search.Create(vMame.Scene.Left, 50, 1026, 750, True);
 
-  { vMame.Scene.Gamelist.Search_Back := TImage.Create(vMame.Scene.Left);
-    vMame.Scene.Gamelist.Search_Back.Name := 'Mame_Gamelist_Search_Back';
-    vMame.Scene.Gamelist.Search_Back.Parent := vMame.Scene.Left;
-    vMame.Scene.Gamelist.Search_Back.SetBounds(50, 1026, 750, 26);
-    vMame.Scene.Gamelist.Search_Back.WrapMode := TImageWrapMode.Tile;
-    vMame.Scene.Gamelist.Search_Back.Bitmap.LoadFromFile(mame.Prog.Images + 'black_menu.png');
-    vMame.Scene.Gamelist.Search_Back.Visible := True;
-
-    vMame.Scene.Gamelist.Search := TImage.Create(vMame.Scene.Gamelist.Search_Back);
-    vMame.Scene.Gamelist.Search.Name := 'Mame_Gamelist_Search_Image';
-    vMame.Scene.Gamelist.Search.Parent := vMame.Scene.Gamelist.Search_Back;
-    vMame.Scene.Gamelist.Search.SetBounds(1, 1, 24, 24);
-    vMame.Scene.Gamelist.Search.WrapMode := TImageWrapMode.Fit;
-    vMame.Scene.Gamelist.Search.Bitmap.LoadFromFile(mame.Prog.Images + 'search.png');
-    vMame.Scene.Gamelist.Search.OnClick := mame.Input.Mouse.Image.OnMouseClick;
-    vMame.Scene.Gamelist.Search.OnMouseEnter := mame.Input.Mouse.Image.OnMouseEnter;
-    vMame.Scene.Gamelist.Search.OnMouseLeave := mame.Input.Mouse.Image.OnMouseLeave;
-    vMame.Scene.Gamelist.Search.Visible := True;
-
-    vMame.Scene.Gamelist.Search_Glow := TGlowEffect.Create(vMame.Scene.Gamelist.Search);
-    vMame.Scene.Gamelist.Search_Glow.Name := 'Mame_Gamelist_Search_Glow';
-    vMame.Scene.Gamelist.Search_Glow.Parent := vMame.Scene.Gamelist.Search;
-    vMame.Scene.Gamelist.Search_Glow.Enabled := False;
-
-    vMame.Scene.Gamelist.Search_Edit := TEdit.Create(vMame.Scene.Gamelist.Search_Back);
-    vMame.Scene.Gamelist.Search_Edit.Name := 'Mame_Gamelist_Search_Edit';
-    vMame.Scene.Gamelist.Search_Edit.Parent := vMame.Scene.Gamelist.Search_Back;
-    vMame.Scene.Gamelist.Search_Edit.SetBounds(28, 1, 0, 24);
-    vMame.Scene.Gamelist.Search_Edit.StyledSettings := vMame.Scene.Gamelist.Search_Edit.StyledSettings -
-    [TStyledSetting.FontColor, TStyledSetting.Size];
-    vMame.Scene.Gamelist.Search_Edit.Text:= '';
-    vMame.Scene.Gamelist.Search_Edit.TextSettings.FontColor:= TAlphaColorRec.White;
-    vMame.Scene.Gamelist.Search_Edit.TextSettings.Font.Size:= 16;
-    vMame.Scene.Gamelist.Search_Edit.Visible := True;
-
-    vMame.Scene.Gamelist.Search_Edit_Ani:= TFloatAnimation.Create(vMame.Scene.Gamelist.Search_Edit);
-    vMame.Scene.Gamelist.Search_Edit_Ani.Name:= 'Mame_Gamelist_Search_Edit_Animation';
-    vMame.Scene.Gamelist.Search_Edit_Ani.Parent:=  vMame.Scene.Gamelist.Search_Edit;
-    vMame.Scene.Gamelist.Search_Edit_Ani.StartValue:= 0;
-    vMame.Scene.Gamelist.Search_Edit_Ani.StopValue:=  vMame.Scene.Gamelist.Search_Back.Width - 38;
-    vMame.Scene.Gamelist.Search_Edit_Ani.Duration:= 0.4;
-    vMame.Scene.Gamelist.Search_Edit_Ani.PropertyName:= 'Width';
-    vMame.Scene.Gamelist.Search_Edit_Ani.Enabled:= False; }
-
   vMame.Scene.Load_Game := TImage.Create(vMame.Scene.Main);
   vMame.Scene.Load_Game.Name := 'Mame_Loading_Game';
   vMame.Scene.Load_Game.Parent := vMame.Scene.Main;
@@ -594,7 +552,7 @@ procedure Get_Set_Mame_Data;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + user_Active_Online.Num.ToString;
+  vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + user_Active_Local.Num.ToString;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
