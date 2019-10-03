@@ -61,8 +61,8 @@ begin
   mame.Gamelist.Timer.OnTimer := mame.Timers.Gamelist.OnTimer;
 
   // Create Main Scene
-  uEmu_Arcade_Mame_Filters_Ini;
-  uEmu_Arcade_Mame_Filters_Load_Filter('All_Unfiltered');
+//  uEmu_Arcade_Mame_Filters_Ini;
+//  uEmu_Arcade_Mame_Filters_Load_Filter('All_Unfiltered');
 
   uEmu_Arcade_Mame_Support_Load;
 

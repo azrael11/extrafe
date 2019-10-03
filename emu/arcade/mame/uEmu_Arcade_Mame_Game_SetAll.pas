@@ -34,11 +34,13 @@ var
 implementation
 
 uses
+  uDatabase,
   uDatabase_ActiveUser,
   uDatabase_SQLCommands,
   uLoad_AllTypes,
   uSnippet_Search,
   uEmu_Arcade_Mame,
+  uEmu_Arcade_Mame_SetAll,
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_AllTypes,
@@ -57,24 +59,20 @@ begin
     vMame.Scene.Gamelist.List_Line[vi].text.text := cShowGamePanelMenu[vi - 10];
     if vi = 11 then
     begin
-      if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Manuals + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.pdf')
-      then
+      if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Manuals + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.pdf') then
         vMame.Scene.Gamelist.List_Line[vi].text.Color := TAlphaColorRec.Red;
     end;
     if vi = 14 then
     begin
-      if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.zip')
-      then
+      if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.zip') then
         vMame.Scene.Gamelist.List_Line[14].text.Color := TAlphaColorRec.Red;
     end;
   end;
-  vMame.Scene.Settings.TextSettings.FontColor:= TAlphaColorRec.Lime;
-  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+  vMame.Scene.Settings.TextSettings.FontColor := TAlphaColorRec.Lime;
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png') then
   begin
-    vMame.Scene.Left.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.List[0, mame.Gamelist.Selected,
-      0] + '.png');
-    vMame.Scene.Right.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.List[0,
-      mame.Gamelist.Selected, 0] + '.png');
+    vMame.Scene.Left.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png');
+    vMame.Scene.Right.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png');
     vMame.Scene.Right.BitmapMargins.Left := -960;
   end;
 
@@ -86,13 +84,13 @@ begin
   vMame_Game_Info_Back.WrapMode := TImageWrapMode.Tile;
   vMame_Game_Info_Back.Visible := True;
 
-  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Stamps + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png') then
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Stamps + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png') then
   begin
     vMame_Game_Info_Stamp := TImage.Create(vMame_Game_Info_Back);
     vMame_Game_Info_Stamp.Name := 'Mame_Game_Info_Stamp';
     vMame_Game_Info_Stamp.Parent := vMame_Game_Info_Back;
     vMame_Game_Info_Stamp.SetBounds((vMame_Game_Info_Back.Width / 2) - (400 / 2), 30, 400, 150);
-    vMame_Game_Info_Stamp.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Stamps + mame.Gamelist.List[0, mame.Gamelist.Selected, 0]+ '.png');
+    vMame_Game_Info_Stamp.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Media.Stamps + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.png');
     vMame_Game_Info_Stamp.WrapMode := TImageWrapMode.Fit;
     vMame_Game_Info_Stamp.Visible := True;
   end;
@@ -122,44 +120,56 @@ begin
   vMame.Scene.Snap.Black_Image.Visible := False;
   vMame.Scene.Snap.Video.Visible := False;
   vMame.Scene.Snap.Image.Visible := False;
-  uSnippet_Search.vSearch.Scene.Back.Visible:= False;
+  uSnippet_Search.vSearch.Scene.Back.Visible := False;
   vMame.Scene.Gamelist.Filters.Visible := False;
   vMame.Scene.Gamelist.Up_Back_Image.Visible := False;
   vMame.Scene.Gamelist.Down_Back_Image.Visible := False;
   vMame.Scene.Gamelist.Filters_Back_Image.Visible := False;
 
   // Get data from mame for general info
-//  uEmu_Arcade_Mame_Game_GetDataFromMame;
 
-  vMame.Scene.Snap.Video.Stop;
+  uEmu_Arcade_Mame_Game_GetDataFromMame;
+
 
 end;
 
 procedure uEmu_Arcade_Mame_Game_GetDataFromMame;
 const
-  cGameLabels: array [0 .. 11] of string = ('Game Name : ', 'Year : ', 'Manufacturer : ', 'Game Type : ',
-    'Refresh Rate : ', 'Height : ', 'Width : ', 'Rotation : ', 'Sound Channels : ', 'Savestate : ',
-    'Emulation : ', 'Overall Status : ');
+  cGameLabels: array [0 .. 11] of string = ('Game Name : ', 'Year : ', 'Manufacturer : ', 'Game Type : ', 'Refresh Rate : ', 'Height : ', 'Width : ',
+    'Rotation : ', 'Sound Channels : ', 'Savestate : ', 'Emulation : ', 'Overall Status : ');
 var
   vData: TStringList;
   vi: Integer;
 begin
-  if Assigned(vData) then
-    FreeAndNil(vData);
-  if FileExists(mame.Prog.Data_Path + 'game.xml') then
-    System.SysUtils.DeleteFile(mame.Prog.Data_Path + 'game.xml');
-  vData := uEmu_Arcade_Mame_Support_Files_MAME_Data_Load(mame.Gamelist.List[0, mame.Gamelist.Selected, 0]);
-  SetLength(vMame_Data.text, vData.Count);
+
+  vData:= TStringList.Create;
+
+  uDatabase_SQLCommands.vQuery := 'SELECT * FROM GAMES WHERE ROMNAME='+ mame.Gamelist.ListRoms[mame.Gamelist.Selected];
+  vMame_Query.Close;
+  vMame_Query.SQL.Clear;
+  vMame_Query.SQl.Add(uDatabase_SQLCommands.vQuery);
+  vMame_Query.Open;
+  vMame_Query.First;
+  vData.Add(vMame_Query.FieldByName('gamename').AsString);
+  vData.Add(vMame_Query.FieldByName('year').AsString);
+  vData.Add(vMame_Query.FieldByName('manufacturer').AsString);
+  vData.Add(vMame_Query.FieldByName('displaytype').AsString);
+  vData.Add(vMame_Query.FieldByName('refreshrate').AsString);
+  vData.Add(vMame_Query.FieldByName('height').AsString);
+  vData.Add(vMame_Query.FieldByName('width').AsString);
+  vData.Add('');
+  vData.Add(vMame_Query.FieldByName('channels').AsString);
+  vData.Add(vMame_Query.FieldByName('savestate').AsString);
+  vData.Add(vMame_Query.FieldByName('emulation').AsString);
+  vData.Add(vMame_Query.FieldByName('status').AsString);
+
   for vi := 0 to vData.Count - 1 do
   begin
-    vMame_Data.text[vi] := TText.Create(vMame_Game_Info_Back);
+    vMame_Data.text[vi] := TText.Create(vMame.Scene.Right);
     vMame_Data.text[vi].Name := 'Mame_Game_Info_Text' + IntToStr(vi);
     vMame_Data.text[vi].Parent := vMame_Game_Info_Back;
-    vMame_Data.text[vi].Width := vMame_Game_Info_Back.Width - 20;
-    vMame_Data.text[vi].Height := 22;
+    vMame_Data.text[vi].SetBounds(10, 260 + (40 * vi), vMame_Game_Info_Back.Width - 20, 22);
     vMame_Data.text[vi].Font.Size := 20;
-    vMame_Data.text[vi].Position.X := 10;
-    vMame_Data.text[vi].Position.Y := 260 + (40 * vi);
     vMame_Data.text[vi].Color := TAlphaColorRec.White;
     vMame_Data.text[vi].Font.Style := vMame_Data.text[vi].Font.Style + [TFontStyle.fsBold];
     vMame_Data.text[vi].Font.Family := 'Tahoma';
@@ -183,7 +193,7 @@ begin
   vMame.Scene.Snap.Black_Image.Visible := True;
   vMame.Scene.Snap.Video.Visible := True;
   vMame.Scene.Snap.Image.Visible := True;
-  uSnippet_Search.vSearch.Scene.Back.Visible:= True;
+  uSnippet_Search.vSearch.Scene.Back.Visible := True;
   vMame.Scene.Gamelist.Filters.Visible := True;
   vMame.Scene.Gamelist.Up_Back_Image.Visible := True;
   vMame.Scene.Gamelist.Down_Back_Image.Visible := True;

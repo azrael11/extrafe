@@ -709,10 +709,10 @@ type
 
 type
   TEMU_GAMELISTS = record
-    // O : Master filter list
-    // 1 : All_Unfiltered
     Games: IXMLDocument;
     Games_Count: Integer;
+    ListGames: TStringList;
+    ListRoms: TStringList;
     List: array of array of array of string;
     Timer: TTimer;
     Selected: Integer;
@@ -755,16 +755,6 @@ type
 
 type
   TEMU_MAME_PROG = record
-    Path: WideString;
-    Ini: TIniFile;
-    Ini_Name: WideString;
-    Ini_Path: WideString;
-    Games_List: WideString;
-    Games_XML: WideString;
-    Data_Path: WideString;
-    Ini_Filters: TIniFile;
-    Filter: WideString;
-    Images: WideString;
     Sounds: WideString;
     Media_Path: WideString;
   end;
@@ -938,15 +928,14 @@ procedure TEMU_GAMELISTS_ANIMATION.OnFinish(Sender: TObject);
 begin
   vMame.Scene.Snap.Image_Fade_Ani.Enabled := False;
   vMame.Scene.Snap.Image.Bitmap := vMame.Scene.Snap.Image_Fade.Target;
-  vMame.Scene.Snap.Image_Reflaction.Enabled:= True;
+  vMame.Scene.Snap.Image_Reflaction.Enabled := True;
 end;
 
 { TEMU_VIDEO_TIMER }
 
 procedure TEMU_VIDEO_TIMER.OnTimer(Sender: TObject);
 begin
-  vMame.Scene.Snap.Video.Play(user_Active_Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.List[0, mame.Gamelist.Selected, 0]
-    + '.mp4');
+  vMame.Scene.Snap.Video.Play(user_Active_Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.mp4');
   vMameVideoTimer.Enabled := False;
   vMame.Scene.Snap.Video.Visible := True;
 end;

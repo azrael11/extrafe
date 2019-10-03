@@ -391,13 +391,6 @@ begin
   Script_Mame_Install.Main.Tab3.Progress.Value := 20;
   // Application.ProcessMessages;
 
-  // if mame.prog.Path = '' then
-  // uEmulation_Arcade_Mame_Install_IniValues;
-
-  // Take the full list of games
-  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
-    user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -listfull > ' + user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database + 'gamelist.txt'),
-    nil, SW_HIDE);
   // Take the version of mame
   ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
     user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -h > ' + user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database + 'version.txt'),
@@ -407,13 +400,6 @@ begin
 
   uEmu_Arcade_Mame_SetAll.Set_Mame_Data;
   Script_Mame_Install.Main.Tab3.Progress.Value := 50;
-
-  // Create the big xml game file
-  Script_Mame_Install.Main.Tab3.Edit_Info.Text := 'Generate the xml file. This will take some time please wait';
-  // Application.ProcessMessages;
-  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
-    user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -listxml > ' + user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database + 'gameslist.xml'),
-    nil, SW_HIDE);
 
   // Active the main control tab
   if emulation.Level = 0 then
@@ -581,3 +567,12 @@ finalization
 Script_Mame_Install.Main.Tab3.Dialog.Free;
 
 end.
+
+// must have for example
+
+{  // Create the big xml game file
+  Script_Mame_Install.Main.Tab3.Edit_Info.Text := 'Generate the xml file. This will take some time please wait';
+  // Application.ProcessMessages;
+  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
+    user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -listxml > ' + user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database + 'gameslist.xml'),
+    nil, SW_HIDE);}

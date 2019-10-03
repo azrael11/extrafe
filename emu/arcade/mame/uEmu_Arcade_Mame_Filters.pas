@@ -39,7 +39,6 @@ var
   vFilter_Comp_Combobox: TEMU_ARCADE_MAME_FILTER_COMBOBOX;
   vFilter_Comp_Button: TEMU_ARCADE_MAME_FILTER_BUTTON;
 
-procedure uEmu_Arcade_Mame_Filters_Ini;
 
 procedure uEmu_Arcade_Mame_Filters_Free;
 
@@ -47,10 +46,6 @@ procedure uEmu_Arcade_Mame_Filters_SetFilter;
 
 procedure uEmu_Arcade_Mame_Filters_ButtonOK_Standard;
 
-function uEmu_Arcade_Mame_Filters_CheckVersion(vFilter: String): Boolean;
-// procedure uEmu_Arcade_Mame_Filters_WriteToIni(vFilter: String);
-
-procedure uEmu_Arcade_Mame_Filters_WriteToFilterINI(vCurrentFilter: String);
 procedure uEmu_Arcade_Mame_Filters_Load_Filter(vFilterName: String);
 
 procedure uEmu_Arcade_Mame_Filters_Info(vItem: Integer; vFilterName: String);
@@ -106,55 +101,6 @@ uses
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Ini;
 
-function uEmu_Arcade_Mame_Filters_CheckVersion(vFilter: String): Boolean;
-var
-  vFilter_MameVer: String;
-  vFilter_PathsCount: Integer;
-  vFilter_RomPath_Names: array [0 .. 100] of string;
-  vi: Integer;
-begin
-  if vFilter= 'gameslist' then
-    vFilter:= 'ALL_UNFILTERED';
-  Result := True;
-  vFilter_MameVer := mame.Prog.Ini_Filters.ReadString(UpperCase(vFilter), 'MameVer', vFilter_MameVer);
-  vFilter_PathsCount := mame.Prog.Ini_Filters.ReadInteger(UpperCase(vFilter), 'Paths_Count', vFilter_PathsCount);
-  for vi := 0 to vFilter_PathsCount do
-    vFilter_RomPath_Names[vi] := mame.Prog.Ini_Filters.ReadString(UpperCase(vFilter), 'Path_' + IntToStr(vi),
-      vFilter_RomPath_Names[vi]);
-  if vFilter_MameVer = mame.emu.MameVer then
-  begin
-    if vFilter_PathsCount = mame.emu.Ini.CORE_SEARCH_rompath.Count then
-    begin
-      for vi := 0 to mame.emu.Ini.CORE_SEARCH_rompath.Count - 1 do
-        if mame.emu.Ini.CORE_SEARCH_rompath.Strings[vi] <> vFilter_RomPath_Names[vi] then
-          Result := False;
-    end
-    else
-      Result := False;
-  end
-  else
-    Result := False;
-end;
-
-procedure uEmu_Arcade_Mame_Filters_Ini;
-begin
-  mame.Prog.Ini_Filters := TIniFile.Create(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Database + 'gamelist_filters.ini');
-  mame.Prog.Filter := mame.Prog.Ini_Filters.ReadString('MASTER', 'Selected', mame.Prog.Filter);
-end;
-
-procedure uEmu_Arcade_Mame_Filters_WriteToFilterINI(vCurrentFilter: String);
-var
-  vi: Integer;
-begin
-  mame.Prog.Ini_Filters.WriteString(UpperCase(vCurrentFilter), 'MameVer', mame.emu.MameVer);
-  mame.Prog.Ini_Filters.WriteString(UpperCase(vCurrentFilter), 'Created', 'OK');
-  for vi := 0 to mame.emu.Ini.CORE_SEARCH_rompath.Count - 1 do
-    mame.Prog.Ini_Filters.WriteString(UpperCase(vCurrentFilter), 'Path_' + IntToStr(vi),
-      mame.emu.Ini.CORE_SEARCH_rompath.Strings[vi]);
-  mame.Prog.Ini_Filters.WriteString(UpperCase(vCurrentFilter), 'Paths_Count', IntToStr(vi));
-  mame.Prog.Ini_Filters.WriteString('MASTER', 'Selected', vCurrentFilter);
-end;
-
 procedure uEmu_Arcade_Mame_Filters_Load_Filter(vFilterName: String);
 var
   vi, vk: Integer;
@@ -167,7 +113,7 @@ var
   vList: Tstringlist;
 begin
   vList := Tstringlist.Create;
-  if vFilterName = 'All_Unfiltered' then
+{  if vFilterName = 'All_Unfiltered' then
     vList.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Database+ 'gamelist.txt');
 
   SetLength(mame.Gamelist.List, 31);
@@ -217,7 +163,7 @@ begin
     Delete(vRomName, length(vRomName), 1);
     mame.Gamelist.List[0, vi, 0] := vRomName;
     mame.Gamelist.List[0, vi, 1] := vGameName;
-  end;
+  end;}
 end;
 
 /// /
@@ -240,7 +186,6 @@ begin
   vFilter_Panel.Position.X := vMame.Scene.Left.Width - 275;
   vFilter_Panel.Position.Y := 250;
   vFilter_Panel.WrapMode := TImageWrapMode.Tile;
-  vFilter_Panel.Bitmap.LoadFromFile(mame.Prog.Images + 'black_menu.png');
   vFilter_Panel.Visible := True;
 
   vFilter_Shandow := TShadowEffect.Create(vFilter_Panel);
@@ -382,7 +327,7 @@ begin
   if vFilterName= 'All_Unfiltered' then
     vFilterName:= 'gameslist';
 
-  if not FileExists(mame.Prog.Data_Path + vFilterName + '.txt') then
+{  if not FileExists(mame.Prog.Data_Path + vFilterName + '.txt') then
   begin
     vFilter_Label_Info.Text := 'Filter "' + vFilterName + '" in not available yet.';
     vFilter_Label_Info_2.Text := 'Please press start button. This may take a while.';
@@ -390,20 +335,7 @@ begin
   end
   else
   begin
-    if uEmu_Arcade_Mame_Filters_CheckVersion(vFilterName) then
-    begin
-//      mame.Gamelist.Available.Roms.LoadFromFile(mame.Prog.Data_Path + 'gamelist_mame_available.txt');
-//      mame.Gamelist.Available.Names.LoadFromFile(mame.Prog.Data_Path + 'gamelist_mame_available_n.txt');
-      vFilter_Label_Info.Text := 'Selected filter : Available';
-      vFilter_Label_Info_2.Text := 'Press OK to accept this filter or cancel to use the previous one.';
-    end
-    else
-    begin
-      vFilter_Label_Info.Text := 'Filter "Available" is not ment to be for this situation';
-      vFilter_Label_Info_2.Text := 'Please press start button to rebuild for better results. Please wait...';
-      vFilter_Start.Visible := True;
-    end;
-  end;
+  end;}
 end;
 
 procedure uEmu_Arcade_Mame_Filters_SetFilter;
@@ -422,8 +354,6 @@ end;
 procedure uEmu_Arcade_Mame_Filters_ButtonOK_Standard;
 begin
   uEmu_Arcade_Mame_Display_Main;
-  mame.Prog.Ini_Filters.WriteString('MASTER', 'Selected',
-    vFilter_Combo.Items.Strings[vFilter_Combo.ItemIndex]);
   vMame.Scene.Gamelist.T_Filters.Text := 'Filter : ' + vFilter_Combo.Items.Strings[vFilter_Combo.ItemIndex];
   uEmu_Arcade_Mame_Filters_Free;
 end;

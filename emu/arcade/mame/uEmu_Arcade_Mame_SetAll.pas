@@ -18,7 +18,33 @@ uses
   FMX.Filter.Effects,
   FMX.Edit,
   FmxPasLibVlcPlayerUnit,
-  PasLibVlcUnit;
+  PasLibVlcUnit,
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Error,
+  FireDAC.UI.Intf,
+  FireDAC.Phys.Intf,
+  FireDAC.Stan.Def,
+  FireDAC.Stan.Pool,
+  FireDAC.Stan.Async,
+  FireDAC.Phys,
+  FireDAC.FMXUI.Wait,
+  Data.DB,
+  FireDAC.Comp.Client,
+  FireDAC.Phys.IB,
+  FireDAC.Phys.IBLiteDef,
+  FireDAC.Stan.StorageJSON,
+  FireDAC.Stan.Param,
+  FireDAC.DatS,
+  FireDAC.DApt.Intf,
+  FireDAC.DApt,
+  FireDAC.Comp.DataSet,
+  FireDAC.Comp.UI,
+  ZAbstractRODataset,
+  ZAbstractDataset,
+  ZDataset,
+  ZAbstractConnection,
+  ZConnection;
 
 procedure uEmu_Arcade_Mame_SetAll_Set;
 procedure Create_Video_Scene;
@@ -28,6 +54,13 @@ procedure HideShow_Image_Scene(vShow: Boolean);
 
 procedure Get_Set_Mame_Data;
 procedure Set_Mame_Data;
+
+procedure Connect_Database;
+procedure Disconnect_Database;
+
+var
+  vMame_Database: TFDConnection;
+  vMame_Query: TFDQuery;
 
 implementation
 
@@ -61,8 +94,8 @@ begin
   vMame.Scene.Main.Name := 'Mame_Main';
   vMame.Scene.Main.Parent := Emu_Form;
   vMame.Scene.Main.SetBounds(0, 0, Emu_Form.Width, Emu_Form.Height);
-  // vMame.Scene.Main.Bitmap.LoadFromFile(mame.Prog.Images+ 'config_background.png');
-  // vMame.Scene.Main.WrapMode:= TImageWrapMode;
+  vMame.Scene.Main.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'config.jpg');
+  vMame.Scene.Main.WrapMode := TImageWrapMode.Stretch;
   vMame.Scene.Main.Visible := True;
 
   vMame.Scene.Main_Blur := TGaussianBlurEffect.Create(vMame.Scene.Main);
@@ -111,12 +144,6 @@ begin
   vMame.Config.Scene.Right.Parent := vMame.Config.Scene.Main;
   vMame.Config.Scene.Right.SetBounds(150, 30, 550, 600);
   vMame.Config.Scene.Right.Visible := True;
-
-  // Create main backs
-  // vMame.Scene.Snap.Full_Video:= TFmxPasLibVlcPlayer.Create(vMame.Scene.Main);
-  // vMame.Scene.Snap.Full_Video.Name:= 'Mame_Full_Video';
-  // vMame.Scene.Snap.Full_Video.Parent:= vMame.Scene.Main;
-  // vMame.Scene.Snap.Full_Video.Align:= TAlignLayout.Client;
 
   vMame.Scene.Right := TImage.Create(vMame.Scene.Main);
   vMame.Scene.Right.Name := 'Mame_Right';
@@ -190,7 +217,7 @@ begin
   vMame.Scene.Settings.Font.Family := 'IcoMoon-Free';
   vMame.Scene.Settings.Font.Size := 48;
   vMame.Scene.Settings.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vMame.Scene.Settings.Text:= #$e994;
+  vMame.Scene.Settings.Text := #$e994;
   vMame.Scene.Settings.OnClick := mame.Input.Mouse.Text.OnMouseClick;
   vMame.Scene.Settings.OnMouseEnter := mame.Input.Mouse.Text.OnMouseEnter;
   vMame.Scene.Settings.OnMouseLeave := mame.Input.Mouse.Text.OnMouseLeave;
@@ -318,7 +345,7 @@ begin
     user_Active_Local.EMULATORS.Arcade_D.Mame_D.Version := Trim(Copy(vList.Strings[0], 0, viPos - 1));
     uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'MAME_VERSION', user_Active_Local.EMULATORS.Arcade_D.Mame_D.Version,
       user_Active_Local.Num.ToString);
-    DeleteFile(PChar(mame.Prog.Data_Path + 'version.txt'));
+//    DeleteFile(PChar(mame.Prog.Data_Path + 'version.txt'));
     vList.Free;
   end;
 
@@ -396,8 +423,7 @@ begin
   vMame.Scene.Gamelist.T_Filters.Parent := vMame.Scene.Gamelist.Filters_Back_Image;
   vMame.Scene.Gamelist.T_Filters.SetBounds(1, 1, 720, 22);
   vMame.Scene.Gamelist.T_Filters.Color := TAlphaColorRec.White;
-  vFilter_Selected_Name := mame.Prog.Ini_Filters.ReadString('MASTER', 'Selected', vFilter_Selected_Name);
-  vMame.Scene.Gamelist.T_Filters.Text := 'Filter : ' + vFilter_Selected_Name;
+  vMame.Scene.Gamelist.T_Filters.Text := 'Filter : ';
   vMame.Scene.Gamelist.T_Filters.Font.Family := 'Tahoma';
   vMame.Scene.Gamelist.T_Filters.Font.Style := vMame.Scene.Gamelist.T_MameVersion.Font.Style + [TFontStyle.fsBold];
   vMame.Scene.Gamelist.T_Filters.Font.Size := 20;
@@ -551,7 +577,56 @@ end;
 procedure Get_Set_Mame_Data;
 var
   vQuery: String;
+  vi: Integer;
 begin
+  Connect_Database;
+
+  vMame_Query.Close;
+  vMame_Query.SQL.Clear;
+  vMame_Query.SQL.Text := 'SELECT COUNT(*) FROM GAMES';
+  vMame_Query.Open;
+  mame.Gamelist.Games_Count := vMame_Query.Fields[0].AsInteger;
+
+  vQuery := 'SELECT GAMENAME FROM GAMES ASC';
+  vMame_Query.Close;
+  vMame_Query.SQL.Clear;
+  vMame_Query.SQL.Text := vQuery;
+  vMame_Query.DisableControls;
+  vMame_Query.Open;
+  vMame_Query.First;
+
+  mame.Gamelist.ListGames := TStringlist.Create;
+  try
+    vMame_Query.First;
+    while not vMame_Query.Eof do
+    begin
+      mame.Gamelist.ListGames.Add(vMame_Query.FieldByName('gamename').AsString);
+      vMame_Query.Next;
+    end;
+  finally
+    vMame_Query.EnableControls;
+  end;
+
+  vQuery := 'SELECT ROMNAME FROM GAMES ASC';
+  vMame_Query.Close;
+  vMame_Query.SQL.Clear;
+  vMame_Query.SQL.Text := vQuery;
+  vMame_Query.DisableControls;
+  vMame_Query.Open;
+  vMame_Query.First;
+
+  mame.Gamelist.ListRoms := TStringlist.Create;
+  try
+    vMame_Query.First;
+    while not vMame_Query.Eof do
+    begin
+      mame.Gamelist.ListRoms.Add(vMame_Query.FieldByName('romname').AsString);
+      vMame_Query.Next;
+    end;
+  finally
+    vMame_Query.EnableControls;
+  end;
+
   vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + user_Active_Local.Num.ToString;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
@@ -595,6 +670,36 @@ begin
 
     uEmu_Arcade_Mame_Loading;
   end;
+end;
+
+procedure Connect_Database;
+begin
+  vMame_Database := TFDConnection.Create(emu.Emu_Form);
+  vMame_Database.Name := 'Mame_Local_Database';
+  with vMame_Database do
+  begin
+    Close;
+    with Params do
+    begin
+      Add('DriverID=SQLITE');
+      Add('Database=' + extrafe.Prog.Path + 'data\database\arcade\ARCADE.DB');
+    end;
+    Open;
+  end;
+  vMame_Database.LoginPrompt := False;
+
+  vMame_Database.Connected := True;
+
+  vMame_Query := TFDQuery.Create(emu.Emu_Form);
+  vMame_Query.Name := 'Mame_Local_Query';
+  vMame_Query.Connection := vMame_Database;
+  vMame_Query.Active := False;
+
+end;
+
+procedure Disconnect_Database;
+begin
+  vMame_Database.Connected := False;
 end;
 
 end.

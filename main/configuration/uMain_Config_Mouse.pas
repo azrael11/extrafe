@@ -101,12 +101,13 @@ procedure TMAIN_CONFIG_IMAGE.OnMouseClick(Sender: TObject);
 begin
   if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
-    if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
-      uMain_Config_Profile_User.Avatar_Page(vAvatar.Page - 1)
-    else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Right' then
-      uMain_Config_Profile_User.Avatar_Page(vAvatar.Page + 1)
-    else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + IntToStr(TImage(Sender).Tag) then
+    if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + TImage(Sender).Tag.ToString then
       uMain_Config_Profile_User.Avatar_Select(TImage(Sender).Tag);
+  end
+  else if extrafe.prog.State = 'main_config_profile_user' then
+  begin
+    if TImage(Sender).Name = 'Main_Config_Profile_Main_Avatar' then
+      uMain_Config_Profile_User.Avatar;
   end
   else if extrafe.prog.State = 'main_config_addons' then
   begin
@@ -146,14 +147,19 @@ procedure TMAIN_CONFIG_IMAGE.OnMouseEnter(Sender: TObject);
 begin
   if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
-    if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
-      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Left_Glow.Enabled := True
-    else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Right' then
-      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Right_Glow.Enabled := True
-    else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + IntToStr(TImage(Sender).Tag) then
+    if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + TImage(Sender).Tag.ToString then
     begin
+      TImage(Sender).Cursor := crHandPoint;
       if mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].GlowColor <> TAlphaColorRec.White then
         mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].Enabled := True;
+    end;
+  end
+  else if extrafe.prog.State = 'main_config_profile_user' then
+  begin
+    if TImage(Sender).Name = 'Main_Config_Profile_Main_Avatar' then
+    begin
+      TImage(Sender).Cursor := crHandPoint;
+      uMain_Config_Profile_User.Avatar_Glow(mainScene.Config.main.R.Profile.User.Avatar_Change);
     end;
   end
   else if extrafe.prog.State = 'main_config_emulators' then
@@ -214,14 +220,18 @@ procedure TMAIN_CONFIG_IMAGE.OnMouseLeave(Sender: TObject);
 begin
   if extrafe.prog.State = 'main_config_profile_avatar' then
   begin
-    if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
-      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Left_Glow.Enabled := False
-    else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Right' then
-      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Right_Glow.Enabled := False
-    else if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + IntToStr(TImage(Sender).Tag) then
+    if TImage(Sender).Name = 'Main_Config_Profile_Avatar_Image_' + IntToStr(TImage(Sender).Tag) then
     begin
       if mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].GlowColor <> TAlphaColorRec.White then
         mainScene.Config.Main.R.Profile.User.Avatar.Main.AVatar_Glow[TImage(Sender).Tag].Enabled := False;
+    end;
+  end
+  else if extrafe.prog.State = 'main_config_profile_user' then
+  begin
+    if TImage(Sender).Name = 'Main_Config_Profile_Main_Avatar' then
+    begin
+      TImage(Sender).Cursor := crHandPoint;
+      uMain_Config_Profile_User.Avatar_Glow_Free(mainScene.Config.main.R.Profile.User.Avatar_Change);
     end;
   end
   else if extrafe.prog.State = 'main_config_emulators' then
@@ -263,7 +273,28 @@ end;
 
 procedure TMAIN_CONFIG_TEXT.OnMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'main_config_profile_user' then
+  if extrafe.prog.State = 'main_config_profile_avatar' then
+  begin
+    if TText(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
+    begin
+      if vAvatar.Page > 0 then
+      begin
+        mainScene.Config.Main.R.Profile.User.Avatar.Main.Control.SetActiveTabWithTransition
+          (mainScene.Config.Main.R.Profile.User.Avatar.Main.Tabs[vAvatar.Page - 1], TTabTransition.Slide, TTabTransitionDirection.Reversed);
+        uMain_Config_Profile_User.Avatar_Page(vAvatar.Page - 1);
+      end;
+    end
+    else if TText(Sender).Name = 'Main_Config_Profile_Avatar_Right' then
+    begin
+      if vAvatar.Page < vAvatar.Pages then
+      begin
+        mainScene.Config.Main.R.Profile.User.Avatar.Main.Control.SetActiveTabWithTransition
+          (mainScene.Config.Main.R.Profile.User.Avatar.Main.Tabs[vAvatar.Page + 1], TTabTransition.Slide);
+        uMain_Config_Profile_User.Avatar_Page(vAvatar.Page + 1);
+      end;
+    end;
+  end
+  else if extrafe.prog.State = 'main_config_profile_user' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
       uMain_Config_Profile_User.Avatar
@@ -288,10 +319,18 @@ end;
 
 procedure TMAIN_CONFIG_TEXT.OnMouseEnter(Sender: TObject);
 begin
-  if extrafe.prog.State = 'main_config_profile_user' then
+  if extrafe.prog.State = 'main_config_profile_avatar' then
+  begin
+    TText(Sender).Cursor := crHandPoint;
+    if TText(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
+      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Left_Glow.Enabled := True
+    else if TText(Sender).Name = 'Main_Config_Profile_Avatar_Right' then
+      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Right_Glow.Enabled := True
+  end
+  else if extrafe.prog.State = 'main_config_profile_user' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uSnippets.HyperLink_OnMouseOver(TText(Sender))
+      uMain_Config_Profile_User.Avatar_Glow(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
       uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
@@ -318,20 +357,27 @@ end;
 
 procedure TMAIN_CONFIG_TEXT.OnMouseLeave(Sender: TObject);
 begin
-  if extrafe.prog.State = 'main_config_profile_user' then
+  if extrafe.prog.State = 'main_config_profile_avatar' then
+  begin
+    if TText(Sender).Name = 'Main_Config_Profile_Avatar_Left' then
+      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Left_Glow.Enabled := False
+    else if TText(Sender).Name = 'Main_Config_Profile_Avatar_Right' then
+      mainScene.Config.Main.R.Profile.User.Avatar.Main.Arrow_Right_Glow.Enabled := False
+  end
+  else if extrafe.prog.State = 'main_config_profile_user' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uSnippets.HyperLink_OnMouseLeave(TImage(Sender), TAlphaColorRec.White)
+      uMain_Config_Profile_User.Avatar_Glow_Free(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
       uSnippets.HyperLink_OnMouseLeave(TImage(Sender), TAlphaColorRec.White)
     else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
     begin
-      if vTemp_Personal.Genre <> True then
+      if vTemp_Personal.Genre <> 1 then
         mainScene.Config.Main.R.Profile.User.Gender_Male_Glow.Enabled := False
     end
     else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Female' then
     begin
-      if vTemp_Personal.Genre <> False then
+      if vTemp_Personal.Genre <> 0 then
         mainScene.Config.Main.R.Profile.User.Gender_Female_Glow.Enabled := False
     end
   end

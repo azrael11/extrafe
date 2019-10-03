@@ -20,8 +20,7 @@ procedure uEmu_Arcade_Mame_Gamelist_PushUp;
 procedure uEmu_Arcade_Mame_Gamelist_PushLeft;
 procedure uEmu_Arcade_Mame_Gamelist_PushRight;
 
-procedure uEmu_Arcade_Mame_Gamelist_Create_Available(vList_Rom, vList_Name, vRomPath: Tstringlist;
-  vRemove: Boolean);
+procedure uEmu_Arcade_Mame_Gamelist_Create_Available(vList_Rom, vList_Name, vRomPath: Tstringlist; vRemove: Boolean);
 procedure uEmu_Arcade_Mame_Gemelist_Create_Filter(vIniPath, vFilter: String);
 
 function uEmu_Arcade_Mame_Gamelist_GameInfo(vRomName: String): Tstringlist;
@@ -61,39 +60,35 @@ end;
 procedure uEmu_Arcade_Mame_Gamelist_Refresh;
 var
   vi, ri, ki: Integer;
-  vFound_Rom: Boolean;
 begin
   mame.Gamelist.Loading_Done := False;
   uEmu_Arcade_Mame_Gamelist_Clear;
   ri := mame.Gamelist.Selected - 10;
   for vi := 0 to 20 do
   begin
-    if ((mame.Gamelist.Selected + 10) + vi < 20) or
-      ((mame.Gamelist.Selected + 10) + vi > mame.Gamelist.Games_Count) then
+    if ((mame.Gamelist.Selected + 10) + vi < 20) or ((mame.Gamelist.Selected + 10) + vi > mame.Gamelist.Games_Count) then
     begin
       vMame.Scene.Gamelist.List_Line[vi].Text.Text := '';
       ri := -1;
     end
     else
     begin
-      vFound_Rom := False;
-      vMame.Scene.Gamelist.List_Line[vi].Text.Text := mame.Gamelist.List[0,ri,1];
+      vMame.Scene.Gamelist.List_Line[vi].Text.Text := mame.Gamelist.ListGames.Strings[ri];
       if uSnippet_Text_ToPixels(vMame.Scene.Gamelist.List_Line[vi].Text) > 640 then
-        vMame.Scene.Gamelist.List_Line[vi].Text.Text := uSnippet_Text_SetInGivenPixels(640,
-          vMame.Scene.Gamelist.List_Line[vi].Text);
+        vMame.Scene.Gamelist.List_Line[vi].Text.Text := uSnippet_Text_SetInGivenPixels(640, vMame.Scene.Gamelist.List_Line[vi].Text);
       for ki := 0 to mame.Emu.Ini.CORE_SEARCH_rompath.Count - 1 do
       begin
-        if FileExists(mame.Emu.Ini.CORE_SEARCH_rompath.Strings[ki] + '\' + mame.Gamelist.List[0,ri,0] + '.zip') then
-          vFound_Rom := True;
+        if FileExists(mame.Emu.Ini.CORE_SEARCH_rompath.Strings[ki] + '\' + mame.Gamelist.ListRoms[ri] + '.zip') then
+          vMame.Scene.Gamelist.List_Line[vi].Text.Color := TAlphaColorRec.White
+        else
+          vMame.Scene.Gamelist.List_Line[vi].Text.Color := TAlphaColorRec.Red;
       end;
-      if vFound_Rom = False then
-        vMame.Scene.Gamelist.List_Line[vi].Text.Color := TAlphaColorRec.Red;
     end;
     inc(ri, 1);
   end;
   uEmu_Arcade_Mame_Gamelist_GlowSelected;
   mame.Gamelist.Loading_Done := True;
-  vMame.Scene.Gamelist.T_Games_Count_Info.Text :=IntToStr(mame.Gamelist.Selected + 1) + '/' + IntToStr(mame.Gamelist.Games_Count);
+  vMame.Scene.Gamelist.T_Games_Count_Info.Text := IntToStr(mame.Gamelist.Selected + 1) + '/' + IntToStr(mame.Gamelist.Games_Count);
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -107,8 +102,7 @@ begin
 end;
 /// /////////////////////////////////////////////////////////////////////////////
 
-procedure uEmu_Arcade_Mame_Gamelist_Create_Available(vList_Rom, vList_Name, vRomPath: Tstringlist;
-  vRemove: Boolean);
+procedure uEmu_Arcade_Mame_Gamelist_Create_Available(vList_Rom, vList_Name, vRomPath: Tstringlist; vRemove: Boolean);
 var
   Rec: TSearchRec;
   vi, vfi, vgi: Integer;
@@ -117,82 +111,82 @@ var
   vRom_Paths: array [0 .. 100] of string;
   vFilesNum: Integer;
 begin
-{  vMasterGameList := Tstringlist.Create;
-  vMasterGameList_n := Tstringlist.Create;
-  if vRemove then
-  begin
+  { vMasterGameList := Tstringlist.Create;
+    vMasterGameList_n := Tstringlist.Create;
+    if vRemove then
+    begin
     for vi := 0 to vList_Rom.Count - 1 do
     begin
-      vMasterGameList.Add(mame.Gamelist.All_M.Roms[vi]);
-      vMasterGameList_n.Add(mame.Gamelist.All_M.Names[vi]);
+    vMasterGameList.Add(mame.Gamelist.All_M.Roms[vi]);
+    vMasterGameList_n.Add(mame.Gamelist.All_M.Names[vi]);
     end;
-  end
-  else
-  begin
+    end
+    else
+    begin
     for vi := 0 to vList_Rom.Count do
     begin
-      vMasterGameList.Add('');
-      vMasterGameList_n.Add('');
+    vMasterGameList.Add('');
+    vMasterGameList_n.Add('');
     end;
-  end;
+    end;
 
-  for vi := 0 to vRomPath.Count - 1 do
-  begin
+    for vi := 0 to vRomPath.Count - 1 do
+    begin
     vRom_Paths[vi] := vRomPath.Strings[vi];
     if vRom_Paths[0] = 'roms' then
-      vRom_Paths[0] := mame.Emu.Path + 'roms';
+    vRom_Paths[0] := mame.Emu.Path + 'roms';
     vFilter_Label_Info.Text :=
-      'This happend only for the first time user changes the mame version or add a new rom directory.';
+    'This happend only for the first time user changes the mame version or add a new rom directory.';
     vFilter_Label_Info_2.Text := ' Please wait... Accessing rom path : ' + vRom_Paths[vi];
 
     vFilesNum := uWindows_CountFilesOrFolders(vRom_Paths[vi], True, '.zip');
     vgi := 0;
     vFilter_Progress_Bar.Visible := True;
     if FindFirst(vRom_Paths[vi] + '\*.zip', faAnyFile, Rec) = 0 then
-      repeat
-        if ((Rec.Attr and faDirectory) <> faDirectory) then
-        begin
-          vRom_ext := ExtractFileExt(Rec.Name);
-          vRom := Trim(Copy(Rec.Name, 0, length(Rec.Name) - length(vRom_ext)));
-          if vList_Rom.IndexOf(vRom) <> -1 then
-          begin
-            vfi := vList_Rom.IndexOf(vRom);
-            if vRemove then
-            begin
-              if vMasterGameList.Strings[vfi] <> '' then
-              begin
-                vMasterGameList.Delete(vfi);
-                vMasterGameList.Insert(vfi, '');
-                vMasterGameList_n.Delete(vfi);
-                vMasterGameList_n.Insert(vfi, '');
-              end;
-            end
-            else
-            begin
-              if vMasterGameList.Strings[vfi] = '' then
-              begin
-                vMasterGameList.Delete(vfi);
-                vMasterGameList.Insert(vfi, vRom);
-                vMasterGameList_n.Delete(vfi);
-                vMasterGameList_n.Insert(vfi, vList_Name.Strings[vfi]);
-              end;
-            end;
-          end;
-        end;
-        uEmu_Arcade_Mame_Progress(vFilesNum, vgi);
-        inc(vgi, 1);
-      until FindNext(Rec) <> 0;
+    repeat
+    if ((Rec.Attr and faDirectory) <> faDirectory) then
+    begin
+    vRom_ext := ExtractFileExt(Rec.Name);
+    vRom := Trim(Copy(Rec.Name, 0, length(Rec.Name) - length(vRom_ext)));
+    if vList_Rom.IndexOf(vRom) <> -1 then
+    begin
+    vfi := vList_Rom.IndexOf(vRom);
+    if vRemove then
+    begin
+    if vMasterGameList.Strings[vfi] <> '' then
+    begin
+    vMasterGameList.Delete(vfi);
+    vMasterGameList.Insert(vfi, '');
+    vMasterGameList_n.Delete(vfi);
+    vMasterGameList_n.Insert(vfi, '');
+    end;
+    end
+    else
+    begin
+    if vMasterGameList.Strings[vfi] = '' then
+    begin
+    vMasterGameList.Delete(vfi);
+    vMasterGameList.Insert(vfi, vRom);
+    vMasterGameList_n.Delete(vfi);
+    vMasterGameList_n.Insert(vfi, vList_Name.Strings[vfi]);
+    end;
+    end;
+    end;
+    end;
+    uEmu_Arcade_Mame_Progress(vFilesNum, vgi);
+    inc(vgi, 1);
+    until FindNext(Rec) <> 0;
     vFilter_Progress_Bar.Visible := False;
-  end;
+    end;
 
-  for vi := vMasterGameList.Count - 1 downto 0 do
-  begin
+    for vi := vMasterGameList.Count - 1 downto 0 do
+    begin
     if vMasterGameList.Strings[vi] = '' then
     begin
-      vMasterGameList.Delete(vi);
-      vMasterGameList_n.Delete(vi);
+    vMasterGameList.Delete(vi);
+    vMasterGameList_n.Delete(vi);
     end;
-  end;  }
+    end; }
 end;
 
 procedure uEmu_Arcade_Mame_Gemelist_Create_Filter(vIniPath, vFilter: String);
@@ -204,62 +198,62 @@ var
   vRom, vName: String;
   vNumName: Integer;
 begin
-{  Application.ProcessMessages;
-  vMasterGameList := Tstringlist.Create;
-  vMasterGameList_n := Tstringlist.Create;
+  { Application.ProcessMessages;
+    vMasterGameList := Tstringlist.Create;
+    vMasterGameList_n := Tstringlist.Create;
 
-  vFound_Root := False;
+    vFound_Root := False;
 
-  AssignFile(vTextFile, vIniPath);
-  Reset(vTextFile);
-  while not Eof(vTextFile) do
-  begin
+    AssignFile(vTextFile, vIniPath);
+    Reset(vTextFile);
+    while not Eof(vTextFile) do
+    begin
     Readln(vTextFile, vText);
     if vFound_Root then
-      vMasterGameList.Add(vText);
+    vMasterGameList.Add(vText);
     if vText = '[ROOT_FOLDER]' then
-      vFound_Root := True
-  end;
-  CloseFile(vTextFile);
+    vFound_Root := True
+    end;
+    CloseFile(vTextFile);
 
-  vFilter_Label_Info.Text :=
+    vFilter_Label_Info.Text :=
     'This happend only for the first time user changes the mame version or add a new rom directory.';
-  vFilter_Label_Info_2.Text := 'Please wait... loading filter.';
+    vFilter_Label_Info_2.Text := 'Please wait... loading filter.';
 
-  vgi := 0;
-  vFilesCount := vMasterGameList.Count;
+    vgi := 0;
+    vFilesCount := vMasterGameList.Count;
 
-  for vi := 0 to vMasterGameList.Count - 1 do
-  begin
+    for vi := 0 to vMasterGameList.Count - 1 do
+    begin
     vl := mame.Gamelist.All_M.Roms.IndexOf(vMasterGameList.Strings[vi]);
     if vl <> -1 then
-      vMasterGameList_n.Add(mame.Gamelist.All_M.Names[vl])
+    vMasterGameList_n.Add(mame.Gamelist.All_M.Names[vl])
     else
-      vMasterGameList_n.Add('Not Supported');
+    vMasterGameList_n.Add('Not Supported');
     uEmu_Arcade_Mame_Progress(vFilesCount, vgi);
     inc(vgi, 1);
-  end;
+    end;
 
-  vMasterGameList_n.Sort;
+    vMasterGameList_n.Sort;
 
-  vFilter_Label_Info_2.Text := 'Please wait... Sorting filter.';
-  vgi := 0;
-  vFilesCount := vMasterGameList_n.Count;
+    vFilter_Label_Info_2.Text := 'Please wait... Sorting filter.';
+    vgi := 0;
+    vFilesCount := vMasterGameList_n.Count;
 
-  for vi := 0 to vMasterGameList_n.Count - 1 do
-  begin
+    for vi := 0 to vMasterGameList_n.Count - 1 do
+    begin
     vName := vMasterGameList_n.Strings[vi];
     vNumName := mame.Gamelist.All_M.Names.IndexOf(vName);
     if vNumName <> -1 then
-      vRom := mame.Gamelist.All_M.Roms.Strings[vNumName]
+    vRom := mame.Gamelist.All_M.Roms.Strings[vNumName]
     else
-      vRom := 'Not Supported';
+    vRom := 'Not Supported';
     vMasterGameList.Delete(vi);
     vMasterGameList.Insert(vi, vRom);
     uEmu_Arcade_Mame_Progress(vFilesCount, vgi);
     inc(vgi, 1);
-  end;
-         }
+    end;
+  }
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -275,9 +269,9 @@ var
 begin
   if mame.Gamelist.Selected <> mame.Gamelist.Games_Count then
   begin
-    if extrafe.prog.Virtual_Keyboard= False then
+    if extrafe.prog.Virtual_Keyboard = False then
       if uSnippet_Search.vSearch.Actions.Active then
-          uSnippet_Search.Clear;
+        uSnippet_Search.Clear;
     inc(mame.Gamelist.Selected, 1);
     uEmu_Arcade_Mame_Gamelist_Refresh;
     mame.Gamelist.Timer.Enabled := False;

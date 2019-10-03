@@ -40,9 +40,9 @@ begin
     vMame.Scene.Gamelist.List_Line[vi].Text.Text := cShowGamePanelMenu[ri];
     inc(ri, 1);
   end;
-  if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Manuals + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.pdf') then
+  if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Manuals + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.pdf') then
     vMame.Scene.Gamelist.List_Line[11 - (mame.Game.Menu_Selected)].Text.Color := TAlphaColorRec.Red;
-  if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks + mame.Gamelist.List[0, mame.Gamelist.Selected, 0] + '.zip')
+  if not FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.zip')
   then
     vMame.Scene.Gamelist.List_Line[14 - (mame.Game.Menu_Selected)].Text.Color := TAlphaColorRec.Red;
 
@@ -53,10 +53,9 @@ procedure uEmu_Arcade_Mame_Game_Actions_Enter;
 var
   romName: WideString;
 begin
-
-  romName := mame.Gamelist.List[0, mame.Gamelist.Selected, 0];
+  romName := mame.Gamelist.ListRoms[mame.Gamelist.Selected];
   vMame.Scene.Load_Game.Visible := True;
-  vMame.Scene.Load_Game_Line2.Text := mame.Gamelist.List[0, mame.Gamelist.Selected, 0];
+  vMame.Scene.Load_Game_Line2.Text := mame.Gamelist.ListRoms[mame.Gamelist.Selected];
   vMame_Game_Info_Back.Visible := False;
   vMame.Scene.Left_Blur.Enabled := True;
   vMame.Scene.Right_Blur.Enabled := True;

@@ -163,12 +163,14 @@ type
 type
   TMAIN_CONFIG_PROFILE_USER_AVATAR_MAIN = record
     Panel: TPanel;
-    Avatar: array [0 .. 19] of TImage;
-    Avatar_Glow: array [0 .. 19] of TGlowEffect;
-    Avatar_Check: array [0 .. 19] of TImage;
-    Arrow_Left: TImage;
+    Control : TTabControl;
+    Tabs: array of TTabItem;
+    Avatar: array of TImage;
+    Avatar_Glow: array of TGlowEffect;
+    Avatar_Check: array of TText;
+    Arrow_Left: TText;
     Arrow_Left_Glow: TGlowEffect;
-    Arrow_Right: TImage;
+    Arrow_Right: TText;
     Arrow_Right_Glow: TGlowEffect;
     Page_Info: TLabel;
     Change: TButton;
@@ -205,6 +207,7 @@ type
   TMAIN_CONFIG_PROFILE_USER = record
     Panel: TPanel;
     Avatar_Show: TImage;
+    Avatar_Show_Glow: TGlowEffect;
     Avatar_Change: TText;
     Username: TLabel;
     Username_V: TEdit;

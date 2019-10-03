@@ -421,9 +421,6 @@
         <DCCReference Include="main.pas">
             <Form>Main_Form</Form>
         </DCCReference>
-        <DCCReference Include="loading.pas">
-            <Form>Loading_Form</Form>
-        </DCCReference>
         <DCCReference Include="loading\uLoad.pas"/>
         <DCCReference Include="code\_os\uWindows.pas"/>
         <DCCReference Include="main\uMain.pas"/>
@@ -589,6 +586,9 @@
         <DCCReference Include="emu\consoles\snes\uEmu_Consoles_Snes_AllTypes.pas"/>
         <DCCReference Include="emu\consoles\master_system\uEmu_Consoles_MasterSystem_AllTypes.pas"/>
         <DCCReference Include="emu\consoles\mega_drive\uEmu_Consoles_MegaDrive_AllTypes.pas"/>
+        <DCCReference Include="load.pas">
+            <Form>Loading</Form>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -615,7 +615,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Debug" Class="File">
+                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Release" Class="File">
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -1139,6 +1139,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Debug" Class="File">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(IBREDISTDIR)\ios64_device\interbase\license.txt" Configuration="Release" Class="File">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\interbase\</RemoteDir>
@@ -1160,12 +1166,6 @@
                 <DeployFile LocalName="$(IBREDISTDIR)\win32_togo\interbase\license.txt" Configuration="Release" Class="File">
                     <Platform Name="Win32">
                         <RemoteDir>interbase\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Release" Class="File">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

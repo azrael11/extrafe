@@ -16,6 +16,7 @@ procedure Search(vString: String);
 implementation
 
 uses
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   uVirtual_Keyboard,
   uSnippet_Search,
@@ -93,8 +94,7 @@ var
 begin
   if uVirtual_Keyboard.vKey.Options.vType = 'Search' then
   begin
-    if (UpperCase(vKey) <> 'ENTER') and (UpperCase(vKey) <> 'ESC') and (UpperCase(vKey) <> 'UP') and
-      (UpperCase(vKey) <> 'DOWN') then
+    if (UpperCase(vKey) <> 'ENTER') and (UpperCase(vKey) <> 'ESC') and (UpperCase(vKey) <> 'UP') and (UpperCase(vKey) <> 'DOWN') then
     begin
       vFoundResult := False;
       vFoundDrop := False;
@@ -148,8 +148,7 @@ begin
               if ri = 20 then
                 uVirtual_Keyboard.Drop(ri, '...', '')
               else
-                uVirtual_Keyboard.Drop(ri, mame.Gamelist.List[0, vi + ri, 1],
-                  mame.prog.Images + 'emu_mame.png');
+                uVirtual_Keyboard.Drop(ri, mame.Gamelist.ListRoms[vi + ri], user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'emu_mame.png');
             end
           end;
         end
@@ -158,8 +157,7 @@ begin
           vStringResult := uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text;
           Delete(vStringResult, length(vStringResult), 1);
           uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text := vStringResult;
-          uVirtual_Keyboard.vKey.Construct.Edit.Edit.SelStart :=
-            length(uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text);
+          uVirtual_Keyboard.vKey.Construct.Edit.Edit.SelStart := length(uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text);
           // Put code what to do if result not found like (warning, sound etc)
         end;
 
@@ -179,18 +177,15 @@ begin
         vFoundDrop := False;
         for vi := 0 to 19 do
           if Assigned(uVirtual_Keyboard.vKey.Construct.Drop.Line_Back[vi]) then
-            if uVirtual_Keyboard.vKey.Construct.Drop.Line_Back[vi].Fill.Color = TAlphaColorRec.Deepskyblue
-            then
+            if uVirtual_Keyboard.vKey.Construct.Drop.Line_Back[vi].Fill.Color = TAlphaColorRec.Deepskyblue then
             begin
               vFoundDrop := True;
               Break
             end;
         if vFoundDrop then
         begin
-          uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text :=
-            uVirtual_Keyboard.vKey.Construct.Drop.Text[vi].Text;
-          uVirtual_Keyboard.vKey.Construct.Edit.Edit.SelStart :=
-            length(uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text);
+          uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text := uVirtual_Keyboard.vKey.Construct.Drop.Text[vi].Text;
+          uVirtual_Keyboard.vKey.Construct.Edit.Edit.SelStart := length(uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text);
           uVirtual_Keyboard.Press('Drop');
         end
         else
@@ -212,7 +207,7 @@ begin
   if vString = '' then
   begin
     mame.Gamelist.Selected := vMame_Search_Current_Selected;
-    vFoundResult:= True;
+    vFoundResult := True;
   end
   else
   begin
@@ -239,7 +234,7 @@ begin
     Delete(vSearch.Actions.Search_Str, length(uSnippet_Search.vSearch.Actions.Search_Str), 1);
     uSnippet_Search.vSearch.Scene.Edit.Text := uSnippet_Search.vSearch.Actions.Search_Str_Clear;
     BASS_ChannelPlay(mame.Sound.Effects[0], False);
-    uSnippet_Search.vSearch.Actions.Str_Error:= True;
+    uSnippet_Search.vSearch.Actions.Str_Error := True;
   end;
 end;
 

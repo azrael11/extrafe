@@ -51,10 +51,10 @@ var
 
 begin
   isFileFoundAndClose := False;
-  if FileExists(mame.Prog.Data_Path + 'game.xml') then
-    isFileFistTime := False
-  else
-    isFileFistTime := True;
+//  if FileExists(mame.Prog.Data_Path + 'game.xml') then
+//    isFileFistTime := False
+//  else
+//    isFileFistTime := True;
 
   vNum1 := 0;
   vNum2 := -10;
@@ -82,7 +82,7 @@ begin
   vGameNode_3 := nil;
   vGameAttribute := nil;
   vGameXML := CreateXMLDoc;
-  vGameXML.LoadFromFile(mame.Prog.Data_Path + 'game.xml');
+//  vGameXML.LoadFromFile(mame.Prog.Data_Path + 'game.xml');
   vGameRoot := vGameXML.DocumentElement;
   repeat
     if vGameRoot <> nil then
@@ -90,7 +90,7 @@ begin
     else
     begin
       vGameXML := nil;
-      vGameXML.LoadFromFile(mame.Prog.Data_Path + 'game.xml');
+//      vGameXML.LoadFromFile(mame.Prog.Data_Path + 'game.xml');
     end;
   until isFileFoundAndClose = True;
   while vGameRoot.GetNextChild(vGameNode) do
