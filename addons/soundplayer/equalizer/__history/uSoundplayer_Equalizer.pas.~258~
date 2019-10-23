@@ -1,0 +1,109 @@
+unit uSoundplayer_Equalizer;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  FMX.Dialogs,
+  BASS,
+  BASS_FX;
+
+procedure Get_Temp;
+procedure Apply;
+procedure Cancel;
+
+function Update_Pan(vPan: Single): String;
+function Update_Param(vParam: Integer; vValue: Single): String;
+
+var
+  vPar_Set: array [0 .. 9] of BASS_BFX_PEAKEQ;
+  vPar_Change: array [0 .. 9] of BASS_BFX_PEAKEQ;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uSoundplayer_AllTypes;
+
+var
+  vTemp_EQ: TADDON_SOUNDPLAYER_EQUALIZER;
+
+procedure Get_Temp;
+const
+  vFreq: array [0 .. 9] of Single = (70, 180, 320, 600, 1000, 3000, 6000, 12000, 14000, 16000);
+var
+  vi, vk: Integer;
+begin
+  vTemp_EQ := addons.soundplayer.Equalizer;
+  BASS_ChannelRemoveFX(sound.str_music[1], BASS_FX_BFX_PEAKEQ);
+  vk := 0;
+  for vi := 0 to 9 do
+  begin
+    vk := BASS_ChannelSetFX(sound.str_music[1], BASS_FX_BFX_PEAKEQ, 0);
+    with vPar_Set[vi] do
+    begin
+      vPar_Set[vi].lBand := vi;
+      vPar_Set[vi].fBandwidth := 1.0;
+      vPar_Set[vi].fQ := 1.0;
+      vPar_Set[vi].fCenter := 1000.0;
+      vPar_Set[vi].fGain := addons.soundplayer.Equalizer.Param[vi] + 0.0;
+      vPar_Set[vi].lChannel := BASS_BFX_CHANALL;
+    end;
+    BASS_FXSetParameters(vk, @vPar_Set[vi]);
+    vPar_Change[vi] := vPar_Set[vi];
+    inc(vk, 1);
+  end;
+end;
+
+procedure Apply;
+var
+  vi: Integer;
+begin
+  BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_PAN, vTemp_EQ.Pan / 100);
+  for vi := 0 to 9 do
+    BASS_FXSetParameters(sound.str_music[1], @vPar_Change[vi]);
+end;
+
+procedure Cancel;
+var
+  vi: Integer;
+begin
+  BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_PAN, (addons.soundplayer.Equalizer.Pan / 100));
+  for vi := 0 to 9 do
+    BASS_FXSetParameters(sound.str_music[1], @vPar_Set[vi]);
+end;
+
+///
+function Update_Pan(vPan: Single): String;
+begin
+  if vPan = 0 then
+    Result := 'Center'
+  else if vPan < 0 then
+    Result := 'Left : ' + (-vPan).ToString + '%'
+  else if vPan > 0 then
+    Result := 'Right : ' + vPan.ToString + '%';
+  vSoundplayer.EQ.Pan_Metric.Text := Result;
+  vTemp_EQ.Pan := vPan;
+  if addons.soundplayer.Equalizer.Live_Preview then
+    if addons.soundplayer.Player.Play then
+      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_PAN, (vPan / 100));
+end;
+
+function Update_Param(vParam: Integer; vValue: Single): String;
+begin
+  Result := vValue.ToString;
+  vTemp_EQ.Param[vParam] := vValue;
+  if BASS_FXGetParameters(Sound.str_music[1], @vPar_Set[vParam]) then
+  begin
+    vPar_Set[vParam].fGain := vValue;
+    vPar_Set[vParam].fCenter := 1000.0;
+    BASS_FXSetParameters(vParam, @vPar_Set[vParam]);
+  end;
+  vSoundplayer.EQ.Param_Value[vParam].Text := Result;
+  // if addons.soundplayer.Equalizer.Live_Preview then
+  // if addons.soundplayer.Player.Play then
+  addons.soundplayer.Ini.Ini.WriteFloat('Equalizer', 'Param_' + vParam.ToString, vValue);
+end;
+
+end.

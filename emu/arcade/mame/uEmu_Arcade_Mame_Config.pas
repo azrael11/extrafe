@@ -155,7 +155,7 @@ begin
       end;
     1:
       begin
-        uEmu_Arcade_Mame_Config_Create_Display_Panel;
+        uEmu_Arcade_Mame_Config_Display.Load;
         vMame.Config.Scene.Right_Panels[1].Visible := True;
         extrafe.prog.State := 'mame_config_display';
         mame_config_menu_panel := 1;

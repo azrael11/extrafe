@@ -179,6 +179,14 @@ begin
     User_Reg.Registered + ''', ''' + User_Reg.Last_Visit + ''', ''' + User_Reg.Last_Visit + ''', ''1'')');
   ExtraFE_Query_Local.ExecSQL;
 
+
+  { Option Data }
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Add('INSERT INTO USERS (VIRTUAL_KEYBOARD) VALUES("0")');
+  ExtraFE_Query_Local.ExecSQL;
+
+
   { User Statistics data }
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
@@ -202,32 +210,32 @@ begin
   { Arcade Section Start }
   { Media }
   free_vpath;
-  vPath[0] := extrafe.prog.Path + 'emu\arcade\media\artworks';
-  vPath[1] := extrafe.prog.Path + 'emu\arcade\media\cabinets';
-  vPath[2] := extrafe.prog.Path + 'emu\arcade\media\control_panels';
-  vPath[3] := extrafe.prog.Path + 'emu\arcade\media\covers';
-  vPath[4] := extrafe.prog.Path + 'emu\arcade\media\flyers';
-  vPath[5] := extrafe.prog.Path + 'emu\arcade\media\fanart';
-  vPath[6] := extrafe.prog.Path + 'emu\arcade\media\game_over';
-  vPath[7] := extrafe.prog.Path + 'emu\arcade\media\icons';
-  vPath[8] := extrafe.prog.Path + 'emu\arcade\media\manuals';
-  vPath[9] := extrafe.prog.Path + 'emu\arcade\media\marquees';
-  vPath[10] := extrafe.prog.Path + 'emu\arcade\media\pcbs';
-  vPath[11] := extrafe.prog.Path + 'emu\arcade\media\snapshots';
-  vPath[12] := extrafe.prog.Path + 'emu\arcade\media\titles';
-  vPath[13] := extrafe.prog.Path + 'emu\arcade\media\artwork_preview';
-  vPath[14] := extrafe.prog.Path + 'emu\arcade\media\bosses';
-  vPath[15] := extrafe.prog.Path + 'emu\arcade\media\ends';
-  vPath[16] := extrafe.prog.Path + 'emu\arcade\media\how_to';
-  vPath[17] := extrafe.prog.Path + 'emu\arcade\media\logos';
-  vPath[18] := extrafe.prog.Path + 'emu\arcade\media\scores';
-  vPath[19] := extrafe.prog.Path + 'emu\arcade\media\selects';
-  vPath[20] := extrafe.prog.Path + 'emu\arcade\media\stamps';
-  vPath[21] := extrafe.prog.Path + 'emu\arcade\media\versus';
-  vPath[22] := extrafe.prog.Path + 'emu\arcade\media\warnings';
-  vPath[23] := extrafe.prog.Path + 'emu\arcade\media\soundtracks';
-  vPath[24] := extrafe.prog.Path + 'emu\arcade\media\support_files';
-  vPath[25] := extrafe.prog.Path + 'emu\arcade\media\videos';
+  vPath[0] := extrafe.prog.Path + 'emu\arcade\media\artworks\';
+  vPath[1] := extrafe.prog.Path + 'emu\arcade\media\cabinets\';
+  vPath[2] := extrafe.prog.Path + 'emu\arcade\media\control_panels\';
+  vPath[3] := extrafe.prog.Path + 'emu\arcade\media\covers\';
+  vPath[4] := extrafe.prog.Path + 'emu\arcade\media\flyers\';
+  vPath[5] := extrafe.prog.Path + 'emu\arcade\media\fanart\';
+  vPath[6] := extrafe.prog.Path + 'emu\arcade\media\game_over\';
+  vPath[7] := extrafe.prog.Path + 'emu\arcade\media\icons\';
+  vPath[8] := extrafe.prog.Path + 'emu\arcade\media\manuals\';
+  vPath[9] := extrafe.prog.Path + 'emu\arcade\media\marquees\';
+  vPath[10] := extrafe.prog.Path + 'emu\arcade\media\pcbs\';
+  vPath[11] := extrafe.prog.Path + 'emu\arcade\media\snapshots\';
+  vPath[12] := extrafe.prog.Path + 'emu\arcade\media\titles\';
+  vPath[13] := extrafe.prog.Path + 'emu\arcade\media\artwork_preview\';
+  vPath[14] := extrafe.prog.Path + 'emu\arcade\media\bosses\';
+  vPath[15] := extrafe.prog.Path + 'emu\arcade\media\ends\';
+  vPath[16] := extrafe.prog.Path + 'emu\arcade\media\how_to\';
+  vPath[17] := extrafe.prog.Path + 'emu\arcade\media\logos\';
+  vPath[18] := extrafe.prog.Path + 'emu\arcade\media\scores\';
+  vPath[19] := extrafe.prog.Path + 'emu\arcade\media\selects\';
+  vPath[20] := extrafe.prog.Path + 'emu\arcade\media\stamps\';
+  vPath[21] := extrafe.prog.Path + 'emu\arcade\media\versus\';
+  vPath[22] := extrafe.prog.Path + 'emu\arcade\media\warnings\';
+  vPath[23] := extrafe.prog.Path + 'emu\arcade\media\soundtracks\';
+  vPath[24] := extrafe.prog.Path + 'emu\arcade\media\support_files\';
+  vPath[25] := extrafe.prog.Path + 'emu\arcade\media\videos\';
 
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
@@ -289,6 +297,13 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(' INSERT INTO ADDON_TIME_TIME ("USER_ID") VALUES (' + vLocal_Num + ')');
+  ExtraFE_Query_Local.ExecSQL;
+
+  { Addons Weather }
+
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Add(' INSERT INTO ADDON_WEATHER ("USER_ID") VALUES (' + vLocal_Num + ')');
   ExtraFE_Query_Local.ExecSQL;
 
 end;

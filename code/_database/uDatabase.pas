@@ -81,6 +81,13 @@ begin
   ExtraFE_DB.Password := '11azrael';
   ExtraFE_DB.Database := 'extrafe';
 
+{  ExtraFE_DB.HostName := 'azrael11.heliohost.org';
+  ExtraFE_DB.Port := 3306;
+//  ExtraFE_DB.User := 'azrael11@localhost';
+  ExtraFE_DB.User := 'azrael11_azrael';
+  ExtraFE_DB.Password := '11azrael';
+  ExtraFE_DB.Database := 'azrael11_extrafe';}
+
   ExtraFE_Query := TZQuery.Create(Main_Form);
   ExtraFE_Query.Name := 'ExtraFE_Database_Query';
   ExtraFE_Query.Connection := ExtraFE_DB;
@@ -88,14 +95,15 @@ end;
 
 function Online_Connect: Boolean;
 begin
-  try
+  ExtraFE_DB.Connect;
+{  try
     ExtraFE_DB.Connect;
   except
     on E: Exception do
     begin
 //      ShowMessage(E.ToString);
     end;
-  end;
+  end;}
   Result := ExtraFE_DB.Connected;
 end;
 

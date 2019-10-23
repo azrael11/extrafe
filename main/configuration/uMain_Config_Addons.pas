@@ -217,11 +217,11 @@ begin
 
   Icons(ex_main.Config.Addons_Tab_First);
 
-  if Addons.Total_Num > 3 then
+  if user_Active_Local.ADDONS.Active > 3 then
   begin
     mainScene.Config.main.R.Addons.Arrow_Right_Gray.Enabled := False;
     mainScene.Config.main.R.Addons.Right_Num.Visible := True;
-    mainScene.Config.main.R.Addons.Right_Num.Text := (Addons.Total_Num - 3).ToString;
+    mainScene.Config.main.R.Addons.Right_Num.Text := (user_Active_Local.ADDONS.Active - 3).ToString;
   end;
 end;
 

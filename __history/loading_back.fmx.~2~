@@ -1,0 +1,17 @@
+object Loading_Form: TLoading_Form
+  Left = 0
+  Top = 0
+  Caption = 'Loading ExtraFE'
+  ClientHeight = 679
+  ClientWidth = 1132
+  Transparency = True
+  Visible = True
+  WindowState = wsMaximized
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  ShowFullScreenIcon = True
+  OnCreate = FormCreate
+  OnClose = FormClose
+  DesignerMasterStyle = 0
+end

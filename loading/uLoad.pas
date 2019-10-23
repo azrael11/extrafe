@@ -205,6 +205,7 @@ begin
   end
   else
   begin
+    uDatabase_ActiveUser.update_time;
     uLoad_Emulation.load;
     uLoad_Addons_Load;
     ex_load.Scene.Back_Fade.Start;

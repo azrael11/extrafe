@@ -1,0 +1,28 @@
+unit uMain_Sounds;
+
+interface
+uses
+  System.Classes,
+  BASS;
+
+procedure Load;
+procedure Free;
+
+implementation
+uses
+  uLoad_AllTypes;
+
+procedure Load;
+begin
+  //Lock
+  ex_main.Sounds.mouse[0] :=  BASS_StreamCreateFile(False,
+    PChar(ex_main.Paths.Sounds + 'main_blob.mp3'), 0, 0, 0
+    {$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
+end;
+
+procedure Free;
+begin
+  BASS_StreamFree(ex_main.Sounds.mouse[0]);
+end;
+
+end.

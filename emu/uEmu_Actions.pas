@@ -6,12 +6,14 @@ uses
   System.UITypes,
   FMX.Forms;
 
-  procedure uEmu_LoadEmulator(vNum: Integer);
-  procedure uEmu_Actions_Exit;
+procedure uEmu_LoadEmulator(vNum: Integer);
+procedure uEmu_Actions_Exit;
 
-  procedure uEmu_Actions_EmuSettings(vNum: Integer);
+procedure uEmu_Actions_EmuSettings(vNum: Integer);
 
-  procedure uEmu_Actions_VirtualKeyboard_SetKey(vKey: String);
+procedure uEmu_Actions_VirtualKeyboard_SetKey(vKey: String);
+
+procedure Search(vEmulator: String; vAction: Boolean);
 
 implementation
 uses
@@ -36,7 +38,7 @@ procedure uEmu_LoadEmulator(vNum: Integer);
 begin
   Emu_Form.WindowState:= TWindowState.wsMaximized;
   case vNum of
-    0: uEmu_Arcade_Mame_Load;
+    0: uEmu_Arcade_Mame.Load;
   end;
 end;
 
@@ -57,5 +59,12 @@ begin
   Emu_Form.Close;
   Main_Form.ShowModal;
 end;
+
+procedure Search(vEmulator: String; vAction: Boolean);
+begin
+  if vEmulator = 'mame' then
+    uEmu_Arcade_Mame_Actions.Search(vAction);
+end;
+
 
 end.

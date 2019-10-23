@@ -1,0 +1,110 @@
+unit uSnippets;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  WinAPI.Windows,
+  WinAPI.ShellAPI,
+  FMX.Objects,
+  FMX.StdCtrls,
+  FMX.Controls;
+
+// Free a control with all childs exept exeptions
+procedure FreeAllChilds(vControl: TControl; vRemoveParent: Boolean);
+function FreeChilds_Should_I(vChild: TControl): Boolean;
+
+// Delete an element from a dynamic or static array
+//procedure Array_Delete_Element(var vArray; vIndex: Cardinal);
+//procedure Array_Insert_Element(var vArray; vIndex: Cardinal);
+
+// Open a link to default browser
+procedure Open_Link_To_Browser(vLink: String);
+procedure HyperLink_OnMouseOver(Sender: TObject);
+procedure HyperLink_OnMouseLeave(Sender: TObject);
+
+
+implementation
+
+
+//
+function FreeChilds_Should_I(vChild: TControl): Boolean;
+begin
+  //Here i must write some code for exeptions and other stuff
+  Result:= True;
+end;
+
+procedure FreeAllChilds(vControl: TControl; vRemoveParent: Boolean);
+var
+  i : integer;
+  Item : TControl;
+begin
+
+  if Assigned(vControl) then
+  begin
+    for i := (vControl.ControlsCount - 1) downto 0 do
+    begin
+      Item := vControl.controls[i];
+      if assigned(item) then
+        FreeAllChilds(item, FreeChilds_Should_I(item));
+    end;
+
+    if vRemoveParent then
+      FreeAndNil(vControl);
+  end;
+end;
+//
+
+//procedure Array_Delete_Element(var vArray; vIndex: Cardinal);
+//var
+//  ALength: Cardinal;
+//  TailElements: Cardinal;
+//  vi: Integer;
+//begin
+//  ALength := Length(vArray);
+//  Assert(ALength > 0);
+//  Assert(vIndex < ALength);
+//  for vi := vIndex + 1 to ALength - 1 do
+//    vArray[vi - 1] := vArray[vi];
+//  SetLength(vArray, ALength - 1);
+//end;
+
+//procedure InsertX(var A: TXArray; const Index: Cardinal; const Value: X);
+//var
+//  ALength: Cardinal;
+//  TailElements: Cardinal;
+//begin
+//  ALength := Length(A);
+//  Assert(Index <= ALength);
+//  SetLength(A, ALength + 1);
+//  Finalize(A[ALength]);
+//  TailElements := ALength - Index;
+//  if TailElements > 0 then begin
+//    Move(A[Index], A[Index + 1], SizeOf(X) * TailElements);
+//  Initialize(A[Index]);
+//  A[Index] := Value;
+//end;
+
+// Open a link to default browser
+procedure Open_Link_To_Browser(vLink: String);
+begin
+  ShellExecute(0, 'open', PChar(vLink), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure HyperLink_OnMouseOver(Sender: TObject);
+begin
+  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style+ [TFontStyle.fsUnderline];
+  TText(Sender).TextSettings.FontColor:= claDeepskyblue;
+  TText(Sender).Cursor:= crHandPoint;
+end;
+
+procedure uSnippet_Text_HyperLink_OnMouseLeave(Sender: TObject);
+begin
+  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style- [TFontStyle.fsUnderline];
+  TText(Sender).TextSettings.FontColor:= claWhite;
+  TText(Sender).Cursor:= crDefault;
+end;
+
+end.
+

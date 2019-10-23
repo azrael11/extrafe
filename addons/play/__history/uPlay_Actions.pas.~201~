@@ -1,0 +1,169 @@
+unit uPlay_Actions;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  FMX.Types,
+  FMX.Objects,
+  FMX.Effects,
+  Radiant.Shapes,
+  Bass;
+
+procedure uPlay_Actions_ReturnToMain(vIconsNum: Integer);
+procedure uPlay_Actions_Free;
+
+procedure uPlay_Actions_LoadGame(vGame: String);
+
+procedure uPlay_Actions_Image_Full(vImage: TImage);
+procedure uPlay_Actions_Image_Full_Close;
+procedure uPlay_Actions_ResizeVideo(vFull: Boolean; vVideo: TImage);
+
+procedure uPlay_Actions_OnMouseOver_Image(vImage: TImage);
+procedure uPlay_Actions_OnMouseLeave_Image(vImage: TImage);
+procedure uPlay_Actions_OnMouseOver_Video(vImage: TImage);
+procedure uPlay_Actions_OnMouseLeave_Video(vImage: TImage);
+
+procedure MouseOver_GameIcon(vGame: Integer);
+
+var
+  vOverImage: TImage;
+  vOverImage_Icon: TImage;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uMain_AllTypes,
+  uMain_Actions,
+  uPlay_AllTypes,
+  uPlay_SetAll,
+  uPlay_Sounds;
+
+procedure uPlay_Actions_ReturnToMain(vIconsNum: Integer);
+begin
+  emulation.Selection_Ani.StartValue := extrafe.res.Height;
+  emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
+  mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
+  mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
+  emulation.Selection_Ani.Enabled := True;
+  vPlay.Main_Ani.Start;
+  mainScene.Footer.Back_Ani.Start;
+  uMain_Actions_All_Icons_Active(vIconsNum);
+  extrafe.prog.State := 'main';
+end;
+
+procedure uPlay_Actions_Free;
+begin
+  uPlay_Sounds.Unload;
+  if Assigned(vPlay.Info) then
+    FreeAndNil(vPlay.Info);
+  FreeAndNil(vPlay.Main);
+end;
+
+procedure uPlay_Actions_LoadGame(vGame: String);
+begin
+  vPlay.Img_Box_Ani.StartValue := vPlay.Img_Box.Position.X;
+  vPlay.Img_Box_Ani.StopValue := -(vPlay.Img_Box.Width + 10);
+  vPlay.Info_Ani.StartValue := vPlay.Info.Position.X;
+  vPlay.Info_Ani.StopValue := extrafe.res.Width + 10;
+  vPlay.Img_Box_Ani.Start;
+  vPlay.Info_Ani.Start;
+  addons.play.Actions.Game := vGame;
+end;
+
+procedure uPlay_Actions_Image_Full(vImage: TImage);
+var
+  vImage_Path: String;
+begin
+  vPlay.Info_Blur.Enabled := True;
+
+  vPlay.Full.Frame := TRadiantFrame.Create(mainScene.Main.Down_Level);
+  vPlay.Full.Frame.Name := 'AzPlay_Full_Preview';
+  vPlay.Full.Frame.Parent := mainScene.Main.Down_Level;
+  vPlay.Full.Frame.SetBounds(vPlay.Info.Position.X + 50, 180, vPlay.Info.Width - 100,
+    vPlay.Info.Height - 100);
+  vPlay.Full.Frame.FrameSize.Units := TRadiantDimensionUnits.Pixels;
+  vPlay.Full.Frame.FrameSize.Pixels := 10;
+  vPlay.Full.Frame.Fill.Color := TAlphaColorRec.Deepskyblue;
+  vPlay.Full.Frame.Visible := True;
+
+  vPlay.Full.Back := TImage.Create(vPlay.Full.Frame);
+  vPlay.Full.Back.Name := 'AzPlay_Full_Preview_Back';
+  vPlay.Full.Back.Parent := vPlay.Full.Frame;
+  vPlay.Full.Back.SetBounds(10, 10, vPlay.Full.Frame.Width - 20, vPlay.Full.Frame.Height - 20);
+  vPlay.Full.Back.Bitmap.LoadFromFile(addons.play.Path.Images + 'back.png');
+  vPlay.Full.Back.WrapMode := TImageWrapMode.Stretch;
+  vPlay.Full.Back.Visible := True;
+
+  vPlay.Full.Close := TImage.Create(vPlay.Full.Frame);
+  vPlay.Full.Close.Name := 'AzPlay_Full_Preview_Exit';
+  vPlay.Full.Close.Parent := vPlay.Full.Frame;
+  vPlay.Full.Close.SetBounds(vPlay.Full.Frame.Width - 12, -12, 24, 24);
+  vPlay.Full.Close.Bitmap.LoadFromFile(addons.play.Path.Images + 'exit.png');
+  vPlay.Full.Close.OnClick := addons.play.Input.mouse.Image.OnMouseClick;
+  vPlay.Full.Close.OnMouseEnter := addons.play.Input.mouse.Image.OnMouseEnter;
+  vPlay.Full.Close.OnMouseLeave := addons.play.Input.mouse.Image.OnMouseLeave;
+  vPlay.Full.Close.Visible := True;
+
+  vPlay.Full.Close_Glow := TGlowEffect.Create(vPlay.Full.Close);
+  vPlay.Full.Close_Glow.Name := 'AzPlay_Full_Preview_Close_Glow';
+  vPlay.Full.Close_Glow.Parent := vPlay.Full.Close;
+  vPlay.Full.Close_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vPlay.Full.Close_Glow.Opacity := 0.9;
+  vPlay.Full.Close_Glow.Enabled := False;
+
+  vPlay.Full.Image := TImage.Create(vPlay.Full.Back);
+  vPlay.Full.Image.Name := 'AzPlay_Full_Preview_Image';
+  vPlay.Full.Image.Parent := vPlay.Full.Back;
+  vPlay.Full.Image.Align := TAlignLayout.Client;
+  vPlay.Full.Image.Bitmap := vImage.Bitmap;
+  vPlay.Full.Image.WrapMode := TImageWrapMode.Fit;
+  vPlay.Full.Image.Visible := True;
+end;
+
+procedure uPlay_Actions_Image_Full_Close;
+begin
+  vPlay.Info_Blur.Enabled := False;
+  FreeAndNil(vPlay.Full.Frame);
+end;
+
+procedure uPlay_Actions_ResizeVideo(vFull: Boolean; vVideo: TImage);
+begin
+
+end;
+
+procedure uPlay_Actions_OnMouseOver_Image(vImage: TImage);
+begin
+  BASS_ChannelPlay(addons.play.Sounds.mouse[0], False);
+  vPlay.Info_Img_Glow[vImage.Tag].Enabled := True;
+  vPlay.Info_Grey[vImage.Tag].Enabled := False;
+end;
+
+procedure uPlay_Actions_OnMouseLeave_Image(vImage: TImage);
+begin
+  vPlay.Info_Img_Glow[vImage.Tag].Enabled := False;
+  vPlay.Info_Grey[vImage.Tag].Enabled := True;
+end;
+
+procedure uPlay_Actions_OnMouseOver_Video(vImage: TImage);
+begin
+
+end;
+
+procedure uPlay_Actions_OnMouseLeave_Video(vImage: TImage);
+begin
+
+end;
+
+procedure MouseOver_GameIcon(vGame: Integer);
+begin
+  if addons.play.Actions.Sound_Over_Game_Play_Now<> -1 then
+    BASS_ChannelStop(addons.play.Sounds.Voices[addons.play.Actions.Sound_Over_Game_Play_Now]);
+  vPlay.Img_Img_Glow[vGame].Enabled := True;
+  BASS_ChannelPlay(addons.play.Sounds.Voices[vGame], False);
+end;
+
+end.

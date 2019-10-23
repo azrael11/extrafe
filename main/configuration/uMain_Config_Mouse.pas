@@ -91,6 +91,7 @@ uses
   uMain_Config_Addons_Actions,
   uMain_Config_Themes,
   uMain_Config_Info,
+  uMain_Config_General_Visual,
   uMain_Config_Info_Extrafe,
   uMain_Config_Info_Credits,
   uMain_Config_Profile_User;
@@ -442,7 +443,7 @@ begin
       if TButton(Sender).TagFloat = 1000 then
         uMain_Config_Emulators.Start_Emu_Wizard(TButton(Sender))
     end
-    else if extrafe.prog.State = 'main_config_emulators' then
+    else if extrafe.prog.State = 'main_config_addons' then
     begin
       if TButton(Sender).Name = 'Main_Config_Addons_Addon_Weather_Action' then
         uMain_Config_Addons_Actions_AddonActivation(2)
@@ -545,11 +546,8 @@ end;
 
 procedure TMAIN_CONFIG_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
-  if TCheckBox(Sender).Name = 'Main_Config_General_Visoual_VirtualKeyboard' then
-  begin
-    extrafe.prog.Virtual_Keyboard := not extrafe.prog.Virtual_Keyboard;
-    extrafe.Ini.Ini.WriteBool('Visual', 'Virtual_Keyboard', extrafe.prog.Virtual_Keyboard);
-  end;
+  if TCheckBox(Sender).Name = 'Main_Config_General_Visual_VirtualKeyboard' then
+    uMain_Config_General_Visual.Update_Virtual_Keyboard(not TCheckBox(Sender).IsChecked);
 end;
 
 procedure TMAIN_CONFIG_CHECKBOX.OnMouseEnter(Sender: TObject);

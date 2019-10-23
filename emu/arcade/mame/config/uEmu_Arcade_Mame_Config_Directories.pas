@@ -118,7 +118,7 @@ begin
     vMame.Config.Panel.Dirs.Roms.Edit[vi].Parent := vMame.Config.Panel.Dirs.Roms.Box;
     vMame.Config.Panel.Dirs.Roms.Edit[vi].SetBounds(5, (5 + ((vi * 30) + (vi * 10))), vMame.Config.Panel.Dirs.Roms.Box.Width - 64, 30);
     if mame.Emu.Ini.CORE_SEARCH_rompath.Strings[vi] = 'roms' then
-      vRoms := mame.Emu.Path + 'roms'
+      vRoms := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Path + 'roms'
     else
       vRoms := mame.Emu.Ini.CORE_SEARCH_rompath.Strings[vi];
     vMame.Config.Panel.Dirs.Roms.Edit[vi].Text := vRoms;

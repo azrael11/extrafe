@@ -1,0 +1,21 @@
+object Loading_Form: TLoading_Form
+  Left = 0
+  Top = 0
+  Caption = 'Loading ExtraFE'
+  ClientHeight = 707
+  ClientWidth = 1066
+  Transparency = True
+  Visible = True
+  WindowState = wsMaximized
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  ShowFullScreenIcon = True
+  OnCreate = FormCreate
+  OnClose = FormClose
+  DesignerMasterStyle = 0
+  object SQLite_DriverLink: TFDPhysSQLiteDriverLink
+    Left = 32
+    Top = 16
+  end
+end

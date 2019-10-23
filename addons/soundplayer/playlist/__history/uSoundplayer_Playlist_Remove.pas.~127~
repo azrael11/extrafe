@@ -1,0 +1,187 @@
+unit uSoundplayer_Playlist_Remove;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  FMX.Objects,
+  FMX.StdCtrls,
+  Bass;
+
+procedure Load;
+procedure Free;
+
+procedure Playlist;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uSoundplayer,
+  uSoundplayer_Playlist,
+  uSoundplayer_AllTypes,
+  uSoundplayer_Player,
+  uSoundplayer_Playlist_Const;
+
+procedure Load;
+begin
+  if vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
+  begin
+    vSoundplayer.scene.Back_Blur.Enabled := True;
+    uSoundplayer.Hide_Animations;
+    extrafe.prog.State := 'addon_soundplayer_playlist_remove';
+
+    vSoundplayer.Playlist.Remove.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
+    vSoundplayer.Playlist.Remove.Panel.Name := 'A_SP_Playlist_Remove_Panel';
+    vSoundplayer.Playlist.Remove.Panel.Parent := vSoundplayer.scene.soundplayer;
+    vSoundplayer.Playlist.Remove.Panel.SetBounds((vSoundplayer.scene.soundplayer.Width / 2) - 250,
+      (vSoundplayer.scene.soundplayer.Height / 2) - 50, 500, 140);
+    vSoundplayer.Playlist.Remove.Panel.Visible := True;
+
+    uLoad_SetAll_CreateHeader(vSoundplayer.Playlist.Remove.Panel, 'A_SP_Playlist_Remove_Panel',
+      addons.soundplayer.Path.Images + 'sp_remove.png', 'Warning!!! Remove playlist?');
+
+    vSoundplayer.Playlist.Remove.main.Panel := TPanel.Create(vSoundplayer.Playlist.Remove.Panel);
+    vSoundplayer.Playlist.Remove.main.Panel.Name := 'A_SP_Playlist_Remove_Main_Panel';
+    vSoundplayer.Playlist.Remove.main.Panel.Parent := vSoundplayer.Playlist.Remove.Panel;
+    vSoundplayer.Playlist.Remove.main.Panel.SetBounds(0, 30, vSoundplayer.Playlist.Remove.Panel.Width,
+      vSoundplayer.Playlist.Remove.Panel.Height - 30);
+    vSoundplayer.Playlist.Remove.main.Panel.Visible := True;
+
+    vSoundplayer.Playlist.Remove.main.Icon := TImage.Create(vSoundplayer.Playlist.Remove.main.Panel);
+    vSoundplayer.Playlist.Remove.main.Icon.Name := 'A_SP_Playlist_Remove_Icon';
+    vSoundplayer.Playlist.Remove.main.Icon.Parent := vSoundplayer.Playlist.Remove.main.Panel;
+    vSoundplayer.Playlist.Remove.main.Icon.SetBounds(30, 14, 36, 36);
+    vSoundplayer.Playlist.Remove.main.Icon.Bitmap.LoadFromFile(addons.soundplayer.Path.Images +
+      'sp_warning.png');
+    vSoundplayer.Playlist.Remove.main.Icon.Visible := True;
+
+    vSoundplayer.Playlist.Remove.main.Line_1 := TLabel.Create(vSoundplayer.Playlist.Remove.main.Panel);
+    vSoundplayer.Playlist.Remove.main.Line_1.Name := 'A_SP_Playlist_Remove_Main_Line_1';
+    vSoundplayer.Playlist.Remove.main.Line_1.Parent := vSoundplayer.Playlist.Remove.main.Panel;
+    vSoundplayer.Playlist.Remove.main.Line_1.SetBounds(100, 10, 300, 24);
+    vSoundplayer.Playlist.Remove.main.Line_1.Text := 'This action will remove this playlist permanently.';
+    vSoundplayer.Playlist.Remove.main.Line_1.Font.Style := vSoundplayer.Playlist.Remove.main.Line_1.Font.Style
+      + [TFontStyle.fsBold];
+    vSoundplayer.Playlist.Remove.main.Line_1.Visible := True;
+
+    vSoundplayer.Playlist.Remove.main.Line_2 := TLabel.Create(vSoundplayer.Playlist.Remove.main.Panel);
+    vSoundplayer.Playlist.Remove.main.Line_2.Name := 'A_SP_Playlist_Remove_Main_Line_2';
+    vSoundplayer.Playlist.Remove.main.Line_2.Parent := vSoundplayer.Playlist.Remove.main.Panel;
+    vSoundplayer.Playlist.Remove.main.Line_2.SetBounds(100, 30, 300, 24);
+    vSoundplayer.Playlist.Remove.main.Line_2.Text := 'Remove and delete the "' +
+      addons.soundplayer.Playlist.List.Name + addons.soundplayer.Playlist.List.VType + '" playlist';
+    vSoundplayer.Playlist.Remove.main.Line_2.Font.Style := vSoundplayer.Playlist.Remove.main.Line_2.Font.Style
+      + [TFontStyle.fsBold];
+    vSoundplayer.Playlist.Remove.main.Line_2.Visible := True;
+
+    vSoundplayer.Playlist.Remove.main.Remove := TButton.Create(vSoundplayer.Playlist.Remove.main.Panel);
+    vSoundplayer.Playlist.Remove.main.Remove.Name := 'A_SP_Playlist_Remove_Remove';
+    vSoundplayer.Playlist.Remove.main.Remove.Parent := vSoundplayer.Playlist.Remove.main.Panel;
+    vSoundplayer.Playlist.Remove.main.Remove.SetBounds(100, vSoundplayer.Playlist.Remove.main.Panel.Height -
+      34, 100, 24);
+    vSoundplayer.Playlist.Remove.main.Remove.Text := 'Remove';
+    vSoundplayer.Playlist.Remove.main.Remove.OnClick := addons.soundplayer.Input.mouse.Button.OnMouseClick;
+    vSoundplayer.Playlist.Remove.main.Remove.Visible := True;
+
+    vSoundplayer.Playlist.Remove.main.Cancel := TButton.Create(vSoundplayer.Playlist.Remove.main.Panel);
+    vSoundplayer.Playlist.Remove.main.Cancel.Name := 'A_SP_Playlist_Remove_Cancel';
+    vSoundplayer.Playlist.Remove.main.Cancel.Parent := vSoundplayer.Playlist.Remove.main.Panel;
+    vSoundplayer.Playlist.Remove.main.Cancel.SetBounds(vSoundplayer.Playlist.Remove.main.Panel.Width - 200,
+      vSoundplayer.Playlist.Remove.main.Panel.Height - 34, 100, 24);
+    vSoundplayer.Playlist.Remove.main.Cancel.Text := 'Cancel';
+    vSoundplayer.Playlist.Remove.main.Cancel.OnClick := addons.soundplayer.Input.mouse.Button.OnMouseClick;
+    vSoundplayer.Playlist.Remove.main.Cancel.Visible := True;
+  end;
+end;
+
+procedure Free;
+begin
+  vSoundplayer.scene.Back_Blur.Enabled := False;
+  FreeAndNil(vSoundplayer.Playlist.Remove.Panel);
+  uSoundplayer_Player.Text_OnLeave(vSoundplayer.Playlist.Remove_Icon, vSoundplayer.Playlist.Remove_Icon_Glow);
+  extrafe.prog.State := 'addon_soundplayer';
+end;
+
+procedure Playlist;
+type
+  TPlRec = record
+    Name: String;
+    Path: String;
+    VType: String;
+    Songs: Integer;
+    Played: Integer;
+    LastPlayed: String;
+  end;
+
+var
+  vi: Integer;
+  PlRecord: TPlRec;
+begin
+  for vi := 0 to addons.soundplayer.Playlist.Total do
+  begin
+    if vi >= addons.soundplayer.Playlist.Active then
+      if addons.soundplayer.Ini.Ini.ValueExists('Playlists', 'PL_' + (vi + 1).ToString + '_Name') then
+      begin
+        // hold the next key to a record
+        PlRecord.Name := addons.soundplayer.Ini.Ini.ReadString('Playlists',
+          'PL_' + (vi + 1).ToString + '_Name', PlRecord.Name);
+        PlRecord.Path := addons.soundplayer.Ini.Ini.ReadString('Playlists',
+          'PL_' + (vi + 1).ToString + '_Path', PlRecord.Path);
+        PlRecord.VType := addons.soundplayer.Ini.Ini.ReadString('Playlists',
+          'PL_' + (vi + 1).ToString + '_Type', PlRecord.VType);
+        PlRecord.Songs := addons.soundplayer.Ini.Ini.ReadInteger('Playlists',
+          'PL_' + (vi + 1).ToString + '_Songs', PlRecord.Songs);
+        PlRecord.Played := addons.soundplayer.Ini.Ini.ReadInteger('Playlists',
+          'PL_' + (vi + 1).ToString + '_Played', PlRecord.Played);
+        PlRecord.LastPlayed := addons.soundplayer.Ini.Ini.ReadString('Playlists',
+          'PL_' + (vi + 1).ToString + '_LastPlayed', PlRecord.LastPlayed);
+        // delete current key
+        addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Name');
+        addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Path');
+        addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Type');
+        addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Songs');
+        addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Played');
+        addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_LastPlayed');
+        // add hold record to the deleted key
+        addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + vi.ToString + '_Name', PlRecord.Name);
+        addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + vi.ToString + '_Path', PlRecord.Path);
+        addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + vi.ToString + '_Type', PlRecord.VType);
+        addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'PL_' + vi.ToString + '_Songs', PlRecord.Songs);
+        addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'PL_' + vi.ToString + '_Played',
+          PlRecord.Played);
+        addons.soundplayer.Ini.Ini.WriteString('Playlists', 'PL_' + vi.ToString + '_LastPlayed',
+          PlRecord.LastPlayed);
+      end
+      else
+      begin
+        if addons.soundplayer.Ini.Ini.ValueExists('Playlists', 'PL_' + vi.ToString + '_Name') then
+        begin
+          addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Name');
+          addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Path');
+          addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Type');
+          addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Songs');
+          addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_Played');
+          addons.soundplayer.Ini.Ini.DeleteKey('Playlists', 'PL_' + vi.ToString + '_LastPlayed');
+        end;
+        break
+      end;
+  end;
+  // Delete playlist file
+  DeleteFile(addons.soundplayer.Path.Playlists + addons.soundplayer.Playlist.List.Name +
+    addons.soundplayer.Playlist.List.VType);
+  // Update playlist variable
+  addons.soundplayer.Playlist.Active := -1;
+  dec(addons.soundplayer.Playlist.Total, 1);
+  addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'TotalPlaylists', addons.soundplayer.Playlist.Total);
+  addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'ActivePlaylist', -1);
+  addons.soundplayer.Ini.Ini.WriteString('Playlists', 'ActivePlaylistName', '');
+
+  uSoundplayer_Playlist_Const.New_State('', '');
+  vSoundplayer.Info.Total_Songs.Text:= '';
+  Free;
+end;
+
+end.

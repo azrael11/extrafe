@@ -387,7 +387,7 @@ begin
 
   if not FileExists(user_Active_Local.Emulators.Arcade_D.Mame_D.Ini) then
     ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
-      user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -cc'), PChar(mame.Emu.Path), SW_HIDE);
+      user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -cc'), PChar(user_Active_Local.EMULATORS.Arcade_D.Mame_D.Path), SW_HIDE);
   Script_Mame_Install.Main.Tab3.Progress.Value := 20;
   // Application.ProcessMessages;
 

@@ -1,0 +1,24 @@
+unit uMain_Config_Keyboard;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils;
+
+procedure Set_Key(vKey: String);
+
+implementation
+uses
+  uLoad_AllTypes,
+  uMain_Config;
+
+procedure Set_Key(vKey: String);
+begin
+  if extrafe.prog.State= 'main_config' then
+  begin
+    if UpperCase(vKey)= 'ESCAPE' then
+      uMain_Config_ShowHide(extrafe.prog.State);
+  end;
+end;
+
+end.

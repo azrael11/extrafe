@@ -1,0 +1,63 @@
+unit uLoad_UserAccount;
+
+interface
+uses
+  System.Classes,
+  FMX.Dialogs;
+
+  type TUSER_ACOUNT_DATABASE= record
+    Database_Num: Integer;
+    Username: WideString;
+    Password: WideString;
+    Name: WideString;
+    Surname: WideString;
+    Email: WideString;
+    Avatar: WideString;
+    Last_Date_Visit: WideString;
+    Last_Time_Visit: WideString;
+    Country: WideString;
+    Country_Code: WideString;
+    Genre: WideString;
+    Last_Game_Play: WideString;
+    Last_Emulator: WideString;
+    Total_Time_Play: WideString;
+  end;
+
+  type TUSER_ACCOUNT= record
+    data: TUSER_ACOUNT_DATABASE;
+
+  end;
+
+  //Register
+  procedure uUser_Account_CreateRegisteredUser;
+
+
+  var
+    user: TUSER_ACCOUNT;
+
+implementation
+uses
+  loading,
+  uLoad_AllTypes;
+
+////////////////////////////////////////////////////////////////////////////////
+//Register user to server procedures and functions
+procedure uUser_Account_CreateRegisteredUser;
+begin
+{  user.regist.Username:= Loading_Form.Loading_Register_Username_Edit.Text;
+  user.regist.Password:= Loading_Form.Loading_Register_Password_Edit.Text;
+  user.regist.Name:= Loading_Form.Loading_Register_Name_Edit.Text;
+  user.regist.Surname:= Loading_Form.Loading_Register_Surname_Edit.Text;
+  if Loading_Form.Loading_Register_Male_Radio.IsChecked then
+    user.regist.Gender:= 'Male'
+  else
+    user.regist.Gender:= 'Female';
+  user.regist.Avatar:= vAvatarNum;
+  user.regist.EMail:= Loading_Form.Loading_Register_EMail_Edit.Text;
+  user.regist.Captcha:= Loading_Form.Loading_Register_Captcha_Edit.Text;}
+end;
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+end.

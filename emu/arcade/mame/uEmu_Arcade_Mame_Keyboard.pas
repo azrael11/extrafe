@@ -30,7 +30,7 @@ begin
   if uSnippet_Search.vSearch.Actions.CanIType = False then
   begin
     if UpperCase(vKey) = 'ESC' then
-      uEmu_Arcade_Mame_Actions_Escape
+      uEmu_Arcade_Mame_Actions.Return
     else
     begin
       if extrafe.prog.State = 'mame_filters' then
@@ -54,11 +54,11 @@ begin
         else if UpperCase(vKey) = 'RIGHT' then
           uEmu_Arcade_Mame_Gamelist_PushRight
         else if UpperCase(vKey) = 'S' then
-          uEmu_Arcade_Mame_Actions_OpenSearch
+          uEmu_Arcade_Mame_Actions.Open_Search
         else if UpperCase(vKey) = 'Q' then
           uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration
         else if UpperCase(vKey) = 'F' then
-          uEmu_Arcade_Mame_Actions_OpenFilters
+          uEmu_Arcade_Mame_Actions.Open_Filters
         else if UpperCase(vKey) = 'M' then
           uEmu_Arcade_Mame_Actions_ChangeSnapMode
         else if UpperCase(vKey) = 'K' then
@@ -94,30 +94,26 @@ var
 begin
   if uVirtual_Keyboard.vKey.Options.vType = 'Search' then
   begin
-    if (UpperCase(vKey) <> 'ENTER') and (UpperCase(vKey) <> 'ESC') and (UpperCase(vKey) <> 'UP') and (UpperCase(vKey) <> 'DOWN') then
+    if (UpperCase(vKey) <> 'ENTER') and (UpperCase(vKey) <> 'ESC') and (UpperCase(vKey) <> 'UP') and (UpperCase(vKey) <> 'DOWN') and (UpperCase(vKey) <> 'LEFT')
+      and (UpperCase(vKey) <> 'RIGHT') then
     begin
       vFoundResult := False;
       vFoundDrop := False;
       vStringResult := uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text;
       if vStringResult = '' then
       begin
-        mame.Gamelist.Selected := vMame_Search_Current_Selected;
+        mame.Gamelist.Selected := mame.Gamelist.Search_Selected;
         uEmu_Arcade_Mame_Gamelist_Refresh;
-        uEmu_Arcade_Mame_Actions_ShowData;
-        uVirtual_Keyboard.vKey.Options.Drop_Num := -1;
-        uVirtual_Keyboard.vKey.Options.Drop_Current := -1;
-        for ri := 20 downto 0 do
-          if Assigned(uVirtual_Keyboard.vKey.Construct.Drop.Line_Back[ri]) then
-            FreeAndNil(uVirtual_Keyboard.vKey.Construct.Drop.Line_Back[ri]);
-        uVirtual_Keyboard.vKey.Construct.Drop.Back.Height := 0;
+        uEmu_Arcade_Mame_Actions.Show_Media;
+        uVirtual_Keyboard.Clear_Drop;
         uVirtual_Keyboard.vKey.Construct.Title.Text.Text := 'Search for a game';
       end
       else
       begin
         vIntegerResult := length(vStringResult);
-        for vi := 0 to mame.Gamelist.Games_Count do
+        for vi := 0 to mame.Gamelist.Games_Count-1 do
         begin
-          vGameName := Copy(mame.Gamelist.List[0, vi, 1], 0, vIntegerResult);
+          vGameName := Copy(mame.Gamelist.ListGames[vi], 0, vIntegerResult);
           if UpperCase(vStringResult) = UpperCase(vGameName) then
           begin
             vFoundResult := True;
@@ -128,27 +124,20 @@ begin
         if vFoundResult then
         begin
           mame.Gamelist.Selected := vi;
-          uVirtual_Keyboard.vKey.Construct.Title.Text.Text := 'Found "' + mame.Gamelist.List[0, vi, 1] + '"';
+          uVirtual_Keyboard.vKey.Construct.Title.Text.Text := 'Found "' + mame.Gamelist.ListGames[vi] + '"';
           inc(vi, 1);
           uEmu_Arcade_Mame_Gamelist_Refresh;
-          uEmu_Arcade_Mame_Actions_ShowData;
-          uVirtual_Keyboard.vKey.Options.Drop_Num := -1;
-          uVirtual_Keyboard.vKey.Options.Drop_Current := -1;
-          for ri := 20 downto 0 do
-          begin
-            if Assigned(uVirtual_Keyboard.vKey.Construct.Drop.Line_Back[ri]) then
-              FreeAndNil(uVirtual_Keyboard.vKey.Construct.Drop.Line_Back[ri]);
-          end;
-          uVirtual_Keyboard.vKey.Construct.Drop.Back.Height := 0;
+          uEmu_Arcade_Mame_Actions.Show_Media;
+          uVirtual_Keyboard.Clear_Drop;
           for ri := 0 to 20 do
           begin
-            vGameName := Copy(mame.Gamelist.List[0, vi + ri, 1], 0, vIntegerResult);
+            vGameName := Copy(mame.Gamelist.ListGames[vi + ri], 0, vIntegerResult);
             if UpperCase(vStringResult) = UpperCase(vGameName) then
             begin
               if ri = 20 then
                 uVirtual_Keyboard.Drop(ri, '...', '')
               else
-                uVirtual_Keyboard.Drop(ri, mame.Gamelist.ListRoms[vi + ri], user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'emu_mame.png');
+                uVirtual_Keyboard.Drop(ri, mame.Gamelist.ListGames[vi + ri], user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'emu_mame.png');
             end
           end;
         end
@@ -158,7 +147,7 @@ begin
           Delete(vStringResult, length(vStringResult), 1);
           uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text := vStringResult;
           uVirtual_Keyboard.vKey.Construct.Edit.Edit.SelStart := length(uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text);
-          // Put code what to do if result not found like (warning, sound etc)
+          BASS_ChannelPlay(mame.Sound.Effects[0], False);
         end;
 
       end;
@@ -167,9 +156,9 @@ begin
     begin
       if UpperCase(vKey) = 'ESC' then
       begin
-        mame.Gamelist.Selected := vMame_Search_Current_Selected;
+        mame.Gamelist.Selected := mame.Gamelist.Search_Selected;
         uEmu_Arcade_Mame_Gamelist_Refresh;
-        uEmu_Arcade_Mame_Actions_ShowData;
+        uEmu_Arcade_Mame_Actions.Show_Media;
         uVirtual_Keyboard.Animation(False);
       end
       else if UpperCase(vKey) = 'ENTER' then
@@ -197,44 +186,35 @@ end;
 
 procedure Search(vString: String);
 var
-  vIntegerResult: Integer;
   vGameName: String;
-  vi, ri: Integer;
-  vFoundResult: Boolean;
+  vi: Integer;
 begin
-
-  vFoundResult := False;
   if vString = '' then
   begin
-    mame.Gamelist.Selected := vMame_Search_Current_Selected;
-    vFoundResult := True;
+    mame.Gamelist.Selected := mame.Gamelist.Search_Selected;
+    uEmu_Arcade_Mame_Gamelist_Refresh;
+    uEmu_Arcade_Mame_Actions.Show_Media;
   end
   else
   begin
-    vIntegerResult := length(vString);
-    for vi := 0 to mame.Gamelist.Games_Count do
+    for vi := 0 to mame.Gamelist.Games_Count - 1 do
     begin
-      vGameName := Copy(mame.Gamelist.List[0, vi, 1], 0, vIntegerResult);
+      vGameName := Copy(mame.Gamelist.ListGames[vi], 0, length(vString));
       if UpperCase(vString) = UpperCase(vGameName) then
       begin
-        vFoundResult := True;
+        mame.Gamelist.Selected := vi;
+        uEmu_Arcade_Mame_Gamelist_Refresh;
+        uEmu_Arcade_Mame_Actions.Show_Media;
         Break
       end;
     end;
-    mame.Gamelist.Selected := vi;
-  end;
-
-  if vFoundResult then
-  begin
-    uEmu_Arcade_Mame_Gamelist_Refresh;
-    uEmu_Arcade_Mame_Actions_ShowData;
-  end
-  else
-  begin
-    Delete(vSearch.Actions.Search_Str, length(uSnippet_Search.vSearch.Actions.Search_Str), 1);
-    uSnippet_Search.vSearch.Scene.Edit.Text := uSnippet_Search.vSearch.Actions.Search_Str_Clear;
-    BASS_ChannelPlay(mame.Sound.Effects[0], False);
-    uSnippet_Search.vSearch.Actions.Str_Error := True;
+    if UpperCase(vString) <> UpperCase(vGameName) then
+    begin
+      Delete(vSearch.Actions.Search_Str, length(uSnippet_Search.vSearch.Actions.Search_Str), 1);
+      uSnippet_Search.vSearch.Scene.Edit.Text := uSnippet_Search.vSearch.Actions.Search_Str_Clear;
+      BASS_ChannelPlay(mame.Sound.Effects[0], False);
+      uSnippet_Search.vSearch.Actions.Str_Error := True;
+    end;
   end;
 end;
 

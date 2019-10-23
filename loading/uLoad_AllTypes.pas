@@ -222,7 +222,6 @@ type
     Active: Boolean;
     Active_Num: Integer;
     Active_Now_Num: Integer;
-    Total_Num: Integer;
     Active_PosNames: array [0 .. 255] of string;
     time: TADDON_TIME;
     calendar: TADDON_CALENDAR;
@@ -293,9 +292,9 @@ type
   /// Sound variables types
 
 type
-  TSOUND_FX= record
+  TSOUND_FX = record
     general: array [0 .. 128] of HSAMPLE;
-    virtual_keyboard: array [0 .. 128] of HSAMPLE;
+    Virtual_Keyboard: array [0 .. 128] of HSAMPLE;
   end;
 
 type
@@ -356,7 +355,7 @@ type
     Panel_Login_Error: TFloatAnimation;
     Panel_Login_Correct: TFloatAnimation;
     Panel_Shadow: TShadowEffect;
-    Last_Visit: TLabel;
+    Last_Visit: Tlabel;
     Avatar: TImage;
     User: Tlabel;
     User_V: TComboBox;
@@ -370,7 +369,7 @@ type
     Login: TButton;
     Exit_ExtraFE: TButton;
     CapsLock_Icon: TText;
-    CapsLock: TLabel;
+    CapsLock: Tlabel;
     Internet: Tlabel;
     Int_Icon: TText;
     Online_Database: Tlabel;
@@ -417,11 +416,11 @@ type
     Panel: TPanel;
     Data: TLOADING_REGISTER_MAIN_DATA;
     User: Tlabel;
-    User_Max: TLabel;
-    User_Online: TLabel;
+    User_Max: Tlabel;
+    User_Online: Tlabel;
     User_V: TEdit;
     Pass: Tlabel;
-    Pass_Max: TLabel;
+    Pass_Max: Tlabel;
     Pass_V: TEdit;
     Pass_Show: TText;
     Pass_Show_Glow: TGlowEffect;
@@ -430,7 +429,7 @@ type
     RePass_Show: TText;
     RePass_Show_Glow: TGlowEffect;
     Email: Tlabel;
-    Email_Online: TLabel;
+    Email_Online: Tlabel;
     Email_V: TEdit;
     ReEmail: Tlabel;
     ReEmail_V: TEdit;
@@ -607,8 +606,11 @@ end;
 
 procedure TGLOBAL_MOUSE_CLOSE.OnClick(Sender: TObject);
 begin
-  extrafe.prog.State := vHeader.Incoming_Blur.TagString;
-  vHeader.Incoming_Blur.Enabled := False;
+  if vHeader.Incoming_Blur <> nil then
+  begin
+    extrafe.prog.State := vHeader.Incoming_Blur.TagString;
+    vHeader.Incoming_Blur.Enabled := False;
+  end;
   FreeAndNil(vHeader.Panel);
   FreeAndNil(vHeader.Incoming_Panel);
 end;

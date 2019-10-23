@@ -35,6 +35,8 @@ uses
   uWindows,
   uWeather_SetAll,
   uDatabase_ActiveUser,
+  uDatabase,
+  uDatabase_SQLCommands,
   uAzHung_AllTypes,
   uWeather_Providers_Yahoo,
   uWeather_Providers_Yahoo_Config,
@@ -74,7 +76,7 @@ begin
 
   if addons.Active then
   begin
-    for vi := 0 to addons.Total_Num do
+    for vi := 0 to user_Active_Local.ADDONS.Active do
     begin
       case vi of
         0:
@@ -300,8 +302,38 @@ begin
 end;
 
 procedure uLoad_Addons_Weather_Load;
+var
+  vQuery: String;
 begin
-  addons.weather.ini.Path := extrafe.prog.Path + 'data\addons\weather\';
+
+  vQuery := 'SELECT * FROM ADDON_WEATHER WHERE USER_ID='+ user_Active_Local.Num.ToString;
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Add(vQuery);
+  ExtraFE_Query_Local.ExecSQL;
+  ExtraFE_Query_Local.Open;
+
+  user_Active_Local.ADDONS.Weather_D.Menu_Position := ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
+  user_Active_Local.ADDONS.Weather_D.First_Pop := ExtraFE_Query_Local.FieldByName('FIRST_POP').AsBoolean;
+  user_Active_Local.ADDONS.Weather_D.Old_Backup := ExtraFE_Query_Local.FieldByName('OLD_BACKUP').AsBoolean;
+  user_Active_Local.ADDONS.Weather_D.Provider_Count := ExtraFE_Query_Local.FieldByName('PROVIDER_COUNT').AsInteger;
+  user_Active_Local.ADDONS.Weather_D.Provider := ExtraFE_Query_Local.FieldByName('PROVIDER').AsString;
+  user_Active_Local.ADDONS.Weather_D.Yahoo.Iconset_Count := ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET_COUNT').AsInteger;
+  user_Active_Local.ADDONS.Weather_D.Yahoo.Iconset := ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET').AsString;
+  user_Active_Local.ADDONS.Weather_D.Yahoo.Towns_Count := ExtraFE_Query_Local.FieldByName('YAHOO_TOWNS').AsInteger;
+  user_Active_Local.ADDONS.Weather_D.Yahoo.System := ExtraFE_Query_Local.FieldByName('YAHOO_SYSTEM').AsString;
+  user_Active_Local.ADDONS.Weather_D.Yahoo.Degree := ExtraFE_Query_Local.FieldByName('YAHOO_DEGREE_TYPE').AsString;
+  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Count := ExtraFE_Query_Local.FieldByName('OWM_ICONSET_COUNT').AsInteger;
+  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Iconset := ExtraFE_Query_Local.FieldByName('OWM_ICONSET').AsString;
+  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count := ExtraFE_Query_Local.FieldByName('OWM_TOWNS').AsInteger;
+  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.System := ExtraFE_Query_Local.FieldByName('OWM_SYSTEM').AsString;
+  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Degree := ExtraFE_Query_Local.FieldByName('OWM_DEGREE_TYPE').AsString;
+  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.API := ExtraFE_Query_Local.FieldByName('OWM_API').AsString;
+  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Language := ExtraFE_Query_Local.FieldByName('OWM_LANGUAGE').AsString;
+
+
+
+  {addons.weather.ini.Path := extrafe.prog.Path + 'data\addons\weather\';
   addons.weather.ini.Name := 'weather.ini';
   addons.weather.ini.ini := TIniFile.Create(addons.weather.ini.Path + addons.weather.ini.Name);
 
@@ -317,7 +349,7 @@ begin
   addons.weather.Action.First := addons.weather.ini.ini.ReadBool('General', 'First', addons.weather.Action.First);
   addons.weather.Action.Provider := addons.weather.ini.ini.ReadString('Provider', 'Name', addons.weather.Action.Provider);
   addons.weather.Action.Provider_Total := addons.weather.ini.ini.ReadInteger(addons.weather.Action.Provider, 'total', addons.weather.Action.Provider_Total);
-  addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
+  addons.weather.Action.Active_WOEID := addons.weather.ini.ini.ReadInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);}
 
   // Yahoo specific
   uWeather_Providers_Yahoo_Config.Load_Config;

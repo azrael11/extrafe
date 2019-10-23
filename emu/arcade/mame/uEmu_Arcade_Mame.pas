@@ -5,15 +5,12 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  FMX.Forms,
-  FMX.Types,
-  OXmlPDOM;
+  FMX.Types;
 
-procedure uEmu_Arcade_Mame_Load;
-procedure uEmu_Arcade_Mame_Loading;
-procedure uEmu_Arcade_Mame_Display_Main;
+procedure Load;
+procedure Main;
 
-Procedure uEmu_Arcade_Mame_Exit;
+Procedure Exit;
 
 implementation
 
@@ -22,30 +19,17 @@ uses
   uEmu_Actions,
   uEmu_Arcade_Mame_SetAll,
   uEmu_Arcade_Mame_AllTypes,
-  uEmu_Arcade_Mame_Game_SetAll,
   uEmu_Arcade_Mame_Support_Files,
-  uEmu_Arcade_Mame_Ini,
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_Actions,
-  uEmu_Arcade_Mame_Filters,
-  uEmu_Arcade_Mame_Config,
   uEmu_Arcade_Mame_Sounds;
 
-procedure uEmu_Arcade_Mame_Loading;
-begin
-//  Application.ProcessMessages;
-  uEmu_Arcade_Mame_Ini_Load;
-//  uEmu_Arcade_Mame_Ini_GetMediaPaths;
-  // mame.Gamelist.Games:= CreateXMLDoc;
-  // mame.Gamelist.Games.LoadFromFile(mame.Prog.Data_Path+ mame.Prog.Games_XML);
-end;
 
-procedure uEmu_Arcade_Mame_Load;
+procedure Load;
 var
   vi: integer;
 begin
   extrafe.prog.State := 'mame';
-//  emulation.Active_Num := 0;
 
   // Timers
   mame.Timers.Gamelist := TEMU_GAMELISTS_TIMER.Create(vMame.Scene.Main);
@@ -60,20 +44,16 @@ begin
   mame.Gamelist.Timer.Enabled := False;
   mame.Gamelist.Timer.OnTimer := mame.Timers.Gamelist.OnTimer;
 
-  // Create Main Scene
-//  uEmu_Arcade_Mame_Filters_Ini;
-//  uEmu_Arcade_Mame_Filters_Load_Filter('All_Unfiltered');
-
   uEmu_Arcade_Mame_Support_Load;
 
-  uEmu_Arcade_Mame_SetAll_Set;
-  uEmu_Arcade_Mame_Display_Main;
+  uEmu_Arcade_Mame_SetAll.Load;
+  Main;
 
   //Sounds
   uEmu_Arcade_Mame_Sounds.Load;
 end;
 
-procedure uEmu_Arcade_Mame_Display_Main;
+procedure Main;
 var
   vi, ti, ri: integer;
   iPos: integer;
@@ -85,13 +65,13 @@ begin
   uEmu_Arcade_Mame_Gamelist_Refresh;
   vGamesInfoCount := IntToStr(mame.Gamelist.Selected + 1) + '/' + IntToStr(mame.Gamelist.Games_Count);
   vMame.Scene.Gamelist.T_Games_Count_Info.Text := vGamesInfoCount;
-  mame.Main.SnapCategory := 'Video Snaps';
+  mame.Main.SnapCategory := 'Snapshots';
   mame.Main.SnapMode := 'arcade';
   mame.Main.SnapCategory_Num := 0;
-  uEmu_Arcade_Mame_Actions_ShowData;
+  uEmu_Arcade_Mame_Actions.Show_Media;
 end;
 
-Procedure uEmu_Arcade_Mame_Exit;
+Procedure Exit;
 begin
   FreeAndNil(vMame.Scene.Main);
   uEmu_Arcade_Mame_Sounds.Unload;

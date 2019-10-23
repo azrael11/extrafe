@@ -1,0 +1,110 @@
+unit uMain_Config_Emulation_Arcade_Scripts_Mouse;
+
+interface
+
+uses
+  System.Classes,
+  System.UiTypes,
+  FMX.Objects,
+  FMX.StdCtrls,
+  FMX.TabControl,
+  BASS;
+
+type
+  TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_ACTIONS = record
+    Button: TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON;
+    Radio: TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO;
+  end;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uMain_AllTypes,
+  uMain_Config_Emulation_Arcade_Scripts_Mame_Install,
+  uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall;
+
+{ TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON }
+
+procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON.OnMouseClick(Sender: TObject);
+begin
+  BASS_ChannelPlay(sound.str_fx.general[0], False);
+
+{Mame Actions}
+  {Mame Install Actions}
+  if TButton(Sender).Name = 'Script_Mame_Install_Main_Cancel' then
+    uEmulation_Arcade_Mame_Install_Free
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Next' then
+    uEmulation_Arcade_Mame_Install_Slide_To_Next
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Back' then
+    uEmulation_Arcade_Mame_Install_Slide_To_Previous
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Tab3_Find' then
+    Script_Mame_Install.Main.Tab3.Open_Dialog.Execute
+  else if TButton(Sender).Name = 'Script_Mame_Install_Main_Start_Computer' then
+    uEmulation_Arcade_Mame_Install_Start_FromComputer
+  {Mame UnInstall Actions}
+  else if (TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Cancel') or (TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Tab2_Cancel') then
+    uEmulation_Arcade_Mame_Uninstall_Free
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Next' then
+    uEmulation_Arcade_Mame_Uninstall_Slide_To_Next
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Back' then
+    uEmulation_Arcade_Mame_Uninstall_Slide_To_Previous
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Remove' then
+    uEmulation_Arcade_Mame_Uninstall_Remove
+  else if TButton(Sender).Name = 'Script_Mame_Uninstall_Main_Final' then
+    uEmulation_Arcade_Mame_Uninstall_Final;
+{End Of Mame Actions}
+end;
+
+procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON.OnMouseEnter(Sender: TObject);
+begin
+  TButton(Sender).Cursor := crHandPoint;
+end;
+
+procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+{ TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO }
+
+procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+initialization
+
+ex_main.Input.mouse_script_arcade.Button := TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_BUTTON.Create;
+ex_main.Input.mouse_script_arcade.Radio := TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_RADIO.Create;
+
+finalization
+
+ex_main.Input.mouse_script_arcade.Button.Free;
+ex_main.Input.mouse_script_arcade.Radio.Free;
+
+end.

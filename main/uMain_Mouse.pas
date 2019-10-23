@@ -177,17 +177,29 @@ begin
     else
     begin
       uTime_Actions.Free;
-      if Assigned(vTime.Time_Ani) then
-        vTime.Time_Ani.Enabled := False;
-      uWeather_Actions.Free;
-      if Assigned(vWeather.Scene.Weather_Ani) then
-        vWeather.Scene.Weather_Ani.Enabled := False;
-      uSoundplayer.Free;
-      if Assigned(vSoundplayer.Scene.Soundplayer_Ani) then
-        vSoundplayer.Scene.Soundplayer_Ani.Enabled := False;
-      uPlay_Actions_Free;
-      if Assigned(vPlay.Main_Ani) then
-        vPlay.Main_Ani.Enabled := False;
+      if extrafe.prog.State = 'addon_time' then
+      begin
+        if Assigned(vTime.Time_Ani) then
+          vTime.Time_Ani.Enabled := False;
+      end
+      else if extrafe.prog.State = 'addon_weather' then
+      begin
+        uWeather_Actions.Free;
+        if Assigned(vWeather.Scene.Weather_Ani) then
+          vWeather.Scene.Weather_Ani.Enabled := False;
+      end
+      else if extrafe.prog.State = 'addon_soundplayer' then
+      begin
+        uSoundplayer.Free;
+        if Assigned(vSoundplayer.Scene.Soundplayer_Ani) then
+          vSoundplayer.Scene.Soundplayer_Ani.Enabled := False;
+        uPlay_Actions_Free;
+      end
+      else if extrafe.prog.State = 'addon_play' then
+      begin
+        if Assigned(vPlay.Main_Ani) then
+          vPlay.Main_Ani.Enabled := False;
+      end;
     end;
   end
   else if TFloatAnimation(Sender).Name = 'Main_Config_Ani' then

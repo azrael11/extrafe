@@ -10,7 +10,7 @@ uses
   FMX.Listbox,
   FMX.Objects;
 
-  procedure uEmu_Arcade_Mame_Config_Create_Display_Panel;
+  procedure Load;
   function uEmu_Arcade_Mame_Config_Display_ShowVideoMode(vVideoMode: String): Integer;
   function uEmu_Arcade_Mame_Config_Display_SetVideoMode(vVideoMode: Integer): String;
   function uEmu_Arcade_Mame_Config_Display_ShowRotation(vRotation, vClockwise, vAnticlockwise, vAutoClockwise, vAutoAntiClockwise: Boolean): integer;
@@ -24,7 +24,7 @@ implementation
 uses
   uEmu_Arcade_Mame_AllTypes;
 
-procedure uEmu_Arcade_Mame_Config_Create_Display_Panel;
+procedure Load;
 begin
   vMame.Config.Panel.Display.Labels[0]:= TLabel.Create(vMame.Config.Scene.Right_Panels[1]);
   vMame.Config.Panel.Display.Labels[0].Name:= 'Mame_Display_InfoLabel_1';

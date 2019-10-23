@@ -1,0 +1,12 @@
+unit uMain_Config_Emulation_Consoles_Nes_Install;
+
+interface
+uses
+  System.Classes;
+
+
+procedure Choose_Emulator;
+
+implementation
+
+end.

@@ -1,0 +1,44 @@
+unit uLoad_Forgat;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  FMX.Types;
+
+procedure Send_Pass_WithEmail(vEmail: string);
+procedure Cancel;
+
+procedure Update_Email(vEmail: String);
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uLoad_SetAll,
+  uInternet_Files;
+
+procedure Cancel;
+begin
+  FreeAndNil(ex_load.F_Pass.Panel);
+  uLoad_SetAll_Login;
+  ex_load.Login.Pass_V.Text := '';
+end;
+
+procedure Send_Pass_WithEmail(vEmail: string);
+begin
+  if uInternet_Files.Send_HTML_Email(vEmail, 'forgat_password') then
+    Cancel
+  else
+    ex_load.F_Pass.Main.Warning.Visible := True;
+end;
+
+procedure Update_Email(vEmail: String);
+begin
+  if uInternet_Files.ValidEmail(vEmail) then
+    ex_load.F_Pass.Main.Email_V.TextSettings.FontColor:= TAlphaColorRec.Red;
+end;
+
+end.

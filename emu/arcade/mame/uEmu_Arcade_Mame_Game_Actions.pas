@@ -25,6 +25,7 @@ uses
   emu,
   uLoad_AllTypes,
   uEmu_Commands,
+  uEmu_Arcade_Mame_SetAll,
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_Game_SetAll;
@@ -54,12 +55,7 @@ var
   romName: WideString;
 begin
   romName := mame.Gamelist.ListRoms[mame.Gamelist.Selected];
-  vMame.Scene.Load_Game.Visible := True;
-  vMame.Scene.Load_Game_Line2.Text := mame.Gamelist.ListRoms[mame.Gamelist.Selected];
-  vMame_Game_Info_Back.Visible := False;
-  vMame.Scene.Left_Blur.Enabled := True;
-  vMame.Scene.Right_Blur.Enabled := True;
-  vMame.Scene.Gamelist.List.Visible := False;
+  uEmu_Arcade_Mame_SetAll.Create_Loading_Game;
   case mame.Game.Menu_Selected of
     0:
       fEmu_Commands_RunGame(emulation.Arcade[0].Name_Exe, romName, emulation.Arcade[0].Emu_Path, 0);
@@ -76,11 +72,7 @@ begin
     6:
       ;
   end;
-  vMame.Scene.Load_Game.Visible := False;
-  vMame_Game_Info_Back.Visible := True;
-  vMame.Scene.Left_Blur.Enabled := False;
-  vMame.Scene.Right_Blur.Enabled := False;
-  vMame.Scene.Gamelist.List.Visible := True;
+  uEmu_Arcade_Mame_SetAll.Free_Loading_Game;
 end;
 
 procedure uEmu_Arcade_Mame_Game_Actions_ArrowUp;

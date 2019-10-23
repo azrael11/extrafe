@@ -1,0 +1,71 @@
+unit uLoad_Font;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  WinApi.Windows,
+  WinApi.Messages,
+  FMX.Dialogs;
+
+procedure Load;
+procedure UnLoad;
+
+implementation
+uses
+  uLoad_AllTypes;
+procedure Load;
+var
+  vi: integer;
+begin
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'rope.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + '8bit.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'mellow.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'contro.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock2.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  vi := AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'icomoon.ttf'));
+  if vi= 0 then
+  ShowMessage('Icomoon font is loaded')
+else
+  ShowMessage('IcoMoon not loaded {Message : '+ vi.ToString +'}');
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+//  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'IcoMoon-Free.ttf'));
+//  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'linear.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  AddFontResource(PChar(extrafe.prog.Paths.Fonts + 'awesome.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+end;
+
+procedure UnLoad;
+begin
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'rope.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + '8bit.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'mellow.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'contro.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'clock2.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+//  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'icomoon.ttf'));
+//  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+//  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'IcoMoon-Free.ttf'));
+//  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'linear.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+  RemoveFontResource(PChar(extrafe.prog.Paths.Fonts + 'awesome.ttf'));
+  SendMessage(HWND_BROADCAST, WM_FONTCHANGE, 0, 0);
+end;
+
+end.

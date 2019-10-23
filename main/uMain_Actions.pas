@@ -65,7 +65,7 @@ begin
         mainScene.Footer.Back_Ani.Enabled := True;
         Set_Addon_Icon_Active(vNum);
         extrafe.prog.State := 'addon_' + mAddonName;
-        BASS_ChannelPlay(sound.str_fx.general[0], False);
+        BASS_ChannelPlay(sound.str_fx.general[10], False);
       end
       else
       begin
@@ -83,7 +83,7 @@ begin
           if mShow = 'addon_time' then
             vTime.Time_Ani.Enabled := True
           else if mShow = 'addon_calendar' then
-            // vCalendar.Calendar_Ani.Enabled:= True
+//            vCalendar.Calendar_Ani.Enabled:= True
           else if mShow = 'addon_weather' then
             vWeather.Scene.Weather_Ani.Enabled := True
           else if mShow = 'addon_soundplayer' then
@@ -92,7 +92,7 @@ begin
           All_Icons_Active(vNum);
           extrafe.prog.State := 'main';
         end;
-        BASS_ChannelPlay(sound.str_fx.general[1], False);
+        BASS_ChannelPlay(sound.str_fx.general[11], False);
       end;
   end;
 end;
@@ -103,14 +103,15 @@ var
 begin
   for vi := 0 to user_Active_Local.ADDONS.Active do
   begin
-    mainScene.Header.Addon_Icons[vi].Scale.X := 0.9;
-    mainScene.Header.Addon_Icons[vi].Scale.Y := 0.9;
+    mainScene.Header.Addon_Icons[vi].Scale.X := 0.6;
+    mainScene.Header.Addon_Icons[vi].Scale.Y := 0.6;
+    mainScene.Header.Addon_Icons[vi].Align:= TAlignLayout.Center;
     mainScene.Header.Addon_Icons_GaussianBlur[vi].Enabled := True;
   end;
 
-  mainScene.Header.Addon_Icons[vNum].Scale.X := 1.1;
-  mainScene.Header.Addon_Icons[vNum].Scale.Y := 1.1;
-  mainScene.Header.Addon_Icons[vNum].Position.X := mainScene.Header.Addon_Icons[vNum].Position.X - 6;
+  mainScene.Header.Addon_Icons[vNum].Scale.X := 1.2;
+  mainScene.Header.Addon_Icons[vNum].Scale.Y := 1.2;
+  mainScene.Header.Addon_Icons[vNum].Align := TAlignLayout.Center;
   mainScene.Header.Addon_Icons_GaussianBlur[vNum].Enabled := False;
   ADDONS.Active_Now_Num := vNum;
 end;
@@ -119,14 +120,13 @@ procedure All_Icons_Active(vNum: Integer);
 var
   vi: Integer;
 begin
-  for vi := 0 to ADDONS.Total_Num do
+  for vi := 0 to user_Active_Local.ADDONS.Active do
   begin
     mainScene.Header.Addon_Icons[vi].Scale.X := 1;
     mainScene.Header.Addon_Icons[vi].Scale.Y := 1;
     mainScene.Header.Addon_Icons_GaussianBlur[vi].Enabled := False;
   end;
 
-  mainScene.Header.Addon_Icons[vNum].Position.X := mainScene.Header.Addon_Icons[vNum].Position.X + 6;
   ADDONS.Active_Now_Num := -1;
 end;
 /// /////////////////////////////////////////////////////////////////////////////

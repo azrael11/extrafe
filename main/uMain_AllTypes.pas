@@ -63,8 +63,8 @@ type
 
 type
   TMAIN_SOUNDS = record
-    effects: array [0..100] of HSAMPLE;
-    mouse : array [0..100] of HSAMPLE;
+    Effects: array [0 .. 100] of HSAMPLE;
+    mouse: array [0 .. 100] of HSAMPLE;
   end;
 
 type
@@ -116,6 +116,7 @@ type
     Minimize_Grey: TMonochromeEffect;
     Avatar: TImage;
     Avatar_Glow: TGlowEffect;
+    Addon_Icons_Frame: array [0 .. 9] of TLayout;
     Addon_Icons: array [0 .. 9] of TText;
     Addon_Icons_Glow: array [0 .. 9] of TGlowEffect;
     Addon_Icons_GaussianBlur: array [0 .. 9] of TGaussianBlurEffect;
@@ -163,7 +164,7 @@ type
 type
   TMAIN_CONFIG_PROFILE_USER_AVATAR_MAIN = record
     Panel: TPanel;
-    Control : TTabControl;
+    Control: TTabControl;
     Tabs: array of TTabItem;
     Avatar: array of TImage;
     Avatar_Glow: array of TGlowEffect;
@@ -275,7 +276,7 @@ type
 type
   TMAIN_CONFIG_PROFILE_MACHINE = record
     Panel: TPanel;
-    OS : TCONFIG_PROFILE_MACHINE_OS;
+    OS: TCONFIG_PROFILE_MACHINE_OS;
     Net: TCONFIG_PROFILE_MACHINE_INTERNET;
   end;
 
@@ -521,8 +522,8 @@ type
   end;
 
 type
-  TMAIN_ANIMATION= class(TObject)
-    procedure OnFinish(Sender: TOBject);
+  TMAIN_ANIMATION = class(TObject)
+    procedure OnFinish(Sender: TObject);
   end;
 
 type
@@ -539,9 +540,10 @@ var
   mainScene: TMAIN_SCENE;
 
 implementation
+
 uses
-  emu,
-  main,
+  Emu,
+  Main,
   uEmu_Actions,
   uLoad_AllTypes;
 
@@ -562,7 +564,7 @@ end;
 
 { TMAIN_ANIMATION }
 
-procedure TMAIN_ANIMATION.OnFinish(Sender: TOBject);
+procedure TMAIN_ANIMATION.OnFinish(Sender: TObject);
 begin
   if TFloatAnimation(Sender).Name = 'Main_Down_Animation' then
   begin
