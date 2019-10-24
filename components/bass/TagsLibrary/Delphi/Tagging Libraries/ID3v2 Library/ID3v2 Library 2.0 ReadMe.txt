@@ -1,0 +1,418 @@
+ID3v2 Library 2.0 - Copyright © 2010-2016 3delite. All rights reserved.
+=======================================================================
+
+What's the point?
+=================
+
+ID3v2 Library is a component for use in Win32 (9x/ME/2K/XP/Vista/7/8), Win64, OSX, iOS and Android software.
+Reads and writes ID3v1, Lyrics3v2 and ID3v2.3, ID3v2.4 tags.
+
+Features:
+
+- Loading of ID3v1, Lyrics3v2, ID3v2.2, ID3v2.3 and ID3v2.4 tags
+- Saving of ID3v1, Lyrics3v2, ID3v2.3 and ID3v2.4 tags
+- iTunes compatible reading-writing for WAV (including RF64) and AIFF/AIFC ID3v2 tags
+- Support of DSD .dsf and .dff audio files
+- Pure Delphi code, no external dependencies
+- Supports unsynchronisation
+- Supports compression/decompression of frames
+- Access directly all frames as a TMemoryStream (full controll of the frame contents)
+- Full unicode support
+- Delphi XE2 64bit and OSX, Delphi XE5 iOS and Android compatible
+- Cross platform FireMonkey example included
+
+You should also see the included example program Tutorial's source-code for example of how to use ID3v2 Library in your own programs.
+
+For a complete specification of ID3v2 see:
+http://www.id3.org/Developer_Information
+http://www.id3.org/id3v2.4.0-structure
+http://www.id3.org/id3v2.4.0-frames
+
+NOTE: Old ID3v2.2 Tags (with 3 character frame names) are only supported for reading.
+
+If you are interested in APEv2 tagging unit also, please follow the following link:
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/APEv2Library.html
+
+If you are interested in MP4 tagging unit, please follow this link:
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/MP4TagLibrary.html
+
+If you are interested in Ogg Vorbis and Opus Tag Library unit, please follow this link:
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/OpusTagLibrary.html
+
+If you are interested in Flac Tag Library unit, please follow this link:
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/FlacTagLibrary.html
+
+If you are interested in WMA Library unit, please follow this link:
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/WMATagLibrary.html
+
+If you are interested in WAV Tag Library unit, please follow this link:
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/WAVTagLibrary.html
+
+ID3v2 Library is also available as a part of Tags Library:
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/TagsLibrary.html
+
+
+Requirements:
+=============
+
+Delphi 2009 and above.
+
+
+Unicode functions:
+==================
+
+The unicode functions all support all the 4 encoding modes (ASCII format ISO-8859-1, UTF-16 with BOM, UTF-16BE without BOM, UTF-8) in tags and return (converted to) UTF-16 (native Delphi 2009 and above) strings.
+The functions write (native Delphi 2009 and above) UTF-16 with BOM strings to tags.
+If you need other encoding modes please contact me.
+If you find a file with tags that the library doesn't parse properly also please contact me (3delite@3delite.hu).
+
+
+ID3v2.4:
+========
+
+If you want to for example convert ID3v2.3 to ID3v2.4 then set the MajorVersion property to 4, and save the tag. The tag will be written as ID3v2.4.
+
+
+Notes for WAV and AIFF files:
+=============================
+
+If you come across WAV and AIFF files where the ID3v2 tag is at the beginning of the file, ID3v2 Library will read it (as this is the case for MP3 files too) and write the tag at the beginning too.
+If you want to write the ID3v2 tag into the file, as this is the prefered mode, use ID3v2RemoveTag() and then the SaveToFile() method. You can check if the tag is at the beginning with property 'Position', will report '0'.
+
+
+Latest Version:
+===============
+
+The latest version of ID3v2 Library can always be found at 3delite's website:
+
+http://www.3delite.hu/Object%20Pascal%20Developer%20Resources/id3v2library.html
+
+
+Known bugs:
+===========
+
+The FireMonkey tutorial has a bug when displaying, in the "all frames" section, a large frame may give an "invalid floating point operation" error.
+This is a possible bug in the FireMonkey's TMemo component, ID3v2 Library is working properly regardless of this.
+
+
+Copyright, Disclaimer, and all that other jazz
+==============================================
+
+This software is provided "as is", without warranty of ANY KIND, either expressed or implied, including but not limited to the implied warranties of merchantability and/or fitness for a particular purpose. The author shall NOT be held liable for ANY damage to you, your computer, or to anyone or anything else, that may result from its use, or misuse. Basically, you use it at YOUR OWN RISK.
+
+Usage of ID3v2 Library indicates that you agree to the above conditions.
+
+You may freely distribute the ID3v2 Library package as long as NO FEE is charged and all the files remain INTACT AND UNMODIFIED.
+
+All trademarks and other registered names contained in the ID3v2 Library package are the property of their respective owners.
+
+
+ID3v2 Library in shareware and commercial software?
+===================================================
+
+You can use this component in your free programs for free (non money making use). If like it and use it for shareware or commercial (or money making) you have to buy a license.
+
+Shareware License: €50, for usage of the component in an unlimited number of your shareware software.
+
+http://www.shareit.com/product.html?productid=300184607
+
+Commercial License: €250, for usage of the component in a single commercial product.
+
+http://www.shareit.com/product.html?productid=300184612
+
+In all cases there are no royalties to pay, and you can use all future updates without further cost, all you need to do is just obtain the newest version.
+
+There is a discount when purchasing ID3v2 Library and the other tagging libraries together. Please checkmark the other libraries on the order page when purchasing ID3v2 Library to get this discount.
+
+If none of these licenses match your requirements, or if you have any questions, get in touch (3delite@3delite.hu).
+
+
+Installation:
+=============
+
+Add the directory to the search path, and to Uses list add: ID3v1Library and/or ID3v2Library.
+
+
+Credits
+=======
+
+C++ Builder tutorial by Robert Jackson (hsialinboy@yahoo.com)
+DFF properties parsing code by niecn (niecn@163.com)
+
+
+Bug reports, Suggestions, Comments, Enquiries, etc...
+=====================================================
+
+If you have any of the aforementioned please email:
+
+3delite@3delite.hu
+
+
+History
+=======
+
+2.0 11/09/2010
+--------------
+First release.
+
+2.0.3.2 02/02/2011
+------------------
+*Fixed when loading an old ID3v2.2 tag doesn't fail but reports an ID3V2LIBRARY_ERROR_NOT_SUPPORTED_VERSION error
+
+2.0.3.3 04/02/2011
+------------------
+*Fixed when saving ID3v2.3 tag a false stream length value was written
+
+2.0.3.4 05/02/2011
+------------------
+*Fixed when trying saving not supported ID3v2 tag version an ID3V2LIBRARY_ERROR_NOT_SUPPORTED_VERSION is given back
++RemoveTag is more compatible, supports removing ID3v2.2 tag and all versions if they obey the specification
+
+2.0.3.5 07/02/2011
+------------------
++Moved RemoveTag() to a separate function (no need for an object) new name ID3v2RemoveTag() and ID3v1RemoveTag()
+
+2.0.3.6 15/02/2011
+------------------
+*Fixed ID3v2 tag size with compressed frames
+
+2.0.4.7 18/02/2011
+------------------
++ID3v2.3 with extended headers are read, but saved back without extended header
++ID3v2.4 with extended headers are possibly read partially, but saved back without extended header
+
+2.0.5.8 30/09/2011
+------------------
+*Fixed ID3v1 exception on an invalid genre
++OSX support
++FireMonkey example application
+
+2.0.6.12 10/02/2012
+-------------------
+*Fixed saving ID3v2 Tag to a locked file returns an error and no temporary files are left
+*Fixed loading frames with set flags on Win64
++A little clean up of saving code
+
+2.0.8.18 27/02/2012
+-------------------
++ iTunes compatible reading-writing-removing for WAV and AIFF ID3v2 tags
+
+2.0.9.24 05/03/2012
+-------------------
+*The URL managing functions are modified:
+The GetUnicodeURL() and SetUnicodeURL() functions are to be used for official URL frames (WCOM, WCOP, etc.).
+The old GetUnicodeURL() and SetUnicodeURL() is now called GetUnicodeUserDefinedURLLink() (for WXXX).
++Added functions for TXXX frames:
+        function FindCustomFrame(FrameID: AnsiString; Description: String): Integer;
+        function GetUnicodeUserDefinedTextInformation(FrameIndex: Integer; var Description: String): String;
+        function SetUnicodeUserDefinedTextInformation(FrameIndex: Integer; Description: String; Text: String): Boolean;
+The 1. is to make things easier. Use FindCustomFrame() with a Description you are looking for and if there is such a frame it will give you an index to be used with GetUnicodeUserDefinedTextInformation() and SetUnicodeUserDefinedTextInformation().
+*Fixed geting unicode descriptions now are returned without a BOM
++Added popularimeter functions
++Added support for AIFC (compressed AIFF) files
+
+2.0.10.26 11/04/2012
+--------------------
+*Fixed writing corrupted tag when frame's data size was 0 (everything beyond the frame was lost)
+*Fixed remove ID3v2 tag function when theres wasn't a tag
+*Fixed removing ID3v2 tag leaving the previous file
+
+2.0.11.28 22/04/2012
+--------------------
++New function Assign()
++New functions for geting/seting UFID frames
++New functions for geting/seting TXXX frames 
++New functions for "list type" frames
++Renamed functions for "time type" (GetRecordingTime()) frames now named GetTime(), SetTime()
++New function ID3v2DecodeTimeToNumbers() for using with the above function
++New functions for COMM frames: FindUnicodeCommentByDescription(), SetUnicodeCommentByDescription()
+
+2.0.12.32 10/06/2012
+--------------------
+*If writing a tag (or creating) to a file which is locked (opened by some process) and tag doesn't fit and needs a new file to be created, error code ID3V2LIBRARY_ERROR_NEED_EXCLUSIVE_ACCESS is given back
+*When writing a tag (or creating) to WAV and AIFF files and total file size exceeds the 4GB (32bit) limit, error code ID3V2LIBRARY_ERROR_DOESNT_FIT is given back
++Reading & writing for RF64 WAV files (WAV files larger than 4GB)
++Function to convert the error code to a text string
+
+2.0.13.33 20/01/2013
+--------------------
+* Fixed reading of corrupt tags when a tag size is reported larger then the whole tag size
+
+2.0.14.34 07/03/2013
+--------------------
++ Added basic reading support for ID3v2.2 tags, when saved they will be converted to ID3v2.3 (or ID3v2.4 if MajorVersion is set to 4)
+
+2.0.15.37 08/03/2013
+--------------------
++ Fixed saving back ID3v2.2 tags
+
+2.0.16.38 09/03/2013
+--------------------
++ Added support for writing frame encryption flag and byte and grouping flag and byte for ID3v2.3 tags
+
+2.0.17.39 20/04/2013
+--------------------
++ Added Lyrics3v2 loading/saving option to TID3v1Tag class 
++ Added new ID3v2 function GetUnicodeCoverPictureInfo()
+
+2.0.18.46 19/05/2013
+--------------------
++ Added function to get/set multiple values for Txxx frames
++ Added function to get/set multiple values for TXXX frames
+* Fixed reading WAV and AIFF tags
+
+2.0.20.50 29/05/2013
+--------------------
++ Fixed reading UTF8 tags
+
+2.0.21.51 03/06/2013
+--------------------
++ Fixed reading tags endless loop when there is no zero ending character
+
+2.0.22.52 08/07/2013
+--------------------
++ Added "ReturnNativeText" mode for function GetUnicodeText to return undecoded UTF8 fields
+* Fixed SaveToFile() return value if a file couldn't be opened
+
+2.0.23.58 31/10/2013
+--------------------
++ Added support for Delphi XE5 iOS and Android build target
+
+2.0.24.59 02/11/2013
+--------------------
+* Fixed returning ANSI field values with the system locale character set
+
+2.0.25.60 09/11/2013
+--------------------
+* Fixed some functions to set the tag
+* Fixed tutorial .exes
+
+2.0.26.61 16/11/2013
+--------------------
+* Fixed SetUserDefinedURLLink(), SetUserDefinedTextInformation() and SetPopularimeter() functions
+
+2.0.26.62 01/12/2013
+--------------------
+* Fixed ID3v1 0s after the tag field values
+
+2.0.26.63 04/12/2013
+--------------------
+* Fixed ID3v1 tag field values when their length is equal to max. length
+
+2.0.26.64 08/12/2013
+--------------------
+* Fixed ID3v1 0s after the tag field values (again)
+
+2.0.26.65 10/02/2014
+--------------------
++ Added code to load PNG cover arts to VCL tutorial
++ Added function LoadFromMemory() to load the tag from a memory address
+* Fixed FireMonkey tutorial crash on startup
+
+2.0.27.66 21/02/2014
+--------------------
+* Fixed SetUnicodeUserDefinedTextInformation() and SetUTF8UserDefinedTextInformation() functions
+
+2.0.27.67 24/02/2014
+--------------------
+* Fixed ID3v1 false tag detection in some cases
+
+2.0.28.68 08/03/2014
+--------------------
++ When saving ID3v2 tags and the new tag + padding is smaller then the existing tag, the tag is re-written with new padding (this means if for example a large cover art is removed the new file size will be smaller)
++ A little speed-up in ID3v2 tag writing
+
+2.0.28.69 17/04/2014
+--------------------
++ Added checking of invalid WAV and RF64 files before saving the tag
+* Fixed writing ID3v2 tags in WAV RF64 files
+
+2.0.28.70 21/04/2014
+--------------------
++ Added 'Position' property which reports tag's start position in the file
+
+2.0.29.71 15/05/2014
+--------------------
++ Added TID3v1Tag.Assign() function
++ Added TID3v1Tag.LoadFromMemory() function
++ Added TID3v2Tag.GetCoverPictureInfoPointer() function
+
+2.0.30.72 06/06/2014
+--------------------
+- Support of DSD .dsf audio files
+
+2.0.31.73 10/06/2014
+--------------------
++ Added TID3v2Tag.DSFInfo class
++ Added TID3v2Tag.SourceFileType property
+
+2.0.32.82 14/06/2014
+--------------------
++ Added TID3v2Tag.DSFInfo.BitRate property
++ Added TID3v2Tag.WAVInfo record
++ Added TID3v2Tag.MPEGInfo record
++ Added TID3v2Tag.AIFFInfo record
++ Added parsing of 'Xing', 'Info' and 'VBRI' information
+
+2.0.33.83 16/06/2014
+--------------------
++ Added TID3v2Tag.ParseAudioAttributes property (global setting 'ID3v2LibraryDefaultParseAudioAttributes')
+
+2.0.34.84 28/06/2014
+--------------------
+* Fixed nextgen (Android/iOS) compile, won't read AIFF/AIFC files' sample rate though (no extended (10 byte float) support in nextgen)
+
+2.0.35.85 16/11/2014
+--------------------
+* Fixed reading UTF-8 TXXX frames
+
+2.0.36.86 30/11/2014
+--------------------
++ To get MPEG file information the next 4096 bytes are scanned for a valid MPEG frame after the tag
+
+2.0.37.90 31/12/2014
+--------------------
++ Added functions for loading/saving/removing tags to TStream
++ Renamed ID3v1RemoveTag() to RemoveID3v1TagFromFile() and ID3v2RemoveTag() to RemoveID3v2TagFromFile()
+
+2.0.38.91 03/02/2015
+--------------------
++ Added C++ Builder tutorial
+
+2.0.38.93 25/02/2015
+--------------------
+* Fixed TMPEGAudioAttributes.ModeExtension when not avialable
+
+2.0.39.94 21/04/2015
+--------------------
+* Fixed parsing MPEG audio attributes when there is no ID3v2 tag in the file
+
+2.0.40.95 24/04/2015
+--------------------
+* Fixed loading of big endian unicode tags
+
+2.0.41.96 25/04/2015
+--------------------
+* Fixed infinite loop for unicode tags in GetUnicodeUserDefinedTextInformation() introduced with the previous update
+* Fixed loading of (type 2) big endian unicode tags
+
+2.0.42.97 12/10/2015
+--------------------
+* Fixed range check errors
+
+2.0.43.98 20/05/2016
+--------------------
+* Fixed RemoveID3v2TagFromStream()
+
+2.0.44.101 22/05/2016
+---------------------
++ Added support of tagging (read/write/remove) .DFF files
+
+2.0.45.103 08/06/2016
+---------------------
+* Fixed getting multiple values
+
+2.0.46.104 16/06/2016
+---------------------
++ Improved .DFF audio attributes parsing
+* Fixed TID3v2Tag.GetSEFC()
