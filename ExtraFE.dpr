@@ -79,7 +79,7 @@ uses
   uSnippets_Colors in 'code\_snippets\uSnippets_Colors.pas',
   uLoad_Emulation in 'loading\uLoad_Emulation.pas',
   uLoad_Sound in 'loading\uLoad_Sound.pas',
-  uMain_Config_Addons_Actions in 'main\configuration\uMain_Config_Addons_Actions.pas',
+  uMain_Config_Addons_Actions in 'main\configuration\addons\uMain_Config_Addons_Actions.pas',
   uInternet_files in 'code\_internet\uInternet_files.pas',
   uEmu_Arcade_Mame_Config_Mouse in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Mouse.pas',
   uEmu_Arcade_Mame_Config_Keyboard in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Keyboard.pas',

@@ -6,16 +6,10 @@ uses
   System.Classes,
   System.SysUtils,
   System.UITypes,
-  System.UIConsts,
-  System.IniFiles,
   FMX.Objects,
-  FMX.Dialogs,
   FMX.StdCtrls,
-  FMX.Graphics,
-  FMX.Platform,
   FMX.Layouts,
   FMX.Effects,
-  FMX.Edit,
   FMX.Types,
   FMX.Filter.Effects,
   ALFMXObjects,
@@ -40,13 +34,8 @@ procedure AzPlay(vIndex: Integer);
 implementation
 
 uses
-  main,
   uDatabase_ActiveUser,
-  uWeather_Config_Towns,
-  uLoad,
-  uMain_SetAll,
   uMain_AllTypes,
-  uMain_Mouse,
   uLoad_AllTypes;
 
 procedure Icons_Free;
@@ -228,11 +217,11 @@ begin
 
   Icons(ex_main.Config.Addons_Tab_First);
 
-  if Addons.Total_Num > 3 then
+  if user_Active_Local.ADDONS.Active > 3 then
   begin
     mainScene.Config.main.R.Addons.Arrow_Right_Gray.Enabled := False;
     mainScene.Config.main.R.Addons.Right_Num.Visible := True;
-    mainScene.Config.main.R.Addons.Right_Num.Text := (Addons.Total_Num - 3).ToString;
+    mainScene.Config.main.R.Addons.Right_Num.Text := (user_Active_Local.ADDONS.Active - 3).ToString;
   end;
 end;
 
@@ -565,23 +554,20 @@ begin
   mainScene.Config.main.R.Addons.Icons_Info[2].Action.Parent := mainScene.Config.main.R.Addons.Icons_Panel[2];
   mainScene.Config.main.R.Addons.Icons_Info[2].Action.SetBounds(mainScene.Config.main.R.Addons.Icons_Panel[2].Width - 160,
     mainScene.Config.main.R.Addons.Icons_Panel[2].Height - 40, 150, 30);
-  if Addons.Weather.Active then
-
-  else
-    mainScene.Config.main.R.Addons.Icons_Info[2].Action.Text := 'Activate';
   mainScene.Config.main.R.Addons.Icons_Info[2].Action.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.Addons.Icons_Info[2].Action.Visible := True;
 
-  if Addons.Weather.Active then
+  if user_Active_Local.ADDONS.Weather then
   begin
     mainScene.Config.main.R.Addons.Icons_Info[2].Activeted.Text := 'Active';
     mainScene.Config.main.R.Addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Lime;
-    mainScene.Config.main.R.Addons.Icons_Info[2].Action.Text := 'Deactivate'
+    mainScene.Config.main.R.Addons.Icons_Info[2].Action.Text := 'Deactivate';
   end
   else
   begin
     mainScene.Config.main.R.Addons.Icons_Info[2].Activeted.Text := 'Inactive';
     mainScene.Config.main.R.Addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Red;
+    mainScene.Config.main.R.Addons.Icons_Info[2].Action.Text := 'Activate';
   end;
 end;
 
