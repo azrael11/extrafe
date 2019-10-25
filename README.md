@@ -15,4 +15,9 @@ For start coding in ExtraFE exept for cloning the master git you must download a
 1. JCL Library from https://github.com/project-jedi/jcl
 2. InstrumentLab from mitov software http://www.mitov.com/products/instrumentlab#overview use the free version for fmx.
 
-Visit homepage http://extrafe.epizy.com
+# Info
+
+Homepage       : http://extrafe.epizy.com
+Documentation  : http://extrafe.epizy.com/doc/index.html
+Forum          : http://extrafe.epizy.com/smf/index.php 
+
