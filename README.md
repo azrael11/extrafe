@@ -18,6 +18,8 @@ For start coding in ExtraFE exept for cloning the master git you must download a
 # Info
 
 Homepage       : http://extrafe.epizy.com
+
 Documentation  : http://extrafe.epizy.com/doc/index.html
+
 Forum          : http://extrafe.epizy.com/smf/index.php 
 
