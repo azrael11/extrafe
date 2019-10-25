@@ -36,7 +36,7 @@ uses
 procedure uKeyboard_HookKeyboard;
 begin
   FHook := THookInstance<TLowLevelKeyboardHook>.CreateHook(Main_Form);
-  FHook.OnPreExecuteRef := procedure(Hook: THook; var HookMsg: THookMessage)
+  FHook.OnPreExecute := procedure(Hook: THook; var HookMsg: THookMessage)
     var
       LLKeyBoardHook: TLowLevelKeyboardHook;
       ScanCode: integer;
