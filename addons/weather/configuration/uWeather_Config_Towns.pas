@@ -88,6 +88,7 @@ var
 implementation
 
 uses
+  uDatabase_ActiveUser,
   uLoad,
   uLoad_AllTypes,
   uWeather_Actions,
@@ -238,9 +239,9 @@ end;
 
 procedure Show;
 begin
-  if addons.weather.Action.Provider = 'yahoo' then
+  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
     uWeather_Providers_Yahoo_Config.Create_Towns
-  else if addons.weather.Action.Provider = 'openweathermap' then
+  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     uWeather_Providers_OpenWeatherMap_Config.Create_Towns;
 end;
 
@@ -1055,8 +1056,8 @@ var
 begin
   vForcast_Resutls := TStringList.Create;
 
-  vString_Provider := addons.weather.Ini.Ini.ReadString('Provider', 'Name', vString_Provider);
-  vString_Woeid := addons.weather.Ini.Ini.ReadString(vString_Provider, IntToStr(mNum) + '_WoeID', vString_Woeid);
+//  vString_Provider := addons.weather.Ini.Ini.ReadString('Provider', 'Name', vString_Provider);
+//  vString_Woeid := addons.weather.Ini.Ini.ReadString(vString_Provider, IntToStr(mNum) + '_WoeID', vString_Woeid);
   viPos := Pos('{', vString_Woeid);
   vString_Woeid := Trim(Copy(vString_Woeid, 0, viPos - 1));
 
@@ -1107,9 +1108,9 @@ var
   vi: Integer;
   vActive_Woeid: Integer;
 begin
-  if addons.weather.Action.Provider = 'yahoo' then
+  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
     vActive_Woeid := addons.weather.Action.Yahoo.Total_WoeID
-  else if addons.weather.Action.Provider = 'openweathermap' then
+  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     vActive_Woeid := addons.weather.Action.OWM.Total_WoeID;
 
   if vActive_Woeid > -1 then
@@ -1122,14 +1123,14 @@ begin
       vWeather.Config.main.Right.Towns.Town[0].Glow_Panel.Enabled := True;
       vWeather.Config.main.Right.Towns.Town[0].Glow_Panel.GlowColor := TAlphaColorRec.Red;
       vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
-      if addons.weather.Action.Provider = 'yahoo' then
+      if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
       begin
         if addons.weather.Action.Yahoo.Total_WoeID > 0 then
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
         else
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
       end
-      else if addons.weather.Action.Provider = 'openweathermap' then           
+      else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       begin
         if addons.weather.Action.OWM.Total_WoeID> 0 then
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
@@ -1144,7 +1145,7 @@ begin
       vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
       vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
       vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
-      if addons.weather.Action.Provider = 'yahoo' then
+      if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
       begin
         for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
         begin
@@ -1152,7 +1153,7 @@ begin
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
         end;
       end
-      else if addons.weather.Action.Provider = 'openweathermap' then
+      else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       begin
         for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
         begin

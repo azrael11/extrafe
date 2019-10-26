@@ -14,8 +14,8 @@ uses
   FMX.Graphics,
   FMX.Effects;
 
-procedure uWeather_Config_Iconsets_Show;
-procedure uWeather_Config_Iconsets_Free;
+procedure Load;
+procedure Free;
 
 Procedure uWeather_SetAll_Iconsets_CreateMiniPreview(vNum: Integer);
 
@@ -32,6 +32,7 @@ implementation
 
 uses
   uload,
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   main,
   uWeather_Config_Towns,
@@ -41,18 +42,18 @@ uses
   uWeather_Providers_Yahoo_Config,
   uWeather_Providers_OpenWeatherMap_Config;
 
-procedure uWeather_Config_Iconsets_Show;
+procedure Load;
 begin
-  if addons.weather.Action.Provider <> '' then
+  if user_Active_Local.ADDONS.Weather_D.Provider <> '' then
   begin
-    if addons.weather.Action.Provider = 'yahoo' then
+    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
       uWeather_Providers_Yahoo_Config.Create_Iconsets
-    else if addons.weather.Action.Provider = 'openweathermap' then
+    else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       uWeather_Providers_OpenWeatherMap_Config.Create_Iconsets;
   end;
 end;
 
-procedure uWeather_Config_Iconsets_Free;
+procedure Free;
 begin
   FreeAndNil(vWeather.Config.main.Right.Panels[3]);
 end;
@@ -201,7 +202,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Height := 50;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Position.X := 50 * 8;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Position.Y := 2;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Bitmap.LoadFromFile(addons.weather.Path.Images + 'w_preview.png');
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_preview.png');
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.WrapMode := TImageWrapMode.Fit;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnClick := addons.weather.Input.mouse.Image.OnMouseClick;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnMouseEnter := addons.weather.Input.mouse.Image.OnMouseEnter;

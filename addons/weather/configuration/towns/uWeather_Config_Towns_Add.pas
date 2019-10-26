@@ -56,6 +56,7 @@ var
 implementation
 
 uses
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   main,
   uWindows,
@@ -74,7 +75,7 @@ var
   vi: Integer;
   vImage: Timage;
 begin
-  if addons.weather.Action.Provider <> '' then
+  if user_Active_Local.ADDONS.Weather_D.Provider <> '' then
   begin
     extrafe.prog.State := 'addon_weather_config_towns_add';
     vWeather.Config.Panel_Blur.Enabled := True;
@@ -284,7 +285,7 @@ begin
 
     vID := TStringList.Create;
 
-    if addons.weather.Action.Provider = 'yahoo' then
+    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
     begin
       uWeather_Providers_Yahoo.Find_Woeid_Locations(mTown);
       uWeather_Providers_Yahoo.Show_Locations;
@@ -303,9 +304,9 @@ procedure New_Town(vSelectedTown: Integer; vStay: Boolean);
 var
   vi: Integer;
 begin
-  if addons.weather.Action.Provider= 'yahoo' then
+  if user_Active_Local.ADDONS.Weather_D.Provider= 'yahoo' then
     uWeather_Providers_Yahoo.Add_NewTown(vSelectedTown)
-  else if addons.weather.Action.Provider= 'openweathermap' then
+  else if user_Active_Local.ADDONS.Weather_D.Provider= 'openweathermap' then
     uWeather_Providers_OpenWeatherMap.Add_NewTown(vSelectedTown);
   if vStay= False then
     Free;
@@ -329,7 +330,7 @@ begin
   Result := False;
   for vi := 0 to addons.weather.Action.Provider_Total do
   begin
-    vID_S := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider, vi.ToString + '_WOEID', vID_S);
+//    vID_S := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider, vi.ToString + '_WOEID', vID_S);
     if vID_S = vID then
     begin
       Result := True;

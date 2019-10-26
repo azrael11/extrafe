@@ -31,21 +31,6 @@ type
     procedure OnTimer(Sender: TObject);
   end;
 
-type
-  TADDON_WEATHER_PATHS = record
-    Icon: String;
-    Images: String;
-    Iconsets: String;
-    Sounds: String;
-    Temp: String;
-  end;
-
-type
-  TADDON_WEATHER_CONFIG = record
-    Ini: TIniFile;
-    Name: String;
-    Path: String;
-  end;
 
 type
   TADDON_WEATHER_CHOOSENTOWN_UNIT = record
@@ -497,7 +482,6 @@ type
 
 type
   TADDON_WEATHER_ACTIONS = record
-    Provider: String;
     Provider_Total: Integer;
     Active_WOEID: Integer;
     Active_Total: Integer;
@@ -541,8 +525,6 @@ type
     Loaded: Boolean;
     Action: TADDON_WEATHER_ACTIONS;
     Config: TADDON_WEATHER_SETTINGS;
-    Ini: TADDON_WEATHER_CONFIG;
-    Path: TADDON_WEATHER_PATHS;
     Sound: TADDON_WEATHER_SOUND;
     Input: TADDON_WEATHER_INPUT;
   end;

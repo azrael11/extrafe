@@ -30,7 +30,7 @@ begin
   extrafe.stats.Addon[0].OpenTimes:= 0;
   extrafe.stats.Addon[0].SumTime:= 0;
 
-  extrafe.stats.Addon[0].Path:= addons.calendar.Ini.Path;
+//  extrafe.stats.Addon[0].Path:= addons.calendar.Ini.Path;
   extrafe.stats.Addon[0].Name:= addons.calendar.Name+ '_stats.ini';
   extrafe.stats.Addon[0].OpenTimes:= 0;
   extrafe.stats.Addon[0].SumTime:= 0;

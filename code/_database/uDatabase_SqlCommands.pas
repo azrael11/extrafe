@@ -179,13 +179,11 @@ begin
     User_Reg.Registered + ''', ''' + User_Reg.Last_Visit + ''', ''' + User_Reg.Last_Visit + ''', ''1'')');
   ExtraFE_Query_Local.ExecSQL;
 
-
   { Option Data }
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add('INSERT INTO USERS (VIRTUAL_KEYBOARD) VALUES("0")');
   ExtraFE_Query_Local.ExecSQL;
-
 
   { User Statistics data }
   ExtraFE_Query_Local.Close;
@@ -199,7 +197,7 @@ begin
 
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(' INSERT INTO EMULATORS ("USER_ID", "PATH") VALUES (' + vLocal_Num + ', '+ vPath[0] +')');
+  ExtraFE_Query_Local.SQL.Add(' INSERT INTO EMULATORS ("USER_ID", "PATH") VALUES (' + vLocal_Num + ', ' + vPath[0] + ')');
   ExtraFE_Query_Local.ExecSQL;
 
   ExtraFE_Query_Local.Close;
@@ -299,11 +297,23 @@ begin
   ExtraFE_Query_Local.SQL.Add(' INSERT INTO ADDON_TIME_TIME ("USER_ID") VALUES (' + vLocal_Num + ')');
   ExtraFE_Query_Local.ExecSQL;
 
+  { Addons Calendar }
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Add(' INSERT INTO ADDON_CALENDAR ("USER_ID", "MENU_POSITION") VALUES (' + vLocal_Num + ', 1)');
+  ExtraFE_Query_Local.ExecSQL;
+
   { Addons Weather }
+  free_vpath;
+  vPath[0] := extrafe.prog.Path + 'data\addons\weather\icons\';
+  vPath[1] := extrafe.prog.Path + 'data\addons\weather\images\';
+  vPath[2] := extrafe.prog.Path + 'data\addons\weather\sounds\';
+  vPath[3] := extrafe.prog.Path + 'data\addons\weather\temp\';
 
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(' INSERT INTO ADDON_WEATHER ("USER_ID") VALUES (' + vLocal_Num + ')');
+  ExtraFE_Query_Local.SQL.Add(' INSERT INTO ADDON_WEATHER ("USER_ID" , "PATH_ICONS", "PATH_IMAGES", "PATH_SOUNDS", "PATH_TEMP") VALUES (' + vLocal_Num + '), '''
+    + vPath[0] + ''', ''' + vPath[1] + ''', ''' + vPath[2] + ''', ''' + vPath[3] + ''')');
   ExtraFE_Query_Local.ExecSQL;
 
 end;

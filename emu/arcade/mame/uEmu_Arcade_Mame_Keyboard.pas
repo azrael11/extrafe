@@ -69,11 +69,11 @@ begin
       else if extrafe.prog.State = 'mame_game' then
       begin
         if UpperCase(vKey) = 'ENTER' then
-          uEmu_Arcade_Mame_Game_Actions_Enter
+          uEmu_Arcade_Mame_Game_Actions.Enter
         else if UpperCase(vKey) = 'UP' then
-          uEmu_Arcade_Mame_Game_Actions_ArrowUp
+          uEmu_Arcade_Mame_Game_Actions.ArrowUp
         else if UpperCase(vKey) = 'DOWN' then
-          uEmu_Arcade_Mame_Game_Actions_ArrowDown;
+          uEmu_Arcade_Mame_Game_Actions.ArrowDown;
       end;
     end;
   end

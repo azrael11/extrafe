@@ -11,11 +11,11 @@ const
   cShowGamePanelMenu: array [0 .. 10] of string = ('Play game', 'Read manual', 'Open media folder',
     'View images in fullscreen', 'Sound Tracks', 'Add to favorites', 'Add to playlist', '', '', '', '');
 
-procedure uEmu_Arcade_Mame_Game_Actions_Refresh;
+procedure Refresh;
 
-procedure uEmu_Arcade_Mame_Game_Actions_Enter;
-procedure uEmu_Arcade_Mame_Game_Actions_ArrowUp;
-procedure uEmu_Arcade_Mame_Game_Actions_ArrowDown;
+procedure ArrowUp;
+procedure ArrowDown;
+procedure Enter;
 
 implementation
 
@@ -30,7 +30,7 @@ uses
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_Game_SetAll;
 
-procedure uEmu_Arcade_Mame_Game_Actions_Refresh;
+procedure Refresh;
 var
   vi, ri: Integer;
 begin
@@ -50,7 +50,7 @@ begin
   uEmu_Arcade_Mame_Gamelist_GlowSelected
 end;
 
-procedure uEmu_Arcade_Mame_Game_Actions_Enter;
+procedure Enter;
 var
   romName: WideString;
 begin
@@ -75,21 +75,21 @@ begin
   uEmu_Arcade_Mame_SetAll.Free_Loading_Game;
 end;
 
-procedure uEmu_Arcade_Mame_Game_Actions_ArrowUp;
+procedure ArrowUp;
 begin
   if mame.Game.Menu_Selected > 0 then
   begin
     dec(mame.Game.Menu_Selected, 1);
-    uEmu_Arcade_Mame_Game_Actions_Refresh;
+    Refresh;
   end;
 end;
 
-procedure uEmu_Arcade_Mame_Game_Actions_ArrowDown;
+procedure ArrowDown;
 begin
   if mame.Game.Menu_Selected < 6 then
   begin
     inc(mame.Game.Menu_Selected, 1);
-    uEmu_Arcade_Mame_Game_Actions_Refresh;
+    Refresh;
   end
 end;
 

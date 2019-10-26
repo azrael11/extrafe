@@ -207,7 +207,6 @@ type
     Name: String;
     Active: Boolean;
     Main_Menu_Position: Integer;
-    Ini: TADDON_CALENDAR_CONFIG;
     Path: TADDON_CALENDAR_PATHS;
     widget: TADDON_WIDGET;
   end;

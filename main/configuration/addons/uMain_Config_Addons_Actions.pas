@@ -713,23 +713,23 @@ begin
   addons.weather.Active := False;
   addons.weather.Main_Menu_Position := -1;
   extrafe.ini.ini.WriteInteger('Addons', 'Active_Num', addons.Active_Num);
-  addons.weather.ini.ini.WriteBool('WEATHER', 'Active', addons.weather.Active);
-  addons.weather.ini.ini.WriteInteger('WEATHER', 'Menu_Position', addons.weather.Main_Menu_Position);
+//  addons.weather.ini.ini.WriteBool('WEATHER', 'Active', addons.weather.Active);
+//  addons.weather.ini.ini.WriteInteger('WEATHER', 'Menu_Position', addons.weather.Main_Menu_Position);
   mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Text := 'Inactive';
   mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Red;
   mainScene.Config.main.R.addons.Icons_Info[2].Action.Text := 'Activate';
 
-  if mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.IsChecked then
-  begin
-    DeleteFile(addons.weather.ini.Path + addons.weather.ini.Name);
-  end;
+//  if mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Radio_2.IsChecked then
+//  begin
+//    DeleteFile(addons.weather.ini.Path + addons.weather.ini.Name);
+//  end;
   uMain_Config_Addons_Actions_Deactivate_Weather_FreeMessage;
 end;
 
 procedure uMain_Config_Addons_Actions_Deactivate_Weather;
 begin
-  if FileExists(addons.weather.ini.Path + addons.weather.ini.Name) then
-    uMain_Config_Addons_Actions_Deactivate_Weather_ShowMessage;
+//  if FileExists(addons.weather.ini.Path + addons.weather.ini.Name) then
+//    uMain_Config_Addons_Actions_Deactivate_Weather_ShowMessage;
 end;
 
 procedure uMain_Config_Addons_Actions_Deactivate_Weather_FreeMessage;

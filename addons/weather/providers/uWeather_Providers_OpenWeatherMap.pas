@@ -94,6 +94,7 @@ var
 implementation
 
 uses
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   uSnippet_Text,
   uInternet_Files,
@@ -188,7 +189,7 @@ begin
     vBackground.Name := 'A_W_Providers_OpenWeatherMap_Loading_Background';
     vBackground.Parent := vWeather.Scene.Back;
     vBackground.SetBounds(0, 10, vWeather.Scene.Back.Width, vWeather.Scene.Back.Height);
-    vBackground.bitmap.LoadFromFile(addons.weather.Path.Images + 'w_openweathermp_loading.png');
+    vBackground.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_openweathermp_loading.png');
     vBackground.WrapMode := TImageWrapMode.Original;
     vBackground.Visible := True;
 
@@ -256,7 +257,7 @@ begin
     FreeAndNil(vBackground);
   end
   else
-    vWeather.Scene.Back.bitmap.LoadFromFile(addons.weather.Path.Images + 'w_addtowns.png');
+    vWeather.Scene.Back.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
 end;
 
 procedure Show_Selected_Time_Forecast(vLine, vPlace: Integer);
@@ -898,7 +899,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.SetBounds(100, 360, 43, 52);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.bitmap.LoadFromFile(addons.weather.Path.Images + 'w_stand.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small := TImage.Create(vWeather.Scene.Tab_OWM[vTab].Tab);
@@ -906,7 +907,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.SetBounds(94, 335, 54, 54);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.WrapMode := TImageWrapMode.Stretch;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.bitmap.LoadFromFile(addons.weather.Path.Images + 'w_turbine.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation := TFloatAnimation.Create(vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small);
@@ -927,7 +928,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.SetBounds(60, 370, 53, 64);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.bitmap.LoadFromFile(addons.weather.Path.Images + 'w_stand.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine := TImage.Create(vWeather.Scene.Tab_OWM[vTab].Tab);
@@ -935,7 +936,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.SetBounds(54, 335, 64, 64);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.WrapMode := TImageWrapMode.Stretch;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.bitmap.LoadFromFile(addons.weather.Path.Images + 'w_turbine.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation := TFloatAnimation.Create(vWeather.Scene.Tab_OWM[vTab].Wind.Turbine);
@@ -1108,7 +1109,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.Position.X := vWeather.Scene.Tab_OWM[vTab].Tab.Width - 70;
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.Position.Y := 700;
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab_OWM[vTab].Server.Icon.bitmap.LoadFromFile(addons.weather.Path.Images + 'w_openweathermap.png');
+  vWeather.Scene.Tab_OWM[vTab].Server.Icon.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_openweathermap.png');
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].country.LastUpDate := TText.Create(vWeather.Scene.Tab_OWM[vTab].Tab);
@@ -1256,7 +1257,7 @@ begin
   begin
     for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
     begin
-      vString := addons.weather.Ini.Ini.ReadString('openweathermap', 'woeid_' + vi.ToString, vString);
+//      vString := addons.weather.Ini.Ini.ReadString('openweathermap', 'woeid_' + vi.ToString, vString);
       vIPos := Pos('_', vString);
       vWoeid := Trim(Copy(vString, 0, vIPos - 1));
       vTown := Trim(Copy(vString, vIPos + 1, Length(vString) - vIPos));
@@ -1293,14 +1294,14 @@ begin
     if addons.weather.Action.OWM.Total_WoeID = 0 then
       vWeather.Scene.Back.bitmap := nil;
 
-    { For OpenWeatherMap Ini }
-    addons.weather.Ini.Ini.WriteString('openweathermap', 'total', addons.weather.Action.OWM.Total_WoeID.ToString);
-    addons.weather.Ini.Ini.WriteString('openweathermap', 'woeid_' + addons.weather.Action.OWM.Total_WoeID.ToString,
-      vOpenWeatherMap_Find_List[vNum].woeid + '_' + vTemp_NewTown.City_Name);
-    addons.weather.Action.OWM.Woeid_List.Add(addons.weather.Action.OWM.Total_WoeID.ToString);
-    { For Global ini }
-    Inc(addons.weather.Action.Active_WOEID, 1);
-    addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
+//    { For OpenWeatherMap Ini }
+//    addons.weather.Ini.Ini.WriteString('openweathermap', 'total', addons.weather.Action.OWM.Total_WoeID.ToString);
+//    addons.weather.Ini.Ini.WriteString('openweathermap', 'woeid_' + addons.weather.Action.OWM.Total_WoeID.ToString,
+//      vOpenWeatherMap_Find_List[vNum].woeid + '_' + vTemp_NewTown.City_Name);
+//    addons.weather.Action.OWM.Woeid_List.Add(addons.weather.Action.OWM.Total_WoeID.ToString);
+//    { For Global ini }
+//    Inc(addons.weather.Action.Active_WOEID, 1);
+//    addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
 
     Main_Create_Town(addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID], addons.weather.Action.OWM.Total_WoeID);
     if addons.weather.Action.OWM.Total_WoeID > 0 then
@@ -2093,7 +2094,7 @@ const
     'nl', 'pl', 'pt', 'ro', 'ru', 'se', 'sk', 'sl', 'es', 'tr', 'ua', 'vi', 'zh_cn', 'zh_tw');
 begin
   addons.weather.Action.OWM.Language := cLanguages_Ext[vLanguage_Index];
-  addons.weather.Ini.Ini.WriteString('openweathermap', 'language', addons.weather.Action.OWM.Language);
+//  addons.weather.Ini.Ini.WriteString('openweathermap', 'language', addons.weather.Action.OWM.Language);
 end;
 
 function Get_Language_Num(vLanguage: String): Integer;

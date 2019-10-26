@@ -2,8 +2,8 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2018/02/04 11:31:31.000.224,=C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.pas</Transaction>
     <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.fmx</Transaction>
+    <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.pas</Transaction>
     <Transaction>2018/02/04 11:32:22.000.957,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\ExtraFE.dproj</Transaction>
     <Transaction>2018/02/04 11:32:53.000.005,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas</Transaction>
     <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.pas</Transaction>
@@ -408,12 +408,14 @@
     <Transaction>2019/09/21 13:29:30.000.633,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading.fmx=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading_back.fmx</Transaction>
     <Transaction>2019/09/21 13:29:30.000.633,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading_back.pas</Transaction>
     <Transaction>2019/09/21 13:29:38.000.363,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
-    <Transaction>2019/09/21 13:30:45.000.152,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.fmx=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\load.fmx</Transaction>
     <Transaction>2019/09/21 13:30:45.000.152,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\load.pas</Transaction>
+    <Transaction>2019/09/21 13:30:45.000.152,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.fmx=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\load.fmx</Transaction>
     <Transaction>2019/09/21 13:54:04.000.453,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading_back.pas=</Transaction>
-    <Transaction>2019/10/25 09:21:55.276,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons.pas</Transaction>
-    <Transaction>2019/10/25 09:22:21.137,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons.pas</Transaction>
-    <Transaction>2019/10/25 09:22:29.934,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons_Actions.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons_Actions.pas</Transaction>
+    <Transaction>2019/10/25 09:21:55.000.276,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons.pas</Transaction>
+    <Transaction>2019/10/25 09:22:21.000.137,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons.pas</Transaction>
+    <Transaction>2019/10/25 09:22:29.000.934,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons_Actions.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons_Actions.pas</Transaction>
+    <Transaction>2019/10/26 08:47:59.567,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\Unit1.pas</Transaction>
+    <Transaction>2019/10/26 08:48:18.647,C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\addons\calendar\uCalendar_Actions.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\Unit1.pas</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android=""/>
@@ -423,6 +425,7 @@
     <File Path="addons"/>
     <File Path="addons\calendar"/>
     <File Path="addons\calendar\uCalendar_SetAll.pas"/>
+    <File Path="addons\calendar\uCalendar_Actions.pas"/>
     <File Path="addons\play"/>
     <File Path="addons\play\azhung"/>
     <File Path="addons\play\azhung\uAzHung_Actions.pas"/>
@@ -589,6 +592,8 @@
     <File Path="loading\uLoad_Stats.pas"/>
     <File Path="main"/>
     <File Path="main\configuration"/>
+    <File Path="main\configuration\addons"/>
+    <File Path="main\configuration\addons\uMain_Config_Addons_Actions.pas"/>
     <File Path="main\configuration\emulation"/>
     <File Path="main\configuration\emulation\arcade_scripts"/>
     <File Path="main\configuration\emulation\arcade_scripts\mame"/>
@@ -596,38 +601,36 @@
     <File Path="main\configuration\emulation\arcade_scripts\mame\uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall.pas"/>
     <File Path="main\configuration\emulation\arcade_scripts\uMain_Config_Emulation_Arcade_Scripts_Mouse.pas"/>
     <File Path="main\configuration\emulation\console_scritps"/>
+    <File Path="main\configuration\emulation\console_scritps\uMain_Config_Emulation_Consoles_Scripts_Mouse.pas"/>
     <File Path="main\configuration\emulation\console_scritps\nes"/>
     <File Path="main\configuration\emulation\console_scritps\nes\uMain_Config_Emulation_Consoles_Scripts_Nes_Install.pas"/>
-    <File Path="main\configuration\emulation\console_scritps\uMain_Config_Emulation_Consoles_Scripts_Mouse.pas"/>
-    <File Path="main\configuration\general"/>
-    <File Path="main\configuration\general\uMain_Config_General_Graphics.pas"/>
-    <File Path="main\configuration\general\uMain_Config_General_Sound.pas"/>
-    <File Path="main\configuration\general\uMain_Config_General_Visual.pas"/>
     <File Path="main\configuration\info"/>
     <File Path="main\configuration\info\uMain_Config_Info_Credits.pas"/>
     <File Path="main\configuration\info\uMain_Config_Info_Extrafe.pas"/>
     <File Path="main\configuration\profile"/>
-    <File Path="main\configuration\profile\uMain_Config_Profile_Machine.pas"/>
-    <File Path="main\configuration\profile\uMain_Config_Profile_Statistics.pas"/>
     <File Path="main\configuration\profile\uMain_Config_Profile_User.pas"/>
-    <File Path="main\configuration\addons"/>
-    <File Path="main\configuration\addons\uMain_Config_Addons_Actions.pas"/>
-    <File Path="main\configuration\uMain_Config_Emulators.pas"/>
-    <File Path="main\configuration\uMain_Config_General.pas"/>
+    <File Path="main\configuration\profile\uMain_Config_Profile_Statistics.pas"/>
+    <File Path="main\configuration\profile\uMain_Config_Profile_Machine.pas"/>
+    <File Path="main\configuration\general"/>
+    <File Path="main\configuration\general\uMain_Config_General_Visual.pas"/>
+    <File Path="main\configuration\general\uMain_Config_General_Graphics.pas"/>
+    <File Path="main\configuration\general\uMain_Config_General_Sound.pas"/>
     <File Path="main\configuration\uMain_Config_Info.pas"/>
-    <File Path="main\configuration\uMain_Config_Keyboard.pas"/>
-    <File Path="main\configuration\uMain_Config_Mouse.pas"/>
-    <File Path="main\configuration\uMain_Config_Profile.pas"/>
     <File Path="main\configuration\uMain_Config_Themes.pas"/>
+    <File Path="main\configuration\uMain_Config_Profile.pas"/>
     <File Path="main\configuration\uMain_Config_Addons.pas"/>
+    <File Path="main\configuration\uMain_Config_Emulators.pas"/>
+    <File Path="main\configuration\uMain_Config_Mouse.pas"/>
+    <File Path="main\configuration\uMain_Config_Keyboard.pas"/>
+    <File Path="main\configuration\uMain_Config_General.pas"/>
     <File Path="main\uMain.pas"/>
-    <File Path="main\uMain_Actions.pas"/>
-    <File Path="main\uMain_AllTypes.pas"/>
-    <File Path="main\uMain_Config.pas"/>
-    <File Path="main\uMain_Emulation.pas"/>
-    <File Path="main\uMain_Keyboard.pas"/>
     <File Path="main\uMain_Mouse.pas"/>
+    <File Path="main\uMain_Actions.pas"/>
+    <File Path="main\uMain_Keyboard.pas"/>
+    <File Path="main\uMain_Emulation.pas"/>
     <File Path="main\uMain_SetAll.pas"/>
+    <File Path="main\uMain_Config.pas"/>
+    <File Path="main\uMain_AllTypes.pas"/>
     <File Path="emu.pas"/>
     <File Path="emu.fmx"/>
     <File Path="main.pas"/>

@@ -31,6 +31,7 @@ implementation
 
 uses
   uLoad,
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   uMain_SetAll,
   uMain_AllTypes,
@@ -52,7 +53,7 @@ begin
   vWeather.Scene.Weather.Name := 'A_Weather';
   vWeather.Scene.Weather.Parent := mainScene.main.Down_Level;
   vWeather.Scene.Weather.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
-  vWeather.Scene.Weather.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_back.png');
+  vWeather.Scene.Weather.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_back.png');
   vWeather.Scene.Weather.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.Weather.Visible := True;
 
@@ -70,7 +71,7 @@ begin
   vWeather.Scene.Back.Name := 'A_W_Back';
   vWeather.Scene.Back.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Back.SetBounds(0, 0, vWeather.Scene.Weather.Width, vWeather.Scene.Weather.Height);
-  vWeather.Scene.Back.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_back.png');
+  vWeather.Scene.Back.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_back.png');
   vWeather.Scene.Back.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.Back.Visible := True;
 
@@ -84,7 +85,7 @@ begin
   vWeather.Scene.UpLine.Name := 'A_W_UpLine_Image';
   vWeather.Scene.UpLine.Parent := vWeather.Scene.Weather;
   vWeather.Scene.UpLine.SetBounds(0, 0, vWeather.Scene.Weather.Width, 10);
-  vWeather.Scene.UpLine.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_spot.png');
+  vWeather.Scene.UpLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.UpLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.UpLine.Visible := True;
 
@@ -92,7 +93,7 @@ begin
   vWeather.Scene.MiddleLine.Name := 'A_W_MiddleLine_Image';
   vWeather.Scene.MiddleLine.Parent := vWeather.Scene.Weather;
   vWeather.Scene.MiddleLine.SetBounds(0, vWeather.Scene.Weather.Height - 162, vWeather.Scene.Weather.Width, 10);
-  vWeather.Scene.MiddleLine.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_spot.png');
+  vWeather.Scene.MiddleLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.MiddleLine.Visible := True;
 
@@ -104,9 +105,9 @@ begin
   vWeather.Scene.Arrow_Left.Font.Size := 48;
   vWeather.Scene.Arrow_Left.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Left.Text := #$ea38;
-  vWeather.Scene.Arrow_Left.OnClick := addons.Weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Arrow_Left.OnMouseEnter := addons.Weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Arrow_Left.OnMouseLeave := addons.Weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Arrow_Left.OnClick := ADDONS.Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Arrow_Left.OnMouseEnter := ADDONS.Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Arrow_Left.OnMouseLeave := ADDONS.Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Arrow_Left.Visible := False;
 
   vWeather.Scene.Arrow_Left_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Left);
@@ -123,9 +124,9 @@ begin
   vWeather.Scene.Arrow_Right.Font.Size := 48;
   vWeather.Scene.Arrow_Right.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Right.Text := #$ea34;
-  vWeather.Scene.Arrow_Right.OnClick := addons.Weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Arrow_Right.OnMouseEnter := addons.Weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Arrow_Right.OnMouseLeave := addons.Weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Arrow_Right.OnClick := ADDONS.Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Arrow_Right.OnMouseEnter := ADDONS.Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Arrow_Right.OnMouseLeave := ADDONS.Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Arrow_Right.Visible := False;
 
   vWeather.Scene.Arrow_Right_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Right);
@@ -138,7 +139,7 @@ begin
   vWeather.Scene.DownLine.Name := 'A_W_DownLine_Image';
   vWeather.Scene.DownLine.Parent := vWeather.Scene.Back;
   vWeather.Scene.DownLine.SetBounds(0, vWeather.Scene.Back.Height - 10, vWeather.Scene.Back.Width, 10);
-  vWeather.Scene.DownLine.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_spot.png');
+  vWeather.Scene.DownLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.DownLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.DownLine.Visible := True;
 
@@ -151,12 +152,12 @@ begin
   vWeather.Scene.Settings.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Settings.SetBounds(vWeather.Scene.Weather.Width - 60, 20, 50, 50);
   vWeather.Scene.Settings.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Settings.Font.Size:= 48;
-  vWeather.Scene.Settings.TextSettings.FontColor:= TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Settings.Text:= #$e994;
-  vWeather.Scene.Settings.OnClick := addons.Weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Settings.OnMouseEnter := addons.Weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Settings.OnMouseLeave := addons.Weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Settings.Font.Size := 48;
+  vWeather.Scene.Settings.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Settings.Text := #$e994;
+  vWeather.Scene.Settings.OnClick := ADDONS.Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Settings.OnMouseEnter := ADDONS.Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Settings.OnMouseLeave := ADDONS.Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Settings.Visible := False;
 
   vWeather.Scene.Settings_Ani := TFloatAnimation.Create(vWeather.Scene.Settings);
@@ -243,8 +244,8 @@ begin
     vWeather.Config.main.Left.Buttons[vi].Parent := vWeather.Config.main.Left.Panel;
     vWeather.Config.main.Left.Buttons[vi].SetBounds(10, 30 + (vi * 40), 190, 33);
     vWeather.Config.main.Left.Buttons[vi].Text := cLeft_Buttons_Names[vi];
-    vWeather.Config.main.Left.Buttons[vi].OnClick := addons.Weather.Input.mouse_config.Button.OnMouseClick;
-    vWeather.Config.main.Left.Buttons[vi].OnMouseEnter := addons.Weather.Input.mouse_config.Button.OnMouseEnter;
+    vWeather.Config.main.Left.Buttons[vi].OnClick := ADDONS.Weather.Input.mouse_config.Button.OnMouseClick;
+    vWeather.Config.main.Left.Buttons[vi].OnMouseEnter := ADDONS.Weather.Input.mouse_config.Button.OnMouseEnter;
     vWeather.Config.main.Left.Buttons[vi].Tag := vi;
     vWeather.Config.main.Left.Buttons[vi].Visible := True;
   end;
@@ -253,14 +254,14 @@ begin
   vWeather.Config.main.Left.Provider.Name := 'A_W_Config_Left_Panel_Image';
   vWeather.Config.main.Left.Provider.Parent := vWeather.Config.main.Left.Panel;
   vWeather.Config.main.Left.Provider.SetBounds(5, vWeather.Config.main.Left.Panel.Height - 95, 200, 90);
-  if addons.Weather.Action.Provider = 'yahoo' then
-    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_provider_yahoo.png')
-  else if addons.Weather.Action.Provider = 'openweathermap' then
-    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(addons.Weather.Path.Images + 'w_provider_openweathermap.png');
+  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_provider_yahoo.png')
+  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_provider_openweathermap.png');
   vWeather.Config.main.Left.Provider.WrapMode := TImageWrapMode.Stretch;
   vWeather.Config.main.Left.Provider.Visible := True;
 
-  addons.Weather.Config.Active_Panel := -1;
+  ADDONS.Weather.Config.Active_Panel := -1;
 
   // Right panel
   vWeather.Config.main.Right.Panel := Tpanel.Create(vWeather.Config.main.Panel);
@@ -276,7 +277,7 @@ begin
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.Font.Size := 16;
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.HorzAlign := TTextAlign.Center;
-  if addons.Weather.Action.Provider = '' then
+  if user_Active_Local.ADDONS.Weather_D.Provider = '' then
     vWeather.Config.main.Right.NoProvider_Selected.Text := 'Please select forecast provider first!!!';
   vWeather.Config.main.Right.NoProvider_Selected.Visible := True;
 end;

@@ -319,6 +319,15 @@ type
   end;
 
 type
+  TEMU_MAME_SCENE_GAMEMENU_POPUP = record
+    Back: TImage;
+    Line1: TText;
+    Line2: TText;
+    Line3_Text: TText;
+    Line3_Value: TText;
+  end;
+
+type
   TEMU_MAME_SCENE = record
     Main: TImage;
     Main_Blur: TGaussianBlurEffect;
@@ -331,9 +340,7 @@ type
     Right_Blur: TBlurEffect;
     Media: TEMU_MAME_SCENE_SNAPSHOT_GROUP;
     GameMenu: TEMU_MAME_SCENE_GAMEMENU;
-    Load_Game: TImage;
-    Load_Game_Line1: TText;
-    Load_Game_Line2: TText;
+    PopUp: TEMU_MAME_SCENE_GAMEMENU_POPUP;
     Settings: TText;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;

@@ -520,44 +520,67 @@ begin
   vMame.Scene.Gamelist.List.Visible := False;
   vMame.Scene.Media.Back.Visible := False;
 
-  vMame.Scene.Load_Game := TImage.Create(vMame.Scene.Main);
-  vMame.Scene.Load_Game.Name := 'Mame_Loading_Game';
-  vMame.Scene.Load_Game.Parent := vMame.Scene.Main;
-  vMame.Scene.Load_Game.SetBounds(((vMame.Scene.Main.Width / 2) - 250), ((vMame.Scene.Main.Height / 2) - 150), 500, 300);
-  vMame.Scene.Load_Game.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
-  vMame.Scene.Load_Game.WrapMode := TImageWrapMode.Tile;
-  vMame.Scene.Load_Game.Visible := True;
+  vMame.Scene.PopUp.Back := TImage.Create(vMame.Scene.Main);
+  vMame.Scene.PopUp.Back.Name := 'Mame_Loading_Game';
+  vMame.Scene.PopUp.Back.Parent := vMame.Scene.Main;
+  vMame.Scene.PopUp.Back.SetBounds(((vMame.Scene.Main.Width / 2) - 500), ((vMame.Scene.Main.Height / 2 - 200) - 150), 1000, 500);
+  vMame.Scene.PopUp.Back.Bitmap.LoadFromFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
+  vMame.Scene.PopUp.Back.WrapMode := TImageWrapMode.Tile;
+  vMame.Scene.PopUp.Back.Visible := True;
 
-  vMame.Scene.Load_Game_Line1 := TText.Create(vMame.Scene.Load_Game);
-  vMame.Scene.Load_Game_Line1.Name := 'vMame_Loading_Game_Line1';
-  vMame.Scene.Load_Game_Line1.Parent := vMame.Scene.Load_Game;
-  vMame.Scene.Load_Game_Line1.SetBounds(20, 20, 480, 50);
-  vMame.Scene.Load_Game_Line1.Text := 'Loading Game : ';
-  vMame.Scene.Load_Game_Line1.Font.Family := 'Tahoma';
-  vMame.Scene.Load_Game_Line1.Font.Size := 36;
-  vMame.Scene.Load_Game_Line1.TextSettings.HorzAlign := TTextAlign.Center;
-  vMame.Scene.Load_Game_Line1.Color := TAlphaColorRec.Deepskyblue;
-  vMame.Scene.Load_Game_Line1.Font.Style := vMame.Scene.Load_Game_Line1.Font.Style + [TFontStyle.fsBold];
-  vMame.Scene.Load_Game_Line1.Visible := True;
+  vMame.Scene.PopUp.Line1 := TText.Create(vMame.Scene.PopUp.Back);
+  vMame.Scene.PopUp.Line1.Name := 'vMame_Loading_Game_Line1';
+  vMame.Scene.PopUp.Line1.Parent := vMame.Scene.PopUp.Back;
+  vMame.Scene.PopUp.Line1.SetBounds(0, 20, 1000, 50);
+  vMame.Scene.PopUp.Line1.Text := 'Loading Game : ';
+  vMame.Scene.PopUp.Line1.Font.Family := 'Tahoma';
+  vMame.Scene.PopUp.Line1.Font.Size := 36;
+  vMame.Scene.PopUp.Line1.TextSettings.HorzAlign := TTextAlign.Center;
+  vMame.Scene.PopUp.Line1.Color := TAlphaColorRec.Deepskyblue;
+  vMame.Scene.PopUp.Line1.Font.Style := vMame.Scene.PopUp.Line1.Font.Style + [TFontStyle.fsBold];
+  vMame.Scene.PopUp.Line1.Visible := True;
 
-  vMame.Scene.Load_Game_Line2 := TText.Create(vMame.Scene.Load_Game);
-  vMame.Scene.Load_Game_Line2.Name := 'Mame_Loading_Game_Line2';
-  vMame.Scene.Load_Game_Line2.Parent := vMame.Scene.Load_Game;
-  vMame.Scene.Load_Game_Line2.SetBounds(20, 90, 480, 50);
-  vMame.Scene.Load_Game_Line2.Text := '';
-  vMame.Scene.Load_Game_Line2.Font.Family := 'Tahoma';
-  vMame.Scene.Load_Game_Line2.Font.Size := 36;
-  vMame.Scene.Load_Game_Line2.TextSettings.HorzAlign := TTextAlign.Center;
-  vMame.Scene.Load_Game_Line2.Color := TAlphaColorRec.White;
-  vMame.Scene.Load_Game_Line2.Font.Style := vMame.Scene.Load_Game_Line2.Font.Style + [TFontStyle.fsBold];
-  vMame.Scene.Load_Game_Line2.Visible := True;
+  vMame.Scene.PopUp.Line2 := TText.Create(vMame.Scene.PopUp.Back);
+  vMame.Scene.PopUp.Line2.Name := 'Mame_Loading_Game_Line2';
+  vMame.Scene.PopUp.Line2.Parent := vMame.Scene.PopUp.Back;
+  vMame.Scene.PopUp.Line2.SetBounds(0, 90, 1000, 50);
+  vMame.Scene.PopUp.Line2.Text := mame.Gamelist.ListGames[mame.Gamelist.Selected];
+  vMame.Scene.PopUp.Line2.Font.Family := 'Tahoma';
+  vMame.Scene.PopUp.Line2.Font.Size := 36;
+  vMame.Scene.PopUp.Line2.TextSettings.HorzAlign := TTextAlign.Center;
+  vMame.Scene.PopUp.Line2.Color := TAlphaColorRec.White;
+  vMame.Scene.PopUp.Line2.Font.Style := vMame.Scene.PopUp.Line2.Font.Style + [TFontStyle.fsBold];
+  vMame.Scene.PopUp.Line2.Visible := True;
 
-  vMame.Scene.Load_Game_Line2.Text := mame.Gamelist.ListGames.ValueFromIndex[mame.Gamelist.Selected];
+  vMame.Scene.PopUp.Line3_Text := TText.Create(vMame.Scene.PopUp.Back);
+  vMame.Scene.PopUp.Line3_Text.Name := 'Mame_Loading_Game_Line3_Text';
+  vMame.Scene.PopUp.Line3_Text.Parent := vMame.Scene.PopUp.Back;
+  vMame.Scene.PopUp.Line3_Text.SetBounds(0, 440, 200, 50);
+  vMame.Scene.PopUp.Line3_Text.Text := 'Was played : ';
+  vMame.Scene.PopUp.Line3_Text.Font.Family := 'Tahoma';
+  vMame.Scene.PopUp.Line3_Text.Font.Size := 24;
+  vMame.Scene.PopUp.Line3_Text.TextSettings.HorzAlign := TTextAlign.Leading;
+  vMame.Scene.PopUp.Line3_Text.Color := TAlphaColorRec.White;
+  vMame.Scene.PopUp.Line3_Text.Font.Style := vMame.Scene.PopUp.Line2.Font.Style + [TFontStyle.fsBold];
+  vMame.Scene.PopUp.Line3_Text.Visible := True;
+
+  vMame.Scene.PopUp.Line3_Value:= TText.Create(vMame.Scene.PopUp.Back);
+  vMame.Scene.PopUp.Line3_Value.Name := 'Mame_Loading_Game_Line3_Value';
+  vMame.Scene.PopUp.Line3_Value.Parent := vMame.Scene.PopUp.Back;
+  vMame.Scene.PopUp.Line3_Value.SetBounds(140, 440, 200, 50);
+  vMame.Scene.PopUp.Line3_Value.Text := '0';
+  vMame.Scene.PopUp.Line3_Value.Font.Family := 'Tahoma';
+  vMame.Scene.PopUp.Line3_Value.Font.Size := 24;
+  vMame.Scene.PopUp.Line3_Value.TextSettings.HorzAlign := TTextAlign.Leading;
+  vMame.Scene.PopUp.Line3_Value.Color := TAlphaColorRec.Deepskyblue;
+  vMame.Scene.PopUp.Line3_Value.Font.Style := vMame.Scene.PopUp.Line2.Font.Style + [TFontStyle.fsBold];
+  vMame.Scene.PopUp.Line3_Value.Visible := True;
+
 end;
 
 procedure Free_Loading_Game;
 begin
-  FreeAndNil(vMame.Scene.Load_Game);
+  FreeAndNil(vMame.Scene.PopUp.Back);
   vMame.Scene.Left_Blur.Enabled := False;
   vMame.Scene.Right_Blur.Enabled := False;
   vMame.Scene.Gamelist.List.Visible := True;

@@ -168,7 +168,8 @@ uses
   uEmu_Consoles_Snes_AllTypes in 'emu\consoles\snes\uEmu_Consoles_Snes_AllTypes.pas',
   uEmu_Consoles_MasterSystem_AllTypes in 'emu\consoles\master_system\uEmu_Consoles_MasterSystem_AllTypes.pas',
   uEmu_Consoles_MegaDrive_AllTypes in 'emu\consoles\mega_drive\uEmu_Consoles_MegaDrive_AllTypes.pas',
-  load in 'load.pas' {Loading};
+  load in 'load.pas' {Loading},
+  uCalendar_Actions in 'addons\calendar\uCalendar_Actions.pas';
 
 {$R *.res}
 

@@ -79,7 +79,14 @@ type
 
 type
   TDATABASE_ACTIVE_USER_LOCAL_ADDONS_CALENDAR = record
+    Menu_Position: Integer;
+  end;
 
+type
+  TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_TOWNS_DATA = record
+    Name: String;
+    Num: Integer;
+    Woeid: integer;
   end;
 
 type
@@ -89,6 +96,7 @@ type
     Towns_Count: Integer;
     System: String;
     Degree: String;
+    Towns: array of TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_TOWNS_DATA;
   end;
 
 type
@@ -100,6 +108,7 @@ type
     Degree: String;
     API: String;
     Language: String;
+    Towns: array of TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_TOWNS_DATA;
   end;
 
 type
@@ -109,6 +118,10 @@ type
     Old_Backup: Boolean;
     Provider_Count: Integer;
     Provider: String;
+    p_Icons: String;
+    p_Images: String;
+    p_Sounds: String;
+    p_Temp: String;
     Yahoo: TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_YAHOO;
     OpenWeatherMap: TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_OPENWEATHERMAP;
   end;
@@ -465,9 +478,8 @@ begin
   ExtraFE_Query_Local.SQL.Add(vQuery);
   ExtraFE_Query_Local.Open;
   ExtraFE_Query_Local.First;
-  user_Active_Local.OPTIONS.Visual.Virtual_Keyboard:= ExtraFE_Query_Local.FieldByName('VIRTUAL_KEYBOARD').AsBoolean;
+  user_Active_Local.OPTIONS.Visual.Virtual_Keyboard := ExtraFE_Query_Local.FieldByName('VIRTUAL_KEYBOARD').AsBoolean;
   ExtraFE_Query_Local.Close;
-
 
   vQuery := 'SELECT * FROM EMULATORS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;

@@ -10,8 +10,8 @@ uses
   FMX.Types,
   FMX.Edit;
 
-procedure uWeather_Config_Options_Show;
-procedure uWeather_Config_Options_Free;
+procedure Load;
+procedure Free;
 
 function uWeather_Config_Options_CalcDegree(vIsCelcius: Boolean; vCurrent: String): String;
 procedure uWeather_Config_Options_UseDegree(vDegreeType: String);
@@ -20,6 +20,7 @@ implementation
 
 uses
   uLoad,
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   uSnippet_Text,
   uWeather_Actions,
@@ -28,18 +29,18 @@ uses
   uWeather_Providers_Yahoo_Config,
   uWeather_Providers_OpenWeatherMap_Config;
 
-procedure uWeather_Config_Options_Show;
+procedure Load;
 begin
-  if addons.weather.Action.Provider <> '' then
+  if user_Active_Local.ADDONS.Weather_D.Provider <> '' then
   begin
-    if addons.weather.Action.Provider = 'yahoo' then
+    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
       uWeather_Providers_Yahoo_Config.Create_Options
-    else if addons.weather.Action.Provider = 'openweathermap' then
+    else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       uWeather_Providers_OpenWeatherMap_Config.Create_Options;
   end;
 end;
 
-procedure uWeather_Config_Options_Free;
+procedure Free;
 begin
   FreeAndNil(vWeather.Config.Main.Right.Panels[2]);
 end;
@@ -196,7 +197,7 @@ begin
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_9.High.Width + 4;
     end;
-    addons.weather.Ini.Ini.WriteString('openweathermap', 'selected_unit', addons.weather.Action.OWM.Selected_Unit);
+//    addons.weather.Ini.Ini.WriteString('openweathermap', 'selected_unit', addons.weather.Action.OWM.Selected_Unit);
   end
   else
   begin

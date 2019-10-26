@@ -12,6 +12,7 @@ procedure uWeather_Config_ShowPanel(mPanel: Integer);
 implementation
 
 uses
+  uDatabase_ActiveUser,
   uLoad_AllTypes,
   uWeather_AllTypes,
   uWeather_Config_Provider,
@@ -25,8 +26,9 @@ begin
   if mShow then
   begin
     extrafe.prog.State := 'addon_weather_config';
-    if addons.weather.Action.Provider = 'yahoo' then
-      uWeather_Providers_Yahoo.vTime.Enabled := False;
+    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+      if user_Active_Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
+        uWeather_Providers_Yahoo.vTime.Enabled := False;
   end
   else
   begin
@@ -35,7 +37,7 @@ begin
   end;
   vWeather.Scene.Blur.Enabled := mShow;
   vWeather.Config.Panel.Visible := mShow;
-  addons.weather.Config.Active_Panel := -1;
+  ADDONS.weather.Config.Active_Panel := -1;
 
 end;
 
@@ -46,16 +48,17 @@ begin
   else if Assigned(vWeather.Config.main.Right.Panels[1]) then
     uWeather_Config_Towns.Free
   else if Assigned(vWeather.Config.main.Right.Panels[2]) then
-    uWeather_Config_Options_Free
+    uWeather_Config_Options.Free
   else if Assigned(vWeather.Config.main.Right.Panels[3]) then
-    uWeather_Config_Iconsets_Free;
-  if addons.weather.Action.Provider = 'yahoo' then
-    uWeather_Providers_Yahoo.vTime.Enabled := True;
+    uWeather_Config_Iconsets.Free;
+  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    if user_Active_Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
+      uWeather_Providers_Yahoo.vTime.Enabled := True;
 end;
 
 procedure uWeather_Config_ShowPanel(mPanel: Integer);
 begin
-  if addons.weather.Config.Active_Panel <> mPanel then
+  if ADDONS.weather.Config.Active_Panel <> mPanel then
   begin
     uWeather_COnfig_ClearConfig;
     case mPanel of
@@ -64,11 +67,11 @@ begin
       1:
         uWeather_Config_Towns.Load;
       2:
-        uWeather_Config_Options_Show;
+        uWeather_Config_Options.Load;
       3:
-        uWeather_Config_Iconsets_Show;
+        uWeather_Config_Iconsets.Load;
     end;
-    addons.weather.Config.Active_Panel := mPanel;
+    ADDONS.weather.Config.Active_Panel := mPanel;
   end;
 end;
 
