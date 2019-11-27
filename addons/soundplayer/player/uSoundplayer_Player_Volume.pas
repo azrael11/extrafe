@@ -25,32 +25,32 @@ uses
 
 procedure Mute;
 begin
-  if addons.soundplayer.Player.Mute = False then
+  if soundplayer.player_actions.mute = False then
   begin
-    if addons.soundplayer.Volume.Mute = 0 then
+    if soundplayer.player_actions.volume.mute = 0 then
     begin
-      addons.soundplayer.Volume.Mute := addons.soundplayer.Volume.Vol;
-      addons.soundplayer.Volume.Vol := 0;
+      soundplayer.player_actions.volume.Mute := soundplayer.player_actions.volume.Vol;
+      soundplayer.player_actions.volume.Vol := 0;
       addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Master', 0);
       BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, 0);
     end;
     vSoundplayer.Player.Speaker_Left_Volume_Pos.Value := 0;
     vSoundplayer.Player.Speaker_Right_Volume_Pos.Value := 0;
-    addons.soundplayer.Player.Mute := True;
+    soundplayer.player_actions.mute := True;
     vSoundplayer.Player.Speaker_Left_Hue.Enabled := True;
     vSoundplayer.Player.Speaker_Right_Hue.Enabled := True;
   end
   else
   begin
-    if addons.soundplayer.Volume.Mute <> 0 then
+    if soundplayer.player_actions.volume.Mute <> 0 then
     begin
-      addons.soundplayer.Volume.Vol := addons.soundplayer.Volume.Mute;
-      addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Master', addons.soundplayer.Volume.Vol / 100);
-      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.soundplayer.Volume.Vol / 100);
+      soundplayer.player_actions.volume.Vol := soundplayer.player_actions.volume.Mute;
+      addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Master', soundplayer.player_actions.volume.Vol / 100);
+      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, soundplayer.player_actions.volume.Vol / 100);
     end;
-    vSoundplayer.Player.Speaker_Left_Volume_Pos.Value := addons.soundplayer.Volume.Vol;
-    vSoundplayer.Player.Speaker_Right_Volume_Pos.Value := addons.soundplayer.Volume.Vol;
-    addons.soundplayer.Player.Mute := False;
+    vSoundplayer.Player.Speaker_Left_Volume_Pos.Value := soundplayer.player_actions.volume.Vol;
+    vSoundplayer.Player.Speaker_Right_Volume_Pos.Value := soundplayer.player_actions.volume.Vol;
+    soundplayer.player_actions.mute := False;
     vSoundplayer.Player.Speaker_Left_Hue.Enabled := False;
     vSoundplayer.Player.Speaker_Right_Hue.Enabled := False;
   end;
@@ -58,7 +58,7 @@ end;
 
 procedure Show;
 begin
-  if addons.soundplayer.Volume.State = 'Master' then
+  if soundplayer.player_actions.volume.State = 'Master' then
   begin
     vSoundplayer.Player.Speaker_Left_Percent_Ani.Enabled := False;
     vSoundplayer.Player.Speaker_Right_Percent_Ani.Enabled := False;
@@ -69,7 +69,7 @@ end;
 
 procedure Ani;
 begin
-  if addons.soundplayer.Volume.State = 'Master' then
+  if soundplayer.player_actions.volume.State = 'Master' then
   begin
     vSoundplayer.Player.Speaker_Left_Percent_Ani.Enabled := True;
     vSoundplayer.Player.Speaker_Right_Percent_Ani.Enabled := True;
@@ -80,52 +80,52 @@ procedure Update(mValue: single);
 begin
   if extrafe.prog.State <> 'addon_soundplayer_loading' then
   begin
-    if addons.soundplayer.Player.Volume_Changed = False then
+    if soundplayer.player_actions.Volume_Changed = False then
     begin
       Show;
-      addons.soundplayer.Volume.Vol := mValue;
-      if addons.soundplayer.Volume.State = 'Master' then
+      soundplayer.player_actions.volume.Vol := mValue;
+      if soundplayer.player_actions.volume.State = 'Master' then
       begin
         // Set the maste volume of the song
-        BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.soundplayer.Volume.Vol / 100);
+        BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, soundplayer.player_actions.volume.Vol / 100);
         // Write to init the volume
-        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Master', addons.soundplayer.Volume.Vol / 100);
-        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Left', addons.soundplayer.Volume.Vol / 100);
-        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Right', addons.soundplayer.Volume.Vol / 100);
+        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Master', soundplayer.player_actions.volume.Vol / 100);
+        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Left', soundplayer.player_actions.volume.Vol / 100);
+        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Right', soundplayer.player_actions.volume.Vol / 100);
         // Show the current text %;
         vSoundplayer.Player.Speaker_Left_Percent.Text :=
-          FormatFloat('0', addons.soundplayer.Volume.Vol) + '%';
+          FormatFloat('0', soundplayer.player_actions.volume.Vol) + '%';
         vSoundplayer.Player.Speaker_Right_Percent.Text :=
-          FormatFloat('0', addons.soundplayer.Volume.Vol) + '%';
+          FormatFloat('0', soundplayer.player_actions.volume.Vol) + '%';
         // Change the mute stat if is muted
-        if addons.soundplayer.Player.Mute = True then
+        if soundplayer.player_actions.mute = True then
         begin
-          addons.soundplayer.Player.Mute := False;
+          soundplayer.player_actions.mute := False;
           vSoundplayer.Player.Speaker_Left_Hue.Enabled := False;
           vSoundplayer.Player.Speaker_Right_Hue.Enabled := False;
         end
-        else if addons.soundplayer.Volume.Vol = 0 then
+        else if soundplayer.player_actions.volume.Vol = 0 then
           Mute;
-        vSoundplayer.Player.Speaker_Right_Volume_Pos.Value := addons.soundplayer.Volume.Vol;
-        vSoundplayer.Player.Speaker_Left_Volume_Pos.Value := addons.soundplayer.Volume.Vol;
-        addons.soundplayer.Player.Volume_Changed := True;
+        vSoundplayer.Player.Speaker_Right_Volume_Pos.Value := soundplayer.player_actions.volume.Vol;
+        vSoundplayer.Player.Speaker_Left_Volume_Pos.Value := soundplayer.player_actions.volume.Vol;
+        soundplayer.player_actions.Volume_Changed := True;
       end;
     end;
-    addons.soundplayer.Player.Volume_Changed := False;
+    soundplayer.player_actions.Volume_Changed := False;
     Ani;
   end;
 end;
 
 procedure Speakers_OnMouseAbove(vState: Boolean);
 begin
-  if addons.soundplayer.Volume.State = 'Master' then
+  if soundplayer.player_actions.volume.State = 'Master' then
   begin
-    if (vState and (addons.soundplayer.Volume.Vol <> 0)) then
+    if (vState and (soundplayer.player_actions.volume.Vol <> 0)) then
     begin
       vSoundplayer.Player.Speaker_Left_Hue.Enabled := vState;
       vSoundplayer.Player.Speaker_Right_Hue.Enabled := vState;
     end
-    else if ((vState = False) and (addons.soundplayer.Volume.Vol = 0)) then
+    else if ((vState = False) and (soundplayer.player_actions.volume.Vol = 0)) then
     begin
       vSoundplayer.Player.Speaker_Left_Hue.Enabled := not vState;
       vSoundplayer.Player.Speaker_Right_Hue.Enabled := not vState;
@@ -143,9 +143,9 @@ var
   vAdjust_Volume: Real;
 begin
   if vLeave then
-    vAdjust_Volume:= (addons.soundplayer.Volume.Vol / 100) / 2
+    vAdjust_Volume:= (soundplayer.player_actions.volume.Vol / 100) / 2
   else
-    vAdjust_Volume:= (addons.soundplayer.Volume.Vol / 100) * 2;
+    vAdjust_Volume:= (soundplayer.player_actions.volume.Vol / 100) * 2;
   BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, vAdjust_Volume);
 end;
 

@@ -20,7 +20,7 @@ implementation
 
 uses
   uLoad,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad_AllTypes,
   uSnippet_Text,
   uWeather_Actions,
@@ -31,11 +31,11 @@ uses
 
 procedure Load;
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider <> '' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider <> '' then
   begin
-    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
       uWeather_Providers_Yahoo_Config.Create_Options
-    else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       uWeather_Providers_OpenWeatherMap_Config.Create_Options;
   end;
 end;

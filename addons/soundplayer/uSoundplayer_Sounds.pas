@@ -12,21 +12,23 @@ procedure Free;
 implementation
 
 uses
+  uDB,
+  uDB_AUser,
   uLoad_AllTypes;
 
 procedure Load;
 begin
   //Lock
   addons.soundplayer.Sound.Effects[0] := BASS_StreamCreateFile(False,
-    PChar(addons.soundplayer.Path.Sounds + 'a_sp_lock.mp3'), 0, 0, 0
+    PChar(uDB_AUser.Local.ADDONS.Soundplayer_D.p_Sounds + 'a_sp_lock.mp3'), 0, 0, 0
     {$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
   //Lock
   addons.soundplayer.Sound.Effects[1] := BASS_StreamCreateFile(False,
-    PChar(addons.soundplayer.Path.Sounds + 'a_sp_unlock.mp3'), 0, 0, 0
+    PChar(uDB_AUser.Local.ADDONS.Soundplayer_D.p_Sounds + 'a_sp_unlock.mp3'), 0, 0, 0
     {$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
   //Mouse Enter
   addons.soundplayer.Sound.Effects[2] := BASS_StreamCreateFile(False,
-    PChar(addons.soundplayer.Path.Sounds + 'a_sp_hover.mp3'), 0, 0, 0
+    PChar(uDB_AUser.Local.ADDONS.Soundplayer_D.p_Sounds + 'a_sp_hover.mp3'), 0, 0, 0
     {$IFDEF UNICODE} or BASS_UNICODE{$ENDIF});
 end;
 

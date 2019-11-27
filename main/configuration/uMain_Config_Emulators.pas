@@ -53,7 +53,7 @@ uses
   uLoad_AllTypes,
   uSnippet_Image,
   main,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uMain_SetAll,
   uMain_AllTypes,
   uMain_Mouse,
@@ -227,23 +227,23 @@ begin
 
   case vNum of
     0:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.Mame;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Mame;
     1:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.FBA;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.FBA;
     2:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.Zinc;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Zinc;
     3:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.Daphne;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Daphne;
     4:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.Kronos;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Kronos;
     5:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.Raine;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Raine;
     6:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.Model2;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Model2;
     7:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.SuperModel;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.SuperModel;
     8:
-      vInstalled := user_Active_Local.Emulators.Arcade_D.Demul;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Demul;
   end;
 
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.Visible := vInstalled;;
@@ -384,27 +384,27 @@ begin
 
   case vNum of
     0:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Acorn_Archimedes;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Acorn_Archimedes;
     1:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Amiga;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Amiga;
     2:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Amstrad;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Amstrad;
     3:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Atari_800XL;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Atari_800XL;
     4:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Atart_ST;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Atart_ST;
     5:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Commodore_64;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Commodore_64;
     6:
-      vInstalled := user_Active_Local.Emulators.Computers_D.MsDos;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.MsDos;
     7:
-      vInstalled := user_Active_Local.Emulators.Computers_D.PCWindows;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.PCWindows;
     8:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Scummvm;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Scummvm;
     9:
-      vInstalled := user_Active_Local.Emulators.Computers_D.Spectrum;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Spectrum;
     10:
-      vInstalled := user_Active_Local.Emulators.Computers_D.X68000;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.X68000;
   end;
 
   if vInstalled then
@@ -535,36 +535,36 @@ begin
   mainScene.Config.main.R.Emulators.Consoles[vNum].Action.Visible := True;
 
   case vNum of
-    0: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Panasonic_3DO;
-    1: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Amiga_CD32;
-    2: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Atari_2600;
-    3: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Atari_5200;
-    4: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Atari_7800;
-    5: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Atari_Jaguar;
-    6: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Neo_Geo;
-    7: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Neo_Geo_CD;
-    8: vInstalled := user_Active_Local.EMULATORS.Consoles_D.NES;
-    9: vInstalled := user_Active_Local.EMULATORS.Consoles_D.SNES;
-    10: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Nintendo_64;
-    11: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Gamecube;
-    12: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Wii;
-    13: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Wii_U;
-    14: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Nintendo_Switch;
-    15: vInstalled := user_Active_Local.EMULATORS.Consoles_D.PC_Engine;
-    16: vInstalled := user_Active_Local.EMULATORS.Consoles_D.PC_Engine_CD;
-    17: vInstalled := user_Active_Local.EMULATORS.Consoles_D.PX_FX;
-    18: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Playstation;
-    19: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Playstation_2;
-    20: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Playstation_3;
-    21: vInstalled := user_Active_Local.EMULATORS.Consoles_D.SG_1000;
-    22: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Master_System;
-    23: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Mega_Drive;
-    24: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Mega_Drive_32X;
-    25: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Mega_Drive_CD;
-    26: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Saturn;
-    27: vInstalled := user_Active_Local.EMULATORS.Consoles_D.Dreamcast;
-    28: vInstalled := user_Active_Local.EMULATORS.Consoles_D.XBOX;
-    29: vInstalled := user_Active_Local.EMULATORS.Consoles_D.XBOX_ONE;
+    0: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Panasonic_3DO;
+    1: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Amiga_CD32;
+    2: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_2600;
+    3: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_5200;
+    4: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_7800;
+    5: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_Jaguar;
+    6: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Neo_Geo;
+    7: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Neo_Geo_CD;
+    8: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.NES;
+    9: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.SNES;
+    10: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Nintendo_64;
+    11: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Gamecube;
+    12: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Wii;
+    13: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Wii_U;
+    14: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Nintendo_Switch;
+    15: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.PC_Engine;
+    16: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.PC_Engine_CD;
+    17: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.PX_FX;
+    18: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Playstation;
+    19: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Playstation_2;
+    20: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Playstation_3;
+    21: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.SG_1000;
+    22: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Master_System;
+    23: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Mega_Drive;
+    24: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Mega_Drive_32X;
+    25: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Mega_Drive_CD;
+    26: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Saturn;
+    27: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Dreamcast;
+    28: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.XBOX;
+    29: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.XBOX_ONE;
   end;
 
   if vInstalled then
@@ -726,19 +726,19 @@ begin
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Gray.Enabled := True;
 
   case vNum of
-    0: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Atari_Lynx;
-    1: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Neo_Geo_Pocket;
-    2: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.GameGear;
-    3: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Game_And_Watch;
-    4: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Gameboy;
-    5: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Gameboy_Color;
-    6: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Gameboy_VirtualBoy;
-    7: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Gameboy_Advance;
-    8: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Nintendo_DS;
-    9: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Nintendo_3DS;
-    10: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.PSP;
-    11: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.PSP_Vita;
-    12: vInstalled := user_Active_Local.EMULATORS.Handhelds_D.Wonderswan;
+    0: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Atari_Lynx;
+    1: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Neo_Geo_Pocket;
+    2: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.GameGear;
+    3: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Game_And_Watch;
+    4: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy;
+    5: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy_Color;
+    6: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy_VirtualBoy;
+    7: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy_Advance;
+    8: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Nintendo_DS;
+    9: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Nintendo_3DS;
+    10: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.PSP;
+    11: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.PSP_Vita;
+    12: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Wonderswan;
   end;
 
   if vInstalled then
@@ -863,8 +863,8 @@ begin
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Gray.Enabled := True;
 
   case vNum of
-    0: vInstalled := user_Active_Local.EMULATORS.Pinballs_D.Visual_Pinball;
-    1: vInstalled := user_Active_Local.EMULATORS.Pinballs_D.Future_Pinball;
+    0: vInstalled := uDB_AUser.Local.EMULATORS.Pinballs_D.Visual_Pinball;
+    1: vInstalled := uDB_AUser.Local.EMULATORS.Pinballs_D.Future_Pinball;
   end;
 
   if vInstalled then

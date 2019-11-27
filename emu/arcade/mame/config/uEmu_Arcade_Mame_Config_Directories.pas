@@ -13,11 +13,13 @@ uses
   FMX.Layouts,
   FMX.TabControl,
   FMX.Objects,
+  FMX.Effects,
   VCL.FileCtrl,
   ALFmxLayouts;
 
-procedure uEmu_Arcade_Mame_Config_Create_Directories_Panel;
-procedure uEmu_Arcade_Mame_Config_Create_RomPaths;
+procedure Load;
+// procedure Create_Rom_Paths;
+// procedure Create_Media_Paths;
 
 // Actions
 procedure uEmu_Arcade_Mame_Config_CheckAndDownload(vNum: Integer);
@@ -31,8 +33,8 @@ procedure uEmu_Arcade_Mame_Config_Directories_TabItemClick(vName: String);
 implementation
 
 uses
-  uDatabase_ActiveUser,
-  uDatabase_SQLCommands,
+  uDB_AUser,
+  uDB,
   uLoad_AllTypes,
   uWindows,
   uSnippet_Text,
@@ -99,11 +101,31 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Cancel.Visible := True;
 end;
 
-procedure uEmu_Arcade_Mame_Config_Create_RomPaths;
+procedure Create_Rom_Paths;
 var
   vi: Integer;
   vRoms: WideString;
 begin
+  vMame.Config.Panel.Dirs.Roms.Find := TText.Create(vMame.Config.Panel.Dirs.Roms_Tab);
+  vMame.Config.Panel.Dirs.Roms.Find.Name := 'Mame_Dir_Roms_Add';
+  vMame.Config.Panel.Dirs.Roms.Find.Parent := vMame.Config.Panel.Dirs.Roms_Tab;
+  vMame.Config.Panel.Dirs.Roms.Find.SetBounds(vMame.Config.Panel.Dirs.TabControl.Width - 42, 10, 24, 24);
+  vMame.Config.Panel.Dirs.Roms.Find.Font.Family := 'IcoMoon-Free';
+  vMame.Config.Panel.Dirs.Roms.Find.Font.Size := 18;
+  vMame.Config.Panel.Dirs.Roms.Find.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vMame.Config.Panel.Dirs.Roms.Find.Text := #$ea0a;
+  vMame.Config.Panel.Dirs.Roms.Find.OnClick := mame.Config.Input.Mouse.Text.onMouseClick;
+  vMame.Config.Panel.Dirs.Roms.Find.OnMouseEnter := mame.Config.Input.Mouse.Text.OnMouseEnter;
+  vMame.Config.Panel.Dirs.Roms.Find.OnMouseLeave := mame.Config.Input.Mouse.Text.OnMouseLeave;
+  vMame.Config.Panel.Dirs.Roms.Find.Visible := True;
+
+  vMame.Config.Panel.Dirs.Roms.Find_Glow := TGlowEffect.Create(vMame.Config.Panel.Dirs.Roms.Find);
+  vMame.Config.Panel.Dirs.Roms.Find_Glow.Name := 'Mame_Dirs_Roms_Add_Glow';
+  vMame.Config.Panel.Dirs.Roms.Find_Glow.Parent := vMame.Config.Panel.Dirs.Roms.Find;
+  vMame.Config.Panel.Dirs.Roms.Find_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vMame.Config.Panel.Dirs.Roms.Find_Glow.Softness := 0.9;
+  vMame.Config.Panel.Dirs.Roms.Find_Glow.Enabled := False;
+
   vMame.Config.Panel.Dirs.Roms.Box := TVertScrollBox.Create(vMame.Config.Panel.Dirs.Roms_Tab);
   vMame.Config.Panel.Dirs.Roms.Box.Name := 'Mame_Dir_Roms_VertScrollbox';
   vMame.Config.Panel.Dirs.Roms.Box.Parent := vMame.Config.Panel.Dirs.Roms_Tab;
@@ -118,7 +140,7 @@ begin
     vMame.Config.Panel.Dirs.Roms.Edit[vi].Parent := vMame.Config.Panel.Dirs.Roms.Box;
     vMame.Config.Panel.Dirs.Roms.Edit[vi].SetBounds(5, (5 + ((vi * 30) + (vi * 10))), vMame.Config.Panel.Dirs.Roms.Box.Width - 64, 30);
     if mame.Emu.Ini.CORE_SEARCH_rompath.Strings[vi] = 'roms' then
-      vRoms := user_Active_Local.EMULATORS.Arcade_D.Mame_D.Path + 'roms'
+      vRoms := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Path + 'roms'
     else
       vRoms := mame.Emu.Ini.CORE_SEARCH_rompath.Strings[vi];
     vMame.Config.Panel.Dirs.Roms.Edit[vi].Text := vRoms;
@@ -126,63 +148,36 @@ begin
 
     if mame.Emu.Ini.CORE_SEARCH_rompath.Strings[vi] <> 'roms' then
     begin
-      vMame.Config.Panel.Dirs.Roms.Del[vi] := TSpeedButton.Create(vMame.Config.Panel.Dirs.Roms.Box);
-      vMame.Config.Panel.Dirs.Roms.Del[vi].Name := 'Mame_Dir_Roms_Del_' + IntToStr(vi);
+      vMame.Config.Panel.Dirs.Roms.Del[vi] := TText.Create(vMame.Config.Panel.Dirs.Roms.Box);
+      vMame.Config.Panel.Dirs.Roms.Del[vi].Name := 'Mame_Dir_Roms_Del_' + vi.ToString;
       vMame.Config.Panel.Dirs.Roms.Del[vi].Parent := vMame.Config.Panel.Dirs.Roms.Box;
       vMame.Config.Panel.Dirs.Roms.Del[vi].SetBounds((vMame.Config.Panel.Dirs.Roms.Box.Width - 50), (5 + ((vi * 30) + (vi * 10))), 50, 30);
-      vMame.Config.Panel.Dirs.Roms.Del[vi].StyleLookup := 'delettoolbutton';
-      vMame.Config.Panel.Dirs.Roms.Del[vi].StyledSettings := vMame.Config.Panel.Dirs.Roms.Del[vi].StyledSettings - [TstyledSetting.FontColor];
+      vMame.Config.Panel.Dirs.Roms.Del[vi].Font.Family := 'IcoMoon-Free';
+      vMame.Config.Panel.Dirs.Roms.Del[vi].Font.Size := 24;
       vMame.Config.Panel.Dirs.Roms.Del[vi].TextSettings.FontColor := TAlphaColorRec.Red;
-      vMame.Config.Panel.Dirs.Roms.Del[vi].Text := 'Delete';
-      vMame.Config.Panel.Dirs.Roms.Del[vi].OnClick := mame.Config.Input.Mouse.SpeedButton.onMouseClick;
+      vMame.Config.Panel.Dirs.Roms.Del[vi].Text := #$e9ac;
+      vMame.Config.Panel.Dirs.Roms.Del[vi].OnClick := mame.Config.Input.Mouse.Text.onMouseClick;
+      vMame.Config.Panel.Dirs.Roms.Del[vi].OnMouseEnter := mame.Config.Input.Mouse.Text.OnMouseEnter;
+      vMame.Config.Panel.Dirs.Roms.Del[vi].OnMouseLeave := mame.Config.Input.Mouse.Text.OnMouseLeave;
       vMame.Config.Panel.Dirs.Roms.Del[vi].TagFloat := 10;
       vMame.Config.Panel.Dirs.Roms.Del[vi].Tag := vi;
       vMame.Config.Panel.Dirs.Roms.Del[vi].Visible := True;
+
+      vMame.Config.Panel.Dirs.Roms.Del_Glow[vi] := TGlowEffect.Create(vMame.Config.Panel.Dirs.Roms.Del[vi]);
+      vMame.Config.Panel.Dirs.Roms.Del_Glow[vi].Name := 'Mame_Dir_Roms_Del_Glow' + vi.ToString;
+      vMame.Config.Panel.Dirs.Roms.Del_Glow[vi].Parent := vMame.Config.Panel.Dirs.Roms.Del[vi];
+      vMame.Config.Panel.Dirs.Roms.Del_Glow[vi].GlowColor := TAlphaColorRec.Red;
+      vMame.Config.Panel.Dirs.Roms.Del_Glow[vi].Softness := 0.9;
+      vMame.Config.Panel.Dirs.Roms.Del_Glow[vi].Enabled := False;
     end;
   end;
 end;
 
-// Directories
-procedure uEmu_Arcade_Mame_Config_Create_Directories_Panel;
+procedure Create_Media_Paths;
 var
   vi: Integer;
   vType: String;
 begin
-  vMame.Config.Panel.Dirs.TabControl := TTabControl.Create(vMame.Config.Scene.Right_Panels[0]);
-  vMame.Config.Panel.Dirs.TabControl.Name := 'Mame_Dir_Master_TabControl';
-  vMame.Config.Panel.Dirs.TabControl.Parent := vMame.Config.Scene.Right_Panels[0];
-  vMame.Config.Panel.Dirs.TabControl.Align := TAlignLayout.Client;
-  vMame.Config.Panel.Dirs.TabControl.Visible := True;
-
-  vMame.Config.Panel.Dirs.Roms_Tab := TTabItem.Create(vMame.Config.Panel.Dirs.TabControl);
-  vMame.Config.Panel.Dirs.Roms_Tab.Name := 'Mame_Dir_Tab_Roms';
-  vMame.Config.Panel.Dirs.Roms_Tab.Parent := vMame.Config.Panel.Dirs.TabControl;
-  vMame.Config.Panel.Dirs.Roms_Tab.Text := 'Roms';
-  vMame.Config.Panel.Dirs.Roms_Tab.OnClick := mame.Config.Input.Mouse.TabItem.onMouseClick;
-  vMame.Config.Panel.Dirs.Roms_Tab.Visible := True;
-
-  vMame.Config.Panel.Dirs.Media_Tab := TTabItem.Create(vMame.Config.Panel.Dirs.TabControl);
-  vMame.Config.Panel.Dirs.Media_Tab.Name := 'Mame_Dir_Tab_Media';
-  vMame.Config.Panel.Dirs.Media_Tab.Parent := vMame.Config.Panel.Dirs.TabControl;
-  vMame.Config.Panel.Dirs.Media_Tab.Text := 'Media';
-  vMame.Config.Panel.Dirs.Media_Tab.OnClick := mame.Config.Input.Mouse.TabItem.onMouseClick;
-  vMame.Config.Panel.Dirs.Media_Tab.Visible := True;
-
-  // Roms
-  vMame.Config.Panel.Dirs.Roms.Find := TSpeedButton.Create(vMame.Config.Panel.Dirs.Roms_Tab);
-  vMame.Config.Panel.Dirs.Roms.Find.Name := 'Mame_Dir_Roms_Add_Button';
-  vMame.Config.Panel.Dirs.Roms.Find.Parent := vMame.Config.Panel.Dirs.Roms_Tab;
-  vMame.Config.Panel.Dirs.Roms.Find.SetBounds(vMame.Config.Panel.Dirs.TabControl.Width - 42, 10, 24, 24);
-  vMame.Config.Panel.Dirs.Roms.Find.StyleLookup := 'addtoolbutton';
-  vMame.Config.Panel.Dirs.Roms.Find.Hint := 'Add new rom path';
-  vMame.Config.Panel.Dirs.Roms.Find.ShowHint := True;
-  vMame.Config.Panel.Dirs.Roms.Find.OnClick := mame.Config.Input.Mouse.SpeedButton.onMouseClick;
-  vMame.Config.Panel.Dirs.Roms.Find.Tag := -1;
-  vMame.Config.Panel.Dirs.Roms.Find.Visible := True;
-
-  uEmu_Arcade_Mame_Config_Create_RomPaths;
-
-  // Media
   vMame.Config.Panel.Dirs.Media.Box := TVertScrollBox.Create(vMame.Config.Panel.Dirs.Media_Tab);
   vMame.Config.Panel.Dirs.Media.Box.Name := 'Mame_Dir_Media_VertScrollbox';
   vMame.Config.Panel.Dirs.Media.Box.Parent := vMame.Config.Panel.Dirs.Media_Tab;
@@ -204,63 +199,60 @@ begin
     vMame.Config.Panel.Dirs.Media.Edit[vi] := TEdit.Create(vMame.Config.Panel.Dirs.Media.Box);
     vMame.Config.Panel.Dirs.Media.Edit[vi].Name := 'Mame_Dir_Media_Path_' + IntToStr(vi);
     vMame.Config.Panel.Dirs.Media.Edit[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
-    vMame.Config.Panel.Dirs.Media.Edit[vi].Width := vMame.Config.Panel.Dirs.Media.Box.Width - 60;
-    vMame.Config.Panel.Dirs.Media.Edit[vi].Height := 30;
-    vMame.Config.Panel.Dirs.Media.Edit[vi].Position.X := 5;
-    vMame.Config.Panel.Dirs.Media.Edit[vi].Position.Y := 25 + ((vi * 30) + (vi * 25));
+    vMame.Config.Panel.Dirs.Media.Edit[vi].SetBounds(5, 25 + ((vi * 30) + (vi * 25)), vMame.Config.Panel.Dirs.Media.Box.Width - 60, 30);
     case vi of
       0:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Artworks;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artworks;
       1:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Cabinets;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Cabinets;
       2:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Control_Panels;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Control_Panels;
       3:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Covers;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Covers;
       4:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Flyers;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Flyers;
       5:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Fanart;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart;
       6:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Icons;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons;
       7:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Manuals;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals;
       8:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Marquees;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees;
       9:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Pcbs;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Pcbs;
       10:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots;
       11:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Titles;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Titles;
       12:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Artwork_Preview;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artwork_Preview;
       13:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Bosses;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Bosses;
       14:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Ends;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Ends;
       15:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.How_To;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.How_To;
       16:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Logos;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Logos;
       17:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Scores;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Scores;
       18:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Selects;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Selects;
       19:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Versus;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Versus;
       20:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Game_Over;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Game_Over;
       21:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Warnings;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Warnings;
       22:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Stamps;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps;
       23:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks;
       24:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files;
       25:
-        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := user_Active_Local.EMULATORS.Arcade_D.Media.Videos;
+        vMame.Config.Panel.Dirs.Media.Edit[vi].Text := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos;
     end;
     vMame.Config.Panel.Dirs.Media.Edit[vi].Visible := True;
 
@@ -284,32 +276,72 @@ begin
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi] := TText.Create(vMame.Config.Panel.Dirs.Media.Box);
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Name := 'Mame_Dir_Media_CAD_' + IntToStr(vi);
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].TextSettings.FontColor := claWhite;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Font.Style := vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Font.Style + [TFontStyle.fsBold];
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].TextSettings.HorzAlign := TTextAlign.Trailing;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Text := 'Check and Download ' + cMame_Config_Media_dirs[vi];
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Position.Y := 5 + ((vi * 30) + (vi * 25));
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Height := 22;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].SetBounds(vMame.Config.Panel.Dirs.Media.Box.Width - 80, 5 + ((vi * 30) + (vi * 25)), 24, 24);
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Font.Family := 'IcoMoon-Free';
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Text := #$e9c7;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Visible := True;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width := uSnippet_Text_ToPixels(vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi]);
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Position.X := vMame.Config.Panel.Dirs.Media.Edit[vi].Width -
-      vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Width;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnClick := mame.Config.Input.Mouse.Text.onMouseClick;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnMouseEnter := mame.Config.Input.Mouse.Text.OnMouseEnter;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnMouseLeave := mame.Config.Input.Mouse.Text.OnMouseLeave;
-    vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].OnClick := mame.Config.Input.Mouse.Text.onMouseClick;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Tag := vi;
     vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi].Visible := True;
 
-    vMame.Config.Panel.Dirs.Media.Change[vi] := TSpeedButton.Create(vMame.Config.Panel.Dirs.Media.Box);
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[vi] := TGlowEffect.Create(vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi]);
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[vi].Name := 'Mame_Dir_Media_CAD_Glow_' + vi.ToString;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[vi].Parent := vMame.Config.Panel.Dirs.Media.CheckAndDownload[vi];
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[vi].GlowColor := TAlphaColorRec.Deepskyblue;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[vi].Softness := 0.9;
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[vi].Enabled := False;
+
+    vMame.Config.Panel.Dirs.Media.Change[vi] := TText.Create(vMame.Config.Panel.Dirs.Media.Box);
     vMame.Config.Panel.Dirs.Media.Change[vi].Name := 'Mame_Dir_Media_Change_' + IntToStr(vi);
     vMame.Config.Panel.Dirs.Media.Change[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
     vMame.Config.Panel.Dirs.Media.Change[vi].SetBounds((vMame.Config.Panel.Dirs.Media.Box.Width - 50), (25 + ((vi * 30) + (vi * 25))), 30, 30);
-    vMame.Config.Panel.Dirs.Media.Change[vi].StyleLookup := 'delettoolbutton';
-    vMame.Config.Panel.Dirs.Media.Change[vi].Text := '...';
-    vMame.Config.Panel.Dirs.Media.Change[vi].OnClick := mame.Config.Input.Mouse.SpeedButton.onMouseClick;
+    vMame.Config.Panel.Dirs.Media.Change[vi].Font.Family := 'IcoMoon-Free';
+    vMame.Config.Panel.Dirs.Media.Change[vi].Font.Size := 24;
+    vMame.Config.Panel.Dirs.Media.Change[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vMame.Config.Panel.Dirs.Media.Change[vi].Text := #$e930;
+    vMame.Config.Panel.Dirs.Media.Change[vi].OnClick := mame.Config.Input.Mouse.Text.onMouseClick;
+    vMame.Config.Panel.Dirs.Media.Change[vi].OnMouseEnter := mame.Config.Input.Mouse.Text.OnMouseEnter;
+    vMame.Config.Panel.Dirs.Media.Change[vi].OnMouseLeave := mame.Config.Input.Mouse.Text.OnMouseLeave;
     vMame.Config.Panel.Dirs.Media.Change[vi].Tag := vi;
     vMame.Config.Panel.Dirs.Media.Change[vi].Visible := True;
+
+    vMame.Config.Panel.Dirs.Media.Change_Glow[vi] := TGlowEffect.Create(vMame.Config.Panel.Dirs.Media.Change[vi]);
+    vMame.Config.Panel.Dirs.Media.Change_Glow[vi].Name := 'Mame_Dir_Media_Change_Glow_' + vi.ToString;
+    vMame.Config.Panel.Dirs.Media.Change_Glow[vi].Parent := vMame.Config.Panel.Dirs.Media.Change[vi];
+    vMame.Config.Panel.Dirs.Media.Change_Glow[vi].GlowColor := TAlphaColorRec.Deepskyblue;
+    vMame.Config.Panel.Dirs.Media.Change_Glow[vi].Softness := 0.9;
+    vMame.Config.Panel.Dirs.Media.Change_Glow[vi].Enabled := False;
   end;
+
+end;
+
+procedure Load;
+begin
+  vMame.Config.Panel.Dirs.TabControl := TTabControl.Create(vMame.Config.Scene.Right_Panels[0]);
+  vMame.Config.Panel.Dirs.TabControl.Name := 'Mame_Dir_Master_TabControl';
+  vMame.Config.Panel.Dirs.TabControl.Parent := vMame.Config.Scene.Right_Panels[0];
+  vMame.Config.Panel.Dirs.TabControl.Align := TAlignLayout.Client;
+  vMame.Config.Panel.Dirs.TabControl.Visible := True;
+
+  vMame.Config.Panel.Dirs.Roms_Tab := TTabItem.Create(vMame.Config.Panel.Dirs.TabControl);
+  vMame.Config.Panel.Dirs.Roms_Tab.Name := 'Mame_Dir_Tab_Roms';
+  vMame.Config.Panel.Dirs.Roms_Tab.Parent := vMame.Config.Panel.Dirs.TabControl;
+  vMame.Config.Panel.Dirs.Roms_Tab.Text := 'Roms';
+  vMame.Config.Panel.Dirs.Roms_Tab.OnClick := mame.Config.Input.Mouse.TabItem.onMouseClick;
+  vMame.Config.Panel.Dirs.Roms_Tab.Visible := True;
+
+  vMame.Config.Panel.Dirs.Media_Tab := TTabItem.Create(vMame.Config.Panel.Dirs.TabControl);
+  vMame.Config.Panel.Dirs.Media_Tab.Name := 'Mame_Dir_Tab_Media';
+  vMame.Config.Panel.Dirs.Media_Tab.Parent := vMame.Config.Panel.Dirs.TabControl;
+  vMame.Config.Panel.Dirs.Media_Tab.Text := 'Media';
+  vMame.Config.Panel.Dirs.Media_Tab.OnClick := mame.Config.Input.Mouse.TabItem.onMouseClick;
+  vMame.Config.Panel.Dirs.Media_Tab.Visible := True;
+
+  Create_Rom_Paths;
+  Create_Media_Paths;
 
   vMame.Config.Panel.Dirs.TabControl.TabIndex := 0;
 end;
@@ -324,8 +356,8 @@ begin
   begin
     mame.Emu.Ini.CORE_SEARCH_rompath.Insert(mame.Emu.Ini.CORE_SEARCH_rompath.Count, dir);
     FreeAndNil(vMame.Config.Panel.Dirs.Roms.Box);
-    uEmu_Arcade_Mame_Config_Create_RomPaths;
-    uEmu_Arcade_Mame_Gamelist_Refresh;
+    Create_Rom_Paths;
+    uEmu_Arcade_Mame_Gamelist.Refresh;
   end
 end;
 
@@ -333,8 +365,8 @@ procedure uEmu_Arcade_Mame_Config_RomPath_Delete(vRow: Integer);
 begin
   mame.Emu.Ini.CORE_SEARCH_rompath.Delete(vRow);
   FreeAndNil(vMame.Config.Panel.Dirs.Roms.Box);
-  uEmu_Arcade_Mame_Config_Create_RomPaths;
-  uEmu_Arcade_Mame_Gamelist_Refresh;
+  Create_Rom_Paths;
+  uEmu_Arcade_Mame_Gamelist.Refresh;
 end;
 
 ///
@@ -359,163 +391,138 @@ begin
     case vNum of
       0:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Artworks := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ARTWORKS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artworks := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ARTWORKS', vdir, 'USER_ID',  uDB_AUser.Local.Num.ToString);
         end;
       1:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Cabinets := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'CABINETS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Cabinets := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'CABINETS', vdir, 'USER_ID',uDB_AUser.Local.Num.ToString);
         end;
       2:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Control_Panels := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'CONTROL_PANELS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Control_Panels := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'CONTROL_PANELS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       3:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Covers := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'COVERS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Covers := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'COVERS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       4:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Flyers := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'FLYERS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Flyers := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'FLYERS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       5:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Fanart := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'FANART', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'FANART', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       6:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Icons := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ICONS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ICONS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       7:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Manuals := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'MANUALS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MANUALS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       8:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Marquees := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'MARQUEES', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MARQUEES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       9:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Pcbs := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'PCBS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Pcbs := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'PCBS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       10:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SNAPSHOTS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SNAPSHOTS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       11:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Titles := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'TITLES', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Titles := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'TITLES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       12:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Artwork_Preview := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ARTWORK_PREVIEW', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artwork_Preview := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ARTWORK_PREVIEW', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       13:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Bosses := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'BOSSES', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Bosses := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'BOSSES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       14:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Ends := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'ENDS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Ends := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ENDS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       15:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.How_To := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'HOW_TO', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.How_To := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'HOW_TO', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       16:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Logos := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'LOGOS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Logos := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'LOGOS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       17:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Scores := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SCORES', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Scores := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SCORES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       18:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Selects := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SELECTS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Selects := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SELECTS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       19:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Versus := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'VERSUS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Versus := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'VERSUS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       20:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Game_Over := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'GAME_OVER', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Game_Over := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'GAME_OVER', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       21:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Warnings := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'WARNINGS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Warnings := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'WARNINGS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       22:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Stamps := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'STAMPS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'STAMPS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       23:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SOUNDTRACKS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SOUNDTRACKS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       24:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'SUPPORT_FILES', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SUPPORT_FILES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
       25:
         begin
-          user_Active_Local.EMULATORS.Arcade_D.Media.Videos := vdir;
-          uDatabase_SQLCommands.Update_Local_Query('ARCADE_MEDIA', 'VIDEOS', vdir, user_Active_Local.Num.ToString);
+          uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos := vdir;
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'VIDEOS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
         end;
     end;
   end;
 end;
 
-{ TEMU_ARCACE_MAME_CONFIG_DIRECTORIES_TEXT }
-{ procedure TEMU_ARCACE_MAME_CONFIG_DIRECTORIES_TEXT.onMouseClick(
-  Sender: TObject);
-  begin
-  uEmu_Arcade_Mame_Config_CheckAndDowload('');
-  end; }
-
-{ procedure TEMU_ARCACE_MAME_CONFIG_DIRECTORIES_TEXT.onMouseEnter(Sender: TObject);
-  begin
-  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style+ [TFontStyle.fsUnderline];
-  TText(Sender).TextSettings.FontColor:= claDeepskyblue;
-  TText(Sender).Cursor:= crHandPoint;
-  end;
-  {
-  procedure TEMU_ARCACE_MAME_CONFIG_DIRECTORIES_TEXT.onMouseLeave(Sender: TObject);
-  begin
-  TText(Sender).TextSettings.Font.Style:= TText(Sender).TextSettings.Font.Style- [TFontStyle.fsUnderline];
-  if (extrafe.style.Name= 'Amakrits') or (extrafe.style.Name= 'Dark') or (extrafe.style.Name= 'Air') then
-  TText(Sender).TextSettings.FontColor:= claWhite
-  else
-  TText(Sender).TextSettings.FontColor:= claBlack;
-  TText(Sender).Cursor:= crDefault;
-  end; }
-
-/// /////////////////////////////////////////////////////////////////////////////
 procedure uEmu_Arcade_Mame_Config_Directories_TabItemClick(vName: String);
 begin
   if vName = 'Mame_Dir_Tab_Roms' then

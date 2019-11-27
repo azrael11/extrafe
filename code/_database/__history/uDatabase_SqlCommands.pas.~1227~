@@ -1,0 +1,105 @@
+unit uDatabase_SqlCommands;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils;
+
+{ Commands for Local Database }
+function Get_Local_Query(vColumn, vTable, vWhere: String): String;
+
+{ Commands for Online Database }
+function Get_Query(vColumn, vTable, vWhere: String): String;
+procedure Update_Query(vTable_Name, vCol, vValue, vUser_Num: string);
+
+// function Update_Query(vCommand, vValue: string): String;
+// function Update_Run_Query(vQuery: String): Boolean;
+
+var
+  vQuery, vField: String;
+
+implementation
+
+uses
+  load,
+  uload,
+  uLoad_AllTypes,
+  main,
+  uDB,
+  uDatabase_ActiveUser,
+  uLoad_Register;
+
+{ Commands for Local Database }
+{ Query Get Command }
+function Get_Local_Query(vColumn, vTable, vWhere: String): String;
+begin
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Add('SELECT ' + vColumn + ' FROM ' + vTable + ' WHERE USER_ID=' + vWhere);
+  ExtraFE_Query_Local.Open;
+  ExtraFE_Query_Local.First;
+  Result := ExtraFE_Query_Local.FieldByName(vColumn).AsString;
+end;
+
+/// ////////////////////////////////////////////////////////////////////////////////////
+
+{ Commands for Online Database }
+{ Query GET Command }
+function Get_Query(vColumn, vTable, vWhere: String): String;
+var
+  vQuery, vField: String;
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('SELECT ' + vColumn + ' FROM ' + vTable + ' WHERE NUM=' + vWhere);
+  ExtraFE_Query.Open;
+  ExtraFE_Query.First;
+  Result := ExtraFE_Query_Local.FieldByName(vColumn).AsString;
+  ExtraFE_Query.Close;
+end;
+
+{ Query UPDATE Command }
+procedure Update_Query(vTable_Name, vCol, vValue, vUser_Num: string);
+begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add('UPDATE ' + vTable_Name + ' SET ' + vCol + '=''' + vValue + ''' WHERE NUM=' + vUser_Num);
+  ExtraFE_Query.ExecSQL;
+end;
+
+{ function Update_Query(vCommand, vValue: string): String;
+  var
+  vQuery: String;
+  begin
+  if vCommand = 'name' then
+  vQuery := 'UPDATE users SET NAME=''' + vValue + ''' WHERE NUM=' + user_Active_Online.Num.ToString
+  else if vCommand = 'surname' then
+  vQuery := 'UPDATE users SET SURNAME=''' + vValue + ''' WHERE NUM=' + user_Active_Online.Num.ToString
+  else if vCommand = 'gender' then
+  vQuery := 'UPDATE users SET GENDER=''' + vValue + ''' WHERE NUM=' + user_Active_Online.Num.ToString
+  else if vCommand = 'avatar' then
+  vQuery := 'UPDATE users SET AVATAR=' + vValue + ' WHERE NUM=' + user_Active_Online.Num.ToString
+  else if vCommand = 'password' then
+  vQuery := 'UPDATE users SET PASSWORD=''' + vValue + ''' WHERE NUM=' + user_Active_Online.Num.ToString
+  else if vCommand = 'active' then
+  vQuery := 'UPDATE users SET ACTIVE=''' + vValue + ''' WHERE NUM=' + user_Active_Online.Num.ToString
+  else if vCommand = 'lastvisit' then
+  vQuery := 'UPDATE users SET LASTVISIT=''' + vValue + ''' WHERE NUM=' + user_Active_Online.Num.ToString
+  else if vCommand = 'ip' then
+  vQuery := 'UPDATE users SET IP=''' + vValue + ''' WHERE NUM=' + user_Active_Online.Num.ToString;
+
+  if Update_Run_Query(vQuery) then
+  Result := vValue;
+  end;
+
+  function Update_Run_Query(vQuery: String): Boolean;
+  begin
+  ExtraFE_Query.Close;
+  ExtraFE_Query.SQL.Clear;
+  ExtraFE_Query.SQL.Add(vQuery);
+  ExtraFE_Query.ExecSQL;
+  Result := True;
+  end; }
+
+end.

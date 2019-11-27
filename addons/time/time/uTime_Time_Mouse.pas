@@ -93,7 +93,7 @@ begin
         FreeAndNil(vTime.P_Time.Config.Analog.Panel)
       else if Assigned(vTime.P_Time.Config.Digital.Panel) then
         FreeAndNil(vTime.P_Time.Config.Digital.Panel);
-      uTime_Time_SetAll_Set_General;
+      uTime_Time_SetAll.Config_Show_General;
     end;
   end
   else if TTabItem(Sender).Name = 'A_T_P_Time_TabItem_1' then
@@ -104,7 +104,7 @@ begin
         FreeAndNil(vTime.P_Time.Config.General.Panel)
       else if Assigned(vTime.P_Time.Config.Digital.Panel) then
         FreeAndNil(vTime.P_Time.Config.Digital.Panel);
-      uTime_Time_SetAll_Set_Analog;
+      uTime_Time_SetAll.Config_Show_Analog;
     end;
   end
   else if TTabItem(Sender).Name = 'A_T_P_Time_TabItem_2' then
@@ -115,7 +115,7 @@ begin
         FreeAndNil(vTime.P_Time.Config.General.Panel)
       else if Assigned(vTime.P_Time.Config.Analog.Panel) then
         FreeAndNil(vTime.P_Time.Config.Analog.Panel);
-      uTime_Time_SetAll_Set_Digital;
+      uTime_Time_SetAll.Config_Show_Digital;
     end;
   end
 
@@ -167,11 +167,11 @@ if TText(Sender).Name = 'A_T_P_Time_Settings' then
   begin
     if not Assigned(vTime.P_Time.Config.Panel) then
     begin
-      uTime_Time_SetAll_Set_Config;
-      uTime_Time_SetAll_Set_General;
+      uTime_Time_SetAll.Config_Load;
+      uTime_Time_SetAll.Config_Show_General;
     end
     else
-      uTime_Time_SetAll_Config_Free;
+      uTime_Time_SetAll.Config_Free;
   end;
 end;
 

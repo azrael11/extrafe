@@ -23,13 +23,13 @@ uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
   uSoundplayer_Player,
-  uSoundplayer;
+  uSoundplayer_Actions;
 
 procedure uSoundplayer_TagSet_Opus;
 begin
   extrafe.prog.State := 'addon_soundplayer_tag_opus';
 
-  uSoundplayer.Hide_Animations;
+  uSoundplayer_Actions.Hide_Animations;
 
   vSoundplayer.tag.opus.Back := TPanel.Create(vSoundplayer.scene.Soundplayer);
   vSoundplayer.tag.opus.Back.Name := 'A_SP_Tag_Opus';

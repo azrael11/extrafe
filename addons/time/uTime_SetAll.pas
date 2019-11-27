@@ -28,7 +28,7 @@ uses
   uWindows,
   uLoad_AllTypes,
   uSnippets_Colors,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uMain_SetAll,
   uMain_AllTypes,
   uTime_AllTypes,
@@ -46,7 +46,7 @@ begin
   vTime.Time.Name := 'A_Time';
   vTime.Time.Parent := mainScene.Main.Down_Level;
   vTime.Time.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
-  vTime.Time.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Images + 't_back.png');
+  vTime.Time.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Time_D.Path.Images + 't_back.png');
   vTime.Time.WrapMode := TImageWrapMode.Tile;
   vTime.Time.Visible := True;
 
@@ -64,7 +64,7 @@ begin
   vTime.Back.Name := 'A_T_Back_Image';
   vTime.Back.Parent := vTime.Time;
   vTime.Back.SetBounds(0, 0, vTime.Time.Width, vTime.Time.Height);
-  vTime.Back.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Images + 't_back.png');
+  vTime.Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Time_D.Path.Images + 't_back.png');
   vTime.Back.WrapMode := TImageWrapMode.Tile;
   vTime.Back.Visible := True;
 
@@ -72,7 +72,7 @@ begin
   vTime.UpLine.Name := 'A_T_UpLine_Image';
   vTime.UpLine.Parent := vTime.Back;
   vTime.UpLine.SetBounds(0, 0, vTime.Back.Width, 10);
-  vTime.UpLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Images + 't_spot.png');
+  vTime.UpLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Time_D.Path.Images + 't_spot.png');
   vTime.UpLine.WrapMode := TImageWrapMode.Tile;
   vTime.UpLine.Visible := True;
 
@@ -82,7 +82,7 @@ begin
     vTime.Tab[vi].Back.Name := 'A_T_Tab_' + IntToStr(vi);
     vTime.Tab[vi].Back.Parent := vTime.Back;
     vTime.Tab[vi].Back.SetBounds((vTime.Back.Width / 5) * vi, 10, vTime.Back.Width / 5, 100);
-    vTime.Tab[vi].Back.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Images + 't_back.png');
+    vTime.Tab[vi].Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Time_D.Path.Images + 't_back.png');
     vTime.Tab[vi].Back.WrapMode := TImageWrapMode.Tile;
     vTime.Tab[vi].Back.Visible := True;
 
@@ -143,7 +143,7 @@ begin
   vTime.MiddleLine.Name := 'A_T_MiddleLine_Image';
   vTime.MiddleLine.Parent := vTime.Back;
   vTime.MiddleLine.SetBounds(0, 110, vTime.Back.Width, 10);
-  vTime.MiddleLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Images + 't_spot.png');
+  vTime.MiddleLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Time_D.Path.Images + 't_spot.png');
   vTime.MiddleLine.WrapMode := TImageWrapMode.Tile;
   vTime.MiddleLine.Visible := True;
 
@@ -151,7 +151,7 @@ begin
   vTime.DownLine.Name := 'A_T_DownLine_Image';
   vTime.DownLine.Parent := vTime.Back;
   vTime.DownLine.SetBounds(0, vTime.Back.Height - 10, vTime.Back.Width, 10);
-  vTime.DownLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Images + 't_spot.png');
+  vTime.DownLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Time_D.Path.Images + 't_spot.png');
   vTime.DownLine.WrapMode := TImageWrapMode.Tile;
   vTime.DownLine.Visible := True;
 

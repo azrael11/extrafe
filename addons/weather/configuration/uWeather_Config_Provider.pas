@@ -29,8 +29,8 @@ implementation
 
 uses
   uload,
-  uDatabase_ActiveUser,
-  uDatabase_SqlCommands,
+  uDB_AUser,
+  uDB,
   uLoad_AllTypes,
   main,
   uWeather_AllTypes,
@@ -52,7 +52,7 @@ begin
   vWeather.Config.main.Right.Provider.Prov[vNum].Check.Name := 'A_W_Config_Provider_' + vName + '_CheckBox';
   vWeather.Config.main.Right.Provider.Prov[vNum].Check.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
   vWeather.Config.main.Right.Provider.Prov[vNum].Check.SetBounds(5, 35, 20, 20);
-  if user_Active_Local.ADDONS.Weather_D.Provider = vName then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = vName then
     vWeather.Config.main.Right.Provider.Prov[vNum].Check.IsChecked := True
   else
     vWeather.Config.main.Right.Provider.Prov[vNum].Check.IsChecked := False;
@@ -65,7 +65,7 @@ begin
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Name := 'A_W_Config_Provider_' + vName + '_Image';
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.SetBounds(25, 10, 140, 70);
-  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Images + 'w_provider_' + vName + '.png');
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Images + 'w_provider_' + vName + '.png');
   vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Visible := True;
 
   vWeather.Config.main.Right.Provider.Prov[vNum].Desc := TALText.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
@@ -91,14 +91,14 @@ begin
   vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.Text := 'Save the current forecast selections';
   if vName = 'yahoo' then
   begin
-    if user_Active_Local.addons.Weather_D.Yahoo.Towns_Count = -1 then
+    if uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count = -1 then
       vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.IsChecked := False
     else
       vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.IsChecked := True;
   end
   else if vName = 'openweathermap' then
   begin
-    if user_Active_Local.addons.Weather_D.OpenWeatherMap.Towns_Count = -1 then
+    if uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Towns_Count = -1 then
       vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.IsChecked := False
     else
       vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.IsChecked := True;
@@ -109,7 +109,7 @@ begin
   vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.Enabled := False;
   vWeather.Config.main.Right.Provider.Prov[vNum].Check_Old.Visible := True;
 
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if addons.weather.Action.Yahoo.Total_WoeID = -1 then
     begin
@@ -117,7 +117,7 @@ begin
       vWeather.Config.main.Right.Provider.Prov[0].Check_Old.IsChecked := False;
     end;
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
 
   end;
@@ -161,7 +161,7 @@ begin
   vWeather.Config.main.Right.Provider.Text.Name := 'A_W_Config_Provider_Label';
   vWeather.Config.main.Right.Provider.Text.Parent := vWeather.Config.main.Right.Panels[0];
   vWeather.Config.main.Right.Provider.Text.SetBounds(10, vWeather.Config.main.Right.Panels[0].Height - 30, 300, 20);
-  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(user_Active_Local.ADDONS.Weather_D.Provider);
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
   vWeather.Config.main.Right.Provider.Text.Font.Style := vWeather.Config.main.Right.Provider.Text.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Provider.Text.Visible := True;
 
@@ -182,27 +182,27 @@ begin
     if vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked then
       vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := False;
 
-    user_Active_Local.addons.Weather_D.Provider := 'yahoo';
-    uDatabase_SqlCommands.Update_Local_Query('ADDON_WEATHER', 'PROVIDER', 'yahoo', user_Active_Local.Num.ToString);
+    uDB_AUser.Local.addons.Weather_D.Provider := 'yahoo';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', 'yahoo', 'USER_ID', uDB_AUser.Local.Num.ToString);
 
-    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(user_Active_Local.ADDONS.Weather_D.Provider);
-    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Images + 'w_provider_yahoo.png');
+    vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Images + 'w_provider_yahoo.png');
 
     FreeAndNil(vWeather.Scene.Control);
     uWeather_SetAll.Control;
 
-    if user_Active_Local.addons.Weather_D.Yahoo.Towns_Count > -1 then
+    if uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count > -1 then
     begin
       if vWeather.Config.main.Right.Provider.Prov[0].Check_Old.IsChecked = False then
         uWeather_Providers_Yahoo_Config.Get_Data
       else
       begin
         vWeather.Scene.Back.Bitmap := nil;
-        for vi := 0 to user_Active_Local.addons.Weather_D.Yahoo.Towns_Count do
+        for vi := 0 to uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count do
         begin
           SetLength(addons.weather.Action.Yahoo.Data_Town, vi + 2);
           addons.weather.Action.Yahoo.Data_Town[vi] := uWeather_Providers_Yahoo.Get_Forecast(vi,
-            user_Active_Local.addons.Weather_D.Yahoo.Towns[vi].Woeid.ToString);
+            uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Woeid.ToString);
           uWeather_Providers_Yahoo.Main_Create_Town(addons.weather.Action.Yahoo.Data_Town[vi], vi);
           addons.weather.Action.Yahoo.Data_Town[vi].Photos.Picture_Used_Num := vBest_Img_Num;
         end;
@@ -218,12 +218,12 @@ begin
         vWeather.Scene.Arrow_Right.Visible := False;
         vWeather.Scene.Arrow_Left.Visible := False;
 
-        if user_Active_Local.addons.Weather_D.Yahoo.Towns_Count > 0 then
+        if uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count > 0 then
           vWeather.Scene.Arrow_Right.Visible := True;
       end
     end
     else
-      vWeather.Scene.Back.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Images + 'w_addtowns.png');
+      vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Images + 'w_addtowns.png');
     vWeather.Scene.Blur.Enabled := False;
     vWeather.Scene.Blur.Enabled := True;
   end
@@ -262,7 +262,7 @@ begin
         vWeather.Scene.Arrow_Right.Visible := True;
     end
     else
-      vWeather.Scene.Back.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Images + 'w_addtowns.png');
+      vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Images + 'w_addtowns.png');
   end
   else
     Clear_Weather_Addon(not vWeather.Config.main.Right.Provider.Prov[1].Check_Old.IsChecked);
@@ -272,7 +272,7 @@ procedure Clear_Weather_Addon(vClear: Boolean);
 var
   vi: Integer;
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     FreeAndNil(uWeather_Providers_Yahoo.vTime);
     if vClear then
@@ -287,15 +287,15 @@ begin
     end;
     vWeather.Config.main.Right.Provider.Prov[0].Check_Old.Text := 'Retrive old forecast selections';
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     //
   end;
   FreeAndNil(vWeather.Scene.Control);
   uWeather_SetAll.Control;
   // addons.weather.Ini.Ini.WriteString('Provider', 'Name', '');
-  user_Active_Local.ADDONS.Weather_D.Provider := '';
-  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(user_Active_Local.ADDONS.Weather_D.Provider);
+  uDB_AUser.Local.ADDONS.Weather_D.Provider := '';
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
   vWeather.Config.main.Left.Provider.Bitmap := nil;
   vWeather.Scene.Arrow_Left.Visible := False;
   vWeather.Scene.Arrow_Right.Visible := False;

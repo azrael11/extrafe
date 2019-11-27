@@ -18,10 +18,10 @@ uses
   FMX.Types,
   System.Inifiles,
   FmxPasLibVlcPlayerUnit,
-  OXmlPDOM,
   uEmu_Arcade_Mame_Mouse,
   uEmu_Arcade_Mame_Config_Mouse,
   ALFmxLayouts,
+  Radiant.Shapes,
   BASS;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -48,17 +48,21 @@ type
     Labels: array [0 .. 25] of TText;
     Found: array [0 .. 25] of TText;
     CheckAndDownload: array [0 .. 25] of TText;
+    CheckAndDownload_Glow: array [0 .. 25] of TGlowEffect;
     Edit: array [0 .. 25] of TEdit;
-    Change: array [0 .. 25] of TSpeedButton;
+    Change: array [0 .. 25] of TText;
+    Change_Glow: array [0 .. 25] of TGlowEffect;
     Check: TMAME_CONFIG_DIRECTORIES_MEDIA_CHECK;
   end;
 
 type
   TMAME_CONFIG_DIRECTORIES_ROMS = record
-    Find: TSpeedButton;
+    Find: TText;
+    Find_Glow: TGlowEffect;
     Box: TVertScrollBox;
     Edit: array [0 .. 100] of TEdit;
-    Del: array [0 .. 100] of TSpeedButton;
+    Del: array [0 .. 100] of TText;
+    Del_Glow: array [0 .. 100] of TGlowEffect;
   end;
 
 type
@@ -244,14 +248,18 @@ type
     Result: TText;
     Result_Num: TText;
     Result_Games: TText;
-    Remove: TButton;
+    Remove: TText;
+    Remove_Glow: TGlowEffect;
   end;
 
 type
   TEMU_MAME_SCENE_GAMELIST_INFO_FILTERS_WINDOW = record
     Panel: TPanel;
     Shadow: TShadowEffect;
-    Add: TButton;
+    Clear: TText;
+    Clear_Glow: TGlowEffect;
+    Add: TText;
+    Add_Glow: TGlowEffect;
     Info: TText;
     Games_Num: TText;
     Filter_Panels: array of TEMU_MAME_SCENE_GAMELIST_INFO_FILTERS_WINDOW_FILTER_PANELS;
@@ -278,8 +286,9 @@ type
     T_Games_Count_Info: TText;
     T_MameVersion: TText;
     Up_Back_Image: TImage;
-    T_GamePlayers: TText;
-    T_GameCategory: TText;
+    T_Lists: TText;
+    T_Lists_Glow: TGlowEffect;
+    T_Lists_Text: TText;
     Down_Back_Image: TImage;
     Filters: TEMU_MAME_SCENE_GAMELIST_INFO_FILTERS;
     Search_Back: TImage;
@@ -290,12 +299,7 @@ type
   end;
 
 type
-  TEMU_MAME_SCENE_SNAPSHOT_GROUP = record
-    Back: TImage;
-    Type_Arcade: TImage;
-    Type_Arcade_Reflection: TReflectionEffect;
-    Black_Image: TImage;
-    Black_Reflection: TReflectionEffect;
+  TEMU_MAME_SCENE_SNAPSHOT_GROUP_IMAGE = record
     Image: TImage;
     Image_X_Ani: TFloatAnimation;
     Image_Y_Ani: TFloatAnimation;
@@ -303,19 +307,45 @@ type
     Image_Height_Ani: TFloatAnimation;
     Image_Fade: TFadeTransitionEffect;
     Image_Fade_Ani: TFloatAnimation;
-    Image_Reflaction: TReflectionEffect;
+  end;
+
+type
+  TEMU_MAME_SCENE_SNAPSHOT_GROUP_PLAYERS = record
+    Layout: TLayout;
+    Players: TText;
+    Players_Value: TText;
+    Favorite: TText;
+  end;
+
+type
+  TEMU_MAME_SCENE_SNAPSHOT_GROUP = record
+    Back: TImage;
+    T_Image: TEMU_MAME_SCENE_SNAPSHOT_GROUP_IMAGE;
+    T_Players: TEMU_MAME_SCENE_SNAPSHOT_GROUP_PLAYERS;
+    Type_Arcade: TImage;
+    Type_Arcade_Reflection: TReflectionEffect;
+    Black_Image: TImage;
+    Black_Reflection: TReflectionEffect;
+
     Full_Video: TFmxPasLibVlcPlayer;
     Video: TFmxPasLibVlcPlayer;
     Video_Reflaction: TReflectionEffect;
   end;
 
 type
+  TEMU_MAME_SCENE_GAMEMENU_INFO = record
+    Layout: TLayout;
+    Headline: TText;
+    Line: TRadiantLine;
+    Box: TALVertScrollBox;
+    Text_Caption: array [0 .. 18] of TText;
+    Text: array [0 .. 18] of TText;
+  end;
+
+type
   TEMU_MAME_SCENE_GAMEMENU = record
     Stamp: TImage;
-    Headline: TText;
-    Box: TALVertScrollBox;
-    Text_Caption: array [0 .. 11] of TText;
-    Text: array [0 .. 11] of TText;
+    Info: TEMU_MAME_SCENE_GAMEMENU_INFO;
   end;
 
 type
@@ -323,14 +353,29 @@ type
     Back: TImage;
     Line1: TText;
     Line2: TText;
+    Snap: TImage;
     Line3_Text: TText;
     Line3_Value: TText;
+  end;
+
+type
+  TEMU_MAME_SCENE_LISTS = record
+    Panel: TLayout;
+    Add_Panel: TImage;
+    Add: TText;
+    Add_Glow: TGlowEffect;
+    Lists: TTabControl;
+    Lists_Item: array of TTabitem;
+    OutLine: array of TRadiantRectangle;
+    OutLine_Glow: array of TGlowEffect;
+    Lists_Text: array of TText;
   end;
 
 type
   TEMU_MAME_SCENE = record
     Main: TImage;
     Main_Blur: TGaussianBlurEffect;
+    List: TEMU_MAME_SCENE_LISTS;
     Left: TImage;
     Left_Anim: TFloatAnimation;
     Left_Blur: TBlurEffect;
@@ -957,8 +1002,8 @@ var
 implementation
 
 uses
-  uDatabase_ActiveUser,
-  uDatabase_SQLCommands,
+  uDB,
+  uDB_AUser,
   uEmu_Arcade_Mame_Actions;
 
 { TEMU_GAMELISTS_TIMER }
@@ -973,21 +1018,29 @@ end;
 { TEMU_GAMELISTS_ANIMATION }
 
 procedure TEMU_GAMELISTS_ANIMATION.OnFinish(Sender: TObject);
+var
+  vPlayers: String;
 begin
-  vMame.Scene.Media.Image_Fade_Ani.Enabled := False;
-  vMame.Scene.Media.Image_Y_Ani.Enabled := False;
-  vMame.Scene.Media.Image_X_Ani.Enabled := False;
-  vMame.Scene.Media.Image_Width_Ani.Enabled := False;
-  vMame.Scene.Media.Image_Height_Ani.Enabled := False;
-  vMame.Scene.Media.Image.Bitmap := vMame.Scene.Media.Image_Fade.Target;
-  vMame.Scene.Media.Image_Reflaction.Enabled := True;
+  if vMame.Scene.Media.T_Image.Image_Fade_Ani.Enabled = True then
+  begin
+    vMame.Scene.Media.T_Image.Image_Fade_Ani.Enabled := False;
+    vMame.Scene.Media.T_Image.Image_Y_Ani.Enabled := False;
+    vMame.Scene.Media.T_Image.Image_X_Ani.Enabled := False;
+    vMame.Scene.Media.T_Image.Image_Width_Ani.Enabled := False;
+    vMame.Scene.Media.T_Image.Image_Height_Ani.Enabled := False;
+    vMame.Scene.Media.T_Image.Image.Bitmap := vMame.Scene.Media.T_Image.Image_Fade.Target;
+    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    vMame.Scene.Media.T_Players.Players_Value.Text := vPlayers;
+    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'favorites', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    vMame.Scene.Media.T_Players.Favorite.Visible := vPlayers.ToBoolean;
+  end;
 end;
 
 { TEMU_VIDEO_TIMER }
 
 procedure TEMU_VIDEO_TIMER.OnTimer(Sender: TObject);
 begin
-  vMame.Scene.Media.Video.Play(user_Active_Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.mp4');
+  vMame.Scene.Media.Video.Play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.mp4');
   vMameVideoTimer.Enabled := False;
   vMame.Scene.Media.Video.Visible := True;
 end;

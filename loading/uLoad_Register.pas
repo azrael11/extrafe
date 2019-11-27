@@ -102,8 +102,7 @@ uses
   uLoad_AllTypes,
   ULoad_SetAll,
   uInternet_Files,
-  uDatabase,
-  uDatabase_SQLCommands,
+  uDB,
   uSnippet_Convert;
 
 procedure Create_Captcha;
@@ -174,6 +173,7 @@ end;
 function Register_User: Boolean;
 var
   vIp: TJSONValue;
+  vQuery: String;
 begin
   Result := false;
   Is_user_registered := false;
@@ -192,7 +192,7 @@ begin
     User_Reg.Registered := FormatDateTime('dd/mm/yyyy  hh:mm:ss ampm', now);
     User_Reg.Last_Visit := FormatDateTime('dd/mm/yyyy  hh:mm:ss ampm', now);
     User_Reg.Genre := '0';
-    if uDatabase_SQLCommands.Add_New_User then
+    if uDB.Add_New_User_Online then
     begin
       vQuery := 'SELECT * FROM USERS';
       ExtraFE_Query.Close;
@@ -201,7 +201,7 @@ begin
       ExtraFE_Query.Open;
 
       User_Reg.Online_Num := ExtraFE_Query.RecordCount.ToString;
-      uDatabase_SQLCommands.Add_User_Local;
+      uDB.Add_New_User_Local;
       uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
     end;
     Is_user_registered := True;
@@ -728,6 +728,7 @@ const
 var
   vi: Integer;
   vOnLine_Username: String;
+  vQuery: String;
 begin
   User.User_Online_Free := false;
   if vValue <> '' then
@@ -800,16 +801,16 @@ begin
   if (User.User_Empty = false) and (User.User_Total > 7) and (User.User_Num) and (User.User_Symbol) and (User.User_Cap) then
   begin
     vQuery := 'SELECT USERNAME FROM USERS';
-    uDatabase.ExtraFE_Query.Close;
-    uDatabase.ExtraFE_Query.SQL.Clear;
-    uDatabase.ExtraFE_Query.SQL.Add(vQuery);
-    uDatabase.ExtraFE_Query.ExecSQL;
-    uDatabase.ExtraFE_Query.Open;
-    uDatabase.ExtraFE_Query.First;
+    uDB.ExtraFE_Query.Close;
+    uDB.ExtraFE_Query.SQL.Clear;
+    uDB.ExtraFE_Query.SQL.Add(vQuery);
+    uDB.ExtraFE_Query.ExecSQL;
+    uDB.ExtraFE_Query.Open;
+    uDB.ExtraFE_Query.First;
 
-    for vi := 0 to uDatabase.ExtraFE_Query.RecordCount do
+    for vi := 0 to uDB.ExtraFE_Query.RecordCount do
     begin
-      vOnLine_Username := uDatabase.ExtraFE_Query.FieldByName('USERNAME').AsString;
+      vOnLine_Username := uDB.ExtraFE_Query.FieldByName('USERNAME').AsString;
       if vOnLine_Username = vValue then
       begin
         ex_load.Reg.Main.User_Online.Text := 'This username already exists';
@@ -824,7 +825,7 @@ begin
       end;
     end;
 
-    uDatabase.ExtraFE_Query.Next;
+    uDB.ExtraFE_Query.Next;
   end;
 
   if User.User_Total > 0 then
@@ -924,6 +925,7 @@ procedure Update_Email(vValue: String);
 var
   vi: Integer;
   vEmail_Online: String;
+  vQuery: String;
 begin
   if vValue <> '' then
   begin
@@ -950,16 +952,16 @@ begin
   if (User.Email_Empty = false) and (User.Email_Correct) then
   begin
     vQuery := 'SELECT EMAIL FROM USERS';
-    uDatabase.ExtraFE_Query.Close;
-    uDatabase.ExtraFE_Query.SQL.Clear;
-    uDatabase.ExtraFE_Query.SQL.Add(vQuery);
-    uDatabase.ExtraFE_Query.ExecSQL;
-    uDatabase.ExtraFE_Query.Open;
-    uDatabase.ExtraFE_Query.First;
+    uDB.ExtraFE_Query.Close;
+    uDB.ExtraFE_Query.SQL.Clear;
+    uDB.ExtraFE_Query.SQL.Add(vQuery);
+    uDB.ExtraFE_Query.ExecSQL;
+    uDB.ExtraFE_Query.Open;
+    uDB.ExtraFE_Query.First;
 
-    for vi := 0 to uDatabase.ExtraFE_Query.RecordCount do
+    for vi := 0 to uDB.ExtraFE_Query.RecordCount do
     begin
-      vEmail_Online := uDatabase.ExtraFE_Query.FieldByName('EMAIL').AsString;
+      vEmail_Online := uDB.ExtraFE_Query.FieldByName('EMAIL').AsString;
 
       if vEmail_Online = vValue then
       begin
@@ -973,7 +975,7 @@ begin
         ex_load.Reg.Main.Email_Online.TextSettings.FontColor := TAlphaColorRec.Limegreen;
         User.Email_Online_Free := True;
       end;
-      uDatabase.ExtraFE_Query.Next;
+      uDB.ExtraFE_Query.Next;
     end;
   end;
 end;
@@ -1162,6 +1164,7 @@ var
   vTemp: String;
   vTemp_Online: String;
   vOK: Boolean;
+  vQuery: String;
 
   procedure Create_Unique_Number;
   var
@@ -1186,16 +1189,16 @@ begin
   vOK := True;
 
   vQuery := 'SELECT USER_ID FROM USERS';
-  uDatabase.ExtraFE_Query.Close;
-  uDatabase.ExtraFE_Query.SQL.Clear;
-  uDatabase.ExtraFE_Query.SQL.Add(vQuery);
-  uDatabase.ExtraFE_Query.ExecSQL;
-  uDatabase.ExtraFE_Query.Open;
-  uDatabase.ExtraFE_Query.First;
+  uDB.ExtraFE_Query.Close;
+  uDB.ExtraFE_Query.SQL.Clear;
+  uDB.ExtraFE_Query.SQL.Add(vQuery);
+  uDB.ExtraFE_Query.ExecSQL;
+  uDB.ExtraFE_Query.Open;
+  uDB.ExtraFE_Query.First;
 
   repeat
     Create_Unique_Number;
-    uDatabase.ExtraFE_Query.First;
+    uDB.ExtraFE_Query.First;
     for vi := 0 to ExtraFE_Query.RecordCount do
     begin
       vTemp_Online := ExtraFE_Query.FieldByName('USER_ID').AsString;

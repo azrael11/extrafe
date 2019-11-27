@@ -32,25 +32,25 @@ var
 procedure uSoundplayer_Tag_Ogg_GetOgg(vPath: String);
 begin
   vCurrentSongPath := vPath;
-  addons.soundplayer.Player.Tag.ogg.Opus := TOpusTag.Create;
+  soundplayer.player_actions.Tag.ogg.Opus := TOpusTag.Create;
 
-  addons.soundplayer.Player.Tag.ogg.TagError := addons.soundplayer.Player.Tag.ogg.Opus.LoadFromFile(vPath);
+  soundplayer.player_actions.Tag.ogg.TagError := soundplayer.player_actions.Tag.ogg.Opus.LoadFromFile(vPath);
 
-  if addons.soundplayer.Player.Tag.ogg.TagError = 0 then
+  if soundplayer.player_actions.Tag.ogg.TagError = 0 then
   begin
     vSoundplayer.Tag.Opus.Title_V.Text :=
-      addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('TITLE');
-    vSoundplayer.Tag.Opus.Artist_V.Text := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText
+      soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('TITLE');
+    vSoundplayer.Tag.Opus.Artist_V.Text := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText
       ('ARTIST');
     vSoundplayer.Tag.Opus.Album_V.Text :=
-      addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('ALBUM');
+      soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('ALBUM');
     vSoundplayer.Tag.Opus.Genre_V.Text :=
-      addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('GENRE');
-    vSoundplayer.Tag.Opus.Date_V.Text := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('YEAR');
+      soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('GENRE');
+    vSoundplayer.Tag.Opus.Date_V.Text := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('YEAR');
     vSoundplayer.Tag.Opus.Track_V.Text :=
-      addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('TRACK');
-    vSoundplayer.Tag.Opus.Disk_V.Text := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('DISC');
-    vSoundplayer.Tag.Opus.Comment_V.Text := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText
+      soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('TRACK');
+    vSoundplayer.Tag.Opus.Disk_V.Text := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('DISC');
+    vSoundplayer.Tag.Opus.Comment_V.Text := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText
       ('COMMENT');
   end;
 
@@ -64,13 +64,13 @@ var
   CoverArt: TOpusVorbisCoverArtInfo;
 begin
   try
-    Index := addons.soundplayer.Player.Tag.ogg.Opus.FrameExists
+    Index := soundplayer.player_actions.Tag.ogg.Opus.FrameExists
       (OPUSTAGLIBRARY_FRAMENAME_METADATA_BLOCK_PICTURE);
     if Index > -1 then
     begin
       PictureStream := TMemoryStream.Create;
       try
-        if addons.soundplayer.Player.Tag.ogg.Opus.GetCoverArtFromFrame(Index, PictureStream, CoverArt) then
+        if soundplayer.player_actions.Tag.ogg.Opus.GetCoverArtFromFrame(Index, PictureStream, CoverArt) then
         begin
           CoverArt.MIMEType := LowerCase(CoverArt.MIMEType);
           PictureStream.Seek(0, soFromBeginning);
@@ -91,7 +91,7 @@ procedure uSoundplayer_Tag_Ogg_Save;
 var
   vGetSongPosition: word;
 begin
-  if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath
+  if addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now] = vCurrentSongPath
   then
   begin
     vGetSongPosition := BASS_ChannelGetPosition(sound.str_music[1], 0);
@@ -99,33 +99,33 @@ begin
     BASS_StreamFree(sound.str_music[1]);
   end;
 
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('TITLE', vSoundplayer.Tag.Opus.Title_V.Text);
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('ARTIST', vSoundplayer.Tag.Opus.Artist_V.Text);
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('ALBUM', vSoundplayer.Tag.Opus.Album_V.Text);
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('GENRE', vSoundplayer.Tag.Opus.Genre_V.Text);
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('YEAR', vSoundplayer.Tag.Opus.Date_V.Text);
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('TRACK', vSoundplayer.Tag.Opus.Track_V.Text);
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('DISC', vSoundplayer.Tag.Opus.Disk_V.Text);
-  addons.soundplayer.Player.Tag.ogg.Opus.SetTextFrameText('COMMENT', vSoundplayer.Tag.Opus.Comment_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('TITLE', vSoundplayer.Tag.Opus.Title_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('ARTIST', vSoundplayer.Tag.Opus.Artist_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('ALBUM', vSoundplayer.Tag.Opus.Album_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('GENRE', vSoundplayer.Tag.Opus.Genre_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('YEAR', vSoundplayer.Tag.Opus.Date_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('TRACK', vSoundplayer.Tag.Opus.Track_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('DISC', vSoundplayer.Tag.Opus.Disk_V.Text);
+  soundplayer.player_actions.Tag.ogg.Opus.SetTextFrameText('COMMENT', vSoundplayer.Tag.Opus.Comment_V.Text);
 
-  addons.soundplayer.Player.Tag.ogg.TagError := addons.soundplayer.Player.Tag.ogg.Opus.SaveToFile
+  soundplayer.player_actions.Tag.ogg.TagError := soundplayer.player_actions.Tag.ogg.Opus.SaveToFile
     (vCurrentSongPath);
-  if addons.soundplayer.Player.Tag.ogg.TagError <> OPUSTAGLIBRARY_SUCCESS then
+  if soundplayer.player_actions.Tag.ogg.TagError <> OPUSTAGLIBRARY_SUCCESS then
   begin
     Showmessage('Error while saving tag, error code: ' +
-      IntToStr(addons.soundplayer.Player.Tag.ogg.TagError));
+      IntToStr(soundplayer.player_actions.Tag.ogg.TagError));
   end;
 
-  addons.soundplayer.Player.Tag.ogg.Opus.Free;
+  soundplayer.player_actions.Tag.ogg.Opus.Free;
 
-  if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath
+  if addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now] = vCurrentSongPath
   then
   begin
     sound.str_music[1] := BASS_StreamCreateFile(False,
-      PChar(addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now]), 0, 0,
+      PChar(addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now]), 0, 0,
       BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-    BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.soundplayer.Volume.Vol / 100);
-    if addons.soundplayer.Player.Play then
+    BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, soundplayer.player_actions.volume.Vol / 100);
+    if soundplayer.player = sPlay then
     begin
       BASS_ChannelPlay(sound.str_music[1], False);
       BASS_ChannelPause(sound.str_music[1]);
@@ -168,10 +168,10 @@ begin
         NoOfColors := 0;
       end;
 
-      if addons.soundplayer.Player.Tag.ogg.Opus.AddCoverArtFrame(NewPictureStream, CoverArt) > -1 then
+      if soundplayer.player_actions.Tag.ogg.Opus.AddCoverArtFrame(NewPictureStream, CoverArt) > -1 then
       begin
         uSoundplayer_Tag_Ogg_GetOggCover;
-        addons.soundplayer.Player.Tag.ogg.Opus.SaveToFile(vCurrentSongPath);
+        soundplayer.player_actions.Tag.ogg.Opus.SaveToFile(vCurrentSongPath);
       end
       else
         Showmessage('Something wrong with adding this cover');
@@ -187,17 +187,17 @@ var
   vi: integer;
 begin
   vSoundplayer.Tag.Opus.Cover.Bitmap:= nil;
-  for vi :=  0 to high(addons.soundplayer.Player.Tag.ogg.Opus.Frames) do
+  for vi :=  0 to high(soundplayer.player_actions.Tag.ogg.Opus.Frames) do
     begin
-      if addons.soundplayer.Player.Tag.ogg.Opus.Frames[vi].IsCoverArt then
-        addons.soundplayer.Player.Tag.ogg.Opus.DeleteFrame(vi);
+      if soundplayer.player_actions.Tag.ogg.Opus.Frames[vi].IsCoverArt then
+        soundplayer.player_actions.Tag.ogg.Opus.DeleteFrame(vi);
     end;
   vSoundplayer.Info.Cover.Bitmap.LoadFromFile(addons.soundplayer.Path.Images+ 'sp_nocover.png');
 end;
 
 procedure uSoundplayer_Tag_Ogg_Cancel;
 begin
-  addons.soundplayer.Player.Tag.ogg.Opus.Free;
+  soundplayer.player_actions.Tag.ogg.Opus.Free;
   uSoundplayer_TagSet_Opus_Free;
 end;
 

@@ -94,7 +94,7 @@ var
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad_AllTypes,
   uSnippet_Text,
   uInternet_Files,
@@ -189,7 +189,7 @@ begin
     vBackground.Name := 'A_W_Providers_OpenWeatherMap_Loading_Background';
     vBackground.Parent := vWeather.Scene.Back;
     vBackground.SetBounds(0, 10, vWeather.Scene.Back.Width, vWeather.Scene.Back.Height);
-    vBackground.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_openweathermp_loading.png');
+    vBackground.bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_openweathermp_loading.png');
     vBackground.WrapMode := TImageWrapMode.Original;
     vBackground.Visible := True;
 
@@ -257,7 +257,7 @@ begin
     FreeAndNil(vBackground);
   end
   else
-    vWeather.Scene.Back.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
+    vWeather.Scene.Back.bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
 end;
 
 procedure Show_Selected_Time_Forecast(vLine, vPlace: Integer);
@@ -899,7 +899,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.SetBounds(100, 360, 43, 52);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Stand.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small := TImage.Create(vWeather.Scene.Tab_OWM[vTab].Tab);
@@ -907,7 +907,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.SetBounds(94, 335, 54, 54);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.WrapMode := TImageWrapMode.Stretch;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation := TFloatAnimation.Create(vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small);
@@ -928,7 +928,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.SetBounds(60, 370, 53, 64);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Stand.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine := TImage.Create(vWeather.Scene.Tab_OWM[vTab].Tab);
@@ -936,7 +936,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.Parent := vWeather.Scene.Tab_OWM[vTab].Tab;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.SetBounds(54, 335, 64, 64);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.WrapMode := TImageWrapMode.Stretch;
-  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
+  vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation := TFloatAnimation.Create(vWeather.Scene.Tab_OWM[vTab].Wind.Turbine);
@@ -1109,7 +1109,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.Position.X := vWeather.Scene.Tab_OWM[vTab].Tab.Width - 70;
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.Position.Y := 700;
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.WrapMode := TImageWrapMode.Fit;
-  vWeather.Scene.Tab_OWM[vTab].Server.Icon.bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_openweathermap.png');
+  vWeather.Scene.Tab_OWM[vTab].Server.Icon.bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_openweathermap.png');
   vWeather.Scene.Tab_OWM[vTab].Server.Icon.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].country.LastUpDate := TText.Create(vWeather.Scene.Tab_OWM[vTab].Tab);

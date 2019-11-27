@@ -8,21 +8,23 @@ procedure Get_Data;
 
 implementation
 uses
-  uDatabase,
-  uDatabase_ActiveUser;
+  uDB,
+  uDB_AUser;
 
 procedure Get_Data;
 var
   vQuery: String;
 begin
   vQuery := 'SELECT * FROM ADDON_CALENDAR';
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
 
-  user_Active_Local.ADDONS.Calendar_D.Menu_Position:= ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
+  uDB_AUser.Local.ADDONS.Calendar_D.Menu_Position:= uDB.ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
+
+  uDB_AUser.Local.ADDONS.Names.Insert(uDB_AUser.Local.ADDONS.Calendar_D.Menu_Position, 'calendar');
 end;
 
 end.

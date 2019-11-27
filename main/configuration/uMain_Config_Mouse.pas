@@ -110,16 +110,6 @@ begin
     if TImage(Sender).Name = 'Main_Config_Profile_Main_Avatar' then
       uMain_Config_Profile_User.Avatar;
   end
-  else if extrafe.prog.State = 'main_config_addons' then
-  begin
-    if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
-      uMain_Config_Addons.ShowInfo(TImage(Sender).Tag)
-    else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
-      uMain_Config_Addons_Actions.LeftArrow
-    else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
-      uMain_Config_Addons_Actions.RightArrow;
-    BASS_ChannelPlay(sound.str_fx.general[0], False);
-  end
   else if extrafe.prog.State = 'main_config_emulators' then
   begin
     if TImage(Sender).Name = 'Main_Config_Emulators_Image_' + IntToStr(TImage(Sender).Tag) then
@@ -160,7 +150,7 @@ begin
     if TImage(Sender).Name = 'Main_Config_Profile_Main_Avatar' then
     begin
       TImage(Sender).Cursor := crHandPoint;
-      uMain_Config_Profile_User.Avatar_Glow(mainScene.Config.main.R.Profile.User.Avatar_Change);
+      uMain_Config_Profile_User.AVatar_Glow(mainScene.Config.Main.R.Profile.User.Avatar_Change);
     end;
   end
   else if extrafe.prog.State = 'main_config_emulators' then
@@ -178,34 +168,6 @@ begin
         TImage(Sender).Cursor := crHandPoint;
       end;
     end
-  end
-  else if extrafe.prog.State = 'main_config_addons' then
-  begin
-    if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
-    begin
-      mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True;
-      TImage(Sender).Cursor := crHandPoint;
-    end
-    else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
-    begin
-      if mainScene.Config.Main.R.Addons.Arrow_Left_Gray.Enabled = False then
-      begin
-        mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := True;
-        TImage(Sender).Cursor := crHandPoint;
-      end
-      else
-        TImage(Sender).Cursor := crDefault;
-    end
-    else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
-    begin
-      if mainScene.Config.Main.R.Addons.Arrow_Right_Gray.Enabled = False then
-      begin
-        mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := True;
-        TImage(Sender).Cursor := crHandPoint;
-      end
-      else
-        TImage(Sender).Cursor := crDefault;
-    end;
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
@@ -232,7 +194,7 @@ begin
     if TImage(Sender).Name = 'Main_Config_Profile_Main_Avatar' then
     begin
       TImage(Sender).Cursor := crHandPoint;
-      uMain_Config_Profile_User.Avatar_Glow_Free(mainScene.Config.main.R.Profile.User.Avatar_Change);
+      uMain_Config_Profile_User.Avatar_Glow_Free(mainScene.Config.Main.R.Profile.User.Avatar_Change);
     end;
   end
   else if extrafe.prog.State = 'main_config_emulators' then
@@ -243,21 +205,6 @@ begin
     begin
       if mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Gray.Enabled = False then
         mainScene.Config.Main.R.Emulators.Arcade[0].Logo_Glow.Enabled := False
-    end
-  end
-  else if extrafe.prog.State = 'main_config_addons' then
-  begin
-    if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
-      mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := False
-    else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
-    begin
-      if mainScene.Config.Main.R.Addons.Arrow_Left_Gray.Enabled = False then
-        mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := False;
-    end
-    else if TImage(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
-    begin
-      if mainScene.Config.Main.R.Addons.Arrow_Right_Gray.Enabled = False then
-        mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := False;
     end
   end
   else if extrafe.prog.State = 'main_config_info' then
@@ -314,6 +261,18 @@ begin
       uSnippets.Open_Link_To_Browser(TText(Sender).Text)
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
       uSnippets.Open_Link_To_Browser(TText(Sender).Text);
+  end
+  else if extrafe.prog.State = 'main_config_addons' then
+  begin
+    if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+    begin
+      if TText(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
+        uMain_Config_Addons_Actions.LeftArrow
+      else if TText(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
+        uMain_Config_Addons_Actions.RightArrow
+      else if TText(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
+        uMain_Config_Addons.ShowInfo(TImage(Sender).Tag);
+    end;
   end;
   BASS_ChannelPlay(sound.str_fx.general[0], False);
 end;
@@ -331,7 +290,7 @@ begin
   else if extrafe.prog.State = 'main_config_profile_user' then
   begin
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
-      uMain_Config_Profile_User.Avatar_Glow(TText(Sender))
+      uMain_Config_Profile_User.AVatar_Glow(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
       uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TImage(Sender).Name = 'Main_Config_Profile_Main_Gender_Male' then
@@ -353,7 +312,17 @@ begin
       uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
       uSnippets.HyperLink_OnMouseOver(TText(Sender));
+  end
+  else if extrafe.prog.State = 'main_config_addons' then
+  begin
+    if TText(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
+      mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := True
+    else if TText(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
+      mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := True
+    else if TText(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
+      mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True;
   end;
+  TText(Sender).Cursor := crHandPoint;
 end;
 
 procedure TMAIN_CONFIG_TEXT.OnMouseLeave(Sender: TObject);
@@ -390,6 +359,15 @@ begin
       uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Forum_V' then
       uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White);
+  end
+  else if extrafe.prog.State = 'main_config_addons' then
+  begin
+    if TText(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
+      mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := False
+    else if TText(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
+      mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := False
+    else if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
+      mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := False;
   end;
 end;
 
@@ -446,11 +424,11 @@ begin
     else if extrafe.prog.State = 'main_config_addons' then
     begin
       if TButton(Sender).Name = 'Main_Config_Addons_Addon_Weather_Action' then
-        uMain_Config_Addons_Actions_AddonActivation(2)
+        uMain_Config_Addons_Actions.Activation(2)
       else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Soundplayer_Action' then
-        uMain_Config_Addons_Actions_AddonActivation(3)
+        uMain_Config_Addons_Actions.Activation(3)
       else if TButton(Sender).Name = 'Main_Config_Addons_Addon_Play_Action' then
-        uMain_Config_Addons_Actions_AddonActivation(4);
+        uMain_Config_Addons_Actions.Activation(4);
     end
     else if extrafe.prog.State = 'main_config_profile_user' then
     begin
@@ -474,21 +452,21 @@ begin
     else if extrafe.prog.State = 'main_config_addons_actions' then
     begin
       if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_OK' then
-        uMain_Config_Addons_Actions_Deactivate_Weather_Action
+        uMain_Config_Addons_Actions.Weather_Deactivate_Action
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Cancel' then
-        uMain_Config_Addons_Actions_Deactivate_Weather_FreeMessage
+        uMain_Config_Addons_Actions.Weather_Free
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_OK' then
-        uMain_Config_Addons_Actions.Activate_Weather_Action
+        uMain_Config_Addons_Actions.Weather_Activate_Action
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_Cancel' then
-        uMain_Config_Addons_Actions.Activate_Weather_FreeMessage
+        uMain_Config_Addons_Actions.Weather_Activate_FreeMessage
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_OK' then
-        uMain_Config_Addons_Actions_Deactivate_Soundplayer_Action
+        uMain_Config_Addons_Actions.Soundplayer_Deactivate_Action
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Cancel' then
-        uMain_Config_Addons_Actions_Deactivate_Soundplayer_FreeMessage
+        uMain_Config_Addons_Actions.Soundplayer_Free
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_OK' then
-        uMain_Config_Addons_Actions_Activate_Soundplayer_Action
+        uMain_Config_Addons_Actions.Soundplayer_Activate_Action
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Activate_Msg_Main_Cancel' then
-        uMain_Config_Addons_Actions_Activate_Soundplayer_FreeMessage
+        uMain_Config_Addons_Actions.Soundplayer_Activate_FreeMessage
     end;
   end;
   BASS_ChannelPlay(sound.str_fx.general[0], False);

@@ -41,6 +41,7 @@ begin
     vWeather_Ani_Stop := True;
     vWeather.Scene.Arrow_Left_Glow.Enabled := False;
     vWeather.Scene.Arrow_Right_Glow.Enabled := False;
+    FreeAndNil(vWeather.Scene.weather);
 //    addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Wind.Speed, True);
 //    uWeather_Actions_Show_AstronomyAnimation;
 //  end;

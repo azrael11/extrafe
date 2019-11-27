@@ -5,13 +5,15 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteDef, FireDAC.Stan.Intf, FireDAC.Phys,
-  FireDAC.Phys.SQLite;
+  FireDAC.Phys.SQLite, FMX.Objects;
 
 type
   TLoading = class(TForm)
     SQLite_DriverLink: TFDPhysSQLiteDriverLink;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+
+
   private
     { Private declarations }
   public
@@ -54,5 +56,7 @@ begin
   Default_Load := False;
   uLoad.Prepare;
 end;
+
+
 
 end.

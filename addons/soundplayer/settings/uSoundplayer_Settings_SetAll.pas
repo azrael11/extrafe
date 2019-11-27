@@ -12,14 +12,14 @@ implementation
 
 uses
   uLoad_AllTypes,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_AllTypes;
 
 procedure uSoundplayer_Settings_Set;
 begin
   extrafe.prog.State := 'addon_soundplayer_settings';
 
-  uSoundplayer.Hide_Animations;
+  uSoundplayer_Actions.Hide_Animations;
 
   vSoundplayer.scene.Back_Blur.Enabled := True;
 

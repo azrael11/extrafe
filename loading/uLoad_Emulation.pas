@@ -40,8 +40,8 @@ uses
   load,
   uLoad,
   uLoad_AllTypes,
-  uDatabase,
-  uDatabase_ActiveUser,
+  uDB,
+  uDB_AUser,
   uEmu_Arcade_Mame,
   uEmu_Arcade_Mame_SetAll;
 
@@ -92,19 +92,14 @@ begin
   CreateDir(extrafe.prog.Path + 'emu\handhelds\gameboy');
   // Pinball
   CreateDir(extrafe.prog.Path + 'emu\pinball');
-
-  extrafe.ini.ini.WriteBool('Emulation', 'Active', true);
-  emulation.Active := true;
-  extrafe.ini.ini.WriteInteger('Emulation', 'Active_Num', -1);
-  emulation.Active_Num := -1;
-  extrafe.ini.ini.WriteInteger('Emulation', 'Unique_Num', -1);
-  emulation.Unique_Num := -1;
-  extrafe.ini.ini.WriteBool('Emulation', 'ShowCat', true);
-  emulation.ShowCat := true;
 end;
 
 procedure Load;
 begin
+
+  uDB.Emulators_Create;
+  uDB.Emulators_Connect;
+
   ex_load.Scene.Progress_Text.Text := 'Configurate and loading "Emulators" ...';
   // Create the emulators string multi array
   SetLength(emulation.Emu, 5);
@@ -124,7 +119,7 @@ begin
   emulation.Category[0].Logo := emulation.Category[0].Menu_Image_Path + 'arcade.png';
   emulation.Category[0].Background := emulation.Category[0].Menu_Image_Path + 'background.png';
   emulation.Category[0].Second_Level := -1;
-  emulation.Category[0].Installed := user_Active_Local.EMULATORS.Arcade;
+  emulation.Category[0].Installed := uDB_AUser.Local.EMULATORS.Arcade;
   emulation.Category[0].Unique_Num := -1;
 
   emulation.Category[1].Active := true;
@@ -134,7 +129,7 @@ begin
   emulation.Category[1].Logo := emulation.Category[1].Menu_Image_Path + 'computers.png';
   emulation.Category[1].Background := emulation.Category[1].Menu_Image_Path + 'background.png';
   emulation.Category[1].Second_Level := -1;
-  emulation.Category[1].Installed := user_Active_Local.EMULATORS.Computers;
+  emulation.Category[1].Installed := uDB_AUser.Local.EMULATORS.Computers;
   emulation.Category[1].Unique_Num := -1;
 
   emulation.Category[2].Active := true;
@@ -144,7 +139,7 @@ begin
   emulation.Category[2].Logo := emulation.Category[2].Menu_Image_Path + 'consoles.png';
   emulation.Category[2].Background := emulation.Category[2].Menu_Image_Path + 'background.png';
   emulation.Category[2].Second_Level := -1;
-  emulation.Category[2].Installed := user_Active_Local.EMULATORS.Consoles;
+  emulation.Category[2].Installed := uDB_AUser.Local.EMULATORS.Consoles;
   emulation.Category[2].Unique_Num := -1;
 
   emulation.Category[3].Active := true;
@@ -154,7 +149,7 @@ begin
   emulation.Category[3].Logo := emulation.Category[3].Menu_Image_Path + 'handhelds.png';
   emulation.Category[3].Background := emulation.Category[3].Menu_Image_Path + 'background.png';
   emulation.Category[3].Second_Level := -1;
-  emulation.Category[3].Installed := user_Active_Local.EMULATORS.Handhelds;
+  emulation.Category[3].Installed := uDB_AUser.Local.EMULATORS.Handhelds;
   emulation.Category[3].Unique_Num := -1;
 
   emulation.Category[4].Active := true;
@@ -164,8 +159,9 @@ begin
   emulation.Category[4].Logo := emulation.Category[4].Menu_Image_Path + 'pinballs.png';
   emulation.Category[4].Background := emulation.Category[4].Menu_Image_Path + 'background.png';
   emulation.Category[4].Second_Level := -1;
-  emulation.Category[4].Installed := user_Active_Local.EMULATORS.Pinballs;
+  emulation.Category[4].Installed := uDB_AUser.Local.EMULATORS.Pinballs;
   emulation.Category[4].Unique_Num := -1;
+
 
   uLoad_Emulation_SetTabs;
 
@@ -180,15 +176,15 @@ begin
     for vk := 0 to 254 do
       emulation.Emu[vi, vk] := 'nil';
 
-  if user_Active_Local.EMULATORS.Arcade then
+  if uDB_AUser.Local.EMULATORS.Arcade then
     Get_Arcade_Data;
-  if user_Active_Local.EMULATORS.Computers then
+  if uDB_AUser.Local.EMULATORS.Computers then
     Get_Computers_Data;
-  if user_Active_Local.EMULATORS.Consoles then
+  if uDB_AUser.Local.EMULATORS.Consoles then
     Get_Consoles_Data;
-  if user_Active_Local.EMULATORS.Handhelds then
+  if uDB_AUser.Local.EMULATORS.Handhelds then
     Get_Handhelds_Data;
-  if user_Active_Local.EMULATORS.Pinballs then
+  if uDB_AUser.Local.EMULATORS.Pinballs then
     Get_Pinballs_Data;
 
   ex_load.Scene.Progress.Value := 70;
@@ -198,58 +194,58 @@ procedure Get_Arcade_Data;
 var
   vQuery : String;
 begin
-  vQuery := 'SELECT * FROM ARCADE_MEDIA WHERE USER_ID=' + user_Active_Local.Num.ToString;
+  vQuery := 'SELECT * FROM ARCADE_MEDIA WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);
   ExtraFE_Query_Local.Open;
   ExtraFE_Query_Local.First;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Artworks := ExtraFE_Query_Local.FieldByName('ARTWORKS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Cabinets := ExtraFE_Query_Local.FieldByName('CABINETS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Control_Panels := ExtraFE_Query_Local.FieldByName('CONTROL_PANELS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Covers := ExtraFE_Query_Local.FieldByName('COVERS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Flyers := ExtraFE_Query_Local.FieldByName('FLYERS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Fanart := ExtraFE_Query_Local.FieldByName('FANART').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Game_Over := ExtraFE_Query_Local.FieldByName('GAME_OVER').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Icons := ExtraFE_Query_Local.FieldByName('ICONS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Manuals := ExtraFE_Query_Local.FieldByName('MANUALS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Marquees := ExtraFE_Query_Local.FieldByName('MARQUEES').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Pcbs := ExtraFE_Query_Local.FieldByName('PCBS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Snapshots := ExtraFE_Query_Local.FieldByName('SNAPSHOTS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Titles := ExtraFE_Query_Local.FieldByName('TITLES').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Artwork_Preview := ExtraFE_Query_Local.FieldByName('ARTWORK_PREVIEW').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Bosses := ExtraFE_Query_Local.FieldByName('BOSSES').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Ends := ExtraFE_Query_Local.FieldByName('ENDS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.How_To := ExtraFE_Query_Local.FieldByName('HOW_TO').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Logos := ExtraFE_Query_Local.FieldByName('LOGOS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Scores := ExtraFE_Query_Local.FieldByName('SCORES').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Selects := ExtraFE_Query_Local.FieldByName('SELECTS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Stamps := ExtraFE_Query_Local.FieldByName('STAMPS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Versus := ExtraFE_Query_Local.FieldByName('VERSUS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Warnings := ExtraFE_Query_Local.FieldByName('WARNINGS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Soundtracks := ExtraFE_Query_Local.FieldByName('SOUNDTRACKS').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files := ExtraFE_Query_Local.FieldByName('SUPPORT_FILES').AsString;
-  user_Active_Local.EMULATORS.Arcade_D.Media.Videos := ExtraFE_Query_Local.FieldByName('VIDEOS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artworks := ExtraFE_Query_Local.FieldByName('ARTWORKS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Cabinets := ExtraFE_Query_Local.FieldByName('CABINETS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Control_Panels := ExtraFE_Query_Local.FieldByName('CONTROL_PANELS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Covers := ExtraFE_Query_Local.FieldByName('COVERS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Flyers := ExtraFE_Query_Local.FieldByName('FLYERS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart := ExtraFE_Query_Local.FieldByName('FANART').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Game_Over := ExtraFE_Query_Local.FieldByName('GAME_OVER').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons := ExtraFE_Query_Local.FieldByName('ICONS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals := ExtraFE_Query_Local.FieldByName('MANUALS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees := ExtraFE_Query_Local.FieldByName('MARQUEES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Pcbs := ExtraFE_Query_Local.FieldByName('PCBS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots := ExtraFE_Query_Local.FieldByName('SNAPSHOTS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Titles := ExtraFE_Query_Local.FieldByName('TITLES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artwork_Preview := ExtraFE_Query_Local.FieldByName('ARTWORK_PREVIEW').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Bosses := ExtraFE_Query_Local.FieldByName('BOSSES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Ends := ExtraFE_Query_Local.FieldByName('ENDS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.How_To := ExtraFE_Query_Local.FieldByName('HOW_TO').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Logos := ExtraFE_Query_Local.FieldByName('LOGOS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Scores := ExtraFE_Query_Local.FieldByName('SCORES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Selects := ExtraFE_Query_Local.FieldByName('SELECTS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps := ExtraFE_Query_Local.FieldByName('STAMPS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Versus := ExtraFE_Query_Local.FieldByName('VERSUS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Warnings := ExtraFE_Query_Local.FieldByName('WARNINGS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks := ExtraFE_Query_Local.FieldByName('SOUNDTRACKS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files := ExtraFE_Query_Local.FieldByName('SUPPORT_FILES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos := ExtraFE_Query_Local.FieldByName('VIDEOS').AsString;
   ExtraFE_Query_Local.Close;
 
 
-  if user_Active_Local.EMULATORS.Arcade_D.Mame then
+  if uDB_AUser.Local.EMULATORS.Arcade_D.Mame then
     uEmu_Arcade_Mame_SetAll.Get_Set_Mame_Data;
-  { if user_Active_Local.EMULATORS.Arcade_D.FBA then
+  { if uDB_AUser.Local.EMULATORS.Arcade_D.FBA then
     Get_Set_FBA_Data;
-    if user_Active_Local.EMULATORS.Arcade_D.Zinc then
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Zinc then
     Get_Set_Zinc_Data;
-    if user_Active_Local.EMULATORS.Arcade_D.Daphne then
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Daphne then
     Get_Set_Daphne_Data;
-    if user_Active_Local.EMULATORS.Arcade_D.Kronos then
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Kronos then
     Get_Set_Kronos_Data;
-    if user_Active_Local.EMULATORS.Arcade_D.Raine then
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Raine then
     Get_Set_Raine_Data;
-    if user_Active_Local.EMULATORS.Arcade_D.Model2 then
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Model2 then
     Get_Set_Model2_Data;
-    if user_Active_Local.EMULATORS.Arcade_D.SuperModel then
+    if uDB_AUser.Local.EMULATORS.Arcade_D.SuperModel then
     Get_Set_SuperModel_Data;
-    if user_Active_Local.EMULATORS.Arcade_D.Demul then
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Demul then
     Get_Set_Demul_Data; }
 end;
 

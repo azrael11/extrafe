@@ -41,11 +41,11 @@ uses
   uLoad_AllTypes,
   uMain_Actions,
   uKeyboard,
-  uDatabase;
+  uDB;
 
 procedure TMain_Form.FormDestroy(Sender: TObject);
 begin
-  uDatabase.Online_Disconnect;
+//  uDB.Online_Disconnect;
   ReportMemoryLeaksOnShutdown:= False;
 end;
 

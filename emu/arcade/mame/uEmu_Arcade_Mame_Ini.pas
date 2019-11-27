@@ -5,8 +5,7 @@ interface
 uses
   System.Classes,
   System.Inifiles,
-  System.SysUtils,
-  OXmlPDOM;
+  System.SysUtils;
 
 procedure Load;
 procedure Save;
@@ -14,7 +13,7 @@ procedure Save;
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad_AllTypes,
   uEmu_SetAll,
   uEmu_Arcade_Mame_AllTypes;
@@ -165,7 +164,7 @@ var
       mame.Emu.Ini.CORE_PERFORMANCE_speed := vValue
     else if vParam = 'refreshspeed' then
       mame.Emu.Ini.CORE_PERFORMANCE_refreshspeed := StrToBool(vValue)
-    else if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'Arcade32.exe') then
+    else if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'Arcade32.exe') then
     begin
       if vParam = 'syncrefresh' then
         mame.Emu.Ini.CORE_PERFORMANCE_syncrefresh := StrToBool(vValue)
@@ -480,7 +479,7 @@ var
       mame.Emu.Ini.OpenGL_gl_pbo := StrToBool(vValue)
     else if vParam = 'gl_glsl' then
       mame.Emu.Ini.OpenGL_gl_glsl := StrToBool(vValue)
-    else if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32') then
+    else if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32') then
     begin
       if vParam = 'gl_glsl_sync' then
         mame.Emu.Ini.OpenGL_gl_glsl_sync := StrToBool(vValue)
@@ -735,7 +734,7 @@ begin
   // Gameinit support
   mame.Support.GameInit := TStringList.Create;
 
-  AssignFile(vText, user_Active_Local.EMULATORS.Arcade_D.Mame_D.Ini);
+  AssignFile(vText, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini);
   Reset(vText);
   while not Eof(vText) do
   begin
@@ -871,7 +870,7 @@ begin
   vSaveMameIni.Add('sleep                     ' + AlterBoolean(mame.Emu.Ini.CORE_PERFORMANCE_sleep));
   vSaveMameIni.Add('speed                     ' + mame.Emu.Ini.CORE_PERFORMANCE_speed);
   vSaveMameIni.Add('refreshspeed              ' + AlterBoolean(mame.Emu.Ini.CORE_PERFORMANCE_refreshspeed));
-  if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32.exe') then
+  if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32.exe') then
     vSaveMameIni.Add('syncrefresh              ' + AlterBoolean(mame.Emu.Ini.CORE_PERFORMANCE_syncrefresh));
   vSaveMameIni.Add('');
   vSaveMameIni.Add('#');
@@ -917,7 +916,7 @@ begin
   vSaveMameIni.Add('gamma                     ' + mame.Emu.Ini.CORE_SCREEN_gamma);
   vSaveMameIni.Add('pause_brightness          ' + mame.Emu.Ini.CORE_SCREEN_pause_brightness);
   vSaveMameIni.Add('effect                    ' + mame.Emu.Ini.CORE_SCREEN_effect);
-  if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32.exe') then
+  if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32.exe') then
     vSaveMameIni.Add('widestretch               ' + AlterBoolean(mame.Emu.Ini.CORE_SCREEN_widestretch));
   vSaveMameIni.Add('');
   vSaveMameIni.Add('#');
@@ -1112,7 +1111,7 @@ begin
   vSaveMameIni.Add('gl_vbo                    ' + AlterBoolean(mame.Emu.Ini.OpenGL_gl_vbo));
   vSaveMameIni.Add('gl_pbo                    ' + AlterBoolean(mame.Emu.Ini.OpenGL_gl_pbo));
   vSaveMameIni.Add('gl_glsl                   ' + AlterBoolean(mame.Emu.Ini.OpenGL_gl_glsl));
-  if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32.exe') then
+  if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade64.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name = 'arcade32.exe') then
     vSaveMameIni.Add('gl_glsl_sync              ' + AlterBoolean(mame.Emu.Ini.OpenGL_gl_glsl_sync));
   vSaveMameIni.Add('gl_glsl_filter            ' + IntToStr(mame.Emu.Ini.OpenGL_gl_glsl_filter));
   vSaveMameIni.Add('glsl_shader_mame0         ' + mame.Emu.Ini.OpenGL_glsl_shader_mame0);
@@ -1276,7 +1275,7 @@ begin
   vSaveMameIni.Add('# FRONTEND COMMAND OPTIONS');
   vSaveMameIni.Add('#');
   vSaveMameIni.Add('dtd                       ' + IntToStr(mame.Emu.Ini.FRONTEND_COMMAND_dtd));
-  vSaveMameIni.SaveToFile(user_Active_Local.EMULATORS.Arcade_D.Mame_D.Ini + 'mame.ini');
+  vSaveMameIni.SaveToFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini + 'mame.ini');
   FreeAndNil(vSaveMameIni);
 end;
 

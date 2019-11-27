@@ -16,7 +16,7 @@ implementation
 uses
   uLoad_AllTypes,
   uMain_AllTypes,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uWindows;
 
 procedure Load;
@@ -189,7 +189,7 @@ begin
   mainScene.Config.main.R.Profile.Machine.Net.Public_IP_V.Name := 'Main_Config_Profile_Machine_Net_Public_IP_V';
   mainScene.Config.main.R.Profile.Machine.Net.Public_IP_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
   mainScene.Config.main.R.Profile.Machine.Net.Public_IP_V.SetBounds(140, 68, 140, 24);
-  mainScene.Config.main.R.Profile.Machine.Net.Public_IP_V.Text := user_Active_Online.IP;
+  mainScene.Config.main.R.Profile.Machine.Net.Public_IP_V.Text := uDB_AUser.Online.IP;
   mainScene.Config.main.R.Profile.Machine.Net.Public_IP_V.Visible := True;
 end;
 

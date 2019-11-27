@@ -30,7 +30,7 @@ uses
   main;
 
 procedure Set_First;
-procedure Set_Scene;
+procedure Load;
 
 procedure Player;
 procedure Info;
@@ -46,27 +46,27 @@ procedure RemoveSong_Dialog;
 implementation
 
 uses
+  uDB,
+  UDB_AUser,
   uLoad,
   uSnippet_Text,
   uLoad_AllTypes,
   uMain_SetAll,
   uMain_AllTypes,
   uSoundplayer_AllTypes,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_Mouse,
   uSoundplayer_Player,
   uSoundplayer_Playlist,
   BASS;
 
-Procedure Set_Scene;
-var
-  vi: Integer;
+Procedure Load;
 begin
   vSoundplayer.scene.soundplayer := Timage.Create(mainScene.main.Down_Level);
   vSoundplayer.scene.soundplayer.Name := 'A_Soundplayer';
   vSoundplayer.scene.soundplayer.Parent := mainScene.main.Down_Level;
   vSoundplayer.scene.soundplayer.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
-  vSoundplayer.scene.soundplayer.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back.png');
+  vSoundplayer.scene.soundplayer.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back.png');
   vSoundplayer.scene.soundplayer.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.soundplayer.Visible := True;
 
@@ -85,7 +85,7 @@ begin
   vSoundplayer.scene.Back.Name := 'A_SP_Back_Image';
   vSoundplayer.scene.Back.Parent := vSoundplayer.scene.soundplayer;
   vSoundplayer.scene.Back.SetBounds(0, 0, vSoundplayer.scene.soundplayer.Width, vSoundplayer.scene.soundplayer.Height);
-  vSoundplayer.scene.Back.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back.png');
+  vSoundplayer.scene.Back.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back.png');
   vSoundplayer.scene.Back.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.Back.Visible := True;
 
@@ -99,7 +99,7 @@ begin
   vSoundplayer.scene.Back_Presentation.Name := 'A_SP_Presentation';
   vSoundplayer.scene.Back_Presentation.Parent := vSoundplayer.scene.soundplayer;
   vSoundplayer.scene.Back_Presentation.SetBounds(extrafe.res.Half_Width - 700, 20, 1400, 900);
-  vSoundplayer.scene.Back_Presentation.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back_info.png');
+  vSoundplayer.scene.Back_Presentation.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back_info.png');
   vSoundplayer.scene.Back_Presentation.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.Back_Presentation.Visible := False;
 
@@ -108,7 +108,7 @@ begin
   vSoundplayer.scene.UpLine.Name := 'A_SP_UpLine_Image';
   vSoundplayer.scene.UpLine.Parent := vSoundplayer.scene.Back;
   vSoundplayer.scene.UpLine.SetBounds(0, 0, vSoundplayer.scene.soundplayer.Width, 10);
-  vSoundplayer.scene.UpLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.scene.UpLine.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_spot.png');
   vSoundplayer.scene.UpLine.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.UpLine.Visible := True;
 
@@ -119,7 +119,7 @@ begin
   vSoundplayer.scene.MiddleLine.Name := 'A_SP_MiddleLine_Image';
   vSoundplayer.scene.MiddleLine.Parent := vSoundplayer.scene.Back;
   vSoundplayer.scene.MiddleLine.SetBounds(0, 210, vSoundplayer.scene.Back.Width, 10);
-  vSoundplayer.scene.MiddleLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.scene.MiddleLine.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_spot.png');
   vSoundplayer.scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.MiddleLine.Visible := True;
 
@@ -130,7 +130,7 @@ begin
   vSoundplayer.scene.PlaylistLine.Name := 'A_SP_PlaylistLine_Image';
   vSoundplayer.scene.PlaylistLine.Parent := vSoundplayer.scene.Back;
   vSoundplayer.scene.PlaylistLine.SetBounds(0, extrafe.res.Height - 410, vSoundplayer.scene.Back.Width, 10);
-  vSoundplayer.scene.PlaylistLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.scene.PlaylistLine.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_spot.png');
   vSoundplayer.scene.PlaylistLine.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.PlaylistLine.Visible := True;
 
@@ -140,7 +140,7 @@ begin
   vSoundplayer.scene.Settings.Name := 'A_SP_Settings_Image';
   vSoundplayer.scene.Settings.Parent := vSoundplayer.scene.Back;
   vSoundplayer.scene.Settings.SetBounds(vSoundplayer.scene.Back.Width - 60, vSoundplayer.scene.Back.Height - 70, 50, 50);
-  vSoundplayer.scene.Settings.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_settings_blue.png');
+  vSoundplayer.scene.Settings.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_settings_blue.png');
   vSoundplayer.scene.Settings.WrapMode := TImageWrapMode.Fit;
   vSoundplayer.scene.Settings.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
   vSoundplayer.scene.Settings.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
@@ -170,7 +170,7 @@ begin
   vSoundplayer.scene.DownLine.Name := 'A_SP_DownLine_Image';
   vSoundplayer.scene.DownLine.Parent := vSoundplayer.scene.soundplayer;
   vSoundplayer.scene.DownLine.SetBounds(0, vSoundplayer.scene.soundplayer.Height - 10, vSoundplayer.scene.soundplayer.Width, 10);
-  vSoundplayer.scene.DownLine.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.scene.DownLine.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_spot.png');
   vSoundplayer.scene.DownLine.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.DownLine.Visible := True;
 
@@ -192,7 +192,7 @@ begin
   vSoundplayer.timer.Song.OnTimer := vSoundplayer.timer.timer.OnTimer;
   vSoundplayer.timer.Song.Enabled := False;
 
-  uSoundplayer.Load;
+  uSoundplayer_Actions.Load;
 end;
 
 procedure Player;
@@ -478,7 +478,7 @@ begin
   vSoundplayer.Player.Song_Title_Cover_Left.Name := 'A_SP_Player_Title_Cover_Left';
   vSoundplayer.Player.Song_Title_Cover_Left.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.Player.Song_Title_Cover_Left.SetBounds(0, 14, 465, 88);
-  vSoundplayer.Player.Song_Title_Cover_Left.Fill.Bitmap.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back.png');
+  vSoundplayer.Player.Song_Title_Cover_Left.Fill.Bitmap.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back.png');
   vSoundplayer.Player.Song_Title_Cover_Left.Fill.Bitmap.WrapMode := TWrapMode.Tile;
   vSoundplayer.Player.Song_Title_Cover_Left.Fill.Kind := TBrushKind.Bitmap;
   vSoundplayer.Player.Song_Title_Cover_Left.Stroke.Thickness := 0;
@@ -488,7 +488,7 @@ begin
   vSoundplayer.Player.Song_Title_Cover_Right.Name := 'A_SP_Player_Title_Cover_Right';
   vSoundplayer.Player.Song_Title_Cover_Right.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.Player.Song_Title_Cover_Right.SetBounds(1465, 14, 465, 88);
-  vSoundplayer.Player.Song_Title_Cover_Right.Fill.Bitmap.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back.png');
+  vSoundplayer.Player.Song_Title_Cover_Right.Fill.Bitmap.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back.png');
   vSoundplayer.Player.Song_Title_Cover_Right.Fill.Bitmap.WrapMode := TWrapMode.Tile;
   vSoundplayer.Player.Song_Title_Cover_Right.Fill.Kind := TBrushKind.Bitmap;
   vSoundplayer.Player.Song_Title_Cover_Right.Stroke.Thickness := 0;
@@ -601,7 +601,7 @@ begin
   vSoundplayer.Player.Speaker_Left.Name := 'A_SP_Player_Speaker_Left_Image';
   vSoundplayer.Player.Speaker_Left.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.Player.Speaker_Left.SetBounds(38, 15, 85, 150);
-  vSoundplayer.Player.Speaker_Left.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_speaker.png');
+  vSoundplayer.Player.Speaker_Left.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_speaker.png');
   vSoundplayer.Player.Speaker_Left.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
   vSoundplayer.Player.Speaker_Left.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
   vSoundplayer.Player.Speaker_Left.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
@@ -650,7 +650,7 @@ begin
   vSoundplayer.Player.Speaker_Right.Name := 'A_SP_Player_Speaker_Right_Image';
   vSoundplayer.Player.Speaker_Right.Parent := vSoundplayer.scene.Back_Player;
   vSoundplayer.Player.Speaker_Right.SetBounds(vSoundplayer.scene.Back_Player.Width - 123, 15, 85, 150);
-  vSoundplayer.Player.Speaker_Right.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_speaker.png');
+  vSoundplayer.Player.Speaker_Right.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_speaker.png');
   vSoundplayer.Player.Speaker_Right.OnClick := addons.soundplayer.Input.mouse.Image.OnMouseClick;
   vSoundplayer.Player.Speaker_Right.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
   vSoundplayer.Player.Speaker_Right.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
@@ -702,7 +702,7 @@ begin
   vSoundplayer.scene.Back_Info.Name := 'A_SP_BackInfo_Image';
   vSoundplayer.scene.Back_Info.Parent := vSoundplayer.scene.Back;
   vSoundplayer.scene.Back_Info.SetBounds(0, 220, vSoundplayer.scene.Back.Width, (extrafe.res.Height - 410) - 220);
-  vSoundplayer.scene.Back_Info.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_ilhm.png');
+  vSoundplayer.scene.Back_Info.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_ilhm.png');
   vSoundplayer.scene.Back_Info.WrapMode := TImageWrapMode.Center;
   vSoundplayer.scene.Back_Info.Visible := True;
 
@@ -710,7 +710,7 @@ begin
   vSoundplayer.Info.Back_Left.Name := 'A_SP_BackInfo_BackLeft_Image';
   vSoundplayer.Info.Back_Left.Parent := vSoundplayer.scene.Back_Info;
   vSoundplayer.Info.Back_Left.SetBounds(2, 10, 600, vSoundplayer.scene.Back_Info.Height - 20);
-  vSoundplayer.Info.Back_Left.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back_info.png');
+  vSoundplayer.Info.Back_Left.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back_info.png');
   vSoundplayer.Info.Back_Left.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.Info.Back_Left.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
   vSoundplayer.Info.Back_Left.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
@@ -983,7 +983,7 @@ begin
   vSoundplayer.Playlist.List_Line_Edit_Left.Name := 'A_SP_Playlist_Edit_Left_Line_Image';
   vSoundplayer.Playlist.List_Line_Edit_Left.Parent := vSoundplayer.scene.Back_Playlist;
   vSoundplayer.Playlist.List_Line_Edit_Left.SetBounds(vSoundplayer.Playlist.List.Width, 0, 10, vSoundplayer.scene.Back_Playlist.Height);
-  vSoundplayer.Playlist.List_Line_Edit_Left.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.Playlist.List_Line_Edit_Left.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_spot.png');
   vSoundplayer.Playlist.List_Line_Edit_Left.WrapMode := TImageWrapMode.Stretch;
   vSoundplayer.Playlist.List_Line_Edit_Left.Visible := True;
 
@@ -1096,7 +1096,7 @@ begin
   vSoundplayer.Playlist.List_Line_Edit_Right.Name := 'A_SP_Playlist_Edit_Right_Line_Image';
   vSoundplayer.Playlist.List_Line_Edit_Right.Parent := vSoundplayer.scene.Back_Playlist;
   vSoundplayer.Playlist.List_Line_Edit_Right.SetBounds(vSoundplayer.Playlist.List.Width + 80, 0, 10, vSoundplayer.scene.Back_Playlist.Height);
-  vSoundplayer.Playlist.List_Line_Edit_Right.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_spot.png');
+  vSoundplayer.Playlist.List_Line_Edit_Right.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_spot.png');
   vSoundplayer.Playlist.List_Line_Edit_Right.WrapMode := TImageWrapMode.Stretch;
   vSoundplayer.Playlist.List_Line_Edit_Right.Visible := True;
 
@@ -1171,7 +1171,7 @@ begin
   vSoundplayer.Info.Back_Right.Parent := vSoundplayer.scene.Back;
   vSoundplayer.Info.Back_Right.SetBounds(vSoundplayer.scene.Back_Info.Width - 602, vSoundplayer.scene.Back_Info.Position.Y + 10, 600,
     vSoundplayer.scene.Back_Info.Height - 20);
-  vSoundplayer.Info.Back_Right.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_back_info.png');
+  vSoundplayer.Info.Back_Right.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back_info.png');
   vSoundplayer.Info.Back_Right.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.Info.Back_Right.OnMouseEnter := addons.soundplayer.Input.mouse.Image.OnMouseEnter;
   vSoundplayer.Info.Back_Right.OnMouseLeave := addons.soundplayer.Input.mouse.Image.OnMouseLeave;
@@ -1190,7 +1190,7 @@ begin
   vSoundplayer.Info.Cover.Name := 'A_SP_Info_Cover';
   vSoundplayer.Info.Cover.Parent := vSoundplayer.Info.Back_Right;
   vSoundplayer.Info.Cover.SetBounds(50, 50, 500, vSoundplayer.Info.Back_Right.Height - 100);
-  vSoundplayer.Info.Cover.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_nocover.png');
+  vSoundplayer.Info.Cover.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_nocover.png');
   vSoundplayer.Info.Cover.WrapMode := TImageWrapMode.Fit;
   vSoundplayer.Info.Cover.Visible := True;
 
@@ -1403,7 +1403,7 @@ begin
   vSoundplayer.Playlist.Remove_Song.main.Icon.Name := 'A_SP_Playlist_Edit_Song_Remove_Icon';
   vSoundplayer.Playlist.Remove_Song.main.Icon.Parent := vSoundplayer.Playlist.Remove_Song.main.Panel;
   vSoundplayer.Playlist.Remove_Song.main.Icon.SetBounds(20, 20, 36, 36);
-  vSoundplayer.Playlist.Remove_Song.main.Icon.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_warning.png');
+  vSoundplayer.Playlist.Remove_Song.main.Icon.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_warning.png');
   vSoundplayer.Playlist.Remove_Song.main.Icon.Visible := True;
 
   vSoundplayer.Playlist.Remove_Song.main.Text := TLabel.Create(vSoundplayer.Playlist.Remove_Song.main.Panel);
@@ -1477,7 +1477,7 @@ begin
   vSoundplayer.Player.Band_Info_Press.Powered_Img.Parent := vSoundplayer.scene.Back_Presentation;
   vSoundplayer.Player.Band_Info_Press.Powered_Img.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 48, 38, 36, 36);
   vSoundplayer.Player.Band_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
-  vSoundplayer.Player.Band_Info_Press.Powered_Img.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'scrapers/lastfm.png');
+  vSoundplayer.Player.Band_Info_Press.Powered_Img.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'scrapers/lastfm.png');
   vSoundplayer.Player.Band_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
   vSoundplayer.Player.Band_Info_Press.Powered_Img.Visible := True;
 
@@ -1622,7 +1622,7 @@ begin
   vSoundplayer.Player.Album_Info_Press.Powered_Img.Parent := vSoundplayer.scene.Back_Presentation;
   vSoundplayer.Player.Album_Info_Press.Powered_Img.SetBounds(vSoundplayer.scene.Back_Presentation.Width - 48, 38, 36, 36);
   vSoundplayer.Player.Album_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
-  vSoundplayer.Player.Album_Info_Press.Powered_Img.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'scrapers/lastfm.png');
+  vSoundplayer.Player.Album_Info_Press.Powered_Img.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'scrapers/lastfm.png');
   vSoundplayer.Player.Album_Info_Press.Powered_Img.WrapMode := TImageWrapMode.Stretch;
   vSoundplayer.Player.Album_Info_Press.Powered_Img.Visible := True;
 

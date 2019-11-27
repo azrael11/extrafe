@@ -29,6 +29,7 @@ type
     procedure OnMouseClick(Sender: TObject);
     procedure OnMouseEnter(Sender: TObject);
     procedure OnMouseLeave(Sender: TObject);
+    procedure OnMouseUp(Sender: TObject; vButton: TMouseButton; vShift: TShiftState; vX, vY: Single);
   end;
 
 type
@@ -104,12 +105,7 @@ begin
     if TButton(Sender).Name = 'Mame_Window_Filters_Cancel' then
       uEmu_Arcade_Mame_Filters.Free
     else if TButton(Sender).Name = 'Mame_Window_Filters_OK' then
-      uEmu_Arcade_Mame_Filters.Return
-    else if TButton(Sender).Name = 'Mame_Window_Filters_Add' then
-      uEmu_Arcade_Mame_Filters.Add
-    else if TButton(Sender).Name = 'Mame_Window_Filters_Filter_Remove_' + TButton(Sender).Tag.ToString then
-      uEmu_Arcade_Mame_Filters.Remove(TButton(Sender).Tag);
-
+      uEmu_Arcade_Mame_Filters.Return;
   end
   else
   begin
@@ -156,28 +152,64 @@ end;
 
 procedure TEMU_ARCADE_MAME_TEXT.OnMouseClick(Sender: TObject);
 begin
-  if TText(Sender).Name = 'Mame_Settings' then
-    uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration
-  else if TImage(Sender).Name = 'Mame_Gamelist_Filters_Image' then
-    uEmu_Arcade_Mame_Actions.Open_Filters;
-  BASS_ChannelPlay(sound.str_fx.general[0], False);
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
+    if TText(Sender).Name = 'Mame_Settings' then
+      uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration
+    else if TImage(Sender).Name = 'Mame_Gamelist_Filters_Image' then
+      uEmu_Arcade_Mame_Actions.Open_Filters
+    else if TText(Sender).Name = 'Mame_Window_Filters_Add' then
+      uEmu_Arcade_Mame_Filters.Add
+    else if TText(Sender).Name = 'Mame_Window_Filters_Clear' then
+      uEmu_Arcade_Mame_Filters.Clear_Filters
+    else if TText(Sender).Name = 'Mame_Gamelist_Lists' then
+      uEmu_Arcade_Mame_Actions.Open_Lists;
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
+  end;
 end;
 
 procedure TEMU_ARCADE_MAME_TEXT.OnMouseEnter(Sender: TObject);
 begin
-  TText(Sender).Cursor := crHandPoint;
-  if TText(Sender).Name = 'Mame_Settings' then
-    vMame.Scene.Settings_Glow.Enabled := True
-  else if TImage(Sender).Name = 'Mame_Gamelist_Filters_Image' then
-    vMame.Scene.Gamelist.Filters.Icon_Glow.Enabled := True;
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
+    TText(Sender).Cursor := crHandPoint;
+    if TText(Sender).Name = 'Mame_Settings' then
+      vMame.Scene.Settings_Glow.Enabled := True
+    else if TImage(Sender).Name = 'Mame_Gamelist_Filters_Image' then
+      vMame.Scene.Gamelist.Filters.Icon_Glow.Enabled := True
+    else if TText(Sender).Name = 'Mame_Window_Filters_Add' then
+      vMame.Scene.Gamelist.Filters.Window.Add_Glow.Enabled := True
+    else if TText(Sender).Name = 'Mame_Window_Filters_Filter_Remove_' + TText(Sender).Tag.ToString then
+      vMame.Scene.Gamelist.Filters.Window.Filter_Panels[TText(Sender).Tag].Remove_Glow.Enabled := True
+    else if TText(Sender).Name = 'Mame_Gamelist_Lists' then
+      vMame.Scene.Gamelist.T_Lists_Glow.Enabled := True;
+  end;
 end;
 
 procedure TEMU_ARCADE_MAME_TEXT.OnMouseLeave(Sender: TObject);
 begin
-  if TText(Sender).Name = 'Mame_Settings' then
-    vMame.Scene.Settings_Glow.Enabled := False
-  else if TImage(Sender).Name = 'Mame_Gamelist_Filters_Image' then
-    vMame.Scene.Gamelist.Filters.Icon_Glow.Enabled := False;
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
+    if TText(Sender).Name = 'Mame_Settings' then
+      vMame.Scene.Settings_Glow.Enabled := False
+    else if TImage(Sender).Name = 'Mame_Gamelist_Filters_Image' then
+      vMame.Scene.Gamelist.Filters.Icon_Glow.Enabled := False
+    else if TText(Sender).Name = 'Mame_Window_Filters_Add' then
+      vMame.Scene.Gamelist.Filters.Window.Add_Glow.Enabled := False
+    else if TText(Sender).Name = 'Mame_Window_Filters_Filter_Remove_' + TText(Sender).Tag.ToString then
+      vMame.Scene.Gamelist.Filters.Window.Filter_Panels[TText(Sender).Tag].Remove_Glow.Enabled := False
+    else if TText(Sender).Name = 'Mame_Gamelist_Lists' then
+      vMame.Scene.Gamelist.T_Lists_Glow.Enabled := False;
+  end;
+end;
+
+procedure TEMU_ARCADE_MAME_TEXT.OnMouseUp(Sender: TObject; vButton: TMouseButton; vShift: TShiftState; vX, vY: Single);
+begin
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
+    if TText(Sender).Name = 'Mame_Window_Filters_Filter_Remove_' + TText(Sender).Tag.ToString then
+      uEmu_Arcade_Mame_Filters.Remove(TText(Sender).Tag)
+  end;
 end;
 
 { TEMU_ARCADE_MAME_COMBOBOX }

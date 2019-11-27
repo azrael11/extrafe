@@ -46,9 +46,8 @@ procedure Get_Data;
 implementation
 
 uses
-  uDatabase,
-  uDatabase_ActiveUser,
-  uDatabase_SqlCommands,
+  uDB,
+  uDB_AUser,
   uLoad_AllTypes,
   uWindows,
   uWeather_SetAll,
@@ -64,7 +63,7 @@ begin
   // addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'yahoo');
   // addons.weather.Action.Provider := 'yahoo';
   // vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(addons.weather.Action.Provider);
-  // vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_provider_yahoo.png');
+  // vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_yahoo.png');
   // if yahoo have towns load towns else load default
   Load_Config;
 end;
@@ -86,7 +85,7 @@ begin
     addons.weather.Ini.Ini.WriteString('yahoo', 'selected_unit', addons.weather.Action.Yahoo.Selected_Unit);
     end;
     addons.weather.Action.Yahoo.Iconset_Names := TStringList.Create;
-    addons.weather.Action.Yahoo.Iconset_Names := uWindows_GetFolderNames(user_Active_Local.ADDONS.Weather_D.p_Icons + 'yahoo');
+    addons.weather.Action.Yahoo.Iconset_Names := uWindows_GetFolderNames(uDB_AUser.Local.ADDONS.Weather_D.p_Icons + 'yahoo');
     addons.weather.Action.Yahoo.Iconset_Names.Insert(0, 'default');
     if addons.weather.Ini.Ini.ValueExists('yahoo', 'iconset_count') then
     begin
@@ -111,11 +110,10 @@ var
   vi: Integer;
   vTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL;
 begin
-  if addons.weather.Action.Yahoo.Total_WoeID <> -1 then
+  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count <> -1 then
   begin
-    for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+    for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
     begin
-      // Get Data
       vTown.Time_Results := Convert_Time(addons.weather.Action.Yahoo.Data_Town[vi].Observation.Time.TimeStamp,
         addons.weather.Action.Yahoo.Data_Town[vi].Observation.Time.WeekDay).Full;
       vTown.Forecast_Image := Get_Icon_From_Text(addons.weather.Action.Yahoo.Data_Town[vi].Observation.ConditionCode);
@@ -128,7 +126,9 @@ begin
       // Set Data
       Towns_Add_New_Town(vi, vTown);
     end;
-  end;
+  end
+  else
+
 end;
 
 procedure Towns_Update_Arrows;
@@ -270,7 +270,7 @@ begin
   vWeather.Config.main.Right.Towns.Delete.main.Icon.Name := 'A_W_Providers_Yahoo_Question_Delete_Town_Main_Icon';
   vWeather.Config.main.Right.Towns.Delete.main.Icon.Parent := vWeather.Config.main.Right.Towns.Delete.main.Panel;
   vWeather.Config.main.Right.Towns.Delete.main.Icon.SetBounds(30, 14, 36, 36);
-  vWeather.Config.main.Right.Towns.Delete.main.Icon.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Images + 'w_warning.png');
+  vWeather.Config.main.Right.Towns.Delete.main.Icon.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Images + 'w_warning.png');
   vWeather.Config.main.Right.Towns.Delete.main.Icon.Visible := True;
 
   vWeather.Config.main.Right.Towns.Delete.main.Line_1 := TLabel.Create(vWeather.Config.main.Right.Towns.Delete.main.Panel);
@@ -528,8 +528,8 @@ begin
       if vWeather.Config.main.Right.Options_Yahoo.Metric.IsChecked = False then
       begin
         vWeather.Config.main.Right.Options_Yahoo.Imperial.IsChecked := False;
-        user_Active_Local.addons.Weather_D.Yahoo.System := 'metric';
-        uDatabase_SqlCommands.Update_Local_Query('ADDON_WEATHER', 'YAHOO_SYSTEM', 'metric', user_Active_Local.Num.ToString);
+        uDB_AUser.Local.addons.Weather_D.Yahoo.System := 'metric';
+        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_SYSTEM', 'metric', 'USER_ID', uDB_AUser.Local.Num.ToString);
         uWeather_Providers_Yahoo.Use_Metric;
       end;
     end
@@ -538,8 +538,8 @@ begin
       if vWeather.Config.main.Right.Options_Yahoo.Imperial.IsChecked = False then
       begin
         vWeather.Config.main.Right.Options_Yahoo.Metric.IsChecked := False;
-        user_Active_Local.addons.Weather_D.Yahoo.System := 'imperial';
-        uDatabase_SqlCommands.Update_Local_Query('ADDON_WEATHER', 'YAHOO_SYSTEM', 'imperial', user_Active_Local.Num.ToString);
+        uDB_AUser.Local.addons.Weather_D.Yahoo.System := 'imperial';
+        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_SYSTEM', 'imperial', 'USER_ID', uDB_AUser.Local.Num.ToString);
         uWeather_Providers_Yahoo.Use_Imperial;
       end;
     end;
@@ -580,7 +580,7 @@ begin
   vWeather.Config.main.Right.Options_Yahoo.Metric.Parent := vWeather.Config.main.Right.Options_Yahoo.System_Type;
   vWeather.Config.main.Right.Options_Yahoo.Metric.SetBounds(20, 70, 200, 20);
   vWeather.Config.main.Right.Options_Yahoo.Metric.Text := 'Metric';
-  if user_Active_Local.addons.Weather_D.Yahoo.System = 'metric' then
+  if uDB_AUser.Local.addons.Weather_D.Yahoo.System = 'metric' then
     vWeather.Config.main.Right.Options_Yahoo.Metric.IsChecked := True;
   vWeather.Config.main.Right.Options_Yahoo.Metric.Font.Style := vWeather.Config.main.Right.Options_Yahoo.Metric.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Options_Yahoo.Metric.OnClick := addons.weather.Input.mouse_config.Checkbox.OnMouseClick;
@@ -591,14 +591,13 @@ begin
   vWeather.Config.main.Right.Options_Yahoo.Imperial.Name := 'A_W_Provider_Yahoo_Config_Imperial';
   vWeather.Config.main.Right.Options_Yahoo.Imperial.Parent := vWeather.Config.main.Right.Options_Yahoo.System_Type;
   vWeather.Config.main.Right.Options_Yahoo.Imperial.SetBounds(vWeather.Config.main.Right.Options_Yahoo.System_Type.Width - 210, 70, 200, 20);
-  if user_Active_Local.addons.Weather_D.Yahoo.System = 'imperial' then
+  if uDB_AUser.Local.addons.Weather_D.Yahoo.System = 'imperial' then
     vWeather.Config.main.Right.Options_Yahoo.Imperial.IsChecked := True;
   vWeather.Config.main.Right.Options_Yahoo.Imperial.Text := 'Imperial';
   vWeather.Config.main.Right.Options_Yahoo.Imperial.Font.Style := vWeather.Config.main.Right.Options_Yahoo.Imperial.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Options_Yahoo.Imperial.OnClick := addons.weather.Input.mouse_config.Checkbox.OnMouseClick;
   vWeather.Config.main.Right.Options_Yahoo.Imperial.OnMouseEnter := addons.weather.Input.mouse_config.Checkbox.OnMouseEnter;
   vWeather.Config.main.Right.Options_Yahoo.Imperial.Visible := True;
-
 end;
 
 procedure Create_Iconsets;
@@ -748,7 +747,7 @@ begin
     Inc(vl, 1);
   end;
 
-  for vi := 0 to addons.weather.Action.Yahoo.Iconset_Count do
+  for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Count do
     Create_MiniPreview(vi);
 end;
 
@@ -760,7 +759,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Name := 'A_W_Provider_Yahoo_Config_Iconsets_Preview_Name_' + vNum.ToString;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Parent := vWeather.Config.main.Right.Iconsets.Box;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.SetBounds(10, 2 + (vNum * 68), 300, 20);
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Text := addons.weather.Action.Yahoo.Iconset_Names.Strings[vNum];
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Text := uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets.Strings[vNum];
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Font.Style := vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Visible := True;
 
@@ -862,8 +861,8 @@ begin
           vi.ToString;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Parent := vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].SetBounds(50 * vi, 2, 50, 50);
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' +
-          addons.weather.Action.Yahoo.Iconset_Names.Strings[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' +
+          uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets.Strings[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Tag := vi;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].TagString := vNum.ToString;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnClick := addons.weather.Input.mouse_config.Image.OnMouseClick;
@@ -886,8 +885,8 @@ begin
   vWeather.Config.main.Right.Iconsets.Box.Visible := False;
   vWeather.Config.main.Right.Iconsets.Full.Panel.Visible := True;
   vWeather.Config.main.Right.Iconsets.Full.Back.Visible := True;
-  vPath := addons.weather.Action.Yahoo.Iconset_Names.Strings[vPreview_Num];
-  vPath := user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' + vPath + '\';
+  vPath := uDB_AUser.Local.addons.Weather_D.Yahoo.Iconsets.Strings[vPreview_Num];
+  vPath := uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' + vPath + '\';
   if vPreview_Num <> 0 then
   begin
     for vi := 0 to 48 do
@@ -1012,7 +1011,7 @@ begin
         vWeather.Scene.Tab_Yahoo[vi].General.Image.Name := 'A_W_Provider_Yahoo_Image_' + IntToStr(vi);
         vWeather.Scene.Tab_Yahoo[vi].General.Image.Parent := vWeather.Scene.Tab_Yahoo[vi].Tab;
         vWeather.Scene.Tab_Yahoo[vi].General.Image.SetBounds(50, 60, 150, 150);
-        vWeather.Scene.Tab_Yahoo[vi].General.Image.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' +
+        vWeather.Scene.Tab_Yahoo[vi].General.Image.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' +
           addons.weather.Action.Yahoo.Iconset_Names.Strings[vSelectd] + '\w_w_' + addons.weather.Action.Yahoo.Data_Town[vi].Observation.ConditionCode + '.png');
         vWeather.Scene.Tab_Yahoo[vi].General.Image.Tag := vi;
         vWeather.Scene.Tab_Yahoo[vi].General.Image.Visible := True;
@@ -1022,7 +1021,7 @@ begin
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.Name := 'A_W_Provider_Yahoo_Hourly_Info_Image_' + vk.ToString;
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.Parent := vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Layout;
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.SetBounds(15, 25, 90, 90);
-          vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' +
+          vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' +
             addons.weather.Action.Yahoo.Iconset_Names.Strings[vSelectd] + '\w_w_' + addons.weather.Action.Yahoo.Data_Town[vi].Forcasts.Hourly[vk].ConditionCode
             + '.png');
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.WrapMode := TImageWrapMode.Fit;
@@ -1034,7 +1033,7 @@ begin
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.Name := 'A_W_Provider_Yahoo_Daily_Icon_' + vk.ToString;
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.Parent := vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Layout;
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.SetBounds(5, 5, 100, 100);
-          vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' +
+          vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' +
             addons.weather.Action.Yahoo.Iconset_Names.Strings[vSelectd] + '\w_w_' + addons.weather.Action.Yahoo.Data_Town[vi].Forcasts.Daily[vk].ConditionCode
             + '.png');
           vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.WrapMode := TImageWrapMode.Fit;
@@ -1046,17 +1045,17 @@ begin
     begin
       for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
       begin
-        vWeather.Scene.Tab_Yahoo[vi].General.Image.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' +
+        vWeather.Scene.Tab_Yahoo[vi].General.Image.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' +
           addons.weather.Action.Yahoo.Iconset_Names.Strings[vSelectd] + '\w_w_' + addons.weather.Action.Yahoo.Data_Town[vi].Observation.ConditionCode + '.png');
         for vk := 0 to 24 do
         begin
-          vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' +
+          vWeather.Scene.Tab_Yahoo[vi].Forecast_Hourly.Hourly[vk].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' +
             addons.weather.Action.Yahoo.Iconset_Names.Strings[vSelectd] + '\w_w_' + addons.weather.Action.Yahoo.Data_Town[vi].Forcasts.Hourly[vk].ConditionCode
             + '.png');
         end;
         for vk := 0 to 10 do
         begin
-          vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons + 'yahoo\' +
+          vWeather.Scene.Tab_Yahoo[vi].Forecast_Daily.Daily[vk].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons + 'yahoo\' +
             addons.weather.Action.Yahoo.Iconset_Names.Strings[vSelectd] + '\w_w_' + addons.weather.Action.Yahoo.Data_Town[vi].Forcasts.Daily[vi].ConditionCode
             + '.png');
         end;
@@ -1095,12 +1094,12 @@ begin
   ExtraFE_Query_Local.Open;
   ExtraFE_Query_Local.First;
 
-  for vi := 0 to user_Active_Local.addons.Weather_D.Yahoo.Towns_Count do
+  for vi := 0 to uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count do
   begin
-    SetLength(user_Active_Local.addons.Weather_D.Yahoo.Towns, vi + 2);
-    user_Active_Local.addons.Weather_D.Yahoo.Towns[vi].Name := ExtraFE_Query_Local.FieldByName('TOWN_NAME').AsString;
-    user_Active_Local.addons.Weather_D.Yahoo.Towns[vi].Num := ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger;
-    user_Active_Local.addons.Weather_D.Yahoo.Towns[vi].Woeid := ExtraFE_Query_Local.FieldByName('TOWN_WOEID').AsInteger;
+    SetLength(uDB_AUser.Local.addons.Weather_D.Yahoo.Towns, vi + 2);
+    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Name := ExtraFE_Query_Local.FieldByName('TOWN_NAME').AsString;
+    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Num := ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger;
+    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Woeid := ExtraFE_Query_Local.FieldByName('TOWN_WOEID').AsInteger;
     ExtraFE_Query_Local.Next;
   end;
 

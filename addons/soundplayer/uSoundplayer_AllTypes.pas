@@ -163,29 +163,6 @@ type
     Cross_Fade_Sec: Integer;
   end;
 
-type
-  TADDON_SOUNDPLAYER_PLAYER = record
-    Play: Boolean;
-    Pause: Boolean;
-    Stop: Boolean;
-    HasNext_Track: Boolean;
-    HasPrevious_Track: Boolean;
-    VRepeat: String;
-    VRepeat_Num: Integer;
-    VRepeat_Songs_Num: Integer;
-    Suffle: Boolean;
-    Suffle_List: TStringList;
-    Mute: Boolean;
-    Playing_Now: SmallInt;
-    LastPlayed: SmallInt;
-    Thumb_Active: Boolean;
-    Volume_Changed: Boolean;
-    Song_State: Single;
-    Time_Negative: Boolean;
-    Title_Ani: Boolean;
-    Title_Ani_Left: Boolean;
-    Tag: TADDON_SOUNDPLAYER_PLAYER_TAGS;
-  end;
 
 type
   TADDON_SOUNDPLAYER_INFO = record
@@ -303,16 +280,47 @@ type
     Active: Boolean;
     Main_Menu_Position: Integer;
     Actions: TADDON_SOUNDPLAYER_ACTIONS;
-    Player: TADDON_SOUNDPLAYER_PLAYER;
     Equalizer: TADDON_SOUNDPLAYER_EQUALIZER;
     Info: TADDON_SOUNDPLAYER_INFO;
     Playlist: TADDON_SOUNDPLAYER_PLAYLIST;
-    Volume: TADDON_SOUNDPLAYER_VOLUME;
     Path: TADDON_SOUNDPLAYER_PATHS;
     Input: TADDON_SOUNDPLAYER_INPUT;
     Ini: TADDON_SOUNDPLAYER_CONFIG;
     Sound: TADDON_SOUNDPLAYER_SOUND;
   end;
+
+  TPLAYER = (sPlay, sPause, sStop);
+
+type
+  TPLAYER_ACTIONS = record
+    HasNext_Track: Boolean;
+    HasPrevious_Track: Boolean;
+    VRepeat: String;
+    VRepeat_Num: Integer;
+    VRepeat_Songs_Num: Integer;
+    Suffle: Boolean;
+    Suffle_List: TStringList;
+    Mute: Boolean;
+    Playing_Now: SmallInt;
+    LastPlayed: SmallInt;
+    Thumb_Active: Boolean;
+    Volume_Changed: Boolean;
+    Song_State: Single;
+    Time_Negative: Boolean;
+    Title_Ani: Boolean;
+    Title_Ani_Left: Boolean;
+    Tag: TADDON_SOUNDPLAYER_PLAYER_TAGS;
+    volume: TADDON_SOUNDPLAYER_VOLUME;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_NEW = record
+    player: TPLAYER;
+    player_actions: TPLAYER_ACTIONS;
+  end;
+
+var
+  soundplayer: TADDON_SOUNDPLAYER_NEW;
 
   /// /////////////////////////////////////////////////////////////////////////////
   /// Construction
@@ -349,7 +357,7 @@ type
 
 type
   TSOUNDPLAYER_ADDON_SCENE = record
-    Soundplayer: TImage;
+    soundplayer: TImage;
     Soundplayer_Ani: TFloatAnimation;
     Back: TImage;
     Back_Blur: TGaussianBlurEffect;
@@ -748,7 +756,7 @@ type
 type
   TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_INTERNET = record
     Panel: Tpanel;
-    Main: TPanel;
+    Main: Tpanel;
     Info: TLabel;
     Providers_Box: TVertScrollBox;
     Providers: array [0 .. 10] of TImage;
@@ -996,7 +1004,7 @@ end;
 procedure TSOUNDPLAYER_ADDON_FLOATANIMATION.OnFinish(Sender: TObject);
 begin
   TFloatAnimation(Sender).Enabled := False;
-  if addons.Soundplayer.Info.isCoverInFullscreen then
+  if addons.soundplayer.Info.isCoverInFullscreen then
   begin
     if TFloatAnimation(Sender).Name = 'A_SP_Info_Cover_Fullscreen_Animation_Height' then
       uSoundplayer_Info_Actions_ShowCoverFullscreen;
@@ -1008,8 +1016,8 @@ begin
   end;
   if TFloatAnimation(Sender).Name = 'A_SP_Player_Song_Title_Animation' then
   begin
-    if addons.Soundplayer.Player.Title_Ani then
-      addons.Soundplayer.Player.Title_Ani_Left := not addons.Soundplayer.Player.Title_Ani_Left;
+    if soundplayer.player_actions.Title_Ani then
+      soundplayer.player_actions.Title_Ani_Left := not soundplayer.player_actions.Title_Ani_Left;
     uSoundplayer_Player.Title_Animation;
   end;
 end;

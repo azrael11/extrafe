@@ -17,7 +17,6 @@ uses
   FMX.Edit,
   FMX.Layouts,
   FMX.Filter.Effects,
-  OXmlPDOM,
   ALFmxTabControl,
   uWeather_AllTypes,
   Bass;
@@ -77,18 +76,18 @@ var
   vSelected_Panel: TImage;
   vSelectedTown: Integer;
   vLoading_Integer: Integer;
-  vNTXML: IXMLDocument;
-  vNTRoot: PXMLNode;
-  vNTNode: PXMLNode;
-  vNTNode_1: PXMLNode;
-  vNTNode_2: PXMLNode;
-  vNTNode_3: PXMLNode;
-  vNTAttribute: PXMLNode;
+//  vNTXML: IXMLDocument;
+//  vNTRoot: PXMLNode;
+//  vNTNode: PXMLNode;
+//  vNTNode_1: PXMLNode;
+//  vNTNode_2: PXMLNode;
+//  vNTNode_3: PXMLNode;
+//  vNTAttribute: PXMLNode;
 
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad,
   uLoad_AllTypes,
   uWeather_Actions,
@@ -104,132 +103,135 @@ uses
 
 procedure Load;
 begin
-  vWeather.Config.main.Right.Panels[1] := TPanel.Create(vWeather.Config.main.Right.Panel);
-  vWeather.Config.main.Right.Panels[1].name := 'A_W_Config_Panels_1';
-  vWeather.Config.main.Right.Panels[1].Parent := vWeather.Config.main.Right.Panel;
-  vWeather.Config.main.Right.Panels[1].Align := TAlignLayout.Client;
-  vWeather.Config.main.Right.Panels[1].Visible := True;
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider <> '' then
+  begin
+    vWeather.Config.main.Right.Panels[1] := TPanel.Create(vWeather.Config.main.Right.Panel);
+    vWeather.Config.main.Right.Panels[1].name := 'A_W_Config_Panels_1';
+    vWeather.Config.main.Right.Panels[1].Parent := vWeather.Config.main.Right.Panel;
+    vWeather.Config.main.Right.Panels[1].Align := TAlignLayout.Client;
+    vWeather.Config.main.Right.Panels[1].Visible := True;
 
-  vWeather.Config.main.Right.Towns.CityList := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.CityList.name := 'A_W_Config_Towns_CityList_VerticalBox';
-  vWeather.Config.main.Right.Towns.CityList.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.CityList.SetBounds(10, 10, vWeather.Config.main.Right.Panels[1].Width - 40,
-    vWeather.Config.main.Right.Panels[1].Height - 20);
-  vWeather.Config.main.Right.Towns.CityList.Visible := True;
+    vWeather.Config.main.Right.Towns.CityList := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.CityList.name := 'A_W_Config_Towns_CityList_VerticalBox';
+    vWeather.Config.main.Right.Towns.CityList.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.CityList.SetBounds(10, 10, vWeather.Config.main.Right.Panels[1].Width - 40,
+      vWeather.Config.main.Right.Panels[1].Height - 20);
+    vWeather.Config.main.Right.Towns.CityList.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Action := TPanel.Create(vWeather.Config.main.Right.Panels[1]);
-  vWeather.Config.main.Right.Towns.Action.name := 'A_W_Config_Action_Panel';
-  vWeather.Config.main.Right.Towns.Action.Parent := vWeather.Config.main.Right.Panels[1];
-  vWeather.Config.main.Right.Towns.Action.SetBounds(vWeather.Config.main.Right.Panels[1].Width - 40, 0, 40, vWeather.Config.main.Right.Panels[1].Height);
-  vWeather.Config.main.Right.Towns.Action.Visible := True;
+    vWeather.Config.main.Right.Towns.Action := TPanel.Create(vWeather.Config.main.Right.Panels[1]);
+    vWeather.Config.main.Right.Towns.Action.name := 'A_W_Config_Action_Panel';
+    vWeather.Config.main.Right.Towns.Action.Parent := vWeather.Config.main.Right.Panels[1];
+    vWeather.Config.main.Right.Towns.Action.SetBounds(vWeather.Config.main.Right.Panels[1].Width - 40, 0, 40, vWeather.Config.main.Right.Panels[1].Height);
+    vWeather.Config.main.Right.Towns.Action.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Add_Town := TText.Create(vWeather.Config.main.Right.Towns.Action);
-  vWeather.Config.main.Right.Towns.Add_Town.name := 'A_W_Config_Towns_Add';
-  vWeather.Config.main.Right.Towns.Add_Town.Parent := vWeather.Config.main.Right.Towns.Action;
-  vWeather.Config.main.Right.Towns.Add_Town.SetBounds(8, 18, 24, 24);
-  vWeather.Config.main.Right.Towns.Add_Town.Font.Family := 'IcoMoon-Free';
-  vWeather.Config.main.Right.Towns.Add_Town.Font.Size := 24;
-  vWeather.Config.main.Right.Towns.Add_Town.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.Add_Town.Text := #$ea0a;
-  vWeather.Config.main.Right.Towns.Add_Town.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Add_Town.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Add_Town.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.Add_Town.Visible := True;
+    vWeather.Config.main.Right.Towns.Add_Town := TText.Create(vWeather.Config.main.Right.Towns.Action);
+    vWeather.Config.main.Right.Towns.Add_Town.name := 'A_W_Config_Towns_Add';
+    vWeather.Config.main.Right.Towns.Add_Town.Parent := vWeather.Config.main.Right.Towns.Action;
+    vWeather.Config.main.Right.Towns.Add_Town.SetBounds(8, 18, 24, 24);
+    vWeather.Config.main.Right.Towns.Add_Town.Font.Family := 'IcoMoon-Free';
+    vWeather.Config.main.Right.Towns.Add_Town.Font.Size := 24;
+    vWeather.Config.main.Right.Towns.Add_Town.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.Add_Town.Text := #$ea0a;
+    vWeather.Config.main.Right.Towns.Add_Town.OnClick := ADDONS.weather.Input.mouse_config.Text.OnMouseClick;
+    vWeather.Config.main.Right.Towns.Add_Town.OnMouseEnter := ADDONS.weather.Input.mouse_config.Text.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.Add_Town.OnMouseLeave := ADDONS.weather.Input.mouse_config.Text.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.Add_Town.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Add_Town_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.Add_Town);
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.name := 'A_W_Config_Towns_Add_Glow';
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Parent := vWeather.Config.main.Right.Towns.Add_Town;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.Add_Town_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.Add_Town);
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.name := 'A_W_Config_Towns_Add_Glow';
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Parent := vWeather.Config.main.Right.Towns.Add_Town;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.Add_Town_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.EditLock := TText.Create(vWeather.Config.main.Right.Towns.Action);
-  vWeather.Config.main.Right.Towns.EditLock.name := 'A_W_Config_Towns_Lock';
-  vWeather.Config.main.Right.Towns.EditLock.Parent := vWeather.Config.main.Right.Towns.Action;
-  vWeather.Config.main.Right.Towns.EditLock.SetBounds(12, 290, 24, 24);
-  vWeather.Config.main.Right.Towns.EditLock.Font.Family := 'IcoMoon-Free';
-  vWeather.Config.main.Right.Towns.EditLock.Font.Size := 24;
-  vWeather.Config.main.Right.Towns.EditLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.EditLock.Text := #$e98f;
-  vWeather.Config.main.Right.Towns.EditLock.TextSettings.HorzAlign := TTextAlign.Center;
-  vWeather.Config.main.Right.Towns.EditLock.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Towns.EditLock.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.EditLock.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.EditLock.Visible := True;
+    vWeather.Config.main.Right.Towns.EditLock := TText.Create(vWeather.Config.main.Right.Towns.Action);
+    vWeather.Config.main.Right.Towns.EditLock.name := 'A_W_Config_Towns_Lock';
+    vWeather.Config.main.Right.Towns.EditLock.Parent := vWeather.Config.main.Right.Towns.Action;
+    vWeather.Config.main.Right.Towns.EditLock.SetBounds(12, 290, 24, 24);
+    vWeather.Config.main.Right.Towns.EditLock.Font.Family := 'IcoMoon-Free';
+    vWeather.Config.main.Right.Towns.EditLock.Font.Size := 24;
+    vWeather.Config.main.Right.Towns.EditLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.EditLock.Text := #$e98f;
+    vWeather.Config.main.Right.Towns.EditLock.TextSettings.HorzAlign := TTextAlign.Center;
+    vWeather.Config.main.Right.Towns.EditLock.OnClick := ADDONS.weather.Input.mouse_config.Text.OnMouseClick;
+    vWeather.Config.main.Right.Towns.EditLock.OnMouseEnter := ADDONS.weather.Input.mouse_config.Text.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.EditLock.OnMouseLeave := ADDONS.weather.Input.mouse_config.Text.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.EditLock.Visible := True;
 
-  vWeather.Config.main.Right.Towns.EditLock_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.EditLock);
-  vWeather.Config.main.Right.Towns.EditLock_Glow.name := 'A_W_Config_Towns_Lock_Glow';
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Parent := vWeather.Config.main.Right.Towns.EditLock;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.EditLock_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.EditLock_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.EditLock);
+    vWeather.Config.main.Right.Towns.EditLock_Glow.name := 'A_W_Config_Towns_Lock_Glow';
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Parent := vWeather.Config.main.Right.Towns.EditLock;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.EditLock_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.GoUp := TText.Create(vWeather.Config.main.Right.Towns.Action);
-  vWeather.Config.main.Right.Towns.GoUp.name := 'A_W_Config_Towns_PosUp';
-  vWeather.Config.main.Right.Towns.GoUp.Parent := vWeather.Config.main.Right.Towns.Action;
-  vWeather.Config.main.Right.Towns.GoUp.SetBounds(8, 350, 24, 24);
-  vWeather.Config.main.Right.Towns.GoUp.Font.Family := 'IcoMoon-Free';
-  vWeather.Config.main.Right.Towns.GoUp.Font.Size := 24;
-  vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
-  vWeather.Config.main.Right.Towns.GoUp.Text := #$ea41;
-  vWeather.Config.main.Right.Towns.GoUp.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Towns.GoUp.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.GoUp.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.GoUp.Visible := True;
+    vWeather.Config.main.Right.Towns.GoUp := TText.Create(vWeather.Config.main.Right.Towns.Action);
+    vWeather.Config.main.Right.Towns.GoUp.name := 'A_W_Config_Towns_PosUp';
+    vWeather.Config.main.Right.Towns.GoUp.Parent := vWeather.Config.main.Right.Towns.Action;
+    vWeather.Config.main.Right.Towns.GoUp.SetBounds(8, 350, 24, 24);
+    vWeather.Config.main.Right.Towns.GoUp.Font.Family := 'IcoMoon-Free';
+    vWeather.Config.main.Right.Towns.GoUp.Font.Size := 24;
+    vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
+    vWeather.Config.main.Right.Towns.GoUp.Text := #$ea41;
+    vWeather.Config.main.Right.Towns.GoUp.OnClick := ADDONS.weather.Input.mouse_config.Text.OnMouseClick;
+    vWeather.Config.main.Right.Towns.GoUp.OnMouseEnter := ADDONS.weather.Input.mouse_config.Text.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.GoUp.OnMouseLeave := ADDONS.weather.Input.mouse_config.Text.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.GoUp.Visible := True;
 
-  vWeather.Config.main.Right.Towns.GoUp_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoUp);
-  vWeather.Config.main.Right.Towns.GoUp_Glow.name := 'A_W_Config_Towns_PosUp_Glow';
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Parent := vWeather.Config.main.Right.Towns.GoUp;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.GoUp_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoUp);
+    vWeather.Config.main.Right.Towns.GoUp_Glow.name := 'A_W_Config_Towns_PosUp_Glow';
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Parent := vWeather.Config.main.Right.Towns.GoUp;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.GoUp_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.GoDown := TText.Create(vWeather.Config.main.Right.Towns.Action);
-  vWeather.Config.main.Right.Towns.GoDown.name := 'A_W_Config_Towns_PosDown';
-  vWeather.Config.main.Right.Towns.GoDown.Parent := vWeather.Config.main.Right.Towns.Action;
-  vWeather.Config.main.Right.Towns.GoDown.SetBounds(8, 390, 24, 24);
-  vWeather.Config.main.Right.Towns.GoDown.Font.Family := 'IcoMoon-Free';
-  vWeather.Config.main.Right.Towns.GoDown.Font.Size := 24;
-  vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
-  vWeather.Config.main.Right.Towns.GoDown.Text := #$ea43;
-  vWeather.Config.main.Right.Towns.GoDown.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Towns.GoDown.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.GoDown.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.GoDown.Visible := True;
+    vWeather.Config.main.Right.Towns.GoDown := TText.Create(vWeather.Config.main.Right.Towns.Action);
+    vWeather.Config.main.Right.Towns.GoDown.name := 'A_W_Config_Towns_PosDown';
+    vWeather.Config.main.Right.Towns.GoDown.Parent := vWeather.Config.main.Right.Towns.Action;
+    vWeather.Config.main.Right.Towns.GoDown.SetBounds(8, 390, 24, 24);
+    vWeather.Config.main.Right.Towns.GoDown.Font.Family := 'IcoMoon-Free';
+    vWeather.Config.main.Right.Towns.GoDown.Font.Size := 24;
+    vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
+    vWeather.Config.main.Right.Towns.GoDown.Text := #$ea43;
+    vWeather.Config.main.Right.Towns.GoDown.OnClick := ADDONS.weather.Input.mouse_config.Text.OnMouseClick;
+    vWeather.Config.main.Right.Towns.GoDown.OnMouseEnter := ADDONS.weather.Input.mouse_config.Text.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.GoDown.OnMouseLeave := ADDONS.weather.Input.mouse_config.Text.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.GoDown.Visible := True;
 
-  vWeather.Config.main.Right.Towns.GoDown_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoDown);
-  vWeather.Config.main.Right.Towns.GoDown_Glow.name := 'A_W_Config_Towns_PosDown_Glow';
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Parent := vWeather.Config.main.Right.Towns.GoDown;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.GoDown_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.GoDown);
+    vWeather.Config.main.Right.Towns.GoDown_Glow.name := 'A_W_Config_Towns_PosDown_Glow';
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Parent := vWeather.Config.main.Right.Towns.GoDown;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.GoDown_Glow.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.Delete_Icon := TText.Create(vWeather.Config.main.Right.Towns.Action);
-  vWeather.Config.main.Right.Towns.Delete_Icon.name := 'A_W_Config_Towns_Delete';
-  vWeather.Config.main.Right.Towns.Delete_Icon.Parent := vWeather.Config.main.Right.Towns.Action;
-  vWeather.Config.main.Right.Towns.Delete_Icon.SetBounds(8, 480, 24, 24);
-  vWeather.Config.main.Right.Towns.Delete_Icon.Font.Family := 'IcoMoon-Free';
-  vWeather.Config.main.Right.Towns.Delete_Icon.Font.Size := 24;
-  vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
-  vWeather.Config.main.Right.Towns.Delete_Icon.Text := #$e9ac;
-  vWeather.Config.main.Right.Towns.Delete_Icon.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
-  vWeather.Config.main.Right.Towns.Delete_Icon.Visible := True;
+    vWeather.Config.main.Right.Towns.Delete_Icon := TText.Create(vWeather.Config.main.Right.Towns.Action);
+    vWeather.Config.main.Right.Towns.Delete_Icon.name := 'A_W_Config_Towns_Delete';
+    vWeather.Config.main.Right.Towns.Delete_Icon.Parent := vWeather.Config.main.Right.Towns.Action;
+    vWeather.Config.main.Right.Towns.Delete_Icon.SetBounds(8, 480, 24, 24);
+    vWeather.Config.main.Right.Towns.Delete_Icon.Font.Family := 'IcoMoon-Free';
+    vWeather.Config.main.Right.Towns.Delete_Icon.Font.Size := 24;
+    vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
+    vWeather.Config.main.Right.Towns.Delete_Icon.Text := #$e9ac;
+    vWeather.Config.main.Right.Towns.Delete_Icon.OnClick := ADDONS.weather.Input.mouse_config.Text.OnMouseClick;
+    vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseEnter := ADDONS.weather.Input.mouse_config.Text.OnMouseEnter;
+    vWeather.Config.main.Right.Towns.Delete_Icon.OnMouseLeave := ADDONS.weather.Input.mouse_config.Text.OnMouseLeave;
+    vWeather.Config.main.Right.Towns.Delete_Icon.Visible := True;
 
-  vWeather.Config.main.Right.Towns.Delete_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.Delete_Icon);
-  vWeather.Config.main.Right.Towns.Delete_Glow.name := 'A_W_Config_Towns_Delete_Glow';
-  vWeather.Config.main.Right.Towns.Delete_Glow.Parent := vWeather.Config.main.Right.Towns.Delete_Icon;
-  vWeather.Config.main.Right.Towns.Delete_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.Delete_Glow.GlowColor := TAlphaColorRec.Red;
-  vWeather.Config.main.Right.Towns.Delete_Glow.Opacity := 0.9;
-  vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := False;
+    vWeather.Config.main.Right.Towns.Delete_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.Delete_Icon);
+    vWeather.Config.main.Right.Towns.Delete_Glow.name := 'A_W_Config_Towns_Delete_Glow';
+    vWeather.Config.main.Right.Towns.Delete_Glow.Parent := vWeather.Config.main.Right.Towns.Delete_Icon;
+    vWeather.Config.main.Right.Towns.Delete_Glow.Softness := 0.4;
+    vWeather.Config.main.Right.Towns.Delete_Glow.GlowColor := TAlphaColorRec.Red;
+    vWeather.Config.main.Right.Towns.Delete_Glow.Opacity := 0.9;
+    vWeather.Config.main.Right.Towns.Delete_Glow.Enabled := False;
 
-  Show;
+    Show;
+  end;
 end;
 
 procedure Free;
@@ -239,9 +241,9 @@ end;
 
 procedure Show;
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
     uWeather_Providers_Yahoo_Config.Create_Towns
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     uWeather_Providers_OpenWeatherMap_Config.Create_Towns;
 end;
 
@@ -1054,10 +1056,10 @@ var
   vString_Temp_Unit: WideString;
   viPos: Integer;
 begin
-  vForcast_Resutls := TStringList.Create;
+{  vForcast_Resutls := TStringList.Create;
 
-//  vString_Provider := addons.weather.Ini.Ini.ReadString('Provider', 'Name', vString_Provider);
-//  vString_Woeid := addons.weather.Ini.Ini.ReadString(vString_Provider, IntToStr(mNum) + '_WoeID', vString_Woeid);
+  // vString_Provider := addons.weather.Ini.Ini.ReadString('Provider', 'Name', vString_Provider);
+  // vString_Woeid := addons.weather.Ini.Ini.ReadString(vString_Provider, IntToStr(mNum) + '_WoeID', vString_Woeid);
   viPos := Pos('{', vString_Woeid);
   vString_Woeid := Trim(Copy(vString_Woeid, 0, viPos - 1));
 
@@ -1098,7 +1100,7 @@ begin
           end;
         end;
       end;
-  DeleteFile(extrafe.prog.Path + cTemp_Forcast);
+  DeleteFile(extrafe.prog.Path + cTemp_Forcast);  }
 end;
 
 ///
@@ -1108,10 +1110,10 @@ var
   vi: Integer;
   vActive_Woeid: Integer;
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
-    vActive_Woeid := addons.weather.Action.Yahoo.Total_WoeID
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
-    vActive_Woeid := addons.weather.Action.OWM.Total_WoeID;
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    vActive_Woeid := ADDONS.weather.Action.Yahoo.Total_WoeID
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    vActive_Woeid := ADDONS.weather.Action.OWM.Total_WoeID;
 
   if vActive_Woeid > -1 then
   begin
@@ -1119,20 +1121,20 @@ begin
     begin
       vWeather.Config.main.Right.Towns.EditLock.Text := #$e990;
       vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      addons.weather.Config.Selected_Town := 0;
+      ADDONS.weather.Config.Selected_Town := 0;
       vWeather.Config.main.Right.Towns.Town[0].Glow_Panel.Enabled := True;
       vWeather.Config.main.Right.Towns.Town[0].Glow_Panel.GlowColor := TAlphaColorRec.Red;
       vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
-      if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
       begin
-        if addons.weather.Action.Yahoo.Total_WoeID > 0 then
+        if ADDONS.weather.Action.Yahoo.Total_WoeID > 0 then
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
         else
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
       end
-      else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+      else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       begin
-        if addons.weather.Action.OWM.Total_WoeID> 0 then
+        if ADDONS.weather.Action.OWM.Total_WoeID > 0 then
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
         else
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -1145,17 +1147,17 @@ begin
       vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
       vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
       vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
-      if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
       begin
-        for vi := 0 to addons.weather.Action.Yahoo.Total_WoeID do
+        for vi := 0 to ADDONS.weather.Action.Yahoo.Total_WoeID do
         begin
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
         end;
       end
-      else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+      else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       begin
-        for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
+        for vi := 0 to ADDONS.weather.Action.OWM.Total_WoeID do
         begin
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
@@ -1163,7 +1165,7 @@ begin
       end;
       uWeather_Sounds_PlayMouse('Unlock');
     end;
-    addons.weather.Config.Edit_Lock := vLock;
+    ADDONS.weather.Config.Edit_Lock := vLock;
   end;
 end;
 
@@ -1171,7 +1173,7 @@ procedure uWeather_Config_Towns_Edit_SelectTown(vSelected: Integer);
 var
   vi: Integer;
 begin
-  for vi := 0 to addons.weather.Action.Active_Total do
+  for vi := 0 to ADDONS.weather.Action.Active_Total do
   begin
     vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
     vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
@@ -1179,13 +1181,13 @@ begin
 
   vWeather.Config.main.Right.Towns.Town[vSelected].Glow_Panel.GlowColor := TAlphaColorRec.Red;
   vWeather.Config.main.Right.Towns.Town[vSelected].Glow_Panel.Enabled := True;
-  addons.weather.Config.Selected_Town := vSelected;
+  ADDONS.weather.Config.Selected_Town := vSelected;
 
   vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   if vSelected = 0 then
     vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey
-  else if vSelected = addons.weather.Action.Active_Total then
+  else if vSelected = ADDONS.weather.Action.Active_Total then
     vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
 end;
 
@@ -1198,7 +1200,7 @@ procedure uWeather_Config_Towsn_RefreshTownAll;
 var
   vi: Integer;
 begin
-  for vi := 0 to addons.weather.Action.Active_Total do
+  for vi := 0 to ADDONS.weather.Action.Active_Total do
     uWeather_Config_Towns_RefreshTown(vi);
 end;
 

@@ -31,7 +31,7 @@ implementation
 
 uses
   uLoad,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad_AllTypes,
   uMain_SetAll,
   uMain_AllTypes,
@@ -53,7 +53,7 @@ begin
   vWeather.Scene.Weather.Name := 'A_Weather';
   vWeather.Scene.Weather.Parent := mainScene.main.Down_Level;
   vWeather.Scene.Weather.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
-  vWeather.Scene.Weather.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_back.png');
+  vWeather.Scene.Weather.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_back.png');
   vWeather.Scene.Weather.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.Weather.Visible := True;
 
@@ -71,7 +71,7 @@ begin
   vWeather.Scene.Back.Name := 'A_W_Back';
   vWeather.Scene.Back.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Back.SetBounds(0, 0, vWeather.Scene.Weather.Width, vWeather.Scene.Weather.Height);
-  vWeather.Scene.Back.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_back.png');
+  vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_back.png');
   vWeather.Scene.Back.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.Back.Visible := True;
 
@@ -85,7 +85,7 @@ begin
   vWeather.Scene.UpLine.Name := 'A_W_UpLine_Image';
   vWeather.Scene.UpLine.Parent := vWeather.Scene.Weather;
   vWeather.Scene.UpLine.SetBounds(0, 0, vWeather.Scene.Weather.Width, 10);
-  vWeather.Scene.UpLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
+  vWeather.Scene.UpLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.UpLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.UpLine.Visible := True;
 
@@ -93,7 +93,7 @@ begin
   vWeather.Scene.MiddleLine.Name := 'A_W_MiddleLine_Image';
   vWeather.Scene.MiddleLine.Parent := vWeather.Scene.Weather;
   vWeather.Scene.MiddleLine.SetBounds(0, vWeather.Scene.Weather.Height - 162, vWeather.Scene.Weather.Width, 10);
-  vWeather.Scene.MiddleLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
+  vWeather.Scene.MiddleLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.MiddleLine.Visible := True;
 
@@ -139,7 +139,7 @@ begin
   vWeather.Scene.DownLine.Name := 'A_W_DownLine_Image';
   vWeather.Scene.DownLine.Parent := vWeather.Scene.Back;
   vWeather.Scene.DownLine.SetBounds(0, vWeather.Scene.Back.Height - 10, vWeather.Scene.Back.Width, 10);
-  vWeather.Scene.DownLine.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
+  vWeather.Scene.DownLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.DownLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.DownLine.Visible := True;
 
@@ -254,10 +254,10 @@ begin
   vWeather.Config.main.Left.Provider.Name := 'A_W_Config_Left_Panel_Image';
   vWeather.Config.main.Left.Provider.Parent := vWeather.Config.main.Left.Panel;
   vWeather.Config.main.Left.Provider.SetBounds(5, vWeather.Config.main.Left.Panel.Height - 95, 200, 90);
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
-    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_provider_yahoo.png')
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
-    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Weather_D.p_Images + 'w_provider_openweathermap.png');
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_yahoo.png')
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_openweathermap.png');
   vWeather.Config.main.Left.Provider.WrapMode := TImageWrapMode.Stretch;
   vWeather.Config.main.Left.Provider.Visible := True;
 
@@ -277,7 +277,7 @@ begin
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.Font.Size := 16;
   vWeather.Config.main.Right.NoProvider_Selected.TextSettings.HorzAlign := TTextAlign.Center;
-  if user_Active_Local.ADDONS.Weather_D.Provider = '' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = '' then
     vWeather.Config.main.Right.NoProvider_Selected.Text := 'Please select forecast provider first!!!';
   vWeather.Config.main.Right.NoProvider_Selected.Visible := True;
 end;

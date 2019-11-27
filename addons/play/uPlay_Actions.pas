@@ -28,6 +28,8 @@ procedure uPlay_Actions_OnMouseLeave_Video(vImage: TImage);
 
 procedure MouseOver_GameIcon(vGame: Integer);
 
+procedure Get_Data;
+
 var
   vOverImage: TImage;
   vOverImage_Icon: TImage;
@@ -35,6 +37,8 @@ var
 implementation
 
 uses
+  uDB,
+  uDB_AUser,
   uLoad_AllTypes,
   uMain_AllTypes,
   uMain_Actions,
@@ -75,8 +79,6 @@ begin
 end;
 
 procedure uPlay_Actions_Image_Full(vImage: TImage);
-var
-  vImage_Path: String;
 begin
   vPlay.Main_Blur.Enabled := True;
   vPlay.Info_Blur.Enabled := True;
@@ -166,6 +168,34 @@ begin
   vPlay.Img_Img_Glow[vGame].Enabled := True;
   addons.play.Actions.Sound_Over_Game_Play_Now := vGame;
   BASS_ChannelPlay(addons.play.Sounds.Voices[vGame], False);
+end;
+
+procedure Get_Data;
+var
+  vQuery: String;
+begin
+  vQuery := 'SELECT * FROM ADDON_AZPLAY WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+
+  uDB_AUser.Local.addons.Azplay_D.Menu_Position := uDB.ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
+  uDB_AUser.Local.addons.Azplay_D.First_Pop := uDB.ExtraFE_Query_Local.FieldByName('FIRST_POP').AsBoolean;
+  uDB_AUser.Local.addons.Azplay_D.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  uDB_AUser.Local.addons.Azplay_D.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE').AsInteger;
+  uDB_AUser.Local.addons.Azplay_D.AzHung := uDB.ExtraFE_Query_Local.FieldByName('AZHUNG').AsBoolean;
+  uDB_AUser.Local.addons.Azplay_D.AzMatch := uDB.ExtraFE_Query_Local.FieldByName('AZMATCH').AsBoolean;
+  uDB_AUser.Local.addons.Azplay_D.AzOng := uDB.ExtraFE_Query_Local.FieldByName('AZONG').AsBoolean;
+  uDB_AUser.Local.addons.Azplay_D.AzSuko := uDB.ExtraFE_Query_Local.FieldByName('AZSUKO').AsBoolean;
+  uDB_AUser.Local.addons.Azplay_D.AzType := uDB.ExtraFE_Query_Local.FieldByName('AZTYPE').AsBoolean;
+
+  if uDB_AUser.Local.addons.Azplay_D.Menu_Position <> -1 then
+  begin
+    uDB_AUser.Local.addons.Names.Insert(uDB_AUser.Local.addons.Azplay_D.Menu_Position, 'azplay');
+    uDB_AUser.Local.ADDONS.Names.Delete(uDB_AUser.Local.ADDONS.Azplay_D.Menu_Position + 1);
+  end;
 end;
 
 end.

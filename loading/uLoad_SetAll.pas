@@ -28,8 +28,9 @@ type
 procedure uLoad_SetAll_Load;
 procedure uLoad_SetAll_Login;
 procedure uLoad_SetAll_Forget_Password;
-procedure uLoad_SetAll_Register;
+procedure Register_Form;
 procedure uLoad_SetAll_Terms;
+procedure Register_Error;
 
 var
   vLogin_User: array of TLOGIN_USER;
@@ -39,9 +40,8 @@ implementation
 
 uses
   load,
-  uDatabase,
-  uDatabase_SQLCommands,
-  uDatabase_ActiveUser,
+  uDB,
+  uDB_AUser,
   uWindows,
   uLoad_Login,
   uLoad_AllTypes,
@@ -106,7 +106,7 @@ begin
   ex_load.Scene.Progress_Text.Name := 'Loading_Progress_Text';
   ex_load.Scene.Progress_Text.Parent := ex_load.Scene.Back;
   ex_load.Scene.Progress_Text.SetBounds(20, ex_load.Scene.Back.Height - 74, 1000, 22);
-  ex_load.Scene.Progress_Text.StyledSettings :=  ex_load.Scene.Progress_Text.StyledSettings - [TStyledSetting.Size];
+  ex_load.Scene.Progress_Text.StyledSettings := ex_load.Scene.Progress_Text.StyledSettings - [TStyledSetting.Size];
   ex_load.Scene.Progress_Text.Font.Size := 18;
   ex_load.Scene.Progress_Text.Text := 'Waiting for Login.';
   ex_load.Scene.Progress_Text.Visible := True;
@@ -290,6 +290,13 @@ begin
   ex_load.Login.Login.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.Login.Login.Visible := True;
 
+  ex_load.Login.Login_Indicator := TAniIndicator.Create(ex_load.Login.Login);
+  ex_load.Login.Login_Indicator.Name := 'Loading_Login_Indicator';
+  ex_load.Login.Login_Indicator.Parent := ex_load.Login.Login;
+  ex_load.Login.Login_Indicator.SetBounds(75, 5, 30, 30);
+  ex_load.Login.Login_Indicator.Enabled := False;
+  ex_load.Login.Login_Indicator.Visible := False;
+
   ex_load.Login.Exit_ExtraFE := TButton.Create(ex_load.Login.Main);
   ex_load.Login.Exit_ExtraFE.Name := 'Loading_Login_Exit';
   ex_load.Login.Exit_ExtraFE.Parent := ex_load.Login.Main;
@@ -369,7 +376,7 @@ begin
   ex_load.Login.NotRegister := TText.Create(ex_load.Login.Main);
   ex_load.Login.NotRegister.Name := 'Loading_Login_Register';
   ex_load.Login.NotRegister.Parent := ex_load.Login.Main;
-  ex_load.Login.NotRegister.SetBounds(300, 276, 208, 17);
+  ex_load.Login.NotRegister.SetBounds(230, 276, 278, 17);
   ex_load.Login.NotRegister.TextSettings.HorzAlign := TTextAlign.Trailing;
   ex_load.Login.NotRegister.Text := 'Not registered yet? Click here';
   ex_load.Login.NotRegister.TextSettings.FontColor := TAlphaColorRec.White;
@@ -388,10 +395,10 @@ begin
   begin
     for vi := 1 to extrafe.users_total do
     begin
-      vLogin_User[vi].Username := uDatabase_SQLCommands.Get_Local_Query('USERNAME', 'USERS', vi.ToString);
-      vLogin_User[vi].Password := uDatabase_SQLCommands.Get_Local_Query('PASSWORD', 'USERS', vi.ToString);
-      vLogin_User[vi].Avatar := uDatabase_SQLCommands.Get_Local_Query('AVATAR', 'USERS', vi.ToString);
-      vLogin_User[vi].Last_Visit := uDatabase_SQLCommands.Get_Local_Query('LAST_VISIT', 'USERS', vi.ToString);
+      vLogin_User[vi].Username := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'USERNAME', 'USERS', 'USER_ID', vi.ToString);
+      vLogin_User[vi].Password := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PASSWORD', 'USERS', 'USER_ID', vi.ToString);
+      vLogin_User[vi].Avatar := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'AVATAR', 'USERS', 'USER_ID', vi.ToString);
+      vLogin_User[vi].Last_Visit := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'LAST_VISIT', 'USERS', 'USER_ID', vi.ToString);
 
       vListBox_Item[vi] := TListBoxItem.Create(ex_load.Login.User_V);
       vListBox_Item[vi].Name := 'Load_ListItem_' + vi.ToString;
@@ -452,6 +459,11 @@ begin
     begin
       ex_load.Login.Online_Database.Text := 'Online database is connected';
       ex_load.Login.Online_Data_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    end
+    else
+    begin
+      ex_load.Login.NotRegister.Text := 'Something wrong and you can''t register';
+      ex_load.Login.NotRegister.TextSettings.FontColor := TAlphaColorRec.Red;
     end;
   end;
 end;
@@ -542,7 +554,7 @@ begin
   FreeAndNil(ex_load.Login.Panel);
 end;
 
-procedure uLoad_SetAll_Register;
+procedure Register_Form;
 begin
 
   extrafe.prog.State := 'load_register';
@@ -869,6 +881,45 @@ begin
   ex_load.Terms.Main.Close.Text := 'Close';
   ex_load.Terms.Main.Close.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.Terms.Main.Close.Visible := True;
+end;
+
+procedure Register_Error;
+begin
+  ex_load.Login.Panel.Visible:= False;
+
+  ex_load.Reg_Error.Panel := TPanel.Create(ex_load.Scene.Back);
+  ex_load.Reg_Error.Panel.Name := 'Loading_Register_Error';
+  ex_load.Reg_Error.Panel.Parent:=  ex_load.Scene.Back;
+  ex_load.Reg_Error.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
+  ex_load.Reg_Error.Panel.Visible := True;
+
+  CreateHeader(ex_load.Reg_Error.Panel, 'IcoMoon-Free', #$e909, 'Something wrong with register', False, nil);
+
+  ex_load.Reg_Error.Memo := TMemo.Create(ex_load.Reg_Error.Panel);
+  ex_load.Reg_Error.Memo.Name := 'Loading_Register_Error_Main';
+  ex_load.Reg_Error.Memo.Parent:=   ex_load.Reg_Error.Panel;
+  ex_load.Reg_Error.Memo.SetBounds(10, 40, ex_load.Reg_Error.Panel.Width- 20, ex_load.Reg_Error.Panel.Height - 90);
+  ex_load.Reg_Error.Memo.Lines.Add(' Warning !!!');
+  ex_load.Reg_Error.Memo.Lines.Add(' Or internet is down or for some reason you can''t connect to server database.');
+  ex_load.Reg_Error.Memo.Lines.Add(' ');
+  ex_load.Reg_Error.Memo.Lines.Add(' In this case you can''t register a new user.');
+  ex_load.Reg_Error.Memo.Lines.Add(' If your machine is not connect to internet try to connect and restart the ExtraFE');
+  ex_load.Reg_Error.Memo.Lines.Add(' If ExtraFE can''t connect to server database please close and wait for a couple minutes and try again');
+  ex_load.Reg_Error.Memo.Lines.Add('  ');
+  ex_load.Reg_Error.Memo.Lines.Add(' If the next start of ExtraFE the icon of Online database turns Blue then you can register a new user');
+  ex_load.Reg_Error.Memo.WordWrap := True;
+  ex_load.Reg_Error.Memo.Visible := True;
+
+  ex_load.Reg_Error.OK := TButton.Create(ex_load.Reg_Error.Panel);
+  ex_load.Reg_Error.OK.Name := 'Loading_Register_Error_Ok';
+  ex_load.Reg_Error.OK.Parent:=  ex_load.Reg_Error.Panel;
+  ex_load.Reg_Error.OK.SetBounds(10, ex_load.Reg_Error.Panel.Height - 50, ex_load.Reg_Error.Panel.Width - 20, 40);
+  ex_load.Reg_Error.OK.Text:= 'Close';
+  ex_load.Reg_Error.OK.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
+  ex_load.Reg_Error.OK.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
+  ex_load.Reg_Error.OK.Visible := True;
+
+
 end;
 
 end.

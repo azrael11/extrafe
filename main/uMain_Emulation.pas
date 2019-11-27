@@ -71,10 +71,11 @@ uses
   emu,
   uLoad,
   uLoad_AllTypes,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uMain_AllTypes,
   uMain_SetAll,
   uMain_Mouse,
+  uMain_Actions,
   uEmu_Actions;
 
 procedure Clear_Selection_Control;
@@ -119,7 +120,7 @@ begin
   emulation.Selection_Ani.Interpolation := TInterpolationType.Quadratic;
   emulation.Selection_Ani.PropertyName := 'Position.Y';
   emulation.Selection_Ani.Loop := False;
-  emulation.Selection_Ani.OnFinish := ex_main.input.mouse.Animation.OnFinish;
+  emulation.Selection_Ani.OnFinish := uMain_Actions.vMain_Ani.OnFinish;
   emulation.Selection_Ani.Enabled := False;
 end;
 
@@ -273,27 +274,27 @@ begin
       0:
         begin
           vEmu_Num := 8;
-          vActive := user_Active_Local.EMULATORS.Arcade;
+          vActive := uDB_AUser.Local.EMULATORS.Arcade;
         end;
       1:
         begin
           vEmu_Num := 30;
-          vActive := user_Active_Local.EMULATORS.Computers;
+          vActive := uDB_AUser.Local.EMULATORS.Computers;
         end;
       2:
         begin
           vEmu_Num := 40;
-          vActive := user_Active_Local.EMULATORS.Consoles;
+          vActive := uDB_AUser.Local.EMULATORS.Consoles;
         end;
       3:
         begin
           vEmu_Num := 10;
-          vActive := user_Active_Local.EMULATORS.Handhelds;
+          vActive := uDB_AUser.Local.EMULATORS.Handhelds;
         end;
       4:
         begin
           vEmu_Num := 1;
-          vActive := user_Active_Local.EMULATORS.Pinballs;
+          vActive := uDB_AUser.Local.EMULATORS.Pinballs;
         end;
     end;
     Create_Selection_Tab(vi, emulation.Level, vActive);

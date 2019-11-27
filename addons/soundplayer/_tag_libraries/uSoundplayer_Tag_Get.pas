@@ -52,70 +52,70 @@ begin
   uSoundplayer_Tag_Mp3.Get_ID3v1(mSongPath + mSongName);
   uSoundplayer_Tag_Mp3.Get_ID3v2(mSongPath + mSongName);
 
-  myTag.Title := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
-  myTag.Artist := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
-  myTag.Album := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TALB');
-  myTag.Year := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TYER');
-  myTag.Track := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TRCK');
-  myTag.Genre := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TCON');
+  myTag.Title := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
+  myTag.Artist := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
+  myTag.Album := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TALB');
+  myTag.Year := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TYER');
+  myTag.Track := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TRCK');
+  myTag.Genre := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TCON');
 
   // Title
   if TrimLeft(myTag.Title) <> '' then
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title :=
-      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2')
-  else if TrimLeft(addons.soundplayer.Player.Tag.mp3.ID3v1.Title) <> '' then
+      soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TIT2')
+  else if TrimLeft(soundplayer.player_actions.Tag.mp3.ID3v1.Title) <> '' then
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title :=
-      addons.soundplayer.Player.Tag.mp3.ID3v1.Title
+      soundplayer.player_actions.Tag.mp3.ID3v1.Title
   else
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title := mSongName;
 
   // Artist
   if TrimLeft(myTag.Artist) <> '' then
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist :=
-      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1')
+      soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TPE1')
   else
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist :=
-      addons.soundplayer.Player.Tag.mp3.ID3v1.Artist;
+      soundplayer.player_actions.Tag.mp3.ID3v1.Artist;
 
   // Album
   if TrimLeft(myTag.Album) <> '' then
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Album :=
-      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TALB')
+      soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TALB')
   else
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Album :=
-      addons.soundplayer.Player.Tag.mp3.ID3v1.Album;
+      soundplayer.player_actions.Tag.mp3.ID3v1.Album;
 
   // Year
   if TrimLeft(myTag.Year) <> '' then
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Year :=
-      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TYER')
+      soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TYER')
   else
-    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Year := addons.soundplayer.Player.Tag.mp3.ID3v1.Year;
+    addons.soundplayer.Playlist.List.Song_Info[mSongNum].Year := soundplayer.player_actions.Tag.mp3.ID3v1.Year;
 
   // Track
   if TrimLeft(myTag.Track) <> '' then
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Track :=
-      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TRCK')
+      soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TRCK')
   else
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Track :=
-      addons.soundplayer.Player.Tag.mp3.ID3v1.Track.ToString;
+      soundplayer.player_actions.Tag.mp3.ID3v1.Track.ToString;
 
   // Genre
   if TrimLeft(myTag.Genre) <> '' then
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre :=
-      addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TCON')
+      soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TCON')
   else
     addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre :=
-      addons.soundplayer.Player.Tag.mp3.ID3v1.Genre;
+      soundplayer.player_actions.Tag.mp3.ID3v1.Genre;
 
   // Get Rate
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Rate := uSoundplayer_Tag_Mp3.Rating_Get.ToString;
 
   // Get Lyrics
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics := Tstringlist.Create;
-  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.Add(addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeLyrics
-    ('USLT', addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID,
-    addons.soundplayer.Player.Tag.mp3.Lyrics_Description));
+  addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.Add(soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeLyrics
+    ('USLT', soundplayer.player_actions.Tag.mp3.Lyrics_LanguageID,
+    soundplayer.player_actions.Tag.mp3.Lyrics_Description));
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.SaveToFile(addons.soundplayer.Path.Files + 'templyric.txt');
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Lyrics.Clear;
 
@@ -130,8 +130,8 @@ begin
   DeleteFile(addons.soundplayer.Path.Files+ 'templyric.txt');
 
 
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Free;
+  soundplayer.player_actions.Tag.mp3.ID3v2.Free;
 
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Disk_Type := '.mp3';
   vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_mp3.png');
@@ -143,18 +143,18 @@ procedure GetTags_OGG(mSongPath, mSongName: string; mPlaylistNum, mSongNum: Smal
 var
   myTag: TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG;
 begin
-  addons.soundplayer.Player.Tag.ogg.Opus := TOpusTag.Create;
+  soundplayer.player_actions.Tag.ogg.Opus := TOpusTag.Create;
 
-  addons.soundplayer.Player.Tag.ogg.TagError := addons.soundplayer.Player.Tag.ogg.Opus.LoadFromFile
+  soundplayer.player_actions.Tag.ogg.TagError := soundplayer.player_actions.Tag.ogg.Opus.LoadFromFile
     (mSongPath + mSongName);
 
-  myTag.Title := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('TITLE');
-  myTag.Artist := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('ARTIST');
-  myTag.Album := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('ALBUM');
-  myTag.Genre := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('GENRE');
-  myTag.Year := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('YEAR');
-  myTag.Track := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('TRACK');
-  myTag.Comment := addons.soundplayer.Player.Tag.ogg.Opus.ReadFrameByNameAsText('COMMENT');
+  myTag.Title := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('TITLE');
+  myTag.Artist := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('ARTIST');
+  myTag.Album := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('ALBUM');
+  myTag.Genre := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('GENRE');
+  myTag.Year := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('YEAR');
+  myTag.Track := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('TRACK');
+  myTag.Comment := soundplayer.player_actions.Tag.ogg.Opus.ReadFrameByNameAsText('COMMENT');
 
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Title := myTag.Title;
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Artist := myTag.Artist;
@@ -162,7 +162,7 @@ begin
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Genre := myTag.Genre;
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Track := myTag.Track;
 
-  addons.soundplayer.Player.Tag.ogg.Opus.Free;
+  soundplayer.player_actions.Tag.ogg.Opus.Free;
 
   addons.soundplayer.Playlist.List.Song_Info[mSongNum].Disk_Type := '.ogg';
   vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_opus.png');
@@ -177,23 +177,23 @@ var
   PictureStream: TStream;
   CoverArt: TOpusVorbisCoverArtInfo;
 begin
-  addons.soundplayer.Player.Tag.ogg.Opus := TOpusTag.Create;
+  soundplayer.player_actions.Tag.ogg.Opus := TOpusTag.Create;
 
-  addons.soundplayer.Player.Tag.ogg.TagError := addons.soundplayer.Player.Tag.ogg.Opus.LoadFromFile
+  soundplayer.player_actions.Tag.ogg.TagError := soundplayer.player_actions.Tag.ogg.Opus.LoadFromFile
     (addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Path +
     addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Name +
     addons.soundplayer.Playlist.List.Song_Info[vSongNum].Disk_Type);
 
-  if addons.soundplayer.Player.Tag.ogg.TagError = 0 then
+  if soundplayer.player_actions.Tag.ogg.TagError = 0 then
   begin
     try
-      Index := addons.soundplayer.Player.Tag.ogg.Opus.FrameExists
+      Index := soundplayer.player_actions.Tag.ogg.Opus.FrameExists
         (OPUSTAGLIBRARY_FRAMENAME_METADATA_BLOCK_PICTURE);
       if Index > -1 then
       begin
         PictureStream := TMemoryStream.Create;
         try
-          if addons.soundplayer.Player.Tag.ogg.Opus.GetCoverArtFromFrame(Index, PictureStream, CoverArt) then
+          if soundplayer.player_actions.Tag.ogg.Opus.GetCoverArtFromFrame(Index, PictureStream, CoverArt) then
           begin
             CoverArt.MIMEType := LowerCase(CoverArt.MIMEType);
             PictureStream.Seek(0, soFromBeginning);
@@ -209,7 +209,7 @@ begin
       // *
     end;
   end;
-  addons.soundplayer.Player.Tag.ogg.Opus.Free;
+  soundplayer.player_actions.Tag.ogg.Opus.Free;
 end;
 
 ///
@@ -273,16 +273,16 @@ end;
 
 procedure Set_Icon;
 begin
-  if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.mp3' then
+  if addons.soundplayer.Playlist.List.Song_Info[soundplayer.player_actions.Playing_Now].Disk_Type = '.mp3' then
   begin
     vSoundplayer.Player.Song_Tag.Visible:= True;
     vSoundplayer.Player.Song_Tag.Bitmap.LoadFromFile(addons.soundplayer.Path.Images + 'sp_tag_mp3.png');
-    vSoundplayer.Player.Song_KBPS.Text := addons.soundplayer.Player.Tag.mp3.info.General.BitRate.ToString
+    vSoundplayer.Player.Song_KBPS.Text := soundplayer.player_actions.Tag.mp3.info.General.BitRate.ToString
       + ' Kbps';
-    vSoundplayer.Player.Song_SampleRate.Text := addons.soundplayer.Player.Tag.mp3.info.MPEG.SampleRate.
+    vSoundplayer.Player.Song_SampleRate.Text := soundplayer.player_actions.Tag.mp3.info.MPEG.SampleRate.
       ToString + ' Hz';
   end
-  else if addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Disk_Type = '.ogg'
+  else if addons.soundplayer.Playlist.List.Song_Info[soundplayer.player_actions.Playing_Now].Disk_Type = '.ogg'
   then
   begin
     vSoundplayer.Player.Song_Tag.Visible:= True;

@@ -94,7 +94,7 @@ type
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad,
   uLoad_AllTypes,
   main,
@@ -155,7 +155,7 @@ end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseClick(Sender: TObject);
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
       uWeather_Providers_OpenWeatherMap.Show_Selected_Time_Forecast(TPanel(Sender).Tag, TPanel(Sender).TagString.ToInteger);
@@ -164,7 +164,7 @@ end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseEnter(Sender: TObject);
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
     begin
@@ -180,7 +180,7 @@ end;
 
 procedure TWEATHER_ADDON_PANEL.OnMouseLeave(Sender: TObject);
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
     begin
@@ -203,7 +203,7 @@ begin
     uWeather_Actions.Control_Slide_Right
   else if TText(Sender).Name = 'A_W_Map_Close' then
     uWeather_Actions.Close_Map;
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TText(Sender).Name = 'A_W_Provider_Yahoo_Unit_F' then
     begin
@@ -238,7 +238,7 @@ begin
     else if (TText(Sender).Name = 'A_W_Provider_Yahoo_Earth_' + TText(Sender).TagString) then
       uWeather_Providers_Yahoo.Show_Map(TText(Sender).TagString);
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if (TText(Sender).Name = 'A_W_Provider_OpenWeatherMap_Earth_' + TText(Sender).TagString) then
       uWeather_Providers_OpenWeatherMap.Show_Map(TText(Sender).TagString);
@@ -277,7 +277,7 @@ begin
       TText(Sender).Cursor := crHandPoint;
       vWeather.Scene.Map.Close_Glow.Enabled := True;
     end;
-    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
     begin
       if TText(Sender).Name = 'A_W_Provider_Yahoo_Hourly_Left' then
       begin
@@ -342,7 +342,7 @@ begin
         vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Earth_Glow.Enabled := True;
       end;
     end
-    else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     begin
       if (TText(Sender).Name = 'A_W_Provider_OpenWeatherMap_Earth_' + TText(Sender).TagString) then
       begin
@@ -381,7 +381,7 @@ begin
     end
     else if TText(Sender).Name = 'A_W_Map_Close' then
       vWeather.Scene.Map.Close_Glow.Enabled := False;
-    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
     begin
       if TText(Sender).Name = 'A_W_Provider_Yahoo_Hourly_Left' then
       begin
@@ -427,7 +427,7 @@ begin
       else if (TText(Sender).Name = 'A_W_Provider_Yahoo_Earth_' + TText(Sender).TagString) then
         vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Earth_Glow.Enabled := False;
     end
-    else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     begin
       if (TText(Sender).Name = 'A_W_Provider_OpenWeatherMap_Earth_' + TText(Sender).TagString) then
         vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].country.Earth_Glow.Enabled := False;

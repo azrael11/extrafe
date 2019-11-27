@@ -16,7 +16,7 @@ uses
   bass;
 
 const
-  cFist_Group_Images: array [0 .. 4] of string = ('config_time.png', 'config_calendar.png', 'config_weather.png', 'config_soundplayer.png', 'config_play.png');
+  cFist_Group_Images: array [0 .. 4] of string = (#$e94e, #$e953, #$e9c1, #$ea15, #$e915);
 
 procedure Icons(vStart: Integer);
 procedure Icons_Free;
@@ -25,16 +25,16 @@ procedure Create;
 
 procedure ShowInfo(vAddon_Num: Integer);
 
-procedure Time(vIndex: Integer);
-procedure Calendar(vIndex: Integer);
-procedure Weather(vIndex: Integer);
-procedure Soundplayer(vIndex: Integer);
-procedure AzPlay(vIndex: Integer);
+procedure Addon_Time(vIndex: Integer);
+procedure Addon_Calendar(vIndex: Integer);
+procedure Addon_Weather(vIndex: Integer);
+procedure Addon_Soundplayer(vIndex: Integer);
+procedure Addon_AzPlay(vIndex: Integer);
 
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uMain_AllTypes,
   uLoad_AllTypes;
 
@@ -52,15 +52,17 @@ var
 begin
   for vi := 0 to 3 do
   begin
-    mainScene.Config.main.R.Addons.Icons[vi] := TImage.Create(mainScene.Config.main.R.Addons.Groupbox);
+    mainScene.Config.main.R.Addons.Icons[vi] := TText.Create(mainScene.Config.main.R.Addons.Groupbox);
     mainScene.Config.main.R.Addons.Icons[vi].Name := 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(vStart + vi);
     mainScene.Config.main.R.Addons.Icons[vi].Parent := mainScene.Config.main.R.Addons.Groupbox;
     mainScene.Config.main.R.Addons.Icons[vi].SetBounds(74 + (vi * 118), 20, 70, 70);
-    mainScene.Config.main.R.Addons.Icons[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + cFist_Group_Images[vStart + vi]);
-    mainScene.Config.main.R.Addons.Icons[vi].WrapMode := TImageWrapMode.Fit;
-    mainScene.Config.main.R.Addons.Icons[vi].OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
-    mainScene.Config.main.R.Addons.Icons[vi].OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
-    mainScene.Config.main.R.Addons.Icons[vi].OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
+    mainScene.Config.main.R.Addons.Icons[vi].Font.Family := 'IcoMoon-Free';
+    mainScene.Config.main.R.Addons.Icons[vi].Font.Size := 64;
+    mainScene.Config.main.R.Addons.Icons[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    mainScene.Config.main.R.Addons.Icons[vi].Text := cFist_Group_Images[vi + vStart];
+    mainScene.Config.main.R.Addons.Icons[vi].OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+    mainScene.Config.main.R.Addons.Icons[vi].OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+    mainScene.Config.main.R.Addons.Icons[vi].OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
     mainScene.Config.main.R.Addons.Icons[vi].Tag := vStart + vi;
     mainScene.Config.main.R.Addons.Icons[vi].Visible := True;
 
@@ -106,15 +108,15 @@ begin
 
   case vAddon_Num of
     0:
-      Time(vPos_Num);
+      Addon_Time(vPos_Num);
     1:
-      Calendar(vPos_Num);
+      Addon_Calendar(vPos_Num);
     2:
-      Weather(vPos_Num);
+      Addon_Weather(vPos_Num);
     3:
-      Soundplayer(vPos_Num);
+      Addon_Soundplayer(vPos_Num);
     4:
-      AzPlay(vPos_Num);
+      Addon_AzPlay(vPos_Num);
   end;
 
   ex_main.Config.Addons_Active_Tab := vAddon_Num;
@@ -145,21 +147,18 @@ begin
   mainScene.Config.main.R.Addons.Groupbox.Text := 'Addons';
   mainScene.Config.main.R.Addons.Groupbox.Visible := True;
 
-  mainScene.Config.main.R.Addons.Arrow_Left := TImage.Create(mainScene.Config.main.R.Addons.Groupbox);
+  mainScene.Config.main.R.Addons.Arrow_Left := TText.Create(mainScene.Config.main.R.Addons.Groupbox);
   mainScene.Config.main.R.Addons.Arrow_Left.Name := 'Main_Config_Addons_Arrow_Left';
   mainScene.Config.main.R.Addons.Arrow_Left.Parent := mainScene.Config.main.R.Addons.Groupbox;
   mainScene.Config.main.R.Addons.Arrow_Left.SetBounds(4, 20, 70, 70);
-  mainScene.Config.main.R.Addons.Arrow_Left.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_previous.png');
-  mainScene.Config.main.R.Addons.Arrow_Left.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Addons.Arrow_Left.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
-  mainScene.Config.main.R.Addons.Arrow_Left.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
-  mainScene.Config.main.R.Addons.Arrow_Left.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
+  mainScene.Config.main.R.Addons.Arrow_Left.Font.Family := 'IcoMoon-Free';
+  mainScene.Config.main.R.Addons.Arrow_Left.Font.Size := 56;
+  mainScene.Config.main.R.Addons.Arrow_Left.TextSettings.FontColor := TAlphaColorRec.Grey;
+  mainScene.Config.main.R.Addons.Arrow_Left.Text := #$ea38;
+  mainScene.Config.main.R.Addons.Arrow_Left.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+  mainScene.Config.main.R.Addons.Arrow_Left.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+  mainScene.Config.main.R.Addons.Arrow_Left.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
   mainScene.Config.main.R.Addons.Arrow_Left.Visible := True;
-
-  mainScene.Config.main.R.Addons.Arrow_Left_Gray := TMonochromeEffect.Create(mainScene.Config.main.R.Addons.Arrow_Left);
-  mainScene.Config.main.R.Addons.Arrow_Left_Gray.Name := 'Main_Config_Addons_Arrow_Left_Gray';
-  mainScene.Config.main.R.Addons.Arrow_Left_Gray.Parent := mainScene.Config.main.R.Addons.Arrow_Left;
-  mainScene.Config.main.R.Addons.Arrow_Left_Gray.Enabled := True;
 
   mainScene.Config.main.R.Addons.Arrow_Left_Glow := TGlowEffect.Create(mainScene.Config.main.R.Addons.Arrow_Left);
   mainScene.Config.main.R.Addons.Arrow_Left_Glow.Name := 'Main_Config_Addons_Arrow_Left_Glow';
@@ -178,21 +177,18 @@ begin
   mainScene.Config.main.R.Addons.Left_Num.Text := '';
   mainScene.Config.main.R.Addons.Left_Num.Visible := False;
 
-  mainScene.Config.main.R.Addons.Arrow_Right := TImage.Create(mainScene.Config.main.R.Addons.Groupbox);
+  mainScene.Config.main.R.Addons.Arrow_Right := TText.Create(mainScene.Config.main.R.Addons.Groupbox);
   mainScene.Config.main.R.Addons.Arrow_Right.Name := 'Main_Config_Addons_Arrow_Right';
   mainScene.Config.main.R.Addons.Arrow_Right.Parent := mainScene.Config.main.R.Addons.Groupbox;
   mainScene.Config.main.R.Addons.Arrow_Right.SetBounds(mainScene.Config.main.R.Addons.Groupbox.Width - 74, 20, 70, 70);
-  mainScene.Config.main.R.Addons.Arrow_Right.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_next.png');
-  mainScene.Config.main.R.Addons.Arrow_Right.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Addons.Arrow_Right.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
-  mainScene.Config.main.R.Addons.Arrow_Right.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
-  mainScene.Config.main.R.Addons.Arrow_Right.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
+  mainScene.Config.main.R.Addons.Arrow_Right.Font.Family := 'IcoMoon-Free';
+  mainScene.Config.main.R.Addons.Arrow_Right.Font.Size := 56;
+  mainScene.Config.main.R.Addons.Arrow_Right.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  mainScene.Config.main.R.Addons.Arrow_Right.Text := #$ea34;
+  mainScene.Config.main.R.Addons.Arrow_Right.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+  mainScene.Config.main.R.Addons.Arrow_Right.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+  mainScene.Config.main.R.Addons.Arrow_Right.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
   mainScene.Config.main.R.Addons.Arrow_Right.Visible := True;
-
-  mainScene.Config.main.R.Addons.Arrow_Right_Gray := TMonochromeEffect.Create(mainScene.Config.main.R.Addons.Arrow_Right);
-  mainScene.Config.main.R.Addons.Arrow_Right_Gray.Name := 'Main_Config_Addons_Arrow_Right_Gray';
-  mainScene.Config.main.R.Addons.Arrow_Right_Gray.Parent := mainScene.Config.main.R.Addons.Arrow_Right;
-  mainScene.Config.main.R.Addons.Arrow_Right_Gray.Enabled := True;
 
   mainScene.Config.main.R.Addons.Arrow_Right_Glow := TGlowEffect.Create(mainScene.Config.main.R.Addons.Arrow_Right);
   mainScene.Config.main.R.Addons.Arrow_Right_Glow.Name := 'Main_Config_Addons_Arrow_Right_Glow';
@@ -217,16 +213,15 @@ begin
 
   Icons(ex_main.Config.Addons_Tab_First);
 
-  if user_Active_Local.ADDONS.Active > 3 then
+  if uDB_AUser.Local.Addons.Count > 3 then
   begin
-    mainScene.Config.main.R.Addons.Arrow_Right_Gray.Enabled := False;
     mainScene.Config.main.R.Addons.Right_Num.Visible := True;
-    mainScene.Config.main.R.Addons.Right_Num.Text := (user_Active_Local.ADDONS.Active - 3).ToString;
+    mainScene.Config.main.R.Addons.Right_Num.Text := (uDB_AUser.Local.Addons.Count - 3).ToString;
   end;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
-procedure Time(vIndex: Integer);
+procedure Addon_Time(vIndex: Integer);
 begin
   mainScene.Config.main.R.Addons.Icons_Info[0].Header := TLabel.Create(mainScene.Config.main.R.Addons.Icons_Panel[0]);
   mainScene.Config.main.R.Addons.Icons_Info[0].Header.Name := 'Main_Config_Addons_Addon_Time_Header';
@@ -368,7 +363,7 @@ begin
   mainScene.Config.main.R.Addons.Icons_Info[0].Action.Visible := True;
 end;
 
-procedure Calendar(vIndex: Integer);
+procedure Addon_Calendar(vIndex: Integer);
 begin
   mainScene.Config.main.R.Addons.Icons_Info[1].Header := TLabel.Create(mainScene.Config.main.R.Addons.Icons_Panel[1]);
   mainScene.Config.main.R.Addons.Icons_Info[1].Header.Name := 'Main_Config_Addons_Addon_Calendar_Header';
@@ -435,7 +430,7 @@ begin
   mainScene.Config.main.R.Addons.Icons_Info[1].Action.Visible := True;
 end;
 
-procedure Weather(vIndex: Integer);
+procedure Addon_Weather(vIndex: Integer);
 begin
   mainScene.Config.main.R.Addons.Icons_Info[2].Header := TLabel.Create(mainScene.Config.main.R.Addons.Icons_Panel[2]);
   mainScene.Config.main.R.Addons.Icons_Info[2].Header.Name := 'Main_Config_Addons_Addon_Weather_Header';
@@ -555,9 +550,10 @@ begin
   mainScene.Config.main.R.Addons.Icons_Info[2].Action.SetBounds(mainScene.Config.main.R.Addons.Icons_Panel[2].Width - 160,
     mainScene.Config.main.R.Addons.Icons_Panel[2].Height - 40, 150, 30);
   mainScene.Config.main.R.Addons.Icons_Info[2].Action.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Addons.Icons_Info[2].Action.OnMouseEnter := ex_main.input.mouse_config.Button.OnMouseEnter;
   mainScene.Config.main.R.Addons.Icons_Info[2].Action.Visible := True;
 
-  if user_Active_Local.ADDONS.Weather then
+  if uDB_AUser.Local.Addons.Weather then
   begin
     mainScene.Config.main.R.Addons.Icons_Info[2].Activeted.Text := 'Active';
     mainScene.Config.main.R.Addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Lime;
@@ -571,7 +567,7 @@ begin
   end;
 end;
 
-procedure Soundplayer(vIndex: Integer);
+procedure Addon_Soundplayer(vIndex: Integer);
 begin
   mainScene.Config.main.R.Addons.Icons_Info[3].Header := TLabel.Create(mainScene.Config.main.R.Addons.Icons_Panel[3]);
   mainScene.Config.main.R.Addons.Icons_Info[3].Header.Name := 'Main_Config_Addons_Addon_Soundplayer_Header';
@@ -818,9 +814,10 @@ begin
   mainScene.Config.main.R.Addons.Icons_Info[3].Action.SetBounds(mainScene.Config.main.R.Addons.Icons_Panel[3].Width - 160,
     mainScene.Config.main.R.Addons.Icons_Panel[3].Height - 40, 150, 30);
   mainScene.Config.main.R.Addons.Icons_Info[3].Action.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Addons.Icons_Info[3].Action.OnMouseEnter := ex_main.input.mouse_config.Button.OnMouseEnter;
   mainScene.Config.main.R.Addons.Icons_Info[3].Action.Visible := True;
 
-  if user_Active_Local.ADDONS.Soundplayer then
+  if uDB_AUser.Local.Addons.Soundplayer then
   begin
     mainScene.Config.main.R.Addons.Icons_Info[3].Activeted.Text := 'Active';
     mainScene.Config.main.R.Addons.Icons_Info[3].Activeted.Color := TAlphaColorRec.Lime;
@@ -834,7 +831,7 @@ begin
   end;
 end;
 
-procedure AzPlay(vIndex: Integer);
+procedure Addon_AzPlay(vIndex: Integer);
 begin
   mainScene.Config.main.R.Addons.Icons_Info[4].Header := TLabel.Create(mainScene.Config.main.R.Addons.Icons_Panel[4]);
   mainScene.Config.main.R.Addons.Icons_Info[4].Header.Name := 'Main_Config_Addons_Addon_Playr_Header';
@@ -979,9 +976,10 @@ begin
   mainScene.Config.main.R.Addons.Icons_Info[4].Action.SetBounds(mainScene.Config.main.R.Addons.Icons_Panel[4].Width - 160,
     mainScene.Config.main.R.Addons.Icons_Panel[4].Height - 40, 150, 30);
   mainScene.Config.main.R.Addons.Icons_Info[4].Action.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
+  mainScene.Config.main.R.Addons.Icons_Info[4].Action.OnMouseEnter := ex_main.input.mouse_config.Button.OnMouseEnter;
   mainScene.Config.main.R.Addons.Icons_Info[4].Action.Visible := True;
 
-  if user_Active_Local.ADDONS.Azplay then
+  if uDB_AUser.Local.Addons.AzPlay then
   begin
     mainScene.Config.main.R.Addons.Icons_Info[4].Activeted.Text := 'Active';
     mainScene.Config.main.R.Addons.Icons_Info[4].Activeted.Color := TAlphaColorRec.Lime;

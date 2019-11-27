@@ -87,7 +87,7 @@ begin
   vSoundplayer.EQ.Pan_Metric.Text := Result;
   vTemp_EQ.Pan := vPan;
   if addons.soundplayer.Equalizer.Live_Preview then
-    if addons.soundplayer.Player.Play then
+    if soundplayer.player = sPlay then
       BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_PAN, (vPan / 100));
 end;
 
@@ -105,7 +105,7 @@ begin
   end;
   vSoundplayer.EQ.Param_Value[vParam].Text := Result;
   // if addons.soundplayer.Equalizer.Live_Preview then
-  // if addons.soundplayer.Player.Play then
+  // if soundplayer.player = sPlay then
   addons.soundplayer.Ini.Ini.WriteFloat('Equalizer', 'Param_' + vParam.ToString, vValue);
 end;
 

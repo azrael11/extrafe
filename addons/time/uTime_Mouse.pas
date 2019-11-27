@@ -14,11 +14,6 @@ uses
   FMX.Effects;
 
 type
-  TTIME_ADDON_TIMER = class(TObject)
-    procedure onTimer(Sender: TObject);
-  end;
-
-type
   TTIME_ADDON_IMAGE = class(TObject)
     procedure OnMouseClick(Sender: TObject);
     procedure OnMouseEnter(Sender: TObject);
@@ -56,7 +51,7 @@ type
 
 type
   TTIME_MOUSE_ACTIONS = record
-    Timer: TTIME_ADDON_TIMER;
+
     Image: TTIME_ADDON_IMAGE;
     Text: TTIME_ADDON_TEXT;
     Panel: TTIME_ADDON_PANEL;
@@ -110,26 +105,6 @@ begin
 
 end;
 
-{ TTIME_ADDON_TIMER }
-
-procedure TTIME_ADDON_TIMER.onTimer(Sender: TObject);
-begin
-  if TTimer(Sender).Name = 'A_T_P_Time_Timer' then
-  begin
-    if vTime.P_Time.Timer.Enabled then
-    begin
-      if addons.time.P_Time.Clock_Type = 'Analog' then
-        uTime_Time_Actions.Update_Analog
-      else if addons.time.P_Time.Clock_Type = 'Digital' then
-        uTime_Time_Actions.Update_Digital
-      else if addons.time.P_Time.Clock_Type = 'Both' then
-      begin
-        uTime_Time_Actions.Update_Analog;
-        uTime_Time_Actions.Update_Digital;
-      end;
-    end;
-  end;
-end;
 
 { TTIME_ADDON_COMBOBOX }
 procedure TTIME_ADDON_COMBOBOX.OnChange(Sender: TObject);
@@ -180,8 +155,6 @@ begin
 end;
 
 initialization
-
-addons.time.Input.mouse.Timer := TTIME_ADDON_TIMER.Create;
 addons.time.Input.mouse.Image := TTIME_ADDON_IMAGE.Create;
 addons.time.Input.mouse.Text := TTIME_ADDON_TEXT.Create;
 addons.time.Input.mouse.Panel := TTIME_ADDON_PANEL.Create;
@@ -190,8 +163,6 @@ addons.time.Input.mouse.ColorCombobox := TTIME_ADDON_COLORCOMBOBOX.Create;
 addons.time.Input.mouse.Checkbox := TTIME_ADDON_CHECKBOX.Create;
 
 finalization
-
-addons.time.Input.mouse.Timer.Free;
 addons.time.Input.mouse.Image.Free;
 addons.time.Input.mouse.Text.Free;
 addons.time.Input.mouse.Panel.Free;

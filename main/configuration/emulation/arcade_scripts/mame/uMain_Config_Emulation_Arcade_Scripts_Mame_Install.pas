@@ -105,8 +105,8 @@ procedure ShowButtons;
 implementation
 
 uses
-  uDatabase_ActiveUser,
-  uDatabase_SqlCommands,
+  uDB_AUser,
+  uDB,
   uLoad_AllTypes,
   uLoad_Emulation,
   Main,
@@ -375,26 +375,25 @@ begin
   Script_Mame_Install.Main.Tab3.Find.Visible := false;
   Script_Mame_Install.Main.Tab3.Edit_Info.Text := 'Start the installation.';
 
-  user_Active_Local.Emulators.Arcade_D.Mame_D.Name := ExtractFileName(Script_Mame_Install.Main.Tab3.Edit.Text);
-  user_Active_Local.Emulators.Arcade_D.Mame_D.Path := ExtractFilePath(Script_Mame_Install.Main.Tab3.Edit.Text);
-  user_Active_Local.Emulators.Arcade_D.Mame_D.Ini := user_Active_Local.Emulators.Arcade_D.Mame_D.Path + 'mame.ini';
-  user_Active_Local.Emulators.Arcade_D.Mame_D.Version := '';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name := ExtractFileName(Script_Mame_Install.Main.Tab3.Edit.Text);
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path := ExtractFilePath(Script_Mame_Install.Main.Tab3.Edit.Text);
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path + 'mame.ini';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version := '';
 
-  user_Active_Local.Emulators.Arcade_D.Mame_D.p_Path := extrafe.prog.Path + 'emu\arcade\mame\';
-  user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database := user_Active_Local.Emulators.Arcade_D.Mame_D.p_Path + 'database\';
-  user_Active_Local.Emulators.Arcade_D.Mame_D.p_Images := user_Active_Local.Emulators.Arcade_D.Mame_D.p_Path + 'images\';
-  user_Active_Local.Emulators.Arcade_D.Mame_D.p_Sounds := user_Active_Local.Emulators.Arcade_D.Mame_D.p_Path + 'sounds\';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path := extrafe.prog.Path + 'emu\arcade\mame\';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path + 'database\';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path + 'images\';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path + 'sounds\';
 
-  if not FileExists(user_Active_Local.Emulators.Arcade_D.Mame_D.Ini) then
-    ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
-      user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -cc'), PChar(user_Active_Local.EMULATORS.Arcade_D.Mame_D.Path), SW_HIDE);
+  if not FileExists(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini) then
+    ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path + uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name,
+      Char(34)) + ' -cc'), PChar(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path), SW_HIDE);
   Script_Mame_Install.Main.Tab3.Progress.Value := 20;
   // Application.ProcessMessages;
 
   // Take the version of mame
-  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
-    user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -h > ' + user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database + 'version.txt'),
-    nil, SW_HIDE);
+  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path + uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name,
+    Char(34)) + ' -h > ' + uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database + 'version.txt'), nil, SW_HIDE);
   Script_Mame_Install.Main.Tab3.Progress.Value := 40;
   // Application.ProcessMessages;
 
@@ -423,50 +422,49 @@ end;
 
 procedure Update_Database;
 begin
-  user_Active_Local.Emulators.Arcade := True;
-  user_Active_Local.Emulators.Arcade_D.mame := True;
+  uDB_AUser.Local.Emulators.Arcade := True;
+  uDB_AUser.Local.Emulators.Arcade_D.mame := True;
 
-  uDatabase_SqlCommands.Update_Local_Query('EMULATORS', 'ARCADE', 'TRUE', user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE', 'MAME', 'TRUE', user_Active_Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'ARCADE', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'MAME', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
 
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'EXTRAFE_MAME_PATH', user_Active_Local.Emulators.Arcade_D.Mame_D.p_Path,
-    user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'EXTRAFE_MAME_IMAGES', user_Active_Local.Emulators.Arcade_D.Mame_D.p_Images,
-    user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'EXTRAFE_MAME_SOUNDS', user_Active_Local.Emulators.Arcade_D.Mame_D.p_Sounds,
-    user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'EXTRAFE_MAME_DATABASE', user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database,
-    user_Active_Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_PATH', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path, uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_IMAGES', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images,
+    uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_SOUNDS', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds,
+    uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_DATABASE', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database,
+    uDB_AUser.Local.Num.ToString);
 
-  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Installed := True;
-  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Active := True;
-  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Position := 0;
-  user_Active_Local.EMULATORS.Arcade_D.Mame_D.Unique := 0;
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Installed := True;
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Active := True;
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position := 0;
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Unique := 0;
 
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'INSTALLED', 'TRUE', user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'EMU_ACTIVE', 'TRUE', user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'EMU_POSITION', user_Active_Local.Emulators.Arcade_D.Mame_D.Position.ToString,
-    user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'EMU_UNIQUE', '0', user_Active_Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'INSTALLED', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_ACTIVE', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_POSITION', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position.ToString,
+    uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
 
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'MAME_NAME', user_Active_Local.Emulators.Arcade_D.Mame_D.Name, user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'MAME_PATH', user_Active_Local.Emulators.Arcade_D.Mame_D.Path, user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'MAME_INI', user_Active_Local.Emulators.Arcade_D.Mame_D.Ini, user_Active_Local.Num.ToString);
-  uDatabase_SqlCommands.Update_Local_Query('ARCADE_MAME', 'MAME_VERSION', user_Active_Local.Emulators.Arcade_D.Mame_D.Version, user_Active_Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_NAME', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name, uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_PATH', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path, uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_INI', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini, uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_VERSION', 'USER_ID', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version, uDB_AUser.Local.Num.ToString);
 
-  emulation.Emu[0, 0] := user_Active_Local.Emulators.Arcade_D.Mame_D.Name;
-  emulation.Arcade[0].Prog_Path := user_Active_Local.Emulators.Arcade_D.Mame_D.p_Path;
-  emulation.Arcade[0].Emu_Path := user_Active_Local.Emulators.Arcade_D.Mame_D.Path;
-  emulation.Arcade[0].Active := user_Active_Local.Emulators.Arcade_D.Mame_D.Active;
-  emulation.Arcade[0].Active_Place := user_Active_Local.Emulators.Arcade_D.Mame_D.Position;
-  emulation.Arcade[0].Name := user_Active_Local.Emulators.Arcade_D.Mame_D.Name;
-  emulation.Arcade[0].Name_Exe := user_Active_Local.Emulators.Arcade_D.Mame_D.Name;
-  emulation.Arcade[0].Menu_Image_Path := user_Active_Local.Emulators.Arcade_D.Mame_D.p_Images;
-  emulation.Arcade[0].Background := user_Active_Local.Emulators.Arcade_D.Mame_D.p_Images + 'main_background.png';
-  emulation.Arcade[0].Logo := user_Active_Local.Emulators.Arcade_D.Mame_D.p_Images + 'mame.png';
+  emulation.Emu[0, 0] := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name;
+  emulation.Arcade[0].Prog_Path := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path;
+  emulation.Arcade[0].Emu_Path := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path;
+  emulation.Arcade[0].Active := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Active;
+  emulation.Arcade[0].Active_Place := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position;
+  emulation.Arcade[0].Name := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name;
+  emulation.Arcade[0].Name_Exe := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name;
+  emulation.Arcade[0].Menu_Image_Path := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images;
+  emulation.Arcade[0].Background := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images + 'main_background.png';
+  emulation.Arcade[0].Logo := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images + 'mame.png';
   emulation.Arcade[0].Second_Level := -1;
-  emulation.Arcade[0].Unique_Num := user_Active_Local.Emulators.Arcade_D.Mame_D.Unique;
-  emulation.Arcade[0].Installed := user_Active_Local.Emulators.Arcade_D.Mame_D.Installed;
+  emulation.Arcade[0].Unique_Num := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Unique;
+  emulation.Arcade[0].Installed := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Installed;
 
 end;
 
@@ -570,9 +568,9 @@ end.
 
 // must have for example
 
-{  // Create the big xml game file
+{ // Create the big xml game file
   Script_Mame_Install.Main.Tab3.Edit_Info.Text := 'Generate the xml file. This will take some time please wait';
   // Application.ProcessMessages;
-  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(user_Active_Local.Emulators.Arcade_D.Mame_D.Path +
-    user_Active_Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -listxml > ' + user_Active_Local.Emulators.Arcade_D.Mame_D.p_Database + 'gameslist.xml'),
-    nil, SW_HIDE);}
+  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path +
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name, Char(34)) + ' -listxml > ' + uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database + 'gameslist.xml'),
+  nil, SW_HIDE); }

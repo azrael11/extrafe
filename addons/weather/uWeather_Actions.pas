@@ -51,8 +51,8 @@ implementation
 uses
   main,
   uload,
-  uDatabase,
-  uDatabase_ActiveUser,
+  uDB,
+  uDB_AUser,
   uLoad_AllTypes,
   uSnippet_Text,
   uMain_AllTypes,
@@ -64,7 +64,9 @@ uses
   uWeather_MenuActions,
   uWeather_Sounds,
   uWeather_Providers_Yahoo,
-  uWeather_Providers_OpenWeatherMap;
+  uWeather_Providers_OpenWeatherMap,
+  uWeather_Providers_Yahoo_Config,
+  uWeather_Providers_OpenWeatherMap_Config;
 
 procedure Load;
 var
@@ -82,7 +84,7 @@ begin
 
   // What
 
-  if user_Active_Local.ADDONS.Weather_D.Provider <> '' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider <> '' then
   begin
 
     if uWindows_IsConected_ToInternet then
@@ -95,9 +97,9 @@ begin
       vWeather.Config.Panel.Visible := False;
       vLoading_Integer := -1;
 
-      if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
         uWeather_Providers_Yahoo.Main_Create_Towns
-      else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+      else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
         uWeather_Providers_OpenWeatherMap.Main_Create_Towns;
       ShowTheForcast;
     end
@@ -127,19 +129,16 @@ end;
 
 procedure ReturnToMain(vIconsNum: Integer);
 begin
-  if ADDONS.weather.Loaded then
-  begin
-    Close_Map;
-    emulation.Selection_Ani.StartValue := extrafe.res.Height;
-    emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
-    mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
-    mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
-    emulation.Selection_Ani.Enabled := True;
-    vWeather.Scene.Weather_Ani.Start;
-    mainScene.Footer.Back_Ani.Start;
-    uMain_Actions.All_Icons_Active(vIconsNum);
-    extrafe.prog.State := 'main';
-  end;
+  Close_Map;
+//  emulation.Selection_Ani.StartValue := extrafe.res.Height;
+//  emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
+//  mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
+//  mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
+//  emulation.Selection_Ani.Enabled := True;
+  vWeather.Scene.Weather_Ani.Start;
+//  mainScene.Footer.Back_Ani.Start;
+//  uMain_Actions.All_Icons_Active(vIconsNum);
+//  extrafe.prog.State := 'main';
 end;
 
 procedure Free;
@@ -292,7 +291,7 @@ end;
 
 procedure CheckFirst(vCheched: Boolean);
 begin
-//  ADDONS.weather.Ini.Ini.WriteBool('General', 'First', vCheched);
+  // ADDONS.weather.Ini.Ini.WriteBool('General', 'First', vCheched);
   ADDONS.weather.Action.First := vCheched;
 end;
 
@@ -407,34 +406,53 @@ procedure Get_Data;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM ADDON_WEATHER WHERE USER_ID=' + user_Active_Local.Num.ToString;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
+  vQuery := 'SELECT * FROM ADDON_WEATHER WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
 
-  user_Active_Local.ADDONS.Weather_D.Menu_Position := ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
-  user_Active_Local.ADDONS.Weather_D.First_Pop := ExtraFE_Query_Local.FieldByName('FIRST_POP').AsBoolean;
-  user_Active_Local.ADDONS.Weather_D.Old_Backup := ExtraFE_Query_Local.FieldByName('OLD_BACKUP').AsBoolean;
-  user_Active_Local.ADDONS.Weather_D.Provider_Count := ExtraFE_Query_Local.FieldByName('PROVIDER_COUNT').AsInteger;
-  user_Active_Local.ADDONS.Weather_D.Provider := ExtraFE_Query_Local.FieldByName('PROVIDER').AsString;
-  user_Active_Local.ADDONS.Weather_D.p_Icons := ExtraFE_Query_Local.FieldByName('PATH_ICONS').AsString;
-  user_Active_Local.ADDONS.Weather_D.p_Images := ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
-  user_Active_Local.ADDONS.Weather_D.p_Sounds := ExtraFE_Query_Local.FieldByName('PATH_SOUNDS').AsString;
-  user_Active_Local.ADDONS.Weather_D.p_Temp := ExtraFE_Query_Local.FieldByName('PATH_TEMP').AsString;
-  user_Active_Local.ADDONS.Weather_D.Yahoo.Iconset_Count := ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET_COUNT').AsInteger;
-  user_Active_Local.ADDONS.Weather_D.Yahoo.Iconset := ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET').AsString;
-  user_Active_Local.ADDONS.Weather_D.Yahoo.Towns_Count := ExtraFE_Query_Local.FieldByName('YAHOO_TOWNS').AsInteger;
-  user_Active_Local.ADDONS.Weather_D.Yahoo.System := ExtraFE_Query_Local.FieldByName('YAHOO_SYSTEM').AsString;
-  user_Active_Local.ADDONS.Weather_D.Yahoo.Degree := ExtraFE_Query_Local.FieldByName('YAHOO_DEGREE_TYPE').AsString;
-  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Count := ExtraFE_Query_Local.FieldByName('OWM_ICONSET_COUNT').AsInteger;
-  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Iconset := ExtraFE_Query_Local.FieldByName('OWM_ICONSET').AsString;
-  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count := ExtraFE_Query_Local.FieldByName('OWM_TOWNS').AsInteger;
-  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.System := ExtraFE_Query_Local.FieldByName('OWM_SYSTEM').AsString;
-  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Degree := ExtraFE_Query_Local.FieldByName('OWM_DEGREE_TYPE').AsString;
-  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.API := ExtraFE_Query_Local.FieldByName('OWM_APIKEY').AsString;
-  user_Active_Local.ADDONS.Weather_D.OpenWeatherMap.Language := ExtraFE_Query_Local.FieldByName('OWM_LANGUAGE').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Menu_Position := uDB.ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.First_Pop := uDB.ExtraFE_Query_Local.FieldByName('FIRST_POP').AsBoolean;
+  uDB_AUser.Local.ADDONS.Weather_D.Old_Backup := uDB.ExtraFE_Query_Local.FieldByName('OLD_BACKUP').AsBoolean;
+  uDB_AUser.Local.ADDONS.Weather_D.Provider_Count := uDB.ExtraFE_Query_Local.FieldByName('PROVIDER_COUNT').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.Provider := uDB.ExtraFE_Query_Local.FieldByName('PROVIDER').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Icons := uDB.ExtraFE_Query_Local.FieldByName('PATH_ICONS').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Sounds := uDB.ExtraFE_Query_Local.FieldByName('PATH_SOUNDS').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Temp := uDB.ExtraFE_Query_Local.FieldByName('PATH_TEMP').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET_COUNT').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_TOWNS').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.System := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_SYSTEM').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Degree := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_DEGREE_TYPE').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET_COUNT').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count := uDB.ExtraFE_Query_Local.FieldByName('OWM_TOWNS').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.System := uDB.ExtraFE_Query_Local.FieldByName('OWM_SYSTEM').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Degree := uDB.ExtraFE_Query_Local.FieldByName('OWM_DEGREE_TYPE').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.API := uDB.ExtraFE_Query_Local.FieldByName('OWM_APIKEY').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Language := uDB.ExtraFE_Query_Local.FieldByName('OWM_LANGUAGE').AsString;
+
+  { Get Yahoo Iconsets }
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := TStringList.Create;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := uWindows_GetFolderNames(uDB_AUser.Local.ADDONS.Weather_D.p_Icons + 'yahoo\');
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets.Insert(0, 'default');
+  { Get OpenWeatherMap Iconsets }
+
+  { Get Towns Data }
+  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
+    uWeather_Providers_Yahoo_Config.Get_Data;
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > -1 then
+    uWeather_Providers_OpenWeatherMap_Config.Get_Data;
+
+  if uDB_AUser.Local.ADDONS.Weather_D.Menu_Position <> -1 then
+  begin
+    uDB_AUser.Local.ADDONS.Names.Insert(uDB_AUser.Local.ADDONS.Weather_D.Menu_Position, 'weather');
+    uDB_AUser.Local.ADDONS.Names.Delete(uDB_AUser.Local.ADDONS.Weather_D.Menu_Position + 1);
+  end;
+
 end;
 
 end.

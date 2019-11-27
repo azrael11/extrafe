@@ -21,7 +21,7 @@ uses
 
 implementation
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uEmu_Arcade_Mame_AllTypes;
 
 procedure uEmu_Arcade_Mame_Config_Create_Advanced_Panel;
@@ -67,9 +67,9 @@ begin
   vMame.Config.Panel.Advance.Checkbox[1].Text:= 'Sync to monitor refresh';
   vMame.Config.Panel.Advance.Checkbox[1].Font.Style:= vMame.Config.Panel.Advance.Checkbox[1].Font.Style+ [TFontStyle.fsBold];
   vMame.Config.Panel.Advance.Checkbox[1].SetBounds(10,60,180,19);
-  if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame64.exe') then
+  if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame64.exe') then
     vMame.Config.Panel.Advance.Checkbox[1].IsChecked:= mame.Emu.Ini.OSD_VIDEO_syncrefresh
-  else if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade32.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade64.exe') then
+  else if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade32.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade64.exe') then
     vMame.Config.Panel.Advance.Checkbox[1].IsChecked:= mame.Emu.Ini.CORE_PERFORMANCE_syncrefresh;
   vMame.Config.Panel.Advance.Checkbox[1].OnClick:= mame.Config.Input.Mouse.Checkbox.onMouseClick;
   vMame.Config.Panel.Advance.Checkbox[1].Visible:= True;
@@ -338,9 +338,9 @@ begin
     mame.Emu.Ini.FULLSCREEN_triplebuffer:= vMame.Config.Panel.Advance.Checkbox[0].IsChecked
   else if vName= 'Mame_Advanced_Checkbox_SyncToMonitorRefresh' then
     begin
-      if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame64.exe') then
+      if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'mame64.exe') then
         mame.Emu.Ini.OSD_VIDEO_syncrefresh:= vMame.Config.Panel.Advance.Checkbox[1].IsChecked
-      else if (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade32.exe') or (user_Active_Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade64.exe') then
+      else if (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade32.exe') or (uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name= 'arcade64.exe') then
         mame.Emu.Ini.CORE_PERFORMANCE_syncrefresh:= vMame.Config.Panel.Advance.Checkbox[1].IsChecked
     end
   else if vName= 'Mame_Advanced_Checkbox_WaitForVerticalSync' then

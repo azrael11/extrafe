@@ -35,7 +35,7 @@ uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
   uSoundplayer_Playlist,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_Player;
 
 procedure uSoundPlayer_Playlist_Manage_Panel;
@@ -47,7 +47,7 @@ begin
 
     extrafe.prog.State := 'addon_soundplayer_manage_playlists';
 
-    uSoundplayer.Hide_Animations;
+    uSoundplayer_Actions.Hide_Animations;
     vSoundplayer.scene.Back_Blur.Enabled := True;
 
     vSoundplayer.Playlist.Manage.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
@@ -265,15 +265,15 @@ begin
     end;
     addons.soundplayer.Ini.Ini.WriteString('Playlists', 'ActivePlaylistName', vSoundplayer.Playlist.Manage.main.Grid.Cells[1, vPlaylistNum]);
     addons.soundplayer.Ini.Ini.WriteInteger('Playlists', 'ActivePlaylist', addons.soundplayer.Playlist.Active);
-    addons.soundplayer.Player.Playing_Now := 0;
+    soundplayer.player_actions.Playing_Now := 0;
     vSoundplayer.Player.Song_Pos.Value := 0;
     vSoundplayer.Player.Song_PlayTime.Text := '00:00:00';
     vSoundplayer.Player.Song_Title.Text := '';
     vSoundplayer.Player.Song_Time.Text := '00:00:00';
-    uSoundplayer.Set_WithActivePlaylist(addons.soundplayer.Playlist.Active);
-    uSoundplayer_Player.Refresh_GoTo(addons.soundplayer.Player.Playing_Now, False);
+    uSoundplayer_Actions.Set_WithActivePlaylist(addons.soundplayer.Playlist.Active);
+    uSoundplayer_Player.Refresh_GoTo(soundplayer.player_actions.Playing_Now);
     uSoundplayer_Player.State(False, False, False, False, False, '');
-    uSoundplayer.Set_Animations;
+    uSoundplayer_Actions.Set_Animations;
     uSoundPlayer_Playlist_Manage_Free;
     if vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor = TAlphaColorRec.Grey then
       vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;

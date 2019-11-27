@@ -20,29 +20,33 @@ uses
   FMX.ILAnalogClock,
   Radiant.Shapes;
 
-procedure uTime_Time_SetAll_Set;
-procedure uTime_Time_SetAll_Free;
+procedure Load;
+procedure Free;
 
-procedure uTime_Time_SetAll_Set_Config;
-procedure uTime_Time_SetAll_Config_Free;
-procedure uTime_Time_SetAll_Set_General;
-procedure uTime_Time_SetAll_Set_Analog;
-procedure uTime_Time_SetAll_Set_Digital;
+procedure Digital_Create;
+procedure Digital_Free;
+
+procedure Analog_Create;
+procedure Analog_Free;
+
+procedure Config_Load;
+procedure Config_Free;
+procedure Config_Show_General;
+procedure Config_Show_Analog;
+procedure Config_Show_Digital;
 
 implementation
 
 uses
   uWindows,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad_AllTypes,
   uTime_SetAll,
   uTime_AllTypes,
   uTime_Time_AllTypes,
   uTime_Time_Actions;
 
-procedure uTime_Time_SetAll_Set;
-var
-  vi: Integer;
+procedure Load;
 begin
   addons.time.P_Time.Sound_Tick := False;
 
@@ -50,7 +54,7 @@ begin
   vTime.P_Time.Back.Name := 'A_T_P_Time_Back';
   vTime.P_Time.Back.Parent := vTime.Back;
   vTime.P_Time.Back.SetBounds(0, 120, vTime.Back.Width, vTime.Back.Height - 220);
-  vTime.P_Time.Back.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Images + 't_back.png');
+  vTime.P_Time.Back.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Time_D.Path.Images + 't_back.png');
   vTime.P_Time.Back.Visible := True;
 
   vTime.P_Time.Settings := TText.Create(vTime.P_Time.Back);
@@ -84,55 +88,58 @@ begin
   vTime.P_Time.Settings_Ani.StopValue := 360;
   vTime.P_Time.Settings_Ani.Enabled := True;
 
+  vTime.P_Time.Timer := TTimer.Create(vTime.P_Time.Back);
+  vTime.P_Time.Timer.Name := 'A_T_P_Time_Timer';
+  vTime.P_Time.Timer.Parent := vTime.P_Time.Back;
+  vTime.P_Time.Timer.Interval := 10;
+  vTime.P_Time.Timer.OnTimer := uTime_Time_Actions.Timer_Time.OnTimer;
+  vTime.P_Time.Timer.Enabled := True;
+
+  Digital_Create;
+  Analog_Create;
+
+  uTime_Time_Actions.General_ShowType(uDB_AUser.Local.addons.Time_D.time.vType);
+
+end;
+
+procedure Digital_Create;
+begin
   vTime.P_Time.Digital.Back := Timage.Create(vTime.P_Time.Back);
   vTime.P_Time.Digital.Back.Name := 'A_T_P_Time_Digital_Back';
   vTime.P_Time.Digital.Back.Parent := vTime.P_Time.Back;
   vTime.P_Time.Digital.Back.SetBounds((vTime.P_Time.Back.Width / 2) - 300, (vTime.P_Time.Back.Height / 2) - 80, 600, 160);
-  vTime.P_Time.Digital.Back.Visible := False;
+  vTime.P_Time.Digital.Back.Visible := True;
 
   vTime.P_Time.Digital.Rect := TRadiantRectangle.Create(vTime.P_Time.Digital.Back);
   vTime.P_Time.Digital.Rect.Name := 'A_T_P_Time_Digital_Rect';
   vTime.P_Time.Digital.Rect.Parent := vTime.P_Time.Digital.Back;
   vTime.P_Time.Digital.Rect.SetBounds(0, 0, 600, 160);
   vTime.P_Time.Digital.Rect.Fill.Kind := TBrushKind.Solid;
-  if addons.time.P_Time.Digital_Color_Back <> '' then
-    vTime.P_Time.Digital.Rect.Fill.Color := TAlphaColor(StringToColor(addons.time.P_Time.Digital_Color_Back))
-  else
-    vTime.P_Time.Digital.Rect.Fill.Color := TAlphaColorRec.Blue;
+  vTime.P_Time.Digital.Rect.Fill.Color := StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Color);
   vTime.P_Time.Digital.Rect.Stroke.Thickness := 2;
-  if addons.time.P_Time.Digital_Color_Back_Stroke <> '' then
-    vTime.P_Time.Digital.Rect.Stroke.Color := TAlphaColor(StringToCursor(addons.time.P_Time.Digital_Color_Back_Stroke))
-  else
-    vTime.P_Time.Digital.Rect.Stroke.Color := TAlphaColorRec.White;
-  vTime.P_Time.Digital.Rect.Visible := True;
+  vTime.P_Time.Digital.Rect.Stroke.Color := StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Color);
 
   vTime.P_Time.Digital.Hour := TText.Create(vTime.P_Time.Digital.Back);
   vTime.P_Time.Digital.Hour.Name := 'A_T_P_Time_Digital_Hour';
   vTime.P_Time.Digital.Hour.Parent := vTime.P_Time.Digital.Back;
   vTime.P_Time.Digital.Hour.SetBounds(40, 10, 0, 140);
   vTime.P_Time.Digital.Hour.Text := '11:';
-  vTime.P_Time.Digital.Hour.Font.Family := addons.time.P_Time.Digital_Font;
+  vTime.P_Time.Digital.Hour.Font.Family := uDB_AUser.Local.addons.Time_D.time.Digital_Font;
   vTime.P_Time.Digital.Hour.Font.Size := 72;
   vTime.P_Time.Digital.Hour.TextSettings.HorzAlign := TTextAlign.Center;
   vTime.P_Time.Digital.Hour.Font.Style := vTime.P_Time.Digital.Hour.Font.Style + [TFontStyle.fsBold];
-  if addons.time.P_Time.Digital_Color <> '' then
-    vTime.P_Time.Digital.Hour.TextSettings.FontColor := StringToColor(addons.time.P_Time.Digital_Color)
-  else
-    vTime.P_Time.Digital.Hour.TextSettings.FontColor := TAlphaColorRec.White;
+  vTime.P_Time.Digital.Hour.TextSettings.FontColor := StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Font_Color);
   vTime.P_Time.Digital.Hour.Visible := True;
 
   vTime.P_Time.Digital.Sep_1 := TText.Create(vTime.P_Time.Digital.Back);
   vTime.P_Time.Digital.Sep_1.Name := 'A_T_P_Time_Digital_Sep_1';
   vTime.P_Time.Digital.Sep_1.Parent := vTime.P_Time.Digital.Back;
   vTime.P_Time.Digital.Sep_1.SetBounds(100, 10, 0, 140);
-  vTime.P_Time.Digital.Sep_1.Text := addons.time.P_Time.Digital_Sep;
-  vTime.P_Time.Digital.Sep_1.Font.Family := addons.time.P_Time.Digital_Font;
+  vTime.P_Time.Digital.Sep_1.Text := uDB_AUser.Local.addons.Time_D.time.Digital_Sep;
+  vTime.P_Time.Digital.Sep_1.Font.Family := uDB_AUser.Local.addons.Time_D.time.Digital_Font;
   vTime.P_Time.Digital.Sep_1.Font.Size := 72;
   vTime.P_Time.Digital.Sep_1.TextSettings.HorzAlign := TTextAlign.Center;
-  if addons.time.P_Time.Digital_Color <> '' then
-    vTime.P_Time.Digital.Sep_1.TextSettings.FontColor := StringToColor(addons.time.P_Time.Digital_Color)
-  else
-    vTime.P_Time.Digital.Sep_1.TextSettings.FontColor := TAlphaColorRec.White;
+  vTime.P_Time.Digital.Sep_1.TextSettings.FontColor := StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Sep_Color);
   vTime.P_Time.Digital.Sep_1.Visible := True;
 
   vTime.P_Time.Digital.Sep_1_Ani := TFloatAnimation.Create(vTime.P_Time.Digital.Sep_1);
@@ -149,28 +156,22 @@ begin
   vTime.P_Time.Digital.Minutes.Parent := vTime.P_Time.Digital.Back;
   vTime.P_Time.Digital.Minutes.SetBounds(230, 10, 0, 140);
   vTime.P_Time.Digital.Minutes.Text := '25:';
-  vTime.P_Time.Digital.Minutes.Font.Family := addons.time.P_Time.Digital_Font;
+  vTime.P_Time.Digital.Minutes.Font.Family := uDB_AUser.Local.addons.Time_D.time.Digital_Font;
   vTime.P_Time.Digital.Minutes.Font.Size := 72;
   vTime.P_Time.Digital.Minutes.TextSettings.HorzAlign := TTextAlign.Center;
   vTime.P_Time.Digital.Minutes.Font.Style := vTime.P_Time.Digital.Minutes.Font.Style + [TFontStyle.fsBold];
-  if addons.time.P_Time.Digital_Color <> '' then
-    vTime.P_Time.Digital.Minutes.TextSettings.FontColor := StringToColor(addons.time.P_Time.Digital_Color)
-  else
-    vTime.P_Time.Digital.Minutes.TextSettings.FontColor := TAlphaColorRec.White;
+  vTime.P_Time.Digital.Minutes.TextSettings.FontColor := StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Font_Color);
   vTime.P_Time.Digital.Minutes.Visible := True;
 
   vTime.P_Time.Digital.Sep_2 := TText.Create(vTime.P_Time.Digital.Back);
   vTime.P_Time.Digital.Sep_2.Name := 'A_T_P_Time_Digital_Sep_2';
   vTime.P_Time.Digital.Sep_2.Parent := vTime.P_Time.Digital.Back;
   vTime.P_Time.Digital.Sep_2.SetBounds(100, 10, 0, 140);
-  vTime.P_Time.Digital.Sep_2.Text := addons.time.P_Time.Digital_Sep;
-  vTime.P_Time.Digital.Sep_2.Font.Family := addons.time.P_Time.Digital_Font;
+  vTime.P_Time.Digital.Sep_2.Text := uDB_AUser.Local.addons.Time_D.time.Digital_Sep;
+  vTime.P_Time.Digital.Sep_2.Font.Family := uDB_AUser.Local.addons.Time_D.time.Digital_Font;
   vTime.P_Time.Digital.Sep_2.Font.Size := 72;
   vTime.P_Time.Digital.Sep_2.TextSettings.HorzAlign := TTextAlign.Center;
-  if addons.time.P_Time.Digital_Color <> '' then
-    vTime.P_Time.Digital.Sep_2.TextSettings.FontColor := StringToColor(addons.time.P_Time.Digital_Color)
-  else
-    vTime.P_Time.Digital.Sep_2.TextSettings.FontColor := TAlphaColorRec.White;
+  vTime.P_Time.Digital.Sep_2.TextSettings.FontColor := StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Font_Color);
   vTime.P_Time.Digital.Sep_2.Visible := True;
 
   vTime.P_Time.Digital.Sep_2_Ani := TFloatAnimation.Create(vTime.P_Time.Digital.Sep_2);
@@ -187,22 +188,29 @@ begin
   vTime.P_Time.Digital.Seconds.Parent := vTime.P_Time.Digital.Back;
   vTime.P_Time.Digital.Seconds.SetBounds(420, 10, 0, 140);
   vTime.P_Time.Digital.Seconds.Text := '13';
-  vTime.P_Time.Digital.Seconds.Font.Family := addons.time.P_Time.Digital_Font;
+  vTime.P_Time.Digital.Seconds.Font.Family := uDB_AUser.Local.addons.Time_D.time.Digital_Font;
   vTime.P_Time.Digital.Seconds.Font.Size := 72;
   vTime.P_Time.Digital.Seconds.TextSettings.HorzAlign := TTextAlign.Center;
   vTime.P_Time.Digital.Seconds.Font.Style := vTime.P_Time.Digital.Seconds.Font.Style + [TFontStyle.fsBold];
   vTime.P_Time.Digital.Seconds.HorzTextAlign := TTextAlign.Leading;
-  if addons.time.P_Time.Digital_Color <> '' then
-    vTime.P_Time.Digital.Seconds.TextSettings.FontColor := StringToColor(addons.time.P_Time.Digital_Color)
-  else
-    vTime.P_Time.Digital.Seconds.TextSettings.FontColor := TAlphaColorRec.White;
+  vTime.P_Time.Digital.Seconds.TextSettings.FontColor := StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Font_Color);
   vTime.P_Time.Digital.Seconds.Visible := True;
+end;
 
+procedure Digital_Free;
+begin
+
+end;
+
+procedure Analog_Create;
+var
+  vi: Integer;
+begin
   vTime.P_Time.Analog.Back := Timage.Create(vTime.P_Time.Back);
   vTime.P_Time.Analog.Back.Name := 'A_T_P_Time_Analog_Back';
   vTime.P_Time.Analog.Back.Parent := vTime.P_Time.Back;
   vTime.P_Time.Analog.Back.SetBounds((vTime.P_Time.Back.Width / 2) - 300, (vTime.P_Time.Back.Height / 2) - 300, 600, 600);
-  vTime.P_Time.Analog.Back.Visible := False;
+  vTime.P_Time.Analog.Back.Visible := True;
 
   vTime.P_Time.Analog.Circle := TRadiantRing.Create(vTime.P_Time.Analog.Back);
   vTime.P_Time.Analog.Circle.Name := 'A_T_P_Time_Analog_Circle';
@@ -245,7 +253,7 @@ begin
           vTime.P_Time.Analog.Quarters[vi].Position.X := (vTime.P_Time.Analog.Circle.Width / 2) - 25;
         end;
     end;
-    vTime.P_Time.Analog.Quarters[vi].Fill.Bitmap.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Clocks+ 'default\t_analog_hour.png');
+    vTime.P_Time.Analog.Quarters[vi].Fill.Bitmap.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Time_D.Path.Clocks + 'default\t_analog_hour.png');
     vTime.P_Time.Analog.Quarters[vi].Fill.Bitmap.WrapMode := TWrapMode.TileOriginal;
     vTime.P_Time.Analog.Quarters[vi].Fill.Kind := TBrushKind.Bitmap;
     vTime.P_Time.Analog.Quarters[vi].Stroke.Thickness := 0;
@@ -310,7 +318,7 @@ begin
           vTime.P_Time.Analog.Hours[vi].Position.Y := 56;
         end;
     end;
-    vTime.P_Time.Analog.Hours[vi].Fill.Bitmap.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Clocks+ 'default\t_analog_hour.png');
+    vTime.P_Time.Analog.Hours[vi].Fill.Bitmap.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Time_D.Path.Clocks + 'default\t_analog_hour.png');
     vTime.P_Time.Analog.Hours[vi].Fill.Bitmap.WrapMode := TWrapMode.TileOriginal;
     vTime.P_Time.Analog.Hours[vi].Fill.Kind := TBrushKind.Bitmap;
     vTime.P_Time.Analog.Hours[vi].Stroke.Thickness := 0;
@@ -322,7 +330,7 @@ begin
   vTime.P_Time.Analog.Hour.Name := 'A_T_P_Time_Analog_Hour';
   vTime.P_Time.Analog.Hour.Parent := vTime.P_Time.Analog.Circle;
   vTime.P_Time.Analog.Hour.SetBounds((vTime.P_Time.Analog.Circle.Width / 2) - 5, 0, 10, 600);
-  vTime.P_Time.Analog.Hour.Fill.Bitmap.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Clocks+ 'default\t_analog_hour_image.png');
+  vTime.P_Time.Analog.Hour.Fill.Bitmap.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Time_D.Path.Clocks + 'default\t_analog_hour_image.png');
   vTime.P_Time.Analog.Hour.Fill.Bitmap.WrapMode := TWrapMode.TileOriginal;
   vTime.P_Time.Analog.Hour.Fill.Kind := TBrushKind.Bitmap;
   vTime.P_Time.Analog.Hour.Stroke.Thickness := 0;
@@ -333,7 +341,7 @@ begin
   vTime.P_Time.Analog.Minutes.Name := 'A_T_P_Time_Analog_Minutes';
   vTime.P_Time.Analog.Minutes.Parent := vTime.P_Time.Analog.Circle;
   vTime.P_Time.Analog.Minutes.SetBounds((vTime.P_Time.Analog.Circle.Width / 2) - 5, 0, 10, 600);
-  vTime.P_Time.Analog.Minutes.Fill.Bitmap.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Clocks+ 'default\t_analog_minutes.png');
+  vTime.P_Time.Analog.Minutes.Fill.Bitmap.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Time_D.Path.Clocks + 'default\t_analog_minutes.png');
   vTime.P_Time.Analog.Minutes.Fill.Bitmap.WrapMode := TWrapMode.TileOriginal;
   vTime.P_Time.Analog.Minutes.Fill.Kind := TBrushKind.Bitmap;
   vTime.P_Time.Analog.Minutes.Stroke.Thickness := 0;
@@ -344,52 +352,20 @@ begin
   vTime.P_Time.Analog.Seconds.Name := 'A_T_P_Time_Analog_Seconds';
   vTime.P_Time.Analog.Seconds.Parent := vTime.P_Time.Analog.Circle;
   vTime.P_Time.Analog.Seconds.SetBounds((vTime.P_Time.Analog.Circle.Width / 2) - 2, 0, 4, 600);
-  vTime.P_Time.Analog.Seconds.Fill.Bitmap.Bitmap.LoadFromFile(user_Active_Local.ADDONS.Time_D.Path.Clocks+ 'default\t_analog_seconds.png');
+  vTime.P_Time.Analog.Seconds.Fill.Bitmap.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Time_D.Path.Clocks + 'default\t_analog_seconds.png');
   vTime.P_Time.Analog.Seconds.Fill.Bitmap.WrapMode := TWrapMode.TileOriginal;
   vTime.P_Time.Analog.Seconds.Fill.Kind := TBrushKind.Bitmap;
   vTime.P_Time.Analog.Seconds.Stroke.Thickness := 0;
   vTime.P_Time.Analog.Seconds.Stroke.Color := TAlphaColorRec.White;
   vTime.P_Time.Analog.Seconds.Visible := True;
+end;
 
-  if not Assigned(vTime.P_Time.Timer) then
-  begin
-    vTime.P_Time.Timer := TTimer.Create(vTime.P_Time.Back);
-    vTime.P_Time.Timer.Name := 'A_T_P_Time_Timer';
-    vTime.P_Time.Timer.Parent := vTime.P_Time.Back;
-    vTime.P_Time.Timer.Interval := 10;
-    vTime.P_Time.Timer.OnTimer := addons.time.Input.mouse.Timer.OnTimer;
-    vTime.P_Time.Timer.Enabled := True;
-  end;
-
-
-  if user_Active_Local.ADDONS.Time_D.Time.vType = 'analog' then
-    vTime.P_Time.Analog.Back.Visible := True
-  else if user_Active_Local.ADDONS.Time_D.Time.vType = 'digital' then
-    vTime.P_Time.Digital.Back.Visible := True
-  else if user_Active_Local.ADDONS.Time_D.Time.vType = 'both' then
-  begin
-    vTime.P_Time.Analog.Back.Visible := True;
-    vTime.P_Time.Digital.Back.Visible := True;
-  end;
-
-  if (addons.time.P_Time.Clock_Type = 'Analog') or (addons.time.P_Time.Clock_Type = 'Both') then
-  begin
-    if addons.time.P_Time.Analog_Img_Quarters_Show then
-    begin
-      for vi := 0 to 3 do
-        vTime.P_Time.Analog.Quarters[vi].Visible := True;
-    end;
-    if addons.time.P_Time.Analog_Img_Hours_Show then
-    begin
-      for vi := 0 to 7 do
-        vTime.P_Time.Analog.Hours[vi].Visible := True;
-    end;
-  end;
+procedure Analog_Free;
+begin
 
 end;
 
-///
-procedure uTime_Time_SetAll_Set_Config;
+procedure Config_Load;
 const
   cTab_Names: array [0 .. 2] of string = ('General', 'Analog', 'Digital');
 var
@@ -428,7 +404,7 @@ begin
   end;
 end;
 
-procedure uTime_Time_SetAll_Config_Free;
+procedure Config_Free;
 begin
   if Assigned(vTime.P_Time.Config.General.Panel) then
     FreeAndNil(vTime.P_Time.Config.General.Panel);
@@ -439,13 +415,31 @@ begin
   FreeAndNil(vTime.P_Time.Config.Panel);
 end;
 
-procedure uTime_Time_SetAll_Set_General;
+procedure Config_Show_General;
 begin
   vTime.P_Time.Config.General.Panel := TPanel.Create(vTime.P_Time.Config.Tab[0]);
   vTime.P_Time.Config.General.Panel.Name := 'A_T_P_Time_General';
   vTime.P_Time.Config.General.Panel.Parent := vTime.P_Time.Config.Tab[0];
   vTime.P_Time.Config.General.Panel.SetBounds(0, 0, vTime.P_Time.Config.Control.Width, vTime.P_Time.Config.Control.Height);
   vTime.P_Time.Config.General.Panel.Visible := True;
+
+  vTime.P_Time.Config.General.ShowType_L := TLabel.Create(vTime.P_Time.Config.General.Panel);
+  vTime.P_Time.Config.General.ShowType_L.Name := 'A_T_P_Time_General_Type_Label';
+  vTime.P_Time.Config.General.ShowType_L.Parent := vTime.P_Time.Config.General.Panel;
+  vTime.P_Time.Config.General.ShowType_L.SetBounds(10, 20, 300, 24);
+  vTime.P_Time.Config.General.ShowType_L.Text := 'Clock type';
+  vTime.P_Time.Config.General.ShowType_L.Font.Style := vTime.P_Time.Config.General.ShowType_L.Font.Style + [TFontStyle.fsBold];
+  vTime.P_Time.Config.General.ShowType_L.Visible := True;
+
+  vTime.P_Time.Config.General.ShowType := TComboBox.Create(vTime.P_Time.Config.General.Panel);
+  vTime.P_Time.Config.General.ShowType.Name := 'A_T_P_Time_General_Type';
+  vTime.P_Time.Config.General.ShowType.Parent := vTime.P_Time.Config.General.Panel;
+  vTime.P_Time.Config.General.ShowType.SetBounds(10, 40, vTime.P_Time.Config.General.Panel.Width - 20, 24);
+  vTime.P_Time.Config.General.ShowType.Items.Add('Analog');
+  vTime.P_Time.Config.General.ShowType.Items.Add('Digital');
+  vTime.P_Time.Config.General.ShowType.Items.Add('Both');
+  vTime.P_Time.Config.General.ShowType.OnChange := addons.time.Input.mouse_time.Combobox.OnChange;
+  vTime.P_Time.Config.General.ShowType.Visible := True;
 
   vTime.P_Time.Config.General.ShowBothType_L := TLabel.Create(vTime.P_Time.Config.General.Panel);
   vTime.P_Time.Config.General.ShowBothType_L.Name := 'A_T_P_Time_General_Both_Type_Label';
@@ -470,33 +464,15 @@ begin
   vTime.P_Time.Config.General.ShowBothType.OnChange := addons.time.Input.mouse_time.Combobox.OnChange;
   vTime.P_Time.Config.General.ShowBothType.Visible := False;
 
-  vTime.P_Time.Config.General.ShowType_L := TLabel.Create(vTime.P_Time.Config.General.Panel);
-  vTime.P_Time.Config.General.ShowType_L.Name := 'A_T_P_Time_General_Type_Label';
-  vTime.P_Time.Config.General.ShowType_L.Parent := vTime.P_Time.Config.General.Panel;
-  vTime.P_Time.Config.General.ShowType_L.SetBounds(10, 20, 300, 24);
-  vTime.P_Time.Config.General.ShowType_L.Text := 'Clock type';
-  vTime.P_Time.Config.General.ShowType_L.Font.Style := vTime.P_Time.Config.General.ShowType_L.Font.Style + [TFontStyle.fsBold];
-  vTime.P_Time.Config.General.ShowType_L.Visible := True;
-
-  vTime.P_Time.Config.General.ShowType := TComboBox.Create(vTime.P_Time.Config.General.Panel);
-  vTime.P_Time.Config.General.ShowType.Name := 'A_T_P_Time_General_Type';
-  vTime.P_Time.Config.General.ShowType.Parent := vTime.P_Time.Config.General.Panel;
-  vTime.P_Time.Config.General.ShowType.SetBounds(10, 40, vTime.P_Time.Config.General.Panel.Width - 20, 24);
-  vTime.P_Time.Config.General.ShowType.Items.Add('Analog');
-  vTime.P_Time.Config.General.ShowType.Items.Add('Digital');
-  vTime.P_Time.Config.General.ShowType.Items.Add('Both');
-  vTime.P_Time.Config.General.ShowType.OnChange := addons.time.Input.mouse_time.Combobox.OnChange;
-  vTime.P_Time.Config.General.ShowType.Visible := True;
-
-  if user_Active_Local.ADDONS.Time_D.Time.vType = 'analog' then
+  if uDB_AUser.Local.addons.Time_D.time.vType = 'Analog' then
     vTime.P_Time.Config.General.ShowType.ItemIndex := 0
-  else if user_Active_Local.ADDONS.Time_D.Time.vType = 'digital' then
+  else if uDB_AUser.Local.addons.Time_D.time.vType = 'Digital' then
     vTime.P_Time.Config.General.ShowType.ItemIndex := 1
-  else if user_Active_Local.ADDONS.Time_D.Time.vType = 'both' then
+  else if uDB_AUser.Local.addons.Time_D.time.vType = 'Both' then
     vTime.P_Time.Config.General.ShowType.ItemIndex := 2
 end;
 
-procedure uTime_Time_SetAll_Set_Analog;
+procedure Config_Show_Analog;
 begin
   vTime.P_Time.Config.Analog.Panel := TPanel.Create(vTime.P_Time.Config.Tab[1]);
   vTime.P_Time.Config.Analog.Panel.Name := 'A_T_P_Time_Analog';
@@ -546,11 +522,11 @@ begin
   vTime.P_Time.Config.Analog.Options_ShowSecondsIndicator.OnClick := addons.time.Input.mouse_time.Checkbox.OnMouseClick;
   vTime.P_Time.Config.Analog.Options_ShowSecondsIndicator.Visible := True;
 
-//  vTime.P_Time.Config.Analog.Analog_Full := TILAnalogClock.Create(vTime.P_Time.Config.Analog.Panel);
-//  vTime.P_Time.Config.Analog.Analog_Full.Name := 'A_T_P_Time_Analog_Full';
-//  vTime.P_Time.Config.Analog.Analog_Full.Parent:=   vTime.P_Time.Config.Analog.Panel;
-//  vTime.P_Time.Config.Analog.Analog_Full.SetBounds(100, 100, 100, 100);
-//  vTime.P_Time.Config.Analog.Analog_Full.Visible := True;
+  // vTime.P_Time.Config.Analog.Analog_Full := TILAnalogClock.Create(vTime.P_Time.Config.Analog.Panel);
+  // vTime.P_Time.Config.Analog.Analog_Full.Name := 'A_T_P_Time_Analog_Full';
+  // vTime.P_Time.Config.Analog.Analog_Full.Parent:=   vTime.P_Time.Config.Analog.Panel;
+  // vTime.P_Time.Config.Analog.Analog_Full.SetBounds(100, 100, 100, 100);
+  // vTime.P_Time.Config.Analog.Analog_Full.Visible := True;
 
   vTime.P_Time.Config.Analog.Analog := TGroupBox.Create(vTime.P_Time.Config.Analog.Panel);
   vTime.P_Time.Config.Analog.Analog.Name := 'A_T_P_Time_Analog_Images';
@@ -691,12 +667,12 @@ begin
   vTime.P_Time.Config.Analog.Minutes_Image_Search.Text := '...';
   vTime.P_Time.Config.Analog.Minutes_Image_Search.Visible := True;
 
-  if addons.time.P_Time.Clock_Type <> 'Both' then
-    if addons.time.P_Time.Clock_Type = 'Digital' then
+  if uDB_AUser.Local.ADDONS.Time_D.Time.vType <> 'Both' then
+    if uDB_AUser.Local.ADDONS.Time_D.Time.vType = 'Digital' then
       vTime.P_Time.Config.Analog.Panel.Enabled := False;
 end;
 
-procedure uTime_Time_SetAll_Set_Digital;
+procedure Config_Show_Digital;
 var
   vFonts: TStringList;
 begin
@@ -725,7 +701,7 @@ begin
   vFonts := TStringList.Create;
   uWindows_CollectFonts(vFonts);
   vTime.P_Time.Config.Digital.Font_Combo.Items := vFonts;
-  vTime.P_Time.Config.Digital.Font_Combo.ItemIndex := vTime.P_Time.Config.Digital.Font_Combo.Items.IndexOf(user_Active_Local.ADDONS.Time_D.Time.Digital_Font);
+  vTime.P_Time.Config.Digital.Font_Combo.ItemIndex := vTime.P_Time.Config.Digital.Font_Combo.Items.IndexOf(uDB_AUser.Local.addons.Time_D.time.Digital_Font);
 
   vTime.P_Time.Config.Digital.Color_Label := TLabel.Create(vTime.P_Time.Config.Digital.Panel);
   vTime.P_Time.Config.Digital.Color_Label.Name := 'A_T_P_Time_Digital_Color_Label';
@@ -739,7 +715,7 @@ begin
   vTime.P_Time.Config.Digital.Color_Combo.Name := 'A_T_P_Time_Digital_Color';
   vTime.P_Time.Config.Digital.Color_Combo.Parent := vTime.P_Time.Config.Digital.Panel;
   vTime.P_Time.Config.Digital.Color_Combo.SetBounds(10, 90, vTime.P_Time.Config.Digital.Panel.Width - 20, 24);
-  vTime.P_Time.Config.Digital.Color_Combo.Color := TAlphaColor(StringToColor(user_Active_Local.ADDONS.Time_D.Time.Digital_Font_Color));
+  vTime.P_Time.Config.Digital.Color_Combo.Color := TAlphaColor(StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Font_Color));
   vTime.P_Time.Config.Digital.Color_Combo.OnChange := addons.time.Input.mouse_time.ColorCombobox.OnChange;
   vTime.P_Time.Config.Digital.Color_Combo.Visible := True;
 
@@ -760,7 +736,7 @@ begin
   vTime.P_Time.Config.Digital.Sep_Combo.Items.Add('\');
   vTime.P_Time.Config.Digital.Sep_Combo.Items.Add('.');
   vTime.P_Time.Config.Digital.Sep_Combo.Items.Add('#');
-  vTime.P_Time.Config.Digital.Sep_Combo.ItemIndex := vTime.P_Time.Config.Digital.Sep_Combo.Items.IndexOf(user_Active_Local.ADDONS.Time_D.Time.Digital_Sep);
+  vTime.P_Time.Config.Digital.Sep_Combo.ItemIndex := vTime.P_Time.Config.Digital.Sep_Combo.Items.IndexOf(uDB_AUser.Local.addons.Time_D.time.Digital_Sep);
   vTime.P_Time.Config.Digital.Sep_Combo.OnChange := addons.time.Input.mouse_time.Combobox.OnChange;
   vTime.P_Time.Config.Digital.Sep_Combo.Visible := True;
 
@@ -776,7 +752,7 @@ begin
   vTime.P_Time.Config.Digital.Color_Back_Combo.Name := 'A_T_P_Time_Digital_Color_Back';
   vTime.P_Time.Config.Digital.Color_Back_Combo.Parent := vTime.P_Time.Config.Digital.Panel;
   vTime.P_Time.Config.Digital.Color_Back_Combo.SetBounds(10, 190, vTime.P_Time.Config.Digital.Panel.Width - 20, 24);
-  vTime.P_Time.Config.Digital.Color_Back_Combo.Color := TAlphaColor(StringToColor(user_Active_Local.ADDONS.Time_D.Time.Digital_Color));
+  vTime.P_Time.Config.Digital.Color_Back_Combo.Color := TAlphaColor(StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Color));
   vTime.P_Time.Config.Digital.Color_Back_Combo.OnChange := addons.time.Input.mouse_time.ColorCombobox.OnChange;
   vTime.P_Time.Config.Digital.Color_Back_Combo.Visible := True;
 
@@ -792,7 +768,7 @@ begin
   vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.Name := 'A_T_P_Time_Digital_Color_Stroke_Back';
   vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.Parent := vTime.P_Time.Config.Digital.Panel;
   vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.SetBounds(10, 240, vTime.P_Time.Config.Digital.Panel.Width - 20, 24);
-  vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.Color := TAlphaColor(StringToColor(user_Active_Local.ADDONS.Time_D.Time.Digital_Color));
+  vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.Color := TAlphaColor(StringToColor(uDB_AUser.Local.addons.Time_D.time.Digital_Color));
   vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.OnChange := addons.time.Input.mouse_time.ColorCombobox.OnChange;
   vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.Visible := True;
 
@@ -847,12 +823,12 @@ begin
   vTime.P_Time.Digital.Seconds.TextSettings.FontColor := vTime.P_Time.Config.Digital.Color_Combo.Color;
   vTime.P_Time.Digital.Rect.Stroke.Color := vTime.P_Time.Config.Digital.Color_Back_Stroke_Combo.Color;
 
-  if addons.time.P_Time.Clock_Type <> 'Both' then
-    if addons.time.P_Time.Clock_Type = 'Analog' then
+  if uDB_AUser.Local.ADDONS.Time_D.Time.vType <> 'Both' then
+    if uDB_AUser.Local.ADDONS.Time_D.Time.vType = 'Analog' then
       vTime.P_Time.Config.Digital.Panel.Enabled := False;
 end;
 
-procedure uTime_Time_SetAll_Free;
+procedure Free;
 begin
   if Assigned(vTime.P_Time.Config.General.Panel) then
     FreeAndNil(vTime.P_Time.Config.General.Panel);

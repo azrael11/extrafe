@@ -17,10 +17,6 @@ uses
   uMain_Config_Emulation_Consoles_Scripts_Mouse,
   BASS;
 
-type
-  TMAIN_ANIMATION = class(TObject)
-    procedure OnFinish(Sender: TObject);
-  end;
 
 type
   TMAIN_IMAGE = class(TObject)
@@ -57,7 +53,6 @@ type
     Button: TMAIN_BUTTON;
     Text: TMAIN_TEXT;
     Edit: TMAIN_EDIT;
-    Animation: TMAIN_ANIMATION;
   end;
 
 type
@@ -71,6 +66,8 @@ type
 implementation
 
 uses
+  uDB,
+  uDB_AUser,
   uLoad_AllTypes,
   uMain,
   uMain_Actions,
@@ -87,7 +84,7 @@ uses
   uWeather_AllTypes,
   uWeather_SetAll,
   uSoundplayer_SetAll,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_AllTypes,
   uPlay_AllTypes,
   uPlay_SetAll,
@@ -153,64 +150,6 @@ begin
   end;
 end;
 
-{ TMAIN_ANIMATION }
-
-procedure TMAIN_ANIMATION.OnFinish(Sender: TObject);
-begin
-  if TFloatAnimation(Sender).Name = 'MainMenu_Selection_Ani' then
-  begin
-    TFloatAnimation(Sender).Enabled := False;
-    mainScene.Footer.Back_Ani.Enabled := False;
-    if extrafe.prog.State <> 'main' then
-    begin
-      if extrafe.prog.State = 'addon_time' then
-        uTime_Actions.Load
-      else if extrafe.prog.State = 'addon_calendar' then
-        uCalendar_SetComponentsToRightPlace
-      else if extrafe.prog.State = 'addon_weather' then
-        uWeather_SetAll.Load
-      else if extrafe.prog.State = 'addon_soundplayer' then
-        uSoundplayer_SetAll.Set_Scene
-      else if extrafe.prog.State = 'addon_play' then
-        uPlay_SetAll_Set;
-    end
-    else
-    begin
-      uTime_Actions.Free;
-      if extrafe.prog.State = 'addon_time' then
-      begin
-        if Assigned(vTime.Time_Ani) then
-          vTime.Time_Ani.Enabled := False;
-      end
-      else if extrafe.prog.State = 'addon_weather' then
-      begin
-        uWeather_Actions.Free;
-        if Assigned(vWeather.Scene.Weather_Ani) then
-          vWeather.Scene.Weather_Ani.Enabled := False;
-      end
-      else if extrafe.prog.State = 'addon_soundplayer' then
-      begin
-        uSoundplayer.Free;
-        if Assigned(vSoundplayer.Scene.Soundplayer_Ani) then
-          vSoundplayer.Scene.Soundplayer_Ani.Enabled := False;
-        uPlay_Actions_Free;
-      end
-      else if extrafe.prog.State = 'addon_play' then
-      begin
-        if Assigned(vPlay.Main_Ani) then
-          vPlay.Main_Ani.Enabled := False;
-      end;
-    end;
-  end
-  else if TFloatAnimation(Sender).Name = 'Main_Config_Ani' then
-  begin
-    if extrafe.prog.State = 'main' then
-      uMain_COnfig_Free;
-  end
-  else
-    TFloatAnimation(Sender).Enabled := False;
-end;
-
 { TMAIN_BUTTON }
 
 procedure TMAIN_BUTTON.OnMouseClick(Sender: TObject);
@@ -246,7 +185,7 @@ begin
     if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
     begin
       if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
-        uMain_Actions.ShowHide_Addon(TText(Sender).Tag, extrafe.prog.State, TText(Sender).TagString)
+        uMain_Actions.ShowHide_Addon(TText(Sender).Tag, extrafe.prog.State, uDB_AUser.Local.ADDONS.Names[TText(Sender).Tag])
     end
     else if TText(Sender).Name = 'Main_Footer_Settings' then
     begin
@@ -265,7 +204,7 @@ begin
     else if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
     begin
       if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
-        mainScene.Header.Addon_Icons_Glow[TText(Sender).Tag].Enabled := True;
+        mainScene.Header.Addon_Icon.Glow[TText(Sender).Tag].Enabled := True;
     end
     else if TImage(Sender).Name = 'Main_Footer_Settings' then
     begin
@@ -285,7 +224,7 @@ begin
     else if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
     begin
       if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
-        mainScene.Header.Addon_Icons_Glow[TText(Sender).Tag].Enabled := False;
+        mainScene.Header.Addon_Icon.Glow[TText(Sender).Tag].Enabled := False;
     end
     else if TImage(Sender).Name = 'Main_Footer_Settings' then
     begin
@@ -319,7 +258,6 @@ end;
 
 initialization
 
-ex_main.input.mouse.Animation := TMAIN_ANIMATION.Create;
 ex_main.input.mouse.Image := TMAIN_IMAGE.Create;
 ex_main.input.mouse.Button := TMAIN_BUTTON.Create;
 ex_main.input.mouse.Text := TMAIN_TEXT.Create;
@@ -327,7 +265,6 @@ ex_main.input.mouse.Edit := TMAIN_EDIT.Create;
 
 finalization
 
-ex_main.input.mouse.Animation.Free;
 ex_main.input.mouse.Image.Free;
 ex_main.input.mouse.Button.Free;
 ex_main.input.mouse.Text.Free;

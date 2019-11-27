@@ -29,7 +29,7 @@ uses
   load,
   uEmu_SetAll,
   emu,
-  uDatabase,
+  uDB,
   uMain_Emulation,
   uMain_SetAll,
   uMain_AllTypes,
@@ -37,7 +37,7 @@ uses
   uMain_Config_Info,
   uMain_Config_Themes,
   uMain_Config_Profile,
-  uSoundplayer;
+  uSoundplayer_Actions;
 
 procedure uMain_Load;
 begin
@@ -76,21 +76,21 @@ end;
 
 procedure uMain_Exit_SaveProgress;
 begin
-  if extrafe.databases.online_connected then
-  begin
-    uDatabase.ExtraFE_DB.Disconnect;
-    FreeAndNil(uDatabase.ExtraFE_DB);
-  end;
-  uDatabase.ExtraFE_Query_Local.Close;
-  uDatabase.ExtraFE_DB_Local.Connected:= False;
-  FreeAndNil(uDatabase.ExtraFE_DB_Local);
+//  if extrafe.databases.online_connected then
+//  begin
+//    uDB.ExtraFE_DB.Disconnect;
+//    FreeAndNil(uDB.ExtraFE_DB);
+//  end;
+//  uDB.ExtraFE_Query_Local.Close;
+//  uDB.ExtraFE_DB_Local.Connected:= False;
+//  FreeAndNil(uDB.ExtraFE_DB_Local);
 end;
 
 procedure uMain_Exit_Exit;
 begin
   uMain_Exit_SaveProgress;
   //  ReportMemoryLeaksOnShutdown:= True;
-  Application.Terminate;
+  Main_Form.Close;
 end;
 
 procedure uMain_Exit_Stay;

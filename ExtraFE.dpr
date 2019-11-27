@@ -14,7 +14,7 @@ uses
   uMain_Config_Info in 'main\configuration\uMain_Config_Info.pas',
   uMain_Actions in 'main\uMain_Actions.pas',
   uSoundplayer_Playlist in 'addons\soundplayer\uSoundplayer_Playlist.pas',
-  uSoundplayer in 'addons\soundplayer\uSoundplayer.pas',
+  uSoundplayer_Actions in 'addons\soundplayer\uSoundplayer_Actions.pas',
   uSoundplayer_Tag_Mp3 in 'addons\soundplayer\_tag_libraries\mp3\uSoundplayer_Tag_Mp3.pas',
   uWeather_SetAll in 'addons\weather\uWeather_SetAll.pas',
   uWeather_Config_Towns in 'addons\weather\configuration\uWeather_Config_Towns.pas',
@@ -30,7 +30,7 @@ uses
   uWeather_Config_Provider in 'addons\weather\configuration\uWeather_Config_Provider.pas',
   uTTrackbar in 'code\_snippets\uTTrackbar.pas',
   uTLabel in 'code\_snippets\uTLabel.pas',
-  uDatabase_ActiveUser in 'code\_database\uDatabase_ActiveUser.pas',
+  uDB_AUser in 'code\_database\uDB_AUser.pas',
   uWeather_Config_Iconsets in 'addons\weather\configuration\uWeather_Config_Iconsets.pas',
   uWeather_Config_Options in 'addons\weather\configuration\uWeather_Config_Options.pas',
   emu in 'emu.pas' {Emu_Form},
@@ -64,7 +64,6 @@ uses
   uWeather_Keyboard in 'addons\weather\uWeather_Keyboard.pas',
   uWeather_MenuActions in 'addons\weather\uWeather_MenuActions.pas',
   uMain_SetAll in 'main\uMain_SetAll.pas',
-  uDatabase_SqlCommands in 'code\_database\uDatabase_SqlCommands.pas',
   uEmu_Arcade_Mame_Mouse in 'emu\arcade\mame\uEmu_Arcade_Mame_Mouse.pas',
   uLoad_AllTypes in 'loading\uLoad_AllTypes.pas',
   uSoundplayer_Mouse in 'addons\soundplayer\uSoundplayer_Mouse.pas',
@@ -130,7 +129,7 @@ uses
   uAzHung_Actions in 'addons\play\azhung\uAzHung_Actions.pas',
   uAzHung_Mouse in 'addons\play\azhung\uAzHung_Mouse.pas',
   uTime_Sounds in 'addons\time\uTime_Sounds.pas',
-  uDatabase in 'code\_database\uDatabase.pas',
+  uDB in 'code\_database\uDB.pas',
   uAzHung_Sound in 'addons\play\azhung\uAzHung_Sound.pas',
   uWeather_Providers_OpenWeatherMap in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas',
   uWeather_Providers_Yahoo in 'addons\weather\providers\uWeather_Providers_Yahoo.pas',
@@ -169,7 +168,11 @@ uses
   uEmu_Consoles_MasterSystem_AllTypes in 'emu\consoles\master_system\uEmu_Consoles_MasterSystem_AllTypes.pas',
   uEmu_Consoles_MegaDrive_AllTypes in 'emu\consoles\mega_drive\uEmu_Consoles_MegaDrive_AllTypes.pas',
   load in 'load.pas' {Loading},
-  uCalendar_Actions in 'addons\calendar\uCalendar_Actions.pas';
+  uCalendar_Actions in 'addons\calendar\uCalendar_Actions.pas',
+  uTIme_Time_Config_General in 'addons\time\time\config\uTIme_Time_Config_General.pas',
+  uTIme_Time_Config_Digital in 'addons\time\time\config\uTIme_Time_Config_Digital.pas',
+  uTIme_Time_Config_Analog in 'addons\time\time\config\uTIme_Time_Config_Analog.pas',
+  uEmu_Arcade_Mame_Lists in 'emu\arcade\mame\uEmu_Arcade_Mame_Lists.pas';
 
 {$R *.res}
 

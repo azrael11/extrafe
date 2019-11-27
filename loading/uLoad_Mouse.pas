@@ -93,6 +93,11 @@ begin
     uLoad_Login.Exit_Program
   else if TButton(Sender).Name = 'Loading_Reg_Register' then
     uLoad_Register.Apply
+  else if TButton(Sender).Name = 'Loading_Register_Error_Ok' then
+    begin
+      ex_load.Login.Panel.Visible := True;
+      FreeAndNil(ex_load.Reg_Error.Panel);
+    end
   else if TButton(Sender).Name = 'Loading_Reg_Cancel' then
     uLoad_Register.Cancel
   else if TButton(Sender).Name = 'Loading_FPass_Send' then
@@ -206,7 +211,10 @@ begin
     if TText(Sender).Name = 'Loading_Login_Register' then
     begin
       BASS_ChannelPlay(sound.str_fx.general[0], false);
-      uLoad_SetAll_Register;
+      if extrafe.databases.online_connected then
+        uLoad_SetAll.Register_Form
+      else
+        uLoad_SetAll.Register_Error;
     end
     else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
       uLoad_SetAll_Forget_Password
@@ -271,7 +279,12 @@ begin
     if TText(Sender).Name = 'Loading_Intro_Text' then
       ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.White
     else if TText(Sender).Name = 'Loading_Login_Register' then
-      uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
+    begin
+      if not extrafe.databases.online_connected then
+        uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.Red)
+      else
+        uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
+    end
     else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
       uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.Red)
     else if TText(Sender).Name = 'Loading_Login_Pass_Show' then

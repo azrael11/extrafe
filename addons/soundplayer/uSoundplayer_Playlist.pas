@@ -58,16 +58,16 @@ procedure AddSongs_xspf(mPL_Num: SmallInt);
 procedure AddSongs_wpl(mPL_Num: SmallInt);
 procedure AddSongs_expl(mPL_Num: SmallInt);
 
-
-
 implementation
 
 uses
+  uDB,
+  uDB_AUser,
   main,
   uLoad,
   uLoad_AllTypes,
   uWindows,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_Mouse,
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
@@ -106,7 +106,7 @@ begin
     if addons.Soundplayer.Playlist.List.Songs_Num > 0 then
     begin
       uSoundplayer_Playlist.AddSongs(addons.Soundplayer.Playlist.List.vType, vPlaylist_Num);
-      uSoundplayer_Player.Get_Tag(addons.Soundplayer.Player.Playing_Now);
+      uSoundplayer_Player.Get_Tag(soundplayer.player_actions.Playing_Now);
       uSoundplayer_Tag_Get.Set_Icon;
     end
     else
@@ -129,22 +129,22 @@ begin
       else
         vSoundplayer.Playlist.List.Cells[5, vi] := '10';
     end;
-    if addons.Soundplayer.Player.Play then
-      vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '0'
-    else if addons.Soundplayer.Player.Stop then
-      vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '1'
-    else if addons.Soundplayer.Player.Pause then
-      vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '2';
-    vSoundplayer.Playlist.List.Selected := addons.Soundplayer.Player.Playing_Now;
+    if soundplayer.player = sPlay then
+      vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '0'
+    else if soundplayer.player = sStop then
+      vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '1'
+    else if soundplayer.player = sPause then
+      vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '2';
+    vSoundplayer.Playlist.List.Selected := soundplayer.player_actions.Playing_Now;
     uSoundplayer_Tag_Mp3.APICIndex := 0;
-    uSoundplayer_Player.Get_Tag(addons.Soundplayer.Player.Playing_Now);
+    uSoundplayer_Player.Get_Tag(soundplayer.player_actions.Playing_Now);
     uSoundplayer_Tag_Get.Set_Icon;
   end;
   addons.Soundplayer.Playlist.Manage_Lock := False;
   addons.Soundplayer.Playlist.Edit := False;
-  addons.Soundplayer.Player.Thumb_Active := False;
+  soundplayer.player_actions.Thumb_Active := False;
   vSoundplayer.Playlist.Manage_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  if addons.Soundplayer.Playlist.Total > 0 then
+  if uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count > 0 then
     vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
   else
     vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -211,18 +211,18 @@ begin
     end;
   end;
 
-  vSoundplayer.Playlist.List.Selected := addons.Soundplayer.Player.LastPlayed;
+  vSoundplayer.Playlist.List.Selected := soundplayer.player_actions.LastPlayed;
   if addons.Soundplayer.Playlist.List.Songs.Count > 1 then
   begin
-    addons.Soundplayer.Player.HasNext_Track := True;
+    soundplayer.player_actions.HasNext_Track := True;
     vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
   end
   else
   begin
-    addons.Soundplayer.Player.HasNext_Track := False;
+    soundplayer.player_actions.HasNext_Track := False;
     vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   end;
-  addons.Soundplayer.Player.HasPrevious_Track := False;
+  soundplayer.player_actions.HasPrevious_Track := False;
   vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
   vSoundplayer.info.Playlist_name.Text := addons.Soundplayer.Playlist.List.Name;
   vSoundplayer.Playlist.List.Selected := 0;
@@ -255,7 +255,7 @@ begin
 
 end;
 
-////////////////////////////////////////////////////////////////////////
+/// /////////////////////////////////////////////////////////////////////
 // Stringgrid
 procedure OnSelectCell(Sender: TObject; const ACol, ARow: Integer; var CanSelect: Boolean);
 begin
@@ -271,39 +271,35 @@ procedure OnDoubleClick(const Column: TColumn; const Row: Integer);
 begin
   if vSoundplayer.Playlist.List.Cells[2, Row] <> '' then
   begin
-    vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '3';
-    addons.Soundplayer.Player.Playing_Now := Row;
-    uSoundplayer_Player.Update_Last_Song(addons.Soundplayer.Player.Playing_Now);
+    vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '3';
+    soundplayer.player_actions.Playing_Now := Row;
+    uSoundplayer_Player.Update_Last_Song(soundplayer.player_actions.Playing_Now);
     BASS_ChannelStop(sound.str_music[1]);
     BASS_StreamFree(sound.str_music[1]);
-    sound.str_music[1] := BASS_StreamCreateFile(False, PChar(addons.Soundplayer.Playlist.List.Songs.Strings[addons.Soundplayer.Player.Playing_Now]), 0, 0,
+    sound.str_music[1] := BASS_StreamCreateFile(False, PChar(addons.Soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now]), 0, 0,
       BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-    BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.Soundplayer.Volume.Vol / 100);
-    vSoundplayer.info.Total_Songs.Text := IntToStr(addons.Soundplayer.Player.Playing_Now + 1) + '/' + addons.Soundplayer.Playlist.List.Songs_Num.ToString;
-    if addons.Soundplayer.Player.Play = True then
+    BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, soundplayer.player_actions.volume.Vol / 100);
+    vSoundplayer.info.Total_Songs.Text := IntToStr(soundplayer.player_actions.Playing_Now + 1) + '/' + addons.Soundplayer.Playlist.List.Songs_Num.ToString;
+    if soundplayer.player = sPlay then
     begin
       BASS_ChannelPlay(sound.str_music[1], False);
-      addons.Soundplayer.Player.Play := True;
-      addons.Soundplayer.Player.Pause := False;
-      vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '0';
-      uSoundplayer_Player.Get_Tag(addons.Soundplayer.Player.Playing_Now);
+      vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '0';
+      uSoundplayer_Player.Get_Tag(soundplayer.player_actions.Playing_Now);
     end
-    else if (addons.Soundplayer.Player.Pause = True) or (addons.Soundplayer.Player.Stop = True) or
-      ((addons.Soundplayer.Player.Play = False) and (addons.Soundplayer.Player.Stop = False) and (addons.Soundplayer.Player.Pause = False)) then
+    else if (soundplayer.player = sPause) or (soundplayer.player = sStop) then
     begin
       BASS_ChannelStop(sound.str_music[1]);
       BASS_ChannelSetPosition(sound.str_music[1], 0, 0);
-      addons.Soundplayer.Player.Play := False;
-      addons.Soundplayer.Player.Pause := False;
-      vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '1';
-      uSoundplayer_Player.Get_Tag(addons.Soundplayer.Player.Playing_Now);
+      soundplayer.player := sPlay;
+      vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '1';
+      uSoundplayer_Player.Get_Tag(soundplayer.player_actions.Playing_Now);
     end;
     if (addons.Soundplayer.Playlist.List.Songs_Num - 1 <> Row) and (Row <> 0) then
     begin
       vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      addons.Soundplayer.Player.HasPrevious_Track := True;
+      soundplayer.player_actions.HasPrevious_Track := True;
       vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      addons.Soundplayer.Player.HasNext_Track := True;
+      soundplayer.player_actions.HasNext_Track := True;
       if addons.Soundplayer.Playlist.Edit then
       begin
         vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -313,9 +309,9 @@ begin
     else if Row = 0 then
     begin
       vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
-      addons.Soundplayer.Player.HasPrevious_Track := False;
+      soundplayer.player_actions.HasPrevious_Track := False;
       vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      addons.Soundplayer.Player.HasNext_Track := True;
+      soundplayer.player_actions.HasNext_Track := True;
       if addons.Soundplayer.Playlist.Edit then
       begin
         vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -325,9 +321,9 @@ begin
     else
     begin
       vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-      addons.Soundplayer.Player.HasPrevious_Track := True;
+      soundplayer.player_actions.HasPrevious_Track := True;
       vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
-      addons.Soundplayer.Player.HasNext_Track := False;
+      soundplayer.player_actions.HasNext_Track := False;
       if addons.Soundplayer.Playlist.Edit then
       begin
         vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -413,7 +409,7 @@ var
   vi: Integer;
   vPLInfo: TADDON_SOUNDPLAYER_PLAYLIST_PLAYLISTS;
 begin
-  if addons.Soundplayer.Playlist.Total <> -1 then
+  if uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count <> -1 then
   begin
     SetLength(addons.Soundplayer.Playlist.List.Playlists, addons.Soundplayer.Playlist.Total + 1);
     for vi := 0 to addons.Soundplayer.Playlist.Total do
@@ -498,33 +494,33 @@ begin
     addons.Soundplayer.Ini.Ini.WriteInteger('Playlists', 'PL_' + addons.Soundplayer.Playlist.Active.ToString + '_Songs',
       addons.Soundplayer.Playlist.List.Songs_Num);
 
-    if vSelected = addons.Soundplayer.Player.Playing_Now then
+    if vSelected = soundplayer.player_actions.Playing_Now then
     begin
       if vSelected <> 0 then
-        Dec(addons.Soundplayer.Player.Playing_Now, 1);
+        Dec(soundplayer.player_actions.Playing_Now, 1);
       BASS_ChannelStop(sound.str_music[1]);
       BASS_StreamFree(sound.str_music[1]);
-      sound.str_music[1] := BASS_StreamCreateFile(False, PChar(addons.Soundplayer.Playlist.List.Songs.Strings[addons.Soundplayer.Player.Playing_Now]), 0, 0,
+      sound.str_music[1] := BASS_StreamCreateFile(False, PChar(addons.Soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now]), 0, 0,
         BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.Soundplayer.Volume.Vol / 100);
-      uSoundplayer_Player.Get_Tag(addons.Soundplayer.Player.Playing_Now);
-      if (addons.Soundplayer.Player.Play) then
+      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, soundplayer.player_actions.volume.Vol / 100);
+      uSoundplayer_Player.Get_Tag(soundplayer.player_actions.Playing_Now);
+      if soundplayer.player = sPlay then
       begin
         BASS_ChannelPlay(sound.str_music[1], False);
-        vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '0';
+        vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '0';
       end
-      else if addons.Soundplayer.Player.Pause then
+      else if soundplayer.player = sPause then
       begin
         BASS_ChannelPause(sound.str_music[1]);
-        vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '2';
+        vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '2';
       end
-      else if addons.Soundplayer.Player.Stop then
+      else if soundplayer.player = sStop then
       begin
         BASS_ChannelStop(sound.str_music[1]);
-        vSoundplayer.Playlist.List.Cells[1, addons.Soundplayer.Player.Playing_Now] := '1';
+        vSoundplayer.Playlist.List.Cells[1, soundplayer.player_actions.Playing_Now] := '1';
       end;
 
-      if addons.Soundplayer.Player.Playing_Now = 0 then
+      if soundplayer.player_actions.Playing_Now = 0 then
       begin
         vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
         vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -540,10 +536,10 @@ begin
   end
   else if vType = 'move_up' then
   begin
-    if vSelected = addons.Soundplayer.Player.Playing_Now then
+    if vSelected = soundplayer.player_actions.Playing_Now then
     begin
-      Dec(addons.Soundplayer.Player.Playing_Now, 1);
-      if addons.Soundplayer.Player.Playing_Now = 0 then
+      Dec(soundplayer.player_actions.Playing_Now, 1);
+      if soundplayer.player_actions.Playing_Now = 0 then
       begin
         vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Grey;
         vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -581,10 +577,10 @@ begin
   end
   else if vType = 'move_down' then
   begin
-    if vSelected = addons.Soundplayer.Player.Playing_Now then
+    if vSelected = soundplayer.player_actions.Playing_Now then
     begin
-      Inc(addons.Soundplayer.Player.Playing_Now, 1);
-      if addons.Soundplayer.Player.Playing_Now = addons.Soundplayer.Playlist.List.Songs_Num - 1 then
+      Inc(soundplayer.player_actions.Playing_Now, 1);
+      if soundplayer.player_actions.Playing_Now = addons.Soundplayer.Playlist.List.Songs_Num - 1 then
       begin
         vSoundplayer.Player.Previous.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
         vSoundplayer.Player.Next.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -640,7 +636,7 @@ begin
   // Change line is stringgrid
   OnRowActions('move_up', vSoundplayer.Playlist.List.Selected);
 
-  if addons.Soundplayer.Player.Playing_Now = 0 then
+  if soundplayer.player_actions.Playing_Now = 0 then
   begin
     vSoundplayer.Playlist.Songs_Edit.Up_Glow.Enabled := False;
     vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -652,7 +648,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   end;
 
-  uSoundplayer_Player.Update_Last_Song(addons.Soundplayer.Player.Playing_Now);
+  uSoundplayer_Player.Update_Last_Song(soundplayer.player_actions.Playing_Now);
 
 end;
 
@@ -673,7 +669,7 @@ begin
   // Change line is stringgrid
   OnRowActions('move_down', vSoundplayer.Playlist.List.Selected);
 
-  if addons.Soundplayer.Player.Playing_Now = addons.Soundplayer.Playlist.List.Songs.Count - 1 then
+  if soundplayer.player_actions.Playing_Now = addons.Soundplayer.Playlist.List.Songs.Count - 1 then
   begin
     vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     vSoundplayer.Playlist.Songs_Edit.Down_Glow.Enabled := False;
@@ -685,7 +681,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   end;
 
-  uSoundplayer_Player.Update_Last_Song(addons.Soundplayer.Player.Playing_Now);
+  uSoundplayer_Player.Update_Last_Song(soundplayer.player_actions.Playing_Now);
 
 end;
 
@@ -743,7 +739,7 @@ begin
   // Delete from the stringgrid
   OnRowActions('delete', vSoundplayer.Playlist.List.Selected);
 
-  if addons.Soundplayer.Player.Playing_Now = 0 then
+  if soundplayer.player_actions.Playing_Now = 0 then
   begin
     vSoundplayer.Playlist.Songs_Edit.Up_Glow.Enabled := False;
     vSoundplayer.Playlist.Songs_Edit.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -755,7 +751,7 @@ begin
     vSoundplayer.Playlist.Songs_Edit.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   end;
 
-  uSoundplayer_Player.Update_Last_Song(addons.Soundplayer.Player.Playing_Now);
+  uSoundplayer_Player.Update_Last_Song(soundplayer.player_actions.Playing_Now);
 
   Edit_Delete_Cancel;
 end;

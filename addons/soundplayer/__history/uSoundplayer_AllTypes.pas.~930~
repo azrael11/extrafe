@@ -1,0 +1,1038 @@
+unit uSoundplayer_AllTypes;
+
+interface
+
+uses
+  System.Classes,
+  System.IniFiles,
+  System.SysUtils,
+  System.UITypes,
+  FMX.Objects,
+  FMX.Dialogs,
+  FMX.Grid,
+  FMX.Grid.Style,
+  FMX.Effects,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Ani,
+  FMX.Filter.Effects,
+  FMX.TabControl,
+  FMX.Edit,
+  FMX.ComboEdit,
+  FMX.Memo,
+  FMX.ListBox,
+  FMX.Imglist,
+  FMX.Menus,
+  FMX.ExtCtrls,
+  FMX.Layouts,
+  Radiant.Shapes,
+  ALFmxStdCtrls,
+  ID3v1Library,
+  ID3v2Library,
+  ALFmxObjects,
+  OggVorbisAndOpusTagLibrary,
+  uSoundplayer_Mouse,
+  uSoundplayer_Tag_Mouse,
+  uSoundplayer_Equalizer_Mouse,
+  Bass;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_GENERAL = record
+    Filename: String;
+    Loaded: Boolean;
+    MajorVersion: Integer;
+    MinorVersion: Integer;
+    Size: Integer;
+    FramesCount: Integer;
+    BitRate: Integer;
+    CoverArtCount: Integer;
+    PlayTime: Double;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_MPEG = record
+    FrameSize: Integer;
+    SampleRate: Integer;
+    BitRate: Integer;
+    Padding: Boolean;
+    Copyrighted: Boolean;
+    Quality: Integer;
+    ChannelMode: String;
+    Layer: String;
+    ExtensionMode: String;
+  end;
+
+
+  // Keep it for future use
+  { type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV = record
+    FmtSize: Integer;
+    FormatTag: Integer;
+    Channels: Integer;
+    AvgBytesPerSec: Integer;
+    BlockAlign: Integer;
+    BitsPerSamples: Integer;
+    CbSize: Integer;
+    ChannelMask: Integer;
+    end;
+
+    type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF = record
+    Channels: Integer;
+    SampleFrames: Integer;
+    SampleSize: Integer;
+    SampleRate: Double;
+    CompressionID: String;
+    Compression: String;
+    end;
+
+    type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS = record
+    FormatVersion: Integer;
+    FormatID: Integer;
+    SamplingFrequency: Integer;
+    SampleCount: Integer;
+    ChannelType: String;
+    BlockSizePerChannel: Integer;
+    end;
+
+    type
+    TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF = record
+    FormatVersion: String;
+    SampleRate: Integer;
+    ChannelNumber: Integer;
+    CompressionName: String;
+    SampleCount: Integer;
+    PlayTime: Double;
+    BitRate: Integer;
+    SoundDateLenght: Integer;
+    DSTFramesCount: Integer;
+    DSTFramesRate: Integer;
+    Ratio: Double;
+    end; }
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO = record
+    General: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_GENERAL;
+    MPEG: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_MPEG;
+    // Keep it for future use
+    { WAV: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_WAV;
+      AIFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_AIFF;
+      DS: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DS;
+      DFF: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO_DFF; }
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3 = record
+    ID3v1: TID3v1Tag;
+    ID3v2: TID3v2Tag;
+    Lyrics: TStringList;
+    Lyrics_LanguageID: TLanguageID;
+    Lyrics_Description: String;
+    TagError: Integer;
+    Rating_Before_Save: Integer;
+    Rating: Integer;
+    Info: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3_INFO;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS_OGG = record
+    Opus: TOpusTag;
+    TagError: Integer;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYER_TAGS = record
+    mp3: TADDON_SOUNDPLAYER_PLAYER_TAGS_MP3;
+    ogg: TADDON_SOUNDPLAYER_PLAYER_TAGS_OGG;
+    // mp4:
+    // flac:
+    // ape:
+    // wav:
+    // wma:
+  end;
+
+type
+  TADDON_SOUNDPLAYER_EQUALIZER = record
+    PreAmp: Single;
+    Pan: Single;
+    Param: array [0 .. 9] of Single;
+    Preset: String;
+    Live_Preview: Boolean;
+    Cross_Fade: Boolean;
+    Cross_Fade_Sec: Integer;
+  end;
+
+
+type
+  TADDON_SOUNDPLAYER_INFO = record
+    isCoverInFullscreen: Boolean;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_CONFIG = record
+    Ini: TIniFile;
+    Name: string;
+    Path: string;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG = record
+    Disk_Name: String;
+    Disk_Path: String;
+    Disk_Type: String;
+    Title: string;
+    Artist: string;
+    Album: string;
+    Year: string;
+    Track: string;
+    Genre: string;
+    Comment: String;
+    Track_Seconds: string;
+    Rate: String;
+    Lyrics: TStringList;
+    // Cover_A: TBitmap;
+    // Cover_B: TBitmap;
+    // Cover_C: TBitmap;
+    // Cover_Num: Byte;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYLIST_PLAYLISTS = record
+    Name: String;
+    VType: String;
+    Path: String;
+    Songs: Integer;
+    Played: Integer;
+    LastPlayed: String;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYLIST_LIST = record
+    Name: String;
+    VType: String;
+    Num: Integer;
+    Playlist: TStringList;
+    Playlists: array of TADDON_SOUNDPLAYER_PLAYLIST_PLAYLISTS;
+    Songs: TStringList;
+    Song_Info: array of TADDON_SOUNDPLAYER_PLAYLIST_INFO_TAG;
+    Songs_Num: Integer;
+    Songs_Total_Time: String;
+    Played: Integer;
+    Last_Played: String;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PLAYLIST = record
+    Total: SmallInt;
+    Active: SmallInt;
+    List: TADDON_SOUNDPLAYER_PLAYLIST_LIST;
+    Manage_Lock: Boolean;
+    Manage_CtrlKey: Boolean;
+    Manage_Selected: Integer;
+    Edit: Boolean;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_VOLUME = record
+    Vol: Real;
+    State: String;
+    Speaker: String;
+    Mute: Real;
+    Master: Real;
+    Left: Real;
+    Right: Real;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_PATHS = record
+    Icon: String;
+    Images: String;
+    Files: String;
+    Playlists: string;
+    Sounds: String;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_INPUT = record
+    mouse: TSOUNDPLAYER_MOUSE_ACTIONS;
+    mouse_tag: TSOUNDPLAYER_MOUSE_TAG_ACTIONS;
+    mouse_eq: TSOUNDPLAYER_MOUSE_EQUALIZER_ACTIONS;
+    // keyboard:
+    // joystick:
+  end;
+
+type
+  TADDON_SOUNDPLAYER_ACTIONS = record
+    First: Boolean;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_SOUND = record
+    Effects: array [0 .. 10] of HSAMPLE;
+    mouse: array [0 .. 10] of HSAMPLE;
+    warning: array [0 .. 2] of HSAMPLE;
+  end;
+
+type
+  TADDON_SOUNDPLAYER = record
+    Name: String;
+    Active: Boolean;
+    Main_Menu_Position: Integer;
+    Actions: TADDON_SOUNDPLAYER_ACTIONS;
+    Player: TADDON_SOUNDPLAYER_PLAYER;
+    Equalizer: TADDON_SOUNDPLAYER_EQUALIZER;
+    Info: TADDON_SOUNDPLAYER_INFO;
+    Playlist: TADDON_SOUNDPLAYER_PLAYLIST;
+    Path: TADDON_SOUNDPLAYER_PATHS;
+    Input: TADDON_SOUNDPLAYER_INPUT;
+    Ini: TADDON_SOUNDPLAYER_CONFIG;
+    Sound: TADDON_SOUNDPLAYER_SOUND;
+  end;
+
+  TPLAYER = (sPlay, sPause, sStop);
+
+type
+  TPLAYER_ACTIONS = record
+    HasNext_Track: Boolean;
+    HasPrevious_Track: Boolean;
+    VRepeat: String;
+    VRepeat_Num: Integer;
+    VRepeat_Songs_Num: Integer;
+    Suffle: Boolean;
+    Suffle_List: TStringList;
+    Mute: Boolean;
+    Playing_Now: SmallInt;
+    LastPlayed: SmallInt;
+    Thumb_Active: Boolean;
+    Volume_Changed: Boolean;
+    Song_State: Single;
+    Time_Negative: Boolean;
+    Title_Ani: Boolean;
+    Title_Ani_Left: Boolean;
+    Tag: TADDON_SOUNDPLAYER_PLAYER_TAGS;
+    volume: TADDON_SOUNDPLAYER_VOLUME;
+  end;
+
+type
+  TADDON_SOUNDPLAYER_NEW = record
+    player: TPLAYER;
+    player_actions: TPLAYER_ACTIONS;
+  end;
+
+var
+  soundplayer: TADDON_SOUNDPLAYER_NEW;
+
+  /// /////////////////////////////////////////////////////////////////////////////
+  /// Construction
+  ///
+
+type
+  TSOUNDPLAYER_ADDON_FLOATANIMATION = class(TObject)
+    procedure OnFinish(Sender: TObject);
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG = class(TObject)
+    procedure OnClose(Sender: TObject);
+    procedure OnShow(Sender: TObject);
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_SCENE_FIRST_MAIN = record
+    Panel: Tpanel;
+    Line_1: TALText;
+    Line_2: TALText;
+    Line_3: TALText;
+    Line_4: TALText;
+    Check: TCheckBox;
+    Done: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_SCENE_FIRST = record
+    Panel: Tpanel;
+    Panel_Shadow: TShadowEffect;
+    Main: TSOUNDPLAYER_ADDON_SCENE_FIRST_MAIN;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_SCENE = record
+    soundplayer: TImage;
+    Soundplayer_Ani: TFloatAnimation;
+    Back: TImage;
+    Back_Blur: TGaussianBlurEffect;
+    Back_Player: TImage;
+    Back_Presentation: TImage;
+    UpLine: TImage;
+    Back_Info: TImage;
+    MiddleLine: TImage;
+    PlaylistLine: TImage;
+    Back_Playlist: TImage;
+    DownLine: TImage;
+    Dialog: TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG;
+    OpenDialog: TOpenDialog;
+    Settings: TImage;
+    Settings_Ani: TFloatAnimation;
+    Settings_Glow: TGlowEffect;
+    First: TSOUNDPLAYER_ADDON_SCENE_FIRST;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYER_BANDINFO = record
+    Box: TVertScrollBox;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Header: TRectangle;
+    Name: TText;
+    Image: TImage;
+    Powered_By: TText;
+    Powered_Img: TImage;
+    Memo_Sum: TMemo;
+    Memo_Comm: TMemo;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYER_LYRICS = record
+    Box: TVertScrollBox;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Header: TRectangle;
+    Name: TText;
+    Powered_By: TText;
+    Powered_Img: TImage;
+    Lyrics: array of TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYER_ALBUMINFO = record
+    Box: TVertScrollBox;
+    Close: TText;
+    Close_Glow: TGlowEffect;
+    Header: TRectangle;
+    Name: TText;
+    Powered_By: TText;
+    Powered_Img: TImage;
+    Image: TImage;
+    TrackBox: TVertScrollBox;
+    Memo_Sum: TMemo;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYER = record
+    Play: TText;
+    Play_Glow: TGlowEffect;
+    Stop: TText;
+    Stop_Glow: TGlowEffect;
+    Previous: TText;
+    Previous_Glow: TGlowEffect;
+    Next: TText;
+    Next_Glow: TGlowEffect;
+    Eject: TText;
+    Eject_Glow: TGlowEffect;
+    Loop: TText;
+    Loop_State: TText;
+    Loop_State_Glow: TGlowEffect;
+    Loop_To: TText;
+    Loop_Glow: TGlowEffect;
+    Song_Title: TText;
+    Song_Title_Cover_Left: TRectangle;
+    Song_Title_Cover_Right: TRectangle;
+    Song_Title_Ani: TFloatAnimation;
+    Rate: array [0 .. 4] of TText;
+    Song_Pos: TALTrackBar;
+    Song_Tag: TImage;
+    Song_Tag_Glow: TGlowEffect;
+    Song_KBPS: TText;
+    Song_SampleRate: TText;
+    Song_Time: TText;
+    Song_PlayTime: TText;
+    Suffle: TText;
+    Suffle_Glow: TGlowEffect;
+    Speaker_Left: TImage;
+    Speaker_Left_Hue: THueAdjustEffect;
+    Speaker_Left_Percent: TText;
+    Speaker_Left_Percent_Ani: TFloatAnimation;
+    Speaker_Left_Lock_Volume: TImage;
+    Speaker_Left_Lock_Volume_Glow: TGlowEffect;
+    Speaker_Left_Volume_Pos: TALTrackBar;
+    Speaker_Right: TImage;
+    Speaker_Right_Hue: THueAdjustEffect;
+    Speaker_Right_Percent: TText;
+    Speaker_Right_Percent_Ani: TFloatAnimation;
+    Speaker_Right_Lock_Volume: TImage;
+    Speaker_Right_Lock_Volume_Glow: TGlowEffect;
+    Speaker_Right_Volume_Pos: TALTrackBar;
+    Lyrics: TText;
+    Lyrics_Glow: TGlowEffect;
+    Lyrics_Press: TSOUNDPLAYER_ADDON_PLAYER_LYRICS;
+    Equalizer: TText;
+    Equalizer_Glow: TGlowEffect;
+    Band_Info: TText;
+    Band_Info_Glow: TGlowEffect;
+    Band_Info_Press: TSOUNDPLAYER_ADDON_PLAYER_BANDINFO;
+    Album_Info: TText;
+    Album_Info_Glow: TGlowEffect;
+    Album_Info_Press: TSOUNDPLAYER_ADDON_PLAYER_ALBUMINFO;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_INFO = record
+    Back_Left: TImage;
+    Back_Left_Ani: TFloatAnimation;
+    Song: TText;
+    Song_Title: TText;
+    Artist: TText;
+    Artist_Name: TText;
+    Year: TText;
+    Year_Publish: TText;
+    Gerne: TText;
+    Gerne_Kind: TText;
+    Track: TText;
+    Track_Num: TText;
+    Playlist: TText;
+    Playlist_Name: TText;
+    Playlist_Type: TText;
+    Playlist_Type_Kind: TText;
+    Total: TText;
+    Total_Songs: TText;
+    Time: TText;
+    Time_Total: TText;
+    Back_Right: TImage;
+    Back_Right_Ani: TFloatAnimation;
+    Cover: TImage;
+    Cover_Label: TText;
+    Cover_Fade_Ani: TFloatAnimation;
+    Cover_Fullscreen: TText;
+    Cover_Fullscreen_Glow: TGlowEffect;
+    Cover_Fullscreen_Ani_Width: TFloatAnimation;
+    Cover_Fullscreen_Ani_Height: TFloatAnimation;
+    Cover_Fullscreen_Ani_Pos_X: TFloatAnimation;
+    Cover_Fullscreen_Ani_Pos_Y: TFloatAnimation;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_MANAGE_MAIN = record
+    Panel: Tpanel;
+    Grid: TStringGrid;
+    Edit: TImage;
+    Edit_Glow: TGlowEffect;
+    Up: TImage;
+    Up_Glow: TGlowEffect;
+    Up_Grey: TMonochromeEffect;
+    Down: TImage;
+    Down_Glow: TGlowEffect;
+    Down_Grey: TMonochromeEffect;
+    Merge: TImage;
+    Merge_Glow: TGlowEffect;
+    Merge_Grey: TMonochromeEffect;
+    Split: TImage;
+    Split_Glow: TGlowEffect;
+    Split_Grey: TMonochromeEffect;
+    Load: TButton;
+    Cancel: TButton;
+
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_MANAGE = record
+    Panel: Tpanel;
+    Main: TSOUNDPLAYER_ADDON_PLAYLIST_MANAGE_MAIN;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_CREATE_MAIN = record
+    Panel: Tpanel;
+    Text: TLabel;
+    Edit: TEdit;
+    Text_Type: TLabel;
+    Main_Type: TComboBox;
+    Create: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_CREATE = record
+    Panel: Tpanel;
+    Main: TSOUNDPLAYER_ADDON_PLAYLIST_CREATE_MAIN;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE_MAIN = record
+    Panel: Tpanel;
+    Icon: TImage;
+    Line_1: TLabel;
+    Line_2: TLabel;
+    Remove: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE = record
+    Panel: Tpanel;
+    Main: TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE_MAIN;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_SONGS_EDIT = record
+    Lock: TText;
+    Lock_Glow: TGlowEffect;
+    Edit: TText;
+    Edit_Glow: TGlowEffect;
+    Up: TText;
+    Up_Glow: TGlowEffect;
+    Down: TText;
+    Down_Glow: TGlowEffect;
+    Delete: TText;
+    Delete_Glow: TGlowEffect;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE_SONG_MAIN = record
+    Panel: Tpanel;
+    Icon: TImage;
+    Text: TLabel;
+    Erase: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE_SONG = record
+    Remove: Tpanel;
+    Main: TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE_SONG_MAIN;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_PLAYLIST = record
+    List: TStringGrid;
+    List_Popup_Memu: TPopupMenu;
+    List_Line_Edit_Left: TImage;
+    List_Line_Edit_Right: TImage;
+    Songs_Edit: TSOUNDPLAYER_ADDON_PLAYLIST_SONGS_EDIT;
+    Manage_Icon: TText;
+    Manage_Icon_Glow: TGlowEffect;
+    Manage: TSOUNDPLAYER_ADDON_PLAYLIST_MANAGE;
+    Create_Icon: TText;
+    Create_Icon_Glow: TGlowEffect;
+    Create: TSOUNDPLAYER_ADDON_PLAYLIST_CREATE;
+    Remove_Icon: TText;
+    Remove_Icon_Glow: TGlowEffect;
+    Remove: TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE;
+    Remove_Song: TSOUNDPLAYER_ADDON_PLAYLIST_REMOVE_SONG;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TIMER_ONTIMER = class(TObject)
+    procedure OnTimer(Sender: TObject);
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TIMER = record
+    Timer: TSOUNDPLAYER_ADDON_TIMER_ONTIMER;
+    Song: TTimer;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_CONFIG_MAIN = record
+    Panel: Tpanel;
+
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_CONFIG = record
+    Panel: Tpanel;
+    Main: TSOUNDPLAYER_ADDON_CONFIG_MAIN;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_EQUALIZER = record
+    Panel: Tpanel;
+    Main: Tpanel;
+    Pan: TALTrackBar;
+    Pan_Metric: TLabel;
+    Pan_Labels: array [0 .. 1] of TLabel;
+    Metric: TImage;
+    High: TLabel;
+    Middle: TLabel;
+    Low: TLabel;
+    PreAmp: TALTrackBar;
+    PreAMP_Label: TLabel;
+    Param: array [0 .. 9] of TALTrackBar;
+    Param_Value: array [0 .. 9] of TLabel;
+    Param_Label: array [0 .. 9] of TLabel;
+    Live_Preview: TCheckBox;
+    Preset: Tpanel;
+    Presets: TListBox;
+    Preset_Load: TImage;
+    Preset_Save: TImage;
+    Preset_Delete: TImage;
+    Apply: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v1 = record
+    Title: TLabel;
+    Title_V: TEdit;
+    Artist: TLabel;
+    Artist_V: TEdit;
+    Album: TLabel;
+    Album_V: TEdit;
+    Year: TLabel;
+    Year_V: TEdit;
+    Genre: TLabel;
+    Genre_V: TComboEdit;
+    Track: TLabel;
+    Track_V: TEdit;
+    Comment: TLabel;
+    Comment_V: TEdit;
+    Transfer: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v2 = record
+    Title: TLabel;
+    Title_V: TEdit;
+    Artist: TLabel;
+    Artist_V: TEdit;
+    Album: TLabel;
+    Album_V: TEdit;
+    Year: TLabel;
+    Year_V: TEdit;
+    Genre: TLabel;
+    Genre_V: TComboEdit;
+    Track: TLabel;
+    Track_V: TEdit;
+    Comment: TLabel;
+    Comment_V: TEdit;
+    Transfer: TText;
+    Rate_Label: TLabel;
+    Rate: array [0 .. 9] of TText;
+    Rate_Glow: array [0 .. 9] of TGlowEffect;
+    Rate_Dot: array [0 .. 9] of TText;
+    Covers: TGroupBox;
+    Cover: TImage;
+    Cover_Label: TLabel;
+    Cover_ArrowLeft: TText;
+    Cover_ArrowLeft_Glow: TGlowEffect;
+    Cover_ArrowRight: TText;
+    Cover_ArrowRight_Glow: TGlowEffect;
+    Cover_Num: TLabel;
+    Cover_Add_Computer: TText;
+    Cover_Add_Computer_Glow: TGlowEffect;
+    Cover_Add_Internet: TText;
+    Cover_Add_Internet_Glow: TGlowEffect;
+    Cover_Remove: TText;
+    Cover_Remove_Glow: TGlowEffect;
+    Lyrics: TGroupBox;
+    Lyrics_Memo: TMemo;
+    Lyrics_Add_Computer: TText;
+    Lyrics_Add_Computer_Glow: TGlowEffect;
+    Lyrics_Add_Internet: TText;
+    Lyrics_Add_Internet_Glow: TGlowEffect;
+    Lyrics_Remove: TText;
+    Lyrics_Remove_Glow: TGlowEffect;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_COVER_SELECT = record
+    Panel: Tpanel;
+    Main: Tpanel;
+    List: TListBox;
+    Covers: array [0 .. 4] of TImage;
+    Load: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_ADD = record
+    Panel: Tpanel;
+    Main: Tpanel;
+    Radio_Above: TRadioButton;
+    Radio_Clear: TRadioButton;
+    Add: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_INTERNET = record
+    Panel: Tpanel;
+    Main: Tpanel;
+    Info: TLabel;
+    Providers_Box: TVertScrollBox;
+    Providers: array [0 .. 10] of TImage;
+    Providers_Glow: array [0 .. 10] of TGlowEffect;
+    Lyrics_Box: TMemo;
+    Add: TButton;
+    Cancel: TButton;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_GENERAL = record
+    Box: TGroupBox;
+    Filename: TText;
+    Loaded: TCheckBox;
+    MajorVersion: TText;
+    MinorVersion: TText;
+    Size: TText;
+    FramesCount: TText;
+    BitRate: TText;
+    CoverArtCount: TText;
+    PlayTime: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_MPEG = record
+    Box: TGroupBox;
+    FrameSize: TText;
+    SampleRate: TText;
+    BitRate: TText;
+    Padding: TCheckBox;
+    Copyrighted: TCheckBox;
+    Quality: TText;
+    ChannelMode: TText;
+    Layer: TText;
+    ExtensionMode: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_WAV = record
+    Box: TGroupBox;
+    FmtSize: TText;
+    FormatTag: TText;
+    Channels: TText;
+    AvgBytesPerSec: TText;
+    BlockAlign: TText;
+    BitsPerSamples: TText;
+    CbSize: TText;
+    ChannelMask: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_AIFF = record
+    Box: TGroupBox;
+    Channels: TText;
+    SampleFrames: TText;
+    SampleSize: TText;
+    SampleRate: TText;
+    CompressionID: TText;
+    Compression: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DS = record
+    Box: TGroupBox;
+    FormatVersion: TText;
+    FormatID: TText;
+    SamplingFrequency: TText;
+    SampleCount: TText;
+    ChannelType: TText;
+    BlockSizePerChannel: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DFF = record
+    Box: TGroupBox;
+    FormatVersion: TText;
+    SampleRate: TText;
+    ChannelNumber: TText;
+    CompressionName: TText;
+    SampleCount: TText;
+    PlayTime: TText;
+    BitRate: TText;
+    SoundDataLenght: TText;
+    DSTFramesCount: TText;
+    DSTFramesRate: TText;
+    Ratio: TText;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3_INFO = record
+    General: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_GENERAL;
+    MPEG: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_MPEG;
+    WAV: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_WAV;
+    AIFF: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_AIFF;
+    DSInfo: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DS;
+    DFFInfo: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO_DFF;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP3 = record
+    Back: Tpanel;
+    Back_Blur: TGaussianBlurEffect;
+    Main: Tpanel;
+    Logo: TImage;
+    Button_Save: TButton;
+    Button_Cancel: TButton;
+    TabControl: TTabControl;
+    TabItem: array [0 .. 2] of TTabItem;
+    ID3v1: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v1;
+    ID3v2: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3v2;
+    Info: TSOUNDPLAYER_ADDON_TAGS_MP3_INFO;
+    Cover_Select: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_COVER_SELECT;
+    Lyrics_Add: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_ADD;
+    Lyrics_Int: TSOUNDPLAYER_ADDON_TAGS_MP3_ID3V2_LYRICS_INTERNET;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_APE = record
+
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_FLAC = record
+
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_MP4 = record
+
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_OPUS = record
+    Back: Tpanel;
+    Back_Blur: TGaussianBlurEffect;
+    Main: Tpanel;
+    Logo: TImage;
+    Button_Save: TButton;
+    Button_Cancel: TButton;
+    Title: TLabel;
+    Title_V: TEdit;
+    Artist: TLabel;
+    Artist_V: TEdit;
+    Album: TLabel;
+    Album_V: TEdit;
+    Genre: TLabel;
+    Genre_V: TComboEdit;
+    Date: TLabel;
+    Date_V: TEdit;
+    Track: TLabel;
+    Track_V: TEdit;
+    Disk: TLabel;
+    Disk_V: TEdit;
+    Comment: TLabel;
+    Comment_V: TEdit;
+    CoverBox: TGroupBox;
+    Cover_Label: TLabel;
+    Cover: TImage;
+    Cover_LoadFromComputer: TImage;
+    Cover_LoadFromComputer_Glow: TGlowEffect;
+    Cover_LoadFromInterent: TImage;
+    Cover_LoadFromInterent_Glow: TGlowEffect;
+    Cover_Delete: TImage;
+    Cover_Delete_Glow: TGlowEffect;
+    Cover_Delete_Grey: TMonochromeEffect;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS_WMA = record
+
+  end;
+
+type
+  TSOUNDPLAYER_ADDON_TAGS = record
+    mp3: TSOUNDPLAYER_ADDON_TAGS_MP3;
+    ape: TSOUNDPLAYER_ADDON_TAGS_APE;
+    flac: TSOUNDPLAYER_ADDON_TAGS_FLAC;
+    mp4: TSOUNDPLAYER_ADDON_TAGS_MP4;
+    Opus: TSOUNDPLAYER_ADDON_TAGS_OPUS;
+    wma: TSOUNDPLAYER_ADDON_TAGS_WMA;
+  end;
+
+type
+  TSOUNDPLAYER_ADDON = record
+    scene: TSOUNDPLAYER_ADDON_SCENE;
+    Player: TSOUNDPLAYER_ADDON_PLAYER;
+    Info: TSOUNDPLAYER_ADDON_INFO;
+    Playlist: TSOUNDPLAYER_ADDON_PLAYLIST;
+    Timer: TSOUNDPLAYER_ADDON_TIMER;
+    EQ: TSOUNDPLAYER_ADDON_EQUALIZER;
+    Tag: TSOUNDPLAYER_ADDON_TAGS;
+    config: TSOUNDPLAYER_ADDON_CONFIG;
+    Ani: TSOUNDPLAYER_ADDON_FLOATANIMATION;
+  end;
+
+var
+  vSoundplayer: TSOUNDPLAYER_ADDON;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uSoundplayer_Info_Actions,
+  uSoundplayer_Player,
+  uSoundplayer_Tag_Mp3,
+  uSoundplayer_Tag_Ogg;
+
+{ TSOUNDPLAYER_ADDON_TIMER_ONTIMER }
+
+procedure TSOUNDPLAYER_ADDON_TIMER_ONTIMER.OnTimer(Sender: TObject);
+begin
+  if TTimer(Sender).Name = 'A_SP_Timer_Song' then
+    uSoundplayer_Player.Refresh;
+end;
+
+{ TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG }
+procedure TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG.OnClose(Sender: TObject);
+begin
+  if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_AddSongs' then
+    uSoundplayer_Player.Add_Songs
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Mp3_Cover_AddComputer' then
+    uSoundplayer_Tag_Mp3.Cover_Select
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Mp3_Lyrics_AddComputer' then
+    uSoundplayer_Tag_Mp3.Lyrics_Add
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Ogg_Cover_AddComputer' then
+    uSoundplayer_Tag_Ogg_Cover_Select;
+end;
+
+procedure TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG.OnShow(Sender: TObject);
+begin
+  vSoundplayer.scene.OpenDialog.Filename := '';
+  if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_AddSongs' then
+    vSoundplayer.scene.OpenDialog.Filter := 'mp3 files (*.mp3)|*.mp3|ogg files(*.ogg)|*.ogg'
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Mp3_Cover_AddComputer' then
+    vSoundplayer.scene.OpenDialog.Filter :=
+      'All supported images (*.png , *.jpg , *.jpeg , *.bmp)|*.png; *.jpg; *.jpeg; *.bmp|png files (*.png)|*.png|jpeg files(*.jpeg, *.jpg)|*.jpeg;*.jpg |bitmap files(*.bmp)|*.bmp'
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Mp3_Lyrics_AddComputer' then
+    vSoundplayer.scene.OpenDialog.Filter := 'txt files (*.txt)|*.txt'
+  else if TOpenDialog(Sender).Name = 'A_SP_OpenDialog_Ogg_Cover_AddComputer' then
+    vSoundplayer.scene.OpenDialog.Filter :=
+      'All supported images (*.png , *.jpg , *.jpeg , *.bmp)|*.png; *.jpg; *.jpeg; *.bmp|png files (*.png)|*.png|jpeg files(*.jpeg, *.jpg)|*.jpeg;*.jpg |bitmap files(*.bmp)|*.bmp'
+end;
+
+{ TSOUNDPLAYER_ADDON_FLOATANIMATION }
+procedure TSOUNDPLAYER_ADDON_FLOATANIMATION.OnFinish(Sender: TObject);
+begin
+  TFloatAnimation(Sender).Enabled := False;
+  if addons.soundplayer.Info.isCoverInFullscreen then
+  begin
+    if TFloatAnimation(Sender).Name = 'A_SP_Info_Cover_Fullscreen_Animation_Height' then
+      uSoundplayer_Info_Actions_ShowCoverFullscreen;
+  end
+  else
+  begin
+    if TFloatAnimation(Sender).Name = 'A_SP_Info_Cover_Fullscreen_Animation_Height' then
+      uSoundplayer_Info_Actions_ShowCoverExitFullscreen;
+  end;
+  if TFloatAnimation(Sender).Name = 'A_SP_Player_Song_Title_Animation' then
+  begin
+    if soundplayer.player_actions.Title_Ani then
+      soundplayer.player_actions.Title_Ani_Left := not soundplayer.player_actions.Title_Ani_Left;
+    uSoundplayer_Player.Title_Animation;
+  end;
+end;
+
+initialization
+
+vSoundplayer.Ani := TSOUNDPLAYER_ADDON_FLOATANIMATION.Create;
+vSoundplayer.scene.Dialog := TSOUNDPLAYER_ADDON_SCENE_OPENDIALOG.Create;
+vSoundplayer.Timer.Timer := TSOUNDPLAYER_ADDON_TIMER_ONTIMER.Create;
+
+finalization
+
+vSoundplayer.Ani.Free;
+vSoundplayer.scene.Dialog.Free;
+vSoundplayer.Timer.Timer.Free;
+
+end.

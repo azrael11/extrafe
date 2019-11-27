@@ -6,11 +6,17 @@ uses
   System.Classes,
   System.SysUtils,
   FMX.Types,
+  FMX.Ani,
   BASS;
 
 type
   TMAIN_TIMER = class(TObject)
     procedure OnTimer(Sender: TObject);
+  end;
+
+type
+  TMAIN_ANIMATION = class(TObject)
+    procedure OnFinish(Sender: TObject);
   end;
 
 procedure ShowAvatar;
@@ -24,23 +30,29 @@ procedure Update_Footer_Timer;
 
 var
   vMain_Timer: TMAIN_TIMER;
-
-  // Emulator number
-  // 0 MAME
+  vMain_Ani: TMAIN_ANIMATION;
+  vMain_Addon_Active: String;
 
 implementation
 
 uses
   uLoad_AllTypes,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uMain_AllTypes,
   uMain_Config,
   uTime_AllTypes,
+  uTime_Actions,
   uWeather_AllTypes,
   uWeather_Actions,
   uSoundplayer_AllTypes,
   uSoundplayer_Player,
-  uPlay_Actions;
+  uSoundplayer_Actions,
+  uPlay_Actions,
+  uPlay_SetAll,
+  uCalendar_SetAll,
+  uWeather_SetALl,
+  uSoundplayer_SetAll,
+  uPlay_AllTypes;
 
 procedure ShowAvatar;
 begin
@@ -50,69 +62,73 @@ begin
   ex_main.Config.Active_Panel := 0;
 end;
 
+procedure GoTo_Addon_Animation(vAddon_Name: String);
+begin
+  emulation.Selection_Ani.StartValue := ex_main.Settings.MainSelection_Pos.Y;
+  emulation.Selection_Ani.StopValue := extrafe.res.Height;
+  mainScene.Footer.Back_Ani.StartValue := ex_main.Settings.Footer_Pos.Y;
+  mainScene.Footer.Back_Ani.StopValue := extrafe.res.Height;
+  emulation.Selection_Ani.Enabled := True;
+  mainScene.Footer.Back_Ani.Enabled := True;
+  extrafe.prog.State := 'addon_' + vAddon_Name;
+  vMain_Addon_Active := vAddon_Name;
+end;
+
+procedure Return_Main_Animation;
+begin
+  emulation.Selection_Ani.StartValue := extrafe.res.Height;
+  emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
+  mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
+  mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
+  emulation.Selection_Ani.Enabled := True;
+  mainScene.Footer.Back_Ani.Enabled := True;
+  extrafe.prog.State := 'main';
+end;
+
 procedure ShowHide_Addon(vNum: Integer; mShow: string; mAddonName: string);
 begin
   if mainScene.Header.Back_Blur.Enabled = False then
-  begin
     if emulation.Selection_Ani.Enabled = False then
       if mShow = 'main' then
       begin
-        emulation.Selection_Ani.StartValue := ex_main.Settings.MainSelection_Pos.Y;
-        emulation.Selection_Ani.StopValue := extrafe.res.Height;
-        mainScene.Footer.Back_Ani.StartValue := ex_main.Settings.Footer_Pos.Y;
-        mainScene.Footer.Back_Ani.StopValue := extrafe.res.Height;
-        emulation.Selection_Ani.Enabled := True;
-        mainScene.Footer.Back_Ani.Enabled := True;
+        GoTo_Addon_Animation(mAddonName);
         Set_Addon_Icon_Active(vNum);
-        extrafe.prog.State := 'addon_' + mAddonName;
         BASS_ChannelPlay(sound.str_fx.general[10], False);
       end
       else
       begin
-        if mAddonName = 'weather' then
+        Return_Main_Animation;
+        if mShow = 'addon_time' then
+          vTime.Time_Ani.Enabled := True
+        else if mShow = 'addon_calendar' then
+          // vCalendar.Calendar_Ani.Enabled:= True
+        else if mShow = 'addon_weather' then
           uWeather_Actions.ReturnToMain(vNum)
-        else if mAddonName = 'play' then
-          uPlay_Actions_ReturnToMain(vNum)
-        else
-        begin
-          emulation.Selection_Ani.StartValue := extrafe.res.Height;
-          emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
-          mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
-          mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
-          emulation.Selection_Ani.Enabled := True;
-          if mShow = 'addon_time' then
-            vTime.Time_Ani.Enabled := True
-          else if mShow = 'addon_calendar' then
-//            vCalendar.Calendar_Ani.Enabled:= True
-          else if mShow = 'addon_weather' then
-            vWeather.Scene.Weather_Ani.Enabled := True
-          else if mShow = 'addon_soundplayer' then
-            vSoundplayer.Scene.Soundplayer_Ani.Enabled := True;
-          mainScene.Footer.Back_Ani.Enabled := True;
-          All_Icons_Active(vNum);
-          extrafe.prog.State := 'main';
-        end;
+        else if mShow = 'addon_soundplayer' then
+          vSoundplayer.Scene.Soundplayer_Ani.Enabled := True
+        else if mShow = 'play' then
+          uPlay_Actions_ReturnToMain(vNum);
+        All_Icons_Active(vNum);
         BASS_ChannelPlay(sound.str_fx.general[11], False);
       end;
-  end;
 end;
 
 procedure Set_Addon_Icon_Active(vNum: Integer);
 var
   vi: Integer;
 begin
-  for vi := 0 to user_Active_Local.ADDONS.Active do
+  for vi := 0 to uDB_AUser.Local.ADDONS.Active do
   begin
-    mainScene.Header.Addon_Icons[vi].Scale.X := 0.6;
-    mainScene.Header.Addon_Icons[vi].Scale.Y := 0.6;
-    mainScene.Header.Addon_Icons[vi].Align:= TAlignLayout.Center;
-    mainScene.Header.Addon_Icons_GaussianBlur[vi].Enabled := True;
+    mainScene.Header.Addon_Icon.Icons[vi].Scale.X := 0.6;
+    mainScene.Header.Addon_Icon.Icons[vi].Scale.Y := 0.6;
+    mainScene.Header.Addon_Icon.Icons[vi].Align := TAlignLayout.Center;
+    mainScene.Header.Addon_Icon.Blur[vi].Enabled := True;
   end;
 
-  mainScene.Header.Addon_Icons[vNum].Scale.X := 1.2;
-  mainScene.Header.Addon_Icons[vNum].Scale.Y := 1.2;
-  mainScene.Header.Addon_Icons[vNum].Align := TAlignLayout.Center;
-  mainScene.Header.Addon_Icons_GaussianBlur[vNum].Enabled := False;
+  mainScene.Header.Addon_Icon.Icons[vNum].Scale.X := 1.2;
+  mainScene.Header.Addon_Icon.Icons[vNum].Scale.Y := 1.2;
+  mainScene.Header.Addon_Icon.Icons[vNum].Align := TAlignLayout.Center;
+  mainScene.Header.Addon_Icon.Blur[vNum].Enabled := False;
   ADDONS.Active_Now_Num := vNum;
 end;
 
@@ -120,15 +136,58 @@ procedure All_Icons_Active(vNum: Integer);
 var
   vi: Integer;
 begin
-  for vi := 0 to user_Active_Local.ADDONS.Active do
+  for vi := 0 to uDB_AUser.Local.ADDONS.Active do
   begin
-    mainScene.Header.Addon_Icons[vi].Scale.X := 1;
-    mainScene.Header.Addon_Icons[vi].Scale.Y := 1;
-    mainScene.Header.Addon_Icons_GaussianBlur[vi].Enabled := False;
+    mainScene.Header.Addon_Icon.Icons[vi].Scale.X := 1;
+    mainScene.Header.Addon_Icon.Icons[vi].Scale.Y := 1;
+    mainScene.Header.Addon_Icon.Blur[vi].Enabled := False;
   end;
 
   ADDONS.Active_Now_Num := -1;
 end;
+
+procedure Load_Addon;
+begin
+  if extrafe.prog.State = 'addon_time' then
+    uTime_Actions.Load
+  else if extrafe.prog.State = 'addon_calendar' then
+    uCalendar_SetComponentsToRightPlace
+  else if extrafe.prog.State = 'addon_weather' then
+    uWeather_SetALl.Load
+  else if extrafe.prog.State = 'addon_soundplayer' then
+    uSoundplayer_SetAll.Load
+  else if extrafe.prog.State = 'addon_play' then
+    uPlay_SetAll_Set;
+end;
+
+procedure Free_Addon;
+begin
+  uTime_Actions.Free;
+  if vMain_Addon_Active = 'time' then
+  begin
+    if Assigned(vTime.Time_Ani) then
+      vTime.Time_Ani.Enabled := False;
+  end
+  else if vMain_Addon_Active = 'weather' then
+  begin
+    uWeather_Actions.Free;
+    if Assigned(vWeather.Scene.Weather_Ani) then
+      vWeather.Scene.Weather_Ani.Enabled := False;
+  end
+  else if vMain_Addon_Active = 'soundplayer' then
+  begin
+    uSoundplayer_Actions.Free;
+    if Assigned(vSoundplayer.Scene.Soundplayer_Ani) then
+      vSoundplayer.Scene.Soundplayer_Ani.Enabled := False;
+    uPlay_Actions_Free;
+  end
+  else if vMain_Addon_Active = 'play' then
+  begin
+    if Assigned(vPlay.Main_Ani) then
+      vPlay.Main_Ani.Enabled := False;
+  end;
+end;
+
 /// /////////////////////////////////////////////////////////////////////////////
 procedure Update_Footer_Timer;
 var
@@ -142,7 +201,7 @@ end;
 procedure Update_All;
 begin
   if extrafe.prog.State <> 'addon_soundplayer' then
-    if ADDONS.soundplayer.Player.Play then
+    if soundplayer.player = sPlay then
       uSoundplayer_Player.Refresh;
 end;
 { TMAIN_TIMER }
@@ -153,6 +212,28 @@ begin
     Update_All
   else if TTimer(Sender).Name = 'Main_Footer_Timer' then
     Update_Footer_Timer
+end;
+
+{ TMAIN_ANIMATION }
+
+procedure TMAIN_ANIMATION.OnFinish(Sender: TObject);
+begin
+  if TFloatAnimation(Sender).Name = 'MainMenu_Selection_Ani' then
+  begin
+    TFloatAnimation(Sender).Enabled := False;
+    mainScene.Footer.Back_Ani.Enabled := False;
+    if extrafe.prog.State <> 'main' then
+      Load_Addon
+    else
+      Free_Addon
+  end
+  else if TFloatAnimation(Sender).Name = 'Main_Config_Ani' then
+  begin
+    if extrafe.prog.State = 'main' then
+      uMain_COnfig_Free;
+  end
+  else
+    TFloatAnimation(Sender).Enabled := False;
 end;
 
 initialization

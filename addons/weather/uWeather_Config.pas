@@ -12,7 +12,7 @@ procedure uWeather_Config_ShowPanel(mPanel: Integer);
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uLoad_AllTypes,
   uWeather_AllTypes,
   uWeather_Config_Provider,
@@ -26,8 +26,8 @@ begin
   if mShow then
   begin
     extrafe.prog.State := 'addon_weather_config';
-    if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
-      if user_Active_Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
+    if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+      if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
         uWeather_Providers_Yahoo.vTime.Enabled := False;
   end
   else
@@ -51,8 +51,8 @@ begin
     uWeather_Config_Options.Free
   else if Assigned(vWeather.Config.main.Right.Panels[3]) then
     uWeather_Config_Iconsets.Free;
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
-    if user_Active_Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
       uWeather_Providers_Yahoo.vTime.Enabled := True;
 end;
 

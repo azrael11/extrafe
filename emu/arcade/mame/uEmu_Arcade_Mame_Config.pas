@@ -147,7 +147,7 @@ begin
   case vShow of
     0:
       begin
-        uEmu_Arcade_Mame_Config_Create_Directories_Panel;
+        uEmu_Arcade_Mame_Config_Directories.Load;
         vMame.Config.Scene.Right_Panels[0].Visible := True;
         extrafe.prog.State := 'mame_config_dirs';
         vMame.Config.Panel.Dirs.TabControl.TabIndex := 0;

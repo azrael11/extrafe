@@ -63,7 +63,7 @@ type
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uSnippets,
   uLoad_AllTypes,
   uWeather_AllTypes,
@@ -79,7 +79,7 @@ uses
 
 procedure TWEATHER_ADDON_CONFIG_TEXT.OnMouseClick(Sender: TObject);
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TText(Sender).TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
     begin
@@ -119,7 +119,7 @@ begin
       BASS_ChannelPlay(sound.str_fx.general[0], False);
     end;
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if TText(Sender).TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
     begin
@@ -242,7 +242,7 @@ begin
     if TButton(Sender).Name = 'A_W_Config_Left_Button_' + TButton(Sender).Tag.ToString then
       uWeather_Config_ShowPanel(TButton(Sender).Tag);
   end;
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if extrafe.prog.state = 'addon_weather_config_towns_add' then
     begin
@@ -262,7 +262,7 @@ begin
     end;
     BASS_ChannelPlay(sound.str_fx.general[0], False);
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if extrafe.prog.state = 'addon_weather_config_towns_add' then
     begin
@@ -297,14 +297,14 @@ begin
     else if TCheckBox(Sender).Name = 'A_W_Config_Provider_openweathermap_CheckBox' then
       uWeather_Config_Provider.Check_OpenWeatherMap;
   end;
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TCheckBox(Sender).Name = 'A_W_Provider_Yahoo_Config_Metric' then
       uWeather_Providers_Yahoo_Config.Options_Check_System_Type('metric')
     else if TCheckBox(Sender).Name = 'A_W_Provider_Yahoo_Config_Imperial' then
       uWeather_Providers_Yahoo_Config.Options_Check_System_Type('imperial');
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if TCheckBox(Sender).Name = 'A_W_Providers_OpenWeatherMap_Config_Options_Metric_Checkbox' then
       uWeather_Providers_OpenWeatherMap_Config.Options_Check_System_Type('metric')
@@ -327,7 +327,7 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_PANEL.OnMouseClick(Sender: TObject);
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TPanel(Sender).Name = 'A_W_Provider_Yahoo_Config_Towns_CityNum_Above_' + TPanel(Sender).Tag.ToString then
     begin
@@ -335,7 +335,7 @@ begin
         uWeather_Providers_Yahoo_Config.Towns_Select(TPanel(Sender).Tag);
     end;
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
 
   end;
@@ -345,7 +345,7 @@ procedure TWEATHER_ADDON_CONFIG_PANEL.OnMouseEnter(Sender: TObject);
 var
   vi: Integer;
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TPanel(Sender).Name = 'A_W_Provider_Yahoo_Config_Towns_CityNum_Above_' + TPanel(Sender).Tag.ToString then
       vWeather.Config.main.Right.Towns.Town[TPanel(Sender).Tag].Glow_Panel.Enabled := True
@@ -356,7 +356,7 @@ begin
       vWeather.Config.main.Right.Iconsets.Mini[TPanel(Sender).TagString.ToInteger].Panel_Glow.Enabled := True;
     end
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
 
   end;
@@ -365,7 +365,7 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_PANEL.OnMouseLeave(Sender: TObject);
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TPanel(Sender).Name = 'A_W_Provider_Yahoo_Config_Towns_CityNum_Above_' + TPanel(Sender).Tag.ToString then
     begin
@@ -375,7 +375,7 @@ begin
     else if TPanel(Sender).Name = 'A_W_Config_Provider_Yahoo_Iconsets_Mini_Preview_Panel_' + TPanel(Sender).TagString then
       vWeather.Config.main.Right.Iconsets.Mini[TPanel(Sender).TagString.ToInteger].Panel_Glow.Enabled := False;
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
 
   end;
@@ -385,13 +385,13 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_IMAGE.OnMouseClick(Sender: TObject);
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TImage(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Mini_Preview_Image_' + TImage(Sender).TagString + '_' + TImage(Sender).Tag.ToString then
       uWeather_Providers_Yahoo_Config.Select_Iconset(TImage(Sender).TagString.ToInteger);
     BASS_ChannelPlay(sound.str_fx.general[0], False);
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
 
   end;
@@ -401,7 +401,7 @@ procedure TWEATHER_ADDON_CONFIG_IMAGE.OnMouseEnter(Sender: TObject);
 var
   vi: Integer;
 begin
-  if user_Active_Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TImage(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Mini_Preview_Image_' + TImage(Sender).TagString + '_' + TImage(Sender).Tag.ToString then
     begin
@@ -411,7 +411,7 @@ begin
       TImage(Sender).Cursor := crHandPoint;
     end;
   end
-  else if user_Active_Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
 
   end;

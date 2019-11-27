@@ -16,8 +16,8 @@ implementation
 uses
   uLoad_AllTypes,
   uMain_AllTypes,
-  uDatabase_ActiveUser,
-  uDatabase_SQLCommands;
+  uDB_AUser,
+  uDB;
 
 procedure Create;
 begin
@@ -39,18 +39,18 @@ begin
     mainScene.Config.Main.R.General.Visual.Keyboard_Group;
   mainScene.Config.Main.R.General.Visual.Virtual_Keyboard.SetBounds(20, 20, 300, 24);
   mainScene.Config.Main.R.General.Visual.Virtual_Keyboard.Text := 'Enable virtual keyboard';
-  mainScene.Config.Main.R.General.Visual.Virtual_Keyboard.IsChecked:= user_Active_Local.OPTIONS.Visual.Virtual_Keyboard;
+  mainScene.Config.Main.R.General.Visual.Virtual_Keyboard.IsChecked:= uDB_AUser.Local.OPTIONS.Visual.Virtual_Keyboard;
   mainScene.Config.Main.R.General.Visual.Virtual_Keyboard.OnClick:= ex_main.Input.mouse_config.Checkbox.OnMouseClick;
   mainScene.Config.Main.R.General.Visual.Virtual_Keyboard.Visible := True;
 end;
 
 procedure Update_Virtual_Keyboard(vState: Boolean);
 begin
-  user_Active_Local.OPTIONS.Visual.Virtual_Keyboard:= vState;
+  uDB_AUser.Local.OPTIONS.Visual.Virtual_Keyboard:= vState;
   if vState then
-    uDatabase_SQLCommands.Update_Local_Query('options','virtual_keyboard', '1', user_Active_Local.Num.ToString)
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'options','virtual_keyboard', '1', 'USER_ID', uDB_AUser.Local.Num.ToString)
   else
-    uDatabase_SQLCommands.Update_Local_Query('options','virtual_keyboard', '0', user_Active_Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'options','virtual_keyboard', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
 end;
 
 end.

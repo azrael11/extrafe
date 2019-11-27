@@ -108,6 +108,7 @@ type
     Options: TOPTIONS;
     Mouse: TVIRTUAL_KEYBOARD_MOUSE;
     Animation: TANIMATION;
+    Enter_Pressed: Boolean;
   end;
 
 const
@@ -165,6 +166,7 @@ begin
   end
   else
   begin
+    VKey.Enter_Pressed:= True;
     VKey.Construct.Ani.StartValue := extrafe.res.Half_Height - 250;
     VKey.Construct.Ani.StopValue := extrafe.res.Height + 1;
     VKey.Construct.Ani.Start;
@@ -180,6 +182,7 @@ var
 begin
   VKey.Options.Previus_State := extrafe.prog.State;
   extrafe.prog.State := 'virtual_keyboard';
+  VKey.Enter_Pressed := False;
   VKey.Options.vType := vType;
 
   if not Assigned(VKey.Construct.Frame) then
@@ -973,6 +976,7 @@ begin
     begin
       VKey.Construct.Blur.Enabled := False;
       VK_Free;
+      VKey.Enter_Pressed:= False;
     end;
   end;
 end;

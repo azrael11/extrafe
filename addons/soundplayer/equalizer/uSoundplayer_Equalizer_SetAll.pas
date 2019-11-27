@@ -21,7 +21,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_Player,
   uSoundplayer_Equalizer;
 
@@ -34,7 +34,7 @@ var
 begin
   extrafe.prog.State := 'addon_soundplayer_manage_playlists';
 
-  uSoundplayer.Hide_Animations;
+  uSoundplayer_Actions.Hide_Animations;
   vSoundplayer.scene.Back_Blur.Enabled := True;
 
   uSoundplayer_Equalizer.Get_Temp;

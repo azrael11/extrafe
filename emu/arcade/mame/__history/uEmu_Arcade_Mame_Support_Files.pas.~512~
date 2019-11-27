@@ -1,0 +1,299 @@
+unit uEmu_Arcade_Mame_Support_Files;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.Threading,
+  FMX.Forms,
+  WinAPI.Windows,
+  WinAPI.ShellApi,
+  OXmlPDOM;
+
+function uEmu_Arcade_Mame_Support_Files_MAME_Data_Load(vRomName: String): TStringList;
+
+procedure uEmu_Arcade_Mame_Support_Load;
+
+procedure uEmu_Arcade_Mame_Support_Files_NPlayers_Load;
+function uEmu_Arcade_Mame_Support_Files_NPlayers_GetGame(vRomName: String): String;
+
+procedure uEmu_Arcade_Mame_Support_Files_Catver_Load;
+function uEmu_Arcade_Mame_Support_Files_Catver_GetGame(vRomName: String): String;
+
+procedure uEmu_Arcade_Mame_Support_Files_Gameinit_Load;
+
+implementation
+
+uses
+  uDatabase_ActiveUser,
+  uDatabase_SQLCommands,
+  uLoad_AllTypes,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Commands;
+
+function uEmu_Arcade_Mame_Support_Files_MAME_Data_Load(vRomName: String): TStringList;
+var
+  vGameXML: IXMLDocument;
+  vGameRoot: PXMLNode;
+  vGameNode: PXMLNode;
+  vGameNode_1: PXMLNode;
+  vGameNode_2: PXMLNode;
+  vGameNode_3: PXMLNode;
+  vGameAttribute: PXMLNode;
+  isFileFoundAndClose: Boolean;
+  ProcID: Cardinal;
+  vNum: Int64;
+  vNum1, vNum2: Integer;
+  isFileFistTime: Boolean;
+  vTask: ITask;
+  vList: Tstringlist;
+
+begin
+  isFileFoundAndClose := False;
+//  if FileExists(mame.Prog.Data_Path + 'game.xml') then
+//    isFileFistTime := False
+//  else
+//    isFileFistTime := True;
+
+  vNum1 := 0;
+  vNum2 := -10;
+
+//  fEmu_Commands_RunCommand(emulation.Arcade[0].Name_Exe, ' '+ vRomName + ' -lx > ' + mame.Prog.Data_Path + 'game.xml',
+//    emulation.Arcade[0].Emu_Path, SW_HIDE);
+//
+//  vList:= TStringList.Create;
+//
+//  vlist:= fEmu_Commands_CaptureOutput(emulation.Arcade[0].Emu_Path+ emulation.Arcade[0].Name_Exe,  ' '+vRomName + ' -lx');
+//
+//  fEmu_Commands_CaptureOutput1('E:\', emulation.Arcade[0].Emu_Path, emulation.Arcade[0].Name_Exe+ ' '+vRomName + ' -lx', '');
+
+{  vTask:= TTask.Run(
+    procedure
+    begin
+      ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(mame.Emu.Path + mame.Emu.Name,
+        Char(34)) + ' ' + vRomName + ' -lx > ' + mame.Prog.Data_Path + 'game.xml'), nil, SW_HIDE);
+    end);     }
+
+  sleep(1000);
+  vGameNode := nil;
+  vGameNode_1 := nil;
+  vGameNode_2 := nil;
+  vGameNode_3 := nil;
+  vGameAttribute := nil;
+  vGameXML := CreateXMLDoc;
+//  vGameXML.LoadFromFile(mame.Prog.Data_Path + 'game.xml');
+  vGameRoot := vGameXML.DocumentElement;
+  repeat
+    if vGameRoot <> nil then
+      isFileFoundAndClose := True
+    else
+    begin
+      vGameXML := nil;
+//      vGameXML.LoadFromFile(mame.Prog.Data_Path + 'game.xml');
+    end;
+  until isFileFoundAndClose = True;
+  while vGameRoot.GetNextChild(vGameNode) do
+  begin
+    vGameAttribute := nil;
+    vGameNode.FindAttribute('name', vGameAttribute);
+    if vGameAttribute.NodeValue = vRomName then
+      while vGameNode.GetNextChild(vGameNode_1) do
+      begin
+        vGameAttribute := nil;
+        if vGameNode_1.NodeName = 'description' then
+          Result.Add(vGameNode_1.Text)
+        else if vGameNode_1.NodeName = 'year' then
+          Result.Add(vGameNode_1.Text)
+        else if vGameNode_1.NodeName = 'manufacturer' then
+          Result.Add(vGameNode_1.Text)
+        else if vGameNode_1.NodeName = 'display' then
+        begin
+          vGameNode_1.FindAttribute('type', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+          vGameAttribute := nil;
+          vGameNode_1.FindAttribute('refresh', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+          vGameAttribute := nil;
+          vGameNode_1.FindAttribute('height', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+          vGameAttribute := nil;
+          vGameNode_1.FindAttribute('width', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+          vGameAttribute := nil;
+          vGameNode_1.FindAttribute('rotate', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+
+        end
+        else if vGameNode_1.NodeName = 'sound' then
+        begin
+          vGameNode_1.FindAttribute('channels', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+        end
+        else if vGameNode_1.NodeName = 'driver' then
+        begin
+          vGameNode_1.FindAttribute('savestate', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+          vGameAttribute := nil;
+          vGameNode_1.FindAttribute('emulation', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+          vGameAttribute := nil;
+          vGameNode_1.FindAttribute('status', vGameAttribute);
+          Result.Add(vGameAttribute.NodeValue);
+        end;
+      end;
+  end;
+end;
+
+procedure uEmu_Arcade_Mame_Support_Load;
+begin
+  uEmu_Arcade_Mame_Support_Files_NPlayers_Load;
+  uEmu_Arcade_Mame_Support_Files_Catver_Load;
+end;
+
+procedure uEmu_Arcade_Mame_Support_Files_NPlayers_Load;
+var
+  vTextFile: TextFile;
+  viPos: Integer;
+  vString: String;
+  vi: Integer;
+  vRom, vName: String;
+begin
+  mame.Support.List_Active[0] := False;
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini') then
+  begin
+    vi := 0;
+    mame.Support.List_Active[0] := True;
+    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini');
+    Reset(vTextFile);
+    while not Eof(vTextFile) do
+    begin
+      Readln(vTextFile, vString);
+      viPos := Pos('=', vString);
+      if viPos <> 0 then
+      begin
+        vRom := Trim(Copy(vString, 0, viPos - 1));
+        vName := Trim(Copy(vString, viPos + 1, length(vString) - viPos));
+        mame.Support.List[0, vi, 0] := vRom;
+        mame.Support.List[0, vi, 1] := vName;
+        Inc(vi, 1);
+      end;
+    end;
+    CloseFile(vTextFile);
+  end;
+end;
+
+function uEmu_Arcade_Mame_Support_Files_NPlayers_GetGame(vRomName: String): String;
+var
+  vi: Integer;
+  vFound: Boolean;
+begin
+  vFound := False;
+  for vi := 0 to 50000 do
+  begin
+    if mame.Support.List[0, vi, 0] = vRomName then
+    begin
+      Result := mame.Support.List[0, vi, 1];
+      vFound := True;
+      break;
+    end;
+  end;
+  if vFound = False then
+    Result := 'Not Registered';
+end;
+
+/// /////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Support_Files_Catver_Load;
+var
+  vTextFile: TextFile;
+  viPos: Integer;
+  vString: String;
+  vAdded_now: Boolean;
+  vi, vk: Integer;
+  vRom, vName, vAdded: String;
+  vRom_Found: String;
+begin
+  mame.Support.List_Active[1] := False;
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'catver.ini') then
+  begin
+    vi := 0;
+    vAdded_now := False;
+    mame.Support.List_Active[1] := True;
+    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + ('catver.ini'));
+    Reset(vTextFile);
+    while not Eof(vTextFile) do
+    begin
+      Readln(vTextFile, vString);
+      if vString = '[VerAdded]' then
+      begin
+        vAdded_now := True;
+        vi := 0;
+      end;
+      viPos := Pos('=', vString);
+      if viPos <> 0 then
+      begin
+        if vAdded_now then
+        begin
+          vAdded := Trim(Copy(vString, viPos + 1, length(vString) - viPos));
+          mame.Support.List[1, vi, 2] := vAdded;
+          Inc(vi, 1);
+        end
+        else
+        begin
+          vRom := Trim(Copy(vString, 0, viPos - 1));
+          vName := Trim(Copy(vString, viPos + 1, length(vString) - viPos));
+          mame.Support.List[1, vi, 0] := vRom;
+          mame.Support.List[1, vi, 1] := vName;
+          Inc(vi, 1);
+        end;
+      end;
+    end;
+    CloseFile(vTextFile);
+  end;
+end;
+
+function uEmu_Arcade_Mame_Support_Files_Catver_GetGame(vRomName: String): String;
+var
+  vi: Integer;
+  vFound: Boolean;
+begin
+  vFound := False;
+  for vi := 0 to 50000 do
+  begin
+    if mame.Support.List[1, vi, 0] = vRomName then
+    begin
+      Result := mame.Support.List[1, vi, 1];
+      vFound := True;
+      break;
+    end;
+  end;
+  if vFound = False then
+    Result := 'Not Registered';
+end;
+
+/// /////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Support_Files_Gameinit_Load;
+var
+  vTextFile: TextFile;
+  vString: String;
+  vAdded_now: Boolean;
+begin
+  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'gameinit.ini') then
+  begin
+    vAdded_now := False;
+    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + ('gameinit.ini'));
+    Reset(vTextFile);
+    while not Eof(vTextFile) do
+    begin
+      Readln(vTextFile, vString);
+      if vString = '[ROOT_FOLDER]' then
+        vAdded_now := True;
+      if vAdded_now = True then
+        mame.Support.GameInit.Add(vString);
+    end;
+    CloseFile(vTextFile);
+  end;
+end;
+
+/// /////////////////////////////////////////////////////////////////////////////
+end.

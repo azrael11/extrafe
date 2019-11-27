@@ -76,174 +76,174 @@ end;
 
 procedure Get_ID3v1(vPath: String);
 begin
-  addons.soundplayer.Player.Tag.mp3.ID3v1 := TID3v1Tag.Create;
+  soundplayer.player_actions.Tag.mp3.ID3v1 := TID3v1Tag.Create;
 
-  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v1.LoadFromFile(vPath);
-  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V1LIBRARY_SUCCESS then
+  soundplayer.player_actions.Tag.mp3.TagError := soundplayer.player_actions.Tag.mp3.ID3v1.LoadFromFile(vPath);
+  if soundplayer.player_actions.Tag.mp3.TagError <> ID3V1LIBRARY_SUCCESS then
   begin
     // Show a message error
     // Get major and minor version num of mp3
   end;
 
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Loaded := True;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Loaded := True;
 end;
 
 procedure Set_Tag_ID3v1(vPath: String);
 begin
   Get_ID3v1(vPath);
 
-  vSoundplayer.Tag.mp3.ID3v1.Title_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Title;
-  vSoundplayer.Tag.mp3.ID3v1.Artist_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Artist;
-  vSoundplayer.Tag.mp3.ID3v1.Album_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Album;
-  vSoundplayer.Tag.mp3.ID3v1.Year_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Year;
-  vSoundplayer.Tag.mp3.ID3v1.Genre_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Genre;
-  vSoundplayer.Tag.mp3.ID3v1.Track_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Track.ToString;
-  vSoundplayer.Tag.mp3.ID3v1.Comment_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v1.Comment;
+  vSoundplayer.Tag.mp3.ID3v1.Title_V.Text := soundplayer.player_actions.Tag.mp3.ID3v1.Title;
+  vSoundplayer.Tag.mp3.ID3v1.Artist_V.Text := soundplayer.player_actions.Tag.mp3.ID3v1.Artist;
+  vSoundplayer.Tag.mp3.ID3v1.Album_V.Text := soundplayer.player_actions.Tag.mp3.ID3v1.Album;
+  vSoundplayer.Tag.mp3.ID3v1.Year_V.Text := soundplayer.player_actions.Tag.mp3.ID3v1.Year;
+  vSoundplayer.Tag.mp3.ID3v1.Genre_V.Text := soundplayer.player_actions.Tag.mp3.ID3v1.Genre;
+  vSoundplayer.Tag.mp3.ID3v1.Track_V.Text := soundplayer.player_actions.Tag.mp3.ID3v1.Track.ToString;
+  vSoundplayer.Tag.mp3.ID3v1.Comment_V.Text := soundplayer.player_actions.Tag.mp3.ID3v1.Comment;
 
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Free;
 end;
 
 procedure Get_ID3v2(vPath: String);
 begin
-  addons.soundplayer.Player.Tag.mp3.ID3v2 := TID3v2Tag.Create;
+  soundplayer.player_actions.Tag.mp3.ID3v2 := TID3v2Tag.Create;
 
-  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v2.LoadFromFile(vPath);
-  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V2LIBRARY_SUCCESS then
+  soundplayer.player_actions.Tag.mp3.TagError := soundplayer.player_actions.Tag.mp3.ID3v2.LoadFromFile(vPath);
+  if soundplayer.player_actions.Tag.mp3.TagError <> ID3V2LIBRARY_SUCCESS then
   begin
     // Show an error message
     // Get major and minor version num of mp3
   end;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.RemoveUnsynchronisationOnAllFrames;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader := True;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.ExtendedHeader3.CRCPresent := True;
+  soundplayer.player_actions.Tag.mp3.ID3v2.RemoveUnsynchronisationOnAllFrames;
+  soundplayer.player_actions.Tag.mp3.ID3v2.ExtendedHeader := True;
+  soundplayer.player_actions.Tag.mp3.ID3v2.ExtendedHeader3.CRCPresent := True;
 
-  addons.soundplayer.Player.Tag.mp3.Info.General.Filename := addons.soundplayer.Player.Tag.mp3.ID3v2.Filename;
-  addons.soundplayer.Player.Tag.mp3.Info.General.Loaded := addons.soundplayer.Player.Tag.mp3.ID3v2.Loaded;
-  addons.soundplayer.Player.Tag.mp3.Info.General.MajorVersion := addons.soundplayer.Player.Tag.mp3.ID3v2.MajorVersion;
-  addons.soundplayer.Player.Tag.mp3.Info.General.MinorVersion := addons.soundplayer.Player.Tag.mp3.ID3v2.MinorVersion;
-  addons.soundplayer.Player.Tag.mp3.Info.General.Size := addons.soundplayer.Player.Tag.mp3.ID3v2.Size;
-  addons.soundplayer.Player.Tag.mp3.Info.General.FramesCount := addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount;
-  addons.soundplayer.Player.Tag.mp3.Info.General.BitRate := addons.soundplayer.Player.Tag.mp3.ID3v2.BitRate;
-  addons.soundplayer.Player.Tag.mp3.Info.General.CoverArtCount := addons.soundplayer.Player.Tag.mp3.ID3v2.CoverArtCount;
-  addons.soundplayer.Player.Tag.mp3.Info.General.PlayTime := addons.soundplayer.Player.Tag.mp3.ID3v2.PlayTime;
+  soundplayer.player_actions.Tag.mp3.Info.General.Filename := soundplayer.player_actions.Tag.mp3.ID3v2.Filename;
+  soundplayer.player_actions.Tag.mp3.Info.General.Loaded := soundplayer.player_actions.Tag.mp3.ID3v2.Loaded;
+  soundplayer.player_actions.Tag.mp3.Info.General.MajorVersion := soundplayer.player_actions.Tag.mp3.ID3v2.MajorVersion;
+  soundplayer.player_actions.Tag.mp3.Info.General.MinorVersion := soundplayer.player_actions.Tag.mp3.ID3v2.MinorVersion;
+  soundplayer.player_actions.Tag.mp3.Info.General.Size := soundplayer.player_actions.Tag.mp3.ID3v2.Size;
+  soundplayer.player_actions.Tag.mp3.Info.General.FramesCount := soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount;
+  soundplayer.player_actions.Tag.mp3.Info.General.BitRate := soundplayer.player_actions.Tag.mp3.ID3v2.BitRate;
+  soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount := soundplayer.player_actions.Tag.mp3.ID3v2.CoverArtCount;
+  soundplayer.player_actions.Tag.mp3.Info.General.PlayTime := soundplayer.player_actions.Tag.mp3.ID3v2.PlayTime;
 
-  addons.soundplayer.Player.Tag.mp3.Info.MPEG.FrameSize := addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.FrameSize;
-  addons.soundplayer.Player.Tag.mp3.Info.MPEG.SampleRate := addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.SampleRate;
-  addons.soundplayer.Player.Tag.mp3.Info.MPEG.BitRate := addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.BitRate;
-  addons.soundplayer.Player.Tag.mp3.Info.MPEG.Padding := addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.Padding;
-  addons.soundplayer.Player.Tag.mp3.Info.MPEG.Copyrighted := addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.Copyrighted;
-  addons.soundplayer.Player.Tag.mp3.Info.MPEG.Quality := addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.Quality;
-  if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmUnknown then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ChannelMode := 'Unknown Type'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmMono then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ChannelMode := 'Mono'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmDualChannel then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ChannelMode := 'Dual'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmJointStereo then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ChannelMode := 'Joint'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmStereo then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ChannelMode := 'Stereo';
-  if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpeglUnknown then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.Layer := 'Unknown Type'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl1 then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 1'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl2 then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 2'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl3 then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 3';
-  if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeUnknown then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ExtensionMode := 'Unknown Type'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeNone then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ExtensionMode := 'None'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeIntensity then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ExtensionMode := 'Intensity'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeMS then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ExtensionMode := 'meMs'
-  else if addons.soundplayer.Player.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeIntensityMS then
-    addons.soundplayer.Player.Tag.mp3.Info.MPEG.ExtensionMode := 'IntensityMS';
+  soundplayer.player_actions.Tag.mp3.Info.MPEG.FrameSize := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.FrameSize;
+  soundplayer.player_actions.Tag.mp3.Info.MPEG.SampleRate := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.SampleRate;
+  soundplayer.player_actions.Tag.mp3.Info.MPEG.BitRate := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.BitRate;
+  soundplayer.player_actions.Tag.mp3.Info.MPEG.Padding := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Padding;
+  soundplayer.player_actions.Tag.mp3.Info.MPEG.Copyrighted := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Copyrighted;
+  soundplayer.player_actions.Tag.mp3.Info.MPEG.Quality := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Quality;
+  if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmUnknown then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Unknown Type'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmMono then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Mono'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmDualChannel then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Dual'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmJointStereo then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Joint'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmStereo then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Stereo';
+  if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpeglUnknown then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Unknown Type'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl1 then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 1'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl2 then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 2'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl3 then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 3';
+  if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeUnknown then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'Unknown Type'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeNone then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'None'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeIntensity then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'Intensity'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeMS then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'meMs'
+  else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeIntensityMS then
+    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'IntensityMS';
 
 
   // Implentamentions of Wav, Aiff, DS, DFF variables that not needed for mpeg
   // But must keep it for future use
-  { addons.soundplayer.Player.Tag.mp3.Info.WAV.FmtSize :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.FmtSize;
-    addons.soundplayer.Player.Tag.mp3.Info.WAV.FormatTag :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.FormatTag;
-    addons.soundplayer.Player.Tag.mp3.Info.WAV.Channels :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.Channels;
-    addons.soundplayer.Player.Tag.mp3.Info.WAV.AvgBytesPerSec :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.AvgBytesPerSec;
-    addons.soundplayer.Player.Tag.mp3.Info.WAV.BlockAlign :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.BlockAlign;
-    addons.soundplayer.Player.Tag.mp3.Info.WAV.BitsPerSamples :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.BitsPerSample;
-    addons.soundplayer.Player.Tag.mp3.Info.WAV.CbSize := addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.CbSize;
-    addons.soundplayer.Player.Tag.mp3.Info.WAV.ChannelMask :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.WAVInfo.ChannelMask;
+  { soundplayer.player_actions.Tag.Info.WAV.FmtSize :=
+    soundplayer.player_actions.Tag.ID3v2.WAVInfo.FmtSize;
+    soundplayer.player_actions.Tag.Info.WAV.FormatTag :=
+    soundplayer.player_actions.Tag.ID3v2.WAVInfo.FormatTag;
+    soundplayer.player_actions.Tag.Info.WAV.Channels :=
+    soundplayer.player_actions.Tag.ID3v2.WAVInfo.Channels;
+    soundplayer.player_actions.Tag.Info.WAV.AvgBytesPerSec :=
+    soundplayer.player_actions.Tag.ID3v2.WAVInfo.AvgBytesPerSec;
+    soundplayer.player_actions.Tag.Info.WAV.BlockAlign :=
+    soundplayer.player_actions.Tag.ID3v2.WAVInfo.BlockAlign;
+    soundplayer.player_actions.Tag.Info.WAV.BitsPerSamples :=
+    soundplayer.player_actions.Tag.ID3v2.WAVInfo.BitsPerSample;
+    soundplayer.player_actions.Tag.Info.WAV.CbSize := soundplayer.player_actions.Tag.ID3v2.WAVInfo.CbSize;
+    soundplayer.player_actions.Tag.Info.WAV.ChannelMask :=
+    soundplayer.player_actions.Tag.ID3v2.WAVInfo.ChannelMask;
 
-    addons.soundplayer.Player.Tag.mp3.Info.AIFF.Channels :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.AIFFInfo.Channels;
-    addons.soundplayer.Player.Tag.mp3.Info.AIFF.SampleFrames :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.AIFFInfo.SampleFrames;
-    addons.soundplayer.Player.Tag.mp3.Info.AIFF.SampleSize :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.AIFFInfo.SampleSize;
-    addons.soundplayer.Player.Tag.mp3.Info.AIFF.SampleRate :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.AIFFInfo.SampleRate;
-    addons.soundplayer.Player.Tag.mp3.Info.AIFF.CompressionID :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.AIFFInfo.CompressionID;
-    addons.soundplayer.Player.Tag.mp3.Info.AIFF.Compression :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.AIFFInfo.Compression;
+    soundplayer.player_actions.Tag.Info.AIFF.Channels :=
+    soundplayer.player_actions.Tag.ID3v2.AIFFInfo.Channels;
+    soundplayer.player_actions.Tag.Info.AIFF.SampleFrames :=
+    soundplayer.player_actions.Tag.ID3v2.AIFFInfo.SampleFrames;
+    soundplayer.player_actions.Tag.Info.AIFF.SampleSize :=
+    soundplayer.player_actions.Tag.ID3v2.AIFFInfo.SampleSize;
+    soundplayer.player_actions.Tag.Info.AIFF.SampleRate :=
+    soundplayer.player_actions.Tag.ID3v2.AIFFInfo.SampleRate;
+    soundplayer.player_actions.Tag.Info.AIFF.CompressionID :=
+    soundplayer.player_actions.Tag.ID3v2.AIFFInfo.CompressionID;
+    soundplayer.player_actions.Tag.Info.AIFF.Compression :=
+    soundplayer.player_actions.Tag.ID3v2.AIFFInfo.Compression;
 
-    addons.soundplayer.Player.Tag.mp3.Info.DS.FormatVersion :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.FormatVersion;
-    addons.soundplayer.Player.Tag.mp3.Info.DS.FormatID :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.FormatID;
-    addons.soundplayer.Player.Tag.mp3.Info.DS.SamplingFrequency :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.SamplingFrequency;
-    addons.soundplayer.Player.Tag.mp3.Info.DS.SampleCount :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.SampleCount;
-    if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctUnknown then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Unknown Type'
-    else if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctMono then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Mono'
-    else if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctStereo then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Stereo'
-    else if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct3Channels then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Three Channels'
-    else if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctQuad then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Quad Sound System'
-    else if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct4Channels then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Four Channels'
-    else if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct5Channels then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Five Channels'
-    else if addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct51Channels then
-    addons.soundplayer.Player.Tag.mp3.Info.DS.ChannelType := 'Five Channels Plus One';
-    addons.soundplayer.Player.Tag.mp3.Info.DS.BlockSizePerChannel :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DSFInfo.BlockSizePerChannel;
+    soundplayer.player_actions.Tag.Info.DS.FormatVersion :=
+    soundplayer.player_actions.Tag.ID3v2.DSFInfo.FormatVersion;
+    soundplayer.player_actions.Tag.Info.DS.FormatID :=
+    soundplayer.player_actions.Tag.ID3v2.DSFInfo.FormatID;
+    soundplayer.player_actions.Tag.Info.DS.SamplingFrequency :=
+    soundplayer.player_actions.Tag.ID3v2.DSFInfo.SamplingFrequency;
+    soundplayer.player_actions.Tag.Info.DS.SampleCount :=
+    soundplayer.player_actions.Tag.ID3v2.DSFInfo.SampleCount;
+    if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctUnknown then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Unknown Type'
+    else if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctMono then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Mono'
+    else if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctStereo then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Stereo'
+    else if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct3Channels then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Three Channels'
+    else if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfctQuad then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Quad Sound System'
+    else if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct4Channels then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Four Channels'
+    else if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct5Channels then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Five Channels'
+    else if soundplayer.player_actions.Tag.ID3v2.DSFInfo.ChannelType = TDSFChannelType.dsfct51Channels then
+    soundplayer.player_actions.Tag.Info.DS.ChannelType := 'Five Channels Plus One';
+    soundplayer.player_actions.Tag.Info.DS.BlockSizePerChannel :=
+    soundplayer.player_actions.Tag.ID3v2.DSFInfo.BlockSizePerChannel;
 
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.FormatVersion :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.FormatVersion;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.SampleRate :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.SampleRate;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.ChannelNumber :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.ChannelNumber;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.CompressionName :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.CompressionName;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.SampleCount :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.SampleCount;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.PlayTime :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.PlayTime;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.BitRate :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.BitRate;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.SoundDateLenght :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.SoundDataLength;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.DSTFramesCount :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.DSTFramesCount;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.DSTFramesRate :=
-    addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.DSTFramesRate;
-    addons.soundplayer.Player.Tag.mp3.Info.DFF.Ratio := addons.soundplayer.Player.Tag.mp3.ID3v2.DFFInfo.Ratio; }
+    soundplayer.player_actions.Tag.Info.DFF.FormatVersion :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.FormatVersion;
+    soundplayer.player_actions.Tag.Info.DFF.SampleRate :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.SampleRate;
+    soundplayer.player_actions.Tag.Info.DFF.ChannelNumber :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.ChannelNumber;
+    soundplayer.player_actions.Tag.Info.DFF.CompressionName :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.CompressionName;
+    soundplayer.player_actions.Tag.Info.DFF.SampleCount :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.SampleCount;
+    soundplayer.player_actions.Tag.Info.DFF.PlayTime :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.PlayTime;
+    soundplayer.player_actions.Tag.Info.DFF.BitRate :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.BitRate;
+    soundplayer.player_actions.Tag.Info.DFF.SoundDateLenght :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.SoundDataLength;
+    soundplayer.player_actions.Tag.Info.DFF.DSTFramesCount :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.DSTFramesCount;
+    soundplayer.player_actions.Tag.Info.DFF.DSTFramesRate :=
+    soundplayer.player_actions.Tag.ID3v2.DFFInfo.DSTFramesRate;
+    soundplayer.player_actions.Tag.Info.DFF.Ratio := soundplayer.player_actions.Tag.ID3v2.DFFInfo.Ratio; }
 
-  addons.soundplayer.Player.Tag.mp3.ID3v2.Loaded := True;
+  soundplayer.player_actions.Tag.mp3.ID3v2.Loaded := True;
 end;
 
 procedure Set_Tag_ID3v2(vPath: String);
@@ -255,33 +255,33 @@ var
 
 begin
   Get_ID3v2(vPath);
-  vSoundplayer.Tag.mp3.ID3v2.Title_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
-  vSoundplayer.Tag.mp3.ID3v2.Artist_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
-  vSoundplayer.Tag.mp3.ID3v2.Album_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TALB');
-  vSoundplayer.Tag.mp3.ID3v2.Year_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TYER');
-  vSoundplayer.Tag.mp3.ID3v2.Genre_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TCON');
-  vSoundplayer.Tag.mp3.ID3v2.Track_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeText('TRCK');
-  vSoundplayer.Tag.mp3.ID3v2.Comment_V.Text := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeComment('TCOMM',
-    addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID, addons.soundplayer.Player.Tag.mp3.Lyrics_Description);
+  vSoundplayer.Tag.mp3.ID3v2.Title_V.Text := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
+  vSoundplayer.Tag.mp3.ID3v2.Artist_V.Text := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
+  vSoundplayer.Tag.mp3.ID3v2.Album_V.Text := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TALB');
+  vSoundplayer.Tag.mp3.ID3v2.Year_V.Text := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TYER');
+  vSoundplayer.Tag.mp3.ID3v2.Genre_V.Text := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TCON');
+  vSoundplayer.Tag.mp3.ID3v2.Track_V.Text := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TRCK');
+  vSoundplayer.Tag.mp3.ID3v2.Comment_V.Text := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeComment('TCOMM',
+    soundplayer.player_actions.Tag.mp3.Lyrics_LanguageID, soundplayer.player_actions.Tag.mp3.Lyrics_Description);
 
-  addons.soundplayer.Player.Tag.mp3.Lyrics := Tstringlist.Create;
-  addons.soundplayer.Player.Tag.mp3.Lyrics.Add(addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeLyrics('USLT',
-    addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID, addons.soundplayer.Player.Tag.mp3.Lyrics_Description));
-  addons.soundplayer.Player.Tag.mp3.Lyrics.SaveToFile(addons.soundplayer.Path.Files + 'templyric.txt');
-  addons.soundplayer.Player.Tag.mp3.Lyrics.Clear;
+  soundplayer.player_actions.Tag.mp3.Lyrics := Tstringlist.Create;
+  soundplayer.player_actions.Tag.mp3.Lyrics.Add(soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeLyrics('USLT',
+    soundplayer.player_actions.Tag.mp3.Lyrics_LanguageID, soundplayer.player_actions.Tag.mp3.Lyrics_Description));
+  soundplayer.player_actions.Tag.mp3.Lyrics.SaveToFile(addons.soundplayer.Path.Files + 'templyric.txt');
+  soundplayer.player_actions.Tag.mp3.Lyrics.Clear;
 
   AssignFile(vTextFile, addons.soundplayer.Path.Files + 'templyric.txt');
   Reset(vTextFile);
   while Not EOF(vTextFile) do
   begin
     Readln(vTextFile, vString);
-    addons.soundplayer.Player.Tag.mp3.Lyrics.Add(vString);
+    soundplayer.player_actions.Tag.mp3.Lyrics.Add(vString);
   end;
   CloseFile(vTextFile);
   DeleteFile(addons.soundplayer.Path.Files+ 'templyric.txt');
 
   vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.Clear;
-  vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.AddStrings(addons.soundplayer.Player.Tag.mp3.Lyrics);
+  vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.AddStrings(soundplayer.player_actions.Tag.mp3.Lyrics);
 
   if vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.Count - 1 > 1 then
     vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor := TAlphaColorRec.Red
@@ -292,7 +292,7 @@ begin
   // vMemoChars: Integer;
   // vMemoChars := Length(StringReplace(StringReplace(vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text, #10, '', [rfReplaceAll]), #13, '', [rfReplaceAll]));
 
-  if addons.soundplayer.Player.Tag.mp3.Info.General.CoverArtCount = 0 then
+  if soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount = 0 then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight.TextSettings.FontColor := TAlphaColorRec.Grey;
     vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -310,7 +310,7 @@ begin
   end;
 
   Rating_Set;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
+  soundplayer.player_actions.Tag.mp3.ID3v2.Free;
 end;
 
 function Cover_Get_Image(vFullPath: String; out vDesk: String; out vImage: TBitmap): Boolean;
@@ -327,11 +327,11 @@ begin
   try
     PictureStream := TMemoryStream.Create;
     try
-      for vi := APICIndex to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
+      for vi := APICIndex to soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 do
       begin
-        if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[vi].ID, 'APIC') then
+        if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[vi].ID, 'APIC') then
         begin
-          Success := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeCoverPictureStream(vi, PictureStream, MIMEType, Description, PictureType);
+          Success := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeCoverPictureStream(vi, PictureStream, MIMEType, Description, PictureType);
           if (PictureStream.Size <> 0) OR Success then
             Break;
         end;
@@ -395,7 +395,7 @@ end;
 
 procedure Cover_SetArrows;
 begin
-  if addons.soundplayer.Player.Tag.mp3.Info.General.CoverArtCount > 1 then
+  if soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount > 1 then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -413,10 +413,10 @@ var
   vDescription: String;
   vImage: TBitmap;
 begin
-  Get_ID3v2(addons.soundplayer.Player.Tag.mp3.Info.General.Filename);
-  for i := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
+  Get_ID3v2(soundplayer.player_actions.Tag.mp3.Info.General.Filename);
+  for i := 0 to soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
-    if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[i].ID, 'APIC') then
+    if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[i].ID, 'APIC') then
     begin
       if i < APICIndex then
       begin
@@ -439,10 +439,10 @@ var
   vDescription: String;
   vImage: TBitmap;
 begin
-  Get_ID3v2(addons.soundplayer.Player.Tag.mp3.Info.General.Filename);
-  for i := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
+  Get_ID3v2(soundplayer.player_actions.Tag.mp3.Info.General.Filename);
+  for i := 0 to soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
-    if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[i].ID, 'APIC') then
+    if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[i].ID, 'APIC') then
     begin
       if i > CurrentAPICIndex then
       begin
@@ -518,14 +518,14 @@ begin
 
   PictureStream := TMemoryStream.Create;
 
-  for vi := addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 downto 0 do
+  for vi := soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 downto 0 do
   begin
-    if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[vi].ID, 'APIC') then
+    if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[vi].ID, 'APIC') then
     begin
-      Success := addons.soundplayer.Player.Tag.mp3.ID3v2.GetUnicodeCoverPictureStream(vi, PictureStream, MIMEType, Description, PictureType);
+      Success := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeCoverPictureStream(vi, PictureStream, MIMEType, Description, PictureType);
       if vSelection = PictureType then
       begin
-        addons.soundplayer.Player.Tag.mp3.ID3v2.DeleteFrame(vi);
+        soundplayer.player_actions.Tag.mp3.ID3v2.DeleteFrame(vi);
       end;
     end;
   end;
@@ -552,9 +552,9 @@ begin
 
   PictureType := vSelection;
 
-  FrameIndex := addons.soundplayer.Player.Tag.mp3.ID3v2.AddFrame('APIC');
+  FrameIndex := soundplayer.player_actions.Tag.mp3.ID3v2.AddFrame('APIC');
 
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeCoverPictureFromFile(FrameIndex, Description, vSoundplayer.scene.OpenDialog.Filename, MIMEType,
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeCoverPictureFromFile(FrameIndex, Description, vSoundplayer.scene.OpenDialog.Filename, MIMEType,
     PictureType);
   vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap.LoadFromFile(vSoundplayer.scene.OpenDialog.Filename);
   vSoundplayer.Info.Cover.Bitmap.LoadFromFile(vSoundplayer.scene.OpenDialog.Filename);
@@ -574,9 +574,9 @@ var
   vImage: TBitmap;
 begin
   vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := nil;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.DeleteFrame(CurrentAPICIndex);
-  addons.soundplayer.Player.Tag.mp3.Info.General.CoverArtCount := addons.soundplayer.Player.Tag.mp3.ID3v2.CoverArtCount;
-  if addons.soundplayer.Player.Tag.mp3.Info.General.CoverArtCount = 0 then
+  soundplayer.player_actions.Tag.mp3.ID3v2.DeleteFrame(CurrentAPICIndex);
+  soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount := soundplayer.player_actions.Tag.mp3.ID3v2.CoverArtCount;
+  if soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount = 0 then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft.TextSettings.FontColor := TAlphaColorRec.Grey;
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -674,7 +674,7 @@ var
   vGetSongPosition: Integer;
   vi, vk: Integer;
 begin
-  if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath then
+  if addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now] = vCurrentSongPath then
   begin
     vGetSongPosition := BASS_ChannelGetPosition(sound.str_music[1], BASS_POS_BYTE);
     BASS_ChannelStop(sound.str_music[1]);
@@ -683,42 +683,42 @@ begin
 
   Get_ID3v1(vCurrentSongPath);
 
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Title := vSoundplayer.Tag.mp3.ID3v1.Title_V.Text;
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Artist := vSoundplayer.Tag.mp3.ID3v1.Artist_V.Text;
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Album := vSoundplayer.Tag.mp3.ID3v1.Album_V.Text;
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Year := vSoundplayer.Tag.mp3.ID3v1.Year_V.Text;
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Genre := vSoundplayer.Tag.mp3.ID3v1.Genre_V.Text;
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Track := vSoundplayer.Tag.mp3.ID3v1.Track_V.Text.ToInteger;
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Comment := vSoundplayer.Tag.mp3.ID3v1.Comment_V.Text;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Title := vSoundplayer.Tag.mp3.ID3v1.Title_V.Text;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Artist := vSoundplayer.Tag.mp3.ID3v1.Artist_V.Text;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Album := vSoundplayer.Tag.mp3.ID3v1.Album_V.Text;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Year := vSoundplayer.Tag.mp3.ID3v1.Year_V.Text;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Genre := vSoundplayer.Tag.mp3.ID3v1.Genre_V.Text;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Track := vSoundplayer.Tag.mp3.ID3v1.Track_V.Text.ToInteger;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Comment := vSoundplayer.Tag.mp3.ID3v1.Comment_V.Text;
 
-  addons.soundplayer.Player.Tag.mp3.ID3v1.SaveToFile(vCurrentSongPath);
+  soundplayer.player_actions.Tag.mp3.ID3v1.SaveToFile(vCurrentSongPath);
 
-  addons.soundplayer.Player.Tag.mp3.ID3v1.Free;
+  soundplayer.player_actions.Tag.mp3.ID3v1.Free;
 
   Get_ID3v2(vCurrentSongPath);
 
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TIT2', vSoundplayer.Tag.mp3.ID3v2.Title_V.Text);
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TPE1', vSoundplayer.Tag.mp3.ID3v2.Artist_V.Text);
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TALB', vSoundplayer.Tag.mp3.ID3v2.Album_V.Text);
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TYER', vSoundplayer.Tag.mp3.ID3v2.Year_V.Text);
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TCON', vSoundplayer.Tag.mp3.ID3v2.Genre_V.Text);
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeText('TRCK', vSoundplayer.Tag.mp3.ID3v2.Track_V.Text);
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeComment('TCOMM', vSoundplayer.Tag.mp3.ID3v2.Comment_V.Text,
-    addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID, '');
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeText('TIT2', vSoundplayer.Tag.mp3.ID3v2.Title_V.Text);
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeText('TPE1', vSoundplayer.Tag.mp3.ID3v2.Artist_V.Text);
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeText('TALB', vSoundplayer.Tag.mp3.ID3v2.Album_V.Text);
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeText('TYER', vSoundplayer.Tag.mp3.ID3v2.Year_V.Text);
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeText('TCON', vSoundplayer.Tag.mp3.ID3v2.Genre_V.Text);
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeText('TRCK', vSoundplayer.Tag.mp3.ID3v2.Track_V.Text);
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeComment('TCOMM', vSoundplayer.Tag.mp3.ID3v2.Comment_V.Text,
+    soundplayer.player_actions.Tag.mp3.Lyrics_LanguageID, '');
 
-  addons.soundplayer.Player.Tag.mp3.ID3v2.SetUnicodeLyrics('USLT', vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text,
-    addons.soundplayer.Player.Tag.mp3.Lyrics_LanguageID, addons.soundplayer.Player.Tag.mp3.Lyrics_Description);
+  soundplayer.player_actions.Tag.mp3.ID3v2.SetUnicodeLyrics('USLT', vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text,
+    soundplayer.player_actions.Tag.mp3.Lyrics_LanguageID, soundplayer.player_actions.Tag.mp3.Lyrics_Description);
 
   Rating_Save;
 
-  addons.soundplayer.Player.Tag.mp3.TagError := addons.soundplayer.Player.Tag.mp3.ID3v2.SaveToFile(vCurrentSongPath);
+  soundplayer.player_actions.Tag.mp3.TagError := soundplayer.player_actions.Tag.mp3.ID3v2.SaveToFile(vCurrentSongPath);
 
-  addons.soundplayer.Player.Tag.mp3.ID3v2.Unsynchronised := False;
+  soundplayer.player_actions.Tag.mp3.ID3v2.Unsynchronised := False;
 
-  if addons.soundplayer.Player.Tag.mp3.TagError <> ID3V2LIBRARY_SUCCESS then
+  if soundplayer.player_actions.Tag.mp3.TagError <> ID3V2LIBRARY_SUCCESS then
   begin
-    Showmessage('Error saving ID3v2 tag, error code: ' + IntToStr(addons.soundplayer.Player.Tag.mp3.TagError) + #13#10 +
-      ID3v2TagErrorCode2String(addons.soundplayer.Player.Tag.mp3.TagError));
+    Showmessage('Error saving ID3v2 tag, error code: ' + IntToStr(soundplayer.player_actions.Tag.mp3.TagError) + #13#10 +
+      ID3v2TagErrorCode2String(soundplayer.player_actions.Tag.mp3.TagError));
   end;
 
   // Save it to songs info
@@ -758,8 +758,8 @@ begin
   else
     addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Comment := vSoundplayer.Tag.mp3.ID3v2.Comment_V.Text;
   // Rating
-  addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate := addons.soundplayer.Player.Tag.mp3.Rating.ToString;
-  if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath then
+  addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate := soundplayer.player_actions.Tag.mp3.Rating.ToString;
+  if addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now] = vCurrentSongPath then
   begin
     vk := 0;
     vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : Not Rating';
@@ -784,17 +784,17 @@ begin
     end;
   end;
   addons.soundplayer.Playlist.List.Song_Info[vCurrentSongNum].Rate := Rating_Get.ToString;
-  addons.soundplayer.Player.Tag.mp3.ID3v2.Free;
+  soundplayer.player_actions.Tag.mp3.ID3v2.Free;
 
-  if addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now] = vCurrentSongPath then
+  if addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now] = vCurrentSongPath then
   begin
-    sound.str_music[1] := BASS_StreamCreateFile(False, PChar(addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now]), 0, 0,
+    sound.str_music[1] := BASS_StreamCreateFile(False, PChar(addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now]), 0, 0,
       BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-    if addons.soundplayer.Player.Play then
+    if soundplayer.player = sPlay then
     begin
       BASS_ChannelPlay(sound.str_music[1], True);
       BASS_ChannelSetPosition(sound.str_music[1], vGetSongPosition, BASS_POS_BYTE);
-      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, addons.soundplayer.Volume.Vol / 100);
+      BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, soundplayer.player_actions.volume.Vol / 100);
     end;
   end;
 
@@ -836,9 +836,9 @@ begin
     begin
       for vi := 0 to 9 do
         vSoundplayer.Tag.mp3.ID3v2.Rate_Glow[vi].Enabled := False;
-      for vi := 9 downto addons.soundplayer.Player.Tag.mp3.Rating do
+      for vi := 9 downto soundplayer.player_actions.Tag.mp3.Rating do
         vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-      for vi := 0 to addons.soundplayer.Player.Tag.mp3.Rating - 1 do
+      for vi := 0 to soundplayer.player_actions.Tag.mp3.Rating - 1 do
         vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
     end;
   end;
@@ -855,8 +855,8 @@ begin
   for vi := 0 to vStarNum do
     vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
 
-  addons.soundplayer.Player.Tag.mp3.Rating := vStarNum + 1;
-  vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : ' + addons.soundplayer.Player.Tag.mp3.Rating.ToString + '/10';
+  soundplayer.player_actions.Tag.mp3.Rating := vStarNum + 1;
+  vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : ' + soundplayer.player_actions.Tag.mp3.Rating.ToString + '/10';
 end;
 
 procedure Rating_RemoveAll_Stars;
@@ -868,7 +868,7 @@ begin
     vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
     vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := True;
   end;
-  addons.soundplayer.Player.Tag.mp3.Rating := 0;
+  soundplayer.player_actions.Tag.mp3.Rating := 0;
   vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : Not Rating';
 end;
 
@@ -879,24 +879,24 @@ var
   vRating: Integer;
 begin
   vFound := False;
-  if addons.soundplayer.Player.Tag.mp3.Rating_Before_Save <> addons.soundplayer.Player.Tag.mp3.Rating then
+  if soundplayer.player_actions.Tag.mp3.Rating_Before_Save <> soundplayer.player_actions.Tag.mp3.Rating then
   begin
-    if addons.soundplayer.Player.Tag.mp3.Rating > 0 then
-      vRating := round((addons.soundplayer.Player.Tag.mp3.Rating) * 25.5)
+    if soundplayer.player_actions.Tag.mp3.Rating > 0 then
+      vRating := round((soundplayer.player_actions.Tag.mp3.Rating) * 25.5)
     else
       vRating := 0;
-    for vIndex := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
+    for vIndex := 0 to soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 do
     begin
-      if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[vIndex].ID, 'POPM') then
+      if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[vIndex].ID, 'POPM') then
       begin
-        addons.soundplayer.Player.Tag.mp3.ID3v2.SetPopularimeter(vIndex, 'spoooky11@hotmail.gr', vRating, 0);
+        soundplayer.player_actions.Tag.mp3.ID3v2.SetPopularimeter(vIndex, 'spoooky11@hotmail.gr', vRating, 0);
         vFound := True;
       end;
     end;
     if vFound = False then
     begin
-      vIndex := addons.soundplayer.Player.Tag.mp3.ID3v2.AddFrame('POPM');
-      addons.soundplayer.Player.Tag.mp3.ID3v2.SetPopularimeter(vIndex, 'spoooky11@hotmail.gr', vRating, 0);
+      vIndex := soundplayer.player_actions.Tag.mp3.ID3v2.AddFrame('POPM');
+      soundplayer.player_actions.Tag.mp3.ID3v2.SetPopularimeter(vIndex, 'spoooky11@hotmail.gr', vRating, 0);
     end;
   end;
 end;
@@ -921,16 +921,16 @@ begin
       vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
     for vi := 0 to round(vRating) - 1 do
       vSoundplayer.Tag.mp3.ID3v2.Rate_Dot[vi].Visible := False;
-    addons.soundplayer.Player.Tag.mp3.Rating := round(vRating);
-    addons.soundplayer.Player.Tag.mp3.Rating_Before_Save := round(vRating);
-    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : ' + addons.soundplayer.Player.Tag.mp3.Rating.ToString + '/10';
+    soundplayer.player_actions.Tag.mp3.Rating := round(vRating);
+    soundplayer.player_actions.Tag.mp3.Rating_Before_Save := round(vRating);
+    vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : ' + soundplayer.player_actions.Tag.mp3.Rating.ToString + '/10';
   end
   else
   begin
     for vi := 0 to 9 do
       vSoundplayer.Tag.mp3.ID3v2.Rate[vi].Visible := False;
-    addons.soundplayer.Player.Tag.mp3.Rating := -1;
-    addons.soundplayer.Player.Tag.mp3.Rating_Before_Save := -1;
+    soundplayer.player_actions.Tag.mp3.Rating := -1;
+    soundplayer.player_actions.Tag.mp3.Rating_Before_Save := -1;
     vSoundplayer.Tag.mp3.ID3v2.Rate_Label.Text := 'Rating : Not Rating';
   end;
 end;
@@ -944,12 +944,12 @@ var
   vFound: Boolean;
 begin
   vFound := False;
-  for vi := 0 to addons.soundplayer.Player.Tag.mp3.ID3v2.FrameCount - 1 do
+  for vi := 0 to soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
-    if IsSameFrameID(addons.soundplayer.Player.Tag.mp3.ID3v2.Frames[vi].ID, 'POPM') then
+    if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[vi].ID, 'POPM') then
     begin
       vFound := True;
-      if addons.soundplayer.Player.Tag.mp3.ID3v2.GetPopularimeter(vi, vEmail, vRating, vCounter) = True then
+      if soundplayer.player_actions.Tag.mp3.ID3v2.GetPopularimeter(vi, vEmail, vRating, vCounter) = True then
         Result := vRating;
     end
   end;

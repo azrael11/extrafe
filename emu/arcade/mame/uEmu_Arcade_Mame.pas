@@ -62,7 +62,7 @@ var
   vGamesInfoCount: String;
 begin
   mame.Gamelist.Selected := 0;
-  uEmu_Arcade_Mame_Gamelist_Refresh;
+  uEmu_Arcade_Mame_Gamelist.Refresh;
   vGamesInfoCount := IntToStr(mame.Gamelist.Selected + 1) + '/' + IntToStr(mame.Gamelist.Games_Count);
   vMame.Scene.Gamelist.T_Games_Count_Info.Text := vGamesInfoCount;
   mame.Main.SnapCategory := 'Snapshots';
@@ -73,6 +73,12 @@ end;
 
 Procedure Exit;
 begin
+  FreeAndNil(vMame.Scene.Left);
+  {Right}
+  {Media}
+  FreeAndNil(vMame.Scene.Media.T_Image.Image);
+  FreeAndNil(vMame.Scene.Media.Back);
+  FreeAndNil(vMame.Scene.Right);
   FreeAndNil(vMame.Scene.Main);
   uEmu_Arcade_Mame_Sounds.Unload;
   mame.Support.ClearSupport;

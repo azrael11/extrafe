@@ -36,8 +36,8 @@ procedure Get_Data;
 implementation
 
 uses
-  uDatabase,
-  uDatabase_ActiveUser,
+  uDB,
+  uDB_AUser,
   uWindows,
   uLoad_AllTypes,
   uWeather_AllTypes,
@@ -46,9 +46,9 @@ uses
 procedure Load;
 begin
 //  addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'openweathermap');
-  user_Active_Local.ADDONS.Weather_D.Provider := 'openweathermap';
-  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(user_Active_Local.ADDONS.Weather_D.Provider);
-  vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Images + 'w_provider_openweathermap.png');
+  uDB_AUser.Local.ADDONS.Weather_D.Provider := 'openweathermap';
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
+  vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Images + 'w_provider_openweathermap.png');
   Load_Config;
 end;
 
@@ -71,7 +71,7 @@ begin
   end;
 
   addons.weather.Action.OWM.Iconset_Names := TStringList.Create;
-  addons.weather.Action.OWM.Iconset_Names := uWindows_GetFolderNames(user_Active_Local.addons.Weather_D.p_Icons + 'openweathermap\');
+  addons.weather.Action.OWM.Iconset_Names := uWindows_GetFolderNames(uDB_AUser.Local.addons.Weather_D.p_Icons + 'openweathermap\');
   addons.weather.Action.OWM.Iconset_Names.Insert(0, 'default');
   if addons.weather.Ini.Ini.ValueExists('openweathermap', 'iconset_count') then
   begin
@@ -839,7 +839,7 @@ begin
           vi.ToString;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Parent := vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].SetBounds(50 * vi, 2, 50, 50);
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(user_Active_Local.addons.Weather_D.p_Icons +
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons +
           addons.weather.Action.Yahoo.Iconset_Names.Strings[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Tag := vi;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].TagString := vNum.ToString;
@@ -867,12 +867,12 @@ begin
   ExtraFE_Query_Local.Open;
   ExtraFE_Query_Local.First;
 
-  for vi := 0 to user_Active_Local.addons.Weather_D.Yahoo.Towns_Count do
+  for vi := 0 to uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count do
   begin
-    SetLength(user_Active_Local.addons.Weather_D.Yahoo.Towns, vi + 2);
-    user_Active_Local.addons.Weather_D.Yahoo.Towns[vi].Name := ExtraFE_Query_Local.FieldByName('TOWN_NAME').AsString;
-    user_Active_Local.addons.Weather_D.Yahoo.Towns[vi].Num := ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger;
-    user_Active_Local.addons.Weather_D.Yahoo.Towns[vi].Woeid := ExtraFE_Query_Local.FieldByName('TOWN_WOEID').AsInteger;
+    SetLength(uDB_AUser.Local.addons.Weather_D.Yahoo.Towns, vi + 2);
+    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Name := ExtraFE_Query_Local.FieldByName('TOWN_NAME').AsString;
+    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Num := ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger;
+    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Woeid := ExtraFE_Query_Local.FieldByName('TOWN_WOEID').AsInteger;
     ExtraFE_Query_Local.Next;
   end;
 end;

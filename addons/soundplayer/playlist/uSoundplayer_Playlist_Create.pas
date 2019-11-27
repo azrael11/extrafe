@@ -31,7 +31,7 @@ uses
   uLoad_AllTypes,
   uWindows,
   uSoundplayer_AllTypes,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_Playlist,
   uSoundplayer_Player,
   uSoundplayer_Playlist_Const;
@@ -40,7 +40,7 @@ procedure Load;
 begin
   vSoundplayer.scene.Back_Blur.Enabled := True;
 
-  uSoundplayer.Hide_Animations;
+  uSoundplayer_Actions.Hide_Animations;
 
   vSoundplayer.Playlist.Create.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.Playlist.Create.Panel.Name := 'A_SP_Playlist_Create_Panel';

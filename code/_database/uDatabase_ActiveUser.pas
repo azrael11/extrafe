@@ -416,11 +416,12 @@ implementation
 uses
   load,
   uLoad,
-  uDatabase,
-  uInternet_files,
-  uDatabase_SQLCommands;
+  uDB,
+  uInternet_files;
 
 procedure Get_Online_Data(vUser_Num: String);
+var
+  vQuery: String;
 begin
   vQuery := 'SELECT * FROM USERS WHERE NUM=' + vUser_Num;
   ExtraFE_Query.Close;
@@ -448,6 +449,7 @@ end;
 procedure Get_Local_Data(vUser_Num: String);
 var
   all: string;
+  vQuery: String;
 begin
   vQuery := 'SELECT * FROM USERS WHERE USER_ID=' + vUser_Num;
   ExtraFE_Query_Local.Close;
@@ -689,14 +691,14 @@ begin
   begin
     vIP := uInternet_files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
     vIP_Value := vIP.GetValue<String>('ip');
-    uDatabase_SQLCommands.Update_Query('USERS', 'IP', vIP_Value, user_Active_Online.Num.ToString);
-    uDatabase_SQLCommands.Update_Local_Query('users', 'IP', vIP_Value, user_Active_Local.Num.ToString);
+    uDB.Query_Update_Online('USERS', 'IP', vIP_Value, user_Active_Online.Num.ToString);
+    uDB.Query_Update('users', 'IP', vIP_Value, user_Active_Local.Num.ToString);
     user_Active_Local.IP := vIP_Value;
-    uDatabase_SQLCommands.Update_Query('USERS', 'LAST_VISIT', vCurFinal, user_Active_Online.Num.ToString);
-    uDatabase_SQLCommands.Update_Local_Query('users', 'LAST_VISIT_ONLINE', vCurFinal, user_Active_Local.Num.ToString);
+    uDB.Query_Update_Online('USERS', 'LAST_VISIT', vCurFinal, user_Active_Online.Num.ToString);
+    uDB.Query_Update('users', 'LAST_VISIT_ONLINE', vCurFinal, user_Active_Local.Num.ToString);
   end;
 
-  uDatabase_SQLCommands.Update_Local_Query('users', 'LAST_VISIT', vCurFinal, user_Active_Local.Num.ToString);
+  uDB.Query_Update('users', 'LAST_VISIT', vCurFinal, user_Active_Local.Num.ToString);
 end;
 
 procedure Temp_User;

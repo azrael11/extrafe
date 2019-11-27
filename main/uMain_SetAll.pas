@@ -29,6 +29,7 @@ uses
 procedure uMain_SetAll_Set;
 
 procedure uMain_SetAll_Exit;
+procedure Addon_Icon(vNum: integer);
 
 implementation
 
@@ -43,11 +44,48 @@ uses
   uMain_Config_Emulators,
   uMain_Config_Themes,
   uMain_Mouse,
-  uDatabase_ActiveUser;
+  uDB_AUser;
+
+procedure Addon_Icon(vNum: integer);
+begin
+  mainScene.Header.Addon_Icon.Frame[vNum] := TLayout.Create(mainScene.Header.Back);
+  mainScene.Header.Addon_Icon.Frame[vNum].Name := 'Main_Header_Addon_Frame_' + vNum.ToString;
+  mainScene.Header.Addon_Icon.Frame[vNum].Parent := mainScene.Header.Back;
+  mainScene.Header.Addon_Icon.Frame[vNum].SetBounds(50 + (vNum * 55), mainScene.Header.Back.Height - 60, 50, 50);
+  mainScene.Header.Addon_Icon.Frame[vNum].Visible := True;
+
+  mainScene.Header.Addon_Icon.Icons[vNum] := TText.Create(mainScene.Header.Addon_Icon.Frame[vNum]);
+  mainScene.Header.Addon_Icon.Icons[vNum].Name := 'Main_Header_Addon_Icon_' + vNum.ToString;
+  mainScene.Header.Addon_Icon.Icons[vNum].Parent := mainScene.Header.Addon_Icon.Frame[vNum];
+  mainScene.Header.Addon_Icon.Icons[vNum].SetBounds(0, 0, 50, 50);
+  mainScene.Header.Addon_Icon.Icons[vNum].Font.Family := 'IcoMoon-Free';
+  mainScene.Header.Addon_Icon.Icons[vNum].Font.Size := 48;
+  mainScene.Header.Addon_Icon.Icons[vNum].Align := TAlignLayout.Center;
+  mainScene.Header.Addon_Icon.Icons[vNum].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  mainScene.Header.Addon_Icon.Icons[vNum].OnClick := ex_main.input.mouse.Text.OnMouseClick;
+  mainScene.Header.Addon_Icon.Icons[vNum].OnMouseEnter := ex_main.input.mouse.Text.OnMouseEnter;
+  mainScene.Header.Addon_Icon.Icons[vNum].OnMouseLeave := ex_main.input.mouse.Text.OnMouseLeave;
+  mainScene.Header.Addon_Icon.Icons[vNum].Tag := vNum;
+  mainScene.Header.Addon_Icon.Icons[vNum].Visible := True;
+
+  mainScene.Header.Addon_Icon.Glow[vNum] := TGlowEffect.Create(mainScene.Header.Addon_Icon.Icons[vNum]);
+  mainScene.Header.Addon_Icon.Glow[vNum].Name := 'Main_Header_Addon_Icon_Glow_' + IntToStr(vNum);
+  mainScene.Header.Addon_Icon.Glow[vNum].Parent := mainScene.Header.Addon_Icon.Icons[vNum];
+  mainScene.Header.Addon_Icon.Glow[vNum].GlowColor := TAlphaColorRec.Deepskyblue;
+  mainScene.Header.Addon_Icon.Glow[vNum].Opacity := 0.9;
+  mainScene.Header.Addon_Icon.Glow[vNum].Softness := 0.4;
+  mainScene.Header.Addon_Icon.Glow[vNum].Enabled := False;
+
+  mainScene.Header.Addon_Icon.Blur[vNum] := TGaussianBlurEffect.Create(mainScene.Header.Addon_Icon.Icons[vNum]);
+  mainScene.Header.Addon_Icon.Blur[vNum].Name := 'Main_Header_Addon_Icon_Blur_' + IntToStr(vNum);
+  mainScene.Header.Addon_Icon.Blur[vNum].Parent := mainScene.Header.Addon_Icon.Icons[vNum];
+  mainScene.Header.Addon_Icon.Blur[vNum].BlurAmount := 0.2;
+  mainScene.Header.Addon_Icon.Blur[vNum].Enabled := False;
+end;
 
 procedure uMain_SetAll_Set;
 var
-  vi: Integer;
+  vi: integer;
   vCol: TGridPanelLayout.TColumnItem;
   vRow: TGridPanelLayout.TRowItem;
 begin
@@ -68,16 +106,16 @@ begin
   mainScene.main.Down_Level.WrapMode := TImageWrapMode.Tile;
   mainScene.main.Down_Level.Visible := True;
 
-  mainScene.Main.Down_Level_Ani := TFloatAnimation.Create(mainScene.Main.Down_Level);
-  mainScene.Main.Down_Level_Ani.Name := 'Main_Down_Animation';
-  mainScene.Main.Down_Level_Ani.Parent:=   mainScene.Main.Down_Level;
-  mainScene.Main.Down_Level_Ani.PropertyName:= 'Opacity';
-  mainScene.Main.Down_Level_Ani.Duration := 1.8;
-  mainScene.Main.Down_Level_Ani.Interpolation := TInterpolationType.Linear;
-  mainScene.Main.Down_Level_Ani.StartValue := 1;
-  mainScene.Main.Down_Level_Ani.StopValue := 0.1;
-  mainScene.Main.Down_Level_Ani.OnFinish := mainScene.Animation.OnFinish;
-  mainScene.Main.Down_Level_Ani.Enabled := False;
+  mainScene.main.Down_Level_Ani := TFloatAnimation.Create(mainScene.main.Down_Level);
+  mainScene.main.Down_Level_Ani.Name := 'Main_Down_Animation';
+  mainScene.main.Down_Level_Ani.Parent := mainScene.main.Down_Level;
+  mainScene.main.Down_Level_Ani.PropertyName := 'Opacity';
+  mainScene.main.Down_Level_Ani.Duration := 1.8;
+  mainScene.main.Down_Level_Ani.Interpolation := TInterpolationType.Linear;
+  mainScene.main.Down_Level_Ani.StartValue := 1;
+  mainScene.main.Down_Level_Ani.StopValue := 0.1;
+  mainScene.main.Down_Level_Ani.OnFinish := mainScene.Animation.OnFinish;
+  mainScene.main.Down_Level_Ani.Enabled := False;
 
   mainScene.main.Up_Level := TImage.Create(mainScene.main.Down_Level);
   mainScene.main.Up_Level.Name := 'Main_Up';
@@ -155,7 +193,7 @@ begin
   mainScene.Header.Avatar.Name := 'Main_Header_Avatar';
   mainScene.Header.Avatar.Parent := mainScene.Header.Back;
   mainScene.Header.Avatar.SetBounds(mainScene.Header.Back.Width - 179, 5, 120, 120);
-  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active_Local.Avatar + '.png');
+  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.Avatar + '.png');
   mainScene.Header.Avatar.WrapMode := TImageWrapMode.Fit;
   mainScene.Header.Avatar.OnClick := ex_main.input.mouse.Image.OnMouseClick;
   mainScene.Header.Avatar.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;
@@ -170,78 +208,23 @@ begin
   mainScene.Header.Avatar_Glow.Softness := 0.4;
   mainScene.Header.Avatar_Glow.Enabled := False;
 
-  for vi := 0 to user_Active_Local.ADDONS.Active do
-  begin
-    mainScene.Header.Addon_Icons_Frame[vi] := TLayout.Create(mainScene.Header.Back);
-    mainScene.Header.Addon_Icons_Frame[vi].Name := 'Main_Header_Addon_Frame_' + vi.ToString;
-    mainScene.Header.Addon_Icons_Frame[vi].Parent:=  mainScene.Header.Back;
-    mainScene.Header.Addon_Icons_Frame[vi].SetBounds(50 + (vi * 55), mainScene.Header.Back.Height - 60, 50, 50);    mainScene.Header.Addon_Icons_Frame[vi].Visible:= True;
+  for vi := 0 to uDB_AUser.Local.ADDONS.Active do
+    Addon_Icon(vi);
 
-    mainScene.Header.Addon_Icons[vi] := TText.Create(mainScene.Header.Addon_Icons_Frame[vi]);
-    mainScene.Header.Addon_Icons[vi].Name := 'Main_Header_Addon_Icon_' + vi.ToString;
-    mainScene.Header.Addon_Icons[vi].Parent := mainScene.Header.Addon_Icons_Frame[vi];
-    mainScene.Header.Addon_Icons[vi].SetBounds(0, 0, 50, 50);
-    mainScene.Header.Addon_Icons[vi].Font.Family := 'IcoMoon-Free';
-    mainScene.Header.Addon_Icons[vi].Font.Size := 48;
-    mainScene.Header.Addon_Icons[vi].Align := TAlignLayout.Center;
-    mainScene.Header.Addon_Icons[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    if vi = 0 then
-    begin
-      mainScene.Header.Addon_Icons[vi].Text := #$e94e;
-      mainScene.Header.Addon_Icons[vi].TagString := 'time';
-    end
-    else if vi = 1 then
-    begin
-      mainScene.Header.Addon_Icons[vi].Text := #$e953;
-      mainScene.Header.Addon_Icons[vi].TagString := 'calendar';
-    end
-    else if vi > 1 then
-    begin
-      if user_Active_Local.ADDONS.Weather then
-      begin
-        if vi = user_Active_Local.ADDONS.Weather_D.Menu_Position then
-        begin
-          mainScene.Header.Addon_Icons[vi].Text := #$e9c1;
-          mainScene.Header.Addon_Icons[vi].TagString := 'weather';
-        end;
-      end
-      // else if user_Active_Local.ADDONS.Soundplayer then
-      // begin
-      // if vi= user_Active_Local.ADDONS.Soundplayer_D.Menu_Position then
-      // begin
-      // mainScene.Header.Addon_Icons[vi].Text := #$ea15;
-      // mainScene.Header.Addon_Icons[vi].TagString := 'soundplayer';
-      // end;
-      // end
-      // else if user_Active_Local.ADDONS.Azplay then
-      // begin
-      // if vi= user_Active_Local.ADDONS.Azplay_D.Menu_Position then
-      // begin
-      // mainScene.Header.Addon_Icons[vi].Text := #$e915;
-      // mainScene.Header.Addon_Icons[vi].TagString := 'azplay';
-      // end;
-      // end
-    end;
-    mainScene.Header.Addon_Icons[vi].OnClick := ex_main.input.mouse.Text.OnMouseClick;
-    mainScene.Header.Addon_Icons[vi].OnMouseEnter := ex_main.input.mouse.Text.OnMouseEnter;
-    mainScene.Header.Addon_Icons[vi].OnMouseLeave := ex_main.input.mouse.Text.OnMouseLeave;
-    mainScene.Header.Addon_Icons[vi].Tag := vi;
-    mainScene.Header.Addon_Icons[vi].Visible := True;
+  { Time }
+  mainScene.Header.Addon_Icon.Icons[0].Text := #$e94e;
+  { Calendar }
+  mainScene.Header.Addon_Icon.Icons[1].Text := #$e953;
+  { Weather IF }
+  if uDB_AUser.Local.ADDONS.Weather then
+    mainScene.Header.Addon_Icon.Icons[uDB_AUser.Local.ADDONS.Weather_D.Menu_Position].Text := #$e9c1;
+  { Soundplayer IF }
+  if uDB_AUser.Local.ADDONS.Soundplayer then
+    mainScene.Header.Addon_Icon.Icons[uDB_AUser.Local.ADDONS.Soundplayer_D.Menu_Position].Text := #$ea15;
+  { AzPlay IF }
+  if uDB_AUser.Local.ADDONS.Azplay then
+    mainScene.Header.Addon_Icon.Icons[uDB_AUser.Local.ADDONS.Azplay_D.Menu_Position].Text := #$e915;
 
-    mainScene.Header.Addon_Icons_Glow[vi] := TGlowEffect.Create(mainScene.Header.Addon_Icons[vi]);
-    mainScene.Header.Addon_Icons_Glow[vi].Name := 'Main_Header_Addon_Icon_Glow_' + IntToStr(vi);
-    mainScene.Header.Addon_Icons_Glow[vi].Parent := mainScene.Header.Addon_Icons[vi];
-    mainScene.Header.Addon_Icons_Glow[vi].GlowColor := TAlphaColorRec.Deepskyblue;
-    mainScene.Header.Addon_Icons_Glow[vi].Opacity := 0.9;
-    mainScene.Header.Addon_Icons_Glow[vi].Softness := 0.4;
-    mainScene.Header.Addon_Icons_Glow[vi].Enabled := False;
-
-    mainScene.Header.Addon_Icons_GaussianBlur[vi] := TGaussianBlurEffect.Create(mainScene.Header.Addon_Icons[vi]);
-    mainScene.Header.Addon_Icons_GaussianBlur[vi].Name := 'Main_Header_Addon_Icon_Blur_' + IntToStr(vi);
-    mainScene.Header.Addon_Icons_GaussianBlur[vi].Parent := mainScene.Header.Addon_Icons[vi];
-    mainScene.Header.Addon_Icons_GaussianBlur[vi].BlurAmount := 0.2;
-    mainScene.Header.Addon_Icons_GaussianBlur[vi].Enabled := False;
-  end;
   ADDONS.Active_Now_Num := -1;
 
   // Footer

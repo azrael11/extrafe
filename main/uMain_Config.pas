@@ -30,6 +30,7 @@ uses
   uMain_SetAll,
   uMain_AllTypes,
   uMain_Mouse,
+  uMain_Actions,
   uMain_Config_Profile,
   uMain_Config_General,
   uMain_Config_Emulators,
@@ -68,7 +69,7 @@ begin
   mainScene.Config.Panel_Ani.Parent := mainScene.Config.Panel;
   mainScene.Config.Panel_Ani.Duration := 0.4;
   mainScene.Config.Panel_Ani.PropertyName := 'Position.X';
-  mainScene.Config.Panel_Ani.OnFinish := ex_main.input.mouse.Animation.OnFinish;
+  mainScene.Config.Panel_Ani.OnFinish :=  uMain_Actions.vMain_Ani.OnFinish;
   mainScene.Config.Panel_Ani.Enabled := False;
 
   CreateHeader(mainScene.Config.Panel, 'IcoMoon-Free', #$e994, 'Main configuration', False, nil);

@@ -64,9 +64,9 @@ uses
   uWindows,
   uSnippets,
   uLoad_Alltypes,
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uMain_AllTypes,
-  uDatabase_SqlCommands;
+  uDB;
 
 procedure Load;
 begin
@@ -90,7 +90,7 @@ begin
   mainScene.Config.main.R.Profile.User.Username_V.Name := 'Main_Config_Profile_Main_Username_Edit';
   mainScene.Config.main.R.Profile.User.Username_V.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Username_V.SetBounds(10, 30, 370, 24);
-  mainScene.Config.main.R.Profile.User.Username_V.Text := user_Active_Local.Username;
+  mainScene.Config.main.R.Profile.User.Username_V.Text := uDB_AUser.Local.Username;
   mainScene.Config.main.R.Profile.User.Username_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Username_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Username_V.Visible := True;
@@ -106,7 +106,7 @@ begin
   mainScene.Config.main.R.Profile.User.Password_V.Name := 'Main_Config_Profile_Main_Password_Edit';
   mainScene.Config.main.R.Profile.User.Password_V.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Password_V.SetBounds(10, 90, 370, 24);
-  mainScene.Config.main.R.Profile.User.Password_V.Text := user_Active_Local.Password;
+  mainScene.Config.main.R.Profile.User.Password_V.Text := uDB_AUser.Local.Password;
   mainScene.Config.main.R.Profile.User.Password_V.ReadOnly := True;
   mainScene.Config.main.R.Profile.User.Password_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Password_V.Password := True;
@@ -138,7 +138,7 @@ begin
   mainScene.Config.main.R.Profile.User.Email_Dir.Name := 'Main_Config_Profile_Main_EMail_Dir';
   mainScene.Config.main.R.Profile.User.Email_Dir.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Email_Dir.SetBounds(56, 141, 400, 24);
-  mainScene.Config.main.R.Profile.User.Email_Dir.Text := user_Active_Local.Email;
+  mainScene.Config.main.R.Profile.User.Email_Dir.Text := uDB_AUser.Local.Email;
   mainScene.Config.main.R.Profile.User.Email_Dir.HorzTextAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Email_Dir.TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.main.R.Profile.User.Email_Dir.Visible := True;
@@ -147,7 +147,7 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar_Show.Name := 'Main_Config_Profile_Main_Avatar';
   mainScene.Config.main.R.Profile.User.Avatar_Show.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Avatar_Show.SetBounds(410, 10, 150, 150);
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + user_Active_Local.Avatar + '.png');
+  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.Avatar + '.png');
   mainScene.Config.main.R.Profile.User.Avatar_Show.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Avatar_Show.OnClick := ex_main.Input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Profile.User.Avatar_Show.OnMouseEnter := ex_main.Input.mouse_config.Image.OnMouseEnter;
@@ -191,7 +191,7 @@ begin
   mainScene.Config.main.R.Profile.User.Name_V.Name := 'Main_Config_Profile_Main_Name_Edit';
   mainScene.Config.main.R.Profile.User.Name_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
   mainScene.Config.main.R.Profile.User.Name_V.SetBounds(10, 60, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 24);
-  mainScene.Config.main.R.Profile.User.Name_V.Text := user_Active_Local.Name;
+  mainScene.Config.main.R.Profile.User.Name_V.Text := uDB_AUser.Local.Name;
   mainScene.Config.main.R.Profile.User.Name_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Name_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Name_V.Visible := True;
@@ -207,7 +207,7 @@ begin
   mainScene.Config.main.R.Profile.User.Surname_V.Name := 'Main_Config_Profile_Main_Surname_Edit';
   mainScene.Config.main.R.Profile.User.Surname_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
   mainScene.Config.main.R.Profile.User.Surname_V.SetBounds(10, 110, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 24);
-  mainScene.Config.main.R.Profile.User.Surname_V.Text := user_Active_Local.Surname;
+  mainScene.Config.main.R.Profile.User.Surname_V.Text := uDB_AUser.Local.Surname;
   mainScene.Config.main.R.Profile.User.Surname_V.TextSettings.HorzAlign := TTextAlign.Center;
   mainScene.Config.main.R.Profile.User.Surname_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
   mainScene.Config.main.R.Profile.User.Surname_V.Visible := True;
@@ -265,7 +265,7 @@ begin
   mainScene.Config.main.R.Profile.User.Country.Name := 'Main_Config_Profile_Main_Country';
   mainScene.Config.main.R.Profile.User.Country.Parent := mainScene.Config.main.R.Profile.User.Panel;
   mainScene.Config.main.R.Profile.User.Country.SetBounds(410, 232, 150, 120);
-  mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images + user_Active_Local.Country + '.png');
+  mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images + uDB_AUser.Local.Country + '.png');
   mainScene.Config.main.R.Profile.User.Country.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Profile.User.Country.Visible := True;
 
@@ -284,7 +284,7 @@ begin
   mainScene.Config.main.R.Profile.User.Active_Led.Border.Color := $00484848;
   mainScene.Config.main.R.Profile.User.Active_Led.Border.BevelOuter.Style := TULBevelStyle.bvsNone;
   mainScene.Config.main.R.Profile.User.Active_Led.Border.BevelInner.Style := TULBevelStyle.bvsNone;
-  mainScene.Config.main.R.Profile.User.Active_Led.Value := user_Active_Local.Active;
+  mainScene.Config.main.R.Profile.User.Active_Led.Value := uDB_AUser.Local.Active;
   mainScene.Config.main.R.Profile.User.Active_Led.Visible := True;
 
   mainScene.Config.main.R.Profile.User.Active_Text := TText.Create(mainScene.Config.main.R.Profile.User.Status);
@@ -293,7 +293,7 @@ begin
   mainScene.Config.main.R.Profile.User.Active_Text.SetBounds(40, 30, 200, 20);
   mainScene.Config.main.R.Profile.User.Active_Text.HorzTextAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Active_Text.TextSettings.FontColor := TAlphaColorRec.White;
-  if user_Active_Local.Active then
+  if uDB_AUser.Local.Active then
     mainScene.Config.main.R.Profile.User.Active_Text.Text := 'User Is Active Online'
   else
     mainScene.Config.main.R.Profile.User.Active_Text.Text := 'User Is InActive Online';
@@ -305,13 +305,13 @@ begin
   mainScene.Config.main.R.Profile.User.Created.SetBounds(10, 55, 500, 20);
   mainScene.Config.main.R.Profile.User.Created.TextSettings.FontColor := TAlphaColorRec.White;
   mainScene.Config.main.R.Profile.User.Created.TextSettings.Font.Size := 12;
-  mainScene.Config.main.R.Profile.User.Created.Text := 'User : was created on : ' +user_Active_Local.Registered;
+  mainScene.Config.main.R.Profile.User.Created.Text := 'User : was created on : ' +uDB_AUser.Local.Registered;
   mainScene.Config.main.R.Profile.User.Created.TextSettings.HorzAlign := TTextAlign.Leading;
   mainScene.Config.main.R.Profile.User.Created.Visible := True;
 
-  vTemp_Personal.Name := user_Active_Local.Name;
-  vTemp_Personal.Surname := user_Active_Local.Surname;
-  vTemp_Personal.Genre := user_Active_Local.Genre.ToInteger;
+  vTemp_Personal.Name := uDB_AUser.Local.Name;
+  vTemp_Personal.Surname := uDB_AUser.Local.Surname;
+  vTemp_Personal.Genre := uDB_AUser.Local.Genre.ToInteger;
 
   Genre(vTemp_Personal.Genre.ToString);
 end;
@@ -371,26 +371,26 @@ end;
 
 procedure Apply_Changes;
 begin
-  if vTemp_Personal.Name <> user_Active_Online.Name then
+  if vTemp_Personal.Name <> uDB_AUser.Online.Name then
   begin
-    user_Active_Online.Name := vTemp_Personal.Name;
-    uDatabase_SqlCommands.Update_Query('USERS', 'NAME', vTemp_Personal.Name, user_Active_Online.Num.ToString);
-    user_Active_Local.Name := vTemp_Personal.Name;
-    uDatabase_SqlCommands.Update_Local_Query('USERS', 'NAME', vTemp_Personal.Name, user_Active_Local.Num.ToString);
+    uDB_AUser.Online.Name := vTemp_Personal.Name;
+    uDB.Query_Update_Online('USERS', 'NAME', vTemp_Personal.Name, uDB_AUser.Online.Num.ToString);
+    uDB_AUser.Local.Name := vTemp_Personal.Name;
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'NAME', vTemp_Personal.Name, 'USER_ID', uDB_AUser.Local.Num.ToString);
   end;
-  if vTemp_Personal.Surname <> user_Active_Online.Surname then
+  if vTemp_Personal.Surname <> uDB_AUser.Online.Surname then
   begin
-    user_Active_Online.Surname := vTemp_Personal.Surname;
-    uDatabase_SqlCommands.Update_Query('USERS', 'SURNAME', vTemp_Personal.Surname, user_Active_Online.Num.ToString);
-    user_Active_Local.Surname := vTemp_Personal.Surname;
-    uDatabase_SqlCommands.Update_Local_Query('USERS', 'SURNAME', vTemp_Personal.Surname, user_Active_Local.Num.ToString);
+    uDB_AUser.Online.Surname := vTemp_Personal.Surname;
+    uDB.Query_Update_Online('USERS', 'SURNAME', vTemp_Personal.Surname, uDB_AUser.Online.Num.ToString);
+    uDB_AUser.Local.Surname := vTemp_Personal.Surname;
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'SURNAME', vTemp_Personal.Surname, 'USER_ID', uDB_AUser.Local.Num.ToString);
   end;
-  if vTemp_Personal.Genre <> user_Active_Online.Genre then
+  if vTemp_Personal.Genre <> uDB_AUser.Online.Genre then
   begin
-    user_Active_Online.Genre := vTemp_Personal.Genre;
-    uDatabase_SqlCommands.Update_Query('USERS', 'GENDER', vTemp_Personal.Genre.ToString, user_Active_Online.Num.ToString);
-    user_Active_Local.Genre := vTemp_Personal.Genre.ToBoolean;
-    uDatabase_SqlCommands.Update_Local_Query('USERS', 'GENDER', vTemp_Personal.Genre.ToString, user_Active_Local.Num.ToString);
+    uDB_AUser.Online.Genre := vTemp_Personal.Genre;
+    uDB.Query_Update_Online('USERS', 'GENDER', vTemp_Personal.Genre.ToString, uDB_AUser.Online.Num.ToString);
+    uDB_AUser.Local.Genre := vTemp_Personal.Genre.ToBoolean;
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'GENDER', vTemp_Personal.Genre.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
   end;
 end;
 ///
@@ -564,8 +564,8 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar.main.Cancel.Visible := True;
 
   vAvatar.Page := 0;
-  mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[user_Active_Local.Avatar.ToInteger].Visible := True;
-  vAvatar.Checked := user_Active_Local.Avatar.ToInteger;
+  mainScene.Config.main.R.Profile.User.Avatar.main.Avatar_Check[uDB_AUser.Local.Avatar.ToInteger].Visible := True;
+  vAvatar.Checked := uDB_AUser.Local.Avatar.ToInteger;
 end;
 
 procedure Avatar_Glow(vText: TText);
@@ -588,7 +588,7 @@ begin
   if (vPage >= 0) and (vPage <= vAvatar.Pages) then
   begin
     vAvatar.Page := vPage;
-    vAvatarPage_Num := (user_Active_Local.Avatar.ToInteger div 20) + 1;
+    vAvatarPage_Num := (uDB_AUser.Local.Avatar.ToInteger div 20) + 1;
     for vi := 0 to 19 do
     begin
       if (vAvatar.Page = vAvatarPage_Num) and ((vAvatar.Checked mod 20) = vi) then
@@ -612,10 +612,10 @@ end;
 
 procedure Avatar_Change;
 begin
-  user_Active_Online.Avatar := vAvatar.Checked;
-  uDatabase_SqlCommands.Update_Query('USERS', 'AVATAR', vAvatar.Checked.ToString, user_Active_Online.Num.ToString);
-  user_Active_Local.Avatar := vAvatar.Checked.ToString;
-  uDatabase_SqlCommands.Update_Local_Query('USERS', 'AVATAR', vAvatar.Checked.ToString, user_Active_Local.Num.ToString);
+  uDB_AUser.Online.Avatar := vAvatar.Checked;
+  uDB.Query_Update_Online('USERS', 'AVATAR', vAvatar.Checked.ToString, uDB_AUser.Online.Num.ToString);
+  uDB_AUser.Local.Avatar := vAvatar.Checked.ToString;
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'AVATAR', vAvatar.Checked.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
   mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');
   mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + vAvatar.Checked.ToString + '.png');
   Return;
@@ -753,7 +753,7 @@ end;
 function Password_Check: Boolean;
 begin
   Result := False;
-  if mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text = user_Active_Online.Password then
+  if mainScene.Config.main.R.Profile.User.Pass.main.Current_V.Text = uDB_AUser.Online.Password then
   begin
     if mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text = mainScene.Config.main.R.Profile.User.Pass.main.New_Rewrite_V.Text then
     begin
@@ -776,10 +776,10 @@ procedure Password_Change;
 begin
   if Password_Check then
   begin
-    uDatabase_SqlCommands.Update_Query('USERS', 'PASSWORD', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text, user_Active_Online.Num.ToString);
-    user_Active_Online.Password := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
-    uDatabase_SqlCommands.Update_Local_Query('USERS', 'PASSWORD', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text, user_Active_Local.Num.ToString);
-    user_Active_Local.Password := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
+    uDB.Query_Update_Online('USERS', 'PASSWORD', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text, uDB_AUser.Online.Num.ToString);
+    uDB_AUser.Online.Password := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'PASSWORD', mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.Password := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
     mainScene.Config.main.R.Profile.User.Password_V.Text := mainScene.Config.main.R.Profile.User.Pass.main.New_V.Text;
     Return;
   end;

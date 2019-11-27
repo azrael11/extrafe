@@ -343,7 +343,7 @@ begin
   begin
     if (TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_' + TText(Sender).TagString) or
       (TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Rate_Dot_' + TText(Sender).TagString) then
-      uSoundplayer_Tag_MP3.Rating_Stars(addons.soundplayer.Player.Tag.mp3.Rating, True)
+      uSoundplayer_Tag_MP3.Rating_Stars(soundplayer.player_actions.Tag.mp3.Rating, True)
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v1_Transfer' then
       uSnippets.HyperLink_OnMouseLeave(TText(Sender), TAlphaColorRec.White)
     else if TText(Sender).Name = 'A_SP_Tag_Mp3_ID3v2_Transfer' then

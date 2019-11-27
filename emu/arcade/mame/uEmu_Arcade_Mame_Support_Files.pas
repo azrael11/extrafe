@@ -8,8 +8,7 @@ uses
   System.Threading,
   FMX.Forms,
   WinAPI.Windows,
-  WinAPI.ShellApi,
-  OXmlPDOM;
+  WinAPI.ShellApi;
 
 function uEmu_Arcade_Mame_Support_Files_MAME_Data_Load(vRomName: String): TStringList;
 
@@ -26,21 +25,20 @@ procedure uEmu_Arcade_Mame_Support_Files_Gameinit_Load;
 implementation
 
 uses
-  uDatabase_ActiveUser,
-  uDatabase_SQLCommands,
+  uDB_AUser,
   uLoad_AllTypes,
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Commands;
 
 function uEmu_Arcade_Mame_Support_Files_MAME_Data_Load(vRomName: String): TStringList;
 var
-  vGameXML: IXMLDocument;
-  vGameRoot: PXMLNode;
-  vGameNode: PXMLNode;
-  vGameNode_1: PXMLNode;
-  vGameNode_2: PXMLNode;
-  vGameNode_3: PXMLNode;
-  vGameAttribute: PXMLNode;
+//  vGameXML: IXMLDocument;
+//  vGameRoot: PXMLNode;
+//  vGameNode: PXMLNode;
+//  vGameNode_1: PXMLNode;
+//  vGameNode_2: PXMLNode;
+//  vGameNode_3: PXMLNode;
+//  vGameAttribute: PXMLNode;
   isFileFoundAndClose: Boolean;
   ProcID: Cardinal;
   vNum: Int64;
@@ -75,7 +73,7 @@ begin
         Char(34)) + ' ' + vRomName + ' -lx > ' + mame.Prog.Data_Path + 'game.xml'), nil, SW_HIDE);
     end);     }
 
-  sleep(1000);
+{  sleep(1000);
   vGameNode := nil;
   vGameNode_1 := nil;
   vGameNode_2 := nil;
@@ -142,7 +140,7 @@ begin
           Result.Add(vGameAttribute.NodeValue);
         end;
       end;
-  end;
+  end;      }
 end;
 
 procedure uEmu_Arcade_Mame_Support_Load;
@@ -160,11 +158,11 @@ var
   vRom, vName: String;
 begin
   mame.Support.List_Active[0] := False;
-  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini') then
+  if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini') then
   begin
     vi := 0;
     mame.Support.List_Active[0] := True;
-    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini');
+    AssignFile(vTextFile, uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + 'nplayers.ini');
     Reset(vTextFile);
     while not Eof(vTextFile) do
     begin
@@ -214,12 +212,12 @@ var
   vRom_Found: String;
 begin
   mame.Support.List_Active[1] := False;
-  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'catver.ini') then
+  if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + 'catver.ini') then
   begin
     vi := 0;
     vAdded_now := False;
     mame.Support.List_Active[1] := True;
-    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + ('catver.ini'));
+    AssignFile(vTextFile, uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + ('catver.ini'));
     Reset(vTextFile);
     while not Eof(vTextFile) do
     begin
@@ -278,10 +276,10 @@ var
   vString: String;
   vAdded_now: Boolean;
 begin
-  if FileExists(user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + 'gameinit.ini') then
+  if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + 'gameinit.ini') then
   begin
     vAdded_now := False;
-    AssignFile(vTextFile, user_Active_Local.EMULATORS.Arcade_D.Media.Support_Files + ('gameinit.ini'));
+    AssignFile(vTextFile, uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + ('gameinit.ini'));
     Reset(vTextFile);
     while not Eof(vTextFile) do
     begin

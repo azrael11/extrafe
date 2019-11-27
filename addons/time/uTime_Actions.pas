@@ -9,6 +9,8 @@ uses
 procedure Load;
 procedure Free;
 
+procedure Get_Data;
+
 procedure ShowTab(vTab: Integer);
 
 implementation
@@ -19,7 +21,9 @@ uses
   uTime_AllTypes,
   uTime_SetAll,
   uTime_Time_SetAll,
-  uTime_Sounds;
+  uTime_Sounds,
+  uDB,
+  uDB_AUser;
 
 procedure Load;
 begin
@@ -35,12 +39,12 @@ begin
   begin
     vTime.Tab[vi].Back_Glow.Enabled := False;
     if Assigned(vTime.P_Time.Back) then
-      uTime_Time_SetAll_Free;
+      uTime_Time_SetAll.Free;
   end;
 
   case vTab of
     0:
-      uTime_Time_SetAll_Set;
+      uTime_Time_SetAll.Load;
   end;
   vTime.Tab[vTab].Back_Glow.Enabled := True;
   vTime.Tab_Selected := vTab;
@@ -52,10 +56,30 @@ var
 begin
   for vi := 0 to 4 do
     FreeAndNil(vTime.Tab[vi]);
-  uTime_Time_SetAll_Free;
+  uTime_Time_SetAll.Config_Free;
   FreeAndNil(vTime.Time);
 end;
 
-/// /////////////////////////////////////////////////////////////////////////////
+procedure Get_Data;
+var
+  vQuery: String;
+begin
+  vQuery := 'SELECT * FROM ADDON_TIME WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+
+  uDB_AUser.Local.ADDONS.Time_D.Menu_Position := uDB.ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
+  uDB_AUser.Local.ADDONS.Time_D.First_Pop := uDB.ExtraFE_Query_Local.FieldByName('FIRST_POP').AsBoolean;
+  uDB_AUser.Local.ADDONS.Time_D.Path.Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
+  uDB_AUser.Local.ADDONS.Time_D.Path.Sounds := uDB.ExtraFE_Query_Local.FieldByName('PATH_SOUNDS').AsString;
+  uDB_AUser.Local.ADDONS.Time_D.Path.Clocks := uDB.ExtraFE_Query_Local.FieldByName('PATH_CLOCKS').AsString;
+
+  uTime_Time_Actions.Get_Data;
+
+  uDB_AUser.Local.ADDONS.Names.Insert(uDB_AUser.Local.ADDONS.Time_D.Menu_Position, 'time');
+end;
 
 end.

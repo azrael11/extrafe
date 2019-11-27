@@ -18,7 +18,7 @@ procedure New_State(vPlaylistName, vPlaylistType: String);
 var
   vi, vk: Integer;
 begin
-  if addons.soundplayer.Player.Play then
+  if soundplayer.player = sPlay then
     BASS_ChannelStop(sound.str_music[1]);
   // Player
   uSoundplayer_Player.State(False, False, False, False, False, '');

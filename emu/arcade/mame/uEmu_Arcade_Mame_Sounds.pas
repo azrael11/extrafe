@@ -12,12 +12,12 @@ procedure Unload;
 implementation
 
 uses
-  uDatabase_ActiveUser,
+  uDB_AUser,
   uEmu_Arcade_Mame_AllTypes;
 
 procedure Load;
 begin
-  mame.Sound.Effects[0] := BASS_StreamCreateFile(False, PChar(user_Active_Local.EMULATORS.Arcade_D.Mame_D.p_Sounds + 'wrong.mp3'), 0, 0, 0
+  mame.Sound.Effects[0] := BASS_StreamCreateFile(False, PChar(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Sounds + 'wrong.mp3'), 0, 0, 0
     {$IFDEF UNICODE} or BASS_UNICODE
 {$ENDIF});
 end;

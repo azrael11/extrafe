@@ -19,7 +19,7 @@ implementation
 
 uses
   uLoad_AllTypes,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_Playlist,
   uSoundplayer_AllTypes,
   uSoundplayer_Player,
@@ -30,7 +30,7 @@ begin
   if vSoundplayer.Playlist.Remove_Icon.TextSettings.FontColor = TAlphaColorRec.Deepskyblue then
   begin
     vSoundplayer.scene.Back_Blur.Enabled := True;
-    uSoundplayer.Hide_Animations;
+    uSoundplayer_Actions.Hide_Animations;
     extrafe.prog.State := 'addon_soundplayer_playlist_remove';
 
     vSoundplayer.Playlist.Remove.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);

@@ -39,7 +39,7 @@ begin
   vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';
   vRESTClient.BaseURL := 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=' + addons.soundplayer.Playlist.List.Song_Info
-    [addons.soundplayer.Player.Playing_Now].Artist + '&api_key=' + vAPI + '&format=json';
+    [soundplayer.player_actions.Playing_Now].Artist + '&api_key=' + vAPI + '&format=json';
   vRESTClient.FallbackCharsetEncoding := 'UTF-8';
 
   vRESTResponse := TRESTResponse.Create(vRESTClient);
@@ -95,8 +95,8 @@ var
 begin
   vAPI := '17d1261b9ed4b209902d9167320e3663';
   vRESTClient := TRESTClient.Create('');
-  vArtist := addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Artist;
-  vAlbumName := addons.soundplayer.Playlist.List.Song_Info[addons.soundplayer.Player.Playing_Now].Album;
+  vArtist := addons.soundplayer.Playlist.List.Song_Info[soundplayer.player_actions.Playing_Now].Artist;
+  vAlbumName := addons.soundplayer.Playlist.List.Song_Info[soundplayer.player_actions.Playing_Now].Album;
   vRESTClient.Name := 'Soundplayer_Album_RestClient';
   vRESTClient.Accept := 'application/json, text/plain; q=0.9, text/html;q=0.8,';
   vRESTClient.AcceptCharset := 'UTF-8, *;q=0.8';

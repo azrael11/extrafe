@@ -105,7 +105,7 @@ uses
   uSnippet_Text,
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
-  uSoundplayer,
+  uSoundplayer_Actions,
   uSoundplayer_Player,
   uSoundplayer_Info_Actions,
   uSoundplayer_Playlist,
@@ -124,7 +124,7 @@ begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
       if TImage(Sender).Name = 'A_SP_Player_Tag_Image' then
-        uSoundplayer_Player.Show_Tag(addons.soundplayer.Playlist.List.Songs.Strings[addons.soundplayer.Player.Playing_Now], vSoundplayer.Playlist.List.Selected)
+        uSoundplayer_Player.Show_Tag(addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now], vSoundplayer.Playlist.List.Selected)
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Left_Image' then
         uSoundplayer_Player_Volume.Mute
       else if TImage(Sender).Name = 'A_SP_Player_Speaker_Right_Image' then
@@ -286,13 +286,13 @@ begin
         vSoundplayer.scene.OpenDialog.Execute
       end
       else if TText(Sender).Name = 'A_SP_Player_Loop' then
-        uSoundplayer_Player.Repeat_Set(addons.soundplayer.Player.VRepeat)
+        uSoundplayer_Player.Repeat_Set(soundplayer.player_actions.VRepeat)
       else if TText(Sender).Name = 'A_SP_Player_Loop_State' then
         uSoundplayer_Player.Repeat_Inc_LoopState
       else if TImage(Sender).Name = 'A_SP_Player_Suffle' then
         uSoundplayer_Player.Suffle
       else if TText(Sender).Name = 'A_SP_SongTime_Play' then
-        addons.soundplayer.Player.Time_Negative := not addons.soundplayer.Player.Time_Negative
+        soundplayer.player_actions.Time_Negative := not soundplayer.player_actions.Time_Negative
       else if TText(Sender).Name = 'A_SP_Equalizer' then
         uSoundplayer_Equalizer_SetAll.Load
       else if TText(Sender).Name = 'A_SP_AlbumInfo' then
@@ -563,7 +563,7 @@ begin
   begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
-      if addons.soundplayer.Player.Playing_Now <> Row then
+      if soundplayer.player_actions.Playing_Now <> Row then
         uSoundplayer_Playlist.OnDoubleClick(Column, Row);
     end;
   end;
@@ -662,7 +662,7 @@ begin
     if extrafe.prog.State = 'addon_soundplayer' then
     begin
       if TALTrackBar(Sender).Name = 'A_SP_SongPos_Thumb' then
-        addons.soundplayer.Player.Thumb_Active := True;
+        soundplayer.player_actions.Thumb_Active := True;
     end;
   end
 end;
@@ -704,7 +704,7 @@ begin
   if not Assigned(vSoundplayer.scene.First.Panel) then
   begin
     if TALTrackBar(Sender).Name = 'A_SP_SongPos_Thumb' then
-      if addons.soundplayer.Player.Thumb_Active then
+      if soundplayer.player_actions.Thumb_Active then
         uSoundplayer_Player.Update_Thumb_Pos(Sender, vSoundplayer.Player.Song_Pos.Value, False);
   end;
 
@@ -753,7 +753,7 @@ end;
 procedure TSOUNDPLAYER_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
   if TCheckBox(Sender).Name = 'A_SP_First_Main_Check' then
-    uSoundplayer.CheckFirst(not addons.soundplayer.Actions.First);
+    uSoundplayer_Actions.CheckFirst(not addons.soundplayer.Actions.First);
 end;
 
 procedure TSOUNDPLAYER_CHECKBOX.OnMouseEnter(Sender: TObject);

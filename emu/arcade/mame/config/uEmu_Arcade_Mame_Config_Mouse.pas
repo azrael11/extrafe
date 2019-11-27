@@ -4,6 +4,7 @@ interface
 
 uses
   System.Classes,
+  System.SysUtils,
   System.StrUtils,
   System.UITypes,
   System.UIConsts,
@@ -11,7 +12,8 @@ uses
   FMX.Listbox,
   FMX.TabControl,
   FMX.Objects,
-  FMX.Graphics;
+  FMX.Graphics,
+  BASS;
 
 type
   TEMU_ARCADE_MAME_CONFIG_SPEEDBUTTON = class(TObject)
@@ -103,18 +105,7 @@ uses
 { TEMU_ARCADE_MAME_CONFIG_BUTTON }
 procedure TEMU_ARCADE_MAME_CONFIG_SPEEDBUTTON.onMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_media' then
-  begin
-    if ContainsText(TSpeedButton(Sender).Name, 'Mame_Dir_Media_Change_') then
-      uEmu_Arcade_Mame_Config_Media_Find(TSpeedButton(Sender).Tag)
-  end
-  else if extrafe.prog.State = 'mame_config_dirs' then
-  begin
-    if TSpeedButton(Sender).Name = 'Mame_Dir_Roms_Add_Button' then
-      uEmu_Arcade_Mame_Config_Roms_Find
-    else if TSpeedButton(Sender).TagFloat = 10 then
-      uEmu_Arcade_Mame_Config_RomPath_Delete(TSpeedButton(Sender).Tag);
-  end;
+
 end;
 
 procedure TEMU_ARCADE_MAME_CONFIG_SPEEDBUTTON.onMouseEnter(Sender: TObject);
@@ -144,7 +135,7 @@ begin
     uEmu_Arcade_Mame_Config_MiscII_ButtonClick(TButton(Sender).Name)
   else if extrafe.prog.State = 'mame_config_media' then
   begin
-    if TButton(Sender).Name= 'Mame_Dir_Check_Cancel' then
+    if TButton(Sender).Name = 'Mame_Dir_Check_Cancel' then
       uEmu_Arcade_Mame_Config_CheckAndDownload_Free;
   end;
 end;
@@ -162,25 +153,47 @@ end;
 { TEMU_ARCADE_MAME_CONFIG_TEXT }
 procedure TEMU_ARCADE_MAME_CONFIG_TEXT.onMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_media' then
-    uEmu_Arcade_Mame_Config_CheckAndDownload(TText(Sender).Tag);
+  if extrafe.prog.State = 'mame_config_dirs' then
+  begin
+    if TText(Sender).Name = 'Mame_Dir_Roms_Add' then
+      uEmu_Arcade_Mame_Config_Roms_Find
+    else if TText(Sender).TagFloat = 10 then
+      uEmu_Arcade_Mame_Config_RomPath_Delete(TSpeedButton(Sender).Tag);
+  end
+  else if extrafe.prog.State = 'mame_config_media' then
+  begin
+    if ContainsText(TText(Sender).Name, 'Mame_Dir_Media_Change_') then
+      uEmu_Arcade_Mame_Config_Media_Find(TText(Sender).Tag)
+    else
+      uEmu_Arcade_Mame_Config_CheckAndDownload(TText(Sender).Tag);
+  end;
+  BASS_ChannelPlay(sound.str_fx.general[0], False);
 end;
 
 procedure TEMU_ARCADE_MAME_CONFIG_TEXT.onMouseEnter(Sender: TObject);
 begin
-  TText(Sender).TextSettings.Font.Style := TText(Sender).TextSettings.Font.Style + [TFontStyle.fsUnderline];
-  TText(Sender).TextSettings.FontColor := claDeepskyblue;
   TText(Sender).Cursor := crHandPoint;
+  if TText(Sender).Name = 'Mame_Dir_Media_Change_' + TText(Sender).Tag.ToString then
+    vMame.Config.Panel.Dirs.Media.Change_Glow[TText(Sender).Tag].Enabled := True
+  else if TText(Sender).Name = 'Mame_Dir_Media_CAD_' + TText(Sender).Tag.ToString then
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[TText(Sender).Tag].Enabled := True
+  else if TText(Sender).Name = 'Mame_Dir_Roms_Add' then
+    vMame.Config.Panel.Dirs.Roms.Find_Glow.Enabled := True
+  else if TText(Sender).Name = 'Mame_Dir_Roms_Del_' + TText(Sender).Tag.ToString then
+    vMame.Config.Panel.Dirs.Roms.Del_Glow[TText(Sender).Tag].Enabled := True;
+
 end;
 
 procedure TEMU_ARCADE_MAME_CONFIG_TEXT.onMouseLeave(Sender: TObject);
 begin
-  TText(Sender).TextSettings.Font.Style := TText(Sender).TextSettings.Font.Style - [TFontStyle.fsUnderline];
-  if (extrafe.Style.Name = 'Amakrits') or (extrafe.Style.Name = 'Dark') or (extrafe.Style.Name = 'Air') then
-    TText(Sender).TextSettings.FontColor := claWhite
-  else
-    TText(Sender).TextSettings.FontColor := claBlack;
-  TText(Sender).Cursor := crDefault;
+  if TText(Sender).Name = 'Mame_Dir_Media_Change_' + TText(Sender).Tag.ToString then
+    vMame.Config.Panel.Dirs.Media.Change_Glow[TText(Sender).Tag].Enabled := False
+  else if TText(Sender).Name = 'Mame_Dir_Media_CAD_' + TText(Sender).Tag.ToString then
+    vMame.Config.Panel.Dirs.Media.CheckAndDownload_Glow[TText(Sender).Tag].Enabled := False
+  else if TText(Sender).Name = 'Mame_Dir_Roms_Add' then
+    vMame.Config.Panel.Dirs.Roms.Find_Glow.Enabled := False
+  else if TText(Sender).Name = 'Mame_Dir_Roms_Del_' + TText(Sender).Tag.ToString then
+    vMame.Config.Panel.Dirs.Roms.Del_Glow[TText(Sender).Tag].Enabled := False;
 end;
 
 { TEMU_ARCADE_MAME_CONFIG_TRACKBAR }
@@ -262,8 +275,7 @@ begin
   else if extrafe.prog.State = 'mame_config_controls' then
     uEmu_Arcade_Mame_Config_Controllers_ComboboxOnChange(TComboBox(Sender).Name)
   else if extrafe.prog.State = 'mame_config_controlmapping' then
-    uEmu_Arcade_Mame_Config_ControllerMapping_SetContMapping(TComboBox(Sender).ItemIndex,
-      TComboBox(Sender).Tag)
+    uEmu_Arcade_Mame_Config_ControllerMapping_SetContMapping(TComboBox(Sender).ItemIndex, TComboBox(Sender).Tag)
   else if extrafe.prog.State = 'mame_config_misc' then
     uEmu_Arcade_Mame_Config_Misc_ComboboxOnChange(TComboBox(Sender).Name)
   else if extrafe.prog.State = 'mame_config_miscII' then
