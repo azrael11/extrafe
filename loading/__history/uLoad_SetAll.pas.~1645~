@@ -924,9 +924,11 @@ end;
 
 procedure Register_Success;
 begin
-  ex_load.Reg_Success.Panel := TLayout.Create(ex_load.Scene.Back);
+  ex_load.Scene.Back_Blur.Enabled := True;
+
+  ex_load.Reg_Success.Panel := TLayout.Create(ex_load.Scene.Back_Back);
   ex_load.Reg_Success.Panel.Name := 'Loading_Register_Success';
-  ex_load.Reg_Success.Panel.Parent:=   ex_load.Scene.Back;
+  ex_load.Reg_Success.Panel.Parent:=   ex_load.Scene.Back_Back;
   ex_load.Reg_Success.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
   ex_load.Reg_Success.Panel.Visible := True;
 
@@ -942,13 +944,13 @@ begin
   ex_load.Reg_Success.Indicator := TAniIndicator.Create(ex_load.Reg_Success.Panel);
   ex_load.Reg_Success.Indicator.Name := 'Loading_Register_Success_AniIndicator';
   ex_load.Reg_Success.Indicator.Parent:=  ex_load.Reg_Success.Panel;
-  ex_load.Reg_Success.Indicator.SetBounds((ex_load.Reg_Success.Panel.Width / 2) - 40, 70, 80, 80);
+  ex_load.Reg_Success.Indicator.SetBounds((ex_load.Reg_Success.Panel.Width / 2) - 40, 70, 40, 40);
   ex_load.Reg_Success.Indicator.Enabled := True;
 
   ex_load.Reg_Success.Timer := TTimer.Create(ex_load.Reg_Success.Panel);
   ex_load.Reg_Success.Timer.Name := 'Loading_Register_Success_Timer';
   ex_load.Reg_Success.Timer.Parent:=   ex_load.Reg_Success.Panel;
-  ex_load.Reg_Success.Timer.Interval:= 100;
+  ex_load.Reg_Success.Timer.Interval:= 3000;
   ex_load.Reg_Success.Timer.OnTimer := ex_load.Reg_Success.Success_Timer.OnTimer;
   ex_load.Reg_Success.Timer.Enabled := True;
 end;

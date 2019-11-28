@@ -924,6 +924,8 @@ end;
 
 procedure Register_Success;
 begin
+  ex_load.Login.Panel.Visible:= False;
+
   ex_load.Reg_Success.Panel := TLayout.Create(ex_load.Scene.Back);
   ex_load.Reg_Success.Panel.Name := 'Loading_Register_Success';
   ex_load.Reg_Success.Panel.Parent:=   ex_load.Scene.Back;
@@ -948,7 +950,7 @@ begin
   ex_load.Reg_Success.Timer := TTimer.Create(ex_load.Reg_Success.Panel);
   ex_load.Reg_Success.Timer.Name := 'Loading_Register_Success_Timer';
   ex_load.Reg_Success.Timer.Parent:=   ex_load.Reg_Success.Panel;
-  ex_load.Reg_Success.Timer.Interval:= 100;
+  ex_load.Reg_Success.Timer.Interval:= 3000;
   ex_load.Reg_Success.Timer.OnTimer := ex_load.Reg_Success.Success_Timer.OnTimer;
   ex_load.Reg_Success.Timer.Enabled := True;
 end;

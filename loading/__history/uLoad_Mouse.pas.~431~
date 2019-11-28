@@ -217,14 +217,13 @@ begin
         uLoad_SetAll.Register_Error;
     end
     else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-//      uLoad_SetAll.Login_Forget_Password
-      uLoad_SetAll.Register_Success
+      uLoad_SetAll_Forget_Password
     else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
       uLoad_Login.Show_Password
     else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
       uLoad_Register.Refresh_Captcha
     else if TText(Sender).Name = 'Loading_Register_Terms' then
-      uLoad_SetAll.Register_Terms
+      Register_Terms
     else if TImage(Sender).Name = 'Loading_Register_Pass_Show' then
       uLoad_Register.Show_Password
     else if TImage(Sender).Name = 'Loading_Register_RePass_Show' then

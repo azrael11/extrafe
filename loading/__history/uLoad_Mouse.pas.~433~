@@ -217,8 +217,7 @@ begin
         uLoad_SetAll.Register_Error;
     end
     else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-//      uLoad_SetAll.Login_Forget_Password
-      uLoad_SetAll.Register_Success
+      uLoad_SetAll.Login_Forget_Password
     else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
       uLoad_Login.Show_Password
     else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then

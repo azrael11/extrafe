@@ -924,6 +924,8 @@ end;
 
 procedure Register_Success;
 begin
+  ex_load.Login.Panel.Visible:= False;
+
   ex_load.Reg_Success.Panel := TLayout.Create(ex_load.Scene.Back);
   ex_load.Reg_Success.Panel.Name := 'Loading_Register_Success';
   ex_load.Reg_Success.Panel.Parent:=   ex_load.Scene.Back;

@@ -371,7 +371,7 @@ begin
   { User Statistics data }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'USERS_STATISTICS', vColumns, vValues);
+  Query_Insert(ExtraFE_Query_Local, 'USER_STATISTICS', vColumns, vValues);
 
   { Emulation data }
   free_vpath;
@@ -456,12 +456,12 @@ begin
   vPath[2] := extrafe.prog.Path + 'data\addons\time\clock\';
 
   vColumns := 'USER_ID, MENU_POSITION, FIRST_POP, PATH_IMAGES, PATH_SOUNDS, PATH_CLOCKS';
-  vValues := '"' + vLocal_Num + '", "0", TRUE, "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
+  vValues := '"' + vLocal_Num + '", 0, TRUE, "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_TIME', vColumns, vValues);
 
   { Addons Time Time Data }
   vColumns := 'USER_ID';
-  vValues := '"' + vLocal_Num + '"';
+  vValues := '"'+ vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_TIME_TIME', vColumns, vValues);
 
   { Addons Calendar }
@@ -477,7 +477,7 @@ begin
   vPath[3] := extrafe.prog.Path + 'data\addons\weather\temp\';
 
   vColumns := 'USER_ID, PATH_ICONS, PATH_IMAGES, PATH_SOUNDS, PATH_TEMP';
-  vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '"';
+  vValues := '"' + vLocal_Num + '", "' + vPath[0] + ''', ''' + vPath[1] + ''', ''' + vPath[2] + ''', ''' + vPath[3] + '';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_WEATHER', vColumns, vValues);
 
   { Addons SoundPlayer }
@@ -487,13 +487,13 @@ begin
   vPath[2] := extrafe.prog.Path + 'data\addons\soundplayer\sounds\';
 
   vColumns := 'USER_ID, PATH_IMAGES, PATH_PLAYLISTS, PATH_SOUNDS';
-  vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
+  vValues := vLocal_Num + ', ' + vPath[0] + ''', ''' + vPath[1] + ''', ''' + vPath[2] + '';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', vColumns, vValues);
 
   { Addons AzPlay }
 
   vColumns := 'USER_ID, COUNT, ACTIVE, AZHUNG';
-  vValues := '"' + vLocal_Num + '", "4", "0", "1"';
+  vValues := vLocal_Num + ', "4", "0", "1"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_AZPLAY', vColumns, vValues);
 
 end;

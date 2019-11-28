@@ -27,8 +27,7 @@ uses
   uTime_AllTypes,
   uSoundplayer_AllTypes,
   uWeather_AllTypes,
-  uPlay_AllTypes,
-  CodeSiteLogging;
+  uPlay_AllTypes;
 
 /// Global Window Header
 ///
@@ -614,25 +613,21 @@ procedure TLOADING_REGISTER_SUCCESS_TIMER.OnTimer(Sender: TObject);
 begin
   if uLoad_Register.vTask.Status = TTaskStatus.Completed then
   begin
-    CodeSite.Send('Threading task is completed');
-    ex_load.Reg_Success.Timer.Enabled := False;
+    ex_load.Reg_Success.Timer.Free;
     if uLoad_Register.Is_user_registered then
     begin
-      CodeSite.Send('User is finally resistered. Begin actions to login');
-      FreeAndNil(ex_load.Reg_Success.Panel);
       uLoad_Register.Cancel;
     end
     else
     begin
-      CodeSite.Send('User not registered. Beging actions to go back');
-      FreeAndNil(ex_load.Reg_Success.Panel);
+      uLoad_Register.Fail;
       ex_load.Reg.Panel.Visible := True;
       ex_load.Reg.Main.Data.Panel.Visible := True;
-      uLoad_Register.Fail;
     end;
     FreeAndNil(ex_load.Reg_Success.Panel);
 
     uLoad_Register.vTask := nil;
+
   end
 end;
 

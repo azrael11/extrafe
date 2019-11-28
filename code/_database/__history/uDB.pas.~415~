@@ -371,7 +371,7 @@ begin
   { User Statistics data }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'USERS_STATISTICS', vColumns, vValues);
+  Query_Insert(ExtraFE_Query_Local, 'USER_STATISTICS', vColumns, vValues);
 
   { Emulation data }
   free_vpath;

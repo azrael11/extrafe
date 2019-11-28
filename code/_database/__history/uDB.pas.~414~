@@ -371,7 +371,7 @@ begin
   { User Statistics data }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'USERS_STATISTICS', vColumns, vValues);
+  Query_Insert(ExtraFE_Query_Local, 'USER_STATISTICS', vColumns, vValues);
 
   { Emulation data }
   free_vpath;
@@ -456,7 +456,7 @@ begin
   vPath[2] := extrafe.prog.Path + 'data\addons\time\clock\';
 
   vColumns := 'USER_ID, MENU_POSITION, FIRST_POP, PATH_IMAGES, PATH_SOUNDS, PATH_CLOCKS';
-  vValues := '"' + vLocal_Num + '", "0", TRUE, "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
+  vValues := '"' + vLocal_Num + '", 0, TRUE, "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_TIME', vColumns, vValues);
 
   { Addons Time Time Data }

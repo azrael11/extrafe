@@ -23,7 +23,7 @@ uses
 procedure Cancel;
 begin
   FreeAndNil(ex_load.F_Pass.Panel);
-  uLoad_SetAll.Login;
+  uLoad_SetAll_Login;
   ex_load.Login.Pass_V.Text := '';
 end;
 

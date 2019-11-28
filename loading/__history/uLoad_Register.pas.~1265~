@@ -183,7 +183,6 @@ begin
     procedure()
     begin
       Is_user_registered := false;
-      CodeSite.Send('Is_User_Registered : False');
       if Check_Data then
       begin
         vIp := uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
@@ -201,7 +200,6 @@ begin
         User_Reg.Genre := '0';
         if uDB.Add_New_User_Online then
         begin
-          CodeSite.Send('New user is on Online Database');
           vQuery := 'SELECT * FROM USERS';
           ExtraFE_Query.Close;
           ExtraFE_Query.SQL.Clear;
@@ -210,10 +208,9 @@ begin
 
           User_Reg.Online_Num := ExtraFE_Query.RecordCount.ToString;
           uDB.Add_New_User_Local;
-          CodeSite.Send('New user is on Local Database');
           uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
-          Is_user_registered := True;
         end;
+        Is_user_registered := True;
       end;
     end);
 

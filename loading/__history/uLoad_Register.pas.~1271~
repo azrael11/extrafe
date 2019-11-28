@@ -212,8 +212,8 @@ begin
           uDB.Add_New_User_Local;
           CodeSite.Send('New user is on Local Database');
           uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
-          Is_user_registered := True;
-        end;
+        end
+
       end;
     end);
 

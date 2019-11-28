@@ -190,7 +190,7 @@ procedure SetLoadingScreen;
 begin
   uKeyboard_HookKeyboard;
   FHook.Active := True;
-  uLoad_SetAll_Load;
+  uLoad_SetAll.Load;
 end;
 
 procedure Start_ExtraFE;

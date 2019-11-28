@@ -618,17 +618,14 @@ begin
     ex_load.Reg_Success.Timer.Enabled := False;
     if uLoad_Register.Is_user_registered then
     begin
-      CodeSite.Send('User is finally resistered. Begin actions to login');
       FreeAndNil(ex_load.Reg_Success.Panel);
       uLoad_Register.Cancel;
     end
     else
     begin
-      CodeSite.Send('User not registered. Beging actions to go back');
-      FreeAndNil(ex_load.Reg_Success.Panel);
+      uLoad_Register.Fail;
       ex_load.Reg.Panel.Visible := True;
       ex_load.Reg.Main.Data.Panel.Visible := True;
-      uLoad_Register.Fail;
     end;
     FreeAndNil(ex_load.Reg_Success.Panel);
 
