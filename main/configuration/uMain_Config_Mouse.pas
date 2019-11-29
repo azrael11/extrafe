@@ -129,7 +129,7 @@ begin
     else if ContainsText(TImage(Sender).Name, 'Main_Config_Info_Credits_Image_') then
     begin
       if (ex_main.Config.Info_Credits_Tab_Selected <> vTab_Selected) or (ex_main.Config.Info_Credits_Selected <> TImage(Sender).Tag) then
-        uMain_Config_Info_Credits_ShowBrand((TImage(Sender).TagString).ToInteger, TImage(Sender).Tag);
+        uMain_Config_Info_Credits.Brand_Show((TImage(Sender).TagString).ToInteger, TImage(Sender).Tag);
     end;
   end;
 end;
@@ -415,7 +415,7 @@ begin
   if ContainsText(extrafe.prog.State, 'main_config') then
   begin
     if TButton(Sender).Name = 'Main_Config_Button_' + IntToStr(TButton(Sender).Tag) then
-      uMain_Config_ShowPanel(TButton(Sender).Tag)
+      uMain_Config.ShowPanel(TButton(Sender).Tag)
     else if extrafe.prog.State = 'main_config_emulators' then
     begin
       if TButton(Sender).TagFloat = 1000 then

@@ -21,6 +21,8 @@ uses
 procedure Login;
 procedure Exit_Program;
 
+procedure Change_User(vUser_Num: Integer);
+
 procedure Update_Password(vValue: String);
 
 procedure Show_Password;
@@ -43,8 +45,9 @@ var
 
 procedure Login;
 begin
-  if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.Username) and
-    (ex_load.Login.Pass_V.Text = uDB_AUser.Local.Password) then
+  ex_load.Scene.Progress.Visible := True;
+  ex_load.Scene.Progress_Text.Visible := True;
+  if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.Username) and (ex_load.Login.Pass_V.Text = uDB_AUser.Local.Password) then
     uLoad.Start_ExtraFE
   else
   begin
@@ -130,6 +133,29 @@ begin
   else
     ex_load.Login.Pass_Show.TextSettings.FontColor := TAlphaColorRec.Grey;
 
+end;
+
+procedure Change_User(vUser_Num: Integer);
+begin
+  if extrafe.databases.online_connected then
+  begin
+    if vUser_Num <> 0 then
+    begin
+      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + vLogin_User[vUser_Num].Avatar + '.png');
+      ex_load.Login.Last_Visit.Text := 'Last Visit : ' + vLogin_User[vUser_Num].Last_Visit;
+      uDB_AUser.Get_Local_Data((vUser_Num).ToString);
+      // Get online data
+    end
+    else
+    begin
+      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
+      ex_load.Login.Last_Visit.Text := 'Last Visit : --/--/--';
+    end
+  end
+  else
+  begin
+    // Exception (if not connectet to internet or online database)
+  end;
 end;
 
 end.

@@ -26,9 +26,9 @@ uses
   IdComponent,
   uMain_AllTypes;
 
-procedure uMain_SetAll_Set;
+procedure Load;
+procedure Free;
 
-procedure uMain_SetAll_Exit;
 procedure Addon_Icon(vNum: integer);
 
 implementation
@@ -83,7 +83,7 @@ begin
   mainScene.Header.Addon_Icon.Blur[vNum].Enabled := False;
 end;
 
-procedure uMain_SetAll_Set;
+procedure Load;
 var
   vi: integer;
   vCol: TGridPanelLayout.TColumnItem;
@@ -395,7 +395,7 @@ begin
 
 end;
 
-procedure uMain_SetAll_Exit;
+procedure Free;
 begin
   mainScene.Header.Back_Blur.Enabled := True;
   mainScene.Selection.Blur.Enabled := True;

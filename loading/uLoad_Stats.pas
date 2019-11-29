@@ -6,10 +6,8 @@ uses
   System.Classes,
   System.IniFiles;
 
-procedure uLoad_Stats_FirstTime;
-procedure uLoad_Stats_Load;
-
-procedure uLoad_Stats_Clear;
+procedure Load;
+procedure Clear;
 
 implementation
 
@@ -17,16 +15,12 @@ uses
   main,
   uLoad_AllTypes;
 
-procedure uLoad_Stats_FirstTime;
-begin
-end;
-
-procedure uLoad_Stats_Load;
+procedure Load;
 begin
 
 end;
 
-procedure uLoad_Stats_Clear;
+procedure Clear;
 begin
 
 end;

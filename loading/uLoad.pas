@@ -136,12 +136,7 @@ begin
   uDB.Local_Create;
   extrafe.databases.local_connected := uDB.Local_Connect;
 
-  ExtraFE_Query_Local.close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Text := 'SELECT COUNT(*) FROM USERS';
-  ExtraFE_Query_Local.Open;
-  extrafe.users_total := ExtraFE_Query_Local.Fields[0].AsInteger;
-
+  extrafe.users_total := uDB.Local_Get_Users;
   extrafe.res.Monitor := uWindows.Get_Monitor_Resolution;
 
   if extrafe.users_total > 0 then
@@ -177,7 +172,7 @@ begin
   mainScene.main.style.Name := 'Main_StyleBook';
   mainScene.main.style.Parent := Main_Form;
 
-  uMain_Config_Themes_ApplyTheme(extrafe.style.Name);
+  uMain_Config_Themes.ApplyTheme(extrafe.style.Name);
   load.Loading.StyleBook := mainScene.main.style;
 
   ex_load.Path.Images := extrafe.prog.Path + 'data\loading\';

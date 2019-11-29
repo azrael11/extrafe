@@ -36,12 +36,16 @@ uses
 { Databases actions }
 
 procedure Online_Create;
+procedure Online_Create_Tables;
 function Online_Connect: Boolean;
 function Online_Disconnect: Boolean;
 
 procedure Local_Create;
+procedure Local_Create_Tables;
 function Local_Connect: Boolean;
 function Local_Disconnect: Boolean;
+
+function Local_Get_Users: Integer;
 
 procedure Emulators_Create;
 function Emulators_Connect: Boolean;
@@ -109,6 +113,7 @@ uses
   uLoad_Register,
   uDB_AUser;
 
+{Online Database procedures}
 procedure Online_Create;
 begin
   ExtraFE_DB := TZConnection.Create(Main_Form);
@@ -140,6 +145,11 @@ begin
   ExtraFE_Query.Connection := ExtraFE_DB;
 end;
 
+procedure Online_Create_Tables;
+begin
+
+end;
+
 function Online_Connect: Boolean;
 begin
   try
@@ -157,14 +167,12 @@ end;
 
 function Online_Disconnect: Boolean;
 begin
-  // Query_Update_Online('USERS', 'ACTIVE', 'FALSE', user_Active_Local.Num.ToString);
-  // ExtraFE_DB.Disconnect;
-  // Result := ExtraFE_DB.Connected;
+   Query_Update_Online('USERS', 'ACTIVE', 'FALSE', uDB_AUser.Online.Num.ToString);
+   ExtraFE_DB.Disconnect;
+   Result := ExtraFE_DB.Connected;
 end;
 
-/// ////////////////
-///
-
+{Local Database procedures}
 procedure Local_Create;
 begin
   ExtraFE_DB_Local := TFDConnection.Create(main.Main_Form);
@@ -180,6 +188,33 @@ begin
     Open;
   end;
   ExtraFE_DB_Local.LoginPrompt := False;
+end;
+
+procedure Local_Create_Tables;
+begin
+  {22 Tables}
+  //Users
+  //Users_Statistics
+  //Settings
+  //Options
+  //Addons
+  //Addon_Time
+  //Addon_Time_Time
+  //Addon_Calendar
+  //Addon_Weather
+  //Addon_Weather_OWM
+  //Addon_Weather_Yahoo
+  //Addon_Soundplayer
+  //Addon_Soundplayer_Playlists
+  //Addon_AzPlay
+  //Emulators
+  //Arcade
+  //Arcade_Mame
+  //Arcade_Media
+  //Computers
+  //Consoles
+  //Handhelds
+  //Pinballs
 end;
 
 function Local_Connect: Boolean;
@@ -525,11 +560,6 @@ begin
   Result := vQuery.FieldByName(vColumn).AsString;
 end;
 
-// function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): Integer;
-// begin
-//
-// end;
-
 { Queries Actions Online }
 procedure Query_Update_Online(vTable_Name, vCol, vValue, vUser_Num: string);
 begin
@@ -552,15 +582,14 @@ begin
   ExtraFE_Query.Close;
 end;
 
-{ function Query_Select_Online(vTable, vWhere, vField: string): Integer; override;
-  begin
-  ExtraFE_Query.Close;
-  ExtraFE_Query.SQL.Clear;
-  ExtraFE_Query.SQL.Add('SELECT * FROM '+ vTable +' WHERE USER_ID=' + vWhere);
-  ExtraFE_Query.ExecSQL;
-  ExtraFE_Query.Open;
-  ExtraFE_Query.First;
-  Result := ExtraFE_Query.FieldByName(vField).AsInteger;
-  end; }
+
+function Local_Get_Users: Integer;
+begin
+  ExtraFE_Query_Local.close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Text := 'SELECT COUNT(*) FROM USERS';
+  ExtraFE_Query_Local.Open;
+  Result := ExtraFE_Query_Local.Fields[0].AsInteger;
+end;
 
 end.

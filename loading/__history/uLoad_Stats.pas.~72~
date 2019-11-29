@@ -1,0 +1,32 @@
+unit uLoad_Stats;
+
+interface
+
+uses
+  System.Classes,
+  System.IniFiles;
+
+procedure Load;
+procedure Clear;
+
+implementation
+
+uses
+  main,
+  uLoad_AllTypes;
+
+procedure uLoad_Stats_FirstTime;
+begin
+end;
+
+procedure uLoad_Stats_Load;
+begin
+
+end;
+
+procedure uLoad_Stats_Clear;
+begin
+
+end;
+
+end.

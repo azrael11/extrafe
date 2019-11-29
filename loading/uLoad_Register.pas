@@ -176,9 +176,9 @@ var
   vIp: TJSONValue;
   vQuery: String;
 begin
-  ex_load.Reg.Panel.Visible:= False;
-  ex_load.Reg.Main.Data.Panel.Visible := False;
-  uLoad_SetAll.Register_Success;
+  ex_load.Reg.Panel.Visible := false;
+  ex_load.Reg.Main.Data.Panel.Visible := false;
+  ULoad_SetAll.Register_Success;
   vTask := TTask.Create(
     procedure()
     begin
@@ -759,18 +759,26 @@ begin
   else
     Wrong(ex_load.Reg.Main.Data.User[1], 1);
 
-  for vi := 1 to User.User_Total do
+  if User.User_Total = 0 then
   begin
-    if vValue[vi] in cNumbers then
+    Wrong(ex_load.Reg.Main.Data.User[2], 2);
+    User.User_Num := false;
+  end
+  else
+  begin
+    for vi := 1 to User.User_Total do
     begin
-      OK(ex_load.Reg.Main.Data.User[2], 2);
-      User.User_Num := True;
-      Break
-    end
-    else
-    begin
-      Wrong(ex_load.Reg.Main.Data.User[2], 2);
-      User.User_Num := false;
+      if vValue[vi] in cNumbers then
+      begin
+        OK(ex_load.Reg.Main.Data.User[2], 2);
+        User.User_Num := True;
+        Break
+      end
+      else
+      begin
+        Wrong(ex_load.Reg.Main.Data.User[2], 2);
+        User.User_Num := false;
+      end;
     end;
   end;
 

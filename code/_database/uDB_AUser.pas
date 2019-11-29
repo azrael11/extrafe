@@ -58,7 +58,6 @@ type
     Digital_Font_Color: String;
     Digital_Sep: String;
     Digital_Sep_Color: String;
-
   end;
 
 type
@@ -426,8 +425,6 @@ function Find_User_Online_Num(vUser_ID: String): Integer;
 
 procedure update_time;
 
-procedure Temp_User;
-
 var
   Local: TDATABASE_ACTIVE_USER_LOCAL;
   Online: TDATABASE_ACTIVE_USER_ONLINE;
@@ -659,20 +656,6 @@ begin
   end;
 
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT', 'USER_ID',  vCurFinal, Local.Num.ToString);
-end;
-
-procedure Temp_User;
-begin
-  { uDB_AUser.Online.Num := 0;
-    uDB_AUser.Online.Username := 'JohnDoe';
-    uDB_AUser.Online.Password := '123456';
-    uDB_AUser.Online.Email := 'JohnDoe@temp.com';
-    uDB_AUser.Online.IP := '100.100.100.100';
-    uDB_AUser.Online.Name := 'Jonh';
-    uDB_AUser.Online.Surname := 'Doe';
-    uDB_AUser.Online.Avatar := '0';
-    uDB_AUser.Online.Registered := '00:00:00:00';
-    uDB_AUser.Online.Last_Visit := '00:00:00:00'; }
 end;
 
 end.

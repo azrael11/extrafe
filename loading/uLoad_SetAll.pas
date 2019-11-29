@@ -41,7 +41,7 @@ var
 implementation
 
 uses
-  load,
+  Load,
   uDB,
   uDB_AUser,
   uWindows,
@@ -52,17 +52,17 @@ uses
 procedure Load;
 begin
   // Back
-  ex_load.Scene.Back_Back := TImage.Create(load.Loading);
+  ex_load.Scene.Back_Back := TImage.Create(Load.Loading);
   ex_load.Scene.Back_Back.Name := 'Loading_Back_Back';
-  ex_load.Scene.Back_Back.Parent := load.Loading;
+  ex_load.Scene.Back_Back.Parent := Load.Loading;
   ex_load.Scene.Back_Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
   ex_load.Scene.Back_Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back_Back.WrapMode := TImageWrapMode.Fit;
   ex_load.Scene.Back_Back.Visible := True;
 
-  ex_load.Scene.Back := TImage.Create(load.Loading);
+  ex_load.Scene.Back := TImage.Create(Load.Loading);
   ex_load.Scene.Back.Name := 'Loading_Back';
-  ex_load.Scene.Back.Parent := load.Loading;
+  ex_load.Scene.Back.Parent := Load.Loading;
   ex_load.Scene.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
   ex_load.Scene.Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back.WrapMode := TImageWrapMode.Fit;
@@ -102,7 +102,7 @@ begin
   ex_load.Scene.Progress.Min := 0;
   ex_load.Scene.Progress.Max := 100;
   ex_load.Scene.Progress.Value := 0;
-  ex_load.Scene.Progress.Visible := True;
+  ex_load.Scene.Progress.Visible := False;
 
   ex_load.Scene.Progress_Text := TLabel.Create(ex_load.Scene.Back);
   ex_load.Scene.Progress_Text.Name := 'Loading_Progress_Text';
@@ -111,7 +111,7 @@ begin
   ex_load.Scene.Progress_Text.StyledSettings := ex_load.Scene.Progress_Text.StyledSettings - [TStyledSetting.Size];
   ex_load.Scene.Progress_Text.Font.Size := 18;
   ex_load.Scene.Progress_Text.Text := 'Waiting for Login.';
-  ex_load.Scene.Progress_Text.Visible := True;
+  ex_load.Scene.Progress_Text.Visible := False;
 
   ex_load.Scene.Code_Name := TText.Create(ex_load.Scene.Back);
   ex_load.Scene.Code_Name.Name := 'Loading_Code_Name';
@@ -129,16 +129,15 @@ begin
   ex_load.Scene.Ver.Parent := ex_load.Scene.Back;
   ex_load.Scene.Ver.SetBounds(extrafe.res.Width - 350, 160, 260, 26);
   ex_load.Scene.Ver.TextSettings.FontColor := TAlphaColorRec.White;
-  ex_load.Scene.Ver.Text := 'Version: ' + extrafe.prog.Version.Major + '.' + extrafe.prog.Version.Minor + '.' + extrafe.prog.Version.Realeash + ' build ' +
-    extrafe.prog.Version.Build;
+  ex_load.Scene.Ver.Text := 'Version: ' + extrafe.prog.Version.Major + '.' + extrafe.prog.Version.Minor + '.' + extrafe.prog.Version.Realeash + ' build ' + extrafe.prog.Version.Build;
   ex_load.Scene.Ver.TextSettings.Font.Style := ex_load.Scene.Code_Name.TextSettings.Font.Style + [TFontstyle.fsBold];
   ex_load.Scene.Ver.RotationAngle := 38;
   ex_load.Scene.Ver.TextSettings.Font.Size := 16;
   ex_load.Scene.Ver.Visible := True;
 
-  ex_load.Scene.Timer := TTimer.Create(load.Loading);
+  ex_load.Scene.Timer := TTimer.Create(Load.Loading);
   ex_load.Scene.Timer.Name := 'Loading_Timer';
-  ex_load.Scene.Timer.Parent := load.Loading;
+  ex_load.Scene.Timer.Parent := Load.Loading;
   ex_load.Scene.Timer.Interval := 1000;
   ex_load.Scene.Timer.Enabled := False;
 
@@ -226,6 +225,7 @@ begin
   ex_load.Login.User_V.Name := 'Loading_Login_User_V';
   ex_load.Login.User_V.Parent := ex_load.Login.Main;
   ex_load.Login.User_V.SetBounds(182, 40, 329, 36);
+  ex_load.Login.User_V.OnChange := ex_load.Input.mouse.Combobox.OnChange;
   ex_load.Login.User_V.Visible := True;
 
   ex_load.Login.Pass := TLabel.Create(ex_load.Login.Main);
@@ -393,6 +393,16 @@ begin
   SetLength(vLogin_User, extrafe.users_total + 1);
   SetLength(vListBox_Item, extrafe.users_total + 1);
 
+  vListBox_Item[0] := TListBoxItem.Create(ex_load.Login.User_V);
+  vListBox_Item[0].Name := 'Load_ListItem_0';
+  vListBox_Item[0].Parent := ex_load.Login.User_V;
+  vListBox_Item[0].StyledSettings := vListBox_Item[0].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
+  vListBox_Item[0].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vListBox_Item[0].Font.Size := 18;
+  vListBox_Item[0].Text := 'Choose...';
+  vListBox_Item[0].Visible := True;
+  ex_load.Login.User_V.AddObject(vListBox_Item[0]);
+
   if extrafe.users_total > 0 then
   begin
     for vi := 1 to extrafe.users_total do
@@ -425,8 +435,6 @@ begin
     vListBox_Item[0].Visible := True;
     ex_load.Login.User_V.AddObject(vListBox_Item[0]);
   end;
-
-  ex_load.Login.User_V.ItemIndex := 0;
 
   if extrafe.users_total > 0 then
   begin
@@ -468,6 +476,8 @@ begin
       ex_load.Login.NotRegister.TextSettings.FontColor := TAlphaColorRec.Red;
     end;
   end;
+
+    ex_load.Login.User_V.ItemIndex := 0;
 end;
 
 procedure Login_Forget_Password;
@@ -887,11 +897,11 @@ end;
 
 procedure Register_Error;
 begin
-  ex_load.Login.Panel.Visible:= False;
+  ex_load.Login.Panel.Visible := False;
 
   ex_load.Reg_Error.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.Reg_Error.Panel.Name := 'Loading_Register_Error';
-  ex_load.Reg_Error.Panel.Parent:=  ex_load.Scene.Back;
+  ex_load.Reg_Error.Panel.Parent := ex_load.Scene.Back;
   ex_load.Reg_Error.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
   ex_load.Reg_Error.Panel.Visible := True;
 
@@ -899,8 +909,8 @@ begin
 
   ex_load.Reg_Error.Memo := TMemo.Create(ex_load.Reg_Error.Panel);
   ex_load.Reg_Error.Memo.Name := 'Loading_Register_Error_Main';
-  ex_load.Reg_Error.Memo.Parent:=   ex_load.Reg_Error.Panel;
-  ex_load.Reg_Error.Memo.SetBounds(10, 40, ex_load.Reg_Error.Panel.Width- 20, ex_load.Reg_Error.Panel.Height - 90);
+  ex_load.Reg_Error.Memo.Parent := ex_load.Reg_Error.Panel;
+  ex_load.Reg_Error.Memo.SetBounds(10, 40, ex_load.Reg_Error.Panel.Width - 20, ex_load.Reg_Error.Panel.Height - 90);
   ex_load.Reg_Error.Memo.Lines.Add(' Warning !!!');
   ex_load.Reg_Error.Memo.Lines.Add(' Or internet is down or for some reason you can''t connect to server database.');
   ex_load.Reg_Error.Memo.Lines.Add(' ');
@@ -914,9 +924,9 @@ begin
 
   ex_load.Reg_Error.OK := TButton.Create(ex_load.Reg_Error.Panel);
   ex_load.Reg_Error.OK.Name := 'Loading_Register_Error_Ok';
-  ex_load.Reg_Error.OK.Parent:=  ex_load.Reg_Error.Panel;
+  ex_load.Reg_Error.OK.Parent := ex_load.Reg_Error.Panel;
   ex_load.Reg_Error.OK.SetBounds(10, ex_load.Reg_Error.Panel.Height - 50, ex_load.Reg_Error.Panel.Width - 20, 40);
-  ex_load.Reg_Error.OK.Text:= 'Close';
+  ex_load.Reg_Error.OK.Text := 'Close';
   ex_load.Reg_Error.OK.OnClick := ex_load.Input.mouse.Button.OnMouseClick;
   ex_load.Reg_Error.OK.OnMouseEnter := ex_load.Input.mouse.Button.OnMouseEnter;
   ex_load.Reg_Error.OK.Visible := True;
@@ -926,13 +936,13 @@ procedure Register_Success;
 begin
   ex_load.Reg_Success.Panel := TLayout.Create(ex_load.Scene.Back);
   ex_load.Reg_Success.Panel.Name := 'Loading_Register_Success';
-  ex_load.Reg_Success.Panel.Parent:=   ex_load.Scene.Back;
+  ex_load.Reg_Success.Panel.Parent := ex_load.Scene.Back;
   ex_load.Reg_Success.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
   ex_load.Reg_Success.Panel.Visible := True;
 
   ex_load.Reg_Success.Text := TText.Create(ex_load.Reg_Success.Panel);
   ex_load.Reg_Success.Text.Name := 'Loading_Register_Success_Text';
-  ex_load.Reg_Success.Text.Parent:=   ex_load.Reg_Success.Panel;
+  ex_load.Reg_Success.Text.Parent := ex_load.Reg_Success.Panel;
   ex_load.Reg_Success.Text.SetBounds(10, 10, ex_load.Reg_Success.Panel.Width - 20, 30);
   ex_load.Reg_Success.Text.Font.Size := 18;
   ex_load.Reg_Success.Text.Text := 'Please wait to complete the registeration...';
@@ -941,14 +951,14 @@ begin
 
   ex_load.Reg_Success.Indicator := TAniIndicator.Create(ex_load.Reg_Success.Panel);
   ex_load.Reg_Success.Indicator.Name := 'Loading_Register_Success_AniIndicator';
-  ex_load.Reg_Success.Indicator.Parent:=  ex_load.Reg_Success.Panel;
+  ex_load.Reg_Success.Indicator.Parent := ex_load.Reg_Success.Panel;
   ex_load.Reg_Success.Indicator.SetBounds((ex_load.Reg_Success.Panel.Width / 2) - 40, 70, 80, 80);
   ex_load.Reg_Success.Indicator.Enabled := True;
 
   ex_load.Reg_Success.Timer := TTimer.Create(ex_load.Reg_Success.Panel);
   ex_load.Reg_Success.Timer.Name := 'Loading_Register_Success_Timer';
-  ex_load.Reg_Success.Timer.Parent:=   ex_load.Reg_Success.Panel;
-  ex_load.Reg_Success.Timer.Interval:= 100;
+  ex_load.Reg_Success.Timer.Parent := ex_load.Reg_Success.Panel;
+  ex_load.Reg_Success.Timer.Interval := 100;
   ex_load.Reg_Success.Timer.OnTimer := ex_load.Reg_Success.Success_Timer.OnTimer;
   ex_load.Reg_Success.Timer.Enabled := True;
 end;

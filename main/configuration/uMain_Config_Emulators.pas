@@ -5,21 +5,13 @@ interface
 uses
   System.SysUtils,
   System.UITypes,
-  System.UIConsts,
-  System.IniFiles,
   FMX.Dialogs,
   FMX.StdCtrls,
-  FMX.Graphics,
   FMX.Objects,
-  FMX.Platform,
   FMX.Layouts,
   FMX.Effects,
-  FMX.Edit,
   FMX.Types,
-  FMX.TabControl,
-  FMX.ImgList,
   FMX.Filter.Effects,
-  FMX.Controls,
   ALFMXObjects;
 
 procedure Create;
@@ -49,14 +41,9 @@ procedure UnInstall_Emu(vEmu_Num: Integer; vEmu_Categorie: String);
 implementation
 
 uses
-  uLoad,
   uLoad_AllTypes,
-  uSnippet_Image,
-  main,
   uDB_AUser,
-  uMain_SetAll,
   uMain_AllTypes,
-  uMain_Mouse,
   {Arcade}
   uMain_Config_Emulation_Arcade_Scripts_Mame_Install,
   uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall,

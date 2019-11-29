@@ -412,7 +412,7 @@ begin
   uMain_Emulation.Create_Selection_Control;
   Update_Database;
 
-  uMain_Emulation_Category(0);
+  uMain_Emulation.Category(0);
 
   Script_Mame_Install.Main.Control.SetActiveTabWithTransition(Script_Mame_Install.Main.Tabs[3], TTabTransition.Slide);
   Script_Mame_Install.Main.Status := 'phase_4';

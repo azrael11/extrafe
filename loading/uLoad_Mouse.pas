@@ -11,6 +11,7 @@ uses
   FMX.Forms,
   FMX.Edit,
   FMX.Layouts,
+  FMX.Listbox,
   FmxPasLibVlcPlayerUnit,
   BASS;
 
@@ -52,6 +53,11 @@ type
   end;
 
 type
+  TLOADING_COMBOBOX = class(TOBject)
+    procedure OnChange(Sender: TObject);
+  end;
+
+type
   TLOADING_VIDEO = class(TObject)
     procedure OnMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
   end;
@@ -63,6 +69,7 @@ type
     Edit: TLOADING_EDIT;
     Text: TLOADING_TEXT;
     Checkbox: TLOADING_CHECKBOX;
+    Combobox: TLOADING_COMBOBOX;
     Layout: TLOADING_VIDEO;
   end;
 
@@ -217,8 +224,7 @@ begin
         uLoad_SetAll.Register_Error;
     end
     else if TText(Sender).Name = 'Loading_Login_Forget_Pass' then
-//      uLoad_SetAll.Login_Forget_Password
-      uLoad_SetAll.Register_Success
+      uLoad_SetAll.Login_Forget_Password
     else if TText(Sender).Name = 'Loading_Login_Pass_Show' then
       uLoad_Login.Show_Password
     else if TText(Sender).Name = 'Loading_Register_Capt_Refresh' then
@@ -336,6 +342,14 @@ begin
 
 end;
 
+{ TLOADING_COMBOBOX }
+
+procedure TLOADING_COMBOBOX.OnChange(Sender: TObject);
+begin
+  if TComboBox(Sender).Name = 'Loading_Login_User_V' then
+    uLoad_Login.Change_User(TComboBox(Sender).ItemIndex);
+end;
+
 initialization
 
 ex_load.Input.mouse.Button := TLOADING_BUTTON.Create;
@@ -343,6 +357,7 @@ ex_load.Input.mouse.Image := TLOADING_IMAGE.Create;
 ex_load.Input.mouse.Edit := TLOADING_EDIT.Create;
 ex_load.Input.mouse.Text := TLOADING_TEXT.Create;
 ex_load.Input.mouse.Checkbox := TLOADING_CHECKBOX.Create;
+ex_load.Input.mouse.Combobox := TLOADING_COMBOBOX.Create;
 ex_load.Input.mouse.Layout := TLOADING_VIDEO.Create;
 
 finalization
@@ -353,5 +368,6 @@ ex_load.Input.mouse.Edit.Free;
 ex_load.Input.mouse.Text.Free;
 ex_load.Input.mouse.Checkbox.Free;
 ex_load.Input.mouse.Layout.Free;
+ex_load.Input.mouse.Combobox.Free;
 
 end.

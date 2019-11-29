@@ -8,28 +8,23 @@ uses
   System.UiTypes,
   FMX.Types,
   FMX.Effects,
-  FMX.Filter.Effects,
   FMX.StdCtrls,
-  FMX.Ani,
-  FMX.Objects;
+  FMX.Ani;
 
-procedure uMain_Config_Load;
-procedure uMain_COnfig_Free;
+procedure Load;
+procedure Free;
 
-procedure uMain_Config_FreePanel(vPanel: Integer);
+procedure ShowPanel(vPanel: Byte);
+procedure FreePanel(vPanel: Integer);
 
-procedure uMain_Config_ShowHide(vMain_State: String);
-
-procedure uMain_Config_ShowPanel(vPanel: Byte);
+procedure ShowHide(vMain_State: String);
 
 implementation
 
 uses
   main,
   uLoad_AllTypes,
-  uMain_SetAll,
   uMain_AllTypes,
-  uMain_Mouse,
   uMain_Actions,
   uMain_Config_Profile,
   uMain_Config_General,
@@ -39,7 +34,7 @@ uses
   uMain_Config_Info,
   uMain_Config_Info_Credits;
 
-procedure uMain_Config_Load;
+procedure Load;
 const
   cButton_Names: array [0 .. 6] of string = ('Profile', 'General', 'Emulators', 'PC Games', 'Addons', 'Themes', 'Info');
 var
@@ -119,19 +114,19 @@ begin
   ex_main.Config.Active_Panel := -1;
 end;
 
-procedure uMain_COnfig_Free;
+procedure Free;
 var
   vi: Integer;
 begin
   FreeAndNil(mainScene.Config.Panel);
 end;
 
-procedure uMain_Config_ShowHide(vMain_State: String);
+procedure ShowHide(vMain_State: String);
 begin
   if vMain_State = 'main' then
   begin
     extrafe.prog.State := 'main_config';
-    uMain_Config_Load;
+    Load;
     mainScene.Config.Panel_Ani.AnimationType := TAnimationType.Out;
     mainScene.Config.Panel_Ani.Interpolation := TInterpolationType.Bounce;
     mainScene.Config.Panel_Ani.StartValue := ex_main.Settings.Config_Pos.X;
@@ -149,12 +144,12 @@ begin
     mainScene.Config.Panel_Ani.Start;
     mainScene.Header.Back_Blur.Enabled := False;
     mainScene.Selection.Blur.Enabled := False;
-    uMain_Config_FreePanel(ex_main.Config.Active_Panel);
+    FreePanel(ex_main.Config.Active_Panel);
     extrafe.prog.State := 'main';
   end;
 end;
 
-procedure uMain_Config_FreePanel(vPanel: Integer);
+procedure FreePanel(vPanel: Integer);
 var
   vi: Integer;
 begin
@@ -177,19 +172,19 @@ begin
       FreeAndNil(mainScene.Config.main.R.Themes.Panel);
     6:
       begin
-        uMain_Config_Info_Credits_ClearBrands;
+        uMain_Config_Info_Credits.Brands_Clear;
         FreeAndNil(mainScene.Config.main.R.Info.Panel);
       end;
   end;
 end;
 
-procedure uMain_Config_ShowPanel(vPanel: Byte);
+procedure ShowPanel(vPanel: Byte);
 var
   vi: Integer;
 begin
   if ex_main.Config.Active_Panel <> vPanel then
   begin
-    uMain_Config_FreePanel(vPanel);
+    FreePanel(vPanel);
     for vi := 0 to 6 do
       mainScene.Config.main.R.Panel[vi].Visible := False;
     mainScene.Config.main.R.Panel[vPanel].Visible := True;
@@ -206,9 +201,9 @@ begin
       4:
         uMain_Config_Addons.Create;
       5:
-        uMain_Config_Themes_Create;
+        uMain_Config_Themes.Create;
       6:
-        uMain_Config_Info_Create;
+        uMain_Config_Info.Create;
     end;
     ex_main.Config.Active_Panel := vPanel;
     mainScene.Config.main.L.Button[vPanel].SetFocus;

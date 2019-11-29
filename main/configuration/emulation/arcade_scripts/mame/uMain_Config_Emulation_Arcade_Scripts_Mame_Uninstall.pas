@@ -399,7 +399,7 @@ begin
 
   uMain_Emulation.Clear_Selection_Control;
   uMain_Emulation.Create_Selection_Control;
-  uMain_Emulation_Category(0);
+  uMain_Emulation.Category(0);
 
   Script_Mame_Uninstall.Main.Control.SetActiveTabWithTransition(Script_Mame_Uninstall.Main.Tabs[3], TTabTransition.Slide);
   Script_Mame_Uninstall.Main.Status := 'phase_4';

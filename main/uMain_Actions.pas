@@ -57,8 +57,8 @@ uses
 procedure ShowAvatar;
 begin
   mainScene.Header.Avatar_Glow.Enabled := False;
-  uMain_Config_ShowHide('main');
-  uMain_Config_ShowPanel(0);
+  uMain_Config.ShowHide('main');
+  uMain_Config.ShowPanel(0);
   ex_main.Config.Active_Panel := 0;
 end;
 
@@ -230,7 +230,7 @@ begin
   else if TFloatAnimation(Sender).Name = 'Main_Config_Ani' then
   begin
     if extrafe.prog.State = 'main' then
-      uMain_COnfig_Free;
+      uMain_Config.Free;
   end
   else
     TFloatAnimation(Sender).Enabled := False;

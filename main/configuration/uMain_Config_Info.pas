@@ -5,31 +5,22 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  System.UiTypes,
   FMX.StdCtrls,
   FMX.Types,
   FMX.TabControl,
-  FMX.Memo,
-  FMX.Objects,
-  FMX.Effects,
-  FMX.Layouts,
   ALFMXObjects;
 
-procedure uMain_Config_Info_Create;
+procedure Create;
 
 implementation
 
 uses
-  main,
-  uLoad,
   uLoad_AllTypes,
-  uMain_SetAll,
   uMain_AllTypes,
-  uMain_Mouse,
   uMain_Config_Info_Extrafe,
   uMain_Config_Info_Credits;
 
-procedure uMain_Config_Info_Create;
+procedure Create;
 const
   cTab_Names: array [0 .. 4] of string = ('ExtraFE', 'Emulators', 'Multimedia', 'Others', 'Credits');
 var
@@ -60,7 +51,7 @@ begin
   end;
 
   uMain_Config_Info_Extrafe.Load;
-  uMain_Config_Info_Credits_Show;
+  uMain_Config_Info_Credits.Load;
 end;
 
 end.

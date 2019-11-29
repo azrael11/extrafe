@@ -11,10 +11,10 @@ uses
   FMX.Layouts,
   FMX.Objects;
 
-procedure uMain_Config_Themes_Create;
+procedure Create;
 
 { procedure uMain_Config_Themes_LoadThemes_Names; }
-procedure uMain_Config_Themes_ApplyTheme(mThemeName: string);
+procedure ApplyTheme(mThemeName: string);
 
 // DONE 1 -oNikos Kordas -cConfig_Themes: Change text colors to white depends of theme that used
 
@@ -29,7 +29,7 @@ uses
   uMain_AllTypes,
   uMain_Mouse;
 
-procedure uMain_Config_Themes_Create;
+procedure Create;
 var
   vi: Integer;
 begin
@@ -110,7 +110,7 @@ end;
   end;
   end; }
 
-procedure uMain_Config_Themes_ApplyTheme(mThemeName: string);
+procedure ApplyTheme(mThemeName: string);
 begin
   if mThemeName = 'Air' then
     mainScene.main.style.LoadFromFile(extrafe.style.Path + 'Air.Style')

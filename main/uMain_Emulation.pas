@@ -13,9 +13,6 @@ uses
   FMX.Ani,
   FMX.Types,
   FMX.Filter.Effects,
-  ALFmxStdCtrls,
-  ALFmxObjects,
-  ALFmxLayouts,
   ALFmxTabControl;
 
 type
@@ -49,17 +46,16 @@ procedure Create_Selection_Control;
 procedure Clear_Selection_Control;
 procedure Create_Selection_Tab(vTab, vLevel: Integer; isActive: Boolean);
 
+procedure Category(vMenuIndex: Integer);
+
 procedure Trigger_Emulator;
+procedure Trigger_Click(vTriggerImage: Integer; vBack: Boolean);
 
-procedure uMain_Emulation_Arcade_Category;
-procedure uMain_Emulation_SubHeader_Level(vCategory: Integer);
+procedure Arcade_Category;
+procedure SubHeader_Level(vCategory: Integer);
 
-procedure uMain_Emulation_Trigger_Click(vTriggerImage: Integer; vBack: Boolean);
-
-procedure uMain_Emulation_Category(vMenuIndex: Integer);
-
-procedure uMain_Emulation_Slide_Right;
-procedure uMain_Emulation_Slide_Left;
+procedure Slide_Right;
+procedure Slide_Left;
 
 var
   vEmu_Input: TEMULATOR_INPUT;
@@ -67,14 +63,9 @@ var
 implementation
 
 uses
-  main,
-  emu,
-  uLoad,
   uLoad_AllTypes,
   uDB_AUser,
   uMain_AllTypes,
-  uMain_SetAll,
-  uMain_Mouse,
   uMain_Actions,
   uEmu_Actions;
 
@@ -210,7 +201,7 @@ begin
   mainScene.Main.Down_Level_Ani.Start;
 end;
 
-procedure uMain_Emulation_Arcade_Category;
+procedure Arcade_Category;
 begin
   emulation.Level := 1;
   emulation.Category_Num := 0;
@@ -220,11 +211,11 @@ begin
   emulation.Selection.TabIndex := 0;
 end;
 
-procedure uMain_Emulation_SubHeader_Level(vCategory: Integer);
+procedure SubHeader_Level(vCategory: Integer);
 begin
   case vCategory of
     0:
-      uMain_Emulation_Arcade_Category;
+      Arcade_Category;
     1:
       ;
     2:
@@ -236,7 +227,7 @@ begin
   end;
 end;
 
-procedure uMain_Emulation_Trigger_Click(vTriggerImage: Integer; vBack: Boolean);
+procedure Trigger_Click(vTriggerImage: Integer; vBack: Boolean);
 begin
   if vBack then
   begin
@@ -244,14 +235,14 @@ begin
     begin
       Clear_Selection_Control;
       Create_Selection_Control;
-      uMain_Emulation_Category(emulation.Category_Num);
+      Category(emulation.Category_Num);
     end;
   end
   else
   begin
     if emulation.Level = 0 then
     begin
-      uMain_Emulation_SubHeader_Level(vTriggerImage);
+      SubHeader_Level(vTriggerImage);
     end
     else
     begin
@@ -261,7 +252,7 @@ begin
   end;
 end;
 
-procedure uMain_Emulation_Category(vMenuIndex: Integer);
+procedure Category(vMenuIndex: Integer);
 var
   vi, ki: Integer;
   vActive: Boolean;
@@ -304,14 +295,14 @@ begin
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
-procedure uMain_Emulation_Slide_Right;
+procedure Slide_Right;
 begin
   if extrafe.prog.State = 'main' then
     if emulation.Selection.TabCount - 1 <> emulation.Selection.TabIndex then
       emulation.Selection.Next();
 end;
 
-procedure uMain_Emulation_Slide_Left;
+procedure Slide_Left;
 begin
   if extrafe.prog.State = 'main' then
     if emulation.Selection.TabIndex <> 0 then
@@ -325,7 +316,7 @@ begin
   if extrafe.prog.State = 'main' then
     if emulation.Selection_Tab[TImage(Sender).Tag].Logo_Gray.Enabled = False then
     begin
-      uMain_Emulation_Trigger_Click(TImage(Sender).Tag, False);
+      Trigger_Click(TImage(Sender).Tag, False);
     end;
 end;
 
@@ -351,7 +342,7 @@ end;
 procedure TEMULATOR_INPUT_MOUSE_TEXT.OnMouseClick(Sender: TObject);
 begin
   if TText(Sender).Name = 'Emulator_Back_Level_' + TText(Sender).Tag.ToString then
-    uMain_Emulation_Trigger_Click(TText(Sender).Tag, True);
+    Trigger_Click(TText(Sender).Tag, True);
 end;
 
 procedure TEMULATOR_INPUT_MOUSE_TEXT.OnMouseEnter(Sender: TObject);

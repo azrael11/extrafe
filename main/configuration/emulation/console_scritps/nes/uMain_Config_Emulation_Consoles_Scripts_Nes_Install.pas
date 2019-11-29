@@ -535,7 +535,7 @@ begin
   // Clear and create the main control tab
   uMain_Emulation.Clear_Selection_Control;
   uMain_Emulation.Create_Selection_Control;
-  uMain_Emulation_Category(2);
+  uMain_Emulation.Category(2);
 
   FreeAndNil(mainScene.Config.Main.R.Emulators.Consoles[8].Panel);
   uMain_Config_Emulators.CreateConsolesPanel(8);

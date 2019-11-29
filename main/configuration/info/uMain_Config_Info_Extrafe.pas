@@ -6,11 +6,8 @@ uses
   System.Classes,
   System.UiTypes,
   System.SysUtils,
-  Winapi.Windows,
-  Winapi.ShellAPI,
   FMX.Types,
   FMX.StdCtrls,
-  FMX.Effects,
   FMX.Objects,
   FMX.Memo;
 
