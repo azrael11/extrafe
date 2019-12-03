@@ -172,7 +172,9 @@ uses
   uTIme_Time_Config_General in 'addons\time\time\config\uTIme_Time_Config_General.pas',
   uTIme_Time_Config_Digital in 'addons\time\time\config\uTIme_Time_Config_Digital.pas',
   uTIme_Time_Config_Analog in 'addons\time\time\config\uTIme_Time_Config_Analog.pas',
-  uEmu_Arcade_Mame_Lists in 'emu\arcade\mame\uEmu_Arcade_Mame_Lists.pas';
+  uEmu_Arcade_Mame_Lists in 'emu\arcade\mame\uEmu_Arcade_Mame_Lists.pas',
+  uDB_Check in 'code\_database\uDB_Check.pas',
+  uMain_Widgets in 'main\uMain_Widgets.pas';
 
 {$R *.res}
 

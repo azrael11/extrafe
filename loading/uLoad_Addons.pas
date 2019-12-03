@@ -32,9 +32,12 @@ begin
 
   uTime_Actions.Get_Data;
   uCalendar_Actions.Get_Data;
-  uWeather_Actions.Get_Data;
-  uSoundplayer_Actions.Get_Data;
-  uPlay_Actions.Get_Data;
+  if uDB_AUser.Local.ADDONS.Weather then
+    uWeather_Actions.Get_Data;
+  if uDB_AUser.Local.ADDONS.Soundplayer then
+    uSoundplayer_Actions.Get_Data;
+  if uDB_AUser.Local.ADDONS.Azplay then
+    uPlay_Actions.Get_Data;
 
   ex_load.Scene.Progress.Value := 90;
 end;

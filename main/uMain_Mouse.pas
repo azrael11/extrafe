@@ -12,11 +12,11 @@ uses
   FMX.Dialogs,
   FMX.Effects,
   FMX.StdCtrls,
+  FMX.Layouts,
   uMain_Config_Mouse,
   uMain_Config_Emulation_Arcade_Scripts_Mouse,
   uMain_Config_Emulation_Consoles_Scripts_Mouse,
   BASS;
-
 
 type
   TMAIN_IMAGE = class(TObject)
@@ -48,11 +48,27 @@ type
   end;
 
 type
+  TMAIN_LAYOUT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_PANEL = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
   TMAIN_MOUSE_ACTIONS = record
     Image: TMAIN_IMAGE;
     Button: TMAIN_BUTTON;
     Text: TMAIN_TEXT;
     Edit: TMAIN_EDIT;
+    Panel: TMAIN_PANEL;
+    Layout: TMAIN_LAYOUT;
   end;
 
 type
@@ -186,7 +202,7 @@ begin
     if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
     begin
       if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
-        uMain_Actions.ShowHide_Addon(TText(Sender).Tag, extrafe.prog.State, uDB_AUser.Local.ADDONS.Names[TText(Sender).Tag])
+        uMain_Actions.ShowHide_Addon(TText(Sender).Tag, extrafe.prog.State, uDB_AUser.Local.addons.Names[TText(Sender).Tag])
     end
     else if TText(Sender).Name = 'Main_Footer_Settings' then
     begin
@@ -257,12 +273,57 @@ begin
 
 end;
 
+{ TMAIN_LAYOUT }
+
+procedure TMAIN_LAYOUT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_LAYOUT.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_LAYOUT.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+{ TMAIN_PANEL }
+
+procedure TMAIN_PANEL.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_PANEL.OnMouseEnter(Sender: TObject);
+begin
+  TPanel(Sender).Cursor := crHandPoint;
+  if TPanel(Sender).Name = 'Main_Footer_Widget_Calenadar_Above' then
+  begin
+    TPanel(Sender).Opacity := 0.4;
+    mainScene.Footer.Widgets.Calendar.Panel_Glow.Enabled := True;
+  end;
+end;
+
+procedure TMAIN_PANEL.OnMouseLeave(Sender: TObject);
+begin
+  if TPanel(Sender).Name = 'Main_Footer_Widget_Calenadar_Above' then
+  begin
+    TPanel(Sender).Opacity := 0;
+    mainScene.Footer.Widgets.Calendar.Panel_Glow.Enabled := True;
+  end;
+end;
+
 initialization
 
 ex_main.input.mouse.Image := TMAIN_IMAGE.Create;
 ex_main.input.mouse.Button := TMAIN_BUTTON.Create;
 ex_main.input.mouse.Text := TMAIN_TEXT.Create;
 ex_main.input.mouse.Edit := TMAIN_EDIT.Create;
+ex_main.input.mouse.Layout := TMAIN_LAYOUT.Create;
+ex_main.input.mouse.Panel := TMAIN_PANEL.Create;
 
 finalization
 
@@ -270,5 +331,7 @@ ex_main.input.mouse.Image.Free;
 ex_main.input.mouse.Button.Free;
 ex_main.input.mouse.Text.Free;
 ex_main.input.mouse.Edit.Free;
+ex_main.input.mouse.Layout.Free;
+ex_main.input.mouse.Panel.Free;
 
 end.

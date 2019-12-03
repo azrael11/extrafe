@@ -5,7 +5,8 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  System.UITypes;
+  System.UITypes,
+  FMX.Forms;
 
 procedure Load;
 
@@ -79,7 +80,7 @@ procedure Exit_Exit;
 begin
   Exit_SaveProgress;
   // ReportMemoryLeaksOnShutdown:= True;
-  Main_Form.Close;
+  Application.Terminate;
 end;
 
 procedure Exit_Stay;

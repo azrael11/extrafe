@@ -128,15 +128,25 @@ type
   end;
 
 type
-  TMAIN_ADDON_CALENDAR = record
-    Icon: TImage;
+  TMAIN_WIDGET_CALENDAR = record
+    Panel: TLayout;
+    Panel_Glow: TInnerGlowEffect;
+    Icon: TText;
+    Text: TText;
+    Above: TPanel;
+  end;
+
+type
+  TMAIN_WIDGET_TIME = record
+    Panel: TLayout;
+    Icon: TText;
     Text: TText;
   end;
 
 type
-  TMAIN_ADDON_TIME = record
-    Icon: TImage;
-    Text: TText;
+  TMAIN_WIDGETS = record
+    Time: TMAIN_WIDGET_TIME;
+    Calendar: TMAIN_WIDGET_CALENDAR;
   end;
 
 type
@@ -149,8 +159,7 @@ type
     Settings: TText;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
-    Addon_Calendar: TMAIN_ADDON_CALENDAR;
-    Addon_Time: TMAIN_ADDON_TIME;
+    Widgets: TMAIN_WIDGETS;
     Timer: TTimer;
   end;
 

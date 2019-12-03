@@ -41,7 +41,6 @@ function Online_Connect: Boolean;
 function Online_Disconnect: Boolean;
 
 procedure Local_Create;
-procedure Local_Create_Tables;
 function Local_Connect: Boolean;
 function Local_Disconnect: Boolean;
 
@@ -66,7 +65,6 @@ function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): 
 { Queries Actions Online }
 procedure Query_Update_Online(vTable_Name, vCol, vValue, vUser_Num: string);
 function Query_Select_Online(vColumn, vTable, vWhere: String): String;
-// function Query_Select_Online(vTable, vWhere, vField: string): Integer; override;
 
 var
   vColumns: String;
@@ -113,7 +111,7 @@ uses
   uLoad_Register,
   uDB_AUser;
 
-{Online Database procedures}
+{ Online Database procedures }
 procedure Online_Create;
 begin
   ExtraFE_DB := TZConnection.Create(Main_Form);
@@ -132,13 +130,6 @@ begin
   ExtraFE_DB.User := 'azrael11';
   ExtraFE_DB.Password := '11azrael';
   ExtraFE_DB.Database := 'extrafe';
-
-  { ExtraFE_DB.HostName := 'azrael11.heliohost.org';
-    ExtraFE_DB.Port := 3306;
-    //  ExtraFE_DB.User := 'azrael11@localhost';
-    ExtraFE_DB.User := 'azrael11_azrael';
-    ExtraFE_DB.Password := '11azrael';
-    ExtraFE_DB.Database := 'azrael11_extrafe'; }
 
   ExtraFE_Query := TZQuery.Create(Main_Form);
   ExtraFE_Query.Name := 'ExtraFE_Database_Query';
@@ -167,12 +158,12 @@ end;
 
 function Online_Disconnect: Boolean;
 begin
-   Query_Update_Online('USERS', 'ACTIVE', 'FALSE', uDB_AUser.Online.Num.ToString);
-   ExtraFE_DB.Disconnect;
-   Result := ExtraFE_DB.Connected;
+  Query_Update_Online('USERS', 'ACTIVE', 'FALSE', uDB_AUser.Online.Num.ToString);
+  ExtraFE_DB.Disconnect;
+  Result := ExtraFE_DB.Connected;
 end;
 
-{Local Database procedures}
+{ Local Database procedures }
 procedure Local_Create;
 begin
   ExtraFE_DB_Local := TFDConnection.Create(main.Main_Form);
@@ -188,33 +179,6 @@ begin
     Open;
   end;
   ExtraFE_DB_Local.LoginPrompt := False;
-end;
-
-procedure Local_Create_Tables;
-begin
-  {22 Tables}
-  //Users
-  //Users_Statistics
-  //Settings
-  //Options
-  //Addons
-  //Addon_Time
-  //Addon_Time_Time
-  //Addon_Calendar
-  //Addon_Weather
-  //Addon_Weather_OWM
-  //Addon_Weather_Yahoo
-  //Addon_Soundplayer
-  //Addon_Soundplayer_Playlists
-  //Addon_AzPlay
-  //Emulators
-  //Arcade
-  //Arcade_Mame
-  //Arcade_Media
-  //Computers
-  //Consoles
-  //Handhelds
-  //Pinballs
 end;
 
 function Local_Connect: Boolean;
@@ -582,10 +546,9 @@ begin
   ExtraFE_Query.Close;
 end;
 
-
 function Local_Get_Users: Integer;
 begin
-  ExtraFE_Query_Local.close;
+  ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text := 'SELECT COUNT(*) FROM USERS';
   ExtraFE_Query_Local.Open;

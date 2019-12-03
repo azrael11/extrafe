@@ -553,6 +553,7 @@ procedure TLOADING_FLOATANIMATION.OnFinish(Sender: TObject);
 begin
   if TFloatAnimation(Sender).Name = 'Loading_FadeOut' then
   begin
+    ex_load.Intro.Timer.Enabled:= False;
     uMain.Load;
     Main_Form.Show;
     FreeAndNil(load.loading);

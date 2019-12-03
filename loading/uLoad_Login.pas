@@ -71,7 +71,7 @@ begin
   end;
   uDB.ExtraFE_DB_Local.Connected := false;
   FreeAndNil(uDB.ExtraFE_DB_Local);
-  load.loading.Close;
+  Application.Terminate;
 end;
 
 procedure Show_Password;

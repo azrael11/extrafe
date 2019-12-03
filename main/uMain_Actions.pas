@@ -194,15 +194,16 @@ var
   vDate: TDateTime;
 begin
   vDate := Now;
-  mainScene.Footer.Addon_Calendar.Text.Text := formatdatetime('dd/mm/yyyy', vDate);
-  mainScene.Footer.Addon_Time.Text.Text := TimeToStr(Now);
+  mainScene.Footer.Widgets.Calendar.Text.Text := formatdatetime('dd/mm/yyyy', vDate);
+  mainScene.Footer.Widgets.Time.Text.Text := TimeToStr(Now);
 end;
 
 procedure Update_All;
 begin
   if extrafe.prog.State <> 'addon_soundplayer' then
-    if soundplayer.player = sPlay then
-      uSoundplayer_Player.Refresh;
+    if uDB_AUser.Local.ADDONS.Soundplayer then
+      if Soundplayer.player = sPlay then
+        uSoundplayer_Player.Refresh;
 end;
 { TMAIN_TIMER }
 

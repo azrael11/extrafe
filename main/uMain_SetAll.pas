@@ -29,6 +29,9 @@ uses
 procedure Load;
 procedure Free;
 
+procedure Create_Header;
+procedure Create_Footer;
+procedure Create_Selection;
 procedure Addon_Icon(vNum: integer);
 
 implementation
@@ -38,6 +41,7 @@ uses
   uLoad_AllTypes,
   main,
   uMain_Actions,
+  uMain_Widgets,
   uMain_Emulation,
   uMain_Config_Addons,
   uMain_Config,
@@ -86,8 +90,6 @@ end;
 procedure Load;
 var
   vi: integer;
-  vCol: TGridPanelLayout.TColumnItem;
-  vRow: TGridPanelLayout.TRowItem;
 begin
   // Main
   mainScene.main.Back := TImage.Create(Main_Form);
@@ -136,7 +138,87 @@ begin
   mainScene.main.Timer.OnTimer := vMain_Timer.OnTimer;
   mainScene.main.Timer.Enabled := True;
 
-  // Header
+  Create_Header;
+  Create_Selection;
+  Create_Footer;
+end;
+
+procedure Free;
+begin
+  mainScene.Header.Back_Blur.Enabled := True;
+  mainScene.Selection.Blur.Enabled := True;
+  mainScene.Footer.Back_Blur.Enabled := True;
+
+  extrafe.prog.State := 'main_exit';
+
+  mainScene.Header.Exit_Glow.Enabled := False;
+
+  mainScene.main.Prog_Exit.Panel := TPanel.Create(mainScene.main.Down_Level);
+  mainScene.main.Prog_Exit.Panel.Name := 'Main_Exit';
+  mainScene.main.Prog_Exit.Panel.Parent := mainScene.main.Down_Level;
+  mainScene.main.Prog_Exit.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 150, 600, 300);
+  mainScene.main.Prog_Exit.Panel.Visible := True;
+
+  mainScene.main.Prog_Exit.Panel_Shadow := TShadowEffect.Create(mainScene.main.Prog_Exit.Panel);
+  mainScene.main.Prog_Exit.Panel_Shadow.Name := 'Main_Exit_Shadow';
+  mainScene.main.Prog_Exit.Panel_Shadow.Parent := mainScene.main.Prog_Exit.Panel;
+  mainScene.main.Prog_Exit.Panel_Shadow.ShadowColor := TAlphaColorRec.Deepskyblue;
+  mainScene.main.Prog_Exit.Panel_Shadow.Direction := 90;
+  mainScene.main.Prog_Exit.Panel_Shadow.Distance := 3;
+  mainScene.main.Prog_Exit.Panel_Shadow.Enabled := True;
+
+  CreateHeader(mainScene.main.Prog_Exit.Panel, 'IcoMoon-Free', #$ea0f, 'Exit ExtrFE?', False, nil);
+
+  mainScene.main.Prog_Exit.main.Panel := TPanel.Create(mainScene.main.Prog_Exit.Panel);
+  mainScene.main.Prog_Exit.main.Panel.Name := 'Main_Exit_Main';
+  mainScene.main.Prog_Exit.main.Panel.Parent := mainScene.main.Prog_Exit.Panel;
+  mainScene.main.Prog_Exit.main.Panel.SetBounds(0, 30, mainScene.main.Prog_Exit.Panel.Width, mainScene.main.Prog_Exit.Panel.Height - 30);
+  mainScene.main.Prog_Exit.main.Panel.Visible := True;
+
+  mainScene.main.Prog_Exit.main.Logo := TImage.Create(mainScene.main.Prog_Exit.main.Panel);
+  mainScene.main.Prog_Exit.main.Logo.Name := 'Main_Exit_Main_Logo';
+  mainScene.main.Prog_Exit.main.Logo.Parent := mainScene.main.Prog_Exit.main.Panel;
+  mainScene.main.Prog_Exit.main.Logo.SetBounds(50, 30, 500, 150);
+  mainScene.main.Prog_Exit.main.Logo.Bitmap.LoadFromFile(ex_main.Paths.Images + 'logo.png');
+  mainScene.main.Prog_Exit.main.Logo.WrapMode := TImageWrapMode.Fit;
+  mainScene.main.Prog_Exit.main.Logo.Visible := True;
+
+  mainScene.main.Prog_Exit.main.Text := TText.Create(mainScene.main.Prog_Exit.main.Panel);
+  mainScene.main.Prog_Exit.main.Text.Name := 'Main_Exit_Main_Text';
+  mainScene.main.Prog_Exit.main.Text.Parent := mainScene.main.Prog_Exit.main.Panel;
+  mainScene.main.Prog_Exit.main.Text.SetBounds(150, 10, 300, 50);
+  mainScene.main.Prog_Exit.main.Text.Text := 'EXIT?';
+  mainScene.main.Prog_Exit.main.Text.Font.Size := 18;
+  mainScene.main.Prog_Exit.main.Text.Color := TAlphaColorRec.White;
+  mainScene.main.Prog_Exit.main.Text.VertTextAlign := TTextAlign.Center;
+  mainScene.main.Prog_Exit.main.Text.Visible := True;
+
+  mainScene.main.Prog_Exit.main.Yes := TButton.Create(mainScene.main.Prog_Exit.main.Panel);
+  mainScene.main.Prog_Exit.main.Yes.Name := 'Main_Exit_Main_Yes';
+  mainScene.main.Prog_Exit.main.Yes.Parent := mainScene.main.Prog_Exit.main.Panel;
+  mainScene.main.Prog_Exit.main.Yes.SetBounds(50, mainScene.main.Prog_Exit.main.Panel.Height - 38, 150, 28);
+  mainScene.main.Prog_Exit.main.Yes.Text := 'Sorry, I have to go';
+  mainScene.main.Prog_Exit.main.Yes.OnClick := ex_main.input.mouse.Button.OnMouseClick;
+  mainScene.main.Prog_Exit.main.Yes.OnMouseEnter := ex_main.input.mouse.Button.OnMouseEnter;
+  mainScene.main.Prog_Exit.main.Yes.OnMouseLeave := ex_main.input.mouse.Button.OnMouseLeave;
+  mainScene.main.Prog_Exit.main.Yes.Visible := True;
+
+  mainScene.main.Prog_Exit.main.No := TButton.Create(mainScene.main.Prog_Exit.main.Panel);
+  mainScene.main.Prog_Exit.main.No.Name := 'Main_Exit_Main_No';
+  mainScene.main.Prog_Exit.main.No.Parent := mainScene.main.Prog_Exit.main.Panel;
+  mainScene.main.Prog_Exit.main.No.SetBounds(mainScene.main.Prog_Exit.main.Panel.Width - 200, mainScene.main.Prog_Exit.main.Panel.Height - 38, 150, 28);
+  mainScene.main.Prog_Exit.main.No.Text := 'One minute more, please';
+  mainScene.main.Prog_Exit.main.No.OnClick := ex_main.input.mouse.Button.OnMouseClick;
+  mainScene.main.Prog_Exit.main.No.OnMouseEnter := ex_main.input.mouse.Button.OnMouseEnter;
+  mainScene.main.Prog_Exit.main.No.OnMouseLeave := ex_main.input.mouse.Button.OnMouseLeave;
+  mainScene.main.Prog_Exit.main.No.Visible := True;
+
+end;
+
+procedure Create_Header;
+var
+  vi: integer;
+begin
   mainScene.Header.Back := TImage.Create(mainScene.main.Down_Level);
   mainScene.Header.Back.Name := 'Main_Header';
   mainScene.Header.Back.Parent := mainScene.main.Down_Level;
@@ -226,8 +308,14 @@ begin
     mainScene.Header.Addon_Icon.Icons[uDB_AUser.Local.ADDONS.Azplay_D.Menu_Position].Text := #$e915;
 
   ADDONS.Active_Now_Num := -1;
+end;
 
-  // Footer
+procedure Create_Footer;
+var
+  vi: integer;
+  vCol: TGridPanelLayout.TColumnItem;
+  vRow: TGridPanelLayout.TRowItem;
+begin
   mainScene.Footer.Back := TImage.Create(mainScene.main.Down_Level);
   mainScene.Footer.Back.Name := 'Main_Footer';
   mainScene.Footer.Back.Parent := mainScene.main.Down_Level;
@@ -262,25 +350,47 @@ begin
   mainScene.Footer.GridPanel.Name := 'Main_Footer_GridPanel';
   mainScene.Footer.GridPanel.Parent := mainScene.Footer.Back;
   mainScene.Footer.GridPanel.Width := mainScene.Footer.Back.Width;
-  mainScene.Footer.GridPanel.Height := mainScene.Footer.Back.Height;
+  mainScene.Footer.GridPanel.Height := mainScene.Footer.Back.Height - 10;
+  mainScene.Footer.GridPanel.Position.Y := 10;
   mainScene.Footer.GridPanel.Visible := True;
 
+  mainScene.Footer.GridPanel.ColumnCollection.BeginUpdate;
   for vi := 0 to 50 do
   begin
-    mainScene.Footer.GridPanel.ColumnCollection.BeginUpdate;
     vCol := mainScene.Footer.GridPanel.ColumnCollection.Add;
     vCol.SizeStyle := TGridPanelLayout.TSizeStyle.Absolute;
     vCol.Value := 36;
-    mainScene.Footer.GridPanel.ColumnCollection.EndUpdate;
   end;
+  mainScene.Footer.GridPanel.ColumnCollection.EndUpdate;
 
+  mainScene.Footer.GridPanel.RowCollection.BeginUpdate;
   for vi := 0 to 3 do
   begin
-    mainScene.Footer.GridPanel.RowCollection.BeginUpdate;
     vRow := mainScene.Footer.GridPanel.RowCollection.Add;
     vRow.SizeStyle := TGridPanelLayout.TSizeStyle.Absolute;
     vRow.Value := 36;
   end;
+  mainScene.Footer.GridPanel.RowCollection.EndUpdate;
+
+  uMain_Widgets.Create_Calendar;
+  uMain_Widgets.Create_Time;
+
+  mainScene.Footer.GridPanel.ControlCollection.BeginUpdate;
+  mainScene.Footer.GridPanel.ControlCollection.AddControl(mainScene.Footer.Widgets.Calendar.Panel);
+  mainScene.Footer.GridPanel.ControlCollection.AddControl(mainScene.Footer.Widgets.Time.Panel);
+
+  mainScene.Footer.Widgets.Calendar.Panel.Parent := mainScene.Footer.GridPanel;
+  mainScene.Footer.Widgets.Time.Panel.Parent := mainScene.Footer.GridPanel;
+  mainScene.Footer.Widgets.Calendar.Panel.Align := TAlignLayout.Client;
+  mainScene.Footer.Widgets.Time.Panel.Align := TAlignLayout.Client;
+
+  mainScene.Footer.GridPanel.ControlCollection.Items[0].Row := 0;
+  mainScene.Footer.GridPanel.ControlCollection.Items[0].ColumnSpan := 6;
+  mainScene.Footer.GridPanel.ControlCollection.Items[1].Row := 1;
+  mainScene.Footer.GridPanel.ControlCollection.Items[1].Column := 0;
+  mainScene.Footer.GridPanel.ControlCollection.Items[1].ColumnSpan := 6;
+
+  mainScene.Footer.GridPanel.ControlCollection.EndUpdate;
 
   mainScene.Footer.Settings := TText.Create(mainScene.Footer.Back);
   mainScene.Footer.Settings.Name := 'Main_Footer_Settings';
@@ -313,54 +423,6 @@ begin
   mainScene.Footer.Settings_Glow.Softness := 0.4;
   mainScene.Footer.Settings_Glow.Enabled := False;
 
-  mainScene.Footer.Addon_Calendar.Icon := TImage.Create(mainScene.Footer.Back);
-  mainScene.Footer.Addon_Calendar.Icon.Name := 'Main_Footer_Addon_Calendar_Icon';
-  mainScene.Footer.Addon_Calendar.Icon.Parent := mainScene.Footer.Back;
-  mainScene.Footer.Addon_Calendar.Icon.SetBounds(10, 10, 22, 22);
-  mainScene.Footer.Addon_Calendar.Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'calendar.png');
-  mainScene.Footer.Addon_Calendar.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Footer.Addon_Calendar.Icon.OnClick := ex_main.input.mouse.Image.OnMouseClick;
-  mainScene.Footer.Addon_Calendar.Icon.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;
-  mainScene.Footer.Addon_Calendar.Icon.OnMouseLeave := ex_main.input.mouse.Image.OnMouseLeave;
-  mainScene.Footer.Addon_Calendar.Icon.Visible := True;
-
-  mainScene.Footer.Addon_Calendar.Text := TText.Create(mainScene.Footer.Addon_Calendar.Icon);
-  mainScene.Footer.Addon_Calendar.Text.Name := 'Main_Footer_Addon_Calendar_Text';
-  mainScene.Footer.Addon_Calendar.Text.Parent := mainScene.Footer.Addon_Calendar.Icon;
-  mainScene.Footer.Addon_Calendar.Text.SetBounds(28, 2, 96, 24); // Width Multiple to 24
-  mainScene.Footer.Addon_Calendar.Text.Text := '';
-  mainScene.Footer.Addon_Calendar.Text.Color := TAlphaColorRec.Deepskyblue;
-  mainScene.Footer.Addon_Calendar.Text.Font.Family := 'Tahoma';
-  mainScene.Footer.Addon_Calendar.Text.Font.Style := mainScene.Footer.Addon_Calendar.Text.Font.Style + [TFontStyle.fsBold];
-  mainScene.Footer.Addon_Calendar.Text.Font.Size := 15;
-  mainScene.Footer.Addon_Calendar.Text.TextSettings.HorzAlign := TTextAlign.Trailing;
-  mainScene.Footer.Addon_Calendar.Text.TextSettings.VertAlign := TTextAlign.Center;
-  mainScene.Footer.Addon_Calendar.Text.Visible := True;
-
-  mainScene.Footer.Addon_Time.Icon := TImage.Create(mainScene.Footer.Back);
-  mainScene.Footer.Addon_Time.Icon.Name := 'Main_Footer_Addon_Time_Icon';
-  mainScene.Footer.Addon_Time.Icon.Parent := mainScene.Footer.Back;
-  mainScene.Footer.Addon_Time.Icon.SetBounds(10, 34, 22, 22);
-  mainScene.Footer.Addon_Time.Icon.Bitmap.LoadFromFile(ex_main.Paths.Images + 'time.png');
-  mainScene.Footer.Addon_Time.Icon.WrapMode := TImageWrapMode.Fit;
-  mainScene.Footer.Addon_Time.Icon.OnClick := ex_main.input.mouse.Image.OnMouseClick;
-  mainScene.Footer.Addon_Time.Icon.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;
-  mainScene.Footer.Addon_Time.Icon.OnMouseLeave := ex_main.input.mouse.Image.OnMouseLeave;
-  mainScene.Footer.Addon_Time.Icon.Visible := True;
-
-  mainScene.Footer.Addon_Time.Text := TText.Create(mainScene.Footer.Addon_Time.Icon);
-  mainScene.Footer.Addon_Time.Text.Name := 'Main_Footer_Addon_Time_Text';
-  mainScene.Footer.Addon_Time.Text.Parent := mainScene.Footer.Addon_Time.Icon;
-  mainScene.Footer.Addon_Time.Text.SetBounds(28, 2, 96, 24);
-  mainScene.Footer.Addon_Time.Text.Text := '';
-  mainScene.Footer.Addon_Time.Text.Color := TAlphaColorRec.Deepskyblue;
-  mainScene.Footer.Addon_Time.Text.Font.Family := 'Tahoma';
-  mainScene.Footer.Addon_Time.Text.Font.Style := mainScene.Footer.Addon_Calendar.Text.Font.Style + [TFontStyle.fsBold];
-  mainScene.Footer.Addon_Time.Text.Font.Size := 15;
-  mainScene.Footer.Addon_Time.Text.TextSettings.HorzAlign := TTextAlign.Trailing;
-  mainScene.Footer.Addon_Time.Text.TextSettings.VertAlign := TTextAlign.Center;
-  mainScene.Footer.Addon_Time.Text.Visible := True;
-
   mainScene.Footer.Timer := TTimer.Create(mainScene.Footer.Back);
   mainScene.Footer.Timer.Name := 'Main_Footer_Timer';
   mainScene.Footer.Timer.Parent := mainScene.Footer.Back;
@@ -368,7 +430,10 @@ begin
   mainScene.Footer.Timer.OnTimer := vMain_Timer.OnTimer;
   mainScene.Footer.Timer.Enabled := True;
 
-  // Selection
+end;
+
+procedure Create_Selection;
+begin
   mainScene.Selection.Back := TImage.Create(mainScene.main.Down_Level);
   mainScene.Selection.Back.Name := 'Main_Selection_Back';
   mainScene.Selection.Back.Parent := mainScene.main.Down_Level;
@@ -392,79 +457,6 @@ begin
   mainScene.Selection.Blur.Enabled := False;
 
   uMain_Emulation.Create_Selection_Control;
-
-end;
-
-procedure Free;
-begin
-  mainScene.Header.Back_Blur.Enabled := True;
-  mainScene.Selection.Blur.Enabled := True;
-  mainScene.Footer.Back_Blur.Enabled := True;
-
-  extrafe.prog.State := 'main_exit';
-
-  mainScene.Header.Exit_Glow.Enabled := False;
-
-  mainScene.main.Prog_Exit.Panel := TPanel.Create(mainScene.main.Down_Level);
-  mainScene.main.Prog_Exit.Panel.Name := 'Main_Exit';
-  mainScene.main.Prog_Exit.Panel.Parent := mainScene.main.Down_Level;
-  mainScene.main.Prog_Exit.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 150, 600, 300);
-  mainScene.main.Prog_Exit.Panel.Visible := True;
-
-  mainScene.main.Prog_Exit.Panel_Shadow := TShadowEffect.Create(mainScene.main.Prog_Exit.Panel);
-  mainScene.main.Prog_Exit.Panel_Shadow.Name := 'Main_Exit_Shadow';
-  mainScene.main.Prog_Exit.Panel_Shadow.Parent := mainScene.main.Prog_Exit.Panel;
-  mainScene.main.Prog_Exit.Panel_Shadow.ShadowColor := TAlphaColorRec.Deepskyblue;
-  mainScene.main.Prog_Exit.Panel_Shadow.Direction := 90;
-  mainScene.main.Prog_Exit.Panel_Shadow.Distance := 3;
-  mainScene.main.Prog_Exit.Panel_Shadow.Enabled := True;
-
-  CreateHeader(mainScene.main.Prog_Exit.Panel, 'IcoMoon-Free', #$ea0f, 'Exit ExtrFE?', False, nil);
-
-  mainScene.main.Prog_Exit.main.Panel := TPanel.Create(mainScene.main.Prog_Exit.Panel);
-  mainScene.main.Prog_Exit.main.Panel.Name := 'Main_Exit_Main';
-  mainScene.main.Prog_Exit.main.Panel.Parent := mainScene.main.Prog_Exit.Panel;
-  mainScene.main.Prog_Exit.main.Panel.SetBounds(0, 30, mainScene.main.Prog_Exit.Panel.Width, mainScene.main.Prog_Exit.Panel.Height - 30);
-  mainScene.main.Prog_Exit.main.Panel.Visible := True;
-
-  mainScene.main.Prog_Exit.main.Logo := TImage.Create(mainScene.main.Prog_Exit.main.Panel);
-  mainScene.main.Prog_Exit.main.Logo.Name := 'Main_Exit_Main_Logo';
-  mainScene.main.Prog_Exit.main.Logo.Parent := mainScene.main.Prog_Exit.main.Panel;
-  mainScene.main.Prog_Exit.main.Logo.SetBounds(50, 30, 500, 150);
-  mainScene.main.Prog_Exit.main.Logo.Bitmap.LoadFromFile(ex_main.Paths.Images + 'logo.png');
-  mainScene.main.Prog_Exit.main.Logo.WrapMode := TImageWrapMode.Fit;
-  mainScene.main.Prog_Exit.main.Logo.Visible := True;
-
-  mainScene.main.Prog_Exit.main.Text := TText.Create(mainScene.main.Prog_Exit.main.Panel);
-  mainScene.main.Prog_Exit.main.Text.Name := 'Main_Exit_Main_Text';
-  mainScene.main.Prog_Exit.main.Text.Parent := mainScene.main.Prog_Exit.main.Panel;
-  mainScene.main.Prog_Exit.main.Text.SetBounds(150, 10, 300, 50);
-  mainScene.main.Prog_Exit.main.Text.Text := 'EXIT?';
-  mainScene.main.Prog_Exit.main.Text.Font.Size := 18;
-  mainScene.main.Prog_Exit.main.Text.Color := TAlphaColorRec.White;
-  mainScene.main.Prog_Exit.main.Text.VertTextAlign := TTextAlign.Center;
-  mainScene.main.Prog_Exit.main.Text.Visible := True;
-
-  mainScene.main.Prog_Exit.main.Yes := TButton.Create(mainScene.main.Prog_Exit.main.Panel);
-  mainScene.main.Prog_Exit.main.Yes.Name := 'Main_Exit_Main_Yes';
-  mainScene.main.Prog_Exit.main.Yes.Parent := mainScene.main.Prog_Exit.main.Panel;
-  mainScene.main.Prog_Exit.main.Yes.SetBounds(50, mainScene.main.Prog_Exit.main.Panel.Height - 38, 150, 28);
-  mainScene.main.Prog_Exit.main.Yes.Text := 'Sorry, I have to go';
-  mainScene.main.Prog_Exit.main.Yes.OnClick := ex_main.input.mouse.Button.OnMouseClick;
-  mainScene.main.Prog_Exit.main.Yes.OnMouseEnter := ex_main.input.mouse.Button.OnMouseEnter;
-  mainScene.main.Prog_Exit.main.Yes.OnMouseLeave := ex_main.input.mouse.Button.OnMouseLeave;
-  mainScene.main.Prog_Exit.main.Yes.Visible := True;
-
-  mainScene.main.Prog_Exit.main.No := TButton.Create(mainScene.main.Prog_Exit.main.Panel);
-  mainScene.main.Prog_Exit.main.No.Name := 'Main_Exit_Main_No';
-  mainScene.main.Prog_Exit.main.No.Parent := mainScene.main.Prog_Exit.main.Panel;
-  mainScene.main.Prog_Exit.main.No.SetBounds(mainScene.main.Prog_Exit.main.Panel.Width - 200, mainScene.main.Prog_Exit.main.Panel.Height - 38, 150, 28);
-  mainScene.main.Prog_Exit.main.No.Text := 'One minute more, please';
-  mainScene.main.Prog_Exit.main.No.OnClick := ex_main.input.mouse.Button.OnMouseClick;
-  mainScene.main.Prog_Exit.main.No.OnMouseEnter := ex_main.input.mouse.Button.OnMouseEnter;
-  mainScene.main.Prog_Exit.main.No.OnMouseLeave := ex_main.input.mouse.Button.OnMouseLeave;
-  mainScene.main.Prog_Exit.main.No.Visible := True;
-
 end;
 
 end.
