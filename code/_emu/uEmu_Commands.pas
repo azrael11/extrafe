@@ -11,25 +11,26 @@ uses
   Winapi.Windows,
   Winapi.ShellApi;
 
-function fEmu_Commands_CaptureOutput(vDosProg, vParameters: WideString): TstringList;
-function fEmu_Commands_CaptureOutput1(const cDrive, vFullPath, vCMDLine, vOutSave: string): Boolean;
+function Capture_Output(vDosProg, vParameters: WideString): TstringList;
+function Capture_Output_Alt(const cDrive, vFullPath, vCMDLine, vOutSave: string): Boolean;
 
-function ShellExecAndWait(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
-function fEmu_Commands_RunGame(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
-function fEmu_Commands_RunCommand(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
-function RunProcess(FileName: string; ShowCmd: DWORD; wait: Boolean; ProcID: PDWORD): Longword;
-//
-function ExecWithShellExecute(AName, CLine: string; run_mode: string; var iErr: int64): Boolean;
-function ExecWithShell(AName, CLine: string; run_mode: string; var hProcess: DWORD; var iErr: int64): Boolean;
-function ExecWithCmdLine(AName, CLine: string; var pInfo: TProcessInformation; var iErr: int64): Boolean;
-function FileSize(const aFilename: String): int64;
+function Run_Game(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
+
+
+{Alternative options of exec and wait}
+//function fEmu_Commands_RunCommand(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
+//function RunProcess(FileName: string; ShowCmd: DWORD; wait: Boolean; ProcID: PDWORD): Longword;
+//function ShellExecAndWait(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
+//function ExecWithShellExecute(AName, CLine: string; run_mode: string; var iErr: int64): Boolean;
+//function ExecWithShell(AName, CLine: string; run_mode: string; var hProcess: DWORD; var iErr: int64): Boolean;
+//function ExecWithCmdLine(AName, CLine: string; var pInfo: TProcessInformation; var iErr: int64): Boolean;
 
 implementation
 
 uses
   emu;
 
-function fEmu_Commands_CaptureOutput(vDosProg, vParameters: WideString): TstringList;
+function Capture_Output(vDosProg, vParameters: WideString): TstringList;
 // procedure RunDosInMemo(DosApp: string; AMemo:TMemo);
 const
   READ_BUFFER_SIZE = 10000000;
@@ -109,7 +110,7 @@ begin
   end;
 end;
 
-function fEmu_Commands_CaptureOutput1(const cDrive, vFullPath, vCMDLine, vOutSave: string): Boolean;
+function Capture_Output_Alt(const cDrive, vFullPath, vCMDLine, vOutSave: string): Boolean;
 var
   start: TStartUpInfo;
   procInfo: TProcessInformation;
@@ -207,7 +208,7 @@ begin
   Result := ShellExecuteExW(@Sei);
 end;
 
-function fEmu_Commands_RunGame(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
+function Run_Game(const FileName, Parameters, dir: string; CmdShow: Integer): Boolean;
 var
   Sei: TShellExecuteInfo;
   tmpProcessInformation: TProcessInformation;
@@ -318,18 +319,6 @@ begin
     PWideChar(AppWDir), sInfo, pInfo);
   if not Result then
     iErr := GetLastError;
-end;
-
-function FileSize(const aFilename: String): int64;
-var
-  info: TWin32FileAttributeData;
-begin
-  Result := -1;
-
-  if NOT GetFileAttributesEx(PWideChar(aFilename), GetFileExInfoStandard, @info) then
-    exit;
-
-  Result := int64(info.nFileSizeLow) or int64(info.nFileSizeHigh shl 32);
 end;
 
 end.

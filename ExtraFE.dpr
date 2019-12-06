@@ -53,7 +53,6 @@ uses
   uEmu_Arcade_Mame_Config_Snap_Movie_Playback in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Snap_Movie_Playback.pas',
   uEmu_Arcade_Mame_Gamelist in 'emu\arcade\mame\uEmu_Arcade_Mame_Gamelist.pas',
   uEmu_Arcade_Mame_SetAll in 'emu\arcade\mame\uEmu_Arcade_Mame_SetAll.pas',
-  uEmu_Arcade_Mame_Support_Files in 'emu\arcade\mame\uEmu_Arcade_Mame_Support_Files.pas',
   uEmu_Arcade_Mame_Actions in 'emu\arcade\mame\uEmu_Arcade_Mame_Actions.pas',
   uEmu_Arcade_Mame_Game_SetAll in 'emu\arcade\mame\uEmu_Arcade_Mame_Game_SetAll.pas',
   uKeyboard in 'code\_snippets\uKeyboard.pas',

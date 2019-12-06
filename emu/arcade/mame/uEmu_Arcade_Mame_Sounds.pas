@@ -7,7 +7,7 @@ uses
   BASS;
 
 procedure Load;
-procedure Unload;
+procedure Free;
 
 implementation
 
@@ -22,7 +22,7 @@ begin
 {$ENDIF});
 end;
 
-procedure Unload;
+procedure Free;
 begin
   BASS_StreamFree(mame.Sound.Effects[0]);
 end;

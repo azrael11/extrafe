@@ -139,7 +139,7 @@ var
 begin
   romName := mame.Gamelist.ListRoms[mame.Gamelist.Selected];
   vGame_Timer.Enabled := False;
-  fEmu_Commands_RunGame(emulation.Arcade[0].Name_Exe, romName, emulation.Arcade[0].Emu_Path, 0);
+  uEmu_Commands.Run_Game(emulation.Arcade[0].Name_Exe, romName, emulation.Arcade[0].Emu_Path, 0);
   play_int := play_count.ToInteger;
   inc(play_int, 1);
   uDB.Query_Update(uDB.Arcade_Query, 'games', 'play_count', play_int.ToString, 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);

@@ -13,6 +13,8 @@ function Country_To_Code(vCountry: String): String;
 
 function Time_To_TimeStamp: Int64;
 
+function Seconds_To_Time(mTime: Real): TDateTime;
+
 
 implementation
 uses
@@ -66,6 +68,18 @@ begin
 
   // now calculate the difference from Jan 1 1970 UTC in seconds...
   Result := DateTimeToUnix(NowUTC);
+end;
+
+function Seconds_To_Time(mTime: Real): TDateTime;
+var
+  hours, min: Word;
+begin
+  hours := Trunc(mTime / 3600);
+  mTime := mTime - (3600 * Trunc(mTime / 3600));
+  min := Trunc(mTime / 60);
+  mTime := mTime - (60 * Trunc(mTime / 60));
+
+  Result := EncodeTime(hours, min, Trunc(mTime), 0);
 end;
 
 end.

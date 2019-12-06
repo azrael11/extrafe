@@ -8,9 +8,9 @@ uses
   System.UiTypes,
   Bass;
 
-procedure uEmu_Arcade_Mame_Keyboard_SetKey(vKey: string);
+procedure SetKey(vKey: string);
 
-procedure uEmu_Arcade_Mame_Keyboard_VirtualKeyboard_SetKey(vKey: string);
+procedure VirtualKeyboard_SetKey(vKey: string);
 procedure Search(vString: String);
 
 implementation
@@ -25,7 +25,7 @@ uses
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Game_Actions;
 
-procedure uEmu_Arcade_Mame_Keyboard_SetKey(vKey: string);
+procedure SetKey(vKey: string);
 begin
   if uSnippet_Search.vSearch.Actions.CanIType = False then
   begin
@@ -56,15 +56,15 @@ begin
         else if UpperCase(vKey) = 'S' then
           uEmu_Arcade_Mame_Actions.Open_Search
         else if UpperCase(vKey) = 'Q' then
-          uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration
+          uEmu_Arcade_Mame_Actions.Open_Global_Configuration
         else if UpperCase(vKey) = 'F' then
           uEmu_Arcade_Mame_Actions.Open_Filters
-        else if UpperCase(vKey) = 'M' then
-          uEmu_Arcade_Mame_Actions_ChangeSnapMode
-        else if UpperCase(vKey) = 'K' then
-          uEmu_Arcade_Mame_Actions_ChangeCategeroy('left')
-        else if UpperCase(vKey) = 'L' then
-          uEmu_Arcade_Mame_Actions_ChangeCategeroy('right');
+//        else if UpperCase(vKey) = 'M' then
+//          uEmu_Arcade_Mame_Actions_ChangeSnapMode
+//        else if UpperCase(vKey) = 'K' then
+//          uEmu_Arcade_Mame_Actions.Change_Categeroy('left')
+//        else if UpperCase(vKey) = 'L' then
+//          uEmu_Arcade_Mame_Actions.Change_Categeroy('right');
       end
       else if extrafe.prog.State = 'mame_game' then
       begin
@@ -83,7 +83,7 @@ begin
   uSnippet_Search.vSearch.Actions.ComesFromSearch := False;
 end;
 
-procedure uEmu_Arcade_Mame_Keyboard_VirtualKeyboard_SetKey(vKey: string);
+procedure VirtualKeyboard_SetKey(vKey: string);
 var
   vStringResult: String;
   vIntegerResult: Integer;

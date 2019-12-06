@@ -18,19 +18,12 @@ procedure Show_Media;
 procedure Activate_Animation(vImagePath: String);
 procedure Show_ImageNotFound;
 
-var
-  vMameVideoTimer: TTimer;
-
-function uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath: String): TstringList;
-procedure uEmu_Arcade_Mame_Actions_PlayGameMusic(vGameSoundPath: String);
-
-procedure uEmu_Arcade_Mame_Actions_ChangeCategeroy(vDirection: String);
-procedure uEmu_Arcade_Mame_Actions_ChangeSnapMode;
+procedure Change_Categeroy(vDirection: String);
+procedure Change_View_Mode(vMode: String);
 procedure Open_Filters;
 procedure Open_Lists;
 procedure Open_Search;
-procedure uEmu_Arcade_Mame_Actions_CloseTopicSearch;
-procedure uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration;
+procedure Open_Global_Configuration;
 
 procedure Return;
 procedure Enter_Game_Menu;
@@ -38,7 +31,7 @@ procedure Enter_Game_Menu;
 procedure Search(vAction: Boolean);
 
 var
-  vMameGameMusicList: TstringList;
+  vMameVideoTimer: TTimer;
 
 implementation
 
@@ -46,7 +39,6 @@ uses
   uDB_AUser,
   emu,
   uLoad_AllTypes,
-  uEmu_Commands,
   uVirtual_Keyboard,
   uSnippet_Search,
   uEmu_Arcade_Mame,
@@ -56,7 +48,6 @@ uses
   uEmu_Arcade_Mame_Ini,
   uEmu_Arcade_Mame_Filters,
   uEmu_Arcade_Mame_Lists,
-  uEmu_Arcade_Mame_Support_Files,
   uEmu_Arcade_Mame_Game_SetAll,
   uEmu_Arcade_Mame_Config;
 
@@ -239,43 +230,6 @@ begin
     vMame.Scene.Media.Image.SetBounds((vMame.Scene.Right.Width / 2) - 235, 55, 470, 630);
     end
     end }
-
-{  if mame.Support.List_Active[0] then
-    vMame.Scene.Gamelist.T_GamePlayers.Text := uEmu_Arcade_Mame_Support_Files_NPlayers_GetGame(mame.Gamelist.ListGames[mame.Gamelist.Selected]);
-  if mame.Support.List_Active[1] then
-    vMame.Scene.Gamelist.T_GameCategory.Text := uEmu_Arcade_Mame_Support_Files_Catver_GetGame(mame.Gamelist.ListGames[mame.Gamelist.Selected]);}
-end;
-
-procedure uEmu_Arcade_Mame_Actions_PlayGameMusic(vGameSoundPath: String);
-begin
-  if FileExists(vGameSoundPath) then
-    vMameGameMusicList := uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath);
-end;
-
-function uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath: String): TstringList;
-var
-  vZip: TZipFile;
-  vLocalHeader: TZipHeader;
-  vStream: TMemoryStream;
-  vi: Integer;
-  vString: String;
-begin
-  { if FileExists(vGameSoundPath) then
-    begin
-    Result:= TStringList.Create;
-    vZip:= TZipFile.Create;
-    vZip.Open(vGameSoundPath, zmRead);
-    vStream:= TMemoryStream.Create;
-    for vi:= 0 to vZip.FileCount- 1 do
-    begin
-    if ExtractFileExt(vZip.FileName[vi])= '.mp3' then
-    Result.Add(vZip.FileName[vi]);
-    //          vString:= Result.Strings[vi];
-    //          vZip.Read(vString, vStream, vLocalHeader);
-    end;
-    end
-    else
-    Result:= nil; }
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -303,23 +257,16 @@ begin
   end;
 end;
 
-procedure uEmu_Arcade_Mame_Actions_CloseTopicSearch;
+procedure Change_View_Mode(vMode: String);
 begin
-  uSnippet_Search.vSearch.Scene.Edit.Text := '';
-  vMame.Scene.Gamelist.Search_Edit.Width := 0;
-  vMame.Scene.Gamelist.Listbox.SetFocus;
-end;
-
-procedure uEmu_Arcade_Mame_Actions_ChangeSnapMode;
-begin
-  if mame.Main.SnapMode = 'arcade' then
+  {if mame.Main.SnapMode = 'arcade' then
     mame.Main.SnapMode := 'frame'
   else
     mame.Main.SnapMode := 'arcade';
-  uEmu_Arcade_Mame_Actions.Show_Media;
+  uEmu_Arcade_Mame_Actions.Show_Media;}
 end;
 
-procedure uEmu_Arcade_Mame_Actions_ChangeCategeroy(vDirection: String);
+procedure Change_Categeroy(vDirection: String);
 const
   cSnapCategory: array [0 .. 17] of string = ('Video Snaps', 'Snapshots', 'Cabinets', 'Control Panels', 'Flyers', 'Marquees', 'Pcbs', 'Artwork Preview',
     'Bosses', 'How To', 'Logos', 'Scores', 'Selects', 'Titles', 'Versus', 'Game Over', 'Ends', 'Warnings');
@@ -343,13 +290,13 @@ begin
   uEmu_Arcade_Mame_Actions.Show_Media;
 end;
 
-procedure uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration;
+procedure Open_Global_Configuration;
 var
   vi: Integer;
 begin
   if not ContainsText(extrafe.Prog.State, 'mame_config') then
   begin
-    uEmu_Arcade_Mame_Config_Load;
+    uEmu_Arcade_Mame_Config.Load;
     vMame.Scene.Left_Anim.StartValue := 0;
     vMame.Scene.Left_Anim.StopValue := -460;
 
@@ -368,15 +315,15 @@ begin
     if extrafe.Prog.State = 'mame_game' then
     begin
       vMame.Config.Scene.Header_Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_green.png');
-      vMame.Config.Scene.Header_Label.Text := 'Configuration for "' + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '" game rom.'
+      vMame.Config.Scene.Header_Label.Text := 'Configuration for "' + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '" game rom.';
+      extrafe.prog.State := 'mame_game_config';
     end
     else
     begin
       vMame.Config.Scene.Header_Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
       vMame.Config.Scene.Header_Label.Text := 'Mame Global configuratin file';
+      extrafe.Prog.State := 'mame_config';
     end;
-
-    extrafe.Prog.State := 'mame_config';
   end
   else
   begin
@@ -401,22 +348,21 @@ begin
     for vi := 0 to 12 do
       vMame.Config.Scene.Right_Panels[vi].Visible := False;
 
-    if vMame.Scene.Settings.Tag = 1 then
+    if extrafe.Prog.State = 'mame_game' then
       extrafe.Prog.State := 'mame'
-    else if vMame.Scene.Settings.Tag = 2 then
-      extrafe.Prog.State := 'mame_game';
+    else if extrafe.Prog.State = 'mame_game_config' then
+      extrafe.Prog.State := 'mame_config';
 
-    uEmu_Arcade_Mame_Config_Free;
+    uEmu_Arcade_Mame_Config.Free;
   end;
 end;
 
-/// /////////////////////////////////////////////////////////////////////////////
 procedure Return;
 begin
   if extrafe.Prog.State = 'mame_filters' then
     uEmu_Arcade_Mame_Filters.Free
-  else if extrafe.Prog.State = 'mame_config' then
-    uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration
+  else if (extrafe.Prog.State = 'mame_config') or (extrafe.Prog.State = 'mame_game_config')then
+    uEmu_Arcade_Mame_Actions.Open_Global_Configuration
   else if extrafe.Prog.State = 'mame_game' then
     uEmu_Arcade_Mame_Game_SetAll.Free
   else if extrafe.Prog.State = 'mame' then
@@ -438,3 +384,29 @@ begin
 end;
 
 end.
+
+{function uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath: String): TstringList;
+var
+  vZip: TZipFile;
+  vLocalHeader: TZipHeader;
+  vStream: TMemoryStream;
+  vi: Integer;
+  vString: String;
+begin
+   if FileExists(vGameSoundPath) then
+    begin
+    Result:= TStringList.Create;
+    vZip:= TZipFile.Create;
+    vZip.Open(vGameSoundPath, zmRead);
+    vStream:= TMemoryStream.Create;
+    for vi:= 0 to vZip.FileCount- 1 do
+    begin
+    if ExtractFileExt(vZip.FileName[vi])= '.mp3' then
+    Result.Add(vZip.FileName[vi]);
+    //          vString:= Result.Strings[vi];
+    //          vZip.Read(vString, vStream, vLocalHeader);
+    end;
+    end
+    else
+    Result:= nil;
+end; }

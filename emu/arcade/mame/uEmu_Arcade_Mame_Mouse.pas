@@ -110,31 +110,31 @@ begin
   else
   begin
     if TButton(Sender).Name = 'Mame_Config_Button_0' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_1' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_2' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_3' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_4' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_5' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_6' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_7' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_8' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_9' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_10' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_11' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
     else if TButton(Sender).Name = 'Mame_Config_Button_12' then
-      uEmu_Arcade_Mame_Config_ShowActivePanel(TButton(Sender).Tag)
+      uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
   end;
 end;
 
@@ -155,7 +155,7 @@ begin
   if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
   begin
     if TText(Sender).Name = 'Mame_Settings' then
-      uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration
+      uEmu_Arcade_Mame_Actions.Open_Global_Configuration
     else if TImage(Sender).Name = 'Mame_Gamelist_Filters_Image' then
       uEmu_Arcade_Mame_Actions.Open_Filters
     else if TText(Sender).Name = 'Mame_Window_Filters_Add' then

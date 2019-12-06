@@ -75,6 +75,7 @@ uses
   uSnippet_Text,
   uInternet_Files,
   uWindows,
+  uSnippet_Convert,
   uSoundplayer_Actions,
   uSoundplayer_AllTypes,
   uSoundplayer_SetAll,
@@ -177,9 +178,9 @@ begin
       if soundplayer.player_actions.Thumb_Active = False then
       begin
         if soundplayer.player_actions.Time_Negative = False then
-          vSoundplayer.Player.Song_PlayTime.Text := FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(sCT))
+          vSoundplayer.Player.Song_PlayTime.Text := FormatDateTime('hh:mm:ss', uSnippet_Convert.Seconds_To_Time(sCT))
         else
-          vSoundplayer.Player.Song_PlayTime.Text := '-' + FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(sFT - sCT));
+          vSoundplayer.Player.Song_PlayTime.Text := '-' + FormatDateTime('hh:mm:ss', uSnippet_Convert.Seconds_To_Time(sFT - sCT));
         vSoundplayer.Player.Song_Pos.Value := (sCT * 1000 / sFT);
         soundplayer.player_actions.Song_State := vSoundplayer.Player.Song_Pos.Value;
       end;
@@ -745,9 +746,9 @@ begin
   sFT := trunc(BASS_ChannelBytes2Seconds(sound.str_music[1], BASS_ChannelGetLength(sound.str_music[1], BASS_POS_BYTE)));
   vCurrent_Position_Song := (sFT * vValue) / 1000;
   if soundplayer.player_actions.Time_Negative = False then
-    vSoundplayer.Player.Song_PlayTime.Text := FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(vCurrent_Position_Song))
+    vSoundplayer.Player.Song_PlayTime.Text := FormatDateTime('hh:mm:ss', uSnippet_Convert.Seconds_To_Time(vCurrent_Position_Song))
   else
-    vSoundplayer.Player.Song_PlayTime.Text := '-' + FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(sFT - vCurrent_Position_Song));
+    vSoundplayer.Player.Song_PlayTime.Text := '-' + FormatDateTime('hh:mm:ss', uSnippet_Convert.Seconds_To_Time(sFT - vCurrent_Position_Song));
   if vKeep then
   begin
     BASS_ChannelSetPosition(sound.str_music[1], BASS_ChannelSeconds2Bytes(sound.str_music[1], vCurrent_Position_Song), BASS_POS_BYTE);
@@ -768,7 +769,7 @@ begin
   BASS_ChannelFlags(sound.str_music[2], BASS_MUSIC_POSRESET, 0);
   song_seconds := trunc(BASS_ChannelBytes2Seconds(sound.str_music[2], BASS_ChannelGetLength(sound.str_music[2], BASS_POS_BYTE)));
   vss := FloatToStr(song_seconds);
-  vSongTime := FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(song_seconds));
+  vSongTime := FormatDateTime('hh:mm:ss', uSnippet_Convert.Seconds_To_Time(song_seconds));
   addons.soundplayer.Playlist.List.Playlist.Add('#EXTINF:' + vss + ',' + mTrackName);
   addons.soundplayer.Playlist.List.Playlist.Add(mTrackPath + mTrackName);
   addons.soundplayer.Playlist.List.Playlist.SaveToFile(addons.soundplayer.Path.Playlists + addons.soundplayer.Playlist.List.Name + '.m3u');

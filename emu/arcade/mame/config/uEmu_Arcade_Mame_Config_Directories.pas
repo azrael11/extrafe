@@ -266,7 +266,7 @@ begin
     vMame.Config.Panel.Dirs.Media.Found[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
     vMame.Config.Panel.Dirs.Media.Found[vi].SetBounds((vMame.Config.Panel.Dirs.Media.Labels[vi].Position.X + vMame.Config.Panel.Dirs.Media.Labels[vi].Width +
       10), (5 + ((vi * 30) + (vi * 25))), 400, 24);
-    vMame.Config.Panel.Dirs.Media.Found[vi].Text := '(Found : ' + uWindows_CountFilesOrFolders(vMame.Config.Panel.Dirs.Media.Edit[vi].Text, False, vType)
+    vMame.Config.Panel.Dirs.Media.Found[vi].Text := '(Found : ' + uWindows.Count_Files_Or_Folders(vMame.Config.Panel.Dirs.Media.Edit[vi].Text, False, vType)
       .ToString + ' files)';
     vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.FontColor := claDeepskyblue;
     vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.Font.Style := vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.Font.Style + [TFontStyle.fsItalic];
@@ -385,7 +385,7 @@ begin
       vType := '*.zip'
     else
       vType := '*.png';
-    vMame.Config.Panel.Dirs.Media.Found[vNum].Text := '(Found : ' + uWindows_CountFilesOrFolders(vdir, False, vType).ToString + ' files)';
+    vMame.Config.Panel.Dirs.Media.Found[vNum].Text := '(Found : ' + uWindows.Count_Files_Or_Folders(vdir, False, vType).ToString + ' files)';
     vdir := vdir + '\';
     vMame.Config.Panel.Dirs.Media.Edit[vNum].Text := vdir;
     case vNum of

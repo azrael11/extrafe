@@ -9,8 +9,6 @@ uses
 procedure uEmu_LoadEmulator(vNum: Integer);
 procedure uEmu_Actions_Exit;
 
-procedure uEmu_Actions_EmuSettings(vNum: Integer);
-
 procedure uEmu_Actions_VirtualKeyboard_SetKey(vKey: String);
 
 procedure Search(vEmulator: String; vAction: Boolean);
@@ -30,7 +28,7 @@ uses
 procedure uEmu_Actions_VirtualKeyboard_SetKey(vKey: String);
 begin
   case emulation.Active_Num of
-    0 : uEmu_Arcade_Mame_Keyboard_VirtualKeyboard_SetKey(vKey);
+    0 : uEmu_Arcade_Mame_Keyboard.VirtualKeyboard_SetKey(vKey);
   end;
 end;
 
@@ -39,13 +37,6 @@ begin
   Emu_Form.WindowState:= TWindowState.wsMaximized;
   case vNum of
     0: uEmu_Arcade_Mame.Load;
-  end;
-end;
-
-procedure uEmu_Actions_EmuSettings(vNum: Integer);
-begin
-  case vNum of
-    0 : uEmu_Arcade_Mame_Actions_OpenGlobalConfiguration;
   end;
 end;
 

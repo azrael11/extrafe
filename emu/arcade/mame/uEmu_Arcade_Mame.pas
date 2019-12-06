@@ -10,7 +10,7 @@ uses
 procedure Load;
 procedure Main;
 
-Procedure Exit;
+procedure Exit;
 
 implementation
 
@@ -19,7 +19,6 @@ uses
   uEmu_Actions,
   uEmu_Arcade_Mame_SetAll,
   uEmu_Arcade_Mame_AllTypes,
-  uEmu_Arcade_Mame_Support_Files,
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Sounds;
@@ -43,8 +42,6 @@ begin
   mame.Gamelist.Timer.Interval := 500;
   mame.Gamelist.Timer.Enabled := False;
   mame.Gamelist.Timer.OnTimer := mame.Timers.Gamelist.OnTimer;
-
-  uEmu_Arcade_Mame_Support_Load;
 
   uEmu_Arcade_Mame_SetAll.Load;
   Main;
@@ -80,7 +77,7 @@ begin
   FreeAndNil(vMame.Scene.Media.Back);
   FreeAndNil(vMame.Scene.Right);
   FreeAndNil(vMame.Scene.Main);
-  uEmu_Arcade_Mame_Sounds.Unload;
+  uEmu_Arcade_Mame_Sounds.Free;
   mame.Support.ClearSupport;
   extrafe.prog.State := 'main';
   uEmu_Actions_Exit;

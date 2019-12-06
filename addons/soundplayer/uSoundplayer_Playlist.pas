@@ -67,6 +67,7 @@ uses
   uLoad,
   uLoad_AllTypes,
   uWindows,
+  uSnippet_Convert,
   uSoundplayer_Actions,
   uSoundplayer_Mouse,
   uSoundplayer_SetAll,
@@ -192,8 +193,8 @@ begin
 {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
       vsTF := trunc(BASS_ChannelBytes2Seconds(sound.str_music[100], BASS_ChannelGetLength(sound.str_music[100], BASS_POS_BYTE)));
       vfsTF := vfsTF + vsTF;
-      addons.Soundplayer.Playlist.List.Songs_Total_Time := FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(vfsTF));
-      vSong_Time := FormatDateTime('hh:mm:ss', uWindows_ConvertSecondsFromTime(vsTF));
+      addons.Soundplayer.Playlist.List.Songs_Total_Time := FormatDateTime('hh:mm:ss', uSnippet_Convert.Seconds_To_Time(vfsTF));
+      vSong_Time := FormatDateTime('hh:mm:ss', uSnippet_Convert.Seconds_To_Time(vsTF));
       uSoundPlayer_GetTag_Details(vString, mPL_Num, vk, vSong_Time);
       vSoundplayer.Playlist.List.Cells[0, vk] := IntToStr(vk + 1);
       vSoundplayer.Playlist.List.Cells[1, vk] := '3';

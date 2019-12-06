@@ -429,7 +429,7 @@ begin
   mainScene.Config.main.R.Profile.User.Avatar.main.Control.Align := TAlignLayout.Client;
   mainScene.Config.main.R.Profile.User.Avatar.main.Control.Visible := True;
 
-  vAvatar.Avatars := uWindows_CountFilesOrFolders(ex_main.Paths.Avatar_Images, False, '*.png');
+  vAvatar.Avatars := uWindows.Count_Files_Or_Folders(ex_main.Paths.Avatar_Images, False, '*.png');
   vAvatar.Pages := vAvatar.Avatars div 20;
 
   SetLength(mainScene.Config.main.R.Profile.User.Avatar.main.Tabs, vAvatar.Pages + 1);

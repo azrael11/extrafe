@@ -4,6 +4,7 @@ interface
 
 uses
   System.Classes,
+  System.IOUtils,
   System.SysUtils,
   System.UiTypes,
   FMX.StdCtrls,
@@ -339,9 +340,9 @@ end;
 procedure uEmulation_Arcade_Mame_Uninstall_Remove;
 begin
   if Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked then
-    uWindows_DeleteDirectory(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database, '*.*', false);
+    TDirectory.Delete(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database);
   if Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked then
-    uWindows_DeleteDirectory(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path, '*.*', True);
+    TDirectory.Delete(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path);
 
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'INSTALLED', 'FALSE', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_POSITION', '-1', 'USER_ID', uDB_AUser.Local.Num.ToString);

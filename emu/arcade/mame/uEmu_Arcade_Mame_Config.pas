@@ -18,11 +18,11 @@ const
     'Artwork Preview', 'Bosses', 'Ends', 'How To', 'Logos', 'Scores', 'Selects', 'Versus', 'Game Over',
     'Warnings', 'Stamps', 'Soundtracks', 'Support Files', 'Videos');
 
-procedure uEmu_Arcade_Mame_Config_Load;
-procedure uEmu_Arcade_Mame_Config_Free;
+procedure Load;
+procedure Free;
 
-procedure uEmu_Arcade_Mame_Config_FreePreviewsPanel(vFreePanel_Num: Integer);
-procedure uEmu_Arcade_Mame_Config_ShowActivePanel(vShow: Integer);
+procedure Free_Panel(vFreePanel_Num: Integer);
+procedure Show_Panel(vShow: Integer);
 
 var
   mame_config_menu_panel: Integer;
@@ -47,7 +47,7 @@ uses
   uEmu_Arcade_Mame_Config_MiscellaneousII,
   uEmu_Arcade_Mame_Config_Snap_Movie_Playback;
 
-procedure uEmu_Arcade_Mame_Config_Load;
+procedure Load;
 var
   vi: Integer;
 begin
@@ -103,7 +103,7 @@ begin
   mame_config_menu_panel := -1;
 end;
 
-procedure uEmu_Arcade_Mame_Config_Free;
+procedure Free;
 var
   vi: Integer;
 begin
@@ -118,7 +118,7 @@ end;
 
 /// /////////////////////////////////////////////////////////////////////////////
 
-procedure uEmu_Arcade_Mame_Config_FreePreviewsPanel(vFreePanel_Num: Integer);
+procedure Free_Panel(vFreePanel_Num: Integer);
 var
   vi: Integer;
 begin
@@ -141,9 +141,9 @@ begin
   end;
 end;
 
-procedure uEmu_Arcade_Mame_Config_ShowActivePanel(vShow: Integer);
+procedure Show_Panel(vShow: Integer);
 begin
-  uEmu_Arcade_Mame_Config_FreePreviewsPanel(mame_config_menu_panel);
+  Free_Panel(mame_config_menu_panel);
   case vShow of
     0:
       begin

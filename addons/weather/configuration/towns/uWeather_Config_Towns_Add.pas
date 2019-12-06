@@ -170,7 +170,7 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.ImageList := TImageList.Create(vWeather.Config.main.Right.Towns.Add.Panel);
   vWeather.Config.main.Right.Towns.Add.main.ImageList.name := 'A_W_Config_Towns_Add_ImageList';
 
-  vCodes := uWindows_GetFileNames(ex_main.Paths.Flags_Images, '*.png');
+  vCodes := uWindows.Get_Files_Names(ex_main.Paths.Flags_Images, '*.png');
 
   for vi := 0 to vCodes.Count - 1 do
   begin

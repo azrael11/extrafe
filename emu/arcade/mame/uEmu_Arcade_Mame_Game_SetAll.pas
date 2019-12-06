@@ -38,7 +38,6 @@ uses
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_AllTypes,
-  uEmu_Arcade_Mame_Support_Files,
   uEmu_Arcade_Mame_Game_Actions;
 
 procedure Load;

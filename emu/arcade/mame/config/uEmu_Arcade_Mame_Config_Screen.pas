@@ -367,9 +367,9 @@ begin
       begin
         vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
         vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
-        mame.Monitor.Monitor_1_Resolutions:= uWindows_GetMonitor_Available_Resolutions;
+        mame.Monitor.Monitor_1_Resolutions:= uWindows.Get_Monitor_Avail_Res;
         vMame.Config.Panel.Screen.Combobox[3].Items:= mame.Monitor.Monitor_1_Resolutions;
-        mame.Monitor.Monitor_1_Refreshs:= uWindows_GetMOnitor_Available_Refreshs;
+        mame.Monitor.Monitor_1_Refreshs:= uWindows.Get_Monitor_Avail_Refresh;
         vMame.Config.Panel.Screen.Combobox[4].Items:= mame.Monitor.Monitor_1_Refreshs;
         vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0;
         vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0;
@@ -425,10 +425,10 @@ begin
     begin
       vMame.Config.Panel.Screen.Combobox[3].Items.Clear;
       vMame.Config.Panel.Screen.Combobox[3].Items.Add('Auto');
-      vMame.Config.Panel.Screen.Combobox[3].Items.AddStrings(uWindows_GetMonitor_Available_Resolutions);
+      vMame.Config.Panel.Screen.Combobox[3].Items.AddStrings(uWindows.Get_Monitor_Avail_Res);
       vMame.Config.Panel.Screen.Combobox[4].Items.Clear;
       vMame.Config.Panel.Screen.Combobox[4].Items.Add('Auto');
-      vMame.Config.Panel.Screen.Combobox[4].Items.AddStrings(uWindows_GetMOnitor_Available_Refreshs);
+      vMame.Config.Panel.Screen.Combobox[4].Items.AddStrings(uWindows.Get_Monitor_Avail_Refresh);
       vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0;
       vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0;
     end;
@@ -571,14 +571,14 @@ begin
         vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= 0
       else
         begin
-          vMame.Config.Panel.Screen.Combobox[3].Items.AddStrings(uWindows_GetMonitor_Available_Resolutions);
+          vMame.Config.Panel.Screen.Combobox[3].Items.AddStrings(uWindows.Get_Monitor_Avail_Res);
           vMame.Config.Panel.Screen.Combobox[3].ItemIndex:= uEmu_Arcade_Mame_Config_Screen_LoadResolution(vResolution);
         end;
       if vRefresh= '0' then
         vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= 0
       else
         begin
-          vMame.Config.Panel.Screen.Combobox[4].Items.AddStrings(uWindows_GetMOnitor_Available_Refreshs);
+          vMame.Config.Panel.Screen.Combobox[4].Items.AddStrings(uWindows.Get_Monitor_Avail_Refresh);
           vMame.Config.Panel.Screen.Combobox[4].ItemIndex:= uEmu_Arcade_Mame_Config_Screen_LoadRefresh(vRefresh);
         end;
     end;

@@ -1,0 +1,90 @@
+unit uEmu_Arcade_Mame_Support_Files;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.Threading,
+  FMX.Forms,
+  WinAPI.Windows,
+  WinAPI.ShellApi;
+
+function uEmu_Arcade_Mame_Support_Files_NPlayers_GetGame(vRomName: String): String;
+
+function uEmu_Arcade_Mame_Support_Files_Catver_GetGame(vRomName: String): String;
+
+procedure uEmu_Arcade_Mame_Support_Files_Gameinit_Load;
+
+implementation
+
+uses
+  uDB_AUser,
+  uLoad_AllTypes,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Commands;
+
+function uEmu_Arcade_Mame_Support_Files_NPlayers_GetGame(vRomName: String): String;
+var
+  vi: Integer;
+  vFound: Boolean;
+begin
+  vFound := False;
+  for vi := 0 to 50000 do
+  begin
+    if mame.Support.List[0, vi, 0] = vRomName then
+    begin
+      Result := mame.Support.List[0, vi, 1];
+      vFound := True;
+      break;
+    end;
+  end;
+  if vFound = False then
+    Result := 'Not Registered';
+end;
+
+function uEmu_Arcade_Mame_Support_Files_Catver_GetGame(vRomName: String): String;
+var
+  vi: Integer;
+  vFound: Boolean;
+begin
+  vFound := False;
+  for vi := 0 to 50000 do
+  begin
+    if mame.Support.List[1, vi, 0] = vRomName then
+    begin
+      Result := mame.Support.List[1, vi, 1];
+      vFound := True;
+      break;
+    end;
+  end;
+  if vFound = False then
+    Result := 'Not Registered';
+end;
+
+/// /////////////////////////////////////////////////////////////////////////////
+procedure uEmu_Arcade_Mame_Support_Files_Gameinit_Load;
+var
+  vTextFile: TextFile;
+  vString: String;
+  vAdded_now: Boolean;
+begin
+  if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + 'gameinit.ini') then
+  begin
+    vAdded_now := False;
+    AssignFile(vTextFile, uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files + ('gameinit.ini'));
+    Reset(vTextFile);
+    while not Eof(vTextFile) do
+    begin
+      Readln(vTextFile, vString);
+      if vString = '[ROOT_FOLDER]' then
+        vAdded_now := True;
+      if vAdded_now = True then
+        mame.Support.GameInit.Add(vString);
+    end;
+    CloseFile(vTextFile);
+  end;
+end;
+
+/// /////////////////////////////////////////////////////////////////////////////
+end.

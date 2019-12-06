@@ -437,7 +437,7 @@ begin
 
   { Get Yahoo Iconsets }
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := TStringList.Create;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := uWindows_GetFolderNames(uDB_AUser.Local.ADDONS.Weather_D.p_Icons + 'yahoo\');
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := uWindows.Get_Folder_Names(uDB_AUser.Local.ADDONS.Weather_D.p_Icons + 'yahoo\');
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets.Insert(0, 'default');
   { Get OpenWeatherMap Iconsets }
 

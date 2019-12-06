@@ -215,7 +215,6 @@
         <DCCReference Include="emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Snap_Movie_Playback.pas"/>
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Gamelist.pas"/>
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_SetAll.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Support_Files.pas"/>
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Actions.pas"/>
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Game_SetAll.pas"/>
         <DCCReference Include="code\_snippets\uKeyboard.pas"/>
@@ -365,9 +364,9 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="$(IBREDISTDIR)\reg_iblite.txt" Configuration="Release" Class="File">
-                    <Platform Name="Win64">
-                        <RemoteDir>interbase\license\</RemoteDir>
+                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Debug" Class="File">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -919,9 +918,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Debug" Class="File">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
+                <DeployFile LocalName="$(IBREDISTDIR)\reg_iblite.txt" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteDir>interbase\license\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

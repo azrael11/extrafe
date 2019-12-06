@@ -127,7 +127,7 @@ begin
   vMame.Config.Panel.Misc_II.Combobox[0].Name:= 'Mame_MiscII_Combobox_Language';
   vMame.Config.Panel.Misc_II.Combobox[0].Parent:= vMame.Config.Panel.Misc_II.Groupbox[2];
   vMame.Config.Panel.Misc_II.Combobox[0].SetBounds(5,30,(vMame.Config.Panel.Misc_II.Groupbox[2].Width- 10),25);
-  vMame.Config.Panel.Misc_II.Combobox[0].Items.AddStrings(uWindows_GetFolderNames(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Path+ 'language'));
+  vMame.Config.Panel.Misc_II.Combobox[0].Items.AddStrings(uWindows.Get_Folder_Names(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Path+ 'language'));
   vMame.Config.Panel.Misc_II.Combobox[0].ItemIndex:= vMame.Config.Panel.Misc_II.Combobox[0].Items.IndexOf(mame.Emu.Ini.CORE_MISC_language);
   vMame.Config.Panel.Misc_II.Combobox[0].OnChange:= mame.Config.Input.Mouse.Combobox.OnChange;
   vMame.Config.Panel.Misc_II.Combobox[0].Visible:= True;

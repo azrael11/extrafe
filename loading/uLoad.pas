@@ -53,10 +53,10 @@ uses
 procedure Load_Consts;
 begin
   { Version }
-  extrafe.prog.Version.Major := uWindows_GetVersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[0];
-  extrafe.prog.Version.Minor := uWindows_GetVersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[1];
-  extrafe.prog.Version.Realeash := uWindows_GetVersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[2];
-  extrafe.prog.Version.Build := uWindows_GetVersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[3];
+  extrafe.prog.Version.Major := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[0];
+  extrafe.prog.Version.Minor := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[1];
+  extrafe.prog.Version.Realeash := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[2];
+  extrafe.prog.Version.Build := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[3];
   { Code Name }
   extrafe.prog.Desc := 'Code name: Mnimi';
   { Virtual Keybord show }

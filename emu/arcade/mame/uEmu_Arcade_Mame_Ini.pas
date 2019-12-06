@@ -29,12 +29,12 @@ var
     v1Pos: Integer;
     v1Line, v1Result: String;
   begin
-    // Core Configuration options
+    {Core Configuration options}
     if vParam = 'readconfig' then
       mame.Emu.Ini.CORE_CONFIGURATION_readconfig := StrToBool(vValue)
     else if vParam = 'writeconfig' then
       mame.Emu.Ini.CORE_CONFIGURATION_writeconfig := StrToBool(vValue)
-      // Core Search path options
+    {Core Search path options}
     else if vParam = 'homepath' then
       mame.Emu.Ini.CORE_SEARCH_homepath := vValue
     else if vParam = 'rompath' then
@@ -99,7 +99,7 @@ var
       mame.Emu.Ini.CORE_SEARCH_languagepath := vValue
     else if vParam = 'swpath' then
       mame.Emu.Ini.CORE_SEARCH_swpath := vValue
-      // Core Output directory optiions
+    {Core Output directory optiions}
     else if vParam = 'cfg_directory' then
       mame.Emu.Ini.CORE_OUTPUT_cfg_directory := vValue
     else if vParam = 'nvram_directory' then
@@ -114,7 +114,7 @@ var
       mame.Emu.Ini.CORE_OUTPUT_diff_directory := vValue
     else if vParam = 'comment_directory' then
       mame.Emu.Ini.CORE_OUTPUT_comment_directory := vValue
-      // Core State/Playback options
+    {Core State/Playback options}
     else if vParam = 'state' then
       mame.Emu.Ini.CORE_STATE_state := vValue
     else if vParam = 'autosave' then
@@ -149,7 +149,7 @@ var
       mame.Emu.Ini.CORE_STATE_statename := vValue
     else if vParam = 'burnin' then
       mame.Emu.Ini.CORE_STATE_burnin := StrToBool(vValue)
-      // Core Prerformance options
+    {Core Prerformance options}
     else if vParam = 'autoframeskip' then
       mame.Emu.Ini.CORE_PERFORMANCE_autoframeskip := StrToBool(vValue)
     else if vParam = 'frameskip' then
@@ -169,7 +169,7 @@ var
       if vParam = 'syncrefresh' then
         mame.Emu.Ini.CORE_PERFORMANCE_syncrefresh := StrToBool(vValue)
     end
-    // Core Render options
+    {Core Render options}
     else if vParam = 'keepaspect' then
       mame.Emu.Ini.CORE_RENDER_keepaspect := StrToBool(vValue)
     else if vParam = 'unevenstretch' then
@@ -186,7 +186,7 @@ var
       mame.Emu.Ini.CORE_RENDER_intscalex := StrToFloat(vValue)
     else if vParam = 'intscaley' then
       mame.Emu.Ini.CORE_RENDER_intscaley := StrToFloat(vValue)
-      // Core Rotation options
+    {Core Rotation options}
     else if vParam = 'rotate' then
       mame.Emu.Ini.CORE_ROTATION_rotate := StrToBool(vValue)
     else if vParam = 'ror' then
@@ -201,7 +201,7 @@ var
       mame.Emu.Ini.CORE_ROTATION_flipx := StrToBool(vValue)
     else if vParam = 'flipy' then
       mame.Emu.Ini.CORE_ROTATION_flipy := StrToBool(vValue)
-      // Core Artwork options
+    {Core Artwork options}
     else if vParam = 'artwork_crop' then
       mame.Emu.Ini.CORE_ARTWORK_artwork_crop := StrToBool(vValue)
     else if vParam = 'use_backdrops' then
@@ -218,7 +218,7 @@ var
       mame.Emu.Ini.CORE_ARTWORK_fallback_artwork := vValue
     else if vParam = 'override_artwork' then
       mame.Emu.Ini.CORE_ARTWORK_override_artwork := vValue
-      // Core Screen options
+    {Core Screen options}
     else if vParam = 'brightness' then
       mame.Emu.Ini.CORE_SCREEN_brightness := vValue
     else if vParam = 'contrast' then
@@ -229,11 +229,10 @@ var
       mame.Emu.Ini.CORE_SCREEN_pause_brightness := vValue
     else if vParam = 'effect' then
       mame.Emu.Ini.CORE_SCREEN_effect := vValue
-      // Arcade 64 specific line
+    {Arcade 64 specific line}
     else if vParam = 'widestretch' then
       mame.Emu.Ini.CORE_SCREEN_widestretch := StrToBool(vValue)
-      //
-      // Core Vector options
+    {Core Vector options}
     else if vParam = 'beam_width_min' then
       mame.Emu.Ini.CORE_VECTOR_beam_width_min := vValue
     else if vParam = 'beam_width_max' then
@@ -242,14 +241,14 @@ var
       mame.Emu.Ini.CORE_VECTOR_beam_intensity_weight := vValue
     else if vParam = 'flicker' then
       mame.Emu.Ini.CORE_VECTOR_flicker := vValue
-      // Core Sound options
+    {Core Sound options}
     else if vParam = 'samplerate' then
       mame.Emu.Ini.CORE_SOUND_samplerate := vValue
     else if vParam = 'samples' then
       mame.Emu.Ini.CORE_SOUND_samples := StrToBool(vValue)
     else if vParam = 'volume' then
       mame.Emu.Ini.CORE_SOUND_volume := vValue
-      // Core Input options
+    {Core Input options}
     else if vParam = 'coin_lockout' then
       mame.Emu.Ini.CORE_INPUT_coin_lockout := StrToBool(vValue)
     else if vParam = 'ctrlr' then
@@ -282,7 +281,7 @@ var
       mame.Emu.Ini.CORE_INPUT_joystick_contradictory := StrToBool(vValue)
     else if vParam = 'coin_impulse' then
       mame.Emu.Ini.CORE_INPUT_coin_impulse := StrToBool(vValue)
-      // Core Input Automatic Enable options
+    {Core Input Automatic Enable options}
     else if vParam = 'paddle_device' then
       mame.Emu.Ini.CORE_INPUT_AUTOMATIC_paddle_device := vValue
     else if vParam = 'adstick_device' then
@@ -299,7 +298,7 @@ var
       mame.Emu.Ini.CORE_INPUT_AUTOMATIC_positional_device := vValue
     else if vParam = 'mouse_device' then
       mame.Emu.Ini.CORE_INPUT_AUTOMATIC_mouse_device := vValue
-      // Core Debugging options
+    {Core Debugging options}
     else if vParam = 'verbose' then
       mame.Emu.Ini.CORE_DEBUGGING_verbose := StrToBool(vValue)
     else if vParam = 'log' then
@@ -312,7 +311,7 @@ var
       mame.Emu.Ini.CORE_DEBUGGING_update_in_pause := StrToBool(vValue)
     else if vParam = 'debugscript' then
       mame.Emu.Ini.CORE_DEBUGGING_debugscript := vValue
-      // Core Comm options
+    {Core Comm options}
     else if vParam = 'comm_localhost' then
       mame.Emu.Ini.CORE_COMM_comm_localhost := vValue
     else if vParam = 'comm_localport' then
@@ -321,7 +320,7 @@ var
       mame.Emu.Ini.CORE_COMM_comm_remotehost := vValue
     else if vParam = 'comm_remoteport' then
       mame.Emu.Ini.CORE_COMM_comm_remoteport := vValue
-      // Core Misc options
+    {Core Misc options}
     else if vParam = 'drc' then
       mame.Emu.Ini.CORE_MISC_drc := StrToBool(vValue)
     else if vParam = 'drc_use_c' then
@@ -350,7 +349,7 @@ var
       mame.Emu.Ini.CORE_MISC_language := vValue
     else if vParam = 'nvram_save' then
       mame.Emu.Ini.CORE_MISC_nvram_save := StrToBool(vValue)
-      // Scripting options
+    {Scripting options}
     else if vParam = 'autoboot_command' then
       mame.Emu.Ini.SCRIPTING_autoboot_command := vValue
     else if vParam = 'autoboot_delay' then
@@ -365,23 +364,23 @@ var
       mame.Emu.Ini.SCRIPTING_plugin := vValue
     else if vParam = 'noplugin' then
       mame.Emu.Ini.SCRIPTING_noplugin := vValue
-      // HTTP Server options
+    {HTTP Server options}
     else if vParam = 'http' then
       mame.Emu.Ini.HTTP_http := vValue
     else if vParam = 'http_port' then
       mame.Emu.Ini.HTTP_port := vValue
     else if vParam = 'http_root' then
       mame.Emu.Ini.HTTP_root := vValue
-      // Osd Keyboard mapping options
+    {Osd Keyboard mapping options}
     else if vParam = 'uimodekey' then
       mame.Emu.Ini.OSD_KEYBOARD_uimodekey := vValue
-      // Osd Font options
+    {Osd Font options}
     else if vParam = 'uifontprovider' then
       mame.Emu.Ini.OSD_FONT_uifontprovider := vValue
-      // Osd Output options
+    {Osd Output options}
     else if vParam = 'output' then
       mame.Emu.Ini.OSD_OUTPUT_output := vValue
-      // Osd Input options
+    {Osd Input options}
     else if vParam = 'keyboardprovider' then
       mame.Emu.Ini.OSD_INPUT_keyboardprovider := vValue
     else if vParam = 'mouseprovider' then
@@ -390,7 +389,7 @@ var
       mame.Emu.Ini.OSD_INPUT_lightgunprovider := vValue
     else if vParam = 'joystickprovider' then
       mame.Emu.Ini.OSD_INPUT_joystickprovider := vValue
-      // Osd Debugging options
+    {Osd Debugging options}
     else if vParam = 'debugger' then
       mame.Emu.Ini.OSD_DEBUGGING_debugger := vValue
     else if vParam = 'debugger_font' then
@@ -399,12 +398,12 @@ var
       mame.Emu.Ini.OSD_DEBUGGING_debugger_font_size := StrToInt(vValue)
     else if vParam = 'watchdog' then
       mame.Emu.Ini.OSD_DEBUGGING_watchdog := StrToBool(vValue)
-      // Osd Performance options
+    {Osd Performance options}
     else if vParam = 'numprocessors' then
       mame.Emu.Ini.OSD_PERFORMANCE_numprocessors := vValue
     else if vParam = 'bench' then
       mame.Emu.Ini.OSD_PERFORMANCE_bench := StrToBool(vValue)
-      // Osd Video options
+    {Osd Video options}
     else if vParam = 'video' then
       mame.Emu.Ini.OSD_VIDEO_video := vValue
     else if vParam = 'numscreens' then
@@ -419,7 +418,7 @@ var
       mame.Emu.Ini.OSD_VIDEO_syncrefresh := StrToBool(vValue)
     else if vParam = 'monitorprovider' then
       mame.Emu.Ini.OSD_VIDEO_monitorprovider := vValue
-      // Osd Per_Window Video options
+    {Osd Per_Window Video options}
     else if vParam = 'screen' then
       mame.Emu.Ini.OSD_PER_WINDOW_screen := vValue
     else if vParam = 'aspect' then
@@ -460,15 +459,15 @@ var
       mame.Emu.Ini.OSD_PER_WINDOW_resolution3 := vValue
     else if vParam = 'view3' then
       mame.Emu.Ini.OSD_PER_WINDOW_view3 := vValue
-      // Osd Fullscreen options
+    {Osd Fullscreen options}
     else if vParam = 'switchres' then
       mame.Emu.Ini.OSD_FULLSCREEN_switchres := StrToBool(vValue)
-      // Osd Accelerated Video options
+    {Osd Accelerated Video options}
     else if vParam = 'filter' then
       mame.Emu.Ini.OSD_ACCELERATED_filter := StrToBool(vValue)
     else if vParam = 'prescale' then
       mame.Emu.Ini.OSD_ACCELERATED_prescale := StrToInt(vValue)
-      // OpenGL specific options
+    {OpenGL specific options}
     else if vParam = 'gl_forcepow2texture' then
       mame.Emu.Ini.OpenGL_gl_forcepow2texture := StrToBool(vValue)
     else if vParam = 'gl_notexturerect' then
@@ -527,19 +526,19 @@ var
       mame.Emu.Ini.OpenGL_glsl_shader_screen8 := vValue
     else if vParam = 'glsl_shader_screen9' then
       mame.Emu.Ini.OpenGL_glsl_shader_screen9 := vValue
-      // Osd Sound options
+    {Osd Sound options}
     else if vParam = 'sound' then
       mame.Emu.Ini.OSD_SOUND_sound := vValue
     else if vParam = 'audio_latency' then
       mame.Emu.Ini.OSD_SOUND_audio_latency := vValue
-      // Portaudio options
+    {Portaudio options}
     else if vParam = 'pa_api' then
       mame.Emu.Ini.PORTAUDIO_pa_api := vValue
     else if vParam = 'pa_device' then
       mame.Emu.Ini.PORTAUDIO_pa_device := vValue
     else if vParam = 'pa_latency' then
       mame.Emu.Ini.PORTAUDIO_pa_latency := vValue
-      // Bgfx post_processing options
+    {Bgfx post_processing options}
     else if vParam = 'bgfx_path' then
       mame.Emu.Ini.BGFX_bgfx_path := vValue
     else if vParam = 'bgfx_backend' then
@@ -552,15 +551,15 @@ var
       mame.Emu.Ini.BGFX_bgfx_shadow_mask := vValue
     else if vParam = 'bgfx_avi_name' then
       mame.Emu.Ini.BGFX_bgfx_avi_name := vValue
-      // Windows performance options
+    {Windows performance options}
     else if vParam = 'priority' then
       mame.Emu.Ini.WINDOWS_PERFORMANCE_priority := vValue
     else if vParam = 'profile' then
       mame.Emu.Ini.WINDOWS_PERFORMANCE_profile := vValue
-      // Windows Video options
+    {Windows Video options}
     else if vParam = 'menu' then
       mame.Emu.Ini.WINDOWS_VIDEO_menu := StrToBool(vValue)
-      // Direct3d Post_processing options
+    {Direct3d Post_processing options}
     else if vParam = 'hlslpath' then
       mame.Emu.Ini.DIRECT3D_hlslpath := vValue
     else if vParam = 'hlsl_enable' then
@@ -649,7 +648,7 @@ var
       mame.Emu.Ini.DIRECT3D_floor := vValue
     else if vParam = 'phosphor_life' then
       mame.Emu.Ini.DIRECT3D_phosphor_life := vValue
-      // NTSC Post-processing options
+    {NTSC Post-processing options}
     else if vParam = 'yiq_enable' then
       mame.Emu.Ini.NTSC_yiq_enable := StrToBool(vValue)
     else if vParam = 'yiq_jitter' then
@@ -676,14 +675,14 @@ var
       mame.Emu.Ini.NTSC_yiq_scan_time := vValue
     else if vParam = 'yiq_phase_count' then
       mame.Emu.Ini.NTSC_yiq_phase_count := vValue
-      // Vector Post_processing options
+    {Vector Post_processing options}
     else if vParam = 'vector_beam_smooth' then
       mame.Emu.Ini.VECTOR_vector_beam_smooth := vValue
     else if vParam = 'vector_length_scale' then
       mame.Emu.Ini.VECTOR_vector_length_scale := vValue
     else if vParam = 'vector_length_ratio' then
       mame.Emu.Ini.VECTOR_vector_length_ratio := vValue
-      // Bloom Post_processing options
+    {Bloom Post_processing options}
     else if vParam = 'bloom_blend_mode' then
       mame.Emu.Ini.BLOOM_bloom_blend_mode := vValue
     else if vParam = 'bloom_scale' then
@@ -708,7 +707,7 @@ var
       mame.Emu.Ini.BLOOM_bloom_lvl7_weight := vValue
     else if vParam = 'bloom_lvl8_weight' then
       mame.Emu.Ini.BLOOM_bloom_lvl8_weight := vValue
-      // Fullscreen options
+    {Fullscreen options}
     else if vParam = 'triplebuffer' then
       mame.Emu.Ini.FULLSCREEN_triplebuffer := StrToBool(vValue)
     else if vParam = 'full_screen_brightness' then
@@ -717,12 +716,12 @@ var
       mame.Emu.Ini.FULLSCREEN_full_screen_contrast := vValue
     else if vParam = 'full_screen_gamma' then
       mame.Emu.Ini.FULLSCREEN_full_screen_gamma := vValue
-      // Input Device options
+    {Input Device options}
     else if vParam = 'global_inputs' then
       mame.Emu.Ini.INPUT_DEVICE_global_inputs := StrToInt(vValue)
     else if vParam = 'dual_lightgun' then
       mame.Emu.Ini.INPUT_DEVICE_dual_lightgun := StrToBool(vValue)
-      // Frontend Command options
+    {Frontend Command options}
     else if vParam = 'dtd' then
       mame.Emu.Ini.FRONTEND_COMMAND_dtd := StrToInt(vValue);
   end;

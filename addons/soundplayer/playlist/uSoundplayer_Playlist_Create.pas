@@ -126,7 +126,7 @@ var
 begin
   vFoundTheSame := False;
   vLists := TStringList.Create;
-  vLists := uWindows_GetFileNames(addons.soundplayer.Path.Playlists, '*.*');
+  vLists := uWindows.Get_Files_Names(addons.soundplayer.Path.Playlists, '*.*');
   for vi := 0 to vLists.Count - 1 do
   begin
     if (vPlaylistName + vPlaylistType) = vLists.Strings[vi] then
