@@ -35,6 +35,7 @@ implementation
 
 uses
   uWindows,
+  uInternet_Files,
   uKeyboard,
   load,
   main,
@@ -53,10 +54,10 @@ uses
 procedure Load_Consts;
 begin
   { Version }
-  extrafe.prog.Version.Major := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[0];
-  extrafe.prog.Version.Minor := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[1];
-  extrafe.prog.Version.Realeash := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[2];
-  extrafe.prog.Version.Build := uWindows.Get_VersionInfo(extrafe.prog.Path + extrafe.prog.Name).Strings[3];
+  extrafe.prog.Version.Major := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[0];
+  extrafe.prog.Version.Minor := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[1];
+  extrafe.prog.Version.Realeash := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[2];
+  extrafe.prog.Version.Build := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[3];
   { Code Name }
   extrafe.prog.Desc := 'Code name: Mnimi';
   { Virtual Keybord show }
@@ -136,8 +137,8 @@ begin
   uDB.Local_Create;
   extrafe.databases.local_connected := uDB.Local_Connect;
 
-  extrafe.users_total := uDB.Local_Get_Users;
-  extrafe.res.Monitor := uWindows.Get_Monitor_Resolution;
+  extrafe.users_total := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'users', '', '');
+  extrafe.res.Monitor := uWindows.Monitor_Get_Res;
 
   if extrafe.users_total > 0 then
   begin
@@ -149,7 +150,7 @@ begin
 
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'ACTIVE_ONLINE', 'FALSE', 'USER_ID',  '0');
   uDB_AUser.Local.Active := False;
-  extrafe.Internet_Active := uWindows_IsConected_ToInternet;
+  extrafe.Internet_Active := uInternet_Files.Internet_Connected;
   if extrafe.Internet_Active then
   begin
     uDB.Online_Create;

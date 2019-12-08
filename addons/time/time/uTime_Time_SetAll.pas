@@ -699,7 +699,7 @@ begin
   vTime.P_Time.Config.Digital.Font_Combo.Visible := True;
 
   vFonts := TStringList.Create;
-  uWindows_CollectFonts(vFonts);
+  uWindows.Fonts_Get(vFonts);
   vTime.P_Time.Config.Digital.Font_Combo.Items := vFonts;
   vTime.P_Time.Config.Digital.Font_Combo.ItemIndex := vTime.P_Time.Config.Digital.Font_Combo.Items.IndexOf(uDB_AUser.Local.addons.Time_D.time.Digital_Font);
 

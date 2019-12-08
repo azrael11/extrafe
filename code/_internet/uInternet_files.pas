@@ -8,6 +8,10 @@ uses
   System.Sysutils,
   FMX.Graphics,
   FMX.Dialogs,
+  FMX.Forms,
+  WinApi.Windows,
+  WinApi.WinInet,
+  Winapi.Winsock,
   IdBaseComponent,
   IdComponent,
   IdTCPConnection,
@@ -27,6 +31,11 @@ const
   HTTP_RESPONSE_OK = 200;
 
 {$M+}
+
+function Internet_Connected: Boolean;
+
+function IP_Get_Address: String;
+
 function ValidEmail(email: string): boolean;
 function GeoIP(out vCountry_Code: string; out vIP: string; out vLat, vLon: String): boolean;
 
@@ -36,7 +45,7 @@ function Send_HTML_Email(vEmail, vTheme: String): boolean;
 procedure HTML_Registration(vHTMLBuild: TIdMessageBuilderHtml);
 procedure HTML_Password_Forgat(vHTMLBuild: TIdMessageBuilderHtml);
 
-function Get_Image(vPath: String): TBitmap;
+function Get_Image(vPath: String): FMX.Graphics.TBitmap;
 function GetPage(aURL: string): string;
 
 function JSONValue(vRestName: String; vBaseUrl: String; vMethod: TRESTRequestMethod): TJSONValue;
@@ -413,13 +422,13 @@ begin
   end;
 end;
 
-function Get_Image(vPath: String): TBitmap;
+function Get_Image(vPath: String): FMX.Graphics.TBitmap;
 var
   MS: TMemoryStream;
   vIdHTTP: TIdHTTP;
 begin
   MS := TMemoryStream.Create;
-  Result := TBitmap.Create;
+  Result := FMX.Graphics.TBitmap.Create;
   vIdHTTP := TIdHTTP.Create(Main_Form);
   try
     try
@@ -492,6 +501,70 @@ begin
   Result := vRESTResponse.JSONValue;
 
   FreeAndNil(vRESTRequest)
+end;
+
+function Internet_Connected: Boolean;
+const
+  // Local system has a valid connection to the Internet, but it might or might
+  // not be currently connected.
+  INTERNET_CONNECTION_CONFIGURED = $40;
+  // Local system uses a local area network to connect to the Internet.
+  INTERNET_CONNECTION_LAN = $02;
+  // Local system uses a modem to connect to the Internet
+  INTERNET_CONNECTION_MODEM = $01;
+  // Local system is in offline mode.
+  INTERNET_CONNECTION_OFFLINE = $20;
+  // Local system uses a proxy server to connect to the Internet
+  INTERNET_CONNECTION_PROXY = $04;
+  // Local system has RAS installed.
+  INTERNET_RAS_INSTALLED = $10;
+var
+  InetState: DWORD;
+  hHttpSession, hReqUrl: HInternet;
+begin
+  Result := InternetGetConnectedState(@InetState, 0);
+  if (Result and (InetState and INTERNET_CONNECTION_CONFIGURED = INTERNET_CONNECTION_CONFIGURED)) then
+  begin
+    // so far we ONLY know there's a valid connection. See if we can grab some
+    // known URL ...
+    hHttpSession := InternetOpen(PChar(Application.Title), INTERNET_OPEN_TYPE_PRECONFIG, nil, nil, 0);
+    try
+      hReqUrl := InternetOpenURL(hHttpSession, PChar('http://www.google.com' { the URL to check } ), nil, 0, 0, 0);
+      Result := hReqUrl <> nil;
+      InternetCloseHandle(hReqUrl);
+    finally
+      InternetCloseHandle(hHttpSession);
+    end;
+  end
+  else if (InetState and INTERNET_CONNECTION_OFFLINE = INTERNET_CONNECTION_OFFLINE) then
+    Result := False; // we know for sure we are offline.
+end;
+
+function IP_Get_Address: String;
+type
+  TaPInAddr = array [0 .. 10] of PInAddr;
+  PaPInAddr = ^TaPInAddr;
+var
+  phe: PHostEnt;
+  pptr: PaPInAddr;
+  Buffer: array [0 .. 63] of Ansichar;
+  i: Integer;
+  GInitData: TWSADATA;
+begin
+  WSAStartup($101, GInitData);
+  Result := '';
+  GetHostName(Buffer, SizeOf(Buffer));
+  phe := GetHostByName(Buffer);
+  if phe = nil then
+    Exit;
+  pptr := PaPInAddr(phe^.h_addr_list);
+  i := 0;
+  while pptr^[i] <> nil do
+  begin
+    Result := StrPas(inet_ntoa(pptr^[i]^));
+    Inc(i);
+  end;
+  WSACleanup;
 end;
 
 end.

@@ -17,7 +17,8 @@ uses
   uLoad_AllTypes,
   uMain_AllTypes,
   uDB_AUser,
-  uWindows;
+  uWindows,
+  uInternet_Files;
 
 procedure Load;
 var
@@ -66,7 +67,7 @@ begin
   mainScene.Config.main.R.Profile.Machine.OS.Architecture_V.Name := 'Main_Config_Profile_Machine_OS_Architecture_V';
   mainScene.Config.main.R.Profile.Machine.OS.Architecture_V.Parent := mainScene.Config.main.R.Profile.Machine.OS.Box;
   mainScene.Config.main.R.Profile.Machine.OS.Architecture_V.SetBounds(140, 60, 140, 24);
-  mainScene.Config.main.R.Profile.Machine.OS.Architecture_V.Text := uWindows_OsArchitectureToStr(TOSVersion.Architecture);
+  mainScene.Config.main.R.Profile.Machine.OS.Architecture_V.Text := uWindows.Os_Architecture(TOSVersion.Architecture);
   mainScene.Config.main.R.Profile.Machine.OS.Architecture_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.OS.VPlatform := TLabel.Create(mainScene.Config.main.R.Profile.Machine.OS.Box);
@@ -80,8 +81,7 @@ begin
   mainScene.Config.main.R.Profile.Machine.OS.VPlatform_V.Name := 'Main_Config_Profile_Machine_OS_VPlatform_V';
   mainScene.Config.main.R.Profile.Machine.OS.VPlatform_V.Parent := mainScene.Config.main.R.Profile.Machine.OS.Box;
   mainScene.Config.main.R.Profile.Machine.OS.VPlatform_V.SetBounds(140, 84, 140, 24);
-  mainScene.Config.main.R.Profile.Machine.OS.VPlatform_V.Text := uWindows_OsPlatformToStr(TOSVersion.Platform) + ' ' +
-    IntToStr(uWindoes_OsPlatformPointerToInt) + ' bit';
+  mainScene.Config.main.R.Profile.Machine.OS.VPlatform_V.Text := uWindows.Os_Platform(TOSVersion.Platform) + ' ' + uWindows.Os_Platform_Point.ToString + ' bit';
   mainScene.Config.main.R.Profile.Machine.OS.VPlatform_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.OS.Operating_System := TLabel.Create(mainScene.Config.main.R.Profile.Machine.OS.Box);
@@ -158,7 +158,7 @@ begin
   mainScene.Config.main.R.Profile.Machine.Net.Internet_V.Name := 'Main_Config_Profile_Machine_Net_Internet_V';
   mainScene.Config.main.R.Profile.Machine.Net.Internet_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
   mainScene.Config.main.R.Profile.Machine.Net.Internet_V.SetBounds(140, 20, 440, 24);
-  if uWindows_IsConected_ToInternet then
+  if uInternet_Files.Internet_Connected then
     mainScene.Config.main.R.Profile.Machine.Net.Internet_V.Text := 'Connected'
   else
     mainScene.Config.main.R.Profile.Machine.Net.Internet_V.Text := 'Disconnected';
@@ -175,7 +175,7 @@ begin
   mainScene.Config.main.R.Profile.Machine.Net.Local_IP_V.Name := 'Main_Config_Profile_Machine_Net_Local_IP_V';
   mainScene.Config.main.R.Profile.Machine.Net.Local_IP_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
   mainScene.Config.main.R.Profile.Machine.Net.Local_IP_V.SetBounds(140, 44, 140, 24);
-  mainScene.Config.main.R.Profile.Machine.Net.Local_IP_V.Text := uWindows.GetIPAddress;
+  mainScene.Config.main.R.Profile.Machine.Net.Local_IP_V.Text := uInternet_Files.IP_Get_Address;
   mainScene.Config.main.R.Profile.Machine.Net.Local_IP_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Public_IP := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);

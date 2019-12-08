@@ -6,21 +6,28 @@ uses
   System.SysUtils,
   System.Inifiles,
   System.DateUtils,
+  System.UiTypes,
   WinApi.Windows;
 
-function Code_To_Country(vCode: String): String;
-function Country_To_Code(vCountry: String): String;
 
-function Time_To_TimeStamp: Int64;
+{Country Convertions}
+function Country_Code_To_Country(vCode: String): String;
+function Country_Country_To_Code(vCountry: String): String;
 
-function Seconds_To_Time(mTime: Real): TDateTime;
+{Time Convertions}
+function Time_Time_To_TimeStamp: Int64;
+function Time_Seconds_To_Time(mTime: Real): TDateTime;
+
+{Color Convertions}
+function Color_Color_To_Hex(vColor: TAlphaColorRec): String;
+function Color_Hex_To_Color(vHexColor: String): TAlphaColorRec;
 
 
 implementation
 uses
   uLoad_AllTypes;
 
-function Code_To_Country(vCode: String): String;
+function Country_Code_To_Country(vCode: String): String;
 var
   vTempIni: TIniFile;
 begin
@@ -29,7 +36,7 @@ begin
   FreeAndNil(vTempIni);
 end;
 
-function Country_To_Code(vCountry: String): String;
+function Country_Country_To_Code(vCountry: String): String;
 var
   vTextFile: TextFile;
   vKey, vValue: String;
@@ -56,7 +63,7 @@ begin
   CloseFile(vTextFile);
 end;
 
-function Time_To_TimeStamp: Int64;
+function Time_Time_To_TimeStamp: Int64;
 var
   SystemTime: TSystemTime;
   NowUTC: TDateTime;
@@ -70,7 +77,7 @@ begin
   Result := DateTimeToUnix(NowUTC);
 end;
 
-function Seconds_To_Time(mTime: Real): TDateTime;
+function Time_Seconds_To_Time(mTime: Real): TDateTime;
 var
   hours, min: Word;
 begin
@@ -82,4 +89,16 @@ begin
   Result := EncodeTime(hours, min, Trunc(mTime), 0);
 end;
 
+function Color_Color_To_Hex(vColor: TAlphaColorRec): String;
+begin
+  Result:='$'+ IntToHex(vColor.A)+ IntToHex(vColor.R)+ IntToHex(vColor.G)+ IntToHex(vColor.B);
+end;
+
+function Color_Hex_To_Color(vHexColor: String): TAlphaColorRec;
+begin
+//complete the function
+//  Result.A:=
+end;
+
 end.
+

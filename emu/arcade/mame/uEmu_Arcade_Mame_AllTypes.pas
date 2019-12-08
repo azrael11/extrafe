@@ -320,6 +320,9 @@ type
 type
   TEMU_MAME_SCENE_SNAPSHOT_GROUP = record
     Back: TImage;
+    Up_Back_Image: TImage;
+    Up_Favorites: TText;
+    Up_Favorites_Glow: TGlowEffect;
     T_Image: TEMU_MAME_SCENE_SNAPSHOT_GROUP_IMAGE;
     T_Players: TEMU_MAME_SCENE_SNAPSHOT_GROUP_PLAYERS;
     Type_Arcade: TImage;
@@ -359,16 +362,23 @@ type
   end;
 
 type
+  TEMU_MAME_SCENE_LISTS_LIST = record
+    Image: TImage;
+    OutLine: TRadiantRectangle;
+    OutLine_Glow: TGlowEffect;
+    Text: TText;
+  end;
+
+type
   TEMU_MAME_SCENE_LISTS = record
     Panel: TLayout;
+    Back: TImage;
     Add_Panel: TImage;
     Add: TText;
     Add_Glow: TGlowEffect;
-    Lists: TTabControl;
-    Lists_Item: array of TTabitem;
-    OutLine: array of TRadiantRectangle;
-    OutLine_Glow: array of TGlowEffect;
-    Lists_Text: array of TText;
+    List_Control: TTabControl;
+    List_Control_Item: array of TTabItem;
+    List: array of TEMU_MAME_SCENE_LISTS_LIST;
   end;
 
 type
@@ -980,11 +990,18 @@ type
   end;
 
 type
+  TEMU_FAVORITES = record
+    Count: Integer;
+    Open: Boolean;
+  end;
+
+type
   TEMU_MAME = record
     Emu: TEMU_MAME_EMU;
     Samples: WideString;
     Gamelist: TEMU_GAMELISTS;
     Filters: TEMU_FILTERS;
+    Favorites: TEMU_FAVORITES;
     Monitor: TEMU_MAME_MONITOR;
     Support: TEMU_MAME_SUPPORT;
     Game: TEMU_MAME_GAME;
@@ -1031,7 +1048,7 @@ begin
     vMame.Scene.Media.T_Image.Image.Bitmap := vMame.Scene.Media.T_Image.Image_Fade.Target;
     vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Media.T_Players.Players_Value.Text := vPlayers;
-    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'favorites', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'favorites', 'mame_status', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Media.T_Players.Favorite.Visible := vPlayers.ToBoolean;
   end;
 end;

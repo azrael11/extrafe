@@ -59,6 +59,10 @@ begin
           uEmu_Arcade_Mame_Actions.Open_Global_Configuration
         else if UpperCase(vKey) = 'F' then
           uEmu_Arcade_Mame_Actions.Open_Filters
+        else if UpperCase(vKey) = 'R' then
+          uEmu_Arcade_Mame_Actions.Open_Favorites
+        else if UpperCase(vKey) = 'T' then
+          uEmu_Arcade_Mame_Actions.Add_To_Favorites;
 //        else if UpperCase(vKey) = 'M' then
 //          uEmu_Arcade_Mame_Actions_ChangeSnapMode
 //        else if UpperCase(vKey) = 'K' then

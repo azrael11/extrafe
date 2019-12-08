@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.SysUtils,
   System.StrUtils,
+  System.UiTypes,
   System.Zip,
   FMX.Objects,
   FMX.Types,
@@ -25,6 +26,11 @@ procedure Open_Lists;
 procedure Open_Search;
 procedure Open_Global_Configuration;
 
+procedure Open_Favorites;
+procedure Is_Favorites_Open;
+procedure Is_Favorites_Closed;
+procedure Add_To_Favorites;
+
 procedure Return;
 procedure Enter_Game_Menu;
 
@@ -36,6 +42,7 @@ var
 implementation
 
 uses
+  uDB,
   uDB_AUser,
   emu,
   uLoad_AllTypes,
@@ -77,7 +84,7 @@ begin
       vMame.Scene.Media.T_Image.Image_X_Ani.StopValue := 132;
     end;
 
-//    vMame.Scene.Media.Image_Height_Ani.Enabled := True;
+    // vMame.Scene.Media.Image_Height_Ani.Enabled := True;
     vMame.Scene.Media.T_Image.Image_Width_Ani.Enabled := True;
     vMame.Scene.Media.T_Image.Image_Y_Ani.Enabled := True;
     vMame.Scene.Media.T_Image.Image_X_Ani.Enabled := True;
@@ -259,11 +266,11 @@ end;
 
 procedure Change_View_Mode(vMode: String);
 begin
-  {if mame.Main.SnapMode = 'arcade' then
+  { if mame.Main.SnapMode = 'arcade' then
     mame.Main.SnapMode := 'frame'
-  else
+    else
     mame.Main.SnapMode := 'arcade';
-  uEmu_Arcade_Mame_Actions.Show_Media;}
+    uEmu_Arcade_Mame_Actions.Show_Media; }
 end;
 
 procedure Change_Categeroy(vDirection: String);
@@ -316,7 +323,7 @@ begin
     begin
       vMame.Config.Scene.Header_Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'settings_green.png');
       vMame.Config.Scene.Header_Label.Text := 'Configuration for "' + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '" game rom.';
-      extrafe.prog.State := 'mame_game_config';
+      extrafe.Prog.State := 'mame_game_config';
     end
     else
     begin
@@ -361,7 +368,7 @@ procedure Return;
 begin
   if extrafe.Prog.State = 'mame_filters' then
     uEmu_Arcade_Mame_Filters.Free
-  else if (extrafe.Prog.State = 'mame_config') or (extrafe.Prog.State = 'mame_game_config')then
+  else if (extrafe.Prog.State = 'mame_config') or (extrafe.Prog.State = 'mame_game_config') then
     uEmu_Arcade_Mame_Actions.Open_Global_Configuration
   else if extrafe.Prog.State = 'mame_game' then
     uEmu_Arcade_Mame_Game_SetAll.Free
@@ -371,7 +378,8 @@ end;
 
 procedure Enter_Game_Menu;
 begin
-  vMame.Scene.Media.T_Players.Layout.Visible:= False;
+  vMame.Scene.Media.Up_Back_Image.Visible := False;
+  vMame.Scene.Media.T_Players.Layout.Visible := False;
   uEmu_Arcade_Mame_SetAll.Show_Image_Scene(False);
   uEmu_Arcade_Mame_Game_SetAll.Load;
   uEmu_Arcade_Mame_Gamelist.Glow_Selected;
@@ -383,30 +391,145 @@ begin
   vMame.Scene.Gamelist.List_Blur.Enabled := vAction;
 end;
 
+procedure Is_Favorites_Open;
+var
+  vQuery: String;
+begin
+  vQuery := 'SELECT gamename, romname FROM games ORDER BY gamename ASC';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  mame.Gamelist.ListRoms.Clear;
+  mame.Gamelist.ListGames.Clear;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListGames.Add(uDB.Arcade_Query.FieldByName('gamename').AsString);
+      mame.Gamelist.ListRoms.Add(uDB.Arcade_Query.FieldByName('romname').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  mame.Gamelist.Games_Count := uDB.Query_Count(Arcade_Query, 'games', '', '');
+
+  vMame.Scene.Media.Up_Favorites.TextSettings.FontColor := TAlphaColorRec.Grey;
+  vMame.Scene.Media.Up_Favorites_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+
+  vMame.Scene.Gamelist.T_Lists.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vMame.Scene.Gamelist.Filters.Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vMame.Scene.Gamelist.Filters.Text.Text := 'All';
+end;
+
+procedure Is_Favorites_Closed;
+var
+  vQuery: String;
+begin
+  vQuery := 'SELECT gamename, romname FROM mame_status WHERE favorites="1" order by gamename asc';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  mame.Gamelist.ListRoms.Clear;
+  mame.Gamelist.ListGames.Clear;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListGames.Add(uDB.Arcade_Query.FieldByName('gamename').AsString);
+      mame.Gamelist.ListRoms.Add(uDB.Arcade_Query.FieldByName('romname').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  mame.Gamelist.Games_Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'favorites', '1');
+
+  vMame.Scene.Media.Up_Favorites.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vMame.Scene.Media.Up_Favorites_Glow.GlowColor := TAlphaColorRec.Grey;
+
+  vMame.Scene.Gamelist.T_Lists.TextSettings.FontColor := TAlphaColorRec.Grey;
+  vMame.Scene.Gamelist.Filters.Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
+  vMame.Scene.Gamelist.Filters.Text.Text := '';
+end;
+
+procedure Open_Favorites;
+var
+  vQuery: String;
+  vi: Integer;
+begin
+  if mame.Favorites.Count > 0 then
+  begin
+    if mame.Favorites.Open then
+      Is_Favorites_Open
+    else
+      Is_Favorites_Closed;
+    uEmu_Arcade_Mame.Main;
+    mame.Favorites.Open := not mame.Favorites.Open;
+  end;
+end;
+
+procedure Add_To_Favorites;
+begin
+  if mame.Favorites.Open then
+  begin
+    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    dec(mame.Favorites.Count, 1);
+    Is_Favorites_Closed;
+    uEmu_Arcade_Mame.Main;
+  end
+  else
+  begin
+    if vMame.Scene.Media.T_Players.Favorite.Visible then
+    begin
+      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+      dec(mame.Favorites.Count, 1);
+    end
+    else
+    begin
+      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '1', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+      inc(mame.Favorites.Count, 1);
+    end;
+    vMame.Scene.Media.T_Players.Favorite.Visible := not vMame.Scene.Media.T_Players.Favorite.Visible;
+  end;
+end;
+
 end.
 
-{function uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath: String): TstringList;
-var
+{ function uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath: String): TstringList;
+  var
   vZip: TZipFile;
   vLocalHeader: TZipHeader;
   vStream: TMemoryStream;
   vi: Integer;
   vString: String;
-begin
-   if FileExists(vGameSoundPath) then
-    begin
-    Result:= TStringList.Create;
-    vZip:= TZipFile.Create;
-    vZip.Open(vGameSoundPath, zmRead);
-    vStream:= TMemoryStream.Create;
-    for vi:= 0 to vZip.FileCount- 1 do
-    begin
-    if ExtractFileExt(vZip.FileName[vi])= '.mp3' then
-    Result.Add(vZip.FileName[vi]);
-    //          vString:= Result.Strings[vi];
-    //          vZip.Read(vString, vStream, vLocalHeader);
-    end;
-    end
-    else
-    Result:= nil;
-end; }
+  begin
+  if FileExists(vGameSoundPath) then
+  begin
+  Result:= TStringList.Create;
+  vZip:= TZipFile.Create;
+  vZip.Open(vGameSoundPath, zmRead);
+  vStream:= TMemoryStream.Create;
+  for vi:= 0 to vZip.FileCount- 1 do
+  begin
+  if ExtractFileExt(vZip.FileName[vi])= '.mp3' then
+  Result.Add(vZip.FileName[vi]);
+  //          vString:= Result.Strings[vi];
+  //          vZip.Read(vString, vStream, vLocalHeader);
+  end;
+  end
+  else
+  Result:= nil;
+  end; }

@@ -199,7 +199,7 @@ begin
   for vi := 0 to vFound_Locations do
   begin
     vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[0, vi] := IntToStr(vi + 1);
-    vCountry_Code := uSnippet_Convert.Country_To_Code(vYahoo_Find_List[vi].country);
+    vCountry_Code := uSnippet_Convert.Country_Country_To_Code(vYahoo_Find_List[vi].country);
     vCodeFlag := vCodes.IndexOf(LowerCase(vCountry_Code) + '.png');
     vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[1, vi] := vCodeFlag.ToString;
     vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[2, vi] := vYahoo_Find_List[vi].city;
@@ -830,7 +830,7 @@ var
   vCode: String;
 begin
   Result := TBitmap.Create;
-  vCode := uSnippet_Convert.Country_To_Code(vCountry);
+  vCode := uSnippet_Convert.Country_Country_To_Code(vCountry);
   Result.LoadFromFile(ex_main.Paths.Flags_Images + vCode + '.png');
 end;
 

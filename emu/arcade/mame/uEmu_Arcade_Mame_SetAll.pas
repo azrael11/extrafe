@@ -58,8 +58,6 @@ procedure Show_Image_Scene(vShow: Boolean);
 
 procedure Players;
 
-
-
 procedure Get_Set_Mame_Data;
 procedure Set_Mame_Data;
 
@@ -279,7 +277,7 @@ begin
   vMame.Scene.Gamelist.T_Lists.Font.Family := 'IcoMoon-Free';
   vMame.Scene.Gamelist.T_Lists.Font.Size := 22;
   vMame.Scene.Gamelist.T_Lists.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vMame.Scene.Gamelist.T_Lists.Text:= #$e904;
+  vMame.Scene.Gamelist.T_Lists.Text := #$e904;
   vMame.Scene.Gamelist.T_Lists.OnClick := mame.Input.Mouse.Text.OnMouseClick;
   vMame.Scene.Gamelist.T_Lists.OnMouseEnter := mame.Input.Mouse.Text.OnMouseEnter;
   vMame.Scene.Gamelist.T_Lists.OnMouseLeave := mame.Input.Mouse.Text.OnMouseLeave;
@@ -491,6 +489,38 @@ begin
   vMame.Scene.Media.Back.WrapMode := TImageWrapMode.Tile;
   vMame.Scene.Media.Back.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
   vMame.Scene.Media.Back.Visible := True;
+
+  vMame.Scene.Media.Up_Back_Image := TImage.Create(vMame.Scene.Right);
+  vMame.Scene.Media.Up_Back_Image.Name := 'Mame_Media_Up_Back_Image';
+  vMame.Scene.Media.Up_Back_Image.Parent := vMame.Scene.Right;
+  vMame.Scene.Media.Up_Back_Image.SetBounds(50, 18, 750, 26);
+  vMame.Scene.Media.Up_Back_Image.WrapMode := TImageWrapMode.Tile;
+  vMame.Scene.Media.Up_Back_Image.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black_menu.png');
+  vMame.Scene.Media.Up_Back_Image.Visible := True;
+
+  vMame.Scene.Media.Up_Favorites := TText.Create(vMame.Scene.Media.Up_Back_Image);
+  vMame.Scene.Media.Up_Favorites.Name := 'Mame_Media_Up_Favorites';
+  vMame.Scene.Media.Up_Favorites.Parent := vMame.Scene.Media.Up_Back_Image;
+  vMame.Scene.Media.Up_Favorites.SetBounds(2, 1, 24, 24);
+  vMame.Scene.Media.Up_Favorites.Font.Family := 'IcoMoon-Free';
+  vMame.Scene.Media.Up_Favorites.Font.Size := 22;
+  vMame.Scene.Media.Up_Favorites.TextSettings.FontColor := TAlphaColorRec.Grey;
+  vMame.Scene.Media.Up_Favorites.Text := #$e9d9;
+  vMame.Scene.Media.Up_Favorites.OnClick := mame.Input.Mouse.Text.OnMouseClick;
+  vMame.Scene.Media.Up_Favorites.OnMouseEnter := mame.Input.Mouse.Text.OnMouseEnter;
+  vMame.Scene.Media.Up_Favorites.OnMouseLeave := mame.Input.Mouse.Text.OnMouseLeave;
+  vMame.Scene.Media.Up_Favorites.Visible := True;
+
+  vMame.Scene.Media.Up_Favorites_Glow := TGlowEffect.Create(vMame.Scene.Media.Up_Favorites);
+  vMame.Scene.Media.Up_Favorites_Glow.Name := 'Mame_Media_Up_Favorites_Glow';
+  vMame.Scene.Media.Up_Favorites_Glow.Parent := vMame.Scene.Media.Up_Favorites;
+  vMame.Scene.Media.Up_Favorites_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vMame.Scene.Media.Up_Favorites_Glow.Softness := 0.9;
+  vMame.Scene.Media.Up_Favorites_Glow.Enabled := False;
+
+
+  mame.Favorites.Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'favorites', '1');
+  mame.Favorites.Open := False;
 
   Players;
   Create_Video_Scene;
@@ -765,7 +795,7 @@ procedure Players;
 begin
   vMame.Scene.Media.T_Players.Layout := TLayout.Create(vMame.Scene.Media.Back);
   vMame.Scene.Media.T_Players.Layout.Name := 'Mame_Media_Players';
-  vMame.Scene.Media.T_Players.Layout.Parent:=  vMame.Scene.Media.Back;
+  vMame.Scene.Media.T_Players.Layout.Parent := vMame.Scene.Media.Back;
   vMame.Scene.Media.T_Players.Layout.SetBounds(0, 0, vMame.Scene.Media.Back.Width, 50);
   vMame.Scene.Media.T_Players.Layout.Visible := True;
 
@@ -802,4 +832,3 @@ begin
 end;
 
 end.
-

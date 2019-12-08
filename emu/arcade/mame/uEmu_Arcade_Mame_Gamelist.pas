@@ -68,8 +68,16 @@ begin
     else
     begin
       vMame.Scene.Gamelist.List_Line[vi].Text.Text := mame.Gamelist.ListGames.Strings[ri];
-      if uSnippet_Text_ToPixels(vMame.Scene.Gamelist.List_Line[vi].Text) > 640 then
-        vMame.Scene.Gamelist.List_Line[vi].Text.Text := uSnippet_Text_SetInGivenPixels(640, vMame.Scene.Gamelist.List_Line[vi].Text);
+      if vi = 10 then
+      begin
+        if uSnippet_Text_ToPixels(vMame.Scene.Gamelist.List_Line[vi].Text) > 640 then
+          vMame.Scene.Gamelist.List_Line[vi].Text.Text := uSnippet_Text_SetInGivenPixels(620, vMame.Scene.Gamelist.List_Line[vi].Text);
+      end
+      else
+      begin
+        if uSnippet_Text_ToPixels(vMame.Scene.Gamelist.List_Line[vi].Text) > 640 then
+          vMame.Scene.Gamelist.List_Line[vi].Text.Text := uSnippet_Text_SetInGivenPixels(640, vMame.Scene.Gamelist.List_Line[vi].Text);
+      end;
       for ki := 0 to mame.Emu.Ini.CORE_SEARCH_rompath.Count - 1 do
       begin
         if FileExists(mame.Emu.Ini.CORE_SEARCH_rompath.Strings[ki] + '\' + mame.Gamelist.ListRoms[ri] + '.zip') then

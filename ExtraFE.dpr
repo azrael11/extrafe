@@ -74,7 +74,6 @@ uses
   uTime_Mouse in 'addons\time\uTime_Mouse.pas',
   uTIme_Time_Actions in 'addons\time\time\uTIme_Time_Actions.pas',
   uLoad_Addons in 'loading\uLoad_Addons.pas',
-  uSnippets_Colors in 'code\_snippets\uSnippets_Colors.pas',
   uLoad_Emulation in 'loading\uLoad_Emulation.pas',
   uLoad_Sound in 'loading\uLoad_Sound.pas',
   uMain_Config_Addons_Actions in 'main\configuration\addons\uMain_Config_Addons_Actions.pas',

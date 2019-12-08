@@ -53,8 +53,8 @@
     <Transaction>2018/02/12 15:48:27.000.742,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\sql_commands.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\uActive_User.pas</Transaction>
     <Transaction>2018/02/12 15:48:47.000.597,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\uActive_User.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\code\_database\sql_commands.pas</Transaction>
     <Transaction>2018/02/18 09:42:45.000.333,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
-    <Transaction>2018/02/18 09:43:23.000.493,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Options.pas</Transaction>
     <Transaction>2018/02/18 09:43:23.000.473,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Iconsets.pas</Transaction>
+    <Transaction>2018/02/18 09:43:23.000.493,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\addons\weather\configuration\uWeather_Config_Options.pas</Transaction>
     <Transaction>2018/02/24 12:13:26.000.442,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/24 12:13:43.000.555,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2018/02/24 12:13:43.000.555,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\emu.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit1.fmx</Transaction>
@@ -313,8 +313,8 @@
     <Transaction>2018/12/29 10:04:27.000.395,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\code\_database\uDatabase.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:38.000.709,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:51.000.456,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\play\azhung\uAzHung_Sound.pas</Transaction>
-    <Transaction>2019/01/16 10:35:54.000.583,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas</Transaction>
     <Transaction>2019/01/16 10:35:54.000.622,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo.pas</Transaction>
+    <Transaction>2019/01/16 10:35:54.000.583,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas</Transaction>
     <Transaction>2019/01/17 08:34:10.000.679,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/17 08:34:33.000.963,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\main\configuration\uMain_Config_Info_Credits.pas</Transaction>
     <Transaction>2019/01/29 11:39:49.000.946,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
@@ -433,6 +433,7 @@
     <Transaction>2019/12/03 11:28:11.000.446,=D:\Nikos_prg\main_prg\code\extrafe\Unit1.pas</Transaction>
     <Transaction>2019/12/03 11:28:35.000.507,D:\Nikos_prg\main_prg\code\extrafe\Unit1.pas=D:\Nikos_prg\main_prg\code\extrafe\main\uMain_Widgets.pas</Transaction>
     <Transaction>2019/12/04 08:40:02.000.935,D:\Nikos_prg\main_prg\code\extrafe\emu\arcade\mame\uEmu_Arcade_Mame_Support_Files.pas=</Transaction>
+    <Transaction>2019/12/07 09:53:44.000.451,C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\code\_snippets\uSnippets_Colors.pas=</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android=""/>
@@ -544,7 +545,6 @@
     <File Path="code\_snippets"/>
     <File Path="code\_snippets\uKeyboard.pas"/>
     <File Path="code\_snippets\uSnippets.pas"/>
-    <File Path="code\_snippets\uSnippets_Colors.pas"/>
     <File Path="code\_snippets\uSnippet_Convert.pas"/>
     <File Path="code\_snippets\uSnippet_Image.pas"/>
     <File Path="code\_snippets\uSnippet_Search.pas"/>

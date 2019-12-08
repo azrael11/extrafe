@@ -136,7 +136,7 @@ begin
   else if extrafe.prog.State = 'mame_config_media' then
   begin
     if TButton(Sender).Name = 'Mame_Dir_Check_Cancel' then
-      uEmu_Arcade_Mame_Config_CheckAndDownload_Free;
+      uEmu_Arcade_Mame_Config_Directories.Media_Download_Free;
   end;
 end;
 
@@ -156,16 +156,16 @@ begin
   if extrafe.prog.State = 'mame_config_dirs' then
   begin
     if TText(Sender).Name = 'Mame_Dir_Roms_Add' then
-      uEmu_Arcade_Mame_Config_Roms_Find
+      uEmu_Arcade_Mame_Config_Directories.Rom_Find_Path
     else if TText(Sender).TagFloat = 10 then
-      uEmu_Arcade_Mame_Config_RomPath_Delete(TSpeedButton(Sender).Tag);
+      uEmu_Arcade_Mame_Config_Directories.Rom_Delete_Path(TSpeedButton(Sender).Tag);
   end
   else if extrafe.prog.State = 'mame_config_media' then
   begin
     if ContainsText(TText(Sender).Name, 'Mame_Dir_Media_Change_') then
-      uEmu_Arcade_Mame_Config_Media_Find(TText(Sender).Tag)
+      uEmu_Arcade_Mame_Config_Directories.Media_Find_Path(TText(Sender).Tag)
     else
-      uEmu_Arcade_Mame_Config_CheckAndDownload(TText(Sender).Tag);
+      uEmu_Arcade_Mame_Config_Directories.Media_Download(TText(Sender).Tag);
   end;
   BASS_ChannelPlay(sound.str_fx.general[0], False);
 end;
@@ -324,7 +324,7 @@ end;
 procedure TEMU_ARCADE_MAME_CONFIG_TABITEM.onMouseClick(Sender: TObject);
 begin
   if (extrafe.prog.State = 'mame_config_dirs') or (extrafe.prog.State = 'mame_config_media') then
-    uEmu_Arcade_Mame_Config_Directories_TabItemClick(TTabItem(Sender).Name);
+    uEmu_Arcade_Mame_Config_Directories.Tab_Click(TTabItem(Sender).Name);
 end;
 
 procedure TEMU_ARCADE_MAME_CONFIG_TABITEM.onMouseEnter(Sender: TObject);

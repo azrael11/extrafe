@@ -59,6 +59,7 @@ uses
   uMain_SetAll,
   uMain_Actions,
   uWindows,
+  uInternet_Files,
   uWeather_SetAll,
   uWeather_Convert,
   uWeather_MenuActions,
@@ -87,7 +88,7 @@ begin
   if uDB_AUser.Local.ADDONS.Weather_D.Provider <> '' then
   begin
 
-    if uWindows_IsConected_ToInternet then
+    if uInternet_Files.Internet_Connected then
     begin
       vTaskTimer := TTimer.Create(Main_Form);
       vTaskTimer.Enabled := False;
@@ -437,7 +438,7 @@ begin
 
   { Get Yahoo Iconsets }
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := TStringList.Create;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := uWindows.Get_Folder_Names(uDB_AUser.Local.ADDONS.Weather_D.p_Icons + 'yahoo\');
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := uWindows.Folder_Names(uDB_AUser.Local.ADDONS.Weather_D.p_Icons + 'yahoo\');
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets.Insert(0, 'default');
   { Get OpenWeatherMap Iconsets }
 

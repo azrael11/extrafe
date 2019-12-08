@@ -44,7 +44,7 @@ procedure Local_Create;
 function Local_Connect: Boolean;
 function Local_Disconnect: Boolean;
 
-function Local_Get_Users: Integer;
+//function Local_Get_Users: Integer;
 
 procedure Emulators_Create;
 function Emulators_Connect: Boolean;
@@ -60,7 +60,7 @@ function Add_New_User_Local: Boolean;
 procedure Query_Insert(vQuery: TFDQuery; vTable, vColumns, vValues: String);
 procedure Query_Update(vQuery: TFDQuery; vTable_Name, vCol, vValue, vRec, vWhere: string);
 function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): String;
-// function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): Integer; overload;
+function Query_Count(vQuery: TFDQuery; vTable, vWhere, vCont: String): Integer;
 
 { Queries Actions Online }
 procedure Query_Update_Online(vTable_Name, vCol, vValue, vUser_Num: string);
@@ -315,9 +315,10 @@ begin
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
   ExtraFE_Query.ParamCheck := False;
-  ExtraFE_Query.SQL.Add('INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT) VALUES ("' + User_Reg.User_ID + '", "' +
-    User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name + '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' +
-    User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' + User_Reg.Last_Visit + '")');
+  ExtraFE_Query.SQL.Add('INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT) VALUES ("' +
+    User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name +
+    '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' +
+    User_Reg.Last_Visit + '")');
   ExtraFE_Query.ExecSQL;
   Result := True;
 end;
@@ -351,15 +352,17 @@ begin
   vPath[8] := vPath[0] + '\data\';
   vPath[9] := vPath[0] + '\data\database\';
 
-  vColumns := 'RESOLUTION_WIDTH, RESOLUTION_HEIGHT, FOULSCREEN, PATH, NAME, PATH_LIB, PATH_HISTORY, PATH_FONTS, THEME_NAME, THEME_PATH, THEME_NUM, LOCAL_DATA, DATABASE_PATH';
-  vValues := '"1920", "1080", "TRUE", "' + vPath[0] + '",  "' + vPath[1] + '",  "' + vPath[2] + '",  "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' + vPath[7] +
-    '", "' + vPath[8] + '", "' + vPath[9] + '"';
+  vColumns :=
+    'RESOLUTION_WIDTH, RESOLUTION_HEIGHT, FOULSCREEN, PATH, NAME, PATH_LIB, PATH_HISTORY, PATH_FONTS, THEME_NAME, THEME_PATH, THEME_NUM, LOCAL_DATA, DATABASE_PATH';
+  vValues := '"1920", "1080", "TRUE", "' + vPath[0] + '",  "' + vPath[1] + '",  "' + vPath[2] + '",  "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] +
+    '", "' + vPath[6] + '", "' + vPath[7] + '", "' + vPath[8] + '", "' + vPath[9] + '"';
   Query_Insert(ExtraFE_Query_Local, 'SETTINGS', vColumns, vValues);
 
   { User data }
   vColumns := 'UNIQUE_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT_ONLINE, LAST_VISIT, ACTIVE_ONLINE';
-  vValues := '"' + User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name + '", "' + User_Reg.Surname
-    + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' + User_Reg.Last_Visit + '", "' + User_Reg.Last_Visit + '", "1"';
+  vValues := '"' + User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' +
+    User_Reg.Name + '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered +
+    '", "' + User_Reg.Last_Visit + '", "' + User_Reg.Last_Visit + '", "1"';
   Query_Insert(ExtraFE_Query_Local, 'USERS', vColumns, vValues);
 
   { Option Data }
@@ -416,9 +419,10 @@ begin
 
   vColumns := 'USER_ID, ARTWORKS, CABINETS, CONTROL_PANELS, COVERS, FLYERS, FANART, GAME_OVER, ICONS, MANUALS, MARQUEES, PCBS, SNAPSHOTS, TITLES, ' +
     'ARTWORK_PREVIEW, BOSSES, ENDS, HOW_TO, LOGOS, SCORES, SELECTS, STAMPS, VERSUS, WARNINGS, SOUNDTRACKS, SUPPORT_FILES, VIDEOS';
-  vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' + vPath[7] + '", "' +
-    vPath[8] + '", "' + vPath[9] + '", "' + vPath[10] + '" , "' + vPath[11] + '", "' + vPath[12] + '", "' + vPath[13] + '", "' + vPath[14] + '", "' + vPath[15] + '", "' + vPath[16] + '", "' +
-    vPath[17] + '", "' + vPath[18] + '", "' + vPath[19] + '", "' + vPath[20] + '", "' + vPath[21] + '", "' + vPath[22] + '", "' + vPath[23] + '", "' + vPath[24] + '", "' + vPath[25] + '"';
+  vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' +
+    vPath[6] + '", "' + vPath[7] + '", "' + vPath[8] + '", "' + vPath[9] + '", "' + vPath[10] + '" , "' + vPath[11] + '", "' + vPath[12] + '", "' + vPath[13] +
+    '", "' + vPath[14] + '", "' + vPath[15] + '", "' + vPath[16] + '", "' + vPath[17] + '", "' + vPath[18] + '", "' + vPath[19] + '", "' + vPath[20] + '", "' +
+    vPath[21] + '", "' + vPath[22] + '", "' + vPath[23] + '", "' + vPath[24] + '", "' + vPath[25] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ARCADE_MEDIA', vColumns, vValues);
 
   { Mame }
@@ -546,13 +550,16 @@ begin
   ExtraFE_Query.Close;
 end;
 
-function Local_Get_Users: Integer;
+function Query_Count(vQuery: TFDQuery; vTable, vWhere, vCont: String): Integer;
 begin
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Text := 'SELECT COUNT(*) FROM USERS';
-  ExtraFE_Query_Local.Open;
-  Result := ExtraFE_Query_Local.Fields[0].AsInteger;
+  vQuery.Close;
+  vQuery.SQL.Clear;
+  if vWhere <> '' then
+    vQuery.SQL.Text := 'SELECT COUNT(*) FROM ' + vTable + ' WHERE ' + vWhere + '="' + vCont + '"'
+  else
+    vQuery.SQL.Text := 'SELECT COUNT(*) FROM ' + vTable;
+  vQuery.Open;
+  Result := vQuery.Fields[0].AsInteger;
 end;
 
 end.

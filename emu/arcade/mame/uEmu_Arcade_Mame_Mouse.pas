@@ -163,7 +163,15 @@ begin
     else if TText(Sender).Name = 'Mame_Window_Filters_Clear' then
       uEmu_Arcade_Mame_Filters.Clear_Filters
     else if TText(Sender).Name = 'Mame_Gamelist_Lists' then
-      uEmu_Arcade_Mame_Actions.Open_Lists;
+      uEmu_Arcade_Mame_Actions.Open_Lists
+    else if TText(Sender).Name = 'Mame_Media_Up_Favorites' then
+      uEmu_Arcade_Mame_Actions.Open_Favorites;
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
+  end
+  else
+  begin
+    if TText(Sender).Name = 'Mame_Media_Up_Favorites' then
+      uEmu_Arcade_Mame_Actions.Open_Favorites;
     BASS_ChannelPlay(sound.str_fx.general[0], False);
   end;
 end;
@@ -182,7 +190,18 @@ begin
     else if TText(Sender).Name = 'Mame_Window_Filters_Filter_Remove_' + TText(Sender).Tag.ToString then
       vMame.Scene.Gamelist.Filters.Window.Filter_Panels[TText(Sender).Tag].Remove_Glow.Enabled := True
     else if TText(Sender).Name = 'Mame_Gamelist_Lists' then
-      vMame.Scene.Gamelist.T_Lists_Glow.Enabled := True;
+      vMame.Scene.Gamelist.T_Lists_Glow.Enabled := True
+    else if TText(Sender).Name = 'Mame_Media_Up_Favorites' then
+      vMame.Scene.Media.Up_Favorites_Glow.Enabled := True;
+  end
+  else
+  begin
+    if mame.Favorites.Count > 0 then
+    begin
+      TText(Sender).Cursor := crHandPoint;
+      if TText(Sender).Name = 'Mame_Media_Up_Favorites' then
+        vMame.Scene.Media.Up_Favorites_Glow.Enabled := True;
+    end;
   end;
 end;
 
@@ -199,7 +218,17 @@ begin
     else if TText(Sender).Name = 'Mame_Window_Filters_Filter_Remove_' + TText(Sender).Tag.ToString then
       vMame.Scene.Gamelist.Filters.Window.Filter_Panels[TText(Sender).Tag].Remove_Glow.Enabled := False
     else if TText(Sender).Name = 'Mame_Gamelist_Lists' then
-      vMame.Scene.Gamelist.T_Lists_Glow.Enabled := False;
+      vMame.Scene.Gamelist.T_Lists_Glow.Enabled := False
+    else if TText(Sender).Name = 'Mame_Media_Up_Favorites' then
+      vMame.Scene.Media.Up_Favorites_Glow.Enabled := False;
+  end
+  else
+  begin
+    if mame.Favorites.Count > 0 then
+    begin
+      if TText(Sender).Name = 'Mame_Media_Up_Favorites' then
+        vMame.Scene.Media.Up_Favorites_Glow.Enabled := False;
+    end;
   end;
 end;
 

@@ -27,7 +27,6 @@ implementation
 uses
   uWindows,
   uLoad_AllTypes,
-  uSnippets_Colors,
   uDB_AUser,
   uMain_SetAll,
   uMain_AllTypes,

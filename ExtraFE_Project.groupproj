@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{DDA87132-142E-4029-8A7D-4CF15D5B2DAD}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="ExtraFE.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\ExtraFE_Databases\ExtraFE_Databases.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ExtraFE">
+        <MSBuild Projects="ExtraFE.dproj"/>
+    </Target>
+    <Target Name="ExtraFE:Clean">
+        <MSBuild Projects="ExtraFE.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ExtraFE:Make">
+        <MSBuild Projects="ExtraFE.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ExtraFE_Databases">
+        <MSBuild Projects="..\ExtraFE_Databases\ExtraFE_Databases.dproj"/>
+    </Target>
+    <Target Name="ExtraFE_Databases:Clean">
+        <MSBuild Projects="..\ExtraFE_Databases\ExtraFE_Databases.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ExtraFE_Databases:Make">
+        <MSBuild Projects="..\ExtraFE_Databases\ExtraFE_Databases.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ExtraFE;ExtraFE_Databases"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ExtraFE:Clean;ExtraFE_Databases:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ExtraFE:Make;ExtraFE_Databases:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

@@ -14,21 +14,22 @@ uses
   FMX.TabControl,
   FMX.Objects,
   FMX.Effects,
-  VCL.FileCtrl,
+  FMX.Dialogs,
   ALFmxLayouts;
 
 procedure Load;
-// procedure Create_Rom_Paths;
-// procedure Create_Media_Paths;
+procedure Tab_Click(vName: String);
 
-// Actions
-procedure uEmu_Arcade_Mame_Config_CheckAndDownload(vNum: Integer);
-procedure uEmu_Arcade_Mame_Config_CheckAndDownload_Free;
-procedure uEmu_Arcade_Mame_Config_Media_Find(vNum: Integer);
-procedure uEmu_Arcade_Mame_Config_Roms_Find;
-procedure uEmu_Arcade_Mame_Config_RomPath_Delete(vRow: Integer);
+{Tab Roms Actions}
+procedure Rom_Find_Path;
+procedure Rom_Create_Path;
+procedure Rom_Delete_Path(vRow: Integer);
 
-procedure uEmu_Arcade_Mame_Config_Directories_TabItemClick(vName: String);
+{Tab Directories Actions}
+procedure Media_Find_Path(vNum: Integer);
+procedure Media_Create_Path;
+procedure Media_Download(vNum: Integer);
+procedure Media_Download_Free;
 
 implementation
 
@@ -42,13 +43,13 @@ uses
   uEmu_Arcade_Mame_Config,
   uEmu_Arcade_Mame_Gamelist;
 
-procedure uEmu_Arcade_Mame_Config_CheckAndDownload_Free;
+procedure Media_Download_Free;
 begin
   vMame.Config.Scene.Main_Blur.Enabled := False;
   FreeAndNil(vMame.Config.Panel.Dirs.Media.Check.Panel);
 end;
 
-procedure uEmu_Arcade_Mame_Config_CheckAndDownload(vNum: Integer);
+procedure Media_Download(vNum: Integer);
 begin
   vMame.Config.Scene.Main_Blur.Enabled := True;
 
@@ -101,7 +102,7 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Cancel.Visible := True;
 end;
 
-procedure Create_Rom_Paths;
+procedure Rom_Create_Path;
 var
   vi: Integer;
   vRoms: WideString;
@@ -173,7 +174,7 @@ begin
   end;
 end;
 
-procedure Create_Media_Paths;
+procedure Media_Create_Path;
 var
   vi: Integer;
   vType: String;
@@ -266,7 +267,7 @@ begin
     vMame.Config.Panel.Dirs.Media.Found[vi].Parent := vMame.Config.Panel.Dirs.Media.Box;
     vMame.Config.Panel.Dirs.Media.Found[vi].SetBounds((vMame.Config.Panel.Dirs.Media.Labels[vi].Position.X + vMame.Config.Panel.Dirs.Media.Labels[vi].Width +
       10), (5 + ((vi * 30) + (vi * 25))), 400, 24);
-    vMame.Config.Panel.Dirs.Media.Found[vi].Text := '(Found : ' + uWindows.Count_Files_Or_Folders(vMame.Config.Panel.Dirs.Media.Edit[vi].Text, False, vType)
+    vMame.Config.Panel.Dirs.Media.Found[vi].Text := '(Found : ' + uWindows.File_Count(vMame.Config.Panel.Dirs.Media.Edit[vi].Text, vType)
       .ToString + ' files)';
     vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.FontColor := claDeepskyblue;
     vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.Font.Style := vMame.Config.Panel.Dirs.Media.Found[vi].TextSettings.Font.Style + [TFontStyle.fsItalic];
@@ -340,52 +341,48 @@ begin
   vMame.Config.Panel.Dirs.Media_Tab.OnClick := mame.Config.Input.Mouse.TabItem.onMouseClick;
   vMame.Config.Panel.Dirs.Media_Tab.Visible := True;
 
-  Create_Rom_Paths;
-  Create_Media_Paths;
+  Rom_Create_Path;
+  Media_Create_Path;
 
   vMame.Config.Panel.Dirs.TabControl.TabIndex := 0;
 end;
 
-procedure uEmu_Arcade_Mame_Config_Roms_Find;
-const
-  m = 1000;
+procedure Rom_Find_Path;
 var
-  dir: string;
+  vdir: string;
 begin
-  if SelectDirectory(dir, [sdAllowCreate, sdPerformCreate, sdPrompt], m) = True then
+  if SelectDirectory('Select Rom path.', '' , vdir) = True then
   begin
-    mame.Emu.Ini.CORE_SEARCH_rompath.Insert(mame.Emu.Ini.CORE_SEARCH_rompath.Count, dir);
+    mame.Emu.Ini.CORE_SEARCH_rompath.Insert(mame.Emu.Ini.CORE_SEARCH_rompath.Count, vdir);
     FreeAndNil(vMame.Config.Panel.Dirs.Roms.Box);
-    Create_Rom_Paths;
+    Rom_Create_Path;
     uEmu_Arcade_Mame_Gamelist.Refresh;
   end
 end;
 
-procedure uEmu_Arcade_Mame_Config_RomPath_Delete(vRow: Integer);
+procedure Rom_Delete_Path(vRow: Integer);
 begin
   mame.Emu.Ini.CORE_SEARCH_rompath.Delete(vRow);
   FreeAndNil(vMame.Config.Panel.Dirs.Roms.Box);
-  Create_Rom_Paths;
+  Rom_Create_Path;
   uEmu_Arcade_Mame_Gamelist.Refresh;
 end;
 
 ///
 
-procedure uEmu_Arcade_Mame_Config_Media_Find(vNum: Integer);
-const
-  m = 1000;
+procedure Media_Find_Path(vNum: Integer);
 var
   vdir: string;
   vType: String;
 begin
   vdir := vMame.Config.Panel.Dirs.Media.Edit[vNum].Text;
-  if SelectDirectory(vdir, [sdAllowCreate, sdPerformCreate, sdPrompt], m) = True then
+  if SelectDirectory('Select Rom path.', '' , vdir) = True then
   begin
     if vNum = 1 then
       vType := '*.zip'
     else
       vType := '*.png';
-    vMame.Config.Panel.Dirs.Media.Found[vNum].Text := '(Found : ' + uWindows.Count_Files_Or_Folders(vdir, False, vType).ToString + ' files)';
+    vMame.Config.Panel.Dirs.Media.Found[vNum].Text := '(Found : ' + uWindows.File_Count(vdir, vType).ToString + ' files)';
     vdir := vdir + '\';
     vMame.Config.Panel.Dirs.Media.Edit[vNum].Text := vdir;
     case vNum of
@@ -523,7 +520,7 @@ begin
   end;
 end;
 
-procedure uEmu_Arcade_Mame_Config_Directories_TabItemClick(vName: String);
+procedure Tab_Click(vName: String);
 begin
   if vName = 'Mame_Dir_Tab_Roms' then
     extrafe.prog.State := 'mame_config_dirs'
