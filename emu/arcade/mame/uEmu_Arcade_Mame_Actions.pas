@@ -137,8 +137,8 @@ begin
   else
   begin
     vImageExists := False;
-    case IndexStr(mame.Main.SnapCategory, ['Snapshots', 'Cabinets', 'Control Panels', 'Flyers', 'Marquees', 'Pcbs', 'Artwork Preview', 'Bosses', 'How To',
-      'Logos', 'Scores', 'Selects', 'Titles', 'Versus', 'Game Over', 'Ends', 'Warnings']) of
+    case IndexStr(mame.Main.SnapCategory, ['Snapshots', 'Cabinets', 'Control Panels', 'Flyers', 'Marquees', 'Pcbs', 'Artwork Preview', 'Bosses', 'How To', 'Logos', 'Scores', 'Selects', 'Titles',
+      'Versus', 'Game Over', 'Ends', 'Warnings']) of
       0:
         if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png') then
           Activate_Animation(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png')
@@ -275,8 +275,8 @@ end;
 
 procedure Change_Categeroy(vDirection: String);
 const
-  cSnapCategory: array [0 .. 17] of string = ('Video Snaps', 'Snapshots', 'Cabinets', 'Control Panels', 'Flyers', 'Marquees', 'Pcbs', 'Artwork Preview',
-    'Bosses', 'How To', 'Logos', 'Scores', 'Selects', 'Titles', 'Versus', 'Game Over', 'Ends', 'Warnings');
+  cSnapCategory: array [0 .. 17] of string = ('Video Snaps', 'Snapshots', 'Cabinets', 'Control Panels', 'Flyers', 'Marquees', 'Pcbs', 'Artwork Preview', 'Bosses', 'How To', 'Logos', 'Scores',
+    'Selects', 'Titles', 'Versus', 'Game Over', 'Ends', 'Warnings');
 begin
   if vDirection = 'left' then
   begin
@@ -485,7 +485,7 @@ procedure Add_To_Favorites;
 begin
   if mame.Favorites.Open then
   begin
-    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     dec(mame.Favorites.Count, 1);
     Is_Favorites_Closed;
     uEmu_Arcade_Mame.Main;
@@ -494,12 +494,12 @@ begin
   begin
     if vMame.Scene.Media.T_Players.Favorite.Visible then
     begin
-      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
       dec(mame.Favorites.Count, 1);
     end
     else
     begin
-      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '1', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '1', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
       inc(mame.Favorites.Count, 1);
     end;
     vMame.Scene.Media.T_Players.Favorite.Visible := not vMame.Scene.Media.T_Players.Favorite.Visible;

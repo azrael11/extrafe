@@ -23,8 +23,7 @@ procedure Info_Box;
 procedure Create_Loading_Game;
 procedure Free_Loading_Game;
 
-// Data from mame
-procedure uEmu_Arcade_Mame_Game_GetDataFromMame;
+procedure Get_Data;
 
 implementation
 
@@ -138,10 +137,10 @@ begin
   vMame.Scene.GameMenu.Info.Box.ShowScrollBars := False;
   vMame.Scene.GameMenu.Info.Box.Visible := True;
 
-  uEmu_Arcade_Mame_Game_GetDataFromMame;
+  Get_Data;
 end;
 
-procedure uEmu_Arcade_Mame_Game_GetDataFromMame;
+procedure Get_Data;
 const
   cGameLabels: array [0 .. 11] of string = ('Game Name', 'Year', 'Manufacturer', 'Game Type', 'Refresh Rate', 'Width', 'Height', 'Sound Channels', 'Savestate',
     'Emulation', 'Overall Status', 'Support Hiscore');
@@ -272,7 +271,7 @@ begin
   vMame.Scene.PopUp.Line1.SetBounds(0, 20, 1000, 50);
   vMame.Scene.PopUp.Line1.Text := 'Loading Game : ';
   vMame.Scene.PopUp.Line1.Font.Family := 'Tahoma';
-  vMame.Scene.PopUp.Line1.Font.Size := 36;
+  vMame.Scene.PopUp.Line1.Font.Size := 32;
   vMame.Scene.PopUp.Line1.TextSettings.HorzAlign := TTextAlign.Center;
   vMame.Scene.PopUp.Line1.Color := TAlphaColorRec.Deepskyblue;
   vMame.Scene.PopUp.Line1.Font.Style := vMame.Scene.PopUp.Line1.Font.Style + [TFontStyle.fsBold];
@@ -284,7 +283,7 @@ begin
   vMame.Scene.PopUp.Line2.SetBounds(0, 90, 1000, 100);
   vMame.Scene.PopUp.Line2.Text := mame.Gamelist.ListGames[mame.Gamelist.Selected];
   vMame.Scene.PopUp.Line2.Font.Family := 'Tahoma';
-  vMame.Scene.PopUp.Line2.Font.Size := 36;
+  vMame.Scene.PopUp.Line2.Font.Size := 32;
   vMame.Scene.PopUp.Line2.TextSettings.HorzAlign := TTextAlign.Center;
   vMame.Scene.PopUp.Line2.Color := TAlphaColorRec.White;
   vMame.Scene.PopUp.Line2.Font.Style := vMame.Scene.PopUp.Line2.Font.Style + [TFontStyle.fsBold];
@@ -295,15 +294,14 @@ begin
   vMame.Scene.PopUp.Snap.Parent:=   vMame.Scene.PopUp.Back;
   vMame.Scene.PopUp.Snap.SetBounds(400, 200, 200, 200);
   vMame.Scene.PopUp.Snap.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png');
-  vMame.Scene.PopUp.Snap.WrapMode:= TImageWrapMode.Center;
+  vMame.Scene.PopUp.Snap.WrapMode:= TImageWrapMode.Fit;
   vMame.Scene.PopUp.Snap.Visible:= True;
-
 
   vMame.Scene.PopUp.Line3_Text := TText.Create(vMame.Scene.PopUp.Back);
   vMame.Scene.PopUp.Line3_Text.Name := 'Mame_Loading_Game_Line3_Text';
   vMame.Scene.PopUp.Line3_Text.Parent := vMame.Scene.PopUp.Back;
   vMame.Scene.PopUp.Line3_Text.SetBounds(20, 440, 200, 50);
-  vMame.Scene.PopUp.Line3_Text.Text := 'Was played : ';
+  vMame.Scene.PopUp.Line3_Text.Text := 'Played : ';
   vMame.Scene.PopUp.Line3_Text.Font.Family := 'Tahoma';
   vMame.Scene.PopUp.Line3_Text.Font.Size := 24;
   vMame.Scene.PopUp.Line3_Text.TextSettings.HorzAlign := TTextAlign.Leading;

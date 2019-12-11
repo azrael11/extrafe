@@ -9,8 +9,7 @@ uses
   FMX.Types;
 
 const
-  cShowGamePanelMenu: array [0 .. 10] of string = ('Play game', 'Read manual', 'Open media folder', 'View images in fullscreen', 'Sound Tracks', '',
-    'Add to playlist', '', '', '', '');
+  cShowGamePanelMenu: array [0 .. 10] of string = ('Play game', 'Read manual', 'Open media folder', 'View images in fullscreen', 'Sound Tracks', '', 'Add to playlist', '', '', '', '');
 
 type
   TGAME_TIMER = class(TObject)
@@ -120,15 +119,15 @@ procedure Add_To_Favorites;
 begin
   if vMame.Scene.Gamelist.List_Line[10].Text.Text = 'Add to favorites' then
   begin
-    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '1', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '1', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Gamelist.List_Line[10].Text.Text := 'Remove from favorites';
-    Inc(mame.Favorites.Count, 1);
+    inc(mame.Favorites.Count, 1);
   end
   else
   begin
-    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'favorites', '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Gamelist.List_Line[10].Text.Text := 'Add to favorites';
-    Dec(mame.Favorites.Count, 1);
+    dec(mame.Favorites.Count, 1);
   end;
   vMame.Scene.Media.T_Players.Favorite.Visible := not vMame.Scene.Media.T_Players.Favorite.Visible;
 end;
@@ -145,7 +144,7 @@ begin
   uEmu_Commands.Run_Game(emulation.Arcade[0].Name_Exe, romName, emulation.Arcade[0].Emu_Path, 0);
   play_int := play_count.ToInteger;
   inc(play_int, 1);
-  uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'play_count', play_int.ToString, 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+  uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString, play_int.ToString, 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
   uEmu_Arcade_Mame_Game_SetAll.Free_Loading_Game;
   FreeAndNil(vGame_Timer);
 end;
