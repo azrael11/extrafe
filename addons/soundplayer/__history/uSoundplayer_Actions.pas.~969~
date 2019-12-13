@@ -55,8 +55,7 @@ begin
         if uDB_AUser.Local.addons.Soundplayer_D.First_Pop then
           uSoundplayer_SetAll.Set_First;
     end;
-  end
-  else
+  end;
 
 
   Set_Animations;
@@ -68,7 +67,7 @@ procedure Free;
 begin
   if Assigned(vSoundplayer.scene.Soundplayer) then
   begin
-    if addons.Soundplayer.Player.Play then
+    if soundplayer.player = sPlay then
       uSoundplayer_Player_Volume.Adjust(True);
     uSoundplayer_Sounds.Free;
     FreeAndNil(vSoundplayer.scene.Soundplayer);
@@ -87,11 +86,11 @@ end;
 procedure Set_WithActivePlaylist(vPlaylist: Integer);
 begin
   soundplayer.player_actions.volume.Vol := soundplayer.player_actions.volume.Master * 100;
-  addons.Soundplayer.Player.Song_State := 0;
+  soundplayer.player_actions.Song_State := 0;
 
   uSoundplayer_Playlist.State('Playlist', vPlaylist);
-  uSoundplayer_Player.State(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop, addons.Soundplayer.Player.Mute,
-    addons.Soundplayer.Player.Suffle, '');
+//  uSoundplayer_Player.State(soundplayer.player = sPlay, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop, addons.Soundplayer.Player.Mute,
+//    soundplayer.player_actions.Suffle, '');
 end;
 
 procedure Set_WithActiveSong;
@@ -101,21 +100,21 @@ begin
   uSoundplayer_Playlist.State('Song', -1);
   vSoundplayer.info.Playlist_Name.Text := addons.Soundplayer.Playlist.List.Name;
   vSoundplayer.info.Playlist_Type_Kind.Text := addons.Soundplayer.Playlist.List.VType;
-  vSoundplayer.info.Total_Songs.Text := (addons.Soundplayer.Player.Playing_Now + 1).ToString + '/' + addons.Soundplayer.Playlist.List.Songs_Num.ToString;
+  vSoundplayer.info.Total_Songs.Text := (soundplayer.player_actions.Playing_Now + 1).ToString + '/' + addons.Soundplayer.Playlist.List.Songs_Num.ToString;
   vSoundplayer.info.Time_Total.Text := addons.Soundplayer.Playlist.List.Songs_Total_Time;
   vSoundplayer.timer.Song.Enabled := True;
-  addons.Soundplayer.Player.Thumb_Active := False;
-  if addons.Soundplayer.Player.Suffle then
+  soundplayer.player_actions.Thumb_Active := False;
+  if soundplayer.player_actions.Suffle then
   begin
-    uSoundplayer_Player.Repeat_Back(addons.Soundplayer.Player.VRepeat);
+    uSoundplayer_Player.Repeat_Back(soundplayer.player_actions.VRepeat);
     uSoundplayer_Player.Suffle_Back;
-    uSoundplayer_Player.Set_Play(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop,
-      addons.Soundplayer.Player.Mute);
+//    uSoundplayer_Player.Set_Play(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop,
+//      addons.Soundplayer.Player.Mute);
     uSoundplayer_Player.Set_Previous_Next;
-  end
-  else
-    uSoundplayer_Player.State(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop, addons.Soundplayer.Player.Mute,
-      addons.Soundplayer.Player.Suffle, addons.Soundplayer.Player.VRepeat);
+  end;
+//  else
+//    uSoundplayer_Player.State(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop, addons.Soundplayer.Player.Mute,
+//      soundplayer.player_actions.Suffle, soundplayer.player_actions.VRepeat);
   uSoundplayer_Player_Volume.Adjust(False);
 end;
 
@@ -182,6 +181,7 @@ begin
     uDB_AUser.Local.ADDONS.Names.Delete(uDB_AUser.Local.ADDONS.Soundplayer_D.Menu_Position + 1);
   end;
 
+  soundplayer.player := sStop;
 end;
 
 end.

@@ -80,7 +80,8 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addons ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ACTIVE" DEFAULT 1 Integer,	"COUNR" DEFAULT 4 Integer,	"TIME" Boolean, "CALENDAR" Boolean, "WEATHER" Boolean, "SOUNDPLAYER" Boolean, "AZPLAY" Boolean);';
+    'CREATE TABLE IF NOT EXISTS addons ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ACTIVE" BOOLENAN DEFAULT True,	"COUNT" Integer DEFAULT 4,	"TIME" Boolean DEFAULT True, ' +
+    '"CALENDAR" Boolean DEFAULT True, "WEATHER" Boolean DEFAULT False, "SOUNDPLAYER" Boolean DEFAULT False, "AZPLAY" Boolean DEFAULT False);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "addons" is checked and corrected');
 
@@ -88,7 +89,8 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_time ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "FIRST_POP" DEFAULT TRUE Boolean,	"MENU_POSITION" DEFAULT 0 Integer,	"PATH_CLOCKS" Text, "PATH_IMAGES" Text, "PATH_SOUNDS" Text);';
+    'CREATE TABLE IF NOT EXISTS addon_time ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "FIRST_POP" Boolean DEFAULT True,	"MENU_POSITION" Integer DEFAULT 0,	"PATH_CLOCKS" Text, ' +
+    ' "PATH_IMAGES" Text, "PATH_SOUNDS" Text);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "addon_time" is checked and corrected');
 

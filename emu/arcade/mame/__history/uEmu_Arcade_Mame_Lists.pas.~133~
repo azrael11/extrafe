@@ -76,6 +76,7 @@ end;
 procedure Load_Lists;
 var
   vi: Integer;
+  vList_Num: Integer;
 begin
   vMame.Scene.List.List_Control := TTabControl.Create(vMame.Scene.List.Back);
   vMame.Scene.List.List_Control.Name := 'Mame_List_Control';
@@ -84,13 +85,18 @@ begin
   vMame.Scene.List.List_Control.TabPosition := TTabPosition.None;
   vMame.Scene.List.List_Control.Visible := True;
 
-  vMame.Scene.List.Lists_Item[0] := TTabItem.Create(vMame.Scene.List.Lists);
-  vMame.Scene.List.Lists_Item[0].Name := 'Main_Config_Profile_Avatar_Main_TabItem_' + vi.ToString;
-  vMame.Scene.List.Lists_Item[0].Parent := vMame.Scene.List.Lists;
-  vMame.Scene.List.Lists_Item[0].SetBounds(10, 10, vMame.Scene.List.Lists.Width - 20, vMame.Scene.List.Lists.Height - 20);
-  vMame.Scene.List.Lists_Item[0].Visible := True;
+  vMame.Scene.List.List_Control_Item[0] := TTabItem.Create(vMame.Scene.List.List_Control);
+  vMame.Scene.List.List_Control_Item[0].Name := 'Main_Config_Profile_Avatar_Main_TabItem_0';
+  vMame.Scene.List.List_Control_Item[0].Parent := vMame.Scene.List.List_Control;
+  vMame.Scene.List.List_Control_Item[0].SetBounds(10, 10, vMame.Scene.List.List_Control.Width - 20, vMame.Scene.List.List_Control.Height - 20);
+  vMame.Scene.List.List_Control_Item[0].Visible := True;
 
-  for vi := 0 to  do
+  vList_Num := 0;
+
+  for vi := 0 to vList_Num do
+  begin
+
+  end;
 
 
 end;

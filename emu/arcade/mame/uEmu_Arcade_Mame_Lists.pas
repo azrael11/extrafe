@@ -91,7 +91,6 @@ begin
   vMame.Scene.List.List_Control_Item[0].SetBounds(10, 10, vMame.Scene.List.List_Control.Width - 20, vMame.Scene.List.List_Control.Height - 20);
   vMame.Scene.List.List_Control_Item[0].Visible := True;
 
-  vList_Num := 0;
 
   for vi := 0 to vList_Num do
   begin

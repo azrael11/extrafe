@@ -44,7 +44,7 @@ procedure Local_tables;
 begin
   CodeSite.EnterMethod('Check Tables of Extrafe local database (SQLLite)');
   { 22 Tables }
-  // Users
+  // Users ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
@@ -53,14 +53,14 @@ begin
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "users" is checked and corrected');
 
-  // Users_Statistics
+  // Users_Statistics ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text := 'CREATE TABLE IF NOT EXISTS users_statistics ("USER_ID" Integer);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "users_statistics" is checked and corrected');
 
-  // Settings
+  // Settings ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
@@ -69,14 +69,14 @@ begin
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "settings" is checked and corrected');
 
-  // Options
+  // Options ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text := 'CREATE TABLE IF NOT EXISTS options ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "VIRTUAL_KEYBOARD" Boolean);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "options" is checked and corrected');
 
-  // Addons
+  // Addons ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
@@ -84,7 +84,7 @@ begin
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "addons" is checked and corrected');
 
-  // Addon_Time
+  // Addon_Time ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
@@ -92,20 +92,17 @@ begin
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "addon_time" is checked and corrected');
 
-
   // Addon_Time_Time ?? Εδώ πρέπει λίγο να το ξανακοιτάξω πολλές στήλες γίνονται αρκετά λιγότερες
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_time_time ("" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "sourcefile" Text,	"savestate" Boolean,	"width" Integer );';
+  ExtraFE_Query_Local.SQL.Text := 'CREATE TABLE IF NOT EXISTS addon_time_time ("" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "sourcefile" Text,	"savestate" Boolean,	"width" Integer );';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "addon_time_time" is checked and corrected');
 
-  // Addon_Calendar
+  // Addon_Calendar ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_calendar ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "MENU_POSITION" Text,	"savestate" Boolean,	"width" Integer );';
+  ExtraFE_Query_Local.SQL.Text := 'CREATE TABLE IF NOT EXISTS addon_calendar ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "MENU_POSITION" DEFAULT 1 Integer);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "addon_calendar" is checked and corrected');
 

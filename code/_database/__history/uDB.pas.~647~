@@ -181,6 +181,8 @@ begin
     Open;
   end;
   ExtraFE_DB_Local.LoginPrompt := False;
+
+  uDB_Check.Local_tables;
 end;
 
 function Local_Connect: Boolean;
@@ -623,13 +625,15 @@ begin
     for vi := 0 to vList_Name.Count - 1 do
     begin
       if vi = 0 then
-        vText_Tables := '"' +vList_Name[vi] + '" ' + UpperCase(vList_Type[vi])+ ' ' + UpperCase(vList_NotNull[vi])+ ' ' + UpperCase(vList_Default_Value[vi])+ ' ' + UpperCase(vList_Primary_Key[vi])
+        vText_Tables := '"' + vList_Name[vi] + '" ' + UpperCase(vList_Type[vi]) + ' ' + UpperCase(vList_NotNull[vi]) + ' ' + UpperCase(vList_Default_Value[vi]) + ' ' + UpperCase(vList_Primary_Key[vi])
       else
-        vText_Tables := vText_Tables + ', "'+ vList_Name[vi] + '" ' + UpperCase(vList_Type[vi])+ ' ' + UpperCase(vList_NotNull[vi])+ ' ' + UpperCase(vList_Default_Value[vi])+ ' ' + UpperCase(vList_Primary_Key[vi]);
+        vText_Tables := vText_Tables + ', "' + vList_Name[vi] + '" ' + UpperCase(vList_Type[vi]) + ' ' + UpperCase(vList_NotNull[vi]) + ' ' + UpperCase(vList_Default_Value[vi]) + ' ' +
+          UpperCase(vList_Primary_Key[vi]);
     end;
     vQuery.Close;
     vQuery.SQL.Clear;
-    vQuery.SQL.Text := 'CREATE TABLE temp ';
+    vQuery.SQL.Text := 'CREATE TABLE temp (' + vText_Tables + ')';
+    vQuery.ExecSQL;
   end
   else
   begin

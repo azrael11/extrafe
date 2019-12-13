@@ -104,13 +104,13 @@ var
   Pinballs_Query: TFDQuery;
 
 implementation
-
 uses
   uLoad_AllTypes,
   main,
   load,
   emu,
   uLoad_Register,
+  uDB_Check,
   uDB_AUser;
 
 { Online Database procedures }
@@ -181,6 +181,7 @@ begin
     Open;
   end;
   ExtraFE_DB_Local.LoginPrompt := False;
+
 end;
 
 function Local_Connect: Boolean;
@@ -195,6 +196,8 @@ begin
   ExtraFE_Query_Local.Name := 'ExtraFE_Local_Query';
   ExtraFE_Query_Local.Connection := ExtraFE_DB_Local;
   ExtraFE_Query_Local.Active := False;
+
+  uDB_Check.Local_tables;
 
   ExtraFE_FDGUIxWaitCursor := TFDGUIxWaitCursor.Create(load.Loading);
   ExtraFE_FDGUIxWaitCursor.Name := 'ExtraFE_Local_GUIxWaitCursor';
