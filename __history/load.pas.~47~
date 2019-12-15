@@ -1,0 +1,51 @@
+unit load;
+
+interface
+
+uses
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteDef, FireDAC.Stan.Intf, FireDAC.Phys,
+  FireDAC.Phys.SQLite, FMX.Objects, FMX.ListBox;
+
+type
+  TLoading = class(TForm)
+    SQLite_DriverLink: TFDPhysSQLiteDriverLink;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Loading: TLoading;
+
+implementation
+
+{$R *.fmx}
+
+uses
+  uLoad_AllTypes,
+  uwindows,
+  uLoad_SetAll,
+  uLoad;
+
+procedure TLoading.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  ReportMemoryLeaksOnShutdown := False;
+end;
+
+procedure TLoading.FormCreate(Sender: TObject);
+var
+  iRetCode: Integer;
+begin
+  Default_Load := False;
+  uLoad.Prepare;
+end;
+
+
+
+end.

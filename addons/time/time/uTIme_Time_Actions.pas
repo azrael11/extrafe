@@ -68,35 +68,26 @@ begin
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
 
-  Local.ADDONS.Time_D.Time.vType := uDB.ExtraFE_Query_Local.FieldByName('Time_Clock_Type').AsString;
-  Local.ADDONS.Time_D.Time.Both_Analog_Width := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_ANALOG_WIDTH').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Analog_Height := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_ANALOG_HEIGHT').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Analog_X := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_ANALOG_X').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Analog_Y := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_ANALOG_Y').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Digital_Width := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_DIGITAL_WIDTH').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Digital_Height := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_DIGITAL_HEIGHT').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Digital_X := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_DIGITAL_X').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Digital_Y := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_DIGITAL_Y').AsInteger;
-  Local.ADDONS.Time_D.Time.Both_Selection := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_BOTH_SELECTION').AsString;
-  Local.ADDONS.Time_D.Time.Analog_Width := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_WIDTH').AsInteger;
-  Local.ADDONS.Time_D.Time.Analog_Height := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_HEIGHT').AsInteger;
-  Local.ADDONS.Time_D.Time.Analog_X := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_X').AsInteger;
-  Local.ADDONS.Time_D.Time.Analog_Y := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_Y').AsInteger;
-  Local.ADDONS.Time_D.Time.Analog_Theme := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_THEME').AsString;
-  Local.ADDONS.Time_D.Time.Analog_Color := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_COLOR').AsString;
-  Local.ADDONS.Time_D.Time.Analog_Font := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_FONT').AsString;
-  Local.ADDONS.Time_D.Time.Analog_Show_Ind := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_SHOWIND').AsBoolean;
-  Local.ADDONS.Time_D.Time.Analog_Show_Nums := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_SHOWNUMS').AsBoolean;
-  Local.ADDONS.Time_D.Time.Analog_Tick := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_ANALOG_TICK').AsBoolean;
-  Local.ADDONS.Time_D.Time.Digital_Width := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_WIDTH').AsInteger;
-  Local.ADDONS.Time_D.Time.Digital_Height := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_HEIGHT').AsInteger;
-  Local.ADDONS.Time_D.Time.Digital_X := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_X').AsInteger;
-  Local.ADDONS.Time_D.Time.Digital_Y := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_Y').AsInteger;
-  Local.ADDONS.Time_D.Time.Digital_Color := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_COLOR').AsString;
-  Local.ADDONS.Time_D.Time.Digital_Font := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_FONT').AsString;
-  Local.ADDONS.Time_D.Time.Digital_Font_Color := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_FONT_COLOR').AsString;
-  Local.ADDONS.Time_D.Time.Digital_Sep := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_SEP').AsString;
-  Local.ADDONS.Time_D.Time.Digital_Sep_Color := uDB.ExtraFE_Query_Local.FieldByName('TIME_CLOCK_DIGITAL_SEP_COLOR').AsString;
+  Local.ADDONS.Time_D.Time.vType := uDB.ExtraFE_Query_Local.FieldByName('CLOCK_TYPE').AsString;
+  Local.ADDONS.Time_D.Time.Analog_Width := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_WIDTH').AsInteger;
+  Local.ADDONS.Time_D.Time.Analog_Height := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_HEIGHT').AsInteger;
+  Local.ADDONS.Time_D.Time.Analog_X := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_X').AsInteger;
+  Local.ADDONS.Time_D.Time.Analog_Y := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_Y').AsInteger;
+  Local.ADDONS.Time_D.Time.Analog_Theme := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_THEME').AsString;
+  Local.ADDONS.Time_D.Time.Analog_Color := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_COLOR').AsString;
+  Local.ADDONS.Time_D.Time.Analog_Font := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_FONT').AsString;
+  Local.ADDONS.Time_D.Time.Analog_Show_Ind := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_INDICATORS').AsBoolean;
+  Local.ADDONS.Time_D.Time.Analog_Show_Nums := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_NUMS').AsBoolean;
+  Local.ADDONS.Time_D.Time.Analog_Tick := uDB.ExtraFE_Query_Local.FieldByName('ANALOG_TICK').AsBoolean;
+  Local.ADDONS.Time_D.Time.Digital_Width := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_WIDTH').AsInteger;
+  Local.ADDONS.Time_D.Time.Digital_Height := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_HEIGHT').AsInteger;
+  Local.ADDONS.Time_D.Time.Digital_X := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_X').AsInteger;
+  Local.ADDONS.Time_D.Time.Digital_Y := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_Y').AsInteger;
+  Local.ADDONS.Time_D.Time.Digital_Color := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_COLOR').AsString;
+  Local.ADDONS.Time_D.Time.Digital_Font := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_FONT').AsString;
+  Local.ADDONS.Time_D.Time.Digital_Font_Color := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_FONT_COLOR').AsString;
+  Local.ADDONS.Time_D.Time.Digital_Sep := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_SEPARATOR').AsString;
+  Local.ADDONS.Time_D.Time.Digital_Sep_Color := uDB.ExtraFE_Query_Local.FieldByName('DIGITAL_SEPARATOR_COLOR').AsString;
 
 end;
 
@@ -197,7 +188,7 @@ begin
   end;
 
   uDB_AUser.Local.ADDONS.Time_D.Time.vType := vType;
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_TIME_TIME', 'TIME_CLOCK_TYPE', vType, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_TIME_TIME', 'CLOCK_TYPE', vType, 'USER_ID', uDB_AUser.Local.Num.ToString);
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////

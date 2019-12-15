@@ -13,8 +13,8 @@ uses
 procedure Load;
 procedure Free;
 
-function uWeather_Config_Options_CalcDegree(vIsCelcius: Boolean; vCurrent: String): String;
-procedure uWeather_Config_Options_UseDegree(vDegreeType: String);
+function CalcDegree(vIsCelcius: Boolean; vCurrent: String): String;
+procedure UseDegree(vDegreeType: String);
 
 implementation
 
@@ -45,7 +45,7 @@ begin
   FreeAndNil(vWeather.Config.Main.Right.Panels[2]);
 end;
 
-function uWeather_Config_Options_CalcDegree(vIsCelcius: Boolean; vCurrent: String): String;
+function CalcDegree(vIsCelcius: Boolean; vCurrent: String): String;
 var
   vi: Single;
 begin
@@ -56,13 +56,13 @@ begin
     Result := FormatFloat('0', ((vi * 9) / 5) + 32);
 end;
 
-procedure uWeather_Config_Options_UseDegree(vDegreeType: String);
+procedure UseDegree(vDegreeType: String);
 var
   vi: integer;
   vCelcius: Boolean;
   vTempUnit: String;
 begin
-  if vDegreeType <> addons.weather.Action.OWM.Selected_Unit then
+  if vDegreeType <> weather.Action.OWM.Selected_Unit then
   begin
     if vDegreeType = 'Celcius' then
     begin
@@ -77,121 +77,121 @@ begin
       vWeather.Config.Main.Right.Options_OWM.Metric.IsChecked := False
     end;
 
-    addons.weather.Action.OWM.Selected_Unit := vDegreeType;
+    weather.Action.OWM.Selected_Unit := vDegreeType;
 
-    for vi := 0 to addons.weather.Action.Active_Total do
+    for vi := 0 to weather.Action.Active_Total do
     begin
-      vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Text);
+      vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Text);
       vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].General.Temprature);
       // vWeather.Scene.Tab_Yahoo[vi].General.Temprature_Unit.Text := vTempUnit;
       // vWeather.Scene.Tab_Yahoo[vi].General.Temprature_Unit.Position.X := vWeather.Scene.Tab_Yahoo[vi]
       // .General.Temprature.Position.X + vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Width + 10;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Current.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Current.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Current.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_1.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_1.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_1.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_2.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_2.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_2.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_3.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_3.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_3.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_4.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_4.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_4.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_5.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_5.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_5.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_6.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_6.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_6.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_7.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_7.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_7.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_8.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_8.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_8.High.Width + 4;
 
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.Low.Position.X + vWeather.Scene.Tab_Yahoo[vi]
         .Forcast.Day_9.Low.Width + 4;
-      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High.Text := uWeather_Config_Options_CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High.Text);
+      vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High.Text);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High);
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High_TU.Text := vTempUnit;
       vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High_TU.Position.X := vWeather.Scene.Tab_Yahoo[vi].Forcast.Day_9.High.Position.X + vWeather.Scene.Tab_Yahoo[vi]

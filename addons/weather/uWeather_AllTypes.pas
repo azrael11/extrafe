@@ -488,7 +488,6 @@ type
     PathAni_Data: TPathData;
     PathAni_Show: Boolean;
     Effect_Active_Num: Integer;
-    First: Boolean;
     Yahoo: TADDON_WEATHER_PROVIDER_YAHOO;
     OWM: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP;
     WEOID_PER_Provider: array of array of Integer;
@@ -528,6 +527,9 @@ type
     Sound: TADDON_WEATHER_SOUND;
     Input: TADDON_WEATHER_INPUT;
   end;
+
+var
+  weather: TADDON_WEATHER;
 
   /// /////////////////////////////////////////////////////////////////////////////
   /// Construction

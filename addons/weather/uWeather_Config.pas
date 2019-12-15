@@ -27,7 +27,7 @@ begin
   begin
     extrafe.prog.State := 'addon_weather_config';
     if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
-      if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
+      if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
         uWeather_Providers_Yahoo.vTime.Enabled := False;
   end
   else
@@ -37,7 +37,7 @@ begin
   end;
   vWeather.Scene.Blur.Enabled := mShow;
   vWeather.Config.Panel.Visible := mShow;
-  ADDONS.weather.Config.Active_Panel := -1;
+  weather.Config.Active_Panel := -1;
 
 end;
 
@@ -52,13 +52,13 @@ begin
   else if Assigned(vWeather.Config.main.Right.Panels[3]) then
     uWeather_Config_Iconsets.Free;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
-    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > -1 then
+    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
       uWeather_Providers_Yahoo.vTime.Enabled := True;
 end;
 
 procedure uWeather_Config_ShowPanel(mPanel: Integer);
 begin
-  if ADDONS.weather.Config.Active_Panel <> mPanel then
+  if weather.Config.Active_Panel <> mPanel then
   begin
     uWeather_COnfig_ClearConfig;
     case mPanel of
@@ -71,7 +71,7 @@ begin
       3:
         uWeather_Config_Iconsets.Load;
     end;
-    ADDONS.weather.Config.Active_Panel := mPanel;
+    weather.Config.Active_Panel := mPanel;
   end;
 end;
 

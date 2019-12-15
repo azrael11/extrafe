@@ -102,6 +102,7 @@ var
 implementation
 
 uses
+  uLoad_Login,
   uLoad_AllTypes,
   ULoad_SetAll,
   uInternet_Files,
@@ -183,7 +184,7 @@ begin
     procedure()
     begin
       Is_user_registered := false;
-      CodeSite.Send('Is_User_Registered : False');
+      CodeSite.EnterMethod('Registration Start for new user');
       if Check_Data then
       begin
         vIp := uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
@@ -199,9 +200,10 @@ begin
         User_Reg.Registered := FormatDateTime('dd/mm/yyyy  hh:mm:ss ampm', now);
         User_Reg.Last_Visit := FormatDateTime('dd/mm/yyyy  hh:mm:ss ampm', now);
         User_Reg.Genre := '0';
+        CodeSite.Category := 'Register New User in Online Database';
         if uDB.Add_New_User_Online then
         begin
-          CodeSite.Send('New user is on Online Database');
+          CodeSite.Send(csmlevel4, 'New user is on Online Database');
           vQuery := 'SELECT * FROM USERS';
           ExtraFE_Query.Close;
           ExtraFE_Query.SQL.Clear;
@@ -213,10 +215,16 @@ begin
           CodeSite.Send('New user is on Local Database');
           uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
           Is_user_registered := True;
+          CodeSite.ExitMethod('Registration For New User is Successfully Done');
+        end
+        else
+        begin
+          CodeSite.Send(csmlevel1, 'Something wrong, server not respoding');
+          CodeSite.ExitMethod('Registration For New User Never Done. Something not goes well');
         end;
+        CodeSite.Category := '';
       end;
     end);
-
   vTask.Start;
 end;
 
@@ -1121,6 +1129,7 @@ begin
   if Is_user_registered then
     ex_load.Login.Pass_V.Text := '';
   FreeAndNil(ex_load.Reg.Panel);
+  CodeSite.Send(csmLevel5, 'User is in login mode');
 end;
 
 procedure Fail;

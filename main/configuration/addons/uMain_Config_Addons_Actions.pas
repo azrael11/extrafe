@@ -532,12 +532,12 @@ begin
   uDB_AUser.Local.addons.Weather_D.Yahoo.Iconset_Count := 3;
   uDB_AUser.Local.addons.Weather_D.Yahoo.Iconset := 'default';
   uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count := -1;
-  uDB_AUser.Local.addons.Weather_D.Yahoo.System := 'imperial';
+  uDB_AUser.Local.addons.Weather_D.Yahoo.Metric:= 'imperial';
   uDB_AUser.Local.addons.Weather_D.Yahoo.Degree := 'celcius';
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Iconset_Count := 1;
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Iconset := 'default';
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Towns_Count := -1;
-  uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.System := 'imperial';
+  uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Metric := 'imperial';
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Degree := 'celcius';
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.API := '';
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Language := 'english';
@@ -557,9 +557,7 @@ begin
     uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_ICONSET', uDB_AUser.Local.addons.Weather_D.Yahoo.Iconset, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_TOWNS', uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_SYSTEM', uDB_AUser.Local.addons.Weather_D.Yahoo.System, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_METRIC', uDB_AUser.Local.addons.Weather_D.Yahoo.Metric, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_DEGREE_TYPE', uDB_AUser.Local.addons.Weather_D.Yahoo.Degree, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
@@ -567,9 +565,7 @@ begin
     'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_ICONSET', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Iconset, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_TOWNS', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Towns_Count.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_SYSTEM', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.System, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_METRIC', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Metric, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_DEGREE_TYPE', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Degree, 'USER_ID',
     uDB_AUser.Local.Num.ToString);

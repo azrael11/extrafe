@@ -180,7 +180,6 @@ type
     Active_PosNames: array [0 .. 255] of string;
     time: TADDON_TIME;
     calendar: TADDON_CALENDAR;
-    weather: TADDON_WEATHER;
     soundplayer: TADDON_SOUNDPLAYER;
     play: TADDON_PLAY;
     Widget_Active: Boolean;
@@ -484,6 +483,7 @@ implementation
 
 uses
   load,
+  uLoad_Login,
   Main,
   uMain,
   uLoad_Register;
@@ -553,8 +553,8 @@ procedure TLOADING_FLOATANIMATION.OnFinish(Sender: TObject);
 begin
   if TFloatAnimation(Sender).Name = 'Loading_FadeOut' then
   begin
-    ex_load.Intro.Timer.Enabled:= False;
-    uMain.Load;
+    ex_load.Intro.Timer.Enabled := False;
+    uMain.load;
     Main_Form.Show;
     FreeAndNil(load.loading);
   end;
@@ -621,6 +621,7 @@ begin
     begin
       CodeSite.Send('User is finally resistered. Begin actions to login');
       FreeAndNil(ex_load.Reg_Success.Panel);
+      Inc(extrafe.users_total, 1);
       uLoad_Register.Cancel;
     end
     else
@@ -630,6 +631,7 @@ begin
       ex_load.Reg.Panel.Visible := True;
       ex_load.Reg.Main.Data.Panel.Visible := True;
       uLoad_Register.Fail;
+      CodeSite.Send(csmLevel5, 'User is in login mode');
     end;
     FreeAndNil(ex_load.Reg_Success.Panel);
 

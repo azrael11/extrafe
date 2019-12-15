@@ -156,9 +156,9 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Height := 54;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Position.X := 10;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Position.Y := 20 + (vNum * 68);
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnClick := ADDONS.weather.Input.mouse.Panel.OnMouseClick;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseEnter := ADDONS.weather.Input.mouse.Panel.OnMouseEnter;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseLeave := ADDONS.weather.Input.mouse.Panel.OnMouseLeave;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnClick := weather.Input.mouse.Panel.OnMouseClick;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseEnter := weather.Input.mouse.Panel.OnMouseEnter;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseLeave := weather.Input.mouse.Panel.OnMouseLeave;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Tag := vNum;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.TagFloat := 100;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Visible := True;
@@ -184,9 +184,9 @@ begin
       uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets.Strings[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
     vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].TagFloat := 100;
     vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Tag := vNum;
-    vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnClick := ADDONS.weather.Input.mouse.Image.OnMouseClick;
-    vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseEnter := ADDONS.weather.Input.mouse.Image.OnMouseEnter;
-    vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseLeave := ADDONS.weather.Input.mouse.Image.OnMouseLeave;
+    vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnClick := weather.Input.mouse.Image.OnMouseClick;
+    vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseEnter := weather.Input.mouse.Image.OnMouseEnter;
+    vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseLeave := weather.Input.mouse.Image.OnMouseLeave;
     vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Visible := True;
   end;
 
@@ -204,9 +204,9 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Position.Y := 2;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_preview.png');
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.WrapMode := TImageWrapMode.Fit;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnClick := ADDONS.weather.Input.mouse.Image.OnMouseClick;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnMouseEnter := ADDONS.weather.Input.mouse.Image.OnMouseEnter;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnMouseLeave := ADDONS.weather.Input.mouse.Image.OnMouseLeave;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnClick := weather.Input.mouse.Image.OnMouseClick;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnMouseEnter := weather.Input.mouse.Image.OnMouseEnter;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.OnMouseLeave := weather.Input.mouse.Image.OnMouseLeave;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.TagFloat := 101;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Tag := vNum;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Preview.Visible := True;

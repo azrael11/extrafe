@@ -122,9 +122,9 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Search.Font.Size := 24;
   vWeather.Config.main.Right.Towns.Add.main.Search.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Config.main.Right.Towns.Add.main.Search.Text := #$e986;
-  vWeather.Config.main.Right.Towns.Add.main.Search.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Add.main.Search.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Add.main.Search.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
+  vWeather.Config.main.Right.Towns.Add.main.Search.OnClick := weather.Input.mouse_config.Text.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Add.main.Search.OnMouseEnter := weather.Input.mouse_config.Text.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Add.main.Search.OnMouseLeave := weather.Input.mouse_config.Text.OnMouseLeave;
   vWeather.Config.main.Right.Towns.Add.main.Search.Visible := True;
 
   vWeather.Config.main.Right.Towns.Add.main.Search_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Towns.Add.main.Search);
@@ -140,8 +140,8 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Add.Parent := vWeather.Config.main.Right.Towns.Add.main.Panel;
   vWeather.Config.main.Right.Towns.Add.main.Add.SetBounds(100, vWeather.Config.main.Right.Towns.Add.main.Panel.Height - 36, 80, 24);
   vWeather.Config.main.Right.Towns.Add.main.Add.Text := 'Add town';
-  vWeather.Config.main.Right.Towns.Add.main.Add.OnClick := addons.weather.Input.mouse_config.Button.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Add.main.Add.OnMouseEnter := addons.weather.Input.mouse_config.Button.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Add.main.Add.OnClick := weather.Input.mouse_config.Button.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Add.main.Add.OnMouseEnter := weather.Input.mouse_config.Button.OnMouseEnter;
   vWeather.Config.main.Right.Towns.Add.main.Add.Visible := True;
 
   vWeather.Config.main.Right.Towns.Add.main.Add_Stay := TButton.Create(vWeather.Config.main.Right.Towns.Add.main.Panel);
@@ -150,8 +150,8 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Add_Stay.SetBounds((vWeather.Config.main.Right.Towns.Add.main.Panel.Width / 2) - 50,
     vWeather.Config.main.Right.Towns.Add.main.Panel.Height - 36, 100, 24);
   vWeather.Config.main.Right.Towns.Add.main.Add_Stay.Text := 'Add and Stay';
-  vWeather.Config.main.Right.Towns.Add.main.Add_Stay.OnClick := addons.weather.Input.mouse_config.Button.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Add.main.Add_Stay.OnMouseEnter := addons.weather.Input.mouse_config.Button.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Add.main.Add_Stay.OnClick := weather.Input.mouse_config.Button.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Add.main.Add_Stay.OnMouseEnter := weather.Input.mouse_config.Button.OnMouseEnter;
   vWeather.Config.main.Right.Towns.Add.main.Add_Stay.Visible := True;
 
   vWeather.Config.main.Right.Towns.Add.main.Cancel := TButton.Create(vWeather.Config.main.Right.Towns.Add.Panel);
@@ -160,8 +160,8 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Cancel.SetBounds(vWeather.Config.main.Right.Towns.Add.main.Panel.Width - 180,
     vWeather.Config.main.Right.Towns.Add.main.Panel.Height - 36, 80, 24);
   vWeather.Config.main.Right.Towns.Add.main.Cancel.Text := 'Cancel';
-  vWeather.Config.main.Right.Towns.Add.main.Cancel.OnClick := addons.weather.Input.mouse_config.Button.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Add.main.Cancel.OnMouseEnter := addons.weather.Input.mouse_config.Button.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Add.main.Cancel.OnClick := weather.Input.mouse_config.Button.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Add.main.Cancel.OnMouseEnter := weather.Input.mouse_config.Button.OnMouseEnter;
   vWeather.Config.main.Right.Towns.Add.main.Cancel.Visible := True;
 
   vWeather.Config.main.Right.Towns.Add.main.Add.Enabled := False;
@@ -224,9 +224,9 @@ begin
     [TGridOption.RowLines] + [TGridOption.RowSelect] - [TGridOption.AlwaysShowSelection] + [TGridOption.Tabs] + [TGridOption.Header] + [TGridOption.HeaderClick]
     - [TGridOption.CancelEditingByDefault] - [TGridOption.AutoDisplacement];
   vWeather.Config.main.Right.Towns.Add.main.Grid.RowHeight := 24;
-  vWeather.Config.main.Right.Towns.Add.main.Grid.OnClick := addons.weather.Input.mouse.Stringgrid.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Add.main.Grid.OnMouseEnter := addons.weather.Input.mouse.Stringgrid.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Add.main.Grid.OnMouseLeave := addons.weather.Input.mouse.Stringgrid.OnMouseLeave;
+  vWeather.Config.main.Right.Towns.Add.main.Grid.OnClick := weather.Input.mouse.Stringgrid.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Add.main.Grid.OnMouseEnter := weather.Input.mouse.Stringgrid.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Add.main.Grid.OnMouseLeave := weather.Input.mouse.Stringgrid.OnMouseLeave;
   vWeather.Config.main.Right.Towns.Add.main.Grid.Visible := True;
 
   for vi := 0 to 4 do
@@ -322,7 +322,7 @@ var
   vID_S: String;
 begin
   Result := False;
-  for vi := 0 to addons.weather.Action.Provider_Total do
+  for vi := 0 to weather.Action.Provider_Total do
   begin
     // vID_S := addons.weather.Ini.Ini.ReadString(addons.weather.Action.Provider, vi.ToString + '_WOEID', vID_S);
     if vID_S = vID then

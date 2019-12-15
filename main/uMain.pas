@@ -6,7 +6,8 @@ uses
   System.Classes,
   System.SysUtils,
   System.UITypes,
-  FMX.Forms;
+  FMX.Forms,
+  CodeSiteLogging;
 
 procedure Load;
 
@@ -57,6 +58,7 @@ begin
 
   // extrafe state
   extrafe.prog.State := 'main';
+    CodeSite.Send(csmLevel5, 'User is in Main mode');
 end;
 
 procedure Exit;

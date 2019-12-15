@@ -222,7 +222,7 @@ begin
     3:
       vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Daphne;
     4:
-      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Kronos;
+      vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Winkawaks;
     5:
       vInstalled := uDB_AUser.Local.Emulators.Arcade_D.Raine;
     6:
@@ -377,7 +377,7 @@ begin
     2:
       vInstalled := uDB_AUser.Local.Emulators.Computers_D.Amstrad;
     3:
-      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Atari_800XL;
+      vInstalled := uDB_AUser.Local.Emulators.Computers_D.Atari_8Bit;
     4:
       vInstalled := uDB_AUser.Local.Emulators.Computers_D.Atart_ST;
     5:

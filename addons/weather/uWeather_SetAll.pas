@@ -105,9 +105,9 @@ begin
   vWeather.Scene.Arrow_Left.Font.Size := 48;
   vWeather.Scene.Arrow_Left.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Left.Text := #$ea38;
-  vWeather.Scene.Arrow_Left.OnClick := ADDONS.Weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Arrow_Left.OnMouseEnter := ADDONS.Weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Arrow_Left.OnMouseLeave := ADDONS.Weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Arrow_Left.OnClick := Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Arrow_Left.OnMouseEnter := Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Arrow_Left.OnMouseLeave := Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Arrow_Left.Visible := False;
 
   vWeather.Scene.Arrow_Left_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Left);
@@ -124,9 +124,9 @@ begin
   vWeather.Scene.Arrow_Right.Font.Size := 48;
   vWeather.Scene.Arrow_Right.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Right.Text := #$ea34;
-  vWeather.Scene.Arrow_Right.OnClick := ADDONS.Weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Arrow_Right.OnMouseEnter := ADDONS.Weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Arrow_Right.OnMouseLeave := ADDONS.Weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Arrow_Right.OnClick := Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Arrow_Right.OnMouseEnter := Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Arrow_Right.OnMouseLeave := Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Arrow_Right.Visible := False;
 
   vWeather.Scene.Arrow_Right_Glow := TGlowEffect.Create(vWeather.Scene.Arrow_Right);
@@ -155,9 +155,9 @@ begin
   vWeather.Scene.Settings.Font.Size := 48;
   vWeather.Scene.Settings.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Settings.Text := #$e994;
-  vWeather.Scene.Settings.OnClick := ADDONS.Weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Settings.OnMouseEnter := ADDONS.Weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Settings.OnMouseLeave := ADDONS.Weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Settings.OnClick := Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Settings.OnMouseEnter := Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Settings.OnMouseLeave := Weather.Input.mouse.Text.OnMouseLeave;
   vWeather.Scene.Settings.Visible := False;
 
   vWeather.Scene.Settings_Ani := TFloatAnimation.Create(vWeather.Scene.Settings);
@@ -244,8 +244,8 @@ begin
     vWeather.Config.main.Left.Buttons[vi].Parent := vWeather.Config.main.Left.Panel;
     vWeather.Config.main.Left.Buttons[vi].SetBounds(10, 30 + (vi * 40), 190, 33);
     vWeather.Config.main.Left.Buttons[vi].Text := cLeft_Buttons_Names[vi];
-    vWeather.Config.main.Left.Buttons[vi].OnClick := ADDONS.Weather.Input.mouse_config.Button.OnMouseClick;
-    vWeather.Config.main.Left.Buttons[vi].OnMouseEnter := ADDONS.Weather.Input.mouse_config.Button.OnMouseEnter;
+    vWeather.Config.main.Left.Buttons[vi].OnClick := Weather.Input.mouse_config.Button.OnMouseClick;
+    vWeather.Config.main.Left.Buttons[vi].OnMouseEnter := Weather.Input.mouse_config.Button.OnMouseEnter;
     vWeather.Config.main.Left.Buttons[vi].Tag := vi;
     vWeather.Config.main.Left.Buttons[vi].Visible := True;
   end;
@@ -261,7 +261,7 @@ begin
   vWeather.Config.main.Left.Provider.WrapMode := TImageWrapMode.Stretch;
   vWeather.Config.main.Left.Provider.Visible := True;
 
-  ADDONS.Weather.Config.Active_Panel := -1;
+  Weather.Config.Active_Panel := -1;
 
   // Right panel
   vWeather.Config.main.Right.Panel := Tpanel.Create(vWeather.Config.main.Panel);

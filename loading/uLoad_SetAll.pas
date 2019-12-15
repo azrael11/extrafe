@@ -16,7 +16,8 @@ uses
   FMX.Memo,
   FMX.Filter.Effects,
   FMX.ListBox,
-  FMX.Layouts;
+  FMX.Layouts,
+  CodeSiteLogging;
 
 type
   TLOGIN_USER = record
@@ -422,18 +423,6 @@ begin
       vListBox_Item[vi].Visible := True;
       ex_load.Login.User_V.AddObject(vListBox_Item[vi]);
     end;
-  end
-  else
-  begin
-    vListBox_Item[0] := TListBoxItem.Create(ex_load.Login.User_V);
-    vListBox_Item[0].Name := 'Load_ListItem_0';
-    vListBox_Item[0].Parent := ex_load.Login.User_V;
-    vListBox_Item[0].StyledSettings := vListBox_Item[0].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
-    vListBox_Item[0].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vListBox_Item[0].Font.Size := 18;
-    vListBox_Item[0].Text := 'Please Register';
-    vListBox_Item[0].Visible := True;
-    ex_load.Login.User_V.AddObject(vListBox_Item[0]);
   end;
 
   if extrafe.users_total > 0 then
@@ -858,6 +847,8 @@ begin
   ex_load.Reg.Main.Cancel.Visible := True;
 
   FreeAndNil(ex_load.Login.Panel);
+
+  CodeSite.Send(csmLevel5, 'User is in Registration mode');
 end;
 
 procedure Register_Terms;

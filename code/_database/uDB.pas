@@ -5,6 +5,7 @@ interface
 uses
   System.Classes,
   System.SysUtils,
+  CodeSiteLogging,
   FMX.Dialogs,
   FireDAC.Stan.Intf,
   FireDAC.Stan.Option,
@@ -341,6 +342,7 @@ var
   end;
 
 begin
+  CodeSite.Send('Start Creating Default Tables for Registered User');
   Result := False;
   vLocal_Num := (uDB_AUser.Local.Num + 1).ToString;
 
@@ -360,22 +362,28 @@ begin
   vValues := '"1920", "1080", "TRUE", "' + vPath[0] + '",  "' + vPath[1] + '",  "' + vPath[2] + '",  "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' + vPath[7] +
     '", "' + vPath[8] + '", "' + vPath[9] + '"';
   Query_Insert(ExtraFE_Query_Local, 'SETTINGS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Settings Table Adding Successfully');
+
 
   { User data }
   vColumns := 'UNIQUE_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT_ONLINE, LAST_VISIT, ACTIVE_ONLINE';
   vValues := '"' + User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name + '", "' + User_Reg.Surname
     + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' + User_Reg.Last_Visit + '", "' + User_Reg.Last_Visit + '", "1"';
   Query_Insert(ExtraFE_Query_Local, 'USERS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Users Table Adding Successfully');
+
 
   { Option Data }
   vColumns := 'VIRTUAL_KEYBOARD';
   vValues := '"0"';
   Query_Insert(ExtraFE_Query_Local, 'OPTIONS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Option Table Adding Successfully');
 
   { User Statistics data }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'USERS_STATISTICS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Statistics Table Adding Successfully');
 
   { Emulation data }
   free_vpath;
@@ -384,11 +392,13 @@ begin
   vColumns := 'USER_ID, PATH';
   vValues := '"' + vLocal_Num + '", "' + vPath[0] + '"';
   Query_Insert(ExtraFE_Query_Local, 'EMULATORS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Emulators Table Adding Successfully');
 
   { Arcade Section Start }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'ARCADE', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Arcade Table Adding Successfully');
 
   { Media }
   free_vpath;
@@ -419,39 +429,46 @@ begin
   vPath[24] := extrafe.prog.Path + 'emu\arcade\media\support_files\';
   vPath[25] := extrafe.prog.Path + 'emu\arcade\media\videos\';
 
-  vColumns := 'USER_ID, ARTWORKS, CABINETS, CONTROL_PANELS, COVERS, FLYERS, FANART, GAME_OVER, ICONS, MANUALS, MARQUEES, PCBS, SNAPSHOTS, TITLES, ' +
+  vColumns := 'ARTWORKS, CABINETS, CONTROL_PANELS, COVERS, FLYERS, FANART, GAME_OVER, ICONS, MANUALS, MARQUEESS, PCBS, SNAPSHOTS, TITLES, ' +
     'ARTWORK_PREVIEW, BOSSES, ENDS, HOW_TO, LOGOS, SCORES, SELECTS, STAMPS, VERSUS, WARNINGS, SOUNDTRACKS, SUPPORT_FILES, VIDEOS';
-  vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' + vPath[7] + '", "' +
+  vValues := '"' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' + vPath[7] + '", "' +
     vPath[8] + '", "' + vPath[9] + '", "' + vPath[10] + '" , "' + vPath[11] + '", "' + vPath[12] + '", "' + vPath[13] + '", "' + vPath[14] + '", "' + vPath[15] + '", "' + vPath[16] + '", "' +
     vPath[17] + '", "' + vPath[18] + '", "' + vPath[19] + '", "' + vPath[20] + '", "' + vPath[21] + '", "' + vPath[22] + '", "' + vPath[23] + '", "' + vPath[24] + '", "' + vPath[25] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ARCADE_MEDIA', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Arcade_Media Table Adding Successfully');
 
   { Mame }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'ARCADE_MAME', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Mame Table Adding Successfully');
   { Arcade Section End }
 
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'COMPUTERS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Computers Table Adding Successfully');
 
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'CONSOLES', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Consoles Table Adding Successfully');
 
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'HANDHELDS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Handhelds Table Adding Successfully');
 
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'PINBALLS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Pinballs Table Adding Successfully');
 
   { Addons data }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDONS', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Addons Table Adding Successfully');
 
   { Addons Time }
   free_vpath;
@@ -462,16 +479,19 @@ begin
   vColumns := 'USER_ID, MENU_POSITION, FIRST_POP, PATH_IMAGES, PATH_SOUNDS, PATH_CLOCKS';
   vValues := '"' + vLocal_Num + '", "0", TRUE, "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_TIME', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Addon_Time Table Adding Successfully');
 
   { Addons Time Time Data }
   vColumns := 'USER_ID';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_TIME_TIME', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Addon_Time_Time Table Adding Successfully');
 
   { Addons Calendar }
   vColumns := 'USER_ID, MENU_POSITION';
   vValues := '"' + vLocal_Num + '" , "1"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_CALENDAR', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Addon_Calendar Table Adding Successfully');
 
   { Addons Weather }
   free_vpath;
@@ -483,6 +503,7 @@ begin
   vColumns := 'USER_ID, PATH_ICONS, PATH_IMAGES, PATH_SOUNDS, PATH_TEMP';
   vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_WEATHER', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Addon_Weather Table Adding Successfully');
 
   { Addons SoundPlayer }
   free_vpath;
@@ -493,13 +514,16 @@ begin
   vColumns := 'USER_ID, PATH_IMAGES, PATH_PLAYLISTS, PATH_SOUNDS';
   vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Addon_Soundplayer Table Adding Successfully');
 
   { Addons AzPlay }
 
   vColumns := 'USER_ID, COUNT, ACTIVE, AZHUNG';
   vValues := '"' + vLocal_Num + '", "4", "0", "1"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_AZPLAY', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Addon_AzPlay Table Adding Successfully');
 
+  CodeSite.Send('All Tables Registered User Creating Successfully');
 end;
 
 { Queries Actions Local }

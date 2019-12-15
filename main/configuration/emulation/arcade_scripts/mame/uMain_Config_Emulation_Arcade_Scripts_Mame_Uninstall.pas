@@ -372,7 +372,7 @@ begin
 
   if (uDB_AUser.Local.Emulators.Arcade_D.Demul = false) and (uDB_AUser.Local.Emulators.Arcade_D.SuperModel = false) and
     (uDB_AUser.Local.Emulators.Arcade_D.Model2 = false) and (uDB_AUser.Local.Emulators.Arcade_D.Raine = false) and
-    (uDB_AUser.Local.Emulators.Arcade_D.Kronos = false) and (uDB_AUser.Local.Emulators.Arcade_D.Daphne = false) and
+    (uDB_AUser.Local.Emulators.Arcade_D.Winkawaks = false) and (uDB_AUser.Local.Emulators.Arcade_D.Daphne = false) and
     (uDB_AUser.Local.Emulators.Arcade_D.Zinc = false) and (uDB_AUser.Local.Emulators.Arcade_D.FBA = false) and (uDB_AUser.Local.Emulators.Arcade_D.Mame = false)
   then
   begin

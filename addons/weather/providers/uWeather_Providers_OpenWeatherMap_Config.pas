@@ -39,8 +39,8 @@ uses
   uDB,
   uDB_AUser,
   uWindows,
-  uLoad_AllTypes,
   uWeather_AllTypes,
+  uLoad_AllTypes,
   uWeather_Providers_OpenWeatherMap;
 
 procedure Load;
@@ -108,20 +108,20 @@ var
   vi: Integer;
   vTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL;
 begin
-  if addons.weather.Action.OWM.Total_WoeID <> -1 then
+  if weather.Action.OWM.Total_WoeID <> -1 then
   begin
-    for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
+    for vi := 0 to weather.Action.OWM.Total_WoeID do
     begin
       // Get Data
-      vTown.Time_Results := ConvertTime(addons.weather.Action.OWM.Data_Town[vi].Current.Date_Time, '').Full;
-      vTown.Forecast_Image := Get_Icon_Text(addons.weather.Action.OWM.Data_Town[vi].Current.weather.ID,
-        addons.weather.Action.OWM.Data_Town[vi].Current.weather.Icon);
-      vTown.Temperature := addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.main.Temp;
+      vTown.Time_Results := ConvertTime(weather.Action.OWM.Data_Town[vi].Current.Date_Time, '').Full;
+      vTown.Forecast_Image := Get_Icon_Text(weather.Action.OWM.Data_Town[vi].Current.weather.ID,
+        weather.Action.OWM.Data_Town[vi].Current.weather.Icon);
+      vTown.Temperature := weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.main.Temp;
       vTown.Temrerature_Unit := 'C';
-      vTown.Temperature_Description := addons.weather.Action.OWM.Data_Town[vi].Current.weather.Description;
-      vTown.City_Name := addons.weather.Action.OWM.Data_Town[vi].Current.Name;
-      vTown.Country_Name := addons.weather.Action.OWM.Data_Town[vi].Current.sys.country;
-      vTown.Country_Flag := Get_Flag(addons.weather.Action.OWM.Data_Town[vi].Five.city.country);
+      vTown.Temperature_Description := weather.Action.OWM.Data_Town[vi].Current.weather.Description;
+      vTown.City_Name := weather.Action.OWM.Data_Town[vi].Current.Name;
+      vTown.Country_Name := weather.Action.OWM.Data_Town[vi].Current.sys.country;
+      vTown.Country_Flag := Get_Flag(weather.Action.OWM.Data_Town[vi].Five.city.country);
       // Set Data
       Towns_Add_New_Town(vi, vTown);
     end;
@@ -264,9 +264,9 @@ begin
   vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.SetBounds(0, 0, vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Width,
     vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel.Height);
   vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Opacity := 0;
-  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnClick := addons.weather.Input.mouse_config.Panel.OnMouseClick;
-  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnMouseEnter := addons.weather.Input.mouse_config.Panel.OnMouseEnter;
-  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnMouseLeave := addons.weather.Input.mouse_config.Panel.OnMouseLeave;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnClick := weather.Input.mouse_config.Panel.OnMouseClick;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnMouseEnter := weather.Input.mouse_config.Panel.OnMouseEnter;
+  vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.OnMouseLeave := weather.Input.mouse_config.Panel.OnMouseLeave;
   vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Tag := vNumPanel;
   vWeather.Config.main.Right.Towns.Town[vNumPanel].Panel_Above.Visible := True;
 end;
@@ -284,7 +284,7 @@ begin
       vCondition := True;
 
   if vDirection = 'down' then
-    if uWeather_Config_Towns.vSelectedTown <> addons.weather.Action.Yahoo.Total_WoeID then
+    if uWeather_Config_Towns.vSelectedTown <> weather.Action.Yahoo.Total_WoeID then
       vCondition := True;
 
   if vCondition then
@@ -304,13 +304,13 @@ begin
 
     // Change the position to ini
     // Change Woeid List
-    vTemp_Ini_Town := addons.weather.Action.OWM.Woeid_List.Strings[uWeather_Config_Towns.vSelectedTown];
-    addons.weather.Action.OWM.Woeid_List.Delete(uWeather_Config_Towns.vSelectedTown);
-    addons.weather.Action.OWM.Woeid_List.Insert(vTemp_Pos, vTemp_Ini_Town);
+    vTemp_Ini_Town := weather.Action.OWM.Woeid_List.Strings[uWeather_Config_Towns.vSelectedTown];
+    weather.Action.OWM.Woeid_List.Delete(uWeather_Config_Towns.vSelectedTown);
+    weather.Action.OWM.Woeid_List.Insert(vTemp_Pos, vTemp_Ini_Town);
     // Change Town List
-    vTemp_Ini_Town := addons.weather.Action.OWM.Towns_List.Strings[uWeather_Config_Towns.vSelectedTown];
-    addons.weather.Action.OWM.Towns_List.Delete(uWeather_Config_Towns.vSelectedTown);
-    addons.weather.Action.OWM.Towns_List.Insert(vTemp_Pos, vTemp_Ini_Town);
+    vTemp_Ini_Town := weather.Action.OWM.Towns_List.Strings[uWeather_Config_Towns.vSelectedTown];
+    weather.Action.OWM.Towns_List.Delete(uWeather_Config_Towns.vSelectedTown);
+    weather.Action.OWM.Towns_List.Insert(vTemp_Pos, vTemp_Ini_Town);
 
 //    for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
 //      addons.weather.Ini.Ini.DeleteKey('openweathermap', 'woeid_' + vi.ToString);
@@ -386,12 +386,12 @@ begin
   vWeather.Config.main.Right.Options_OWM.Metric.Parent := vWeather.Config.main.Right.Options_OWM.System_Type;
   vWeather.Config.main.Right.Options_OWM.Metric.SetBounds(20, 70, 200, 20);
   vWeather.Config.main.Right.Options_OWM.Metric.Text := 'Metric';
-  if addons.weather.Action.OWM.Selected_Unit = 'metric' then
+  if weather.Action.OWM.Selected_Unit = 'metric' then
     vWeather.Config.main.Right.Options_OWM.Metric.IsChecked := True;
   vWeather.Config.main.Right.Options_OWM.Metric.Font.Style := vWeather.Config.main.Right.Options_OWM.Metric.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.main.Right.Options_OWM.Metric.OnClick := addons.weather.Input.mouse_config.Checkbox.OnMouseClick;
-  vWeather.Config.main.Right.Options_OWM.Metric.OnMouseEnter := addons.weather.Input.mouse_config.Checkbox.OnMouseEnter;
-  vWeather.Config.main.Right.Options_OWM.Metric.OnMouseLeave := addons.weather.Input.mouse_config.Checkbox.OnMouseLeave;
+  vWeather.Config.main.Right.Options_OWM.Metric.OnClick := weather.Input.mouse_config.Checkbox.OnMouseClick;
+  vWeather.Config.main.Right.Options_OWM.Metric.OnMouseEnter := weather.Input.mouse_config.Checkbox.OnMouseEnter;
+  vWeather.Config.main.Right.Options_OWM.Metric.OnMouseLeave := weather.Input.mouse_config.Checkbox.OnMouseLeave;
   vWeather.Config.main.Right.Options_OWM.Metric.Visible := True;
 
   vWeather.Config.main.Right.Options_OWM.Imperial := TCheckBox.Create(vWeather.Config.main.Right.Options_OWM.System_Type);
@@ -399,12 +399,12 @@ begin
   vWeather.Config.main.Right.Options_OWM.Imperial.Parent := vWeather.Config.main.Right.Options_OWM.System_Type;
   vWeather.Config.main.Right.Options_OWM.Imperial.SetBounds(vWeather.Config.main.Right.Options_OWM.System_Type.Width - 210, 70, 200, 20);
   vWeather.Config.main.Right.Options_OWM.Imperial.Text := 'Imperial';
-  if addons.weather.Action.OWM.Selected_Unit = 'imperial' then
+  if weather.Action.OWM.Selected_Unit = 'imperial' then
     vWeather.Config.main.Right.Options_OWM.Imperial.IsChecked := True;
   vWeather.Config.main.Right.Options_OWM.Imperial.Font.Style := vWeather.Config.main.Right.Options_OWM.Imperial.Font.Style + [TFontStyle.fsBold];
-  vWeather.Config.main.Right.Options_OWM.Imperial.OnClick := addons.weather.Input.mouse_config.Checkbox.OnMouseClick;
-  vWeather.Config.main.Right.Options_OWM.Imperial.OnMouseEnter := addons.weather.Input.mouse_config.Checkbox.OnMouseEnter;
-  vWeather.Config.main.Right.Options_OWM.Imperial.OnMouseLeave := addons.weather.Input.mouse_config.Checkbox.OnMouseLeave;
+  vWeather.Config.main.Right.Options_OWM.Imperial.OnClick := weather.Input.mouse_config.Checkbox.OnMouseClick;
+  vWeather.Config.main.Right.Options_OWM.Imperial.OnMouseEnter := weather.Input.mouse_config.Checkbox.OnMouseEnter;
+  vWeather.Config.main.Right.Options_OWM.Imperial.OnMouseLeave := weather.Input.mouse_config.Checkbox.OnMouseLeave;
   vWeather.Config.main.Right.Options_OWM.Imperial.Visible := True;
 
   vWeather.Config.main.Right.Options_OWM.MultiLanguage := TGroupBox.Create(vWeather.Config.main.Right.Panels[2]);
@@ -459,8 +459,8 @@ begin
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Chinese Simplified');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Chinese Traditional');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.ItemIndex := uWeather_Providers_OpenWeatherMap.Get_Language_Num
-    (addons.weather.Action.OWM.Language);
-  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.OnChange := addons.weather.Input.mouse_config.Combobox.OnChange;
+    (weather.Action.OWM.Language);
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.OnChange := weather.Input.mouse_config.Combobox.OnChange;
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Visible := True;
 
   vWeather.Config.main.Right.Options_OWM.API := TGroupBox.Create(vWeather.Config.main.Right.Panels[2]);
@@ -478,9 +478,9 @@ begin
   vWeather.Config.main.Right.Options_OWM.API_Lock.Font.Size := 18;
   vWeather.Config.main.Right.Options_OWM.API_Lock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Config.main.Right.Options_OWM.API_Lock.Text := #$e98f;
-  vWeather.Config.main.Right.Options_OWM.API_Lock.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Options_OWM.API_Lock.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Options_OWM.API_Lock.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
+  vWeather.Config.main.Right.Options_OWM.API_Lock.OnClick := weather.Input.mouse_config.Text.OnMouseClick;
+  vWeather.Config.main.Right.Options_OWM.API_Lock.OnMouseEnter := weather.Input.mouse_config.Text.OnMouseEnter;
+  vWeather.Config.main.Right.Options_OWM.API_Lock.OnMouseLeave := weather.Input.mouse_config.Text.OnMouseLeave;
   vWeather.Config.main.Right.Options_OWM.API_Lock.Visible := True;
 
   vWeather.Config.main.Right.Options_OWM.API_Lock_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Options_OWM.API_Lock);
@@ -519,7 +519,7 @@ begin
   vWeather.Config.main.Right.Options_OWM.API_Desc.Enabled := False;
   vWeather.Config.main.Right.Options_OWM.API_Desc.Visible := True;
 
-  addons.weather.Action.OWM.Options_Lock := True;
+  weather.Action.OWM.Options_Lock := True;
 
   vWeather.Config.main.Right.Options_OWM.API_Link := TText.Create(vWeather.Config.main.Right.Options_OWM.API);
   vWeather.Config.main.Right.Options_OWM.API_Link.Name := 'A_W_Providers_OpenWeatherMap_Config_Options_API_Link';
@@ -528,9 +528,9 @@ begin
   vWeather.Config.main.Right.Options_OWM.API_Link.Text := 'https://openweathermap.org/appid';
   vWeather.Config.main.Right.Options_OWM.API_Link.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Config.main.Right.Options_OWM.API_Link.HorzTextAlign := TTextAlign.Leading;
-  vWeather.Config.main.Right.Options_OWM.API_Link.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Options_OWM.API_Link.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Options_OWM.API_Link.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
+  vWeather.Config.main.Right.Options_OWM.API_Link.OnClick := weather.Input.mouse_config.Text.OnMouseClick;
+  vWeather.Config.main.Right.Options_OWM.API_Link.OnMouseEnter := weather.Input.mouse_config.Text.OnMouseEnter;
+  vWeather.Config.main.Right.Options_OWM.API_Link.OnMouseLeave := weather.Input.mouse_config.Text.OnMouseLeave;
   vWeather.Config.main.Right.Options_OWM.API_Link.Enabled := False;
   vWeather.Config.main.Right.Options_OWM.API_Link.Visible := True;
 
@@ -538,7 +538,7 @@ begin
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Name := 'A_W_Providers_OpenWeatherMap_Config_Options_Selected_System_Type';
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Parent := vWeather.Config.main.Right.Panels[2];
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.SetBounds(10, vWeather.Config.main.Right.Panels[2].Height - 50, 300, 20);
-  vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Text := 'Selected System Type : ' + addons.weather.Action.OWM.Selected_Unit;
+  vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Text := 'Selected System Type : ' + weather.Action.OWM.Selected_Unit;
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Visible := True;
 
   vWeather.Config.main.Right.Options_OWM.Selected_Language := TLabel.Create(vWeather.Config.main.Right.Panels[2]);
@@ -546,7 +546,7 @@ begin
   vWeather.Config.main.Right.Options_OWM.Selected_Language.Parent := vWeather.Config.main.Right.Panels[2];
   vWeather.Config.main.Right.Options_OWM.Selected_Language.SetBounds(10, vWeather.Config.main.Right.Panels[2].Height - 30, 300, 20);
   vWeather.Config.main.Right.Options_OWM.Selected_Language.Text := 'Selected Language : ' + uWeather_Providers_OpenWeatherMap.Get_Language_From_Short_Desc
-    (addons.weather.Action.OWM.Language);
+    (weather.Action.OWM.Language);
   vWeather.Config.main.Right.Options_OWM.Selected_Language.Visible := True;
 end;
 
@@ -572,7 +572,7 @@ begin
   vWeather.Config.main.Right.Options_OWM.API_Key.Enabled := vLock;
   vWeather.Config.main.Right.Options_OWM.API_Desc.Enabled := vLock;
   vWeather.Config.main.Right.Options_OWM.API_Link.Enabled := vLock;
-  addons.weather.Action.OWM.Options_Lock := not vLock;
+  weather.Action.OWM.Options_Lock := not vLock;
 end;
 
 ///
@@ -605,9 +605,9 @@ begin
   vWeather.Config.main.Right.Iconsets.Full.Back.Font.Size := 28;
   vWeather.Config.main.Right.Iconsets.Full.Back.Text := #$e967;
   vWeather.Config.main.Right.Iconsets.Full.Back.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Config.main.Right.Iconsets.Full.Back.OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-  vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-  vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
+  vWeather.Config.main.Right.Iconsets.Full.Back.OnClick := weather.Input.mouse_config.Text.OnMouseClick;
+  vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseEnter := weather.Input.mouse_config.Text.OnMouseEnter;
+  vWeather.Config.main.Right.Iconsets.Full.Back.OnMouseLeave := weather.Input.mouse_config.Text.OnMouseLeave;
   vWeather.Config.main.Right.Iconsets.Full.Back.Visible := False;
 
   vWeather.Config.main.Right.Iconsets.Full.Back_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Iconsets.Full.Back);
@@ -721,7 +721,7 @@ begin
     Inc(vl, 1);
   end;
 
-  for vi := 0 to addons.weather.Action.OWM.Iconset_Count do
+  for vi := 0 to weather.Action.OWM.Iconset_Count do
     Create_MiniPreview(vi);
 
 end;
@@ -734,7 +734,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Name := 'A_W_Providers_OpenWeatherMap_Config_Iconsets_Preview_Name_' + vNum.ToString;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Parent := vWeather.Config.main.Right.Iconsets.Box;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.SetBounds(10, 2 + (vNum * 68), 300, 20);
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Text := addons.weather.Action.Yahoo.Iconset_Names.Strings[vNum];
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Text := weather.Action.Yahoo.Iconset_Names.Strings[vNum];
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Font.Style := vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Visible := True;
 
@@ -742,9 +742,9 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Name := 'A_W_Providers_OpenWeatherMap_Config_Iconsets_Mini_Preview_Panel_' + vNum.ToString;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Parent := vWeather.Config.main.Right.Iconsets.Box;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.SetBounds(10, 20 + (vNum * 68), vWeather.Config.main.Right.Iconsets.Box.Width - 30, 54);
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnClick := addons.weather.Input.mouse_config.Panel.OnMouseClick;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseEnter := addons.weather.Input.mouse_config.Panel.OnMouseEnter;
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseLeave := addons.weather.Input.mouse_config.Panel.OnMouseLeave;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnClick := weather.Input.mouse_config.Panel.OnMouseClick;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseEnter := weather.Input.mouse_config.Panel.OnMouseEnter;
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.OnMouseLeave := weather.Input.mouse_config.Panel.OnMouseLeave;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.TagString := vNum.ToString;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel.Visible := True;
 
@@ -777,9 +777,9 @@ begin
       vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
       vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].Tag := vi;
       vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].TagString := vNum.ToString;
-      vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-      vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-      vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
+      vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnClick := weather.Input.mouse_config.Text.OnMouseClick;
+      vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseEnter := weather.Input.mouse_config.Text.OnMouseEnter;
+      vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseLeave := weather.Input.mouse_config.Text.OnMouseLeave;
       vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].Visible := True;
 
       if vi = 8 then
@@ -815,9 +815,9 @@ begin
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].Tag := vi;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].TagString := vNum.ToString;
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnClick := addons.weather.Input.mouse_config.Text.OnMouseClick;
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseEnter := addons.weather.Input.mouse_config.Text.OnMouseEnter;
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseLeave := addons.weather.Input.mouse_config.Text.OnMouseLeave;
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnClick := weather.Input.mouse_config.Text.OnMouseClick;
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseEnter := weather.Input.mouse_config.Text.OnMouseEnter;
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].OnMouseLeave := weather.Input.mouse_config.Text.OnMouseLeave;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[vi].Visible := True;
 
         if vi = 8 then
@@ -840,18 +840,18 @@ begin
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Parent := vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].SetBounds(50 * vi, 2, 50, 50);
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons +
-          addons.weather.Action.Yahoo.Iconset_Names.Strings[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
+          weather.Action.Yahoo.Iconset_Names.Strings[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Tag := vi;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].TagString := vNum.ToString;
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnClick := addons.weather.Input.mouse_config.Image.OnMouseClick;
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseEnter := addons.weather.Input.mouse_config.Image.OnMouseEnter;
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseLeave := addons.weather.Input.mouse_config.Image.OnMouseLeave;
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnClick := weather.Input.mouse_config.Image.OnMouseClick;
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseEnter := weather.Input.mouse_config.Image.OnMouseEnter;
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnMouseLeave := weather.Input.mouse_config.Image.OnMouseLeave;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Visible := True;
       end;
     end;
   end;
 
-  if addons.weather.Action.Yahoo.Iconset_Selected = vNum then
+  if weather.Action.Yahoo.Iconset_Selected = vNum then
     vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[0].Text := #$ea10;
 end;
 

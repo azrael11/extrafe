@@ -481,7 +481,8 @@ end;
 
 procedure TWEATHER_ADDON_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
-
+  if TCheckBox(Sender).Name = 'A_W_First_Main_Check' then
+    uWeather_Actions.CheckFirst(TCheckBox(Sender).IsChecked);
 end;
 
 procedure TWEATHER_ADDON_CHECKBOX.OnMouseEnter(Sender: TObject);
@@ -520,26 +521,26 @@ end;
 
 initialization
 
-addons.weather.Input.mouse.Layout := TWEATHER_ADDON_LAYOUT.Create;
-addons.weather.Input.mouse.Image := TWEATHER_ADDON_IMAGE.Create;
-addons.weather.Input.mouse.Button := TWEATHER_ADDON_BUTTON.Create;
-addons.weather.Input.mouse.Panel := TWEATHER_ADDON_PANEL.Create;
-addons.weather.Input.mouse.Text := TWEATHER_ADDON_TEXT.Create;
-addons.weather.Input.mouse.VLabel := TWEATHER_ADDON_TLABEL.Create;
-addons.weather.Input.mouse.Stringgrid := TWEATHER_ADDON_STRIGGRID.Create;
-addons.weather.Input.mouse.Checkbox := TWEATHER_ADDON_CHECKBOX.Create;
-addons.weather.Input.mouse.Timer := TWEATHER_ADDON_TIMER.Create;
+weather.Input.mouse.Layout := TWEATHER_ADDON_LAYOUT.Create;
+weather.Input.mouse.Image := TWEATHER_ADDON_IMAGE.Create;
+weather.Input.mouse.Button := TWEATHER_ADDON_BUTTON.Create;
+weather.Input.mouse.Panel := TWEATHER_ADDON_PANEL.Create;
+weather.Input.mouse.Text := TWEATHER_ADDON_TEXT.Create;
+weather.Input.mouse.VLabel := TWEATHER_ADDON_TLABEL.Create;
+weather.Input.mouse.Stringgrid := TWEATHER_ADDON_STRIGGRID.Create;
+weather.Input.mouse.Checkbox := TWEATHER_ADDON_CHECKBOX.Create;
+weather.Input.mouse.Timer := TWEATHER_ADDON_TIMER.Create;
 
 finalization
 
-addons.weather.Input.mouse.Layout.Free;
-addons.weather.Input.mouse.Image.Free;
-addons.weather.Input.mouse.Button.Free;
-addons.weather.Input.mouse.Panel.Free;
-addons.weather.Input.mouse.Text.Free;
-addons.weather.Input.mouse.VLabel.Free;
-addons.weather.Input.mouse.Stringgrid.Free;
-addons.weather.Input.mouse.Checkbox.Free;
-addons.weather.Input.mouse.Timer.Free;
+weather.Input.mouse.Layout.Free;
+weather.Input.mouse.Image.Free;
+weather.Input.mouse.Button.Free;
+weather.Input.mouse.Panel.Free;
+weather.Input.mouse.Text.Free;
+weather.Input.mouse.VLabel.Free;
+weather.Input.mouse.Stringgrid.Free;
+weather.Input.mouse.Checkbox.Free;
+weather.Input.mouse.Timer.Free;
 
 end.

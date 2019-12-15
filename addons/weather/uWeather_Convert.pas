@@ -24,7 +24,7 @@ function uWeather_Convert_SunSpot(vSunrise, vSunset: String): TPathData;
 
 implementation
 uses
-  uLoad_AllTypes;
+  uWeather_AllTypes;
 
 function uWeather_Convert_Day(vDay: WideString): WideString;
 begin
@@ -226,12 +226,12 @@ begin
     Result.MoveTo(PointF(0, 0));
     Result.CurveTo(PointF(0, 0), PointF(vTotal_Go, -vTotal_UpCurve), PointF(vTotal_End, -vTotal_High));
 
-    addons.weather.Action.PathAni_Show:= True;
+    weather.Action.PathAni_Show:= True;
   end
   else
   begin
     Result.MoveTo(PointF(-1000, 0));
-    addons.weather.Action.PathAni_Show:= False;
+    weather.Action.PathAni_Show:= False;
   end;
 end;
 end.

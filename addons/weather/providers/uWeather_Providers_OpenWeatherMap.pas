@@ -183,7 +183,7 @@ var
   vText: TText;
   vProgress_Num: Single;
 begin
-  if addons.weather.Action.OWM.Total_WoeID <> -1 then
+  if weather.Action.OWM.Total_WoeID <> -1 then
   begin
     vBackground := TImage.Create(vWeather.Scene.Back);
     vBackground.Name := 'A_W_Providers_OpenWeatherMap_Loading_Background';
@@ -234,20 +234,20 @@ begin
     vProgress.Value := 0;
     vProgress.Visible := True;
 
-    vProgress_Num := 100 / addons.weather.Action.OWM.Total_WoeID;
-    for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
+    vProgress_Num := 100 / weather.Action.OWM.Total_WoeID;
+    for vi := 0 to weather.Action.OWM.Total_WoeID do
     begin
-      SetLength(addons.weather.Action.OWM.Data_Town, addons.weather.Action.OWM.Total_WoeID + 1);
-      vProgress_Text.text := 'Getting forecast for "' + addons.weather.Action.OWM.Towns_List.Strings[vi] + '"';
+      SetLength(weather.Action.OWM.Data_Town, weather.Action.OWM.Total_WoeID + 1);
+      vProgress_Text.text := 'Getting forecast for "' + weather.Action.OWM.Towns_List.Strings[vi] + '"';
       Application.ProcessMessages;
-      addons.weather.Action.OWM.Data_Town[vi] := Get_Forecast(vi, addons.weather.Action.OWM.Woeid_List.Strings[vi]);
-      Main_Create_Town(addons.weather.Action.OWM.Data_Town[vi], vi);
+      weather.Action.OWM.Data_Town[vi] := Get_Forecast(vi, weather.Action.OWM.Woeid_List.Strings[vi]);
+      Main_Create_Town(weather.Action.OWM.Data_Town[vi], vi);
       vProgress.Value := vProgress.Value + vProgress_Num;
       vIcon.text := uWeather_Providers_Yahoo.Get_Icon_From_Text(Random(47).ToString);
       Application.ProcessMessages;
     end;
 
-    if addons.weather.Action.OWM.Total_WoeID > 0 then
+    if weather.Action.OWM.Total_WoeID > 0 then
       vWeather.Scene.Arrow_Right.Visible := True;
 
     FreeAndNil(vProgress);
@@ -287,8 +287,8 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Icon.Font.Size := 72;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Icon.text :=
-    Get_Icon_Text(addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].weather.ID,
-    addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].weather.Icon);
+    Get_Icon_Text(weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].weather.ID,
+    weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].weather.Icon);
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Icon.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Date_Time :=
@@ -297,7 +297,7 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Date_Time.Parent := vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Panel;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Date_Time.SetBounds(10, 35, 200, 20);
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Date_Time.text := 'Forecast for ' +
-    ConvertTime(addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].dt, '').Full;
+    ConvertTime(weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].dt, '').Full;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Date_Time.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Date_Time.Visible := True;
 
@@ -310,7 +310,7 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp.Font.Size := 48;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp.HorzTextAlign := TTextAlign.Trailing;
-  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp.text := addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list
+  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp.text := weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list
     [vList_Num].main.Temp + ' ' + #$f042;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp.Visible := True;
 
@@ -348,8 +348,8 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Min.Font.Size := 24;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Min.TextSettings.FontColor := TAlphaColorRec.Whitesmoke;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Min.HorzTextAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Min.text := addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex]
-    .Five.list[vList_Num].main.Temp_Min + ' ' + #$f042;
+  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Min.text := weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list
+    [vList_Num].main.Temp_Min + ' ' + #$f042;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Min.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Max_Arrow :=
@@ -374,8 +374,8 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Max.Font.Size := 24;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Max.TextSettings.FontColor := TAlphaColorRec.Red;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Max.HorzTextAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Max.text := addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex]
-    .Five.list[vList_Num].main.Temp_Max + ' ' + #$f042;
+  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Max.text := weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list
+    [vList_Num].main.Temp_Max + ' ' + #$f042;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Temp_Max.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Description :=
@@ -387,8 +387,8 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Description.Font.Size := 18;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Description.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Description.HorzTextAlign := TTextAlign.Center;
-  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Description.text := addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex]
-    .Five.list[vList_Num].weather.Description;
+  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Description.text := weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list
+    [vList_Num].weather.Description;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Description.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Humidity_Icon :=
@@ -413,8 +413,8 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Humidity.Font.Size := 16;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Humidity.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Humidity.HorzTextAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Humidity.text := addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex]
-    .Five.list[vList_Num].main.Humidity + ' %';
+  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Humidity.text := weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list
+    [vList_Num].main.Humidity + ' %';
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Humidity.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Pressure_Icon :=
@@ -440,7 +440,7 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Pressure.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Pressure.HorzTextAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Pressure.text :=
-    Round(addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].main.Pressure.ToSingle).ToString;
+    Round(weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].main.Pressure.ToSingle).ToString;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Pressure.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_Icon :=
@@ -466,7 +466,7 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_speed.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_speed.HorzTextAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_speed.text :=
-    Round(StrToFloat(addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].Wind.Speed)).ToString;
+    Round(StrToFloat(weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].Wind.Speed)).ToString;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_speed.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_degree :=
@@ -480,7 +480,7 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_degree.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_degree.HorzTextAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_degree.text :=
-    Round(addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].Wind.degree.ToSingle).ToString;
+    Round(weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list[vList_Num].Wind.degree.ToSingle).ToString;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Wind_degree.Visible := True;
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Clouds_Icon :=
@@ -505,8 +505,8 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Clouds.Font.Size := 16;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Clouds.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Clouds.HorzTextAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Clouds.text := addons.weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex]
-    .Five.list[vList_Num].Clouds.all + ' %';
+  vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Clouds.text := weather.Action.OWM.Data_Town[vWeather.Scene.Control.TabIndex].Five.list
+    [vList_Num].Clouds.all + ' %';
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Clouds.Visible := True;
 end;
 
@@ -579,7 +579,7 @@ begin
       vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
       vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Glow.Enabled := false;
 
-      if vl <= addons.weather.Action.OWM.Data_Town[vTab].Five.cnt.ToInteger - 1 then
+      if vl <= weather.Action.OWM.Data_Town[vTab].Five.cnt.ToInteger - 1 then
       begin
         vTime := ConvertTime(vTown.Five.list[vl].dt, ':').Time;
         if vTime = cTime[vk] then
@@ -658,9 +658,9 @@ begin
       else
         vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.Locked := True;
       vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.Opacity := 0;
-      vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.OnClick := addons.weather.Input.mouse.Panel.OnMouseClick;
-      vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.OnMouseEnter := addons.weather.Input.mouse.Panel.OnMouseEnter;
-      vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.OnMouseLeave := addons.weather.Input.mouse.Panel.OnMouseLeave;
+      vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.OnClick := weather.Input.mouse.Panel.OnMouseClick;
+      vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.OnMouseEnter := weather.Input.mouse.Panel.OnMouseEnter;
+      vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.OnMouseLeave := weather.Input.mouse.Panel.OnMouseLeave;
       vWeather.Scene.Tab_OWM[vTab].Five.Day[vi].Hour[vk].Panel_Over.Visible := True;
 
       if vNA then
@@ -689,15 +689,15 @@ begin
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.SetBounds(16, 90, 42, 42);
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Font.Family := 'Weather Icons';
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Font.Size := 36;
-  if addons.weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Color := TAlphaColorRec.Deepskyblue
   else
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.text := #$f045;
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.TextSettings.HorzAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.OnClick := addons.weather.Input.mouse.text.OnMouseClick;
-  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.OnMouseEnter := addons.weather.Input.mouse.text.OnMouseEnter;
-  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.OnMouseLeave := addons.weather.Input.mouse.text.OnMouseLeave;
+  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.OnClick := weather.Input.mouse.text.OnMouseClick;
+  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.OnMouseEnter := weather.Input.mouse.text.OnMouseEnter;
+  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.OnMouseLeave := weather.Input.mouse.text.OnMouseLeave;
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F_Glow := TGlowEffect.Create(vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F);
@@ -714,15 +714,15 @@ begin
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.SetBounds(16, 140, 42, 42);
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Font.Family := 'Weather Icons';
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Font.Size := 36;
-  if addons.weather.Action.Yahoo.Selected_Unit = 'metric' then
+  if weather.Action.Yahoo.Selected_Unit = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Color := TAlphaColorRec.Deepskyblue
   else
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.text := #$f03c;
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.TextSettings.HorzAlign := TTextAlign.Leading;
-  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.OnClick := addons.weather.Input.mouse.text.OnMouseClick;
-  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.OnMouseEnter := addons.weather.Input.mouse.text.OnMouseEnter;
-  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.OnMouseLeave := addons.weather.Input.mouse.text.OnMouseLeave;
+  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.OnClick := weather.Input.mouse.text.OnMouseClick;
+  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.OnMouseEnter := weather.Input.mouse.text.OnMouseEnter;
+  vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.OnMouseLeave := weather.Input.mouse.text.OnMouseLeave;
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C_Glow := TGlowEffect.Create(vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C);
@@ -914,9 +914,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Name := 'A_W_Provider_OpenWeatherMap_Wind_Small_Turbine_Animation_' + IntToStr(vTab);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Parent := vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.PropertyName := 'RotationAngle';
-  if addons.weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Duration := Convert_Wind((Round(StrToFloat(vTown.Current.Wind.Speed) * 1.8)))
-  else if addons.weather.Action.Yahoo.Selected_Unit = 'metric' then
+  else if weather.Action.Yahoo.Selected_Unit = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Duration := Convert_Wind(Round(vTown.Current.Wind.Speed.ToSingle));
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.StartValue := 0;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.StopValue := 360;
@@ -943,9 +943,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Name := 'A_W_Provider_OpenWeatherMap_Wind_Turbine_Animation_' + IntToStr(vTab);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Parent := vWeather.Scene.Tab_OWM[vTab].Wind.Turbine;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.PropertyName := 'RotationAngle';
-  if addons.weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Duration := Convert_Wind((Round(StrToFloat(vTown.Current.Wind.Speed) * 1.8) - 1))
-  else if addons.weather.Action.Yahoo.Selected_Unit = 'metric' then
+  else if weather.Action.Yahoo.Selected_Unit = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Duration := Convert_Wind(Round(vTown.Current.Wind.Speed.ToSingle));
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.StartValue := 0;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.StopValue := 360;
@@ -968,9 +968,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.SetBounds(100, 470, 200, 30);
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.Font.Size := 16;
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.Color := TAlphaColorRec.White;
-  if addons.weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.text := vTown.Current.main.Pressure + ' inHg'
-  else if addons.weather.Action.Yahoo.Selected_Unit = 'metric' then
+  else if weather.Action.Yahoo.Selected_Unit = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.text := vTown.Current.main.Pressure + ' mb';
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.Tag := vTab;
@@ -1150,9 +1150,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].country.Earth.Font.Size := 26;
   vWeather.Scene.Tab_OWM[vTab].country.Earth.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Tab_OWM[vTab].country.Earth.text := #$e9ca;
-  vWeather.Scene.Tab_OWM[vTab].country.Earth.OnClick := addons.weather.Input.mouse.text.OnMouseClick;
-  vWeather.Scene.Tab_OWM[vTab].country.Earth.OnMouseEnter := addons.weather.Input.mouse.text.OnMouseEnter;
-  vWeather.Scene.Tab_OWM[vTab].country.Earth.OnMouseLeave := addons.weather.Input.mouse.text.OnMouseLeave;
+  vWeather.Scene.Tab_OWM[vTab].country.Earth.OnClick := weather.Input.mouse.text.OnMouseClick;
+  vWeather.Scene.Tab_OWM[vTab].country.Earth.OnMouseEnter := weather.Input.mouse.text.OnMouseEnter;
+  vWeather.Scene.Tab_OWM[vTab].country.Earth.OnMouseLeave := weather.Input.mouse.text.OnMouseLeave;
   vWeather.Scene.Tab_OWM[vTab].country.Earth.HorzTextAlign := TTextAlign.Center;
   vWeather.Scene.Tab_OWM[vTab].country.Earth.TagString := vTab.ToString;
   vWeather.Scene.Tab_OWM[vTab].country.Earth.Visible := True;
@@ -1215,9 +1215,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.Font.Size := 32;
   vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.text := #$f04c;
-  vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.OnClick := addons.weather.Input.mouse.text.OnMouseClick;
-  vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.OnMouseEnter := addons.weather.Input.mouse.text.OnMouseEnter;
-  vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.OnMouseLeave := addons.weather.Input.mouse.text.OnMouseLeave;
+  vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.OnClick := weather.Input.mouse.text.OnMouseClick;
+  vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.OnMouseEnter := weather.Input.mouse.text.OnMouseEnter;
+  vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.OnMouseLeave := weather.Input.mouse.text.OnMouseLeave;
   vWeather.Scene.Tab_OWM[vTab].Refresh.Icon.Visible := True;
 
   vWeather.Scene.Tab_OWM[vTab].Refresh.Glow := TGlowEffect.Create(vWeather.Scene.Tab_OWM[vTab].Refresh.Icon);
@@ -1235,9 +1235,9 @@ var
   vi: Integer;
 begin
   Result := false;
-  for vi := 0 to addons.weather.Action.OWM.Towns_List.Count - 1 do
+  for vi := 0 to weather.Action.OWM.Towns_List.Count - 1 do
   begin
-    if addons.weather.Action.OWM.Woeid_List.Strings[vi] = vWoeid then
+    if weather.Action.OWM.Woeid_List.Strings[vi] = vWoeid then
       Result := True;
   end;
 end;
@@ -1250,19 +1250,19 @@ var
   vWoeid: String;
   vTown: String;
 begin
-  addons.weather.Action.OWM.Woeid_List := TStringList.Create;
-  addons.weather.Action.OWM.Towns_List := TStringList.Create;
+  weather.Action.OWM.Woeid_List := TStringList.Create;
+  weather.Action.OWM.Towns_List := TStringList.Create;
 
-  if addons.weather.Action.OWM.Total_WoeID <> -1 then
+  if weather.Action.OWM.Total_WoeID <> -1 then
   begin
-    for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
+    for vi := 0 to weather.Action.OWM.Total_WoeID do
     begin
-//      vString := addons.weather.Ini.Ini.ReadString('openweathermap', 'woeid_' + vi.ToString, vString);
+      // vString := addons.weather.Ini.Ini.ReadString('openweathermap', 'woeid_' + vi.ToString, vString);
       vIPos := Pos('_', vString);
       vWoeid := Trim(Copy(vString, 0, vIPos - 1));
       vTown := Trim(Copy(vString, vIPos + 1, Length(vString) - vIPos));
-      addons.weather.Action.OWM.Woeid_List.Add(vWoeid);
-      addons.weather.Action.OWM.Towns_List.Add(vTown);
+      weather.Action.OWM.Woeid_List.Add(vWoeid);
+      weather.Action.OWM.Towns_List.Add(vTown);
     end;
   end;
 end;
@@ -1275,36 +1275,35 @@ begin
     ShowMessage('This town already exists in your list')
   else
   begin
-    Inc(addons.weather.Action.OWM.Total_WoeID, 1);
-    SetLength(addons.weather.Action.OWM.Data_Town, addons.weather.Action.OWM.Total_WoeID + 1);
-    addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID] := Get_Forecast(addons.weather.Action.OWM.Total_WoeID,
-      vOpenWeatherMap_Find_List[vNum].woeid);
+    Inc(weather.Action.OWM.Total_WoeID, 1);
+    SetLength(weather.Action.OWM.Data_Town, weather.Action.OWM.Total_WoeID + 1);
+    weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID] := Get_Forecast(weather.Action.OWM.Total_WoeID, vOpenWeatherMap_Find_List[vNum].woeid);
 
-    vTemp_NewTown.Time_Results := ConvertTime(addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.Date_Time, '').Full;
-    vTemp_NewTown.Forecast_Image := Get_Icon_Text(addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.weather.ID,
-      addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.weather.Icon);
-    vTemp_NewTown.Temperature := addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.main.Temp;
+    vTemp_NewTown.Time_Results := ConvertTime(weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.Date_Time, '').Full;
+    vTemp_NewTown.Forecast_Image := Get_Icon_Text(weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.weather.ID,
+      weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.weather.Icon);
+    vTemp_NewTown.Temperature := weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.main.Temp;
     vTemp_NewTown.Temrerature_Unit := 'F';
-    vTemp_NewTown.Temperature_Description := addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.weather.Description;
-    vTemp_NewTown.City_Name := addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.Name;
-    vTemp_NewTown.Country_Name := addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Current.sys.country;
-    vTemp_NewTown.Country_Flag := Get_Flag(addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID].Five.city.country);
+    vTemp_NewTown.Temperature_Description := weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.weather.Description;
+    vTemp_NewTown.City_Name := weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.Name;
+    vTemp_NewTown.Country_Name := weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.sys.country;
+    vTemp_NewTown.Country_Flag := Get_Flag(weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Five.city.country);
 
-    uWeather_Providers_OpenWeatherMap_Config.Towns_Add_New_Town(addons.weather.Action.OWM.Total_WoeID, vTemp_NewTown);
-    if addons.weather.Action.OWM.Total_WoeID = 0 then
+    uWeather_Providers_OpenWeatherMap_Config.Towns_Add_New_Town(weather.Action.OWM.Total_WoeID, vTemp_NewTown);
+    if weather.Action.OWM.Total_WoeID = 0 then
       vWeather.Scene.Back.bitmap := nil;
 
-//    { For OpenWeatherMap Ini }
-//    addons.weather.Ini.Ini.WriteString('openweathermap', 'total', addons.weather.Action.OWM.Total_WoeID.ToString);
-//    addons.weather.Ini.Ini.WriteString('openweathermap', 'woeid_' + addons.weather.Action.OWM.Total_WoeID.ToString,
-//      vOpenWeatherMap_Find_List[vNum].woeid + '_' + vTemp_NewTown.City_Name);
-//    addons.weather.Action.OWM.Woeid_List.Add(addons.weather.Action.OWM.Total_WoeID.ToString);
-//    { For Global ini }
-//    Inc(addons.weather.Action.Active_WOEID, 1);
-//    addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
+    // { For OpenWeatherMap Ini }
+    // addons.weather.Ini.Ini.WriteString('openweathermap', 'total', addons.weather.Action.OWM.Total_WoeID.ToString);
+    // addons.weather.Ini.Ini.WriteString('openweathermap', 'woeid_' + addons.weather.Action.OWM.Total_WoeID.ToString,
+    // vOpenWeatherMap_Find_List[vNum].woeid + '_' + vTemp_NewTown.City_Name);
+    // addons.weather.Action.OWM.Woeid_List.Add(addons.weather.Action.OWM.Total_WoeID.ToString);
+    // { For Global ini }
+    // Inc(addons.weather.Action.Active_WOEID, 1);
+    // addons.weather.Ini.Ini.WriteInteger('Active', 'Active_Woeid', addons.weather.Action.Active_WOEID);
 
-    Main_Create_Town(addons.weather.Action.OWM.Data_Town[addons.weather.Action.OWM.Total_WoeID], addons.weather.Action.OWM.Total_WoeID);
-    if addons.weather.Action.OWM.Total_WoeID > 0 then
+    Main_Create_Town(weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID], weather.Action.OWM.Total_WoeID);
+    if weather.Action.OWM.Total_WoeID > 0 then
       vWeather.Scene.Arrow_Right.Visible := True;
     vWeather.Scene.Blur.Enabled := false;
     vWeather.Scene.Blur.Enabled := True;
@@ -1881,21 +1880,21 @@ end;
 
 function Unit_Type_Char: String;
 begin
-  if addons.weather.Action.OWM.Selected_Unit = 'Celcius' then
+  if weather.Action.OWM.Selected_Unit = 'Celcius' then
     Result := 'C'
-  else if addons.weather.Action.OWM.Selected_Unit = 'Fahrenheit' then
+  else if weather.Action.OWM.Selected_Unit = 'Fahrenheit' then
     Result := 'F'
-  else if addons.weather.Action.OWM.Selected_Unit = 'Kelvin' then
+  else if weather.Action.OWM.Selected_Unit = 'Kelvin' then
     Result := 'K';
 end;
 
 function Unit_Type: String;
 begin
-  if addons.weather.Action.OWM.Selected_Unit = 'Celcius' then
+  if weather.Action.OWM.Selected_Unit = 'Celcius' then
     Result := 'metric'
-  else if addons.weather.Action.OWM.Selected_Unit = 'Fahrenheit' then
+  else if weather.Action.OWM.Selected_Unit = 'Fahrenheit' then
     Result := 'imperial'
-  else if addons.weather.Action.OWM.Selected_Unit = 'Kelvin' then
+  else if weather.Action.OWM.Selected_Unit = 'Kelvin' then
     Result := 'default';
 end;
 
@@ -1908,7 +1907,7 @@ var
 begin
   { Get the current day forecast data }
   vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/weather?id=' + vWoeid + '&APPID=' + cAuthor_OWM_APPID +
-    '&units=' + addons.weather.Action.OWM.Selected_Unit + '&lang=' + addons.weather.Action.OWM.Language, TRESTRequestMethod.rmGET);
+    '&units=' + weather.Action.OWM.Selected_Unit + '&lang=' + weather.Action.OWM.Language, TRESTRequestMethod.rmGET);
 
   Result.Current.coord.lon := vJSONValue.GetValue<String>('coord.lon');
   Result.Current.coord.lat := vJSONValue.GetValue<String>('coord.lat');
@@ -1956,7 +1955,7 @@ begin
 
   { Get the 5 days forecast data }
   vJSONValue := uInternet_Files.JSONValue('OpenWeatherMap', 'http://api.openweathermap.org/data/2.5/forecast?id=' + vWoeid + '&APPID=' + cAuthor_OWM_APPID +
-    '&units=' + addons.weather.Action.OWM.Selected_Unit + '&lang=' + addons.weather.Action.OWM.Language, TRESTRequestMethod.rmGET);
+    '&units=' + weather.Action.OWM.Selected_Unit + '&lang=' + weather.Action.OWM.Language, TRESTRequestMethod.rmGET);
 
   Result.Five.cod := vJSONValue.GetValue<String>('cod');
   Result.Five.vmessage := vJSONValue.GetValue<String>('message');
@@ -2093,8 +2092,8 @@ const
   cLanguages_Ext: array [0 .. 32] of string = ('ar', 'bg', 'ca', 'cz', 'de', 'gr', 'en', 'fa', 'fi', 'fr', 'gl', 'hr', 'hu', 'it', 'ja', 'kr', 'la', 'lt', 'mk',
     'nl', 'pl', 'pt', 'ro', 'ru', 'se', 'sk', 'sl', 'es', 'tr', 'ua', 'vi', 'zh_cn', 'zh_tw');
 begin
-  addons.weather.Action.OWM.Language := cLanguages_Ext[vLanguage_Index];
-//  addons.weather.Ini.Ini.WriteString('openweathermap', 'language', addons.weather.Action.OWM.Language);
+  weather.Action.OWM.Language := cLanguages_Ext[vLanguage_Index];
+  // addons.weather.Ini.Ini.WriteString('openweathermap', 'language', addons.weather.Action.OWM.Language);
 end;
 
 function Get_Language_Num(vLanguage: String): Integer;
@@ -2191,8 +2190,8 @@ end;
 
 procedure Show_Map(vTab_Num: String);
 begin
-  uWeather_Actions.Show_Map('openweathermap', addons.weather.Action.OWM.Data_Town[vTab_Num.ToInteger].Current.coord.lat,
-    addons.weather.Action.OWM.Data_Town[vTab_Num.ToInteger].Current.coord.lon);
+  uWeather_Actions.Show_Map('openweathermap', weather.Action.OWM.Data_Town[vTab_Num.ToInteger].Current.coord.lat,
+    weather.Action.OWM.Data_Town[vTab_Num.ToInteger].Current.coord.lon);
 end;
 
 end.

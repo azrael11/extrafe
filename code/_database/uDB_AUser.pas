@@ -30,15 +30,6 @@ type
 type
   TDATABASE_ACTIVE_USER_LOCAL_ADDONS_TIME_TIME = record
     vType: String;
-    Both_Analog_Width: Integer;
-    Both_Analog_Height: Integer;
-    Both_Analog_X: Integer;
-    Both_Analog_Y: Integer;
-    Both_Digital_Width: Integer;
-    Both_Digital_Height: Integer;
-    Both_Digital_X: Integer;
-    Both_Digital_Y: Integer;
-    Both_Selection: String;
     Analog_Width: Integer;
     Analog_Height: Integer;
     Analog_X: Integer;
@@ -92,9 +83,10 @@ type
   TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_YAHOO = record
     Iconset_Count: Integer;
     Iconset: String;
+    Iconset_Selected: Integer;
     Iconsets: TStringList;
     Towns_Count: Integer;
-    System: String;
+    Metric: String;
     Degree: String;
     Towns: array of TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_TOWNS_DATA;
   end;
@@ -103,9 +95,10 @@ type
   TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_OPENWEATHERMAP = record
     Iconset_Count: Integer;
     Iconset: String;
-    Towns_Count: Integer;
-    System: String;
+    Iconset_Selected: Integer;
+    Metric: String;
     Degree: String;
+    Towns_Count: Integer;
     API: String;
     Language: String;
     Towns: array of TDATABASE_ACTIVE_USER_LOCAL_ADDONS_WEATHER_TOWNS_DATA;
@@ -269,7 +262,7 @@ type
     Zinc_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_ZINC;
     Daphne: Boolean;
     Daphne_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_DAPHNE;
-    Kronos: Boolean;
+    Winkawaks: Boolean;
     Kronos_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_KRONOS;
     Raine: Boolean;
     Raine_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_RAINE;
@@ -286,7 +279,7 @@ type
     Acorn_Archimedes: Boolean;
     Amiga: Boolean;
     Amstrad: Boolean;
-    Atari_800XL: Boolean;
+    Atari_8Bit: Boolean;
     Atart_ST: Boolean;
     Commodore_64: Boolean;
     MsDos: Boolean;
@@ -521,7 +514,7 @@ begin
   Local.EMULATORS.Arcade_D.FBA := ExtraFE_Query_Local.FieldByName('FBA').AsBoolean;
   Local.EMULATORS.Arcade_D.Zinc := ExtraFE_Query_Local.FieldByName('ZINC').AsBoolean;
   Local.EMULATORS.Arcade_D.Daphne := ExtraFE_Query_Local.FieldByName('DAPHNE').AsBoolean;
-  Local.EMULATORS.Arcade_D.Kronos := ExtraFE_Query_Local.FieldByName('KRONOS').AsBoolean;
+  Local.EMULATORS.Arcade_D.Winkawaks := ExtraFE_Query_Local.FieldByName('WINKAWAKS').AsBoolean;
   Local.EMULATORS.Arcade_D.Raine := ExtraFE_Query_Local.FieldByName('RAINE').AsBoolean;
   Local.EMULATORS.Arcade_D.Model2 := ExtraFE_Query_Local.FieldByName('MODEL2').AsBoolean;
   Local.EMULATORS.Arcade_D.SuperModel := ExtraFE_Query_Local.FieldByName('SUPERMODEL').AsBoolean;
@@ -536,7 +529,7 @@ begin
   Local.EMULATORS.Computers_D.Acorn_Archimedes := ExtraFE_Query_Local.FieldByName('ACORN_ARCHIMEDES').AsBoolean;
   Local.EMULATORS.Computers_D.Amiga := ExtraFE_Query_Local.FieldByName('AMIGA').AsBoolean;
   Local.EMULATORS.Computers_D.Amstrad := ExtraFE_Query_Local.FieldByName('AMSTRAD').AsBoolean;
-  Local.EMULATORS.Computers_D.Atari_800XL := ExtraFE_Query_Local.FieldByName('ATARI_800XL').AsBoolean;
+  Local.EMULATORS.Computers_D.Atari_8Bit := ExtraFE_Query_Local.FieldByName('ATARI_8BIT').AsBoolean;
   Local.EMULATORS.Computers_D.Atart_ST := ExtraFE_Query_Local.FieldByName('ATARI_ST').AsBoolean;
   Local.EMULATORS.Computers_D.Commodore_64 := ExtraFE_Query_Local.FieldByName('COMMODORE_64').AsBoolean;
   Local.EMULATORS.Computers_D.MsDos := ExtraFE_Query_Local.FieldByName('MSDOS').AsBoolean;
@@ -565,7 +558,7 @@ begin
   Local.EMULATORS.Consoles_D.Gamecube := ExtraFE_Query_Local.FieldByName('GAMECUBE').AsBoolean;
   Local.EMULATORS.Consoles_D.Wii := ExtraFE_Query_Local.FieldByName('WII').AsBoolean;
   Local.EMULATORS.Consoles_D.Wii_U := ExtraFE_Query_Local.FieldByName('WII_U').AsBoolean;
-  Local.EMULATORS.Consoles_D.Nintendo_Switch := ExtraFE_Query_Local.FieldByName('NINTENDO SWITCH').AsBoolean;
+  Local.EMULATORS.Consoles_D.Nintendo_Switch := ExtraFE_Query_Local.FieldByName('NINTENDO_SWITCH').AsBoolean;
   Local.EMULATORS.Consoles_D.PC_Engine := ExtraFE_Query_Local.FieldByName('PC_ENGINE').AsBoolean;
   Local.EMULATORS.Consoles_D.PC_Engine_CD := ExtraFE_Query_Local.FieldByName('PC_ENGINE_CD').AsBoolean;
   Local.EMULATORS.Consoles_D.PX_FX := ExtraFE_Query_Local.FieldByName('PC_FX').AsBoolean;
