@@ -442,6 +442,7 @@ begin
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER_YAHOO', '','');
   uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER_OWM', '','');
 
+
   { Get Yahoo Iconsets }
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := TStringList.Create;
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := uWindows.Folder_Names(uDB_AUser.Local.ADDONS.Weather_D.p_Icons + 'yahoo\');

@@ -329,15 +329,15 @@ begin
     begin
       vWeather_Ani_Stop := False;
       uWeather_Sounds_PlayEffect('', '', False);
-      uWeather_Sounds_PlayMouse('Slide');
+      BASS_ChannelPlay(weather.Sound.mouse[0], True);
       if vWeather.Scene.Control.TabIndex = 1 then
         vWeather.Scene.Arrow_Left.Visible := False
       else
         vWeather.Scene.Arrow_Left.Visible := True;
       vWeather.Scene.Arrow_Right.Visible := True;
       vWeather.Scene.Arrow_Left_Glow.Enabled := True;
-      vWeather.Scene.Control.Previous;
       Close_Map;
+      vWeather.Scene.Control.Previous;
     end;
   end;
 end;
@@ -429,10 +429,12 @@ begin
   uDB_AUser.Local.ADDONS.Weather_D.p_Temp := uDB.ExtraFE_Query_Local.FieldByName('PATH_TEMP').AsString;
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET_COUNT').AsInteger;
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Selected := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET_SELECTED').AsInteger;
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Degree := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_DEGREE').AsString;
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_METRIC').AsString;
   uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET_COUNT').AsInteger;
   uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Selected := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET_SELECTED').AsInteger;
   uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric := uDB.ExtraFE_Query_Local.FieldByName('OWM_METRIC').AsString;
   uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Degree := uDB.ExtraFE_Query_Local.FieldByName('OWM_DEGREE').AsString;
   uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.API := uDB.ExtraFE_Query_Local.FieldByName('OWM_API').AsString;
