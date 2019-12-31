@@ -1,0 +1,11 @@
+unit uEmu_Emu;
+
+interface
+uses
+  System.Classes;
+
+//function
+
+implementation
+
+end.

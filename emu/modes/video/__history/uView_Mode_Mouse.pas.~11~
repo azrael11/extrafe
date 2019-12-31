@@ -1,0 +1,72 @@
+unit uView_Mode_Mouse;
+
+interface
+uses
+  System.Classes;
+
+type
+  TEMU_VIEW_MODE_VIDEO_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_TEXT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_MOUSE = record
+    Image: TEMU_VIEW_MODE_VIDEO_IMAGE;
+    Text: TEMU_VIEW_MODE_VIDEO_TEXT;
+  end;
+
+var
+ Emu_VM_Video_Mouse: TEMU_VIEW_MODE_VIDEO_MOUSE;
+
+implementation
+
+{ TEMU_VIEW_MODE_VIDEO_IMAGE }
+
+procedure TEMU_VIEW_MODE_VIDEO_IMAGE.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TEMU_VIEW_MODE_VIDEO_IMAGE.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TEMU_VIEW_MODE_VIDEO_IMAGE.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+{ TEMU_VIEW_MODE_VIDEO_TEXT }
+
+procedure TEMU_VIEW_MODE_VIDEO_TEXT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TEMU_VIEW_MODE_VIDEO_TEXT.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TEMU_VIEW_MODE_VIDEO_TEXT.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+initialization
+
+Emu_VM_Video_Mouse.Image := TEMU_VIEW_MODE_VIDEO_IMAGE.Create;
+
+finalization
+
+end.

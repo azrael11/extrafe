@@ -2,10 +2,11 @@ program ExtraFE;
 
 uses
   System.StartUpCopy,
+  System.SysUtils,
   CodeSiteLogging,
   FMX.Forms,
   JCLSysInfo,
-  main in 'main.pas' {Main_Form} ,
+  main in 'main.pas' {Main_Form},
   uLoad in 'loading\uLoad.pas',
   uWindows in 'code\_os\uWindows.pas',
   uMain in 'main\uMain.pas',
@@ -34,7 +35,7 @@ uses
   uDB_AUser in 'code\_database\uDB_AUser.pas',
   uWeather_Config_Iconsets in 'addons\weather\configuration\uWeather_Config_Iconsets.pas',
   uWeather_Config_Options in 'addons\weather\configuration\uWeather_Config_Options.pas',
-  emu in 'emu.pas' {Emu_Form} ,
+  emu in 'emu.pas' {Emu_Form},
   uEmu_SetAll in 'emu\uEmu_SetAll.pas',
   uEmu_Actions in 'emu\uEmu_Actions.pas',
   uEmu_Arcade_Mame_Config in 'emu\arcade\mame\uEmu_Arcade_Mame_Config.pas',
@@ -105,10 +106,8 @@ uses
   uWeather_Sounds in 'addons\weather\uWeather_Sounds.pas',
   uMain_Config_Mouse in 'main\configuration\uMain_Config_Mouse.pas',
   uMain_AllTypes in 'main\uMain_AllTypes.pas',
-  uMain_Config_Emulation_Arcade_Scripts_Mame_Install
-    in 'main\configuration\emulation\arcade_scripts\mame\uMain_Config_Emulation_Arcade_Scripts_Mame_Install.pas',
-  uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall
-    in 'main\configuration\emulation\arcade_scripts\mame\uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall.pas',
+  uMain_Config_Emulation_Arcade_Scripts_Mame_Install in 'main\configuration\emulation\arcade_scripts\mame\uMain_Config_Emulation_Arcade_Scripts_Mame_Install.pas',
+  uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall in 'main\configuration\emulation\arcade_scripts\mame\uMain_Config_Emulation_Arcade_Scripts_Mame_Uninstall.pas',
   uMain_Config_Emulation_Arcade_Scripts_Mouse in 'main\configuration\emulation\arcade_scripts\uMain_Config_Emulation_Arcade_Scripts_Mouse.pas',
   uSnippet_StringGrid in 'code\_snippets\uSnippet_StringGrid.pas',
   uEmu_Arcade_Mame_Ini in 'emu\arcade\mame\uEmu_Arcade_Mame_Ini.pas',
@@ -163,31 +162,32 @@ uses
   uWeather_Providers_Yahoo_Config in 'addons\weather\providers\uWeather_Providers_Yahoo_Config.pas',
   uWeather_Providers_OpenWeatherMap_Config in 'addons\weather\providers\uWeather_Providers_OpenWeatherMap_Config.pas',
   uMain_Config_Emulation_Consoles_Scripts_Mouse in 'main\configuration\emulation\console_scritps\uMain_Config_Emulation_Consoles_Scripts_Mouse.pas',
-  uMain_Config_Emulation_Consoles_Scripts_Nes_Install
-    in 'main\configuration\emulation\console_scritps\nes\uMain_Config_Emulation_Consoles_Scripts_Nes_Install.pas',
+  uMain_Config_Emulation_Consoles_Scripts_Nes_Install in 'main\configuration\emulation\console_scritps\nes\uMain_Config_Emulation_Consoles_Scripts_Nes_Install.pas',
   uEmu_Consoles_Nes_AllTypes in 'emu\consoles\nes\uEmu_Consoles_Nes_AllTypes.pas',
   uEmu_Consoles_Snes_AllTypes in 'emu\consoles\snes\uEmu_Consoles_Snes_AllTypes.pas',
   uEmu_Consoles_MasterSystem_AllTypes in 'emu\consoles\master_system\uEmu_Consoles_MasterSystem_AllTypes.pas',
   uEmu_Consoles_MegaDrive_AllTypes in 'emu\consoles\mega_drive\uEmu_Consoles_MegaDrive_AllTypes.pas',
-  load in 'load.pas' {Loading} ,
+  load in 'load.pas' {Loading},
   uCalendar_Actions in 'addons\calendar\uCalendar_Actions.pas',
   uTIme_Time_Config_General in 'addons\time\time\config\uTIme_Time_Config_General.pas',
   uTIme_Time_Config_Digital in 'addons\time\time\config\uTIme_Time_Config_Digital.pas',
   uTIme_Time_Config_Analog in 'addons\time\time\config\uTIme_Time_Config_Analog.pas',
   uEmu_Arcade_Mame_Lists in 'emu\arcade\mame\uEmu_Arcade_Mame_Lists.pas',
   uDB_Check in 'code\_database\uDB_Check.pas',
-  uMain_Widgets in 'main\uMain_Widgets.pas';
+  uMain_Widgets in 'main\uMain_Widgets.pas',
+  uView_Mode_Video in 'emu\modes\video\uView_Mode_Video.pas',
+  uView_Mode_Video_AllTypes in 'emu\modes\video\uView_Mode_Video_AllTypes.pas',
+  uView_Mode_Video_Mouse in 'emu\modes\video\uView_Mode_Video_Mouse.pas',
+  uEmu_Mouse in 'emu\uEmu_Mouse.pas',
+  uEmu_Emu in 'emu\uEmu_Emu.pas';
 
 {$R *.res}
 
+var
+  Destination: TCodeSiteDestination;
+
 begin
   Application.Initialize;
-{$IFDEF DEBUG}
-  CodeSite.Enabled := True;
-  CodeSite.Clear;
-{$ELSE}
-  CodeSite.Enabled := False;
-{$ENDIF}
   // Disable the KMP_AFFINITY for non Intel CPUS
   if CPUID.CpuType <> CPU_TYPE_INTEL then
     SetEnvironmentVar('KMP_AFFINITY', 'disabled');
@@ -195,6 +195,23 @@ begin
   Application.CreateForm(TMain_Form, Main_Form);
   Application.CreateForm(TEmu_Form, Emu_Form);
   Application.MainForm := load.Loading;
+{$IFDEF DEBUG}
+  CodeSite.Enabled := True;
+  CodeSite.Enabled := CodeSite.Installed;
+  if CodeSite.Enabled then
+  begin
+  {Here can activate the log destination file}
+//    Destination := TCodeSiteDestination.Create(Main_Form);
+//    Destination.LogFile.Active := True;
+//    Destination.LogFile.FileName := ChangeFileExt('ExtraFE', '.xml');
+//    Destination.LogFile.FilePath := ExtractFilePath(ParamStr(0));
+//    CodeSite.Destination := Destination;
+    CodeSite.Clear;
+  end;
+
+{$ELSE}
+  CodeSite.Enabled := False;
+{$ENDIF}
   Application.Run;
 
 end.

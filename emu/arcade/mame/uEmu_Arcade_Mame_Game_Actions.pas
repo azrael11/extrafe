@@ -75,7 +75,7 @@ begin
     0:
       begin
         uEmu_Arcade_Mame_Game_SetAll.Create_Loading_Game;
-        play_count := uDB.Query_Select(uDB.Arcade_Query, 'play_count', 'mame_status', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+        play_count := uDB.Query_Select(uDB.Arcade_Query, 'play_count_id_'+ uDB_AUser.Local.Num.ToString , 'mame_status', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
         vMame.Scene.PopUp.Line3_Value.Text := play_count;
         vGame_Timer := TTimer.Create(Emu_Form);
         vGame_Timer.Interval := 2500;

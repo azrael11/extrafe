@@ -201,12 +201,13 @@ type
     Active: Boolean;
     Position: Integer;
     Unique: Integer;
+    Unique_Multi: Integer;
     Path: String;
     Name: String;
     Version: String;
     Ini: String;
+    View_Mode: String;
     p_Path: String;
-    p_Database: String;
     p_Images: String;
     p_Sounds: String;
   end;
@@ -253,6 +254,11 @@ type
 
 type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE = record
+    Count: Integer;
+    Active: Boolean;
+    Position: Integer;
+    Name: String;
+    p_Images: String;
     Media: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_MEDIA;
     Mame: Boolean;
     Mame_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_MAME;
@@ -276,6 +282,11 @@ type
 
 type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_COMPUTERS = record
+    Count: Integer;
+    Active: Boolean;
+    Position: Integer;
+    Name: String;
+    p_Images: String;
     Acorn_Archimedes: Boolean;
     Amiga: Boolean;
     Amstrad: Boolean;
@@ -291,6 +302,11 @@ type
 
 type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_CONSOLES = record
+    Count: Integer;
+    Active: Boolean;
+    Position: Integer;
+    Name: String;
+    p_Images: String;
     Panasonic_3DO: Boolean;
     Amiga_CD32: Boolean;
     Atari_2600: Boolean;
@@ -325,6 +341,11 @@ type
 
 type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_HANDHELDS = record
+    Count: Integer;
+    Active: Boolean;
+    Position: Integer;
+    Name: String;
+    p_Images: String;
     Atari_Lynx: Boolean;
     Neo_Geo_Pocket: Boolean;
     GameGear: Boolean;
@@ -342,6 +363,11 @@ type
 
 type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_PINBALLS = record
+    Count: Integer;
+    Active: Boolean;
+    Position: Integer;
+    Name: String;
+    p_Images: String;
     Visual_Pinball: Boolean;
     Future_Pinball: Boolean;
   end;
@@ -349,6 +375,8 @@ type
 type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS = record
     Count: Integer;
+    Active_Unique: Integer;
+    Active_Unique_Multi: Integer;
     Arcade: Boolean;
     Arcade_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE;
     Computers: Boolean;
@@ -427,6 +455,7 @@ implementation
 uses
   load,
   uLoad,
+  uLoad_AllTypes,
   uDB,
   uInternet_files;
 
@@ -462,161 +491,220 @@ var
   vQuery: String;
 begin
   vQuery := 'SELECT * FROM USERS WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.Num := ExtraFE_Query_Local.FieldByName('USER_ID').AsInteger;
-  Local.ID := ExtraFE_Query_Local.FieldByName('UNIQUE_ID').AsInteger;
-  Local.Username := ExtraFE_Query_Local.FieldByName('USERNAME').AsString;
-  Local.Password := ExtraFE_Query_Local.FieldByName('PASSWORD').AsString;
-  Local.Email := ExtraFE_Query_Local.FieldByName('EMAIL').AsString;
-  Local.IP := ExtraFE_Query_Local.FieldByName('IP').AsString;
-  Local.Country := ExtraFE_Query_Local.FieldByName('COUNTRY').AsString;
-  Local.Name := ExtraFE_Query_Local.FieldByName('NAME').AsString;
-  Local.Surname := ExtraFE_Query_Local.FieldByName('SURNAME').AsString;
-  Local.Avatar := ExtraFE_Query_Local.FieldByName('AVATAR').AsString;
-  Local.Registered := ExtraFE_Query_Local.FieldByName('REGISTERED').AsString;
-  Local.Last_Visit := ExtraFE_Query_Local.FieldByName('LAST_VISIT').AsString;
-  Local.Last_Visit_Online := ExtraFE_Query_Local.FieldByName('LAST_VISIT_ONLINE').AsString;
-  Local.Genre := ExtraFE_Query_Local.FieldByName('GENDER').AsBoolean;
-  Local.Active := ExtraFE_Query_Local.FieldByName('ACTIVE_ONLINE').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.Num := uDB.ExtraFE_Query_Local.FieldByName('USER_ID').AsInteger;
+  Local.ID := uDB.ExtraFE_Query_Local.FieldByName('UNIQUE_ID').AsInteger;
+  Local.Username := uDB.ExtraFE_Query_Local.FieldByName('USERNAME').AsString;
+  Local.Password := uDB.ExtraFE_Query_Local.FieldByName('PASSWORD').AsString;
+  Local.Email := uDB.ExtraFE_Query_Local.FieldByName('EMAIL').AsString;
+  Local.IP := uDB.ExtraFE_Query_Local.FieldByName('IP').AsString;
+  Local.Country := uDB.ExtraFE_Query_Local.FieldByName('COUNTRY').AsString;
+  Local.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
+  Local.Surname := uDB.ExtraFE_Query_Local.FieldByName('SURNAME').AsString;
+  Local.Avatar := uDB.ExtraFE_Query_Local.FieldByName('AVATAR').AsString;
+  Local.Registered := uDB.ExtraFE_Query_Local.FieldByName('REGISTERED').AsString;
+  Local.Last_Visit := uDB.ExtraFE_Query_Local.FieldByName('LAST_VISIT').AsString;
+  Local.Last_Visit_Online := uDB.ExtraFE_Query_Local.FieldByName('LAST_VISIT_ONLINE').AsString;
+  Local.Genre := uDB.ExtraFE_Query_Local.FieldByName('GENDER').AsBoolean;
+  Local.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_ONLINE').AsBoolean;
 
   vQuery := 'SELECT * FROM OPTIONS WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.OPTIONS.Visual.Virtual_Keyboard := ExtraFE_Query_Local.FieldByName('VIRTUAL_KEYBOARD').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.OPTIONS.Visual.Virtual_Keyboard := uDB.ExtraFE_Query_Local.FieldByName('VIRTUAL_KEYBOARD').AsBoolean;
 
   vQuery := 'SELECT * FROM EMULATORS WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.EMULATORS.Count := ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
-  Local.EMULATORS.Arcade := ExtraFE_Query_Local.FieldByName('ARCADE').AsBoolean;
-  Local.EMULATORS.Computers := ExtraFE_Query_Local.FieldByName('COMPUTERS').AsBoolean;
-  Local.EMULATORS.Consoles := ExtraFE_Query_Local.FieldByName('CONSOLES').AsBoolean;
-  Local.EMULATORS.Handhelds := ExtraFE_Query_Local.FieldByName('HANDHELDS').AsBoolean;
-  Local.EMULATORS.Pinballs := ExtraFE_Query_Local.FieldByName('PINBALLS').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.EMULATORS.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  Local.EMULATORS.Active_Unique := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_UNIQUE').AsInteger;
+  Local.EMULATORS.Active_Unique_Multi := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_UNIQUE_MULTI').AsInteger;
+  Local.EMULATORS.Arcade := uDB.ExtraFE_Query_Local.FieldByName('ARCADE').AsBoolean;
+  Local.EMULATORS.Computers := uDB.ExtraFE_Query_Local.FieldByName('COMPUTERS').AsBoolean;
+  Local.EMULATORS.Consoles := uDB.ExtraFE_Query_Local.FieldByName('CONSOLES').AsBoolean;
+  Local.EMULATORS.Handhelds := uDB.ExtraFE_Query_Local.FieldByName('HANDHELDS').AsBoolean;
+  Local.EMULATORS.Pinballs := uDB.ExtraFE_Query_Local.FieldByName('PINBALLS').AsBoolean;
 
   vQuery := 'SELECT * FROM ARCADE WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.EMULATORS.Arcade_D.Mame := ExtraFE_Query_Local.FieldByName('MAME').AsBoolean;
-  Local.EMULATORS.Arcade_D.FBA := ExtraFE_Query_Local.FieldByName('FBA').AsBoolean;
-  Local.EMULATORS.Arcade_D.Zinc := ExtraFE_Query_Local.FieldByName('ZINC').AsBoolean;
-  Local.EMULATORS.Arcade_D.Daphne := ExtraFE_Query_Local.FieldByName('DAPHNE').AsBoolean;
-  Local.EMULATORS.Arcade_D.Winkawaks := ExtraFE_Query_Local.FieldByName('WINKAWAKS').AsBoolean;
-  Local.EMULATORS.Arcade_D.Raine := ExtraFE_Query_Local.FieldByName('RAINE').AsBoolean;
-  Local.EMULATORS.Arcade_D.Model2 := ExtraFE_Query_Local.FieldByName('MODEL2').AsBoolean;
-  Local.EMULATORS.Arcade_D.SuperModel := ExtraFE_Query_Local.FieldByName('SUPERMODEL').AsBoolean;
-  Local.EMULATORS.Arcade_D.Demul := ExtraFE_Query_Local.FieldByName('DEMUL').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.EMULATORS.Arcade_D.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  Local.EMULATORS.Arcade_D.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE').AsBoolean;
+  Local.EMULATORS.Arcade_D.Position := uDB.ExtraFE_Query_Local.FieldByName('POSITION').AsInteger;
+  Local.EMULATORS.Arcade_D.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
+  Local.EMULATORS.Arcade_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
+  Local.EMULATORS.Arcade_D.Mame := uDB.ExtraFE_Query_Local.FieldByName('MAME').AsBoolean;
+  Local.EMULATORS.Arcade_D.FBA := uDB.ExtraFE_Query_Local.FieldByName('FBA').AsBoolean;
+  Local.EMULATORS.Arcade_D.Zinc := uDB.ExtraFE_Query_Local.FieldByName('ZINC').AsBoolean;
+  Local.EMULATORS.Arcade_D.Daphne := uDB.ExtraFE_Query_Local.FieldByName('DAPHNE').AsBoolean;
+  Local.EMULATORS.Arcade_D.Winkawaks := uDB.ExtraFE_Query_Local.FieldByName('WINKAWAKS').AsBoolean;
+  Local.EMULATORS.Arcade_D.Raine := uDB.ExtraFE_Query_Local.FieldByName('RAINE').AsBoolean;
+  Local.EMULATORS.Arcade_D.Model2 := uDB.ExtraFE_Query_Local.FieldByName('MODEL2').AsBoolean;
+  Local.EMULATORS.Arcade_D.SuperModel := uDB.ExtraFE_Query_Local.FieldByName('SUPERMODEL').AsBoolean;
+  Local.EMULATORS.Arcade_D.Demul := uDB.ExtraFE_Query_Local.FieldByName('DEMUL').AsBoolean;
+
+  if Local.EMULATORS.Arcade_D.p_Images = '' then
+  begin
+    Local.EMULATORS.Arcade_D.p_Images := extrafe.prog.Path + 'emu\arcade\images\';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'PATH_IMAGES', Local.EMULATORS.Arcade_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  end;
 
   vQuery := 'SELECT * FROM COMPUTERS WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.EMULATORS.Computers_D.Acorn_Archimedes := ExtraFE_Query_Local.FieldByName('ACORN_ARCHIMEDES').AsBoolean;
-  Local.EMULATORS.Computers_D.Amiga := ExtraFE_Query_Local.FieldByName('AMIGA').AsBoolean;
-  Local.EMULATORS.Computers_D.Amstrad := ExtraFE_Query_Local.FieldByName('AMSTRAD').AsBoolean;
-  Local.EMULATORS.Computers_D.Atari_8Bit := ExtraFE_Query_Local.FieldByName('ATARI_8BIT').AsBoolean;
-  Local.EMULATORS.Computers_D.Atart_ST := ExtraFE_Query_Local.FieldByName('ATARI_ST').AsBoolean;
-  Local.EMULATORS.Computers_D.Commodore_64 := ExtraFE_Query_Local.FieldByName('COMMODORE_64').AsBoolean;
-  Local.EMULATORS.Computers_D.MsDos := ExtraFE_Query_Local.FieldByName('MSDOS').AsBoolean;
-  Local.EMULATORS.Computers_D.PCWindows := ExtraFE_Query_Local.FieldByName('OLD_PC_WINDOWS').AsBoolean;
-  Local.EMULATORS.Computers_D.Scummvm := ExtraFE_Query_Local.FieldByName('SCUMMVM').AsBoolean;
-  Local.EMULATORS.Computers_D.Spectrum := ExtraFE_Query_Local.FieldByName('SPECTRUM').AsBoolean;
-  Local.EMULATORS.Computers_D.X68000 := ExtraFE_Query_Local.FieldByName('X68000').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.EMULATORS.Computers_D.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  Local.EMULATORS.Computers_D.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE').AsBoolean;
+  Local.EMULATORS.Computers_D.Position := uDB.ExtraFE_Query_Local.FieldByName('POSITION').AsInteger;
+  Local.EMULATORS.Computers_D.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
+  Local.EMULATORS.Computers_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
+  Local.EMULATORS.Computers_D.Acorn_Archimedes := uDB.ExtraFE_Query_Local.FieldByName('ACORN_ARCHIMEDES').AsBoolean;
+  Local.EMULATORS.Computers_D.Amiga := uDB.ExtraFE_Query_Local.FieldByName('AMIGA').AsBoolean;
+  Local.EMULATORS.Computers_D.Amstrad := uDB.ExtraFE_Query_Local.FieldByName('AMSTRAD').AsBoolean;
+  Local.EMULATORS.Computers_D.Atari_8Bit := uDB.ExtraFE_Query_Local.FieldByName('ATARI_8BIT').AsBoolean;
+  Local.EMULATORS.Computers_D.Atart_ST := uDB.ExtraFE_Query_Local.FieldByName('ATARI_ST').AsBoolean;
+  Local.EMULATORS.Computers_D.Commodore_64 := uDB.ExtraFE_Query_Local.FieldByName('COMMODORE_64').AsBoolean;
+  Local.EMULATORS.Computers_D.MsDos := uDB.ExtraFE_Query_Local.FieldByName('MSDOS').AsBoolean;
+  Local.EMULATORS.Computers_D.PCWindows := uDB.ExtraFE_Query_Local.FieldByName('OLD_PC_WINDOWS').AsBoolean;
+  Local.EMULATORS.Computers_D.Scummvm := uDB.ExtraFE_Query_Local.FieldByName('SCUMMVM').AsBoolean;
+  Local.EMULATORS.Computers_D.Spectrum := uDB.ExtraFE_Query_Local.FieldByName('SPECTRUM').AsBoolean;
+  Local.EMULATORS.Computers_D.X68000 := uDB.ExtraFE_Query_Local.FieldByName('X68000').AsBoolean;
+
+  if Local.EMULATORS.Computers_D.p_Images = '' then
+  begin
+    Local.EMULATORS.Computers_D.p_Images := extrafe.prog.Path + 'emu\computers\images\';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'computers', 'PATH_IMAGES', Local.EMULATORS.Computers_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  end;
 
   vQuery := 'SELECT * FROM CONSOLES WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.EMULATORS.Consoles_D.Panasonic_3DO := ExtraFE_Query_Local.FieldByName('3DO').AsBoolean;
-  Local.EMULATORS.Consoles_D.Amiga_CD32 := ExtraFE_Query_Local.FieldByName('AMIGA_CD32').AsBoolean;
-  Local.EMULATORS.Consoles_D.Atari_2600 := ExtraFE_Query_Local.FieldByName('ATARI_2600').AsBoolean;
-  Local.EMULATORS.Consoles_D.Atari_5200 := ExtraFE_Query_Local.FieldByName('ATARI_5200').AsBoolean;
-  Local.EMULATORS.Consoles_D.Atari_7800 := ExtraFE_Query_Local.FieldByName('ATARI_7800').AsBoolean;
-  Local.EMULATORS.Consoles_D.Atari_Jaguar := ExtraFE_Query_Local.FieldByName('ATARI_JAGUAR').AsBoolean;
-  Local.EMULATORS.Consoles_D.Neo_Geo := ExtraFE_Query_Local.FieldByName('NEO_GEO').AsBoolean;
-  Local.EMULATORS.Consoles_D.Neo_Geo_CD := ExtraFE_Query_Local.FieldByName('NEO_GEO_CD').AsBoolean;
-  Local.EMULATORS.Consoles_D.NES := ExtraFE_Query_Local.FieldByName('NES').AsBoolean;
-  Local.EMULATORS.Consoles_D.SNES := ExtraFE_Query_Local.FieldByName('SNES').AsBoolean;
-  Local.EMULATORS.Consoles_D.Nintendo_64 := ExtraFE_Query_Local.FieldByName('NINTENDO_64').AsBoolean;
-  Local.EMULATORS.Consoles_D.Gamecube := ExtraFE_Query_Local.FieldByName('GAMECUBE').AsBoolean;
-  Local.EMULATORS.Consoles_D.Wii := ExtraFE_Query_Local.FieldByName('WII').AsBoolean;
-  Local.EMULATORS.Consoles_D.Wii_U := ExtraFE_Query_Local.FieldByName('WII_U').AsBoolean;
-  Local.EMULATORS.Consoles_D.Nintendo_Switch := ExtraFE_Query_Local.FieldByName('NINTENDO_SWITCH').AsBoolean;
-  Local.EMULATORS.Consoles_D.PC_Engine := ExtraFE_Query_Local.FieldByName('PC_ENGINE').AsBoolean;
-  Local.EMULATORS.Consoles_D.PC_Engine_CD := ExtraFE_Query_Local.FieldByName('PC_ENGINE_CD').AsBoolean;
-  Local.EMULATORS.Consoles_D.PX_FX := ExtraFE_Query_Local.FieldByName('PC_FX').AsBoolean;
-  Local.EMULATORS.Consoles_D.Playstation := ExtraFE_Query_Local.FieldByName('PLAYSTATION').AsBoolean;
-  Local.EMULATORS.Consoles_D.Playstation_2 := ExtraFE_Query_Local.FieldByName('PLAYSTATION_2').AsBoolean;
-  Local.EMULATORS.Consoles_D.Playstation_3 := ExtraFE_Query_Local.FieldByName('PLAYSTATION_3').AsBoolean;
-  Local.EMULATORS.Consoles_D.SG_1000 := ExtraFE_Query_Local.FieldByName('SG_1000').AsBoolean;
-  Local.EMULATORS.Consoles_D.Master_System := ExtraFE_Query_Local.FieldByName('MASTER_SYSTEM').AsBoolean;
-  Local.EMULATORS.Consoles_D.Mega_Drive := ExtraFE_Query_Local.FieldByName('MEGA_DRIVE').AsBoolean;
-  Local.EMULATORS.Consoles_D.Mega_Drive_32X := ExtraFE_Query_Local.FieldByName('MEGA_DRIVE_32X').AsBoolean;
-  Local.EMULATORS.Consoles_D.Mega_Drive_CD := ExtraFE_Query_Local.FieldByName('MEGA_DRIVE_CD').AsBoolean;
-  Local.EMULATORS.Consoles_D.Saturn := ExtraFE_Query_Local.FieldByName('SATURN').AsBoolean;
-  Local.EMULATORS.Consoles_D.Dreamcast := ExtraFE_Query_Local.FieldByName('DREAMCAST').AsBoolean;
-  Local.EMULATORS.Consoles_D.XBOX := ExtraFE_Query_Local.FieldByName('XBOX').AsBoolean;
-  Local.EMULATORS.Consoles_D.XBOX_ONE := ExtraFE_Query_Local.FieldByName('XBOX_ONE').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.EMULATORS.Consoles_D.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  Local.EMULATORS.Consoles_D.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE').AsBoolean;
+  Local.EMULATORS.Consoles_D.Position := uDB.ExtraFE_Query_Local.FieldByName('POSITION').AsInteger;
+  Local.EMULATORS.Consoles_D.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
+  Local.EMULATORS.Consoles_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
+  Local.EMULATORS.Consoles_D.Panasonic_3DO := uDB.ExtraFE_Query_Local.FieldByName('3DO').AsBoolean;
+  Local.EMULATORS.Consoles_D.Amiga_CD32 := uDB.ExtraFE_Query_Local.FieldByName('AMIGA_CD32').AsBoolean;
+  Local.EMULATORS.Consoles_D.Atari_2600 := uDB.ExtraFE_Query_Local.FieldByName('ATARI_2600').AsBoolean;
+  Local.EMULATORS.Consoles_D.Atari_5200 := uDB.ExtraFE_Query_Local.FieldByName('ATARI_5200').AsBoolean;
+  Local.EMULATORS.Consoles_D.Atari_7800 := uDB.ExtraFE_Query_Local.FieldByName('ATARI_7800').AsBoolean;
+  Local.EMULATORS.Consoles_D.Atari_Jaguar := uDB.ExtraFE_Query_Local.FieldByName('ATARI_JAGUAR').AsBoolean;
+  Local.EMULATORS.Consoles_D.Neo_Geo := uDB.ExtraFE_Query_Local.FieldByName('NEO_GEO').AsBoolean;
+  Local.EMULATORS.Consoles_D.Neo_Geo_CD := uDB.ExtraFE_Query_Local.FieldByName('NEO_GEO_CD').AsBoolean;
+  Local.EMULATORS.Consoles_D.NES := uDB.ExtraFE_Query_Local.FieldByName('NES').AsBoolean;
+  Local.EMULATORS.Consoles_D.SNES := uDB.ExtraFE_Query_Local.FieldByName('SNES').AsBoolean;
+  Local.EMULATORS.Consoles_D.Nintendo_64 := uDB.ExtraFE_Query_Local.FieldByName('NINTENDO_64').AsBoolean;
+  Local.EMULATORS.Consoles_D.Gamecube := uDB.ExtraFE_Query_Local.FieldByName('GAMECUBE').AsBoolean;
+  Local.EMULATORS.Consoles_D.Wii := uDB.ExtraFE_Query_Local.FieldByName('WII').AsBoolean;
+  Local.EMULATORS.Consoles_D.Wii_U := uDB.ExtraFE_Query_Local.FieldByName('WII_U').AsBoolean;
+  Local.EMULATORS.Consoles_D.Nintendo_Switch := uDB.ExtraFE_Query_Local.FieldByName('NINTENDO_SWITCH').AsBoolean;
+  Local.EMULATORS.Consoles_D.PC_Engine := uDB.ExtraFE_Query_Local.FieldByName('PC_ENGINE').AsBoolean;
+  Local.EMULATORS.Consoles_D.PC_Engine_CD := uDB.ExtraFE_Query_Local.FieldByName('PC_ENGINE_CD').AsBoolean;
+  Local.EMULATORS.Consoles_D.PX_FX := uDB.ExtraFE_Query_Local.FieldByName('PC_FX').AsBoolean;
+  Local.EMULATORS.Consoles_D.Playstation := uDB.ExtraFE_Query_Local.FieldByName('PLAYSTATION').AsBoolean;
+  Local.EMULATORS.Consoles_D.Playstation_2 := uDB.ExtraFE_Query_Local.FieldByName('PLAYSTATION_2').AsBoolean;
+  Local.EMULATORS.Consoles_D.Playstation_3 := uDB.ExtraFE_Query_Local.FieldByName('PLAYSTATION_3').AsBoolean;
+  Local.EMULATORS.Consoles_D.SG_1000 := uDB.ExtraFE_Query_Local.FieldByName('SG_1000').AsBoolean;
+  Local.EMULATORS.Consoles_D.Master_System := uDB.ExtraFE_Query_Local.FieldByName('MASTER_SYSTEM').AsBoolean;
+  Local.EMULATORS.Consoles_D.Mega_Drive := uDB.ExtraFE_Query_Local.FieldByName('MEGA_DRIVE').AsBoolean;
+  Local.EMULATORS.Consoles_D.Mega_Drive_32X := uDB.ExtraFE_Query_Local.FieldByName('MEGA_DRIVE_32X').AsBoolean;
+  Local.EMULATORS.Consoles_D.Mega_Drive_CD := uDB.ExtraFE_Query_Local.FieldByName('MEGA_DRIVE_CD').AsBoolean;
+  Local.EMULATORS.Consoles_D.Saturn := uDB.ExtraFE_Query_Local.FieldByName('SATURN').AsBoolean;
+  Local.EMULATORS.Consoles_D.Dreamcast := uDB.ExtraFE_Query_Local.FieldByName('DREAMCAST').AsBoolean;
+  Local.EMULATORS.Consoles_D.XBOX := uDB.ExtraFE_Query_Local.FieldByName('XBOX').AsBoolean;
+  Local.EMULATORS.Consoles_D.XBOX_ONE := uDB.ExtraFE_Query_Local.FieldByName('XBOX_ONE').AsBoolean;
+
+  if Local.EMULATORS.Consoles_D.p_Images = '' then
+  begin
+    Local.EMULATORS.Consoles_D.p_Images := extrafe.prog.Path + 'emu\consoles\images\';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'consoles', 'PATH_IMAGES', Local.EMULATORS.Consoles_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  end;
 
   vQuery := 'SELECT * FROM HANDHELDS WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.EMULATORS.Handhelds_D.Atari_Lynx := ExtraFE_Query_Local.FieldByName('ATARI_LYNX').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Neo_Geo_Pocket := ExtraFE_Query_Local.FieldByName('NEO_GEO_POCKET').AsBoolean;
-  Local.EMULATORS.Handhelds_D.GameGear := ExtraFE_Query_Local.FieldByName('GAMEGEAR').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Game_And_Watch := ExtraFE_Query_Local.FieldByName('GAME_AND_WATCH').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Gameboy := ExtraFE_Query_Local.FieldByName('GAMEBOY').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Gameboy_Color := ExtraFE_Query_Local.FieldByName('GAMEBOY_COLOR').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Gameboy_VirtualBoy := ExtraFE_Query_Local.FieldByName('GAMEBOY_VIRTUALBOY').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Gameboy_Advance := ExtraFE_Query_Local.FieldByName('GAMEBOY_ADVANCE').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Nintendo_DS := ExtraFE_Query_Local.FieldByName('NINTENDO_DS').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Nintendo_3DS := ExtraFE_Query_Local.FieldByName('NINTENDO_3DS').AsBoolean;
-  Local.EMULATORS.Handhelds_D.PSP := ExtraFE_Query_Local.FieldByName('PSP').AsBoolean;
-  Local.EMULATORS.Handhelds_D.PSP_Vita := ExtraFE_Query_Local.FieldByName('PSP_VITA').AsBoolean;
-  Local.EMULATORS.Handhelds_D.Wonderswan := ExtraFE_Query_Local.FieldByName('WONDERSWAN').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.EMULATORS.Handhelds_D.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  Local.EMULATORS.Handhelds_D.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Position := uDB.ExtraFE_Query_Local.FieldByName('POSITION').AsInteger;
+  Local.EMULATORS.Handhelds_D.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
+  Local.EMULATORS.Handhelds_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
+  Local.EMULATORS.Handhelds_D.Atari_Lynx := uDB.ExtraFE_Query_Local.FieldByName('ATARI_LYNX').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Neo_Geo_Pocket := uDB.ExtraFE_Query_Local.FieldByName('NEO_GEO_POCKET').AsBoolean;
+  Local.EMULATORS.Handhelds_D.GameGear := uDB.ExtraFE_Query_Local.FieldByName('GAMEGEAR').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Game_And_Watch := uDB.ExtraFE_Query_Local.FieldByName('GAME_AND_WATCH').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Gameboy := uDB.ExtraFE_Query_Local.FieldByName('GAMEBOY').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Gameboy_Color := uDB.ExtraFE_Query_Local.FieldByName('GAMEBOY_COLOR').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Gameboy_VirtualBoy := uDB.ExtraFE_Query_Local.FieldByName('GAMEBOY_VIRTUALBOY').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Gameboy_Advance := uDB.ExtraFE_Query_Local.FieldByName('GAMEBOY_ADVANCE').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Nintendo_DS := uDB.ExtraFE_Query_Local.FieldByName('NINTENDO_DS').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Nintendo_3DS := uDB.ExtraFE_Query_Local.FieldByName('NINTENDO_3DS').AsBoolean;
+  Local.EMULATORS.Handhelds_D.PSP := uDB.ExtraFE_Query_Local.FieldByName('PSP').AsBoolean;
+  Local.EMULATORS.Handhelds_D.PSP_Vita := uDB.ExtraFE_Query_Local.FieldByName('PSP_VITA').AsBoolean;
+  Local.EMULATORS.Handhelds_D.Wonderswan := uDB.ExtraFE_Query_Local.FieldByName('WONDERSWAN').AsBoolean;
+
+  if Local.EMULATORS.Handhelds_D.p_Images = '' then
+  begin
+    Local.EMULATORS.Handhelds_D.p_Images := extrafe.prog.Path + 'emu\handhelds\images\';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'handhelds', 'PATH_IMAGES', Local.EMULATORS.Handhelds_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  end;
+
 
   vQuery := 'SELECT * FROM PINBALLS WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.EMULATORS.Pinballs_D.Visual_Pinball := ExtraFE_Query_Local.FieldByName('VISUAL_PINBALL').AsBoolean;
-  Local.EMULATORS.Pinballs_D.Future_Pinball := ExtraFE_Query_Local.FieldByName('FUTURE_PINBALL').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.EMULATORS.Pinballs_D.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  Local.EMULATORS.Pinballs_D.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE').AsBoolean;
+  Local.EMULATORS.Pinballs_D.Position := uDB.ExtraFE_Query_Local.FieldByName('POSITION').AsInteger;
+  Local.EMULATORS.Pinballs_D.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
+  Local.EMULATORS.Pinballs_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
+  Local.EMULATORS.Pinballs_D.Visual_Pinball := uDB.ExtraFE_Query_Local.FieldByName('VISUAL_PINBALL').AsBoolean;
+  Local.EMULATORS.Pinballs_D.Future_Pinball := uDB.ExtraFE_Query_Local.FieldByName('FUTURE_PINBALL').AsBoolean;
+
+  if Local.EMULATORS.Pinballs_D.p_Images = '' then
+  begin
+    Local.EMULATORS.Pinballs_D.p_Images := extrafe.prog.Path + 'emu\pinball\images\';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'pinballs', 'PATH_IMAGES', Local.EMULATORS.Pinballs_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  end;
+
 
   vQuery := 'SELECT * FROM ADDONS WHERE USER_ID=' + vUser_Num;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  Local.ADDONS.Active := ExtraFE_Query_Local.FieldByName('ACTIVE').AsInteger;
-  Local.ADDONS.Count := ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
-  Local.ADDONS.Time := ExtraFE_Query_Local.FieldByName('TIME').AsBoolean;
-  Local.ADDONS.Calendar := ExtraFE_Query_Local.FieldByName('CALENDAR').AsBoolean;
-  Local.ADDONS.Weather := ExtraFE_Query_Local.FieldByName('WEATHER').AsBoolean;
-  Local.ADDONS.Soundplayer := ExtraFE_Query_Local.FieldByName('SOUNDPLAYER').AsBoolean;
-  Local.ADDONS.Azplay := ExtraFE_Query_Local.FieldByName('AZPLAY').AsBoolean;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  Local.ADDONS.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE').AsInteger;
+  Local.ADDONS.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
+  Local.ADDONS.Time := uDB.ExtraFE_Query_Local.FieldByName('TIME').AsBoolean;
+  Local.ADDONS.Calendar := uDB.ExtraFE_Query_Local.FieldByName('CALENDAR').AsBoolean;
+  Local.ADDONS.Weather := uDB.ExtraFE_Query_Local.FieldByName('WEATHER').AsBoolean;
+  Local.ADDONS.Soundplayer := uDB.ExtraFE_Query_Local.FieldByName('SOUNDPLAYER').AsBoolean;
+  Local.ADDONS.Azplay := uDB.ExtraFE_Query_Local.FieldByName('AZPLAY').AsBoolean;
 end;
 
 function Find_User_Online_Num(vUser_ID: String): Integer;

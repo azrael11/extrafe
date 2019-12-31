@@ -209,8 +209,8 @@ begin
   Script_Mame_Uninstall.Main.Tab2.Check_1 := TCheckBox.Create(Script_Mame_Uninstall.Main.Tab2.Box);
   Script_Mame_Uninstall.Main.Tab2.Check_1.Name := 'Script_Mame_Uninstall_Main_Tab2_Check_1';
   Script_Mame_Uninstall.Main.Tab2.Check_1.Parent := Script_Mame_Uninstall.Main.Tab2.Box;
-  Script_Mame_Uninstall.Main.Tab2.Check_1.SetBounds(20, 30, 300, 24);
-  Script_Mame_Uninstall.Main.Tab2.Check_1.Text := 'Remove Mame emulator from ExtraFE.';
+  Script_Mame_Uninstall.Main.Tab2.Check_1.SetBounds(20, 30, 400, 24);
+  Script_Mame_Uninstall.Main.Tab2.Check_1.Text := 'Uninstall Mame emulator from ExtraFE.';
   Script_Mame_Uninstall.Main.Tab2.Check_1.IsChecked := True;
   Script_Mame_Uninstall.Main.Tab2.Check_1.Enabled := false;
   Script_Mame_Uninstall.Main.Tab2.Check_1.Visible := True;
@@ -218,8 +218,8 @@ begin
   Script_Mame_Uninstall.Main.Tab2.Check_2 := TCheckBox.Create(Script_Mame_Uninstall.Main.Tab2.Box);
   Script_Mame_Uninstall.Main.Tab2.Check_2.Name := 'Script_Mame_Uninstall_Main_Tab2_Check_2';
   Script_Mame_Uninstall.Main.Tab2.Check_2.Parent := Script_Mame_Uninstall.Main.Tab2.Box;
-  Script_Mame_Uninstall.Main.Tab2.Check_2.SetBounds(20, 60, 300, 24);
-  Script_Mame_Uninstall.Main.Tab2.Check_2.Text := 'Remove favorites, categories, e.t.c.';
+  Script_Mame_Uninstall.Main.Tab2.Check_2.SetBounds(20, 60, 400, 24);
+  Script_Mame_Uninstall.Main.Tab2.Check_2.Text := 'Remove favorites, play count, hidden games, e.t.c. from database.';
   Script_Mame_Uninstall.Main.Tab2.Check_2.Visible := True;
 
   Script_Mame_Uninstall.Main.Tab2.Check_3 := TCheckBox.Create(Script_Mame_Uninstall.Main.Tab2.Box);
@@ -237,7 +237,7 @@ begin
   Script_Mame_Uninstall.Main.Tab3.Box.Name := 'Script_Mame_Uninstall_Main_Tab3_Box';
   Script_Mame_Uninstall.Main.Tab3.Box.Parent := Script_Mame_Uninstall.Main.Tabs[2];
   Script_Mame_Uninstall.Main.Tab3.Box.SetBounds(10, 10, Script_Mame_Uninstall.Main.Control.Width - 20, 200);
-  Script_Mame_Uninstall.Main.Tab3.Box.Text := 'Final stage remove Mame.';
+  Script_Mame_Uninstall.Main.Tab3.Box.Text := 'Final stage to uninstall "Mame".';
   Script_Mame_Uninstall.Main.Tab3.Box.Visible := True;
 
   Script_Mame_Uninstall.Main.Tab3.Line_1 := TALText.Create(Script_Mame_Uninstall.Main.Tab3.Box);
@@ -249,39 +249,39 @@ begin
   Script_Mame_Uninstall.Main.Tab3.Line_1.TextSettings.FontColor := TAlphaColorRec.White;
   Script_Mame_Uninstall.Main.Tab3.Line_1.TextSettings.Font.Size := 14;
   Script_Mame_Uninstall.Main.Tab3.Line_1.TextSettings.VertAlign := TTextAlign.Leading;
-  Script_Mame_Uninstall.Main.Tab3.Line_1.Text := ' Press the remove button below to remove Mame from Extrafe';
+  Script_Mame_Uninstall.Main.Tab3.Line_1.Text := ' Press the "<font color="#ff63cbfc">Uninstall</font>" button below to Uninstall Mame from Extrafe';
   Script_Mame_Uninstall.Main.Tab3.Line_1.Visible := True;
 
   Script_Mame_Uninstall.Main.Tab3.Line_2 := TALText.Create(Script_Mame_Uninstall.Main.Tab3.Box);
   Script_Mame_Uninstall.Main.Tab3.Line_2.Name := 'Script_Mame_Uninstall_Main_Tab3_Line_2';
   Script_Mame_Uninstall.Main.Tab3.Line_2.Parent := Script_Mame_Uninstall.Main.Tab3.Box;
-  Script_Mame_Uninstall.Main.Tab3.Line_2.SetBounds(10, 60, Script_Mame_Uninstall.Main.Tab3.Box.Width - 20, 60);
+  Script_Mame_Uninstall.Main.Tab3.Line_2.SetBounds(10, 70, Script_Mame_Uninstall.Main.Tab3.Box.Width - 20, 60);
   Script_Mame_Uninstall.Main.Tab3.Line_2.WordWrap := True;
   Script_Mame_Uninstall.Main.Tab3.Line_2.TextIsHtml := True;
   Script_Mame_Uninstall.Main.Tab3.Line_2.TextSettings.FontColor := TAlphaColorRec.White;
   Script_Mame_Uninstall.Main.Tab3.Line_2.TextSettings.Font.Size := 14;
   Script_Mame_Uninstall.Main.Tab3.Line_2.TextSettings.VertAlign := TTextAlign.Leading;
   Script_Mame_Uninstall.Main.Tab3.Line_2.Text :=
-    ' "<font color="#ff63cbfc">Warning...</font>" you have choosen to remove all favorites, categories e.t.c., perminatily';
+    ' "<font color="#ff63cbfc">Warning...</font>" you have choosen to remove all favorites, play count, hidden games e.t.c. from database permanently';
   Script_Mame_Uninstall.Main.Tab3.Line_2.Visible := false;
 
   Script_Mame_Uninstall.Main.Tab3.Line_3 := TALText.Create(Script_Mame_Uninstall.Main.Tab3.Box);
   Script_Mame_Uninstall.Main.Tab3.Line_3.Name := 'Script_Mame_Uninstall_Main_Tab3_Line_3';
   Script_Mame_Uninstall.Main.Tab3.Line_3.Parent := Script_Mame_Uninstall.Main.Tab3.Box;
-  Script_Mame_Uninstall.Main.Tab3.Line_3.SetBounds(10, 80, Script_Mame_Uninstall.Main.Tab3.Box.Width - 20, 60);
+  Script_Mame_Uninstall.Main.Tab3.Line_3.SetBounds(10, 100, Script_Mame_Uninstall.Main.Tab3.Box.Width - 20, 60);
   Script_Mame_Uninstall.Main.Tab3.Line_3.WordWrap := True;
   Script_Mame_Uninstall.Main.Tab3.Line_3.TextIsHtml := True;
   Script_Mame_Uninstall.Main.Tab3.Line_3.TextSettings.FontColor := TAlphaColorRec.White;
   Script_Mame_Uninstall.Main.Tab3.Line_3.TextSettings.Font.Size := 14;
   Script_Mame_Uninstall.Main.Tab3.Line_3.TextSettings.VertAlign := TTextAlign.Leading;
-  Script_Mame_Uninstall.Main.Tab3.Line_3.Text := ' "<font color="#ff63cbfc">Warning..</font>" you have choose to erase mame from your computer completly.';
+  Script_Mame_Uninstall.Main.Tab3.Line_3.Text := ' "<font color="#ff63cbfc">Warning..</font>" you have choose to erase mame folder from your computer, completly.';
   Script_Mame_Uninstall.Main.Tab3.Line_3.Visible := false;
 
   Script_Mame_Uninstall.Main.Tab3.Remove := TButton.Create(Script_Mame_Uninstall.Main.Tab3.Box);
   Script_Mame_Uninstall.Main.Tab3.Remove.Name := 'Script_Mame_Uninstall_Main_Remove';
   Script_Mame_Uninstall.Main.Tab3.Remove.Parent := Script_Mame_Uninstall.Main.Tab3.Box;
-  Script_Mame_Uninstall.Main.Tab3.Remove.SetBounds((Script_Mame_Uninstall.Main.Tab3.Box.Width / 2) - 70, 140, 140, 30);
-  Script_Mame_Uninstall.Main.Tab3.Remove.Text := 'Remove "Mame"';
+  Script_Mame_Uninstall.Main.Tab3.Remove.SetBounds((Script_Mame_Uninstall.Main.Tab3.Box.Width / 2) - 80, 150, 160, 30);
+  Script_Mame_Uninstall.Main.Tab3.Remove.Text := 'Uninstall "Mame"';
   Script_Mame_Uninstall.Main.Tab3.Remove.OnClick := ex_main.Input.mouse_script_arcade.Button.OnMouseClick;
   Script_Mame_Uninstall.Main.Tab3.Remove.OnMouseEnter := ex_main.Input.mouse_script_arcade.Button.OnMouseEnter;
   Script_Mame_Uninstall.Main.Tab3.Remove.Visible := True;
@@ -339,45 +339,60 @@ end;
 
 procedure uEmulation_Arcade_Mame_Uninstall_Remove;
 begin
-  if Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked then
-    TDirectory.Delete(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database);
-  if Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked then
-    TDirectory.Delete(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path);
+  Dec(uDB_AUser.Local.Emulators.Arcade_D.Count, 1);
+  uDB_AUser.Local.Emulators.Arcade_D.Mame := false;
+  Dec(uDB_AUser.Local.Emulators.Count, 1);
+  if uDB_AUser.Local.Emulators.Count = -1 then
+    uDB_AUser.Local.Emulators.Arcade := false;
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'INSTALLED', 'FALSE', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_POSITION', '-1', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_ACTIVE', 'FALSE', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_PATH', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_DATABASE', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_SOUNDS', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_IMAGES', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_PATH', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_NAME', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_INI', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_VERSION', '--', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Installed := false;
-  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Active := false;
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position := -1;
-  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path := '';
-  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name := '';
-  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version := '';
-  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini := '';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Active := false;
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path := '';
-  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Database := '';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images := '';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds := '';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name := '';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path := '';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini := '';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version := '';
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'MAME', 'FALSE', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB_AUser.Local.Emulators.Arcade_D.Mame := false;
-
-  if (uDB_AUser.Local.Emulators.Arcade_D.Demul = false) and (uDB_AUser.Local.Emulators.Arcade_D.SuperModel = false) and
-    (uDB_AUser.Local.Emulators.Arcade_D.Model2 = false) and (uDB_AUser.Local.Emulators.Arcade_D.Raine = false) and
-    (uDB_AUser.Local.Emulators.Arcade_D.Winkawaks = false) and (uDB_AUser.Local.Emulators.Arcade_D.Daphne = false) and
-    (uDB_AUser.Local.Emulators.Arcade_D.Zinc = false) and (uDB_AUser.Local.Emulators.Arcade_D.FBA = false) and (uDB_AUser.Local.Emulators.Arcade_D.Mame = false)
-  then
+  { Clear from emulators table }
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'COUNT', uDB_AUser.Local.Emulators.Count.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  if uDB_AUser.Local.Emulators.Arcade then
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'ARCADE', '1', 'USER_ID', uDB_AUser.Local.Num.ToString)
+  else
   begin
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'ARCADE', 'FALSE', 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'ARCADE', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
     uDB_AUser.Local.Emulators.Arcade := false;
+  end;
+
+  { Clear from arcade table }
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'COUNT', uDB_AUser.Local.Emulators.Arcade_D.Count.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'MAME', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+
+  { Clear mame table }
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'INSTALLED', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EMU_POSITION', '-1', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EMU_ACTIVE', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_PATH', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_IMAGES', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_SOUNDS', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_NAME', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_PATH', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_INI', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_VERSION', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+
+  if Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked then
+  begin
+    { Delete specific user mame columns }
+    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString);
+    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString);
+    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.Num.ToString);
+  end;
+
+  if Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked then
+  begin
+    {Delete mame folder and subdirecories}
   end;
 
   Dec(emulation.Unique_Num);
@@ -396,11 +411,9 @@ begin
   emulation.Arcade[0].Installed := false;
   emulation.Arcade[0].Unique_Num := -1;
 
-  uLoad_Emulation_SetTabs;
-
   uMain_Emulation.Clear_Selection_Control;
   uMain_Emulation.Create_Selection_Control;
-  uMain_Emulation.Category(0);
+  uMain_Emulation.Category(0, 0);
 
   Script_Mame_Uninstall.Main.Control.SetActiveTabWithTransition(Script_Mame_Uninstall.Main.Tabs[3], TTabTransition.Slide);
   Script_Mame_Uninstall.Main.Status := 'phase_4';
@@ -447,12 +460,20 @@ begin
   begin
     Script_Mame_Uninstall.Main.Control.SetActiveTabWithTransition(Script_Mame_Uninstall.Main.Tabs[2], TTabTransition.Slide);
     Script_Mame_Uninstall.Main.Status := 'phase_3';
-    Script_Mame_Uninstall.Main.Tab3.Line_2.Visible := Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked;
-    if Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked = false then
-      Script_Mame_Uninstall.Main.Tab3.Line_3.Position.Y := 60
-    else
-      Script_Mame_Uninstall.Main.Tab3.Line_3.Position.Y := 80;
-    Script_Mame_Uninstall.Main.Tab3.Line_3.Visible := Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked;
+    if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked = False) then
+      Script_Mame_Uninstall.Main.Tab3.Line_2.Visible := True
+    else if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked) then
+    begin
+      Script_Mame_Uninstall.Main.Tab3.Line_2.Visible := True;
+      Script_Mame_Uninstall.Main.Tab3.Line_3.Visible := True;
+      Script_Mame_Uninstall.Main.Tab3.Line_2.Position.Y := 70;
+      Script_Mame_Uninstall.Main.Tab3.Line_3.Position.Y := 110;
+    end
+    else if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked = False) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked) then
+    begin
+      Script_Mame_Uninstall.Main.Tab3.Line_3.Visible := True;
+      Script_Mame_Uninstall.Main.Tab3.Line_3.Position.Y := 70;
+    end;
   end;
   ShowButtons;
 end;

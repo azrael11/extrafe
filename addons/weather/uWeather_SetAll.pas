@@ -6,20 +6,13 @@ uses
   System.Classes,
   System.SysUtils,
   System.UITypes,
-  System.Math,
   FMX.Objects,
   FMX.Effects,
   FMX.Ani,
   FMX.StdCtrls,
-  FMX.Layouts,
-  FMX.Edit,
-  FMX.Grid,
   FMX.Types,
   FMX.Filter.Effects,
-  FMX.Graphics,
-  FMX.Controls,
   ALFmxTabControl,
-  main,
   uWeather_AllTypes;
 
 procedure Load;
@@ -30,23 +23,13 @@ procedure Config;
 implementation
 
 uses
-  uLoad,
   uDB_AUser,
   uLoad_AllTypes,
   uMain_SetAll,
   uMain_AllTypes,
-  uWindows,
-  uSnippet_Text,
-  uWeather_Convert,
-  uWeather_Mouse,
-  uWeather_Actions,
-  uWeather_MenuActions,
-  uWeather_Config_Towns;
+  uWeather_Actions;
 
 Procedure Load;
-var
-  vComp: TComponent;
-  vi, vl, vt: Integer;
 begin
   // Main Form
   vWeather.Scene.Weather := TImage.Create(mainScene.main.Down_Level);
@@ -192,7 +175,7 @@ begin
   vWeather.Scene.Control.Height := vWeather.Scene.Back.Height - 10;
   vWeather.Scene.Control.Position.X := 10;
   vWeather.Scene.Control.Position.Y := 10;
-  vWeather.Scene.Control.OnAniStop := vWeather_Animation.OnAniStop;
+  vWeather.Scene.Control.OnAniStop := Weather.Ani.main.OnAniStop;
   vWeather.Scene.Control.Visible := True;
 
   vWeather.Scene.Control_Ani := TFloatAnimation.Create(vWeather.Scene.Control);
@@ -270,16 +253,18 @@ begin
   vWeather.Config.main.Right.Panel.SetBounds(210, 0, vWeather.Config.main.Panel.Width - 210, vWeather.Config.main.Panel.Height);
   vWeather.Config.main.Right.Panel.Visible := True;
 
-  vWeather.Config.main.Right.NoProvider_Selected := TText.Create(vWeather.Config.main.Right.Panel);
-  vWeather.Config.main.Right.NoProvider_Selected.Name := 'Weather_Config_Right_Panel_Text';
-  vWeather.Config.main.Right.NoProvider_Selected.Parent := vWeather.Config.main.Right.Panel;
-  vWeather.Config.main.Right.NoProvider_Selected.SetBounds((vWeather.Config.main.Right.Panel.Width / 2) - 150, 100, 300, 30);
-  vWeather.Config.main.Right.NoProvider_Selected.TextSettings.FontColor := TAlphaColorRec.White;
-  vWeather.Config.main.Right.NoProvider_Selected.TextSettings.Font.Size := 16;
-  vWeather.Config.main.Right.NoProvider_Selected.TextSettings.HorzAlign := TTextAlign.Center;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = '' then
+  begin
+    vWeather.Config.main.Right.NoProvider_Selected := TText.Create(vWeather.Config.main.Right.Panel);
+    vWeather.Config.main.Right.NoProvider_Selected.Name := 'Weather_Config_Right_Panel_Text';
+    vWeather.Config.main.Right.NoProvider_Selected.Parent := vWeather.Config.main.Right.Panel;
+    vWeather.Config.main.Right.NoProvider_Selected.SetBounds((vWeather.Config.main.Right.Panel.Width / 2) - 150, 100, 300, 30);
+    vWeather.Config.main.Right.NoProvider_Selected.TextSettings.FontColor := TAlphaColorRec.White;
+    vWeather.Config.main.Right.NoProvider_Selected.TextSettings.Font.Size := 16;
+    vWeather.Config.main.Right.NoProvider_Selected.TextSettings.HorzAlign := TTextAlign.Center;
     vWeather.Config.main.Right.NoProvider_Selected.Text := 'Please select forecast provider first!!!';
-  vWeather.Config.main.Right.NoProvider_Selected.Visible := True;
+    vWeather.Config.main.Right.NoProvider_Selected.Visible := True;
+  end;
 end;
 
 end.

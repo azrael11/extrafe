@@ -1,0 +1,11 @@
+unit uEmu_Mouse;
+
+interface
+uses
+  System.Classes;
+
+procedure Text(vAction: String);
+
+implementation
+
+end.

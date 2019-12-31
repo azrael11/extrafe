@@ -1,0 +1,10 @@
+unit uView_Mode_Video;
+
+interface
+uses
+  System.Classes;
+
+
+implementation
+
+end.

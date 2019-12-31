@@ -79,7 +79,7 @@ begin
 
     weather.Action.OWM.Selected_Unit := vDegreeType;
 
-    for vi := 0 to weather.Action.Active_Total do
+    for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
     begin
       vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Text := CalcDegree(vCelcius, vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Text);
       vWeather.Scene.Tab_Yahoo[vi].General.Temprature.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vi].General.Temprature);

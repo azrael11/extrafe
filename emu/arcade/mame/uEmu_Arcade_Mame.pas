@@ -44,10 +44,10 @@ begin
   mame.Gamelist.Timer.OnTimer := mame.Timers.Gamelist.OnTimer;
 
   uEmu_Arcade_Mame_SetAll.Load;
-  Main;
+//  Main;
 
   //Sounds
-  uEmu_Arcade_Mame_Sounds.Load;
+//  uEmu_Arcade_Mame_Sounds.Load;
 end;
 
 procedure Main;
@@ -62,7 +62,6 @@ begin
   uEmu_Arcade_Mame_Gamelist.Refresh;
   vGamesInfoCount := IntToStr(mame.Gamelist.Selected + 1) + '/' + IntToStr(mame.Gamelist.Games_Count);
   vMame.Scene.Gamelist.T_Games_Count_Info.Text := vGamesInfoCount;
-  mame.Main.SnapCategory := 'Snapshots';
   mame.Main.SnapMode := 'arcade';
   mame.Main.SnapCategory_Num := 0;
   uEmu_Arcade_Mame_Actions.Show_Media;

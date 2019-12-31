@@ -41,15 +41,20 @@ type
   end;
 
 function GetBitmap(vNum, vLevel: Integer; vType: String): TBitmap;
+function Get_Arcade_Image(vNum: Integer; vType: String): TBitmap;
+function Get_Computers_Image(vNum: Integer; vType: String): TBitmap;
+function Get_Consoles_Image(vNum: Integer; vType: String): TBitmap;
+function Get_Handhelds_Image(vNum: Integer; vType: String): TBitmap;
+function Get_Pinballs_Image(vNum: Integer; vType: String): TBitmap;
 
 procedure Create_Selection_Control;
 procedure Clear_Selection_Control;
 procedure Create_Selection_Tab(vTab, vLevel: Integer; isActive: Boolean);
 
-procedure Category(vMenuIndex: Integer);
+procedure Category(vEmuLevel, vIndex: Integer);
 
 procedure Trigger_Emulator;
-procedure Trigger_Click(vTriggerImage: Integer; vBack: Boolean);
+procedure Trigger_Click(vTriggerImage: Integer);
 
 procedure Arcade_Category;
 procedure SubHeader_Level(vCategory: Integer);
@@ -74,23 +79,103 @@ begin
   FreeAndNil(emulation.Selection);
 end;
 
-function GetBitmap(vNum, vLevel: Integer; vType: String): TBitmap;
+function Get_Arcade_Image(vNum: Integer; vType: String): TBitmap;
 begin
   Result := TBitmap.Create;
-  if vType = 'logo' then
+  if emulation.Level = 0 then
   begin
-    if vLevel = 0 then
-      Result.LoadFromFile(emulation.Category[vNum].Logo)
-    else if vLevel = 1 then
-      Result.LoadFromFile(emulation.Arcade[vNum].Logo);
+    if vType = 'logo' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.p_Images + 'logo.png')
+    else if vType = 'background' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.p_Images + 'background.png')
   end
-  else if vType = 'background' then
+  else
   begin
-    if vLevel = 0 then
-      Result.LoadFromFile(emulation.Category[vNum].Background)
-    else if vLevel = 1 then
-      Result.LoadFromFile(emulation.Arcade[vNum].Background);
+    if emulation.Arcade[vNum].Name = 'mame' then
+    begin
+      if vType = 'logo' then
+        Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'logo.png')
+      else if vType = 'background' then
+        Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'background.png')
+    end;
   end;
+end;
+
+function Get_Computers_Image(vNum: Integer; vType: String): TBitmap;
+begin
+  Result := TBitmap.Create;
+  if emulation.Level = 0 then
+  begin
+    if vType = 'logo' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Computers_D.p_Images + 'logo.png')
+    else if vType = 'background' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Computers_D.p_Images + 'background.png')
+  end
+end;
+
+function Get_Consoles_Image(vNum: Integer; vType: String): TBitmap;
+begin
+  Result := TBitmap.Create;
+  if emulation.Level = 0 then
+  begin
+    if vType = 'logo' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Consoles_D.p_Images + 'logo.png')
+    else if vType = 'background' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Consoles_D.p_Images + 'background.png')
+  end
+end;
+
+function Get_Handhelds_Image(vNum: Integer; vType: String): TBitmap;
+begin
+  Result := TBitmap.Create;
+  if emulation.Level = 0 then
+  begin
+    if vType = 'logo' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Handhelds_D.p_Images + 'logo.png')
+    else if vType = 'background' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Handhelds_D.p_Images + 'background.png')
+  end
+end;
+
+function Get_Pinballs_Image(vNum: Integer; vType: String): TBitmap;
+begin
+  Result := TBitmap.Create;
+  if emulation.Level = 0 then
+  begin
+    if vType = 'logo' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Pinballs_D.p_Images + 'logo.png')
+    else if vType = 'background' then
+      Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Pinballs_D.p_Images + 'background.png')
+  end
+end;
+
+function GetBitmap(vNum, vLevel: Integer; vType: String): TBitmap;
+begin
+  if emulation.Category[vNum].Name = 'arcade' then
+    Result := Get_Arcade_Image(vNum, vType)
+  else if emulation.Category[vNum].Name = 'computers' then
+    Result := Get_Computers_Image(vNum, vType)
+  else if emulation.Category[vNum].Name = 'consoles' then
+    Result := Get_Consoles_Image(vNum, vType)
+  else if emulation.Category[vNum].Name = 'handhelds' then
+    Result := Get_Handhelds_Image(vNum, vType)
+  else if emulation.Category[vNum].Name = 'pinballs' then
+    Result := Get_Pinballs_Image(vNum, vType);
+
+  // if vType = 'logo' then
+  // begin
+  // if vLevel = 0 then
+  // Result.LoadFromFile(emulation.Category[vNum].Logo)
+  // else if vLevel = 1 then
+  // Result.LoadFromFile(emulation.Arcade[vNum].Logo);
+  // end
+  // else if vType = 'background' then
+  // begin
+  // if vLevel = 0 then
+  // Result.LoadFromFile(emulation.Category[vNum].Background)
+  // else if vLevel = 1 then
+  // Result.LoadFromFile(emulation.Arcade[vNum].Background);
+  // end;
 end;
 
 procedure Create_Selection_Control;
@@ -126,8 +211,8 @@ begin
   emulation.Selection_Tab[vTab].Background.Name := 'Emulator_Back_' + vTab.ToString;
   emulation.Selection_Tab[vTab].Background.Parent := emulation.Selection_Tab[vTab].Tab;
   emulation.Selection_Tab[vTab].Background.SetBounds(0, 4, emulation.Selection_Tab[vTab].Tab.Width, emulation.Selection_Tab[vTab].Tab.Height);
-  emulation.Selection_Tab[vTab].Background.Bitmap := GetBitmap(vTab, vLevel, 'background');
   emulation.Selection_Tab[vTab].Background.Visible := True;
+  emulation.Selection_Tab[vTab].Background.Bitmap := GetBitmap(vTab, vLevel, 'background');
 
   emulation.Selection_Tab[vTab].Logo := TImage.Create(emulation.Selection_Tab[vTab].Tab);
   emulation.Selection_Tab[vTab].Logo.Name := 'Emulator_Logo_' + vTab.ToString;
@@ -196,18 +281,26 @@ begin
   uEmu_LoadEmulator(emulation.Number);
   mainScene.Main.Down_Level_Ani.Name := 'Main_Down_Animation';
   mainScene.Main.Down_Level_Ani.Duration := 1.8;
-  mainScene.Main.Down_Level_Ani.StartValue:= 1;
+  mainScene.Main.Down_Level_Ani.StartValue := 1;
   mainScene.Main.Down_Level_Ani.StopValue := 0.1;
   mainScene.Main.Down_Level_Ani.Start;
 end;
 
 procedure Arcade_Category;
+var
+  vi: Integer;
 begin
   emulation.Level := 1;
   emulation.Category_Num := 0;
   Clear_Selection_Control;
   Create_Selection_Control;
-  Create_Selection_Tab(0, emulation.Level, emulation.Arcade[0].Active);
+  for vi := 0 to 8 do
+  begin
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Mame then
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Active then
+        if vi = uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Position then
+          Create_Selection_Tab(vi, 1, True);
+  end;
   emulation.Selection.TabIndex := 0;
 end;
 
@@ -227,71 +320,57 @@ begin
   end;
 end;
 
-procedure Trigger_Click(vTriggerImage: Integer; vBack: Boolean);
+procedure Trigger_Click(vTriggerImage: Integer);
 begin
-  if vBack then
-  begin
-    if emulation.Level <> 0 then
-    begin
-      Clear_Selection_Control;
-      Create_Selection_Control;
-      Category(emulation.Category_Num);
-    end;
-  end
+  if emulation.Level = 0 then
+    SubHeader_Level(vTriggerImage)
   else
   begin
-    if emulation.Level = 0 then
-    begin
-      SubHeader_Level(vTriggerImage);
-    end
-    else
-    begin
-      emulation.Number := vTriggerImage;
-      Trigger_Emulator;
-    end;
+    emulation.Number := vTriggerImage;
+    Trigger_Emulator;
   end;
 end;
 
-procedure Category(vMenuIndex: Integer);
+procedure Category(vEmuLevel, vIndex: Integer);
 var
-  vi, ki: Integer;
-  vActive: Boolean;
-  vEmu_Num: Integer;
+  vi: Integer;
 begin
-  emulation.Level := 0;
+  Clear_Selection_Control;
+  Create_Selection_Control;
   for vi := 0 to 4 do
   begin
-    case vi of
-      0:
-        begin
-          vEmu_Num := 8;
-          vActive := uDB_AUser.Local.EMULATORS.Arcade;
-        end;
-      1:
-        begin
-          vEmu_Num := 30;
-          vActive := uDB_AUser.Local.EMULATORS.Computers;
-        end;
-      2:
-        begin
-          vEmu_Num := 40;
-          vActive := uDB_AUser.Local.EMULATORS.Consoles;
-        end;
-      3:
-        begin
-          vEmu_Num := 10;
-          vActive := uDB_AUser.Local.EMULATORS.Handhelds;
-        end;
-      4:
-        begin
-          vEmu_Num := 1;
-          vActive := uDB_AUser.Local.EMULATORS.Pinballs;
-        end;
-    end;
-    Create_Selection_Tab(vi, emulation.Level, vActive);
+    if vi = uDB_AUser.Local.EMULATORS.Arcade_D.Position then
+    begin
+      emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Arcade_D.Name;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Active then
+        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Arcade);
+    end
+    else if vi = uDB_AUser.Local.EMULATORS.Computers_D.Position then
+    begin
+      emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Computers_D.Name;
+      if uDB_AUser.Local.EMULATORS.Computers_D.Active then
+        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Computers);
+    end
+    else if vi = uDB_AUser.Local.EMULATORS.Consoles_D.Position then
+    begin
+      emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Consoles_D.Name;
+      if uDB_AUser.Local.EMULATORS.Consoles_D.Active then
+        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Consoles);
+    end
+    else if vi = uDB_AUser.Local.EMULATORS.Handhelds_D.Position then
+    begin
+      emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Handhelds_D.Name;
+      if uDB_AUser.Local.EMULATORS.Handhelds_D.Active then
+        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Handhelds);
+    end
+    else if vi = uDB_AUser.Local.EMULATORS.Pinballs_D.Position then
+    begin
+      emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Pinballs_D.Name;
+      if uDB_AUser.Local.EMULATORS.Pinballs_D.Active then
+        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Pinballs);
+    end
   end;
-  emulation.Selection.TabIndex := vMenuIndex;
-  emulation.Category_Num := -1;
+  emulation.Selection.TabIndex := vIndex;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -299,14 +378,14 @@ procedure Slide_Right;
 begin
   if extrafe.prog.State = 'main' then
     if emulation.Selection.TabCount - 1 <> emulation.Selection.TabIndex then
-      emulation.Selection.Next();
+      emulation.Selection.Next()
 end;
 
 procedure Slide_Left;
 begin
   if extrafe.prog.State = 'main' then
     if emulation.Selection.TabIndex <> 0 then
-      emulation.Selection.Previous();
+      emulation.Selection.Previous()
 end;
 
 { TEMULATOR_IMAGE }
@@ -315,9 +394,7 @@ procedure TEMULATOR_INPUT_MOUSE_IMAGE.OnMouseClick(Sender: TObject);
 begin
   if extrafe.prog.State = 'main' then
     if emulation.Selection_Tab[TImage(Sender).Tag].Logo_Gray.Enabled = False then
-    begin
-      Trigger_Click(TImage(Sender).Tag, False);
-    end;
+      Trigger_Click(TImage(Sender).Tag);
 end;
 
 procedure TEMULATOR_INPUT_MOUSE_IMAGE.OnMouseEnter(Sender: TObject);
@@ -342,7 +419,10 @@ end;
 procedure TEMULATOR_INPUT_MOUSE_TEXT.OnMouseClick(Sender: TObject);
 begin
   if TText(Sender).Name = 'Emulator_Back_Level_' + TText(Sender).Tag.ToString then
-    Trigger_Click(TText(Sender).Tag, True);
+  begin
+    emulation.Level := 0;
+    Category(emulation.Level, emulation.Category_Num);
+  end;
 end;
 
 procedure TEMULATOR_INPUT_MOUSE_TEXT.OnMouseEnter(Sender: TObject);

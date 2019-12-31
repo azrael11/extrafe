@@ -1,0 +1,29 @@
+unit uView_Mode_Mouse;
+
+interface
+uses
+  System.Classes;
+
+type
+  TEMU_VIEW_MODE_VIDEO_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_TEXT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO = record
+    Image: TEMU_VIEW_MODE_VIDEO_IMAGE;
+    Text: TEMU_VIEW_MODE_VIDEO_TEXT;
+  end;
+
+implementation
+
+end.

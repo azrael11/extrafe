@@ -1,0 +1,10 @@
+unit uEmu_Mouse;
+
+interface
+uses
+  System.Classes;
+
+
+implementation
+
+end.

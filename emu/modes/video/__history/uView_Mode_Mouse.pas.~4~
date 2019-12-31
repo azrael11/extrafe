@@ -1,0 +1,30 @@
+unit uView_Mode_Mouse;
+
+interface
+uses
+  System.Classes;
+
+type
+  TEMU_VIEW_MODE_VIDEO_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_ARCADE_MAME_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_ARCADE_MAME_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+implementation
+
+end.

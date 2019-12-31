@@ -1,0 +1,28 @@
+unit uView_Mode_Video;
+
+interface
+uses
+  System.Classes;
+
+procedure Create_Scene;
+procedure Create_Gamelist;
+procedure Create_Media;
+
+implementation
+
+procedure Create_Scene;
+begin
+
+end;
+
+procedure Create_Gamelist;
+begin
+
+end;
+
+procedure Create_Media;
+begin
+
+end;
+
+end.

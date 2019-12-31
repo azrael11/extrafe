@@ -74,15 +74,13 @@ procedure uWeather_Config_Towns_AddNewTown(vNum: Integer; mWoeid, country_code: 
 
 var
   vSelected_Panel: TImage;
-  vSelectedTown: Integer;
-  vLoading_Integer: Integer;
-//  vNTXML: IXMLDocument;
-//  vNTRoot: PXMLNode;
-//  vNTNode: PXMLNode;
-//  vNTNode_1: PXMLNode;
-//  vNTNode_2: PXMLNode;
-//  vNTNode_3: PXMLNode;
-//  vNTAttribute: PXMLNode;
+  // vNTXML: IXMLDocument;
+  // vNTRoot: PXMLNode;
+  // vNTNode: PXMLNode;
+  // vNTNode_1: PXMLNode;
+  // vNTNode_2: PXMLNode;
+  // vNTNode_3: PXMLNode;
+  // vNTAttribute: PXMLNode;
 
 implementation
 
@@ -160,10 +158,10 @@ begin
     end
     else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     begin
-     if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
-      vWeather.Config.main.Right.Towns.EditLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
-     else
-      vWeather.Config.main.Right.Towns.EditLock.TextSettings.FontColor := TAlphaColorRec.Grey;
+      if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
+        vWeather.Config.main.Right.Towns.EditLock.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
+      else
+        vWeather.Config.main.Right.Towns.EditLock.TextSettings.FontColor := TAlphaColorRec.Grey;
     end;
     vWeather.Config.main.Right.Towns.EditLock.Text := #$e98f;
     vWeather.Config.main.Right.Towns.EditLock.TextSettings.HorzAlign := TTextAlign.Center;
@@ -1069,51 +1067,51 @@ var
   vString_Temp_Unit: WideString;
   viPos: Integer;
 begin
-{  vForcast_Resutls := TStringList.Create;
+  { vForcast_Resutls := TStringList.Create;
 
-  // vString_Provider := addons.weather.Ini.Ini.ReadString('Provider', 'Name', vString_Provider);
-  // vString_Woeid := addons.weather.Ini.Ini.ReadString(vString_Provider, IntToStr(mNum) + '_WoeID', vString_Woeid);
-  viPos := Pos('{', vString_Woeid);
-  vString_Woeid := Trim(Copy(vString_Woeid, 0, viPos - 1));
+    // vString_Provider := addons.weather.Ini.Ini.ReadString('Provider', 'Name', vString_Provider);
+    // vString_Woeid := addons.weather.Ini.Ini.ReadString(vString_Provider, IntToStr(mNum) + '_WoeID', vString_Woeid);
+    viPos := Pos('{', vString_Woeid);
+    vString_Woeid := Trim(Copy(vString_Woeid, 0, viPos - 1));
 
-  vForcast_Resutls.Add(Main_Form.Main_IdHttp.Get('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D' +
+    vForcast_Resutls.Add(Main_Form.Main_IdHttp.Get('http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%3D' +
     vString_Woeid + '%20and%20u%3D%27c%27&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys%20HTTP/1.1'));
-  vForcast_Resutls.SaveToFile(extrafe.prog.Path + cTemp_Forcast);
+    vForcast_Resutls.SaveToFile(extrafe.prog.Path + cTemp_Forcast);
 
-  vNTXML := CreateXMLDoc;
-  vNTXML.LoadFromFile(extrafe.prog.Path + cTemp_Forcast);
-  vNTRoot := vNTXML.DocumentElement;
-  vNTNode := nil;
+    vNTXML := CreateXMLDoc;
+    vNTXML.LoadFromFile(extrafe.prog.Path + cTemp_Forcast);
+    vNTRoot := vNTXML.DocumentElement;
+    vNTNode := nil;
 
-  while vNTRoot.GetNextChild(vNTNode) do
+    while vNTRoot.GetNextChild(vNTNode) do
     while vNTNode.GetNextChild(vNTNode_1) do
-      while vNTNode_1.GetNextChild(vNTNode_2) do
-      begin
-        vNTAttribute := nil;
-        if vNTNode_2.NodeName = 'yweather:units' then
-        begin
-          vNTNode_2.FindAttribute('temperature', vNTAttribute);
-          vString_Temp_Unit := vNTAttribute.NodeValue;
-        end
-        else if vNTNode_2.NodeName = 'item' then
-        begin
-          while vNTNode_2.GetNextChild(vNTNode_3) do
-          begin
-            vNTAttribute := nil;
-            if vNTNode_3.NodeName = 'yweather:condition' then
-            begin
-              vNTNode_3.FindAttribute('temp', vNTAttribute);
-              vNTAttribute := nil;
-              vNTNode_3.FindAttribute('date', vNTAttribute);
-              vNTAttribute := nil;
-              vNTNode_3.FindAttribute('code', vNTAttribute);
-              vNTAttribute := nil;
-              vNTNode_3.FindAttribute('text', vNTAttribute);
-            end;
-          end;
-        end;
-      end;
-  DeleteFile(extrafe.prog.Path + cTemp_Forcast);  }
+    while vNTNode_1.GetNextChild(vNTNode_2) do
+    begin
+    vNTAttribute := nil;
+    if vNTNode_2.NodeName = 'yweather:units' then
+    begin
+    vNTNode_2.FindAttribute('temperature', vNTAttribute);
+    vString_Temp_Unit := vNTAttribute.NodeValue;
+    end
+    else if vNTNode_2.NodeName = 'item' then
+    begin
+    while vNTNode_2.GetNextChild(vNTNode_3) do
+    begin
+    vNTAttribute := nil;
+    if vNTNode_3.NodeName = 'yweather:condition' then
+    begin
+    vNTNode_3.FindAttribute('temp', vNTAttribute);
+    vNTAttribute := nil;
+    vNTNode_3.FindAttribute('date', vNTAttribute);
+    vNTAttribute := nil;
+    vNTNode_3.FindAttribute('code', vNTAttribute);
+    vNTAttribute := nil;
+    vNTNode_3.FindAttribute('text', vNTAttribute);
+    end;
+    end;
+    end;
+    end;
+    DeleteFile(extrafe.prog.Path + cTemp_Forcast); }
 end;
 
 ///
@@ -1124,7 +1122,7 @@ var
   vActive_Woeid: Integer;
 begin
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
-    vActive_Woeid := weather.Action.Yahoo.Total_WoeID
+    vActive_Woeid := uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count
   else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     vActive_Woeid := weather.Action.OWM.Total_WoeID;
 
@@ -1140,7 +1138,7 @@ begin
       vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey;
       if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
       begin
-        if weather.Action.Yahoo.Total_WoeID > 0 then
+        if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
         else
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -1162,7 +1160,7 @@ begin
       vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
       if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
       begin
-        for vi := 0 to weather.Action.Yahoo.Total_WoeID do
+        for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
         begin
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
@@ -1186,10 +1184,21 @@ procedure uWeather_Config_Towns_Edit_SelectTown(vSelected: Integer);
 var
   vi: Integer;
 begin
-  for vi := 0 to weather.Action.Active_Total do
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
-    vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
-    vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
+    for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
+    begin
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
+    end
+  end
+  else
+  begin
+    for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count do
+    begin
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
+      vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
+    end
   end;
 
   vWeather.Config.main.Right.Towns.Town[vSelected].Glow_Panel.GlowColor := TAlphaColorRec.Red;
@@ -1200,8 +1209,19 @@ begin
   vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   if vSelected = 0 then
     vWeather.Config.main.Right.Towns.GoUp.TextSettings.FontColor := TAlphaColorRec.Grey
-  else if vSelected = weather.Action.Active_Total then
-    vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
+  else
+  begin
+    if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    begin
+      if vSelected = uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count then
+        vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
+    end
+    else
+    begin
+      if vSelected = uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count then
+        vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
+    end;
+  end;
 end;
 
 procedure uWeather_Config_Towns_Edit_DeleteTown(vSelected: Integer);
@@ -1213,8 +1233,16 @@ procedure uWeather_Config_Towsn_RefreshTownAll;
 var
   vi: Integer;
 begin
-  for vi := 0 to weather.Action.Active_Total do
-    uWeather_Config_Towns_RefreshTown(vi);
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  begin
+    for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
+      uWeather_Config_Towns_RefreshTown(vi);
+  end
+  else
+  begin
+    for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count do
+      uWeather_Config_Towns_RefreshTown(vi);
+  end;
 end;
 
 end.

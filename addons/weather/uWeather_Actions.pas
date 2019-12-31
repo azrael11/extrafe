@@ -6,24 +6,17 @@ uses
   System.Classes,
   System.SysUtils,
   System.UiTypes,
-  System.Threading,
-  System.Types,
-  FMX.Forms,
   FMX.Objects,
   FMX.Types,
-  FMX.Layouts,
   FMX.StdCtrls,
   FMX.Ani,
-  FMX.Controls,
   FMX.Graphics,
   FMX.Effects,
-  FMX.WebBrowser,
-  ALFmxTabControl,
   ALFmxObjects,
   uWeather_AllTypes,
-  uWeather_Config_Towns,
   Radiant.Shapes,
-  BASS;
+  BASS,
+  CodeSiteLogging;
 
 procedure Load;
 procedure ReturnToMain(vIconsNum: Integer);
@@ -51,19 +44,11 @@ implementation
 
 uses
   main,
-  uload,
   uDB,
   uDB_AUser,
   uLoad_AllTypes,
-  uSnippet_Text,
-  uMain_AllTypes,
-  uMain_SetAll,
-  uMain_Actions,
   uWindows,
   uInternet_Files,
-  uWeather_SetAll,
-  uWeather_Convert,
-  uWeather_MenuActions,
   uWeather_Sounds,
   uWeather_Providers_Yahoo,
   uWeather_Providers_OpenWeatherMap,
@@ -74,17 +59,18 @@ procedure Load;
 var
   ki: Integer;
 begin
+  CodeSite.EnterMethod('User is in Addon Weather');
+
   // Create the effect timer
-  vWeather.Scene.Effect_Timer := TTimer.Create(vWeather.Scene.weather);
-  vWeather.Scene.Effect_Timer.Name := 'A_W_Effect_Timer';
-  vWeather.Scene.Effect_Timer.Parent := vWeather.Scene.weather;
-  vWeather.Scene.Effect_Timer.Interval := 1;
-  vWeather.Scene.Effect_Timer.OnTimer := vWeather.Scene.Timer.OnTimer;
-  vWeather.Scene.Effect_Timer.Enabled := False;
+  vWeather.Scene.Main_Timer := TTimer.Create(vWeather.Scene.weather);
+  vWeather.Scene.Main_Timer.Name := 'A_W_Effect_Timer';
+  vWeather.Scene.Main_Timer.Parent := vWeather.Scene.weather;
+  vWeather.Scene.Main_Timer.Interval := 100;
+  vWeather.Scene.Main_Timer.OnTimer := weather.Timer.main.OnTimer;
+  vWeather.Scene.Main_Timer.Enabled := False;
 
   uWeather_Sounds_Load;
-
-  // What
+  weather.Ani.main_stop := True;
 
   if uDB_AUser.Local.ADDONS.Weather_D.Provider <> '' then
   begin
@@ -94,10 +80,8 @@ begin
       vTaskTimer := TTimer.Create(Main_Form);
       vTaskTimer.Enabled := False;
       vTaskTimer.Interval := 300;
-      vTaskTimer.OnTimer := weather.Input.mouse.Timer.OnTimer;
 
       vWeather.Config.Panel.Visible := False;
-      vLoading_Integer := -1;
 
       if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
         uWeather_Providers_Yahoo.Main_Create_Towns
@@ -108,6 +92,8 @@ begin
   end
   else
     uWeather_Actions.ShowFirstTimeScene(uDB_AUser.Local.ADDONS.Weather_D.First_Pop);
+
+  vWeather.Scene.Main_Timer.Enabled:= True;
 end;
 
 procedure ShowTheForcast;
@@ -123,8 +109,6 @@ begin
 
   weather.Config.Edit_Lock := False;
 
-  weather.Loaded := True;
-
   vWeather.Scene.Control_Ani.Start;
   // uWeather_Actions_Show_AstronomyAnimation;
 end;
@@ -132,15 +116,7 @@ end;
 procedure ReturnToMain(vIconsNum: Integer);
 begin
   Close_Map;
-//  emulation.Selection_Ani.StartValue := extrafe.res.Height;
-//  emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
-//  mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
-//  mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
-//  emulation.Selection_Ani.Enabled := True;
   vWeather.Scene.Weather_Ani.Start;
-//  mainScene.Footer.Back_Ani.Start;
-//  uMain_Actions.All_Icons_Active(vIconsNum);
-//  extrafe.prog.State := 'main';
 end;
 
 procedure Free;
@@ -150,7 +126,7 @@ begin
   if Assigned(vWeather.Scene.weather) then
     FreeAndNil(vWeather.Scene.weather);
   uWeather_Sounds_Free;
-  weather.Loaded := False;
+  CodeSite.ExitMethod('User leave of Addon Weather');
 end;
 
 procedure Show_AstronomyAnimation;
@@ -288,7 +264,6 @@ begin
     vWeather.Scene.First.main.Done.OnClick := weather.Input.mouse.Button.OnMouseClick;
     vWeather.Scene.First.main.Done.Visible := True;
   end;
-  weather.Loaded := True;
 end;
 
 procedure CheckFirst(vCheched: Boolean);
@@ -302,12 +277,12 @@ end;
 
 procedure Control_Slide_Right;
 begin
-  if vWeather_Ani_Stop then
+  if weather.Ani.main_stop then
   begin
     if vWeather.Scene.Control.TabIndex <> vWeather.Scene.Control.TabCount - 1 then
     begin
-      vWeather_Ani_Stop := False;
-//      uWeather_Sounds_PlayEffect('', '', False);
+      weather.Ani.main_stop := False;
+      uWeather_Sounds_PlayEffect('', '', False);
       BASS_ChannelPlay(weather.Sound.mouse[0], True);
       if vWeather.Scene.Control.TabIndex = vWeather.Scene.Control.TabCount - 2 then
         vWeather.Scene.Arrow_Right.Visible := False
@@ -316,6 +291,7 @@ begin
       vWeather.Scene.Arrow_Left.Visible := True;
       vWeather.Scene.Arrow_Right_Glow.Enabled := True;
       Close_Map;
+//      vWeather.Scene.Control.TabIndex :=
       vWeather.Scene.Control.Next;
     end;
   end;
@@ -323,11 +299,11 @@ end;
 
 procedure Control_Slide_Left;
 begin
-  if vWeather_Ani_Stop then
+  if weather.Ani.main_stop then
   begin
-    if vWeather.Scene.Control.TabIndex <> 0 then
+    if vWeather.Scene.Control.TabIndex > 0 then
     begin
-      vWeather_Ani_Stop := False;
+      weather.Ani.main_stop := False;
       uWeather_Sounds_PlayEffect('', '', False);
       BASS_ChannelPlay(weather.Sound.mouse[0], True);
       if vWeather.Scene.Control.TabIndex = 1 then
@@ -460,7 +436,6 @@ begin
     uDB_AUser.Local.ADDONS.Names.Insert(uDB_AUser.Local.ADDONS.Weather_D.Menu_Position, 'weather');
     uDB_AUser.Local.ADDONS.Names.Delete(uDB_AUser.Local.ADDONS.Weather_D.Menu_Position + 1);
   end;
-
 end;
 
 end.

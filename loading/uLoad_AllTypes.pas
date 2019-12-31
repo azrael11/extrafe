@@ -227,19 +227,28 @@ type
     Path: String; // Keeps the path of emu in general
     Unique_Num: Integer; // Keeps the last num of all emulators
     Active_Num: Integer; // Keeps the num of all active emulators
+
     Level: Integer; // Keeps the level of category emulation
     Category_Num: Integer; // Keeps the num of category that called
+    State: String;
+
     Number: Integer;
 
     Selection: TALTabControl;
     Selection_Ani: TFloatAnimation;
     Selection_Tab: array [0 .. 255] of TEXTRAFE_MAIN_MENU_EMULATOR_TAB;
+
+
     Category: array [0 .. 4] of TEXTRAFE_MAIN_MENU_EMULATOR;
+
+
     Arcade: array [0 .. 10] of TEXTRAFE_MAIN_MENU_EMULATOR;
     Computers: array [0 .. 10] of TEXTRAFE_MAIN_MENU_EMULATOR;
     Consoles: array [0 .. 10] of TEXTRAFE_MAIN_MENU_EMULATOR;
     Handhelds: array [0 .. 10] of TEXTRAFE_MAIN_MENU_EMULATOR;
     Pinballs: array [0 .. 10] of TEXTRAFE_MAIN_MENU_EMULATOR;
+
+
     Emu: array of array of string;
   end;
   /// /////////////////////////////////////////////////////////////////////////////

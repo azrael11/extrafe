@@ -22,7 +22,16 @@ uses
   uEmu_Arcade_Mame_Config_Mouse,
   ALFmxLayouts,
   Radiant.Shapes,
-  BASS;
+  BASS,
+  FMX.Controls,
+  Mitov.FMXTypes,
+  FMX.LPControl,
+  FMX.SLControlCollection,
+  FMX.VLCommonDisplay,
+  FMX.VLImageDisplay,
+  Mitov.Types,
+  VLBasicVideoPlayer,
+  VLLAVVideoPlayer;
 
 /// /////////////////////////////////////////////////////////////////////////////
 ///
@@ -320,6 +329,7 @@ type
 type
   TEMU_MAME_SCENE_SNAPSHOT_GROUP = record
     Back: TImage;
+    Back_Image: TImage;
     Up_Back_Image: TImage;
     Up_Favorites: TText;
     Up_Favorites_Glow: TGlowEffect;
@@ -332,7 +342,11 @@ type
 
     Full_Video: TFmxPasLibVlcPlayer;
     Video: TFmxPasLibVlcPlayer;
+    Video_1: TVLLAVVideoPlayer;
+    Video_Display: TVLImageDisplay;
     Video_Reflaction: TReflectionEffect;
+    Video_Timer_Cont: TTimer;
+
   end;
 
 type
@@ -853,8 +867,15 @@ type
   end;
 
 type
+  TEMU_MAME_MAIN_VIDEO = record
+    Active: String;
+    Is_Aspect_Set: Boolean;
+    Old_Width: Integer;
+  end;
+
+type
   TEMU_MAME_MAIN = record
-    SnapCategory: String;
+    Video: TEMU_MAME_MAIN_VIDEO;
     SnapCategory_Num: Integer;
     SnapMode: String;
     Snap_Old_Width: Single;
@@ -952,9 +973,15 @@ type
   end;
 
 type
+  TEMU_VIDEO_TIMER_CONT = class(TTimer)
+    procedure OnTimer(Sender: TObject);
+  end;
+
+type
   TEMU_MAME_TIMERS = record
     Gamelist: TEMU_GAMELISTS_TIMER;
     Video: TEMU_VIDEO_TIMER;
+    Video_Cont: TEMU_VIDEO_TIMER_CONT;
   end;
 
   // Sounds
@@ -1048,7 +1075,8 @@ begin
     vMame.Scene.Media.T_Image.Image.Bitmap := vMame.Scene.Media.T_Image.Image_Fade.Target;
     vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Media.T_Players.Players_Value.Text := vPlayers;
-    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'favorites', 'mame_status', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'fav_id_' + uDB_AUser.Local.Num.ToString, 'mame_status', 'romname',
+      mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Media.T_Players.Favorite.Visible := vPlayers.ToBoolean;
   end;
 end;
@@ -1057,9 +1085,16 @@ end;
 
 procedure TEMU_VIDEO_TIMER.OnTimer(Sender: TObject);
 begin
+  { it is from mitov video components
+    vMame.Scene.Media.Video_1.FileName := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.mp4';
+    vMame.Scene.Media.Video_1.Loop := True;
+    vMame.Scene.Media.Video_1.Start; }
   vMame.Scene.Media.Video.Play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.mp4');
   vMameVideoTimer.Enabled := False;
-  vMame.Scene.Media.Video.Visible := True;
+  vMame.Scene.Media.T_Players.Players_Value.Text := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+  vMame.Scene.Media.T_Players.Favorite.Visible := uDB.Query_Select(uDB.Arcade_Query, 'fav_id_' + uDB_AUser.Local.Num.ToString, 'mame_status', 'romname',
+    mame.Gamelist.ListRoms[mame.Gamelist.Selected]).ToBoolean;
+  vMame.Scene.Media.Video_Timer_Cont.Enabled := True;
 end;
 
 { TEMU_MAME_SUPPORT }
@@ -1067,6 +1102,24 @@ end;
 procedure TEMU_MAME_SUPPORT.ClearSupport;
 begin
   Self := Default (TEMU_MAME_SUPPORT);
+end;
+
+{ TEMU_VIDEO_TIMER_CONT }
+
+procedure TEMU_VIDEO_TIMER_CONT.OnTimer(Sender: TObject);
+begin
+  if (vMame.Scene.Media.Video.GetVideoWidth <> 0) and (vMame.Scene.Media.Video.GetVideoWidth <> mame.Main.Video.Old_Width) then
+    if mame.Main.Video.Is_Aspect_Set = False then
+    begin
+      if vMame.Scene.Media.Video.GetVideoWidth > vMame.Scene.Media.Video.GetVideoHeight then
+        vMame.Scene.Media.Black_Image.SetBounds(100, 200, 650, 488)
+      else
+        vMame.Scene.Media.Black_Image.SetBounds(187, 150, 488, 650);
+      mame.Main.Video.Is_Aspect_Set := True;
+      mame.Main.Video.Old_Width := vMame.Scene.Media.Video.GetVideoWidth;
+    end;
+  if vMame.Scene.Media.Video.GetVideoPosInPercent > 98 then
+    vMame.Scene.Media.Video.Play(mame.Main.Video.Active);
 end;
 
 initialization

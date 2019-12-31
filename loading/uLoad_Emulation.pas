@@ -9,26 +9,13 @@ uses
   FMX.Forms,
   FMX.Graphics;
 
-type
-  TLOAD_EMU_TAB_DATA = record
-    Prog_Path: String;
-    Emu_Path: String;
-    Emu_Name: String;
-    Emu_Name_Exe: String;
-    Active: Boolean;
-    Categorie: Integer;
-    Place_Num: Integer;
-    Unique_Num: Integer;
-    Installed: Boolean;
-    Images_Path: String;
-  end;
-
 procedure uLoad_Emulation_FirstTime;
 procedure Load;
 
-procedure uLoad_Emulation_SetTabs;
+procedure SetTabs;
 
 procedure Get_Arcade_Data;
+procedure Get_Arcade_Media_Data;
 procedure Get_Computers_Data;
 procedure Get_Consoles_Data;
 procedure Get_Handhelds_Data;
@@ -37,7 +24,7 @@ procedure Get_Pinballs_Data;
 implementation
 
 uses
-  load,
+  Load,
   uLoad,
   uLoad_AllTypes,
   uDB,
@@ -112,7 +99,8 @@ begin
 
   //
 
-  emulation.Category[0].Active := true;
+
+{  emulation.Category[0].Active := true;
   emulation.Category[0].Active_Place := 0;
   emulation.Category[0].Name := 'Arcade';
   emulation.Category[0].Menu_Image_Path := emulation.Path + 'arcade\images\';
@@ -160,39 +148,34 @@ begin
   emulation.Category[4].Background := emulation.Category[4].Menu_Image_Path + 'background.png';
   emulation.Category[4].Second_Level := -1;
   emulation.Category[4].Installed := uDB_AUser.Local.EMULATORS.Pinballs;
-  emulation.Category[4].Unique_Num := -1;
+  emulation.Category[4].Unique_Num := -1;           }
 
-
-  uLoad_Emulation_SetTabs;
+  SetTabs;
 
   ex_load.Scene.Progress.Value := 60;
 end;
 
-procedure uLoad_Emulation_SetTabs;
+procedure SetTabs;
 var
   vi, vk: Integer;
 begin
+
   for vi := 0 to 4 do
     for vk := 0 to 254 do
       emulation.Emu[vi, vk] := 'nil';
 
-  if uDB_AUser.Local.EMULATORS.Arcade then
-    Get_Arcade_Data;
-  if uDB_AUser.Local.EMULATORS.Computers then
-    Get_Computers_Data;
-  if uDB_AUser.Local.EMULATORS.Consoles then
-    Get_Consoles_Data;
-  if uDB_AUser.Local.EMULATORS.Handhelds then
-    Get_Handhelds_Data;
-  if uDB_AUser.Local.EMULATORS.Pinballs then
-    Get_Pinballs_Data;
+  Get_Arcade_Data;
+  Get_Computers_Data;
+  Get_Consoles_Data;
+  Get_Handhelds_Data;
+  Get_Pinballs_Data;
 
   ex_load.Scene.Progress.Value := 70;
 end;
 
-procedure Get_Arcade_Data;
+procedure Get_Arcade_Media_Data;
 var
-  vQuery : String;
+  vQuery: String;
 begin
   vQuery := 'SELECT * FROM ARCADE_MEDIA WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
   ExtraFE_Query_Local.Close;
@@ -200,6 +183,8 @@ begin
   ExtraFE_Query_Local.SQL.Add(vQuery);
   ExtraFE_Query_Local.Open;
   ExtraFE_Query_Local.First;
+
+  { Get Arcade Media Paths }
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artworks := ExtraFE_Query_Local.FieldByName('ARTWORKS').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Cabinets := ExtraFE_Query_Local.FieldByName('CABINETS').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Control_Panels := ExtraFE_Query_Local.FieldByName('CONTROL_PANELS').AsString;
@@ -209,7 +194,7 @@ begin
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Game_Over := ExtraFE_Query_Local.FieldByName('GAME_OVER').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons := ExtraFE_Query_Local.FieldByName('ICONS').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals := ExtraFE_Query_Local.FieldByName('MANUALS').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees := ExtraFE_Query_Local.FieldByName('MARQUEES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees := ExtraFE_Query_Local.FieldByName('MARQUEESS').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Pcbs := ExtraFE_Query_Local.FieldByName('PCBS').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots := ExtraFE_Query_Local.FieldByName('SNAPSHOTS').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Titles := ExtraFE_Query_Local.FieldByName('TITLES').AsString;
@@ -226,47 +211,65 @@ begin
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks := ExtraFE_Query_Local.FieldByName('SOUNDTRACKS').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files := ExtraFE_Query_Local.FieldByName('SUPPORT_FILES').AsString;
   uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos := ExtraFE_Query_Local.FieldByName('VIDEOS').AsString;
-  ExtraFE_Query_Local.Close;
+end;
 
+procedure Get_Arcade_Data;
 
-  if uDB_AUser.Local.EMULATORS.Arcade_D.Mame then
-    uEmu_Arcade_Mame_SetAll.Get_Set_Mame_Data;
-  { if uDB_AUser.Local.EMULATORS.Arcade_D.FBA then
-    Get_Set_FBA_Data;
-    if uDB_AUser.Local.EMULATORS.Arcade_D.Zinc then
-    Get_Set_Zinc_Data;
-    if uDB_AUser.Local.EMULATORS.Arcade_D.Daphne then
-    Get_Set_Daphne_Data;
-    if uDB_AUser.Local.EMULATORS.Arcade_D.Kronos then
-    Get_Set_Kronos_Data;
-    if uDB_AUser.Local.EMULATORS.Arcade_D.Raine then
-    Get_Set_Raine_Data;
-    if uDB_AUser.Local.EMULATORS.Arcade_D.Model2 then
-    Get_Set_Model2_Data;
-    if uDB_AUser.Local.EMULATORS.Arcade_D.SuperModel then
-    Get_Set_SuperModel_Data;
-    if uDB_AUser.Local.EMULATORS.Arcade_D.Demul then
-    Get_Set_Demul_Data; }
+begin
+  if uDB_AUser.Local.EMULATORS.Arcade then
+  begin
+    Get_Arcade_Media_Data;
+    if uDB_AUser.Local.EMULATORS.Arcade_D.Mame then
+      uEmu_Arcade_Mame_SetAll.Get_Set_Mame_Data;
+    { if uDB_AUser.Local.EMULATORS.Arcade_D.FBA then
+      Get_Set_FBA_Data;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Zinc then
+      Get_Set_Zinc_Data;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Daphne then
+      Get_Set_Daphne_Data;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Kronos then
+      Get_Set_Kronos_Data;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Raine then
+      Get_Set_Raine_Data;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Model2 then
+      Get_Set_Model2_Data;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.SuperModel then
+      Get_Set_SuperModel_Data;
+      if uDB_AUser.Local.EMULATORS.Arcade_D.Demul then
+      Get_Set_Demul_Data; }
+  end;
 end;
 
 procedure Get_Computers_Data;
 begin
-  //
+  if uDB_AUser.Local.EMULATORS.Computers then
+  begin
+
+  end;
 end;
 
 procedure Get_Consoles_Data;
 begin
+  if uDB_AUser.Local.EMULATORS.Consoles then
+  begin
 
+  end;
 end;
 
 procedure Get_Handhelds_Data;
 begin
+  if uDB_AUser.Local.EMULATORS.Handhelds then
+  begin
 
+  end;
 end;
 
 procedure Get_Pinballs_Data;
 begin
+  if uDB_AUser.Local.EMULATORS.Pinballs then
+  begin
 
+  end;
 end;
 
 end.

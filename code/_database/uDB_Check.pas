@@ -175,8 +175,9 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS emulators ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1", "PATH" Text,	"ARCADE" Boolean DEFAULT False, '
-    + ' "COMPUTERS" Boolean DEFAULT False, "CONSOLES" Boolean DEFAULT False, "HANDHELDS" Boolean DEFAULT False, "PINBALLS" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS emulators ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1", "ACTIVE_UNIQUE" Integer DEFAULT "-1", '
+    + ' "ACTIVE_UNIQUE_MULTI" Integer DEFAULT "-1", "PATH" Text,	"ARCADE" Boolean DEFAULT False, "COMPUTERS" Boolean DEFAULT False, "CONSOLES" Boolean DEFAULT False, "HANDHELDS" Boolean DEFAULT False,'
+    + ' "PINBALLS" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "emulators" is checked and corrected');
 
@@ -184,9 +185,9 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS arcade ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1",	"MAME" Boolean DEFAULT False,	"FBA" Boolean DEFAULT False, '
-    + ' "ZINC" Boolean DEFAULT False, "DAPHNE" Boolean DEFAULT False, "RAINE" Boolean DEFAULT False, "SUPERMODEL" Boolean DEFAULT False, "DEMUL" Boolean DEFAULT False, "WINKAWAKS" Boolean DEFAULT False, '
-    + ' "MODEL2" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS arcade ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ACTIVE" Boolean DEFAULT "True","COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "0", "NAME" Text DEFAULT "arcade", '
+    + ' "PATH_IMAGES" Text,	"MAME" Boolean DEFAULT False,	"FBA" Boolean DEFAULT False, "ZINC" Boolean DEFAULT False, "DAPHNE" Boolean DEFAULT False, "RAINE" Boolean DEFAULT False, '
+    + ' "SUPERMODEL" Boolean DEFAULT False, "DEMUL" Boolean DEFAULT False, "WINKAWAKS" Boolean DEFAULT False, "MODEL2" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "arcade" is checked and corrected');
 
@@ -195,8 +196,8 @@ begin
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
     'CREATE TABLE IF NOT EXISTS arcade_mame ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "INSTALLED" Boolean DEFAULT False,	"EMU_POSITION" Integer DEFAULT "-1", '
-    + ' "EMU_ACTIVE" Boolean DEFAULT False, "EMU_UNIQUE" Integer DEFAULT "-1", "EXTRAFE_MAME_PATH" Text, "EXTRAFE_MAME_IMAGES" Text, "EXTRAFE_MAME_SOUNDS" Text, "MAME_NAME" Text, "MAME_PATH" Text, '
-    + ' "MAME_INI" Text, "MAME_VERSION" Text);';
+    + ' "EMU_ACTIVE" Boolean DEFAULT False, "EMU_UNIQUE" Integer DEFAULT "0","EMU_UNIQUE_MULTI" Integer DEFAULT "0", "VIEW_MODE" Text DEFAULT "video", "EXTRAFE_MAME_PATH" Text, '
+    + ' "EXTRAFE_MAME_IMAGES" Text, "EXTRAFE_MAME_SOUNDS" Text, "MAME_NAME" Text, "MAME_PATH" Text, "MAME_INI" Text, "MAME_VERSION" Text);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "arcade_mame" is checked and corrected');
 
@@ -214,9 +215,9 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS computers ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1",	"ACORN_ARCHIMEDES" Boolean DEFAULT False,	"AMIGA" Boolean DEFAULT False, '
-    + ' "AMSTRAD" Boolean DEFAULT False, "ATARI_8BIT" Boolean DEFAULT False, "ATARI_ST" Boolean DEFAULT False, "COMMODORE_64" Boolean DEFAULT False, "MSDOS" Boolean DEFAULT False, "OLD_PC_WINDOWS" Boolean DEFAULT False, '
-    + ' "SCUMMVM" Boolean DEFAULT False, "SPECTRUM" Boolean DEFAULT False, "X68000" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS computers ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "1", "NAME" Text DEFAULT "computers", '
+    + ' "PATH_IMAGES" Text,	"ACORN_ARCHIMEDES" Boolean DEFAULT False,	"AMIGA" Boolean DEFAULT False, "AMSTRAD" Boolean DEFAULT False, "ATARI_8BIT" Boolean DEFAULT False, "ATARI_ST" Boolean DEFAULT False, '
+    + ' "COMMODORE_64" Boolean DEFAULT False, "MSDOS" Boolean DEFAULT False, "OLD_PC_WINDOWS" Boolean DEFAULT False, "SCUMMVM" Boolean DEFAULT False, "SPECTRUM" Boolean DEFAULT False, "X68000" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "computers" is checked and corrected');
 
@@ -224,12 +225,13 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS consoles ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1",	"3DO" Boolean DEFAULT False,	"AMIGA_CD32" Boolean DEFAULT False, '
-    + ' "ATARI_2600" Boolean DEFAULT False, "ATARI_5200" Boolean DEFAULT False, "ATARI_7800" Boolean DEFAULT False, "ATARI_JAGUAR" Boolean DEFAULT False, "NEO_GEO" Boolean DEFAULT False, "NEO_GEO_CD" Boolean DEFAULT False, '
-    + ' "NES" Boolean DEFAULT False, "SNES" Boolean DEFAULT False, "NINTENDO_64" Boolean DEFAULT False, "GAMECUBE" Boolean DEFAULT False, "WII" Boolean DEFAULT False, "WII_U" Boolean DEFAULT False, '
-    + ' "NINTENDO_SWITCH" Boolean DEFAULT False, "PC_ENGINE" Boolean DEFAULT False, "PC_ENGINE_CD" Boolean DEFAULT False, "PC_FX" Boolean DEFAULT False, "PLAYSTATION" Boolean DEFAULT False, '
-    + ' "PLAYSTATION_2" Boolean DEFAULT False, "PLAYSTATION_3" Boolean DEFAULT False, "SG_1000" Boolean DEFAULT False, "MASTER_SYSTEM" Boolean DEFAULT False, "MEGA_DRIVE" Boolean DEFAULT False, '
-    + ' "MEGA_DRIVE_32X" Boolean DEFAULT False, "MEGA_DRIVE_CD" Boolean DEFAULT False, "SATURN" Boolean DEFAULT False, "DREAMCAST" Boolean DEFAULT False, "XBOX" Boolean DEFAULT False, "XBOX_ONE" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS consoles ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "2", "NAME" Text DEFAULT "consoles", '
+    + ' "PATH_IMAGES" Text,	"3DO" Boolean DEFAULT False,	"AMIGA_CD32" Boolean DEFAULT False, "ATARI_2600" Boolean DEFAULT False, "ATARI_5200" Boolean DEFAULT False, "ATARI_7800" Boolean DEFAULT False, '
+    + ' "ATARI_JAGUAR" Boolean DEFAULT False, "NEO_GEO" Boolean DEFAULT False, "NEO_GEO_CD" Boolean DEFAULT False, "NES" Boolean DEFAULT False, "SNES" Boolean DEFAULT False, "NINTENDO_64" Boolean DEFAULT False, '
+    + ' "GAMECUBE" Boolean DEFAULT False, "WII" Boolean DEFAULT False, "WII_U" Boolean DEFAULT False, "NINTENDO_SWITCH" Boolean DEFAULT False, "PC_ENGINE" Boolean DEFAULT False, "PC_ENGINE_CD" Boolean DEFAULT False, '
+    + ' "PC_FX" Boolean DEFAULT False, "PLAYSTATION" Boolean DEFAULT False, "PLAYSTATION_2" Boolean DEFAULT False, "PLAYSTATION_3" Boolean DEFAULT False, "SG_1000" Boolean DEFAULT False, '
+    + ' "MASTER_SYSTEM" Boolean DEFAULT False, "MEGA_DRIVE" Boolean DEFAULT False, "MEGA_DRIVE_32X" Boolean DEFAULT False, "MEGA_DRIVE_CD" Boolean DEFAULT False, "SATURN" Boolean DEFAULT False, '
+    + ' "DREAMCAST" Boolean DEFAULT False, "XBOX" Boolean DEFAULT False, "XBOX_ONE" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "consoles" is checked and corrected');
 
@@ -237,9 +239,10 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS handhelds ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1", "ATARI_LYNX" Boolean DEFAULT False, "NEO_GEO_POCKET" Boolean DEFAULT False, '
-    + ' "GAMEGEAR" Boolean DEFAULT False, "GAME_AND_WATCH" Boolean DEFAULT False, "GAMEBOY" Boolean DEFAULT False, "GAMEBOY_COLOR" Boolean DEFAULT False, "GAMEBOY_VIRTUALBOY" Boolean DEFAULT False, '
-    + ' "GAMEBOY_ADVANCE" Boolean DEFAULT False, "NINTENDO_DS" Boolean DEFAULT False, "NINTENDO_3DS" Boolean DEFAULT False, "PSP" Boolean DEFAULT False, "PSP_VITA" Boolean DEFAULT False, "WONDERSWAN" Boolean DEFAULT False);';
+    'CREATE TABLE IF NOT EXISTS handhelds ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "3", "NAME" Text DEFAULT "handhelds", '
+    + ' "PATH_IMAGES" Text, "ATARI_LYNX" Boolean DEFAULT False, "NEO_GEO_POCKET" Boolean DEFAULT False, "GAMEGEAR" Boolean DEFAULT False, "GAME_AND_WATCH" Boolean DEFAULT False, "GAMEBOY" Boolean DEFAULT False, '
+    + ' "GAMEBOY_COLOR" Boolean DEFAULT False, "GAMEBOY_VIRTUALBOY" Boolean DEFAULT False, "GAMEBOY_ADVANCE" Boolean DEFAULT False, "NINTENDO_DS" Boolean DEFAULT False, "NINTENDO_3DS" Boolean DEFAULT False, '
+    + ' "PSP" Boolean DEFAULT False, "PSP_VITA" Boolean DEFAULT False, "WONDERSWAN" Boolean DEFAULT False);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "handhelds" is checked and corrected');
 
@@ -247,7 +250,8 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS pinballs ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1", "VISUAL_PINBALL" Boolean DEFAULT False, "FUTURE_PINBALL" Boolean DEFAULT False);';
+    'CREATE TABLE IF NOT EXISTS pinballs ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "4", "NAME" Text DEFAULT "pinballs", '
+    + ' "PATH_IMAGES" Text, "VISUAL_PINBALL" Boolean DEFAULT False, "FUTURE_PINBALL" Boolean DEFAULT False);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "pinballs" is checked and corrected');
 

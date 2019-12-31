@@ -280,17 +280,17 @@ var
   vCondition: Boolean;
 begin
   if vDirection = 'up' then
-    if uWeather_Config_Towns.vSelectedTown <> 0 then
+    if weather.Config.Selected_Town <> 0 then
       vCondition := True;
 
   if vDirection = 'down' then
-    if uWeather_Config_Towns.vSelectedTown <> weather.Action.Yahoo.Total_WoeID then
+    if weather.Config.Selected_Town <> uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count then
       vCondition := True;
 
   if vCondition then
   begin
     // Change the position in memory list
-    vTemp_Pos := uWeather_Config_Towns.vSelectedTown;
+    vTemp_Pos := weather.Config.Selected_Town;
     if vDirection = 'up' then
       Dec(vTemp_Pos, 1)
     else if vDirection = 'down' then
@@ -304,12 +304,12 @@ begin
 
     // Change the position to ini
     // Change Woeid List
-    vTemp_Ini_Town := weather.Action.OWM.Woeid_List.Strings[uWeather_Config_Towns.vSelectedTown];
-    weather.Action.OWM.Woeid_List.Delete(uWeather_Config_Towns.vSelectedTown);
+    vTemp_Ini_Town := weather.Action.OWM.Woeid_List.Strings[weather.Config.Selected_Town];
+    weather.Action.OWM.Woeid_List.Delete(weather.Config.Selected_Town);
     weather.Action.OWM.Woeid_List.Insert(vTemp_Pos, vTemp_Ini_Town);
     // Change Town List
-    vTemp_Ini_Town := weather.Action.OWM.Towns_List.Strings[uWeather_Config_Towns.vSelectedTown];
-    weather.Action.OWM.Towns_List.Delete(uWeather_Config_Towns.vSelectedTown);
+    vTemp_Ini_Town := weather.Action.OWM.Towns_List.Strings[weather.Config.Selected_Town];
+    weather.Action.OWM.Towns_List.Delete(weather.Config.Selected_Town);
     weather.Action.OWM.Towns_List.Insert(vTemp_Pos, vTemp_Ini_Town);
 
 //    for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
@@ -734,7 +734,7 @@ begin
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Name := 'A_W_Providers_OpenWeatherMap_Config_Iconsets_Preview_Name_' + vNum.ToString;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Parent := vWeather.Config.main.Right.Iconsets.Box;
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.SetBounds(10, 2 + (vNum * 68), 300, 20);
-  vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Text := weather.Action.Yahoo.Iconset_Names.Strings[vNum];
+  vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Text := uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets[vNum];
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Font.Style := vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Iconsets.Mini[vNum].Name.Visible := True;
 
@@ -840,7 +840,7 @@ begin
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Parent := vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].SetBounds(50 * vi, 2, 50, 50);
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons +
-          weather.Action.Yahoo.Iconset_Names.Strings[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
+          uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Tag := vi;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].TagString := vNum.ToString;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].OnClick := weather.Input.mouse_config.Image.OnMouseClick;
@@ -851,7 +851,7 @@ begin
     end;
   end;
 
-  if weather.Action.Yahoo.Iconset_Selected = vNum then
+  if weather.Action.OWM.Iconset_Selected = vNum then
     vWeather.Config.main.Right.Iconsets.Mini[vNum].Text_Image[0].Text := #$ea10;
 end;
 

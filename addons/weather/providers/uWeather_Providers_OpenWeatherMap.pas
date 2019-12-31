@@ -100,7 +100,6 @@ uses
   uInternet_Files,
   uWeather_Config_Towns,
   uWeather_Convert,
-  uWeather_MenuActions,
   uWeather_Actions,
   uWeather_Config_Towns_Add,
   uSnippet_Convert,
@@ -689,7 +688,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.SetBounds(16, 90, 42, 42);
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Font.Family := 'Weather Icons';
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Font.Size := 36;
-  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Color := TAlphaColorRec.Deepskyblue
   else
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_F.Color := TAlphaColorRec.White;
@@ -714,7 +713,7 @@ begin
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.SetBounds(16, 140, 42, 42);
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Font.Family := 'Weather Icons';
   vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Font.Size := 36;
-  if weather.Action.Yahoo.Selected_Unit = 'metric' then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Color := TAlphaColorRec.Deepskyblue
   else
     vWeather.Scene.Tab_OWM[vTab].General.Temprature_Unit_C.Color := TAlphaColorRec.White;
@@ -914,9 +913,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Name := 'A_W_Provider_OpenWeatherMap_Wind_Small_Turbine_Animation_' + IntToStr(vTab);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Parent := vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.PropertyName := 'RotationAngle';
-  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Duration := Convert_Wind((Round(StrToFloat(vTown.Current.Wind.Speed) * 1.8)))
-  else if weather.Action.Yahoo.Selected_Unit = 'metric' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.Duration := Convert_Wind(Round(vTown.Current.Wind.Speed.ToSingle));
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.StartValue := 0;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Small_Animation.StopValue := 360;
@@ -943,9 +942,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Name := 'A_W_Provider_OpenWeatherMap_Wind_Turbine_Animation_' + IntToStr(vTab);
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Parent := vWeather.Scene.Tab_OWM[vTab].Wind.Turbine;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.PropertyName := 'RotationAngle';
-  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Duration := Convert_Wind((Round(StrToFloat(vTown.Current.Wind.Speed) * 1.8) - 1))
-  else if weather.Action.Yahoo.Selected_Unit = 'metric' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.Duration := Convert_Wind(Round(vTown.Current.Wind.Speed.ToSingle));
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.StartValue := 0;
   vWeather.Scene.Tab_OWM[vTab].Wind.Turbine_Animation.StopValue := 360;
@@ -968,9 +967,9 @@ begin
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.SetBounds(100, 470, 200, 30);
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.Font.Size := 16;
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.Color := TAlphaColorRec.White;
-  if weather.Action.Yahoo.Selected_Unit = 'imperial' then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'imperial' then
     vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.text := vTown.Current.main.Pressure + ' inHg'
-  else if weather.Action.Yahoo.Selected_Unit = 'metric' then
+  else if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'metric' then
     vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.text := vTown.Current.main.Pressure + ' mb';
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_OWM[vTab].Atmosphere.Pressure.Tag := vTab;

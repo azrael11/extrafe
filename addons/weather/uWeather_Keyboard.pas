@@ -11,11 +11,11 @@ procedure uWeather_Keyboard_SetKey(vKey: String);
 implementation
 
 uses
+  uDB_AUser,
   uLoad,
   uLoad_AllTypes,
   uMain_Actions,
   uWeather_Actions,
-  uWeather_MenuActions,
   uWeather_Config,
   uWeather_Config_Towns,
   uWeather_Config_Towns_Add,
@@ -45,22 +45,30 @@ begin
     end
     else if UpperCase(vKey) = 'DOWN' then
     begin
-      if weather.Config.Edit_Lock then
-        if weather.Config.Selected_Town <> weather.Action.Active_Total then
-          uWeather_Config_Towns_Edit_SelectTown(weather.Config.Selected_Town + 1)
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+      begin
+        if weather.Config.Edit_Lock then
+          if weather.Config.Selected_Town <> uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count then
+            uWeather_Config_Towns_Edit_SelectTown(weather.Config.Selected_Town + 1)
+      end
+      else
+      begin
+        if weather.Config.Edit_Lock then
+          if weather.Config.Selected_Town <> uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count then
+            uWeather_Config_Towns_Edit_SelectTown(weather.Config.Selected_Town + 1)
+      end;
     end;
   end
   else if extrafe.prog.State = 'addon_weather' then
   begin
-    vi := weather.Main_Menu_Position;
     if UpperCase(vKey) = 'LEFT' then
       uWeather_Actions.Control_Slide_Left
     else if UpperCase(vKey) = 'RIGHT' then
       uWeather_Actions.Control_Slide_Right
     else if UpperCase(vKey) = 'S' then
       uWeather_Config_ShowHide(True)
-    else if UpperCase(vKey) = IntToStr(vi + 1) then
-      uMain_Actions.ShowHide_Addon(1000 + vi, extrafe.prog.state, 'weather');
+    else if UpperCase(vKey) = IntToStr(uDB_AUser.Local.ADDONS.Weather_D.Menu_Position + 1) then
+      uMain_Actions.ShowHide_Addon(1000 + uDB_AUser.Local.ADDONS.Weather_D.Menu_Position, extrafe.prog.State, 'weather');
   end;
 end;
 

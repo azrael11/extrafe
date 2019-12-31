@@ -5,6 +5,7 @@ interface
 uses
   System.Classes,
   System.IniFiles,
+  System.SysUtils,
   FMX.Objects,
   FMX.Ani,
   FMX.Layouts,
@@ -26,11 +27,7 @@ uses
   Radiant.Shapes,
   Bass;
 
-type
-  TADDON_WEATHER_MAINTIMER = class(TObject)
-    procedure OnTimer(Sender: TObject);
-  end;
-
+{ Variables }
 
 type
   TADDON_WEATHER_CHOOSENTOWN_UNIT = record
@@ -83,6 +80,7 @@ type
     Last_Checked: String;
   end;
 
+  { Yahoo Variables Area }
 type
   TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_LOCATION = record
     WoeID: WideString;
@@ -251,23 +249,14 @@ type
     Provider: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_PROVIDER;
     Meta: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN_META;
   end;
-  /// /
 
 type
   TADDON_WEATHER_PROVIDER_YAHOO = record
     Data_Town: array of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN;
-    Total_WoeID: Integer;
-    Selected_Unit: String;
-    Iconset_Count: Integer;
-    Iconset_Selected: Integer;
-    Iconset_Name: String;
-    Iconset_Names: TStringList;
-    WoeID_List: TStringList;
-    Towns_List: TStringList;
   end;
+  { Yahoo Variables Area END }
 
-  /// /
-
+  { OpenWeatherMap Variables Area }
 type
   TADDON_WEATHER_PROVIDER_OPENWEATHERMAP_DATATOWN_CURRENT_COORD = record
     lon: String;
@@ -480,17 +469,15 @@ type
     Language: String;
   end;
 
+  { OpenWeatherMap Variables Area END }
+
 type
   TADDON_WEATHER_ACTIONS = record
-    Provider_Total: Integer;
-    Active_WOEID: Integer;
-    Active_Total: Integer;
     PathAni_Data: TPathData;
     PathAni_Show: Boolean;
     Effect_Active_Num: Integer;
     Yahoo: TADDON_WEATHER_PROVIDER_YAHOO;
     OWM: TADDON_WEATHER_PROVIDER_OPENWEATHERMAP;
-    WEOID_PER_Provider: array of array of Integer;
   end;
 
 type
@@ -504,6 +491,7 @@ type
 type
   TADDON_WEATHER_SOUND = record
     Effects: array [0 .. 10] of HSAMPLE;
+    Effect_Play: Boolean;
     mouse: array [0 .. 10] of HSAMPLE;
     warning: array [0 .. 2] of HSAMPLE;
   end;
@@ -517,22 +505,44 @@ type
   end;
 
 type
+  TWEATHER_ANIMATION_MAIN = class(TObject)
+    procedure OnAniStop(Sender: TObject);
+  end;
+
+type
+  TADDON_WEATHER_ANIMATIONS = record
+    main: TWEATHER_ANIMATION_MAIN;
+    main_stop: Boolean;
+  end;
+
+type
+  TADDON_WEATHER_MAINTIMER = class(TObject)
+    procedure OnTimer(Sender: TObject);
+  end;
+
+type
+  TADDON_WEATHER_TIMERS = record
+    main: TADDON_WEATHER_MAINTIMER;
+  end;
+
+type
   TADDON_WEATHER = record
     Name: String;
-    Active: Boolean;
-    Main_Menu_Position: Integer;
-    Loaded: Boolean;
+    // Loaded: Boolean;
     Action: TADDON_WEATHER_ACTIONS;
     Config: TADDON_WEATHER_SETTINGS;
     Sound: TADDON_WEATHER_SOUND;
     Input: TADDON_WEATHER_INPUT;
+    Ani: TADDON_WEATHER_ANIMATIONS;
+    Timer: TADDON_WEATHER_TIMERS;
   end;
 
 var
   weather: TADDON_WEATHER;
 
-  /// /////////////////////////////////////////////////////////////////////////////
-  /// Construction
+  { Variables END }
+
+  { Construction Objects }
 
 type
   TWEATHER_GLOBAL_HEADER = record
@@ -852,7 +862,7 @@ type
 type
   TFIVE_DAY_FORECAST_OWM_DAY_INFO = record
     Panel: TPanel;
-    Date_Time: TText;
+    date_time: TText;
     Temp: TText;
     Thermo: TText;
     Temp_Min_Arrow: TText;
@@ -863,10 +873,10 @@ type
     Humidity: TText;
     Pressure_Icon: TText;
     Pressure: TText;
-    Sea_level: TText;
-    Ground_level: TText;
-    Temp_kf: TText;
-    Description: TText;
+    sea_level: TText;
+    ground_level: TText;
+    temp_kf: TText;
+    description: TText;
     Icon: TText;
     Wind_Icon: TText;
     Wind_speed: TText;
@@ -947,8 +957,7 @@ type
     Arrow_Left_Glow: TGlowEffect;
     Arrow_Right: TText;
     Arrow_Right_Glow: TGlowEffect;
-    Effect_Timer: TTimer;
-    Timer: TADDON_WEATHER_MAINTIMER;
+    Main_Timer: TTimer;
     Tab_Yahoo: array [0 .. 255] of TTAB_YAHOO_PANEL;
     Tab_OWM: array [0 .. 255] of TTAB_OWM_PANEL;
     First: TWEATHER_SCENE_FIRST;
@@ -1170,14 +1179,17 @@ var
 implementation
 
 uses
-  uWeather_Sounds;
+  uWeather_Sounds,
+  uWeather_Providers_Yahoo;
 
 { TADDON_WEATHER_MAINTIMER }
 
 procedure TADDON_WEATHER_MAINTIMER.OnTimer(Sender: TObject);
 begin
   if TTimer(Sender).Name = 'A_W_Effect_Timer' then
-    uWeather_Sounds_Refresh_Effect;
+    uWeather_Sounds_Refresh_Effect
+  else if TTimer(Sender).Name = 'A_W_Providers_Yahoo_Time' then
+    uWeather_Providers_Yahoo.Update_Time(vWeather.Scene.Control.TabIndex);
 end;
 
 { TADDON_WEATHER_MAP }
@@ -1186,18 +1198,41 @@ procedure TADDON_WEATHER_MAP.Ani_On_Finish(Sender: TObject);
 begin
   vWeather.Scene.Map.Browser := TWebBrowser.Create(vWeather.Scene.Map.Rect);
   vWeather.Scene.Map.Browser.Name := 'A_W_Map_Browser';
-  vWeather.Scene.Map.Browser.Parent:= vWeather.Scene.Map.Rect;
+  vWeather.Scene.Map.Browser.Parent := vWeather.Scene.Map.Rect;
   vWeather.Scene.Map.Browser.SetBounds(15, 50, vWeather.Scene.Map.Rect.Width - 30, vWeather.Scene.Map.Rect.Height - 65);
   vWeather.Scene.Map.Browser.URL := vWeather.Scene.Map.Map_Url;
   vWeather.Scene.Map.Browser.Visible := True;
 end;
 
+{ TWEATHER_ANIMATION_MAIN }
+
+procedure TWEATHER_ANIMATION_MAIN.OnAniStop(Sender: TObject);
+begin
+  //  if TPathAnimation(Sender).Name = 'A_W_Weather_Astronomy_Spot_Animation' then
+//  begin
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Text := TimeToStr(Now);
+//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := True;
+//  end
+//  else
+//  begin
+    weather.Ani.main_stop := True;
+    vWeather.Scene.Arrow_Left_Glow.Enabled := False;
+    vWeather.Scene.Arrow_Right_Glow.Enabled := False;
+//    FreeAndNil(vWeather.Scene.weather);
+//    addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Wind.Speed, True);
+//    uWeather_Actions_Show_AstronomyAnimation;
+//  end;
+end;
+
 initialization
 
-vWeather.Scene.Timer := TADDON_WEATHER_MAINTIMER.Create;
+weather.Timer.main := TADDON_WEATHER_MAINTIMER.Create;
+weather.Ani.main := TWEATHER_ANIMATION_MAIN.Create;
+
 
 finalization
 
-vWeather.Scene.Timer.Free;
+weather.Timer.main.Free;
+weather.Ani.main.Free;
 
 end.

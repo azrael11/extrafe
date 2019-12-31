@@ -220,7 +220,7 @@ begin
         vTime.Name := 'A_W_Providers_Yahoo_Time';
         vTime.Parent := vWeather.Scene.Back;
         vTime.Interval := 1000;
-        vTime.OnTimer := vTime_Obj.OnTimer;
+        vTime.OnTimer := weather.Timer.main.OnTimer;
         vTime.Enabled := False;
 
         vWeather.Scene.Arrow_Right.Visible := False;

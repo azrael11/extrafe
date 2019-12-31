@@ -54,7 +54,9 @@ begin
   // if emulation.Active then
   // if emulation.ShowCat then
 
-  uMain_Emulation.Category(0);
+  emulation.Level:= 0;
+  emulation.Category_Num := 0;
+  uMain_Emulation.Category(emulation.level, emulation.Category_Num);
 
   // extrafe state
   extrafe.prog.State := 'main';

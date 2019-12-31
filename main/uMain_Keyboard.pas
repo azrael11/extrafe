@@ -30,12 +30,15 @@ begin
     else if UpperCase(vKey) = 'ENTER' then
     begin
       if extrafe.prog.State = 'main' then
-        uMain_Emulation.Trigger_Click(emulation.Selection.TabIndex, False)
+        uMain_Emulation.Trigger_Click(emulation.Selection.TabIndex)
     end
     else if UpperCase(vKey) = 'ESC' then
     begin
       if emulation.Level <> 0 then
-        uMain_Emulation.Trigger_Click(0, True)
+      begin
+        emulation.level := 0;
+        uMain_Emulation.Category(emulation.Level, emulation.Category_Num);
+      end
       else
         uMain.Exit;
     end

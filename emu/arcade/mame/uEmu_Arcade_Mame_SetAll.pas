@@ -41,7 +41,16 @@ uses
   ZAbstractDataset,
   ZDataset,
   ZAbstractConnection,
-  ZConnection;
+  ZConnection,
+  FMX.Controls,
+  Mitov.FMXTypes,
+  FMX.LPControl,
+  FMX.SLControlCollection,
+  FMX.VLCommonDisplay,
+  FMX.VLImageDisplay,
+  Mitov.Types,
+  VLBasicVideoPlayer,
+  VLLAVVideoPlayer;
 
 procedure Load;
 
@@ -49,7 +58,9 @@ procedure Create_Configuration;
 
 procedure Create_GameList;
 
-procedure Create_Media;
+procedure Create_Media(vView_Mode: String);
+procedure Create_Mode_Video;
+
 procedure Create_Video_Scene;
 procedure HideShow_Video_Scene(vShow: Boolean);
 procedure Free_Video_Scene;
@@ -71,7 +82,8 @@ uses
   uSnippet_Search,
   uEmu_Arcade_Mame,
   uEmu_Arcade_Mame_AllTypes,
-  uEmu_Arcade_Mame_Ini;
+  uEmu_Arcade_Mame_Ini,
+  uView_Mode_Video;
 
 procedure Create_Configuration;
 begin
@@ -342,6 +354,13 @@ end;
 
 procedure Create_Video_Scene;
 begin
+  vMame.Scene.Media.Black_Image := TImage.Create(vMame.Scene.Right);
+  vMame.Scene.Media.Black_Image.Name := 'Mame_Snap_Black_Image';
+  vMame.Scene.Media.Black_Image.Parent := vMame.Scene.Right;
+  vMame.Scene.Media.Black_Image.SetBounds(100, 150, 650, 600);
+  vMame.Scene.Media.Black_Image.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black.png');
+  vMame.Scene.Media.Black_Image.Visible := True;
+
   { vMame.Scene.Media.Black_Image := TImage.Create(vMame.Scene.Right);
     vMame.Scene.Media.Black_Image.Name := 'Mame_Snap_Black_Image';
     vMame.Scene.Media.Black_Image.Parent := vMame.Scene.Right;
@@ -367,11 +386,31 @@ begin
     exit;
   end;
 
-  vMame.Scene.Media.Video := TFmxPasLibVlcPlayer.Create(vMame.Scene.Media.Back);
+  vMame.Scene.Media.Video := TFmxPasLibVlcPlayer.Create(vMame.Scene.Media.Black_Image);
   vMame.Scene.Media.Video.Name := 'Mame_Snap_Video';
-  vMame.Scene.Media.Video.Parent := vMame.Scene.Media.Back;
-  vMame.Scene.Media.Video.SetBounds(50, 100, 650, 600);
+  vMame.Scene.Media.Video.Parent := vMame.Scene.Media.Black_Image;
+  vMame.Scene.Media.Video.Align := TAlignLayout.Client;
+  vMame.Scene.Media.Video.SetVideoAspectRatio('4:3');
   vMame.Scene.Media.Video.WrapMode := TImageWrapMode.Stretch;
+  vMame.Scene.Media.Video.Visible := True;
+
+  { Extremly bugie for my program maybe in the future
+
+    vMame.Scene.Media.Video_Display := TVLImageDisplay.Create(vMame.Scene.Media.Black_Image);
+    vMame.Scene.Media.Video_Display.Name := 'Mame_Video';
+    vMame.Scene.Media.Video_Display.Parent:=  vMame.Scene.Media.Black_Image;
+    vMame.Scene.Media.Video_Display.Align := TAlignLayout.Client;
+    vMame.Scene.Media.Video_Display.Visible := True;
+
+    vMame.Scene.Media.Video_1 := TVLLAVVideoPlayer.Create(vMame.Scene.Media.Black_Image);
+    vMame.Scene.Media.Video_1.FileName := '';
+
+    vMame.Scene.Media.Video_Display.InputPin.SourcePin := vMame.Scene.Media.Video_1.OutputPin; }
+
+  vMame.Scene.Media.Video_Timer_Cont := TTimer.Create(vMame.Scene.Main);
+  vMame.Scene.Media.Video_Timer_Cont.Interval := 100;
+  vMame.Scene.Media.Video_Timer_Cont.OnTimer := mame.Timers.Video_Cont.OnTimer;
+  vMame.Scene.Media.Video_Timer_Cont.Enabled := False;
 
   { vMame.Scene.Media.Video_Reflaction := TReflectionEffect.Create(vMame.Scene.Media.Video);
     vMame.Scene.Media.Video_Reflaction.Name := 'Mame_Snap_Video_Reflaction';
@@ -403,7 +442,7 @@ begin
   // vMame.Scene.Media.Video_Reflaction.Enabled := vShow;
   // vMame.Scene.Media.Type_Arcade.Visible := vShow;
   // vMame.Scene.Media.Type_Arcade_Reflection.Enabled := vShow;
-  vMame.Scene.Media.Video.Visible := vShow;
+  // vMame.Scene.Media.Video.Visible := vShow;
   // mame.Actions.Video_Scene_Show := vShow;
 end;
 
@@ -480,7 +519,7 @@ begin
   vMame.Scene.Media.T_Image.Image_Fade_Ani.Enabled := vShow;
 end;
 
-procedure Create_Media;
+procedure Create_Mode_Video;
 begin
   vMame.Scene.Media.Back := TImage.Create(vMame.Scene.Right);
   vMame.Scene.Media.Back.Name := 'Mame_Media_Back';
@@ -518,15 +557,49 @@ begin
   vMame.Scene.Media.Up_Favorites_Glow.Softness := 0.9;
   vMame.Scene.Media.Up_Favorites_Glow.Enabled := False;
 
-
-  mame.Favorites.Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'favorites', '1');
+  mame.Favorites.Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '1');
   mame.Favorites.Open := False;
 
+  vMame.Scene.Media.Black_Image := TImage.Create(vMame.Scene.Right);
+  vMame.Scene.Media.Black_Image.Name := 'Mame_Snap_Black_Image';
+  vMame.Scene.Media.Black_Image.Parent := vMame.Scene.Right;
+  vMame.Scene.Media.Black_Image.SetBounds(100, 150, 650, 600);
+  vMame.Scene.Media.Black_Image.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'black.png');
+  vMame.Scene.Media.Black_Image.Visible := True;
+
+{$IFDEF WIN32}
+  libvlc_dynamic_dll_init_with_path('C:\Program Files (x86)\VideoLAN\VLC');
+{$ENDIF}
+  if (libvlc_dynamic_dll_error <> '') then
+  begin
+    ShowMessage(libvlc_dynamic_dll_error);
+    exit;
+  end;
+
+  vMame.Scene.Media.Video := TFmxPasLibVlcPlayer.Create(vMame.Scene.Media.Black_Image);
+  vMame.Scene.Media.Video.Name := 'Mame_Snap_Video';
+  vMame.Scene.Media.Video.Parent := vMame.Scene.Media.Black_Image;
+  vMame.Scene.Media.Video.Align := TAlignLayout.Client;
+  vMame.Scene.Media.Video.SetVideoAspectRatio('4:3');
+  vMame.Scene.Media.Video.WrapMode := TImageWrapMode.Stretch;
+  vMame.Scene.Media.Video.Visible := True;
+
+  vMame.Scene.Media.Video_Timer_Cont := TTimer.Create(vMame.Scene.Main);
+  vMame.Scene.Media.Video_Timer_Cont.Interval := 100;
+  vMame.Scene.Media.Video_Timer_Cont.OnTimer := mame.Timers.Video_Cont.OnTimer;
+  vMame.Scene.Media.Video_Timer_Cont.Enabled := False;
+end;
+
+procedure Create_Media(vView_Mode: String);
+begin
+  if vView_Mode = 'video' then
+    Create_Mode_Video;
+
   Players;
-  Create_Video_Scene;
-  HideShow_Video_Scene(False);
+//  Create_Video_Scene;
+//  HideShow_Video_Scene(False);
   Create_Image_Scene;
-  Show_Image_Scene(True);
+//  Show_Image_Scene(False);
 end;
 
 procedure Load;
@@ -539,7 +612,11 @@ begin
   vMame.Scene.Main.WrapMode := TImageWrapMode.Stretch;
   vMame.Scene.Main.Visible := True;
 
-  vMame.Scene.Main_Blur := TGaussianBlurEffect.Create(vMame.Scene.Main);
+  if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
+    uView_Mode_Video.Create_Scene(vMame.Scene.Main);
+
+
+{  vMame.Scene.Main_Blur := TGaussianBlurEffect.Create(vMame.Scene.Main);
   vMame.Scene.Main_Blur.Name := 'Mame_Main_Blur';
   vMame.Scene.Main_Blur.Parent := vMame.Scene.Main;
   vMame.Scene.Main_Blur.BlurAmount := 0;
@@ -599,10 +676,13 @@ begin
   vMame.Scene.Settings_Glow.Softness := 0.4;
   vMame.Scene.Settings_Glow.Enabled := False;
 
-  Create_GameList;
-  Create_Media;
+  if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
+    uView_Mode_Video.Create_Scene;
 
-  uSnippet_Search.Create(vMame.Scene.Left, 50, 1026, 750, True);
+//  Create_GameList;
+//  Create_Media(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode);
+
+  uSnippet_Search.Create(vMame.Scene.Left, 50, 1026, 750, True);  }
 end;
 
 procedure Get_Set_Mame_Data;
@@ -747,24 +827,26 @@ begin
   mame.Gamelist.ListLanguages.Sort;
 
   vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
-  ExtraFE_Query_Local.Close;
-  ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Add(vQuery);
-  ExtraFE_Query_Local.Open;
-  ExtraFE_Query_Local.First;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Installed := ExtraFE_Query_Local.FieldByName('INSTALLED').AsBoolean;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Active := ExtraFE_Query_Local.FieldByName('EMU_ACTIVE').AsBoolean;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Position := ExtraFE_Query_Local.FieldByName('EMU_POSITION').AsInteger;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Unique := ExtraFE_Query_Local.FieldByName('EMU_UNIQUE').AsInteger;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Path := ExtraFE_Query_Local.FieldByName('MAME_PATH').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name := ExtraFE_Query_Local.FieldByName('MAME_NAME').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini := ExtraFE_Query_Local.FieldByName('MAME_INI').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Version := ExtraFE_Query_Local.FieldByName('MAME_VERSION').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Path := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_PATH').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Database := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_DATABASE').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_IMAGES').AsString;
-  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Sounds := ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_SOUNDS').AsString;
-  ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Installed := uDB.ExtraFE_Query_Local.FieldByName('INSTALLED').AsBoolean;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Active := uDB.ExtraFE_Query_Local.FieldByName('EMU_ACTIVE').AsBoolean;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Position := uDB.ExtraFE_Query_Local.FieldByName('EMU_POSITION').AsInteger;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Unique := uDB.ExtraFE_Query_Local.FieldByName('EMU_UNIQUE').AsInteger;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Unique_Multi := uDB.ExtraFE_Query_Local.FieldByName('EMU_UNIQUE_MULTI').AsInteger;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode := uDB.ExtraFE_Query_Local.FieldByName('VIEW_MODE').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Path := uDB.ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_PATH').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_IMAGES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Sounds := uDB.ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_SOUNDS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name := uDB.ExtraFE_Query_Local.FieldByName('MAME_NAME').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Path := uDB.ExtraFE_Query_Local.FieldByName('MAME_PATH').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini := uDB.ExtraFE_Query_Local.FieldByName('MAME_INI').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Version := uDB.ExtraFE_Query_Local.FieldByName('MAME_VERSION').AsString;
+
+  uDB.ExtraFE_Query_Local.Close;
 
   Set_Mame_Data;
 end;

@@ -61,9 +61,16 @@ function Add_New_User_Local: Boolean;
 procedure Query_Insert(vQuery: TFDQuery; vTable, vColumns, vValues: String);
 procedure Query_Update(vQuery: TFDQuery; vTable_Name, vCol, vValue, vRec, vWhere: string);
 procedure Query_Create_New_Column(vQuery: TFDQuery; vTable_Name, vColumn_Name: String);
-procedure Query_Delete_Column(vQuery: TFDQuery; vTable_Name, vColumn_Name: String);
-function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): String;
+procedure Query_Delete_Table(vQuery: TFDQuery; vTable_Name: String);
+procedure Query_Delete_Column(vDB_Conn: TFDConnection; vQuery: TFDQuery; vTable_Name, vColumn_Name: String);
+procedure Query_Delete_Row(vQuery: TFDQuery; vTable_Name, vRec, vWhere: String);
+procedure Query_Delete_ALL_From_Table(vQuery: TFDQuery; vTable_Name: String);
+
+
+function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): String; Overload;
+// function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): TStringList; Overload;
 function Query_Count(vQuery: TFDQuery; vTable, vWhere, vCont: String): Integer;
+function Query_Check_If_Column_Exists(vQuery: TFDQuery; vTable, vCol: String): Boolean;
 
 { Queries Actions Online }
 procedure Query_Update_Online(vTable_Name, vCol, vValue, vUser_Num: string);
@@ -105,6 +112,7 @@ var
   Pinballs_Query: TFDQuery;
 
 implementation
+
 uses
   uLoad_AllTypes,
   main,
@@ -303,7 +311,7 @@ begin
   Arcade.Connected := True;
 
   Arcade_Query := TFDQuery.Create(emu.Emu_Form);
-  Arcade_Query.Name := 'Mame_Local_Query';
+  Arcade_Query.Name := 'Arcade_Local_Query';
   Arcade_Query.Connection := Arcade;
   Arcade_Query.Active := False;
 end;
@@ -321,9 +329,10 @@ begin
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
   ExtraFE_Query.ParamCheck := False;
-  ExtraFE_Query.SQL.Add('INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT) VALUES ("' + User_Reg.User_ID + '", "' +
-    User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name + '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' +
-    User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' + User_Reg.Last_Visit + '")');
+  ExtraFE_Query.SQL.Add('INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT) VALUES ("' +
+    User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name +
+    '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' +
+    User_Reg.Last_Visit + '")');
   ExtraFE_Query.ExecSQL;
   Result := True;
 end;
@@ -358,20 +367,20 @@ begin
   vPath[8] := vPath[0] + '\data\';
   vPath[9] := vPath[0] + '\data\database\';
 
-  vColumns := 'RESOLUTION_WIDTH, RESOLUTION_HEIGHT, FOULSCREEN, PATH, NAME, PATH_LIB, PATH_HISTORY, PATH_FONTS, THEME_NAME, THEME_PATH, THEME_NUM, LOCAL_DATA, DATABASE_PATH';
-  vValues := '"1920", "1080", "TRUE", "' + vPath[0] + '",  "' + vPath[1] + '",  "' + vPath[2] + '",  "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' + vPath[7] +
-    '", "' + vPath[8] + '", "' + vPath[9] + '"';
+  vColumns :=
+    'RESOLUTION_WIDTH, RESOLUTION_HEIGHT, FOULSCREEN, PATH, NAME, PATH_LIB, PATH_HISTORY, PATH_FONTS, THEME_NAME, THEME_PATH, THEME_NUM, LOCAL_DATA, DATABASE_PATH';
+  vValues := '"1920", "1080", "TRUE", "' + vPath[0] + '",  "' + vPath[1] + '",  "' + vPath[2] + '",  "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] +
+    '", "' + vPath[6] + '", "' + vPath[7] + '", "' + vPath[8] + '", "' + vPath[9] + '"';
   Query_Insert(ExtraFE_Query_Local, 'SETTINGS', vColumns, vValues);
   CodeSite.Send(csmLevel4, 'Settings Table Adding Successfully');
 
-
   { User data }
   vColumns := 'UNIQUE_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT_ONLINE, LAST_VISIT, ACTIVE_ONLINE';
-  vValues := '"' + User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name + '", "' + User_Reg.Surname
-    + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' + User_Reg.Last_Visit + '", "' + User_Reg.Last_Visit + '", "1"';
+  vValues := '"' + User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' +
+    User_Reg.Name + '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered +
+    '", "' + User_Reg.Last_Visit + '", "' + User_Reg.Last_Visit + '", "1"';
   Query_Insert(ExtraFE_Query_Local, 'USERS', vColumns, vValues);
   CodeSite.Send(csmLevel4, 'Users Table Adding Successfully');
-
 
   { Option Data }
   vColumns := 'VIRTUAL_KEYBOARD';
@@ -431,9 +440,10 @@ begin
 
   vColumns := 'ARTWORKS, CABINETS, CONTROL_PANELS, COVERS, FLYERS, FANART, GAME_OVER, ICONS, MANUALS, MARQUEESS, PCBS, SNAPSHOTS, TITLES, ' +
     'ARTWORK_PREVIEW, BOSSES, ENDS, HOW_TO, LOGOS, SCORES, SELECTS, STAMPS, VERSUS, WARNINGS, SOUNDTRACKS, SUPPORT_FILES, VIDEOS';
-  vValues := '"' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' + vPath[7] + '", "' +
-    vPath[8] + '", "' + vPath[9] + '", "' + vPath[10] + '" , "' + vPath[11] + '", "' + vPath[12] + '", "' + vPath[13] + '", "' + vPath[14] + '", "' + vPath[15] + '", "' + vPath[16] + '", "' +
-    vPath[17] + '", "' + vPath[18] + '", "' + vPath[19] + '", "' + vPath[20] + '", "' + vPath[21] + '", "' + vPath[22] + '", "' + vPath[23] + '", "' + vPath[24] + '", "' + vPath[25] + '"';
+  vValues := '"' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' +
+    vPath[7] + '", "' + vPath[8] + '", "' + vPath[9] + '", "' + vPath[10] + '" , "' + vPath[11] + '", "' + vPath[12] + '", "' + vPath[13] + '", "' + vPath[14] +
+    '", "' + vPath[15] + '", "' + vPath[16] + '", "' + vPath[17] + '", "' + vPath[18] + '", "' + vPath[19] + '", "' + vPath[20] + '", "' + vPath[21] + '", "' +
+    vPath[22] + '", "' + vPath[23] + '", "' + vPath[24] + '", "' + vPath[25] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ARCADE_MEDIA', vColumns, vValues);
   CodeSite.Send(csmLevel4, 'Arcade_Media Table Adding Successfully');
 
@@ -543,7 +553,7 @@ begin
   vQuery.ExecSQL;
 end;
 
-function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): String;
+function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): String; Overload;
 begin
   vQuery.Close;
   vQuery.SQL.Clear;
@@ -587,35 +597,34 @@ begin
   Result := vQuery.Fields[0].AsInteger;
 end;
 
+procedure Query_Delete_Table(vQuery: TFDQuery; vTable_Name: String);
+begin
+  { Must create it }
+end;
+
 procedure Query_Create_New_Column(vQuery: TFDQuery; vTable_Name, vColumn_Name: String);
 begin
   vQuery.Close;
   vQuery.SQL.Clear;
-  vQuery.SQL.Text := 'ALTER TABLE ' + vTable_Name + ' ADD COLUMN ' + vColumn_Name + ' BOOLEAN DEFAULT=False';
+  vQuery.SQL.Text := 'ALTER TABLE ' + vTable_Name + ' ADD COLUMN ' + vColumn_Name;
   vQuery.ExecSQL;
 end;
 
-procedure Query_Delete_Column(vQuery: TFDQuery; vTable_Name, vColumn_Name: String);
+procedure Query_Delete_Column(vDB_Conn: TFDConnection; vQuery: TFDQuery; vTable_Name, vColumn_Name: String);
 var
-  vList_Name: TStringlist;
-  vList_Type: TStringlist;
-  vList_NotNull: TStringlist;
-  vList_Default_Value: TStringlist;
-  vList_Primary_Key: TStringlist;
+  vList_Name, vList_Type, vList_NN, vList_DV, vList_PK: TStringlist;
   vi: Integer;
   vFound: Boolean;
-  vText_Tables: String;
+  vTables, vSTables, isNull, isDefault, isPrimaryKey: String;
 begin
   vList_Name := TStringlist.Create;
   vList_Type := TStringlist.Create;
-  vList_NotNull := TStringlist.Create;
-  vList_Default_Value := TStringlist.Create;
-  vList_Primary_Key := TStringlist.Create;
+  vList_NN := TStringlist.Create;
+  vList_DV := TStringlist.Create;
+  vList_PK := TStringlist.Create;
 
   vQuery.Close;
-  vQuery.SQL.Clear;
-  vQuery.SQL.Text := 'PRAGMA table_info("' + vTable_Name + '")';
-  vQuery.ExecSQL;
+  vQuery.Open('PRAGMA table_info(' + vTable_Name + ')');
   vQuery.DisableControls;
   vQuery.First;
 
@@ -624,9 +633,9 @@ begin
     begin
       vList_Name.Add(vQuery.FieldByName('name').AsString);
       vList_Type.Add(vQuery.FieldByName('type').AsString);
-      vList_NotNull.Add(vQuery.FieldByName('notnull').AsString);
-      vList_Default_Value.Add(vQuery.FieldByName('dflt_value').AsString);
-      vList_Primary_Key.Add(vQuery.FieldByName('pk').AsString);
+      vList_NN.Add(vQuery.FieldByName('notnull').AsString);
+      vList_DV.Add(vQuery.FieldByName('dflt_value').AsString);
+      vList_PK.Add(vQuery.FieldByName('pk').AsString);
       uDB.Arcade_Query.Next;
     end;
   finally
@@ -639,38 +648,127 @@ begin
     begin
       vList_Name.Delete(vi);
       vList_Type.Delete(vi);
-      vList_NotNull.Delete(vi);
-      vList_Default_Value.Delete(vi);
-      vList_Primary_Key.Delete(vi);
+      vList_NN.Delete(vi);
+      vList_DV.Delete(vi);
+      vList_PK.Delete(vi);
       vFound := True;
+      Break
     end;
+
+  for vi := 0 to vList_Name.Count - 1 do
+  begin
+    if vList_NN.Strings[vi] = '0' then
+      isNull := ''
+    else
+      isNull := 'NOT NULL';
+
+    if vList_DV.Strings[vi] = '' then
+      isDefault := ''
+    else
+      isDefault := 'DEFAULT ' + vList_DV.Strings[vi];
+
+    if vList_PK.Strings[vi] = '0' then
+      isPrimaryKey := ''
+    else
+      isPrimaryKey := 'PRIMARY KEY AUTOINCREMENT';
+
+    if vi = 0 then
+    begin
+      vTables := '"' + vList_Name.Strings[vi] + '" ' + vList_Type.Strings[vi] + ' ' + isNull + ' ' + isDefault + ' ' + isPrimaryKey;
+      vSTables := vList_Name.Strings[vi];
+    end
+    else
+    begin
+      vTables := vTables + ', "' + vList_Name.Strings[vi] + '" ' + vList_Type.Strings[vi] + ' ' + isNull + ' ' + isDefault + ' ' + isPrimaryKey;
+      vSTables := vSTables + ', ' + vList_Name.Strings[vi];
+    end;
+  end;
 
   if vFound then
   begin
-    for vi := 0 to vList_Name.Count - 1 do
+    if ExtraFE_DB_Local.Transaction <> nil then
     begin
-      if vi = 0 then
-        vText_Tables := '"' + vList_Name[vi] + '" ' + UpperCase(vList_Type[vi]) + ' ' + UpperCase(vList_NotNull[vi]) + ' ' + UpperCase(vList_Default_Value[vi]) + ' ' + UpperCase(vList_Primary_Key[vi])
-      else
-        vText_Tables := vText_Tables + ', "' + vList_Name[vi] + '" ' + UpperCase(vList_Type[vi]) + ' ' + UpperCase(vList_NotNull[vi]) + ' ' + UpperCase(vList_Default_Value[vi]) + ' ' +
-          UpperCase(vList_Primary_Key[vi]);
+      if vDB_Conn.Transaction.Active = False then
+      begin
+        vDB_Conn.StartTransaction;
+        vQuery.Close;
+        vQuery.SQL.Clear;
+        vQuery.SQL.Add('PRAGMA foreign_keys=off;');
+        // vQuery.SQL.Add('BEGIN TRANSACTION;');
+        vQuery.SQL.Add('CREATE TABLE temp_table(' + vTables + ');');
+        vQuery.SQL.Add('INSERT INTO temp_table SELECT ' + vSTables + ' FROM ' + vTable_Name + ';');
+        vQuery.SQL.Add('DROP TABLE ' + vTable_Name + ';');
+        vQuery.SQL.Add('ALTER Table temp_table RENAME to ' + vTable_Name + ';');
+        // vQuery.SQL.Add('COMMIT;');
+        vQuery.SQL.Add('PRAGMA foreign_keys=on;');
+        vQuery.ExecSQL;
+        vDB_Conn.Commit;
+      end
+    end
+    else
+    begin
+      vDB_Conn.StartTransaction;
+      vQuery.Close;
+      vQuery.SQL.Clear;
+      vQuery.SQL.Add('PRAGMA foreign_keys=off;');
+      // vQuery.SQL.Add('BEGIN TRANSACTION;');
+      vQuery.SQL.Add('CREATE TABLE temp_table(' + vTables + ');');
+      vQuery.SQL.Add('INSERT INTO temp_table SELECT ' + vSTables + ' FROM ' + vTable_Name + ';');
+      vQuery.SQL.Add('DROP TABLE ' + vTable_Name + ';');
+      vQuery.SQL.Add('ALTER Table temp_table RENAME to ' + vTable_Name + ';');
+      // vQuery.SQL.Add('COMMIT;');
+      vQuery.SQL.Add('PRAGMA foreign_keys=on;');
+      vQuery.ExecSQL;
+      vDB_Conn.Commit;
     end;
-    vQuery.Close;
-    vQuery.SQL.Clear;
-    vQuery.SQL.Text := 'CREATE TABLE temp (' + vText_Tables + ')';
-    vQuery.ExecSQL;
-  end
-  else
-  begin
-
   end;
-  // Find the columns names of the table
-  // Check if the colunm name = vColumn_name
-  // Create a new table _temp with all the tables except the column
-  // Drop the parent table
-  // Create a new table with the parent table name
-  // Insert all the data from the old one
-  // Drop the the temp table
+
+  FreeAndNil(vList_Name);
+  FreeAndNil(vList_Type);
+  FreeAndNil(vList_NN);
+  FreeAndNil(vList_DV);
+  FreeAndNil(vList_PK);
 end;
 
+procedure Query_Delete_Row(vQuery: TFDQuery; vTable_Name, vRec, vWhere: String);
+begin
+  vQuery.Close;
+  vQuery.SQL.Clear;
+  vQuery.SQL.Text := 'DELETE FROM ' + vTable_Name + ' WHERE ' + vRec + '="' + vWhere + '"';
+  vQuery.ExecSQL;
+
+end;
+
+procedure Query_Delete_ALL_From_Table(vQuery: TFDQuery; vTable_Name: String);
+begin
+  vQuery.Close;
+  vQuery.SQL.Clear;
+  vQuery.SQL.Text := 'DELETE FROM ' + vTable_Name;
+  vQuery.ExecSQL;
+end;
+
+function Query_Check_If_Column_Exists(vQuery: TFDQuery; vTable, vCol: String): Boolean;
+begin
+  Result := False;
+  vQuery.Close;
+  vQuery.Open('PRAGMA table_info(' + vTable + ')');
+  vQuery.DisableControls;
+  vQuery.First;
+
+  while not vQuery.Eof do
+  begin
+    if vCol = vQuery.FieldByName('name').AsString then
+    begin
+      Result := True;
+      Break
+    end;
+    vQuery.Next;
+  end;
+  vQuery.EnableControls;
+end;
+
+// function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): TStringList; Overload;
+// begin
+//
+// end;
 end.
