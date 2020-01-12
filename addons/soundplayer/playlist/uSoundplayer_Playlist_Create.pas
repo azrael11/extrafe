@@ -48,7 +48,7 @@ begin
   vSoundplayer.Playlist.Create.Panel.SetBounds((vSoundplayer.scene.soundplayer.Width / 2) - 250, (vSoundplayer.scene.soundplayer.Height / 2) - 125, 500, 150);
   vSoundplayer.Playlist.Create.Panel.Visible := True;
 
-  CreateHeader(vSoundplayer.Playlist.Create.Panel, 'IcoMoon-Free', #$ea0a,'Create a new playlist.', False, nil);
+  CreateHeader(vSoundplayer.Playlist.Create.Panel, 'IcoMoon-Free', #$ea0a, TAlphaColorRec.DeepSkyBlue,'Create a new playlist.', False, nil);
 
   vSoundplayer.Playlist.Create.main.Panel := TPanel.Create(vSoundplayer.Playlist.Create.Panel);
   vSoundplayer.Playlist.Create.main.Panel.Name := 'A_SP_Playlist_Create_Panel_Main';

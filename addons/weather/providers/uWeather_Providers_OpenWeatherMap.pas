@@ -275,7 +275,7 @@ begin
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Panel.SetBounds((vWeather.Scene.Back.Width / 2) - 375, 90, 750, 600);
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Panel.Visible := True;
 
-  CreateHeader(vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Panel, 'IcoMoon-Free', #$ea0c, 'Info for', True, vWeather.Scene.Blur);
+  CreateHeader(vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Panel, 'IcoMoon-Free', #$ea0c, TAlphaColorRec.DeepSkyBlue, 'Info for', True, vWeather.Scene.Blur);
 
   vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Icon :=
     TText.Create(vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Five.Info.Panel);

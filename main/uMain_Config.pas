@@ -67,7 +67,7 @@ begin
   mainScene.Config.Panel_Ani.OnFinish :=  uMain_Actions.vMain_Ani.OnFinish;
   mainScene.Config.Panel_Ani.Enabled := False;
 
-  CreateHeader(mainScene.Config.Panel, 'IcoMoon-Free', #$e994, 'Main configuration', False, nil);
+  CreateHeader(mainScene.Config.Panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.DeepSkyBlue, 'Main configuration', False, nil);
 
   mainScene.Config.main.Left := TPanel.Create(mainScene.Config.Panel);
   mainScene.Config.main.Left.Name := 'Main_Config_Left_Panel';

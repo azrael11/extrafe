@@ -1063,7 +1063,7 @@ begin
   vSoundplayer.tag.mp3.Back_Blur.BlurAmount := 0.5;
   vSoundplayer.tag.mp3.Back_Blur.Enabled := False;
 
-  CreateHeader(vSoundplayer.tag.mp3.Back, 'IcoMoon-Free', #$e935, 'Tag mp3', False, nil);
+  CreateHeader(vSoundplayer.tag.mp3.Back, 'IcoMoon-Free', #$e935, TAlphaColorRec.DeepSkyBlue, 'Tag mp3', False, nil);
 
   vSoundplayer.tag.mp3.Main := TPanel.Create(vSoundplayer.tag.mp3.Back);
   vSoundplayer.tag.mp3.Main.Name := 'A_SP_Back_Main';
@@ -1130,7 +1130,7 @@ begin
   vSoundplayer.tag.mp3.Cover_Select.Panel.SetBounds(extrafe.res.Half_Width - 275, extrafe.res.Half_Height - 300, 550, 400);
   vSoundplayer.tag.mp3.Cover_Select.Panel.Visible := True;
 
-  CreateHeader(vSoundplayer.tag.mp3.Cover_Select.Panel, 'IcoMoon-Free', #$e90d, 'Choose cover type.', False, nil);
+  CreateHeader(vSoundplayer.tag.mp3.Cover_Select.Panel, 'IcoMoon-Free', #$e90d, TAlphaColorRec.DeepSkyBlue, 'Choose cover type.', False, nil);
 
   vSoundplayer.tag.mp3.Cover_Select.Main := TPanel.Create(vSoundplayer.tag.mp3.Cover_Select.Panel);
   vSoundplayer.tag.mp3.Cover_Select.Main.Name := 'A_SP_Tag_Mp3_CoverSelet_Main';
@@ -1199,7 +1199,7 @@ begin
   vSoundplayer.tag.mp3.Lyrics_Add.Panel.SetBounds(extrafe.res.Half_Width - 175, extrafe.res.Half_Height - 100, 350, 200);
   vSoundplayer.tag.mp3.Lyrics_Add.Panel.Visible := True;
 
-  CreateHeader(vSoundplayer.tag.mp3.Lyrics_Add.Panel, 'IcoMoon-Free', #$e922, 'How to add lyrics?', False, nil);
+  CreateHeader(vSoundplayer.tag.mp3.Lyrics_Add.Panel, 'IcoMoon-Free', #$e922, TAlphaColorRec.DeepSkyBlue, 'How to add lyrics?', False, nil);
 
   vSoundplayer.tag.mp3.Lyrics_Add.Main := TPanel.Create(vSoundplayer.tag.mp3.Lyrics_Add.Panel);
   vSoundplayer.tag.mp3.Lyrics_Add.Main.Name := 'A_SP_Tag_Mp3_LyricsAdd_Main';
@@ -1251,7 +1251,7 @@ begin
   vSoundplayer.tag.mp3.Lyrics_Int.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 450, 600, 700);
   vSoundplayer.tag.mp3.Lyrics_Int.Panel.Visible := True;
 
-  CreateHeader(vSoundplayer.tag.mp3.Lyrics_Int.Panel, 'IcoMoon-Free', #$e922, 'Lyrics from Internet', False, nil);
+  CreateHeader(vSoundplayer.tag.mp3.Lyrics_Int.Panel, 'IcoMoon-Free', #$e922, TAlphaColorRec.DeepSkyBlue, 'Lyrics from Internet', False, nil);
 
   vSoundplayer.tag.mp3.Lyrics_Int.Main := TPanel.Create(vSoundplayer.tag.mp3.Lyrics_Int.Panel);
   vSoundplayer.tag.mp3.Lyrics_Int.Main.Name := 'A_SP_Tag_Mp3_Lyrics_Get_Main';

@@ -10,26 +10,29 @@ uses
   FMX.StdCtrls;
 
 const
-  cMame_Config_Buttons_Names: array [0 .. 12] of WideString = ('Directories', 'Display', 'Advance', 'Screen',
-    'OpenGL/BGFX', 'OpenGL Shaders', 'Vector', 'Sound', 'Controllers', 'Controller Mapping', 'Miscellaneous',
-    'Miscellaneous II', 'Snap/Movie/Playback');
-  cMame_Config_Media_dirs: array [0 .. 25] of WideString = ('Artworks', 'Cabinets', 'Control Panels',
-    'Covers', 'Flyers', 'Fanart', 'Icons', 'Manuals', 'Marquees', 'Pcbs', 'Snapshots', 'Titles',
-    'Artwork Preview', 'Bosses', 'Ends', 'How To', 'Logos', 'Scores', 'Selects', 'Versus', 'Game Over',
-    'Warnings', 'Stamps', 'Soundtracks', 'Support Files', 'Videos');
+  cMame_Config_Buttons_Names: array [0 .. 12] of WideString = ('Directories', 'Display', 'Advance', 'Screen', 'OpenGL/BGFX', 'OpenGL Shaders', 'Vector',
+    'Sound', 'Controllers', 'Controller Mapping', 'Miscellaneous', 'Miscellaneous II', 'Snap/Movie/Playback');
+  cMame_Config_Media_dirs: array [0 .. 25] of WideString = ('Artworks', 'Cabinets', 'Control Panels', 'Covers', 'Flyers', 'Fanart', 'Icons', 'Manuals',
+    'Marquees', 'Pcbs', 'Snapshots', 'Titles', 'Artwork Preview', 'Bosses', 'Ends', 'How To', 'Logos', 'Scores', 'Selects', 'Versus', 'Game Over', 'Warnings',
+    'Stamps', 'Soundtracks', 'Support Files', 'Videos');
 
 procedure Load;
-procedure Free;
+
+procedure Get_ViewMode_Panels;
 
 procedure Free_Panel(vFreePanel_Num: Integer);
 procedure Show_Panel(vShow: Integer);
 
 var
   mame_config_menu_panel: Integer;
+  mame_config_panel: TPanel;
+  mame_config_left: TPanel;
+  mame_config_right: TPanel;
 
 implementation
 
 uses
+  uDB_AUser,
   uLoad_AllTypes,
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Mouse,
@@ -45,42 +48,37 @@ uses
   uEmu_Arcade_Mame_Config_Controller_Mapping,
   uEmu_Arcade_Mame_Config_Miscellaneous,
   uEmu_Arcade_Mame_Config_MiscellaneousII,
-  uEmu_Arcade_Mame_Config_Snap_Movie_Playback;
+  uEmu_Arcade_Mame_Config_Snap_Movie_Playback,
+  {View Modes}
+  uView_Mode_Video_AllTypes;
+
+procedure Get_ViewMode_Panels;
+begin
+  if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
+  begin
+    mame_config_panel := Emu_VM_Video.Config.main;
+    mame_config_left := Emu_VM_Video.Config.left;
+    mame_config_right := Emu_VM_Video.Config.right;
+  end;
+end;
 
 procedure Load;
 var
   vi: Integer;
 begin
-  vMame.Config.Scene.Header_Icon := TImage.Create(vMame.Config.Scene.Header);
-  vMame.Config.Scene.Header_Icon.Name := 'Mame_Config_Header_Icon';
-  vMame.Config.Scene.Header_Icon.Parent := vMame.Config.Scene.Header;
-  vMame.Config.Scene.Header_Icon.Width := 24;
-  vMame.Config.Scene.Header_Icon.Height := 24;
-  vMame.Config.Scene.Header_Icon.Position.X := 6;
-  vMame.Config.Scene.Header_Icon.Position.Y := 3;
-  vMame.Config.Scene.Header_Icon.Visible := True;
+  Get_ViewMode_Panels;
 
-  vMame.Config.Scene.Header_Label := TLabel.Create(vMame.Config.Scene.Header);
-  vMame.Config.Scene.Header_Label.Name := 'Mame_Config_Header_Label';
-  vMame.Config.Scene.Header_Label.Parent := vMame.Config.Scene.Header;
-  vMame.Config.Scene.Header_Label.Width := vMame.Config.Scene.Header.Width - 36;
-  vMame.Config.Scene.Header_Label.Height := 28;
-  vMame.Config.Scene.Header_Label.Position.X := 36;
-  vMame.Config.Scene.Header_Label.Position.Y := 1;
-  vMame.Config.Scene.Header_Label.Font.Family := 'Tahoma';
-  vMame.Config.Scene.Header_Label.Font.Style := vMame.Config.Scene.Header_Label.Font.Style +
-    [TFontStyle.fsBold];
-  vMame.Config.Scene.Header_Label.Visible := True;
+  if extrafe.prog.State = 'mame' then
+    uLoad_AllTypes.CreateHeader(mame_config_panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.DeepSkyBlue, 'Mame Global Configuration', False, nil)
+  else if extrafe.prog.State = 'mame_game' then
+    uLoad_AllTypes.CreateHeader(mame_config_panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.Limegreen, 'Configuration For "Game In Here"', False, nil);
 
   for vi := 0 to 12 do
   begin
-    vMame.Config.Scene.Left_Buttons[vi] := TButton.Create(vMame.Config.Scene.Left);
+    vMame.Config.Scene.Left_Buttons[vi] := TButton.Create(mame_config_left);
     vMame.Config.Scene.Left_Buttons[vi].Name := 'Mame_Config_Button_' + IntToStr(vi);
-    vMame.Config.Scene.Left_Buttons[vi].Parent := vMame.Config.Scene.Left;
-    vMame.Config.Scene.Left_Buttons[vi].Width := 130;
-    vMame.Config.Scene.Left_Buttons[vi].Height := 22;
-    vMame.Config.Scene.Left_Buttons[vi].Position.X := 10;
-    vMame.Config.Scene.Left_Buttons[vi].Position.Y := 20 + ((vi * 22) + (vi * 10));
+    vMame.Config.Scene.Left_Buttons[vi].Parent := mame_config_left;
+    vMame.Config.Scene.Left_Buttons[vi].SetBounds(10, 20 + ((vi * 22) + (vi * 10)), 130, 22);
     vMame.Config.Scene.Left_Buttons[vi].OnClick := mame.Input.Mouse.Button.OnMouseClick;
     vMame.Config.Scene.Left_Buttons[vi].Text := cMame_Config_Buttons_Names[vi];
     vMame.Config.Scene.Left_Buttons[vi].Tag := vi;
@@ -89,31 +87,19 @@ begin
 
   for vi := 0 to 12 do
   begin
-    vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(vMame.Config.Scene.Right);
+    vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(mame_config_right);
     vMame.Config.Scene.Right_Panels[vi].Name := 'Mame_Config_A_Panel_' + IntToStr(vi);
-    vMame.Config.Scene.Right_Panels[vi].Parent := vMame.Config.Scene.Right;
-    vMame.Config.Scene.Right_Panels[vi].Width := vMame.Config.Scene.Right.Width;
-    vMame.Config.Scene.Right_Panels[vi].Height := vMame.Config.Scene.Right.Height;
-    vMame.Config.Scene.Right_Panels[vi].Position.X := 0;
-    vMame.Config.Scene.Right_Panels[vi].Position.Y := 0;
+    vMame.Config.Scene.Right_Panels[vi].Parent := mame_config_right;
+    vMame.Config.Scene.Right_Panels[vi].SetBounds(0, 0, mame_config_right.Width, mame_config_right.Height);
     vMame.Config.Scene.Right_Panels[vi].Tag := vi;
     vMame.Config.Scene.Right_Panels[vi].Visible := False;
   end;
 
   mame_config_menu_panel := -1;
-end;
-
-procedure Free;
-var
-  vi: Integer;
-begin
-  FreeAndNil(vMame.Config.Scene.Header_Icon);
-  FreeAndNil(vMame.Config.Scene.Header_Label);
-  for vi := 0 to 12 do
-  begin
-    FreeAndNil(vMame.Config.Scene.Left_Buttons[vi]);
-    FreeAndNil(vMame.Config.Scene.Right_Panels[vi]);
-  end;
+  if extrafe.prog.State = 'mame' then
+    vHeader.Icon_Text.TextSettings.FontColor := TAlphaColorRec.DeepSkyBlue
+  else if extrafe.prog.State = 'mame_game' then
+    vHeader.Icon_Text.TextSettings.FontColor := TAlphaColorRec.Limegreen;
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -128,13 +114,10 @@ begin
       FreeAndNil(vMame.Config.Scene.Right_Panels[vi]);
     for vi := 0 to 12 do
     begin
-      vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(vMame.Config.Scene.Right);
+      vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(mame_config_right);
       vMame.Config.Scene.Right_Panels[vi].Name := 'Mame_Config_A_Panel_' + IntToStr(vi);
-      vMame.Config.Scene.Right_Panels[vi].Parent := vMame.Config.Scene.Right;
-      vMame.Config.Scene.Right_Panels[vi].Width := vMame.Config.Scene.Right.Width;
-      vMame.Config.Scene.Right_Panels[vi].Height := vMame.Config.Scene.Right.Height;
-      vMame.Config.Scene.Right_Panels[vi].Position.X := 0;
-      vMame.Config.Scene.Right_Panels[vi].Position.Y := 0;
+      vMame.Config.Scene.Right_Panels[vi].Parent := mame_config_right;
+      vMame.Config.Scene.Right_Panels[vi].SetBounds(0, 0, mame_config_right.Width, mame_config_right.Height);
       vMame.Config.Scene.Right_Panels[vi].Tag := vi;
       vMame.Config.Scene.Right_Panels[vi].Visible := False;
     end;

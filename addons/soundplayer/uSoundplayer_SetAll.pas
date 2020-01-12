@@ -1286,7 +1286,7 @@ begin
   vSoundplayer.scene.First.Panel_Shadow.Direction := 90;
   vSoundplayer.scene.First.Panel_Shadow.Enabled := True;
 
-  CreateHeader(vSoundplayer.scene.First.Panel, 'IcoMoon-Free', #$ea1c, 'Welcome to "Soundplayer" addon.', False, nil);
+  CreateHeader(vSoundplayer.scene.First.Panel, 'IcoMoon-Free', #$ea1c, TAlphaColorRec.DeepSkyBlue, 'Welcome to "Soundplayer" addon.', False, nil);
 
   vSoundplayer.scene.First.main.Panel := TPanel.Create(vSoundplayer.scene.First.Panel);
   vSoundplayer.scene.First.main.Panel.Name := 'A_SP_Firt_Main';
@@ -1390,7 +1390,7 @@ begin
   vSoundplayer.Playlist.Remove_Song.Remove.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 75, 500, 140);
   vSoundplayer.Playlist.Remove_Song.Remove.Visible := True;
 
-  CreateHeader(vSoundplayer.Playlist.Remove_Song.Remove, 'IcoMoon-Free', #$ea0f, 'remove this song from the playlist?', False, nil);
+  CreateHeader(vSoundplayer.Playlist.Remove_Song.Remove, 'IcoMoon-Free', #$ea0f, TAlphaColorRec.DeepSkyBlue, 'remove this song from the playlist?', False, nil);
 
   vSoundplayer.Playlist.Remove_Song.main.Panel := TPanel.Create(vSoundplayer.Playlist.Remove_Song.Remove);
   vSoundplayer.Playlist.Remove_Song.main.Panel.Name := 'A_SP_Playlist_Edit_Song_Remove_Main';

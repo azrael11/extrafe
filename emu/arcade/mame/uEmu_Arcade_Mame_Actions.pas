@@ -94,6 +94,7 @@ begin
   mame.Main.Snap_Old_Width := vMame.Scene.Media.T_Image.Image_Width_Ani.StopValue;
 end;
 
+
 procedure Show_Media;
 var
   vImageExists: Boolean;
@@ -127,22 +128,22 @@ begin
     end;
     if FileExists(uDB_AUser.Local.Emulators.Arcade_D.Media.Flyers + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png') then
     begin
-//      aWand := ALImageMagickLib.NewMagickWand;
-//
-//      ALImageMagickLib.MagickReadImage(aWand, PAnsiChar(uDB_AUser.Local.Emulators.Arcade_D.Media.Flyers + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png'));
-//
-//      ALImageMagickLib.MagickResizeImage(aWand, 1920, 1080, LanczosFilter);
-//
-//      ALImageMagickLib.MagickWriteImage(aWand, PAnsiChar(extrafe.prog.Path + 'temp.png'));
-//
-//      ALImageMagickLib.DestroyMagickWand(aWand);
-//
-//      vMame.Scene.Left.Bitmap.LoadFromFile(extrafe.prog.Path + 'temp.png');
-//      vMame.Scene.Left.WrapMode := TImageWrapMode.Stretch;
-//      vMame.Scene.Right.Bitmap.LoadFromFile(extrafe.prog.Path + 'temp.png');
-//      vMame.Scene.Right.WrapMode := TImageWrapMode.Stretch;
-//
-//      TFile.Delete(extrafe.prog.Path + 'temp.png');
+      // aWand := ALImageMagickLib.NewMagickWand;
+      //
+      // ALImageMagickLib.MagickReadImage(aWand, PAnsiChar(uDB_AUser.Local.Emulators.Arcade_D.Media.Flyers + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png'));
+      //
+      // ALImageMagickLib.MagickResizeImage(aWand, 1920, 1080, LanczosFilter);
+      //
+      // ALImageMagickLib.MagickWriteImage(aWand, PAnsiChar(extrafe.prog.Path + 'temp.png'));
+      //
+      // ALImageMagickLib.DestroyMagickWand(aWand);
+      //
+      // vMame.Scene.Left.Bitmap.LoadFromFile(extrafe.prog.Path + 'temp.png');
+      // vMame.Scene.Left.WrapMode := TImageWrapMode.Stretch;
+      // vMame.Scene.Right.Bitmap.LoadFromFile(extrafe.prog.Path + 'temp.png');
+      // vMame.Scene.Right.WrapMode := TImageWrapMode.Stretch;
+      //
+      // TFile.Delete(extrafe.prog.Path + 'temp.png');
     end
     else if vMame.Scene.Left.WrapMode <> TImageWrapMode.Original then
     begin
@@ -260,7 +261,13 @@ end;
 /// /////////////////////////////////////////////////////////////////////////////
 procedure Open_Filters;
 begin
-  uEmu_Arcade_Mame_Filters.Load;
+  if not ContainsText(extrafe.Prog.State, 'mame_filters') then
+  begin
+//    uEmu_Arcade_Mame_Filters.Load(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode);
+    extrafe.Prog.State := 'emu_mame_filters';
+  end
+  else
+    extrafe.Prog.State := 'emu_mame';
 end;
 
 procedure Open_Lists;
@@ -322,67 +329,16 @@ begin
   if not ContainsText(extrafe.Prog.State, 'mame_config') then
   begin
     uEmu_Arcade_Mame_Config.Load;
-    vMame.Scene.Left_Anim.StartValue := 0;
-    vMame.Scene.Left_Anim.StopValue := -460;
-
-    vMame.Scene.Right_Anim.StartValue := 960;
-    vMame.Scene.Right_Anim.StopValue := 1460;
-
-    vMame.Scene.Left_Anim.Start;
-    vMame.Scene.Right_Anim.Start;
-    vMame.Scene.Left_Blur.Enabled := True;
-    vMame.Scene.Right_Blur.Enabled := True;
-
-    if uDB_AUser.Local.Emulators.Arcade_D.Mame_D.View_Mode = 'video' then
-      if vMame.Scene.Media.Video.IsPlay then
-        vMame.Scene.Media.Video.Pause;
-
-    if extrafe.Prog.State = 'mame_game' then
-    begin
-      vMame.Config.Scene.Header_Icon.Bitmap.LoadFromFile(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images + 'settings_green.png');
-      vMame.Config.Scene.Header_Label.Text := 'Configuration for "' + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '" game rom.';
-      extrafe.Prog.State := 'mame_game_config';
-    end
-    else
-    begin
-      vMame.Config.Scene.Header_Icon.Bitmap.LoadFromFile(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images + 'settings_blue.png');
-      vMame.Config.Scene.Header_Label.Text := 'Mame Global configuratin file';
-      extrafe.Prog.State := 'mame_config';
-    end;
+    extrafe.Prog.State := 'emu_mame_config';
   end
   else
-  begin
-    vMame.Scene.Left_Anim.StartValue := -460;
-    vMame.Scene.Left_Anim.StopValue := 0;
-
-    vMame.Scene.Right_Anim.StartValue := 1460;
-    vMame.Scene.Right_Anim.StopValue := 960;
-
-    vMame.Scene.Left_Anim.Enabled := True;
-    vMame.Scene.Right_Anim.Enabled := True;
-
-    uEmu_Arcade_Mame_Ini.Save;
-
-    vMame.Scene.Left_Blur.Enabled := False;
-    vMame.Scene.Right_Blur.Enabled := False;
-
-    if uDB_AUser.Local.Emulators.Arcade_D.Mame_D.View_Mode = 'video' then
-      if vMame.Scene.Media.Video.IsPause then
-        vMame.Scene.Media.Video.Resume;
-
-    for vi := 0 to 12 do
-      vMame.Config.Scene.Right_Panels[vi].Visible := False;
-
-    extrafe.Prog.State := 'mame';
-
-    uEmu_Arcade_Mame_Config.Free;
-  end;
+    extrafe.Prog.State := 'emu_mame';
 end;
 
 procedure Return;
 begin
   if extrafe.Prog.State = 'mame_filters' then
-    uEmu_Arcade_Mame_Filters.Free
+//    uEmu_Arcade_Mame_Filters.Free
   else if (extrafe.Prog.State = 'mame_config') or (extrafe.Prog.State = 'mame_game_config') then
     uEmu_Arcade_Mame_Actions.Open_Global_Configuration
   else if extrafe.Prog.State = 'mame_game' then

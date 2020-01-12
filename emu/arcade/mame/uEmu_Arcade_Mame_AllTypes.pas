@@ -964,7 +964,8 @@ type
   // TEMU MAME TIMERS
 type
   TEMU_GAMELISTS_TIMER = class(TTimer)
-    procedure OnTimer(Sender: TObject);
+    procedure
+    OnTimer(Sender: TObject);
   end;
 
 type
@@ -1108,18 +1109,18 @@ end;
 
 procedure TEMU_VIDEO_TIMER_CONT.OnTimer(Sender: TObject);
 begin
-  if (vMame.Scene.Media.Video.GetVideoWidth <> 0) and (vMame.Scene.Media.Video.GetVideoWidth <> mame.Main.Video.Old_Width) then
-    if mame.Main.Video.Is_Aspect_Set = False then
-    begin
-      if vMame.Scene.Media.Video.GetVideoWidth > vMame.Scene.Media.Video.GetVideoHeight then
-        vMame.Scene.Media.Black_Image.SetBounds(100, 200, 650, 488)
-      else
-        vMame.Scene.Media.Black_Image.SetBounds(187, 150, 488, 650);
-      mame.Main.Video.Is_Aspect_Set := True;
-      mame.Main.Video.Old_Width := vMame.Scene.Media.Video.GetVideoWidth;
-    end;
-  if vMame.Scene.Media.Video.GetVideoPosInPercent > 98 then
-    vMame.Scene.Media.Video.Play(mame.Main.Video.Active);
+//  if (vMame.Scene.Media.Video.GetVideoWidth <> 0) and (vMame.Scene.Media.Video.GetVideoWidth <> mame.Main.Video.Old_Width) then
+//    if mame.Main.Video.Is_Aspect_Set = False then
+//    begin
+//      if vMame.Scene.Media.Video.GetVideoWidth > vMame.Scene.Media.Video.GetVideoHeight then
+//        vMame.Scene.Media.Black_Image.SetBounds(100, 200, 650, 488)
+//      else
+//        vMame.Scene.Media.Black_Image.SetBounds(187, 150, 488, 650);
+//      mame.Main.Video.Is_Aspect_Set := True;
+//      mame.Main.Video.Old_Width := vMame.Scene.Media.Video.GetVideoWidth;
+//    end;
+//  if vMame.Scene.Media.Video.GetVideoPosInPercent > 98 then
+//    vMame.Scene.Media.Video.Play(mame.Main.Video.Active);
 end;
 
 initialization

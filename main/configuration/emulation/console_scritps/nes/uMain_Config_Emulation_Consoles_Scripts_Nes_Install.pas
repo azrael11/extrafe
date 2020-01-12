@@ -145,7 +145,7 @@ begin
   Script_Nes_Install.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 175, 600, 350);
   Script_Nes_Install.Panel.Visible := True;
 
-  CreateHeader(Script_Nes_Install.Panel, 'IcoMoon-Free', #$e997, 'Install a nes emulator', false, nil);
+  CreateHeader(Script_Nes_Install.Panel, 'IcoMoon-Free', #$e997, TAlphaColorRec.DeepSkyBlue, 'Install a nes emulator', false, nil);
 
   Script_Nes_Install.Main.Panel := TPanel.Create(Script_Nes_Install.Panel);
   Script_Nes_Install.Main.Panel.Name := 'Script_Nes_Install_Main';

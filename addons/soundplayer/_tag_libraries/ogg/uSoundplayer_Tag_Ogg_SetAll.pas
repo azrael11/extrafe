@@ -46,7 +46,7 @@ begin
   vSoundplayer.tag.opus.Back_Blur.BlurAmount := 0.5;
   vSoundplayer.tag.opus.Back_Blur.Enabled := False;
 
-  CreateHeader(vSoundplayer.tag.opus.Back, 'IcoMoon-Free', #$e935, 'Tag ogg,opus', False, nil);
+  CreateHeader(vSoundplayer.tag.opus.Back, 'IcoMoon-Free', #$e935, TAlphaColorRec.DeepSkyBlue, 'Tag ogg,opus', False, nil);
 
   // Prepei na balo ola se tab prota to opus/ogg meta to info
 

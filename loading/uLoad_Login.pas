@@ -142,10 +142,10 @@ begin
   begin
     if vUser_Num <> 0 then
     begin
-      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + vLogin_User[vUser_Num].Avatar + '.png');
-      ex_load.Login.Last_Visit.Text := 'Last Visit : ' + vLogin_User[vUser_Num].Last_Visit;
       uDB_AUser.Get_Local_Data((vUser_Num).ToString);
-      // Get online data
+      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.Avatar + '.png');
+      ex_load.Login.Last_Visit.Text := 'Last Visit : ' + uDB_AUser.Local.Last_Visit;
+      uDB_AUser.Get_Online_Data(uDB_AUser.Local.Unique_ID);
     end
     else
     begin

@@ -377,7 +377,7 @@ begin
   vTime.P_Time.Config.Panel.SetBounds(vTime.P_Time.Back.Width - 362, 2, 360, vTime.P_Time.Back.Height - 160);
   vTime.P_Time.Config.Panel.Visible := True;
 
-  CreateHeader(vTime.P_Time.Config.Panel, 'IcoMoon-Free', #$e994, 'Configuration', False, nil);
+  CreateHeader(vTime.P_Time.Config.Panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.DeepSkyBlue, 'Configuration', False, nil);
 
   vTime.P_Time.Config.Main.Panel := TPanel.Create(vTime.P_Time.Config.Panel);
   vTime.P_Time.Config.Main.Panel.Name := 'A_T_P_Time_Main';

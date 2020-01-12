@@ -4,6 +4,7 @@ interface
 
 uses
   System.Classes,
+  System.UITypes,
   FMX.StdCtrls;
 
 procedure uSoundplayer_Settings_Set;
@@ -29,7 +30,7 @@ begin
   vSoundplayer.config.Panel.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Half_Height - 450, 800, 800);
   vSoundplayer.config.Panel.Visible := True;
 
-  CreateHeader(vSoundplayer.config.Panel, 'IcoMoon-Free', #$e995, 'Soundplayer configuration', False, nil);
+  CreateHeader(vSoundplayer.config.Panel, 'IcoMoon-Free', #$e995, TAlphaColorRec.DeepSkyBlue, 'Soundplayer configuration', False, nil);
 
   vSoundplayer.config.Main.Panel := TPanel.Create(vSoundplayer.config.Panel);
   vSoundplayer.config.Main.Panel.Name := 'A_SP_Settings_Main';

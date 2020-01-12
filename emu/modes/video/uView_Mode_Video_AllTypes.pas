@@ -4,6 +4,7 @@ interface
 
 uses
   System.Classes,
+  System.SysUtils,
   FMX.Objects,
   FMX.Ani,
   FMX.Effects,
@@ -18,7 +19,70 @@ uses
   FmxPasLibVlcPlayerUnit,
   ALFMXLayouts;
 
-{ Game list objects }
+{ XML Variables }
+
+type
+  TEMU_VIEW_MODE_XML_MAIN_BACKGROUND_TYPES = record
+    image: String;
+    width: String;
+    height: String;
+    vType: String;
+  end;
+
+type
+  TEMU_VIEW_MODE_XML_MAIN_IMAGE_GENERAL_TYPES = record
+    image: string;
+    width: string;
+    height: string;
+  end;
+
+type
+  TEMU_VIEW_MODE_XML_MAIN = record
+    Background: TEMU_VIEW_MODE_XML_MAIN_BACKGROUND_TYPES;
+    Black: TEMU_VIEW_MODE_XML_MAIN_IMAGE_GENERAL_TYPES;
+    Black_Opacity: TEMU_VIEW_MODE_XML_MAIN_IMAGE_GENERAL_TYPES;
+    Selection: TEMU_VIEW_MODE_XML_MAIN_IMAGE_GENERAL_TYPES;
+  end;
+
+type
+  TEMU_VIEW_MODE_XML_CONFIG = record
+    Left_Duration: String;
+    Left_Limit: String;
+    Right_Duration: String;
+    Right_Limit: String;
+  end;
+
+type
+  TEMU_VIEW_MODE_XML_GAME = record
+
+  end;
+
+type
+  TEMU_VIEW_MODE_XML_EMU = record
+    name: String;
+    vType: String;
+    exe: String;
+  end;
+
+type
+  TEMU_VIEW_MODE_XML_FILTERS = record
+    main: TstringList;
+    main_num: String;
+  end;
+
+type
+  TEMU_VIEW_MODE_XML = record
+    emu: TEMU_VIEW_MODE_XML_EMU;
+    main: TEMU_VIEW_MODE_XML_MAIN;
+    config: TEMU_VIEW_MODE_XML_CONFIG;
+    game: TEMU_VIEW_MODE_XML_GAME;
+    filters: TEMU_VIEW_MODE_XML_FILTERS;
+    Images_Path: String;
+  end;
+
+  { End XML Variables }
+
+  { Game list objects }
 type
   TEMU_VIEW_MODE_VIDEO_GAMELIST_SEARCH = record
     Back: TImage;
@@ -67,14 +131,14 @@ type
 
 type
   TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_LIST = record
-    Image: TImage;
+    image: TImage;
     OutLine: TRadiantRectangle;
     OutLine_Glow: TGlowEffect;
     Text: TText;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_WINDOW= record
+  TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_WINDOW = record
     Panel: TLayout;
     Back: TImage;
     Add_Panel: TImage;
@@ -115,6 +179,7 @@ type
     Back: TImage;
     Games_Count: TText;
     Version: TText;
+    Timer: TTimer;
   end;
 
 type
@@ -194,7 +259,9 @@ type
 
 type
   TEMU_VIEW_MODE_VIDEO_CONFIGURATION = record
-    Main: TPanel;
+    main: TPanel;
+    left: TPanel;
+    right: TPanel;
     Blur: TGaussianBlurEffect;
     Shadow: TShadowEffect;
   end;
@@ -202,14 +269,15 @@ type
 
 type
   TEMU_VIEW_MODE_VIDEO = record
+    main: TImage;
     Blur: TGaussianBlurEffect;
-    Left: TImage;
+    left: TImage;
     Left_Ani: TFloatAnimation;
     Left_Blur: TBlurEffect;
-    Right: TImage;
+    right: TImage;
     Right_Ani: TFloatAnimation;
     Right_Blur: TBlurEffect;
-    Config: TEMU_VIEW_MODE_VIDEO_CONFIGURATION;
+    config: TEMU_VIEW_MODE_VIDEO_CONFIGURATION;
     Gamelist: TEMU_VIEW_MODE_VIDEO_GAMELIST;
     Media: TEMU_VIEW_MODE_VIDEO_MEDIA;
     GameMenu: TEMU_VIEW_MODE_GAMEMENU;
@@ -220,9 +288,139 @@ type
     Exit_Glow: TGlowEffect;
   end;
 
+  { End Of Objects types }
+
+  { Variables needed }
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_VIDEO = record
+    Active_Video: String;
+    Old_Width: Integer;
+    Loaded: Boolean;
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_GAMELIST = record
+    Loaded: Boolean;
+    Games: TStringlist;
+    Roms: TStringlist;
+    Paths: TStringlist;
+    Selected: Integer;
+    Total_Games: Integer;
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_FILTERS = record
+    Roms: TStringList;
+    Games: TstringList;
+    List: TStringList;
+    List_Added: TStringList;
+    Added: Integer;
+    Done: Boolean;
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG = class(TObject)
+    procedure OnFinish(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS = record
+    config: TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG;
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST = class(TObject)
+    procedure OnTimer(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO = class(TObject)
+    procedure OnTimer(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS = record
+    Gamelist: TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST;
+    Video: TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO;
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_VARIABLES = record
+    Config_Open: Boolean;
+    Filters_Open: Boolean;
+    Game_Mode: Boolean;
+    Filters: TEMU_VIEW_MODE_VIDEO_VARIABLES_FILTERS;
+    Gamelist: TEMU_VIEW_MODE_VIDEO_VARIABLES_GAMELIST;
+    Video: TEMU_VIEW_MODE_VIDEO_VARIABLES_VIDEO;
+    Ani: TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS;
+    Timer: TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS;
+  end;
+
+  { End of Variables needed }
+
 var
   Emu_VM_Video: TEMU_VIEW_MODE_VIDEO;
+  Emu_XML: TEMU_VIEW_MODE_XML;
+  Emu_VM_Video_Var: TEMU_VIEW_MODE_VIDEO_VARIABLES;
 
 implementation
+
+uses
+  uEmu_Emu,
+  uView_Mode_Video,
+  uView_Mode_Video_Actions;
+
+{ TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG }
+
+procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG.OnFinish(Sender: TObject);
+begin
+  if TFloatAnimation(Sender).name = 'Main_Right_Animation' then
+  begin
+    if Emu_VM_Video_Var.Config_Open then
+      uView_Mode_Video.Create_Configuration(Emu_VM_Video.main);
+    uEmu_Emu.Mouse_Action('Emu_Settings');
+  end;
+end;
+
+{ TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST }
+
+procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST.OnTimer(Sender: TObject);
+begin
+  uView_Mode_Video_Actions.Refresh_Scene(Emu_VM_Video_Var.Gamelist.Selected, Emu_VM_Video_Var.Gamelist.Roms);
+  Emu_VM_Video.Gamelist.Gamelist.Timer.Enabled := False;
+end;
+
+{ TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO }
+
+procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO.OnTimer(Sender: TObject);
+var
+  vWidth, vHeight: Cardinal;
+begin
+  if Emu_VM_Video_Var.Video.Loaded = False then
+  begin
+    if Emu_VM_Video.Media.Video.Video.GetVideoDimension(vWidth, vHeight) then
+    begin
+      if Emu_VM_Video.Media.Video.Video.GetVideoWidth <> 0 then
+      begin
+        if Emu_VM_Video.Media.Video.Video.GetVideoWidth <> Emu_VM_Video_Var.Video.Old_Width then
+        begin
+          if Emu_VM_Video.Media.Video.Video.GetVideoWidth > Emu_VM_Video.Media.Video.Video.GetVideoHeight then
+            Emu_VM_Video.Media.Video.Back.SetBounds(100, 200, 650, 488)
+          else
+            Emu_VM_Video.Media.Video.Back.SetBounds(187, 150, 488, 650);
+        end;
+        Emu_VM_Video.Media.Video.Game_Info.Layout.SetBounds(0, -50, Emu_VM_Video.Media.Video.Back.width, 50);
+        Emu_VM_Video.Media.Video.Game_Info.Favorite.SetBounds(Emu_VM_Video.Media.Video.Game_Info.Layout.width - 60, 5, 60, 50);
+        Emu_VM_Video_Var.Video.Old_Width := Emu_VM_Video.Media.Video.Video.GetVideoWidth;
+        Emu_VM_Video_Var.Video.Loaded := True;
+      end;
+    end;
+  end;
+  if Emu_VM_Video_Var.Video.Loaded then
+  begin
+    if Emu_VM_Video.Media.Video.Video.GetVideoPosInPercent > 98 then
+      Emu_VM_Video.Media.Video.Video.Play(Emu_VM_Video_Var.Video.Active_Video);
+  end;
+end;
 
 end.

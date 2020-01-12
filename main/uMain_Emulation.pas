@@ -91,7 +91,7 @@ begin
   end
   else
   begin
-    if emulation.Arcade[vNum].Name = 'mame' then
+    if emulation.Arcade[vNum].Name = emulation.Arcade[0].Name then // uEmu_Emu info
     begin
       if vType = 'logo' then
         Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'logo.png')

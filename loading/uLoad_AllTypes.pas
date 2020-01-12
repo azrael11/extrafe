@@ -203,7 +203,7 @@ type
     Background: String;
     Second_Level: Integer;
     Installed: Boolean;
-    Unique_Num: Integer;
+    Unique_Num: Single;
   end;
 
 type
@@ -486,7 +486,7 @@ var
   ex_load: TLOADING;
   vHeader: TGLOBAL_HEADER;
 
-procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String; vHas_Close: Boolean; vBlur: TGaussianBlurEffect);
+procedure CreateHeader(vPanel: TPanel; vFamily, vIcon: String; vColor: Integer; vText: String; vHas_Close: Boolean; vBlur: TGaussianBlurEffect);
 
 implementation
 
@@ -497,7 +497,7 @@ uses
   uMain,
   uLoad_Register;
 
-procedure CreateHeader(vPanel: TPanel; vFamily, vIcon, vText: String; vHas_Close: Boolean; vBlur: TGaussianBlurEffect);
+procedure CreateHeader(vPanel: TPanel; vFamily, vIcon: String; vColor: Integer; vText: String; vHas_Close: Boolean; vBlur: TGaussianBlurEffect);
 var
   vName: String;
 begin
@@ -519,7 +519,7 @@ begin
   vHeader.Icon_Text.SetBounds(6, 3, 24, 24);
   vHeader.Icon_Text.Font.Family := vFamily;
   vHeader.Icon_Text.Font.Size := 18;
-  vHeader.Icon_Text.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vHeader.Icon_Text.TextSettings.FontColor := vColor;
   vHeader.Icon_Text.Text := vIcon;
   vHeader.Icon_Text.Visible := True;
 

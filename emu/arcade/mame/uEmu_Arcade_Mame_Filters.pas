@@ -14,8 +14,7 @@ uses
   FMX.Effects,
   FMX.Types;
 
-procedure Load;
-procedure Free;
+procedure Load(vView_Mode: String);
 
 procedure Add;
 procedure Clear_Filters;
@@ -44,15 +43,16 @@ uses
   uEmu_Arcade_Mame_SetAll,
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_AllTypes,
-  uEmu_Arcade_Mame_Ini;
+  uEmu_Arcade_Mame_Ini,
+  {View Modes}
+  uView_Mode_Video_AllTypes;
 
-procedure Load;
+procedure Load(vView_Mode: String);
+var
+  vMain: Timage;
 begin
-  if vMame.Scene.Media.Video.IsPlay then
-    vMame.Scene.Media.Video.Pause;
-  extrafe.Prog.State := 'mame_filters';
-  vMame.Scene.Left_Blur.Enabled := True;
-  vMame.Scene.Right_Blur.Enabled := True;
+  if vView_Mode = 'video' then
+    vMain := Emu_VM_Video.main;
 
   if not Assigned(vMame.Scene.Gamelist.Filters.Window.Panel) then
   begin
@@ -76,12 +76,10 @@ begin
     mame.Filters.Temp_ListRoms := TStringList.Create;
     mame.Filters.Temp_ListGames := TStringList.Create;
 
-    vMame.Scene.Settings_Ani.Enabled := False;
-
-    vMame.Scene.Gamelist.Filters.Window.Panel := TPanel.Create(vMame.Scene.Main);
+    vMame.Scene.Gamelist.Filters.Window.Panel := TPanel.Create(vMain);
     vMame.Scene.Gamelist.Filters.Window.Panel.Name := 'Mame_Window_Filters';
-    vMame.Scene.Gamelist.Filters.Window.Panel.Parent := vMame.Scene.Main;
-    vMame.Scene.Gamelist.Filters.Window.Panel.SetBounds(vMame.Scene.Left.Width - 275, 250, 550, 300);
+    vMame.Scene.Gamelist.Filters.Window.Panel.Parent := vMain;
+    vMame.Scene.Gamelist.Filters.Window.Panel.SetBounds(extrafe.res.Half_Width - 275, 250, 550, 300);
     vMame.Scene.Gamelist.Filters.Window.Panel.Visible := True;
 
     vMame.Scene.Gamelist.Filters.Window.Shadow := TShadowEffect.Create(vMame.Scene.Gamelist.Filters.Window.Panel);
@@ -89,7 +87,7 @@ begin
     vMame.Scene.Gamelist.Filters.Window.Shadow.Parent := vMame.Scene.Gamelist.Filters.Window.Panel;
     vMame.Scene.Gamelist.Filters.Window.Shadow.Enabled := True;
 
-    CreateHeader(vMame.Scene.Gamelist.Filters.Window.Panel, 'IcoMoon-Free', #$ea5b, 'Select desire filters to narrow the list', False, nil);
+    CreateHeader(vMame.Scene.Gamelist.Filters.Window.Panel, 'IcoMoon-Free', #$ea5b, TAlphaColorRec.DeepSkyBlue, 'Select desire filters to narrow the list', False, nil);
 
     vMame.Scene.Gamelist.Filters.Window.Info := TText.Create(vMame.Scene.Gamelist.Filters.Window.Panel);
     vMame.Scene.Gamelist.Filters.Window.Info.Name := 'Main_Window_Filters_Info';
@@ -211,17 +209,6 @@ begin
 
   vMame.Scene.Gamelist.Filters.Window.Games_Num.Text := mame.Filters.Temp_ListRoms_Final.Count.ToString;
   vMame.Scene.Gamelist.Filters.Window.Clear.TextSettings.FontColor := TAlphaColorRec.Grey;
-end;
-
-procedure Free;
-begin
-  extrafe.Prog.State := 'mame';
-  vMame.Scene.Gamelist.Filters.Window.Panel.Visible := False;
-  vMame.Scene.Left_Blur.Enabled := False;
-  vMame.Scene.Right_Blur.Enabled := False;
-  vMame.Scene.Settings_Ani.Enabled := True;
-  if vMame.Scene.Media.Video.IsPause then
-    vMame.Scene.Media.Video.Resume;
 end;
 
 procedure Add;
@@ -733,7 +720,7 @@ begin
         vMame.Scene.Gamelist.Filters.Text.Text := vMame.Scene.Gamelist.Filters.Text.Text + ', ' + vFilter_Name;
     end;
   end;
-  Free;
+  extrafe.Prog.State := 'emu_mame';
 end;
 
 end.

@@ -13,17 +13,26 @@ procedure SetKey(vKey: string);
 procedure VirtualKeyboard_SetKey(vKey: string);
 procedure Search(vString: String);
 
+procedure Action(vAction: String);
+
 implementation
 
 uses
   uDB_AUser,
   uLoad_AllTypes,
+  uEmu_Arcade_Mame,
   uVirtual_Keyboard,
   uSnippet_Search,
   uEmu_Arcade_Mame_Gamelist,
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Game_Actions;
+
+procedure Action(vAction: String);
+begin
+  if vAction = 'Exit' then
+    uEmu_Arcade_Mame.Exit;
+end;
 
 procedure SetKey(vKey: string);
 begin

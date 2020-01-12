@@ -13,9 +13,12 @@ procedure uEmu_Actions_VirtualKeyboard_SetKey(vKey: String);
 
 procedure Search(vEmulator: String; vAction: Boolean);
 
+procedure Key(vKey: String);
+
 implementation
 uses
   emu,
+  uEmu_Emu,
   uLoad,
   uLoad_AllTypes,
   main,
@@ -57,5 +60,9 @@ begin
     uEmu_Arcade_Mame_Actions.Search(vAction);
 end;
 
+procedure Key(vKey: String);
+begin
+  uEmu_Emu.Key_View_Mode(vKey);
+end;
 
 end.

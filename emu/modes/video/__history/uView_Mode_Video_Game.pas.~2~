@@ -1,0 +1,9 @@
+unit uView_Mode_Video_Game;
+
+interface
+uses
+  System.Classes;
+
+implementation
+
+end.

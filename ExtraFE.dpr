@@ -179,7 +179,12 @@ uses
   uView_Mode_Video_AllTypes in 'emu\modes\video\uView_Mode_Video_AllTypes.pas',
   uView_Mode_Video_Mouse in 'emu\modes\video\uView_Mode_Video_Mouse.pas',
   uEmu_Mouse in 'emu\uEmu_Mouse.pas',
-  uEmu_Emu in 'emu\uEmu_Emu.pas';
+  uEmu_Emu in 'emu\uEmu_Emu.pas',
+  uView_Mode_Video_Actions in 'emu\modes\video\uView_Mode_Video_Actions.pas',
+  uView_Mode_Video_Key in 'emu\modes\video\uView_Mode_Video_Key.pas',
+  uView_Mode_Video_Joy in 'emu\modes\video\uView_Mode_Video_Joy.pas',
+  uView_Mode_Video_Game in 'emu\modes\video\uView_Mode_Video_Game.pas',
+  uView_Mode_Video_Actions_Filters in 'emu\modes\video\uView_Mode_Video_Actions_Filters.pas';
 
 {$R *.res}
 

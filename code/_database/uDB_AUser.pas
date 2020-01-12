@@ -152,7 +152,7 @@ type
   TDATABASE_ACTIVE_USER_LOCAL_ADDONS = record
     Count: Integer;
     Active: Integer;
-    Names: TStringlist;
+    Names: TStringList;
     Time: Boolean;
     Time_D: TDATABASE_ACTIVE_USER_LOCAL_ADDONS_TIME;
     Calendar: Boolean;
@@ -200,8 +200,7 @@ type
     Installed: Boolean;
     Active: Boolean;
     Position: Integer;
-    Unique: Integer;
-    Unique_Multi: Integer;
+    Unique: Single;
     Path: String;
     Name: String;
     Version: String;
@@ -210,6 +209,7 @@ type
     p_Path: String;
     p_Images: String;
     p_Sounds: String;
+    p_Views: String;
   end;
 
 type
@@ -375,8 +375,7 @@ type
 type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS = record
     Count: Integer;
-    Active_Unique: Integer;
-    Active_Unique_Multi: Integer;
+    Active_Unique: Single;
     Arcade: Boolean;
     Arcade_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE;
     Computers: Boolean;
@@ -420,7 +419,7 @@ type
 type
   TDATABASE_ACTIVE_USER_LOCAL = record
     Num: Integer;
-    ID: Integer;
+    Unique_ID: String;
     Username: String;
     Password: String;
     Email: String;
@@ -439,7 +438,7 @@ type
     EMULATORS: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS;
   end;
 
-procedure Get_Online_Data(vUser_Num: String);
+procedure Get_Online_Data(vUser_ID: String);
 procedure Get_Local_Data(vUser_Num: String);
 
 function Find_User_Online_Num(vUser_ID: String): Integer;
@@ -459,11 +458,11 @@ uses
   uDB,
   uInternet_files;
 
-procedure Get_Online_Data(vUser_Num: String);
+procedure Get_Online_Data(vUser_ID: String);
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM USERS WHERE NUM=' + vUser_Num;
+  vQuery := 'SELECT * FROM USERS WHERE USER_ID=' + vUser_ID;
   ExtraFE_Query.Close;
   ExtraFE_Query.SQL.Clear;
   ExtraFE_Query.SQL.Add(vQuery);
@@ -497,7 +496,7 @@ begin
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
   Local.Num := uDB.ExtraFE_Query_Local.FieldByName('USER_ID').AsInteger;
-  Local.ID := uDB.ExtraFE_Query_Local.FieldByName('UNIQUE_ID').AsInteger;
+  Local.Unique_ID := uDB.ExtraFE_Query_Local.FieldByName('UNIQUE_ID').AsString;
   Local.Username := uDB.ExtraFE_Query_Local.FieldByName('USERNAME').AsString;
   Local.Password := uDB.ExtraFE_Query_Local.FieldByName('PASSWORD').AsString;
   Local.Email := uDB.ExtraFE_Query_Local.FieldByName('EMAIL').AsString;
@@ -527,8 +526,7 @@ begin
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
   Local.EMULATORS.Count := uDB.ExtraFE_Query_Local.FieldByName('COUNT').AsInteger;
-  Local.EMULATORS.Active_Unique := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_UNIQUE').AsInteger;
-  Local.EMULATORS.Active_Unique_Multi := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_UNIQUE_MULTI').AsInteger;
+  Local.EMULATORS.Active_Unique := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_UNIQUE').AsSingle;
   Local.EMULATORS.Arcade := uDB.ExtraFE_Query_Local.FieldByName('ARCADE').AsBoolean;
   Local.EMULATORS.Computers := uDB.ExtraFE_Query_Local.FieldByName('COMPUTERS').AsBoolean;
   Local.EMULATORS.Consoles := uDB.ExtraFE_Query_Local.FieldByName('CONSOLES').AsBoolean;
@@ -670,7 +668,6 @@ begin
     uDB.Query_Update(uDB.ExtraFE_Query_Local, 'handhelds', 'PATH_IMAGES', Local.EMULATORS.Handhelds_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
   end;
 
-
   vQuery := 'SELECT * FROM PINBALLS WHERE USER_ID=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
@@ -690,7 +687,6 @@ begin
     Local.EMULATORS.Pinballs_D.p_Images := extrafe.prog.Path + 'emu\pinball\images\';
     uDB.Query_Update(uDB.ExtraFE_Query_Local, 'pinballs', 'PATH_IMAGES', Local.EMULATORS.Pinballs_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
   end;
-
 
   vQuery := 'SELECT * FROM ADDONS WHERE USER_ID=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
@@ -725,18 +721,16 @@ var
   vIP_Value: String;
 begin
   vCurFinal := FormatDateTime('dd/mm/yyyy  hh:mm:ss ampm', now);
-  if uDB_AUser.Online.Active = 1 then
-  begin
-    vIP := uInternet_files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
-    vIP_Value := vIP.GetValue<String>('ip');
-    uDB.Query_Update_Online('USERS', 'IP', vIP_Value, Online.Num.ToString);
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'IP', vIP_Value, 'USER_ID', Local.Num.ToString);
-    uDB_AUser.Local.IP := vIP_Value;
-    uDB.Query_Update_Online('USERS', 'LAST_VISIT', vCurFinal, Online.Num.ToString);
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT_ONLINE', vCurFinal, 'USER_ID', Local.Num.ToString);
-  end;
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT', 'USER_ID',  vCurFinal, Local.Num.ToString);
+  vIP := uInternet_files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
+  vIP_Value := vIP.GetValue<String>('ip');
+  uDB.Query_Update_Online('USERS', 'IP', vIP_Value, Online.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'IP', vIP_Value, 'USER_ID', Local.Num.ToString);
+  Local.IP := vIP_Value;
+  Online.IP := vIP_Value;
+  uDB.Query_Update_Online('USERS', 'LAST_VISIT', vCurFinal, Online.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT', vCurFinal, 'USER_ID', Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT_ONLINE', vCurFinal, 'USER_ID', Local.Num.ToString);
 end;
 
 end.

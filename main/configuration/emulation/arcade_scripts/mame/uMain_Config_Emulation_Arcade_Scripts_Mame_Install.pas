@@ -132,7 +132,7 @@ begin
   Script_Mame_Install.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 175, 600, 350);
   Script_Mame_Install.Panel.Visible := True;
 
-  CreateHeader(Script_Mame_Install.Panel, 'IcoMoon-Free', #$e997, 'Install a Mame emulator', false, nil);
+  CreateHeader(Script_Mame_Install.Panel, 'IcoMoon-Free', #$e997, TAlphaColorRec.DeepSkyBlue, 'Install a Mame emulator', false, nil);
 
   Script_Mame_Install.Main.Panel := TPanel.Create(Script_Mame_Install.Panel);
   Script_Mame_Install.Main.Panel.Name := 'Script_Mame_Install_Main';
@@ -383,6 +383,7 @@ begin
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path := extrafe.prog.Path + 'emu\arcade\mame\';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path + 'images\';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path + 'sounds\';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Views := uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path + 'views\';
 
   if not FileExists(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini) then
     ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path + uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name,
@@ -405,7 +406,7 @@ begin
   uMain_Emulation.Create_Selection_Control;
 
   uLoad_Emulation.Get_Arcade_Media_Data;
-  uEmu_Arcade_Mame_SetALl.Get_Set_Mame_Data;
+  uEmu_Arcade_Mame_SetAll.Get_Set_Mame_Data;
 
   uMain_Emulation.Category(0, 0);
 
@@ -433,6 +434,8 @@ begin
     uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_SOUNDS', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE_VIEWS', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Views, 'USER_ID',
+    uDB_AUser.Local.Num.ToString);
 
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Installed := True;
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Active := True;
@@ -443,8 +446,7 @@ begin
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_ACTIVE', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_POSITION', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position.ToString, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE_MULTI', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE', '0.0', 'USER_ID', uDB_AUser.Local.Num.ToString);
 
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_NAME', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name, 'USER_ID',
     uDB_AUser.Local.Num.ToString);
@@ -456,24 +458,24 @@ begin
 
   if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString) then
   begin
-    {Create message procedure to user select option from new fav or existence one}
+    { Create message procedure to user select option from new fav or existence one }
   end
   else
     uDB.Query_Create_New_Column(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString + ' BOOLEAN DEFAULT False');
 
   if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString) then
   begin
-    {Create message procedure to user select option from new playcount or existence one}
+    { Create message procedure to user select option from new playcount or existence one }
   end
   else
     uDB.Query_Create_New_Column(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString + ' INTEGER DEFAULT 0');
 
   if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.Num.ToString) then
   begin
-    {Create message procedure to user select option from new hidden games  or existence one}
+    { Create message procedure to user select option from new hidden games  or existence one }
   end
   else
-  uDB.Query_Create_New_Column(uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.Num.ToString + ' BOOLEAN DEFAULT False');
+    uDB.Query_Create_New_Column(uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.Num.ToString + ' BOOLEAN DEFAULT False');
 
 end;
 

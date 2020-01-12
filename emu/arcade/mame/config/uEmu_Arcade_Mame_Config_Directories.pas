@@ -60,7 +60,7 @@ begin
   vMame.Config.Panel.Dirs.Media.Check.Panel.SetBounds(((vMame.Scene.Main.Width / 2) - 400), ((vMame.Scene.Main.Height / 2) - 200), 800, 600);
   vMame.Config.Panel.Dirs.Media.Check.Panel.Visible := True;
 
-  CreateHeader(vMame.Config.Panel.Dirs.Media.Check.Panel, 'IcoMoon-Free', #$e933, 'Check and download "' + vMame.Config.Panel.Dirs.Media.Labels[vNum].Text +
+  CreateHeader(vMame.Config.Panel.Dirs.Media.Check.Panel, 'IcoMoon-Free', #$e933, TAlphaColorRec.DeepSkyBlue, 'Check and download "' + vMame.Config.Panel.Dirs.Media.Labels[vNum].Text +
     ' "', False, nil);
 
   vMame.Config.Panel.Dirs.Media.Check.Main := TPanel.Create(vMame.Config.Panel.Dirs.Media.Check.Panel);

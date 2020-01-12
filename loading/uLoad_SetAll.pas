@@ -19,14 +19,6 @@ uses
   FMX.Layouts,
   CodeSiteLogging;
 
-type
-  TLOGIN_USER = record
-    Username: String;
-    Password: String;
-    Avatar: String;
-    Last_Visit: String;
-  end;
-
 procedure Load;
 procedure Login;
 procedure Login_Forget_Password;
@@ -36,7 +28,6 @@ procedure Register_Error;
 procedure Register_Success;
 
 var
-  vLogin_User: array of TLOGIN_USER;
   vListBox_Item: array of TListBoxItem;
 
 implementation
@@ -180,7 +171,7 @@ begin
   ex_load.Login.Panel_Login_Correct.StartValue := 0.2;
   ex_load.Login.Panel_Login_Correct.Enabled := False;
 
-  CreateHeader(ex_load.Login.Panel, 'IcoMoon-Free', #$e971, 'Login', False, nil);
+  CreateHeader(ex_load.Login.Panel, 'IcoMoon-Free', #$e971, TAlphaColorRec.DeepSkyBlue, 'Login', False, nil);
 
   ex_load.Login.Main := TPanel.Create(ex_load.Login.Panel);
   ex_load.Login.Main.Name := 'Loading_Main';
@@ -391,7 +382,6 @@ begin
   ex_load.Scene.Logo.Position.X := ex_load.Login.Panel.Position.X;
   ex_load.Scene.Logo.Position.Y := ex_load.Login.Panel.Position.Y - 340;
 
-  SetLength(vLogin_User, extrafe.users_total + 1);
   SetLength(vListBox_Item, extrafe.users_total + 1);
 
   vListBox_Item[0] := TListBoxItem.Create(ex_load.Login.User_V);
@@ -408,32 +398,16 @@ begin
   begin
     for vi := 1 to extrafe.users_total do
     begin
-      vLogin_User[vi].Username := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'USERNAME', 'USERS', 'USER_ID', vi.ToString);
-      vLogin_User[vi].Password := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PASSWORD', 'USERS', 'USER_ID', vi.ToString);
-      vLogin_User[vi].Avatar := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'AVATAR', 'USERS', 'USER_ID', vi.ToString);
-      vLogin_User[vi].Last_Visit := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'LAST_VISIT', 'USERS', 'USER_ID', vi.ToString);
-
       vListBox_Item[vi] := TListBoxItem.Create(ex_load.Login.User_V);
       vListBox_Item[vi].Name := 'Load_ListItem_' + vi.ToString;
       vListBox_Item[vi].Parent := ex_load.Login.User_V;
       vListBox_Item[vi].StyledSettings := vListBox_Item[vi].StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
       vListBox_Item[vi].TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
       vListBox_Item[vi].Font.Size := 18;
-      vListBox_Item[vi].Text := vLogin_User[vi].Username;
+      vListBox_Item[vi].Text := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'USERNAME', 'USERS', 'USER_ID', vi.ToString);
       vListBox_Item[vi].Visible := True;
       ex_load.Login.User_V.AddObject(vListBox_Item[vi]);
     end;
-  end;
-
-  if extrafe.users_total > 0 then
-  begin
-    ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + vLogin_User[1].Avatar + '.png');
-    ex_load.Login.Last_Visit.Text := 'Last Visit : ' + vLogin_User[1].Last_Visit;
-  end
-  else
-  begin
-    ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
-    ex_load.Login.Last_Visit.Text := 'Last Visti :  Not Yet';
   end;
 
   GetKeyboardState(vkState);
@@ -480,7 +454,7 @@ begin
   ex_load.F_Pass.Panel.Opacity := 0.8;
   ex_load.F_Pass.Panel.Visible := True;
 
-  CreateHeader(ex_load.F_Pass.Panel, 'IcoMoon-Free', #$e98d, 'Forget my password', False, nil);
+  CreateHeader(ex_load.F_Pass.Panel, 'IcoMoon-Free', #$e98d, TAlphaColorRec.DeepSkyBlue, 'Forget my password', False, nil);
 
   ex_load.F_Pass.Main.Panel := TPanel.Create(ex_load.F_Pass.Panel);
   ex_load.F_Pass.Main.Panel.Name := 'Loading_FPass_Main';
@@ -579,7 +553,7 @@ begin
 
   uLoad_Register.Create_Help;
 
-  CreateHeader(ex_load.Reg.Panel, 'IcoMoon-Free', #$e907, 'Register', False, nil);
+  CreateHeader(ex_load.Reg.Panel, 'IcoMoon-Free', #$e907, TAlphaColorRec.DeepSkyBlue, 'Register', False, nil);
 
   ex_load.Reg.Main.Panel := TPanel.Create(ex_load.Reg.Panel);
   ex_load.Reg.Main.Panel.Name := 'Loading_Register_Main';
@@ -859,7 +833,7 @@ begin
   ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 600);
   ex_load.Terms.Panel.Visible := True;
 
-  CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, 'Read the terms of ExtraFE.', False, nil);
+  CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, TAlphaColorRec.DeepSkyBlue, 'Read the terms of ExtraFE.', False, nil);
 
   ex_load.Terms.Main.Panel := TPanel.Create(ex_load.Terms.Panel);
   ex_load.Terms.Main.Panel.Name := 'Loading_Terms_Main';
@@ -896,7 +870,7 @@ begin
   ex_load.Reg_Error.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
   ex_load.Reg_Error.Panel.Visible := True;
 
-  CreateHeader(ex_load.Reg_Error.Panel, 'IcoMoon-Free', #$e909, 'Something wrong with register', False, nil);
+  CreateHeader(ex_load.Reg_Error.Panel, 'IcoMoon-Free', #$e909, TAlphaColorRec.DeepSkyBlue, 'Something wrong with register', False, nil);
 
   ex_load.Reg_Error.Memo := TMemo.Create(ex_load.Reg_Error.Panel);
   ex_load.Reg_Error.Memo.Name := 'Loading_Register_Error_Main';

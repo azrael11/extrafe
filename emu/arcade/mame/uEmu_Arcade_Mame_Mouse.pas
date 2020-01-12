@@ -53,6 +53,8 @@ type
     ComboBox: TEMU_ARCADE_MAME_COMBOBOX;
   end;
 
+procedure Action(vAction: String);
+
 implementation
 
 uses
@@ -62,6 +64,17 @@ uses
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Config,
   uEmu_Arcade_Mame_Filters;
+
+procedure Action(vAction: String);
+begin
+  if vAction = 'Emu_Exit' then
+    uEmu_Arcade_Mame.Exit
+  else if vAction = 'Emu_Settings' then
+    uEmu_Arcade_Mame_Actions.Open_Global_Configuration
+  else if vAction = 'Emu_Gamelist_Filters_Icon' then
+    uEmu_Arcade_Mame_Actions.Open_Filters;
+
+end;
 
 { TEMU_ARCADE_MAME_IMAGE }
 
@@ -103,7 +116,7 @@ begin
   if extrafe.prog.State = 'mame_filters' then
   begin
     if TButton(Sender).Name = 'Mame_Window_Filters_Cancel' then
-      uEmu_Arcade_Mame_Filters.Free
+//      uEmu_Arcade_Mame_Filters.Free
     else if TButton(Sender).Name = 'Mame_Window_Filters_OK' then
       uEmu_Arcade_Mame_Filters.Return;
   end

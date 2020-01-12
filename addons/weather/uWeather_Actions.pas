@@ -167,7 +167,7 @@ begin
     vWeather.Scene.First.Panel_Shadow.Direction := 90;
     vWeather.Scene.First.Panel_Shadow.Enabled := True;
 
-    CreateHeader(vWeather.Scene.First.Panel, 'Weather Icons', #$f002, 'Welcome to "Weather" Addon.', False, nil);
+    CreateHeader(vWeather.Scene.First.Panel, 'Weather Icons', #$f002, TAlphaColorRec.DeepSkyBlue, 'Welcome to "Weather" Addon.', False, nil);
 
     vWeather.Scene.First.main.Panel := TPanel.Create(vWeather.Scene.First.Panel);
     vWeather.Scene.First.main.Panel.Name := 'A_W_First_Main';

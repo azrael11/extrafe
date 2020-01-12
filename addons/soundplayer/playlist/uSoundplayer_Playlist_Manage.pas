@@ -56,7 +56,7 @@ begin
     vSoundplayer.Playlist.Manage.Panel.SetBounds((vSoundplayer.scene.soundplayer.Width / 2) - 300, (vSoundplayer.scene.soundplayer.Height / 2) - 200, 600, 450);
     vSoundplayer.Playlist.Manage.Panel.Visible := True;
 
-    CreateHeader(vSoundplayer.Playlist.Manage.Panel, 'IcoMoon-Free', #$e9bb, 'Manage playlists.', False, nil);
+    CreateHeader(vSoundplayer.Playlist.Manage.Panel, 'IcoMoon-Free', #$e9bb, TAlphaColorRec.DeepSkyBlue, 'Manage playlists.', False, nil);
 
     vSoundplayer.Playlist.Manage.main.Panel := TPanel.Create(vSoundplayer.Playlist.Manage.Panel);
     vSoundplayer.Playlist.Manage.main.Panel.Name := 'A_SP_Playlist_Manage_Main_Panel';

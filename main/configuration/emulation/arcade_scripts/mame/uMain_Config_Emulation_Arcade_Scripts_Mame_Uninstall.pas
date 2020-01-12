@@ -113,7 +113,7 @@ begin
   Script_Mame_Uninstall.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 175, 600, 350);
   Script_Mame_Uninstall.Panel.Visible := True;
 
-  CreateHeader(Script_Mame_Uninstall.Panel, 'IcoMoon-Free', #$e9a9, 'UnInstall  Mame emulator from ExtraFE', false, nil);
+  CreateHeader(Script_Mame_Uninstall.Panel, 'IcoMoon-Free', #$e9a9, TAlphaColorRec.DeepSkyBlue, 'UnInstall  Mame emulator from ExtraFE', false, nil);
 
   Script_Mame_Uninstall.Main.Panel := TPanel.Create(Script_Mame_Uninstall.Panel);
   Script_Mame_Uninstall.Main.Panel.Name := 'Script_Mame_Uninstall_Main';
@@ -351,6 +351,7 @@ begin
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path := '';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images := '';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds := '';
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Views := '';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name := '';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path := '';
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini := '';
@@ -377,6 +378,7 @@ begin
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_PATH', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_IMAGES', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_SOUNDS', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_VIEWS', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_NAME', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_PATH', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_INI', '', 'USER_ID', uDB_AUser.Local.Num.ToString);

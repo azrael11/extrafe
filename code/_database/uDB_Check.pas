@@ -175,9 +175,9 @@ begin
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS emulators ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1", "ACTIVE_UNIQUE" Integer DEFAULT "-1", '
-    + ' "ACTIVE_UNIQUE_MULTI" Integer DEFAULT "-1", "PATH" Text,	"ARCADE" Boolean DEFAULT False, "COMPUTERS" Boolean DEFAULT False, "CONSOLES" Boolean DEFAULT False, "HANDHELDS" Boolean DEFAULT False,'
-    + ' "PINBALLS" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS emulators ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1", "ACTIVE_UNIQUE" Real DEFAULT "-1", '
+    + ' "PATH" Text,	"ARCADE" Boolean DEFAULT False, "COMPUTERS" Boolean DEFAULT False, "CONSOLES" Boolean DEFAULT False, "HANDHELDS" Boolean DEFAULT False,' +
+    ' "PINBALLS" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "emulators" is checked and corrected');
 
@@ -196,7 +196,7 @@ begin
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
     'CREATE TABLE IF NOT EXISTS arcade_mame ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "INSTALLED" Boolean DEFAULT False,	"EMU_POSITION" Integer DEFAULT "-1", '
-    + ' "EMU_ACTIVE" Boolean DEFAULT False, "EMU_UNIQUE" Integer DEFAULT "0","EMU_UNIQUE_MULTI" Integer DEFAULT "0", "VIEW_MODE" Text DEFAULT "video", "EXTRAFE_MAME_PATH" Text, '
+    + ' "EMU_ACTIVE" Boolean DEFAULT False, "EMU_UNIQUE" Real DEFAULT "0", "VIEW_MODE" Text DEFAULT "video" ,"EXTRAFE_MAME_VIEWS" Text, "EXTRAFE_MAME_PATH" Text, '
     + ' "EXTRAFE_MAME_IMAGES" Text, "EXTRAFE_MAME_SOUNDS" Text, "MAME_NAME" Text, "MAME_PATH" Text, "MAME_INI" Text, "MAME_VERSION" Text);';
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "arcade_mame" is checked and corrected');
