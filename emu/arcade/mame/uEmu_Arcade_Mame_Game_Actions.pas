@@ -145,6 +145,11 @@ begin
   play_int := play_count.ToInteger;
   inc(play_int, 1);
   uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString, play_int.ToString, 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+  FreeAndNil(vMame.Scene.PopUp.Back);
+  vMame.Scene.Left_Blur.Enabled := False;
+  vMame.Scene.Right_Blur.Enabled := False;
+  vMame.Scene.Gamelist.List.Visible := True;
+  vMame.Scene.Media.Back.Visible := True;
   uEmu_Arcade_Mame_Game_SetAll.Free_Loading_Game;
   FreeAndNil(vGame_Timer);
 end;

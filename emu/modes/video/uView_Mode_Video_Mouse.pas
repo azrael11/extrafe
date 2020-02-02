@@ -5,7 +5,12 @@ interface
 uses
   System.Classes,
   System.UiTypes,
-  FMX.Objects;
+  System.StrUtils,
+  FMX.Objects,
+  FMX.Dialogs,
+  FMX.StdCtrls,
+  FMX.Edit,
+  BASS;
 
 type
   TEMU_VIEW_MODE_VIDEO_IMAGE = class(TObject)
@@ -29,10 +34,25 @@ type
   end;
 
 type
+  TEMU_VIEW_MODE_VIDEO_MODEL3D = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_EDIT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnTyping(Sender: TObject);
+  end;
+
+type
   TEMU_VIEW_MODE_VIDEO_MOUSE = record
     Image: TEMU_VIEW_MODE_VIDEO_IMAGE;
     Text: TEMU_VIEW_MODE_VIDEO_TEXT;
     Button: TEMU_VIEW_MODE_VIDEO_BUTTON;
+    Model3D: TEMU_VIEW_MODE_VIDEO_MODEL3D;
+    Edit: TEMU_VIEW_MODE_VIDEO_EDIT;
   end;
 
 var
@@ -80,6 +100,10 @@ begin
       uView_Mode_Video_Actions.Configuration_Action
     else if TText(Sender).Name = 'Emu_Gamelist_Filters_Icon' then
       uView_Mode_Video_Actions.Filters_Action
+    else if TText(Sender).Name = 'Emu_Media_Bar_Favorites' then
+      uView_Mode_Video_Actions.Favorites_Open
+    else if TText(Sender).Name = 'Emu_Gamelist_Search_Icon' then
+      uView_Mode_Video_Actions.Search_Open
     else
       uEmu_Emu.Mouse_Action(TText(Sender).Name);
   end;
@@ -87,9 +111,13 @@ end;
 
 procedure TEMU_VIEW_MODE_VIDEO_TEXT.OnMouseEnter(Sender: TObject);
 begin
-  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  if TText(Sender).Name = 'Emu_Media_Bar_Favorites' then
   begin
     TText(Sender).Cursor := crHandPoint;
+    Emu_VM_Video.Media.Bar.Favorites_Glow.Enabled := True;
+  end;
+  if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+  begin
     if Emu_VM_Video_Var.Filters_Open then
     begin
       if TText(Sender).Name = 'Emu_Filters_Window_Clear' then
@@ -107,10 +135,8 @@ begin
         Emu_VM_Video.Gamelist.Filters.Filter_Glow.Enabled := True
       else if TText(Sender).Name = 'Emu_Gamelist_Lists_Icon' then
         Emu_VM_Video.Gamelist.Lists.Lists_Glow.Enabled := True
-      else if TText(Sender).Name = 'Emu_Media_Bar_Favorites' then
-      begin
-
-      end;
+      else if TText(Sender).Name = 'Emu_Gamelist_Search_Icon' then
+        Emu_VM_Video.Gamelist.Search.Glow.Enabled := True
     end;
   end;
 end;
@@ -135,9 +161,9 @@ begin
     else if TText(Sender).Name = 'Emu_Gamelist_Lists_Icon' then
       Emu_VM_Video.Gamelist.Lists.Lists_Glow.Enabled := False
     else if TText(Sender).Name = 'Emu_Media_Bar_Favorites' then
-    begin
-
-    end;
+      Emu_VM_Video.Media.Bar.Favorites_Glow.Enabled := False
+    else if TText(Sender).Name = 'Emu_Gamelist_Search_Icon' then
+      Emu_VM_Video.Gamelist.Search.Glow.Enabled := False
   end;
 end;
 
@@ -145,6 +171,8 @@ end;
 
 procedure TEMU_VIEW_MODE_VIDEO_BUTTON.OnMouseClick(Sender: TObject);
 begin
+  if TButton(Sender).Name = 'Emu_Filters_Window_Cancel' then
+    uView_Mode_Video_Actions_Filters.Close_Window;
 
 end;
 
@@ -158,16 +186,60 @@ begin
 
 end;
 
+{ TEMU_VIEW_MODE_VIDEO_MODEL3D }
+
+procedure TEMU_VIEW_MODE_VIDEO_MODEL3D.OnMouseClick(Sender: TObject);
+begin
+  if Emu_VM_Video_Var.favorites.game_is then
+  begin
+    Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := Emu_VM_Video.GameMenu.Favorite.Material_Source;
+    uView_Mode_Video_Actions.Favorites_Add;
+  end
+  else
+  begin
+    Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := nil;
+    uView_Mode_Video_Actions.Favorites_Add;
+  end;
+end;
+
+procedure TEMU_VIEW_MODE_VIDEO_MODEL3D.OnMouseEnter(Sender: TObject);
+begin
+  Emu_VM_Video.GameMenu.Favorite.View.Cursor := crHandPoint;
+  Emu_VM_Video.GameMenu.Favorite.Ani.Duration := 0.5;
+end;
+
+procedure TEMU_VIEW_MODE_VIDEO_MODEL3D.OnMouseLeave(Sender: TObject);
+begin
+  Emu_VM_Video.GameMenu.Favorite.Ani.Duration := 2;
+end;
+
+{ TEMU_VIEW_MODE_VIDEO_EDIT }
+
+procedure TEMU_VIEW_MODE_VIDEO_EDIT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TEMU_VIEW_MODE_VIDEO_EDIT.OnTyping(Sender: TObject);
+begin
+  if Emu_VM_Video_Var.Search_Open then
+    uView_Mode_Video_Actions.Search_Find(Emu_VM_Video_Var.Search.vstring);
+end;
+
 initialization
 
 Emu_VM_Video_Mouse.Image := TEMU_VIEW_MODE_VIDEO_IMAGE.Create;
 Emu_VM_Video_Mouse.Text := TEMU_VIEW_MODE_VIDEO_TEXT.Create;
 Emu_VM_Video_Mouse.Button := TEMU_VIEW_MODE_VIDEO_BUTTON.Create;
+Emu_VM_Video_Mouse.Model3D := TEMU_VIEW_MODE_VIDEO_MODEL3D.Create;
+Emu_VM_Video_Mouse.Edit := TEMU_VIEW_MODE_VIDEO_EDIT.Create;
 
 finalization
 
 Emu_VM_Video_Mouse.Image.Free;
 Emu_VM_Video_Mouse.Text.Free;
 Emu_VM_Video_Mouse.Button.Free;
+Emu_VM_Video_Mouse.Model3D.Free;
+Emu_VM_Video_Mouse.Edit.Free;
 
 end.

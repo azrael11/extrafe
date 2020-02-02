@@ -14,18 +14,20 @@ uses
   FMX.Effects,
   FMX.Layouts,
   FMX.Dialogs,
+  FMX.Edit,
   FmxPasLibVlcPlayerUnit,
   PasLibVlcUnit,
   Xml.xmldom,
   Xml.XMLIntf,
   Xml.adomxmldom,
   Xml.XMLDoc,
-  Xml.omnixmldom;
+  Xml.omnixmldom,
+  FireDAC.Comp.Client;
 
 { Creation }
 
 { Create Scene }
-procedure Create_Scene(vMain: TImage; vPath, vImages: String);
+procedure Create_Scene(vUser_Num: Integer; vQuery: TFDQuery; vMain: TImage; vPath, vImages, vSounds: String);
 
 { Create the configuration standard part }
 procedure Create_Configuration(vMain: TImage);
@@ -55,7 +57,9 @@ implementation
 
 uses
   uLoad_AllTypes,
+  uDB,
   uDB_AUser,
+  uView_Mode_Video_Sounds,
   uView_Mode_Video_AllTypes,
   uView_Mode_Video_Mouse;
 
@@ -76,6 +80,8 @@ begin
       Emu_XML.emu.vtype := vRoot.Attributes['type'];
     if vRoot.HasAttribute('exe') then
       Emu_XML.emu.exe := vRoot.Attributes['exe'];
+    if vRoot.HasAttribute('path') then
+      Emu_XML.emu.path := vRoot.Attributes['path'];
 
     for vi := 0 to vRoot.ChildNodes.Count - 1 do
     begin
@@ -117,6 +123,13 @@ begin
 
         for vk := 0 to Emu_XML.filters.main_num.ToInteger do
           Emu_XML.filters.main.Add(vNode.ChildNodes['list'].ChildNodes[vk].Text);
+      end
+      else if vNode.NodeName = 'game' then
+      begin
+        { Game variables }
+        Emu_XML.game.games := vNode.ChildNodes['games'].Text;
+        Emu_XML.game.play_count_refresh_status := vNode.ChildNodes['refresh_play_count'].Text;
+        Emu_XML.game.favorites := vNode.ChildNodes['favorites'].Text;
       end;
     end;
 
@@ -167,18 +180,30 @@ begin
   FreeAndNil(Emu_VM_Video.config.main);
 end;
 
-procedure Create_Scene(vMain: TImage; vPath, vImages: String);
+procedure Create_Scene(vUser_Num: Integer; vQuery: TFDQuery; vMain: TImage; vPath, vImages, vSounds: String);
 begin
   Emu_VM_Video.main := vMain;
 
-  Emu_XML.Images_Path := vImages + 'video\';
   Load_XML_Variables(vPath);
+  Emu_XML.Images_Path := vImages + 'video\';
+  Emu_XML.Sounds_Path := vSounds + 'video\';
 
+  { Load all view mode (video) sounds }
+  uView_Mode_Video_Sounds.Load;
+
+  { Set up the start variables }
+  Emu_VM_Video_Var.Query := vQuery;
+  Emu_VM_Video_Var.User_Num := vUser_Num;
   Emu_VM_Video_Var.Config_Open := False;
   Emu_VM_Video_Var.Filters_Open := False;
   Emu_VM_Video_Var.Game_Mode := False;
   Emu_VM_Video_Var.Gamelist.Loaded := False;
+  Emu_VM_Video_Var.Favorites_Open := False;
+  Emu_VM_Video_Var.Search_Open := False;
   Emu_VM_Video_Var.Video.Old_Width := 0;
+  Emu_VM_Video_Var.favorites.Count := uDB.Query_Count(Emu_VM_Video_Var.Query, Emu_XML.game.favorites, 'fav_id_' + Emu_VM_Video_Var.User_Num.ToString, '1');
+  if Emu_VM_Video_Var.Favorites_Open then
+    Emu_VM_Video_Var.favorites.game_is := True;
 
   { Gamelist refresh timer }
   Emu_VM_Video.Gamelist.Gamelist.Timer := TTimer.Create(Emu_VM_Video.main);
@@ -346,69 +371,69 @@ var
   vi: Integer;
   viPos: Integer;
 begin
-  Emu_VM_Video.Gamelist.Games.List := TImage.Create(Emu_VM_Video.left);
-  Emu_VM_Video.Gamelist.Games.List.name := 'Emu_Gamelist_Games';
-  Emu_VM_Video.Gamelist.Games.List.Parent := Emu_VM_Video.left;
-  Emu_VM_Video.Gamelist.Games.List.SetBounds(50, 50, 750, (Emu_VM_Video.left.height - 180));
-  Emu_VM_Video.Gamelist.Games.List.WrapMode := TImageWrapMode.Tile;
-  Emu_VM_Video.Gamelist.Games.List.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black_Opacity.image);
-  Emu_VM_Video.Gamelist.Games.List.Visible := True;
+  Emu_VM_Video.Gamelist.games.List := TImage.Create(Emu_VM_Video.left);
+  Emu_VM_Video.Gamelist.games.List.name := 'Emu_Gamelist_Games';
+  Emu_VM_Video.Gamelist.games.List.Parent := Emu_VM_Video.left;
+  Emu_VM_Video.Gamelist.games.List.SetBounds(50, 50, 750, (Emu_VM_Video.left.height - 180));
+  Emu_VM_Video.Gamelist.games.List.WrapMode := TImageWrapMode.Tile;
+  Emu_VM_Video.Gamelist.games.List.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black_Opacity.image);
+  Emu_VM_Video.Gamelist.games.List.Visible := True;
 
-  Emu_VM_Video.Gamelist.Games.Listbox := TVertScrollBox.Create(Emu_VM_Video.Gamelist.Games.List);
-  Emu_VM_Video.Gamelist.Games.Listbox.name := 'Emu_Gamelist_Games_Box';
-  Emu_VM_Video.Gamelist.Games.Listbox.Parent := Emu_VM_Video.Gamelist.Games.List;
-  Emu_VM_Video.Gamelist.Games.Listbox.Align := TAlignLayout.Client;
-  Emu_VM_Video.Gamelist.Games.Listbox.ShowScrollBars := False;
-  Emu_VM_Video.Gamelist.Games.Listbox.Visible := True;
+  Emu_VM_Video.Gamelist.games.Listbox := TVertScrollBox.Create(Emu_VM_Video.Gamelist.games.List);
+  Emu_VM_Video.Gamelist.games.Listbox.name := 'Emu_Gamelist_Games_Box';
+  Emu_VM_Video.Gamelist.games.Listbox.Parent := Emu_VM_Video.Gamelist.games.List;
+  Emu_VM_Video.Gamelist.games.Listbox.Align := TAlignLayout.Client;
+  Emu_VM_Video.Gamelist.games.Listbox.ShowScrollBars := False;
+  Emu_VM_Video.Gamelist.games.Listbox.Visible := True;
 
   for vi := 0 to 20 do
   begin
-    Emu_VM_Video.Gamelist.Games.Line[vi].Back := TImage.Create(Emu_VM_Video.Gamelist.Games.Listbox);
-    Emu_VM_Video.Gamelist.Games.Line[vi].Back.name := 'Emu_Gamelist_Games_Line_' + vi.ToString;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Back.Parent := Emu_VM_Video.Gamelist.Games.Listbox;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Back.SetBounds(0, ((vi * 40) + (vi + 10)), (Emu_VM_Video.Gamelist.Games.Listbox.width - 10), 40);
-    Emu_VM_Video.Gamelist.Games.Line[vi].Back.Tag := vi;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Back.Visible := True;
+    Emu_VM_Video.Gamelist.games.Line[vi].Back := TImage.Create(Emu_VM_Video.Gamelist.games.Listbox);
+    Emu_VM_Video.Gamelist.games.Line[vi].Back.name := 'Emu_Gamelist_Games_Line_' + vi.ToString;
+    Emu_VM_Video.Gamelist.games.Line[vi].Back.Parent := Emu_VM_Video.Gamelist.games.Listbox;
+    Emu_VM_Video.Gamelist.games.Line[vi].Back.SetBounds(0, ((vi * 40) + (vi + 10)), (Emu_VM_Video.Gamelist.games.Listbox.width - 10), 40);
+    Emu_VM_Video.Gamelist.games.Line[vi].Back.Tag := vi;
+    Emu_VM_Video.Gamelist.games.Line[vi].Back.Visible := True;
 
-    Emu_VM_Video.Gamelist.Games.Line[vi].Icon := TImage.Create(Emu_VM_Video.Gamelist.Games.Line[vi].Back);
-    Emu_VM_Video.Gamelist.Games.Line[vi].Icon.name := 'Emu_Gamelist_Games_Icon_' + vi.ToString;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Icon.Parent := Emu_VM_Video.Gamelist.Games.Line[vi].Back;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Icon.SetBounds(4, 2, 38, 38);
-    Emu_VM_Video.Gamelist.Games.Line[vi].Icon.Tag := vi;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Icon.Visible := True;
+    Emu_VM_Video.Gamelist.games.Line[vi].Icon := TImage.Create(Emu_VM_Video.Gamelist.games.Line[vi].Back);
+    Emu_VM_Video.Gamelist.games.Line[vi].Icon.name := 'Emu_Gamelist_Games_Icon_' + vi.ToString;
+    Emu_VM_Video.Gamelist.games.Line[vi].Icon.Parent := Emu_VM_Video.Gamelist.games.Line[vi].Back;
+    Emu_VM_Video.Gamelist.games.Line[vi].Icon.SetBounds(4, 2, 38, 38);
+    Emu_VM_Video.Gamelist.games.Line[vi].Icon.Tag := vi;
+    Emu_VM_Video.Gamelist.games.Line[vi].Icon.Visible := True;
 
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text := TText.Create(Emu_VM_Video.Gamelist.Games.Line[vi].Back);
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.name := 'Emu_Gamelist_Games_Game_' + vi.ToString;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Parent := Emu_VM_Video.Gamelist.Games.Line[vi].Back;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.SetBounds(48, 3, 654, 34);
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Text := IntToStr(vi);
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Font.Family := 'Tahoma';
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Color := TAlphaColorRec.White;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Font.Style := Emu_VM_Video.Gamelist.Games.Line[vi].Text.Font.Style + [TFontStyle.fsBold];
+    Emu_VM_Video.Gamelist.games.Line[vi].Text := TText.Create(Emu_VM_Video.Gamelist.games.Line[vi].Back);
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.name := 'Emu_Gamelist_Games_Game_' + vi.ToString;
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.Parent := Emu_VM_Video.Gamelist.games.Line[vi].Back;
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.SetBounds(48, 3, 654, 34);
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.Text := IntToStr(vi);
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.Font.Family := 'Tahoma';
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.Color := TAlphaColorRec.White;
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.Font.Style := Emu_VM_Video.Gamelist.games.Line[vi].Text.Font.Style + [TFontStyle.fsBold];
     if vi = 10 then
-      Emu_VM_Video.Gamelist.Games.Line[vi].Text.Font.Size := 24
+      Emu_VM_Video.Gamelist.games.Line[vi].Text.Font.Size := 24
     else
-      Emu_VM_Video.Gamelist.Games.Line[vi].Text.Font.Size := 18;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.HorzTextAlign := TTextAlign.Leading;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Tag := vi;
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Visible := True;
+      Emu_VM_Video.Gamelist.games.Line[vi].Text.Font.Size := 18;
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.HorzTextAlign := TTextAlign.Leading;
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.Tag := vi;
+    Emu_VM_Video.Gamelist.games.Line[vi].Text.Visible := True;
   end;
 
-  Emu_VM_Video.Gamelist.Games.Selection := TGlowEffect.Create(Emu_VM_Video.Gamelist.Games.Line[10].Text);
-  Emu_VM_Video.Gamelist.Games.Selection.name := 'Emu_Gamelist_Game_Selection';
-  Emu_VM_Video.Gamelist.Games.Selection.Parent := Emu_VM_Video.Gamelist.Games.Line[10].Text;
-  Emu_VM_Video.Gamelist.Games.Selection.GlowColor := TAlphaColorRec.Deepskyblue;
-  Emu_VM_Video.Gamelist.Games.Selection.Opacity := 0.9;
-  Emu_VM_Video.Gamelist.Games.Selection.Softness := 0.4;
-  Emu_VM_Video.Gamelist.Games.Selection.Enabled := True;
+  Emu_VM_Video.Gamelist.games.Selection := TGlowEffect.Create(Emu_VM_Video.Gamelist.games.Line[10].Text);
+  Emu_VM_Video.Gamelist.games.Selection.name := 'Emu_Gamelist_Game_Selection';
+  Emu_VM_Video.Gamelist.games.Selection.Parent := Emu_VM_Video.Gamelist.games.Line[10].Text;
+  Emu_VM_Video.Gamelist.games.Selection.GlowColor := TAlphaColorRec.Deepskyblue;
+  Emu_VM_Video.Gamelist.games.Selection.Opacity := 0.9;
+  Emu_VM_Video.Gamelist.games.Selection.Softness := 0.4;
+  Emu_VM_Video.Gamelist.games.Selection.Enabled := True;
 
-  Emu_VM_Video.Gamelist.Games.Line[10].Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Selection.image);
+  Emu_VM_Video.Gamelist.games.Line[10].Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Selection.image);
 
-  Emu_VM_Video.Gamelist.Games.List_Blur := TBlurEffect.Create(Emu_VM_Video.Gamelist.Games.Listbox);
-  Emu_VM_Video.Gamelist.Games.List_Blur.name := 'Emu_Gamelist_Games_List_Blur';
-  Emu_VM_Video.Gamelist.Games.List_Blur.Parent := Emu_VM_Video.Gamelist.Games.Listbox;
-  Emu_VM_Video.Gamelist.Games.List_Blur.Softness := 0.9;
-  Emu_VM_Video.Gamelist.Games.List_Blur.Enabled := False;
+  Emu_VM_Video.Gamelist.games.List_Blur := TBlurEffect.Create(Emu_VM_Video.Gamelist.games.Listbox);
+  Emu_VM_Video.Gamelist.games.List_Blur.name := 'Emu_Gamelist_Games_List_Blur';
+  Emu_VM_Video.Gamelist.games.List_Blur.Parent := Emu_VM_Video.Gamelist.games.Listbox;
+  Emu_VM_Video.Gamelist.games.List_Blur.Softness := 0.9;
+  Emu_VM_Video.Gamelist.games.List_Blur.Enabled := False;
 end;
 
 procedure Create_Gamelist_Lists;
@@ -493,9 +518,57 @@ begin
   Emu_VM_Video.Gamelist.filters.Filter_Text.Visible := True;
 end;
 
-
 procedure Create_Gamelist_Search;
 begin
+  Emu_VM_Video.Gamelist.Search.Back := TImage.Create(Emu_VM_Video.left);
+  Emu_VM_Video.Gamelist.Search.Back.name := 'Emu_Gamelist_Search';
+  Emu_VM_Video.Gamelist.Search.Back.Parent := Emu_VM_Video.left;
+  Emu_VM_Video.Gamelist.Search.Back.SetBounds(50, 1026, 750, 26);
+  Emu_VM_Video.Gamelist.Search.Back.WrapMode := TImageWrapMode.Tile;
+  Emu_VM_Video.Gamelist.Search.Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black_Opacity.image);
+  Emu_VM_Video.Gamelist.Search.Back.Visible := True;
+
+  Emu_VM_Video.Gamelist.Search.Search := TText.Create(Emu_VM_Video.Gamelist.Search.Back);
+  Emu_VM_Video.Gamelist.Search.Search.name := 'Emu_Gamelist_Search_Icon';
+  Emu_VM_Video.Gamelist.Search.Search.Parent := Emu_VM_Video.Gamelist.Search.Back;
+  Emu_VM_Video.Gamelist.Search.Search.SetBounds(2, 1, 24, 24);
+  Emu_VM_Video.Gamelist.Search.Search.Font.Family := 'IcoMoon-Free';
+  Emu_VM_Video.Gamelist.Search.Search.Font.Size := 22;
+  Emu_VM_Video.Gamelist.Search.Search.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  Emu_VM_Video.Gamelist.Search.Search.Text := #$e986;
+  Emu_VM_Video.Gamelist.Search.Search.OnClick := Emu_VM_Video_Mouse.Text.OnMouseClick;
+  Emu_VM_Video.Gamelist.Search.Search.OnMouseEnter := Emu_VM_Video_Mouse.Text.OnMouseEnter;
+  Emu_VM_Video.Gamelist.Search.Search.OnMouseLeave := Emu_VM_Video_Mouse.Text.OnMouseLeave;
+  Emu_VM_Video.Gamelist.Search.Search.Visible := True;
+
+  Emu_VM_Video.Gamelist.Search.Glow := TGlowEffect.Create(Emu_VM_Video.Gamelist.Search.Search);
+  Emu_VM_Video.Gamelist.Search.Glow.name := 'Emu_Gamelist_Search_Icon_Glow';
+  Emu_VM_Video.Gamelist.Search.Glow.Parent := Emu_VM_Video.Gamelist.Search.Search;
+  Emu_VM_Video.Gamelist.Search.Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  Emu_VM_Video.Gamelist.Search.Glow.Softness := 0.9;
+  Emu_VM_Video.Gamelist.Search.Glow.Enabled := False;
+
+  Emu_VM_Video.Gamelist.Search.Edit := TEdit.Create(Emu_VM_Video.Gamelist.Search.Back);
+  Emu_VM_Video.Gamelist.Search.Edit.name := 'Emu_Gamelist_Search_Edit';
+  Emu_VM_Video.Gamelist.Search.Edit.Parent := Emu_VM_Video.Gamelist.Search.Back;
+  Emu_VM_Video.Gamelist.Search.Edit.SetBounds(34, 1, 0, 30);
+  Emu_VM_Video.Gamelist.Search.Edit.StyledSettings := Emu_VM_Video.Gamelist.Search.Edit.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor];
+  Emu_VM_Video.Gamelist.Search.Edit.Text := '';
+  Emu_VM_Video.Gamelist.Search.Edit.TextSettings.FontColor := TAlphaColorRec.White;
+  Emu_VM_Video.Gamelist.Search.Edit.TextSettings.Font.Size := 20;
+  Emu_VM_Video.Gamelist.Search.Edit.OnTyping := Emu_VM_Video_Mouse.Edit.OnTyping;
+  Emu_VM_Video.Gamelist.Search.Edit.Visible := True;
+
+
+  Emu_VM_Video.Gamelist.Search.Edit_Ani := TFloatAnimation.Create(Emu_VM_Video.Gamelist.Search.Edit);
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.Name := 'Emu_Gamelist_Search_Edit_Animation';
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.Parent := Emu_VM_Video.Gamelist.Search.Edit;
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.PropertyName := 'Width';
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.Duration := 0.4;
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.StartValue := 0;
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.StopValue := 706;
+//  Emu_VM_Video.Gamelist.Search.Edit_Ani.OnFinish := vSearch.Actions.Anim.OnFinish;
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.Enabled := False;
 
 end;
 
@@ -515,27 +588,27 @@ begin
   Emu_VM_Video.Media.Bar.Back := TImage.Create(Emu_VM_Video.right);
   Emu_VM_Video.Media.Bar.Back.name := 'Emu_Media_Bar';
   Emu_VM_Video.Media.Bar.Back.Parent := Emu_VM_Video.right;
-  Emu_VM_Video.Media.Bar.Back.SetBounds(50, 50, 750, (Emu_VM_Video.right.height - 180));
+  Emu_VM_Video.Media.Bar.Back.SetBounds(50, 18, 750, 26);
   Emu_VM_Video.Media.Bar.Back.WrapMode := TImageWrapMode.Tile;
   Emu_VM_Video.Media.Bar.Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black_Opacity.image);
   Emu_VM_Video.Media.Bar.Back.Visible := True;
 
-  Emu_VM_Video.Media.Bar.Favorites := TText.Create(Emu_VM_Video.Media.Bar.Back);
-  Emu_VM_Video.Media.Bar.Favorites.name := 'Emu_Media_Bar_Favorites';
-  Emu_VM_Video.Media.Bar.Favorites.Parent := Emu_VM_Video.Media.Bar.Back;
-  Emu_VM_Video.Media.Bar.Favorites.SetBounds(2, 1, 24, 24);
-  Emu_VM_Video.Media.Bar.Favorites.Font.Family := 'IcoMoon-Free';
-  Emu_VM_Video.Media.Bar.Favorites.Font.Size := 22;
-  Emu_VM_Video.Media.Bar.Favorites.TextSettings.FontColor := TAlphaColorRec.Grey;
-  Emu_VM_Video.Media.Bar.Favorites.Text := #$e9d9;
-  Emu_VM_Video.Media.Bar.Favorites.OnClick := Emu_VM_Video_Mouse.Text.OnMouseClick;
-  Emu_VM_Video.Media.Bar.Favorites.OnMouseEnter := Emu_VM_Video_Mouse.Text.OnMouseEnter;
-  Emu_VM_Video.Media.Bar.Favorites.OnMouseLeave := Emu_VM_Video_Mouse.Text.OnMouseLeave;
-  Emu_VM_Video.Media.Bar.Favorites.Visible := True;
+  Emu_VM_Video.Media.Bar.favorites := TText.Create(Emu_VM_Video.Media.Bar.Back);
+  Emu_VM_Video.Media.Bar.favorites.name := 'Emu_Media_Bar_Favorites';
+  Emu_VM_Video.Media.Bar.favorites.Parent := Emu_VM_Video.Media.Bar.Back;
+  Emu_VM_Video.Media.Bar.favorites.SetBounds(2, 1, 24, 24);
+  Emu_VM_Video.Media.Bar.favorites.Font.Family := 'IcoMoon-Free';
+  Emu_VM_Video.Media.Bar.favorites.Font.Size := 22;
+  Emu_VM_Video.Media.Bar.favorites.TextSettings.FontColor := TAlphaColorRec.Grey;
+  Emu_VM_Video.Media.Bar.favorites.Text := #$e9da;
+  Emu_VM_Video.Media.Bar.favorites.OnClick := Emu_VM_Video_Mouse.Text.OnMouseClick;
+  Emu_VM_Video.Media.Bar.favorites.OnMouseEnter := Emu_VM_Video_Mouse.Text.OnMouseEnter;
+  Emu_VM_Video.Media.Bar.favorites.OnMouseLeave := Emu_VM_Video_Mouse.Text.OnMouseLeave;
+  Emu_VM_Video.Media.Bar.favorites.Visible := True;
 
-  Emu_VM_Video.Media.Bar.Favorites_Glow := TGlowEffect.Create(Emu_VM_Video.Media.Bar.Favorites);
+  Emu_VM_Video.Media.Bar.Favorites_Glow := TGlowEffect.Create(Emu_VM_Video.Media.Bar.favorites);
   Emu_VM_Video.Media.Bar.Favorites_Glow.name := 'Emu_Media_Bar_Favorites_Glow';
-  Emu_VM_Video.Media.Bar.Favorites_Glow.Parent := Emu_VM_Video.Media.Bar.Favorites;
+  Emu_VM_Video.Media.Bar.Favorites_Glow.Parent := Emu_VM_Video.Media.Bar.favorites;
   Emu_VM_Video.Media.Bar.Favorites_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   Emu_VM_Video.Media.Bar.Favorites_Glow.Softness := 0.9;
   Emu_VM_Video.Media.Bar.Favorites_Glow.Enabled := False;
@@ -546,8 +619,9 @@ begin
   Emu_VM_Video.Media.Video.Back := TImage.Create(Emu_VM_Video.right);
   Emu_VM_Video.Media.Video.Back.name := 'Emu_Media_Video';
   Emu_VM_Video.Media.Video.Back.Parent := Emu_VM_Video.right;
-  Emu_VM_Video.Media.Video.Back.SetBounds(100, 150, 650, 600);
-  Emu_VM_Video.Media.Video.Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black.image);
+  Emu_VM_Video.Media.Video.Back.SetBounds(50, 50, 750, (Emu_VM_Video.right.height - 180));
+  Emu_VM_Video.Media.Video.Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black_Opacity.image);
+  Emu_VM_Video.Media.Video.Back.WrapMode := TImageWrapMode.Tile;
   Emu_VM_Video.Media.Video.Back.Visible := True;
 
 {$IFDEF WIN32}
@@ -559,23 +633,30 @@ begin
     Exit;
   end;
 
-  Emu_VM_Video.Media.Video.Video := TFmxPasLibVlcPlayer.Create(Emu_VM_Video.Media.Video.Back);
+  Emu_VM_Video.Media.Video.Video_Back := TImage.Create(Emu_VM_Video.Media.Video.Back);
+  Emu_VM_Video.Media.Video.Video_Back.name := 'Emu_Media_Video_Back';
+  Emu_VM_Video.Media.Video.Video_Back.Parent := Emu_VM_Video.Media.Video.Back;
+  Emu_VM_Video.Media.Video.Video_Back.SetBounds(50, 100, 650, 600);
+  Emu_VM_Video.Media.Video.Video_Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black.image);
+  Emu_VM_Video.Media.Video.Video_Back.Visible := True;
+
+  Emu_VM_Video.Media.Video.Video := TFmxPasLibVlcPlayer.Create(Emu_VM_Video.Media.Video.Video_Back);
   Emu_VM_Video.Media.Video.Video.name := 'Mame_Snap_Video';
-  Emu_VM_Video.Media.Video.Video.Parent := Emu_VM_Video.Media.Video.Back;
+  Emu_VM_Video.Media.Video.Video.Parent := Emu_VM_Video.Media.Video.Video_Back;
   Emu_VM_Video.Media.Video.Video.Align := TAlignLayout.Client;
   Emu_VM_Video.Media.Video.Video.SetVideoAspectRatio('4:3');
   Emu_VM_Video.Media.Video.Video.WrapMode := TImageWrapMode.Stretch;
   Emu_VM_Video.Media.Video.Video.Visible := True;
 
-  Emu_VM_Video.Media.Video.Video_Timer_Cont := TTimer.Create(Emu_VM_Video.Media.Video.Back);
+  Emu_VM_Video.Media.Video.Video_Timer_Cont := TTimer.Create(Emu_VM_Video.Media.Video.Video_Back);
   Emu_VM_Video.Media.Video.Video_Timer_Cont.Interval := 100;
   Emu_VM_Video.Media.Video.Video_Timer_Cont.OnTimer := Emu_VM_Video_Var.Timer.Video.OnTimer;
   Emu_VM_Video.Media.Video.Video_Timer_Cont.Enabled := False;
 
-  Emu_VM_Video.Media.Video.Game_Info.Layout := TLayout.Create(Emu_VM_Video.Media.Video.Back);
+  Emu_VM_Video.Media.Video.Game_Info.Layout := TLayout.Create(Emu_VM_Video.Media.Video.Video_Back);
   Emu_VM_Video.Media.Video.Game_Info.Layout.name := 'Mame_Media_Players';
-  Emu_VM_Video.Media.Video.Game_Info.Layout.Parent := Emu_VM_Video.Media.Video.Back;
-  Emu_VM_Video.Media.Video.Game_Info.Layout.SetBounds(0, -50, Emu_VM_Video.Media.Video.Back.width, 50);
+  Emu_VM_Video.Media.Video.Game_Info.Layout.Parent := Emu_VM_Video.Media.Video.Video_Back;
+  Emu_VM_Video.Media.Video.Game_Info.Layout.SetBounds(0, -50, Emu_VM_Video.Media.Video.Video_Back.width, 50);
   Emu_VM_Video.Media.Video.Game_Info.Layout.Visible := True;
 
   Emu_VM_Video.Media.Video.Game_Info.Players := TText.Create(Emu_VM_Video.Media.Video.Game_Info.Layout);
@@ -605,8 +686,8 @@ begin
   Emu_VM_Video.Media.Video.Game_Info.Favorite.SetBounds(Emu_VM_Video.Media.Video.Game_Info.Layout.width - 60, 5, 60, 50);
   Emu_VM_Video.Media.Video.Game_Info.Favorite.Font.Family := 'IcoMoon-Free';
   Emu_VM_Video.Media.Video.Game_Info.Favorite.Font.Size := 24;
-  Emu_VM_Video.Media.Video.Game_Info.Favorite.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  Emu_VM_Video.Media.Video.Game_Info.Favorite.Text := #$e9d9;
+  Emu_VM_Video.Media.Video.Game_Info.Favorite.TextSettings.FontColor := TAlphaColorRec.Red;
+  Emu_VM_Video.Media.Video.Game_Info.Favorite.Text := #$e9da;
   Emu_VM_Video.Media.Video.Game_Info.Favorite.Visible := False;
 end;
 

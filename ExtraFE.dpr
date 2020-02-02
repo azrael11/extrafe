@@ -184,7 +184,8 @@ uses
   uView_Mode_Video_Key in 'emu\modes\video\uView_Mode_Video_Key.pas',
   uView_Mode_Video_Joy in 'emu\modes\video\uView_Mode_Video_Joy.pas',
   uView_Mode_Video_Game in 'emu\modes\video\uView_Mode_Video_Game.pas',
-  uView_Mode_Video_Actions_Filters in 'emu\modes\video\uView_Mode_Video_Actions_Filters.pas';
+  uView_Mode_Video_Actions_Filters in 'emu\modes\video\uView_Mode_Video_Actions_Filters.pas',
+  uView_Mode_Video_Sounds in 'emu\modes\video\uView_Mode_Video_Sounds.pas';
 
 {$R *.res}
 

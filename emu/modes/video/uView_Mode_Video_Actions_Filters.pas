@@ -17,10 +17,13 @@ procedure Create_Window;
 procedure Add;
 procedure Sort_Panels;
 
+procedure Close_Window;
+
 implementation
 
 uses
   uLoad_AllTypes,
+  uView_Mode_Video_Actions,
   uView_Mode_Video_Mouse,
   uView_Mode_Video_AllTypes;
 
@@ -282,4 +285,10 @@ begin
   end;
 end;
 
+procedure Close_Window;
+begin
+  uView_Mode_Video_Actions.Filters_Action;
+end;
+
 end.
+
