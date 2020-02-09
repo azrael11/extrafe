@@ -608,7 +608,7 @@ begin
   vMame.Scene.Main.Name := 'Mame_Main';
   vMame.Scene.Main.Parent := Emu_Form;
   vMame.Scene.Main.SetBounds(0, 0, Emu_Form.Width, Emu_Form.Height);
-  vMame.Scene.Main.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'config.jpg');
+//  vMame.Scene.Main.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'config.jpg');
   vMame.Scene.Main.WrapMode := TImageWrapMode.Stretch;
   vMame.Scene.Main.Visible := True;
 

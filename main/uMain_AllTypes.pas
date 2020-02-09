@@ -324,14 +324,38 @@ type
   end;
 
 type
+  TMAIN_CONFIG_GENERAL_KEYBOARD = record
+
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_JOYSTICK = record
+    Select: TComboBox;
+    Panel: TPanel;
+    Place: TRectangle;
+    Place_Circle: TCircle;
+    Place_Lines: array [0..1] of TLine;
+    Place_dot: TCircle;
+    Buttons: array [0..15] of TCircle;
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_MOUSE = record
+
+  end;
+
+type
   TMAIN_CONFIG_GENERAL = record
     Panel: TPanel;
     Blur: TGaussianBlurEffect;
     Contol: TTabControl;
-    Tab_Item: array [0 .. 2] of TTabItem;
+    Tab_Item: array [0 .. 5] of TTabItem;
     Visual: TMAIN_CONFIG_GENERAL_VISOUAL;
     Graphics: TMAIN_CONFIG_GENERAL_GRAPHICS;
     Sound: TMAIN_CONFIG_GENERAL_SOUND;
+    Keyboard: TMAIN_CONFIG_GENERAL_KEYBOARD;
+    Joystick: TMAIN_CONFIG_GENERAL_JOYSTICK;
+    Mouse: TMAIN_CONFIG_GENERAL_MOUSE;
   end;
 
   // Config Emulators

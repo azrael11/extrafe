@@ -185,7 +185,10 @@ uses
   uView_Mode_Video_Joy in 'emu\modes\video\uView_Mode_Video_Joy.pas',
   uView_Mode_Video_Game in 'emu\modes\video\uView_Mode_Video_Game.pas',
   uView_Mode_Video_Actions_Filters in 'emu\modes\video\uView_Mode_Video_Actions_Filters.pas',
-  uView_Mode_Video_Sounds in 'emu\modes\video\uView_Mode_Video_Sounds.pas';
+  uView_Mode_Video_Sounds in 'emu\modes\video\uView_Mode_Video_Sounds.pas',
+  uMain_Config_General_Keyboard in 'main\configuration\general\uMain_Config_General_Keyboard.pas',
+  uMain_Config_General_Joystick in 'main\configuration\general\uMain_Config_General_Joystick.pas',
+  uMain_Config_General_Mouse in 'main\configuration\general\uMain_Config_General_Mouse.pas';
 
 {$R *.res}
 

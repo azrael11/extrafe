@@ -17,11 +17,12 @@ implementation
 uses
   uLoad_AllTypes,
   uMain_AllTypes,
-  uMain_Config_General_Visual;
+  uMain_Config_General_Visual,
+  uMain_Config_General_Joystick;
 
 procedure Create;
 const
-  cItem_Names: array [0 .. 2] of string = ('Visual', 'Graphics', 'Sound');
+  cItem_Names: array [0 .. 5] of string = ('Visual', 'Graphics', 'Sound', 'Keyboard', 'Joystick', 'Mouse');
 var
   vi: Integer;
 begin
@@ -43,7 +44,7 @@ begin
   mainScene.Config.Main.R.General.Contol.Align := TAlignLayout.Client;
   mainScene.Config.Main.R.General.Contol.Visible := True;
 
-  for vi := 0 to 2 do
+  for vi := 0 to 5 do
   begin
     mainScene.Config.Main.R.General.Tab_Item[vi] := TTabItem.Create(mainScene.Config.Main.R.General.Contol);
     mainScene.Config.Main.R.General.Tab_Item[vi].Name := 'Main_Config_General_Tab_Item_' + vi.ToString;
@@ -54,7 +55,8 @@ begin
       mainScene.Config.Main.R.General.Tab_Item[vi].Visible := True;
   end;
 
-  uMain_Config_General_Visual.Create;
+  uMain_Config_General_Visual.Load;
+  uMain_Config_General_Joystick.Load;
 end;
 
 end.

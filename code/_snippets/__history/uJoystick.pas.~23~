@@ -1,0 +1,439 @@
+unit uJoystick;
+
+interface
+
+uses
+  System.Classes,
+  FMX.Types,
+  WinApi.MMSystem;
+
+type
+    TGamePort = ( One,Two,None );
+    TJoyMoveEvent = procedure(Sender:TObject; var X,Y:Integer) of object;
+    TButtonNotifyEvent = procedure(Sender:TObject; Pushed:Boolean )of object;
+
+type
+  TJoystick = class(TComponent)
+  private
+
+    { Internal private uses }
+    CenterX:LongInt;
+    CenterY:LongInt;
+    DeltaPosX,DeltaNegX: LongInt;
+    DeltaPosY,DeltaNegY: LongInt;
+
+    JoyId: Word;
+    JoyCaps: TJoyCaps;
+    JoyInfo: TJoyInfo;
+
+    { Published Private declarations }
+    FActive : Boolean; { runtime only....enables joystick polling }
+    FGamePort: TGamePort; {which game port to monitor }
+    FEnabled: Boolean; {tells whether event is enabled}
+    FNotifyRange: Integer ; { percentage joystick move notify }
+    FPollRate: Integer; {tells how often to check joystick in miliseconds}
+    FRepeatPosition: Boolean;{call joymove event if same as before}
+    FRepeatButton1: Boolean;
+    FRepeatButton2: Boolean;
+    FRepeatButton3: Boolean;
+    FRepeatButton4: Boolean;
+
+    FOnButton1 : TButtonNotifyEvent;
+    FOnButton2 : TButtonNotifyEvent;
+    FOnButton3 : TButtonNotifyEvent;
+    FOnButton4 : TButtonNotifyEvent;
+    FOnJoyMove : TJoyMoveEvent;
+
+    LastJoyX,LastJoyY : LongInt; { remembers last joystick position }
+    LastButton1,LastButton2 : Boolean;{ remebers last button positions }
+    LastButton3,LastButton4 : Boolean;
+
+    FTimer : TTimer;
+
+    procedure SetNotifyRange( value:Integer );
+    procedure SetGamePort( value:TGamePort );
+    procedure SetPollRate( value:Integer );
+
+    procedure SetDefaults; {sets the default values for variables }
+    procedure MakeTimer; { initialization of TTimer }
+    procedure Translate(Sender: TObject); { THE routine...for joystick}
+
+    procedure DoButton1;
+    procedure DoButton2;
+    procedure DoButton3;
+    procedure DoButton4;
+    procedure DoJoystick;
+  protected
+    { Protected declarations }
+
+  public
+    { Public declarations }
+    constructor Create(AOwner :TComponent);override;
+    destructor Destroy;override;
+
+    procedure Activate; { during runtime...enables interrupt }
+    procedure DeActivate; { during runtime...disables interrupt }
+
+    procedure Devices(var Value:Word);{returns # of devices}
+    procedure Buttons( Port:Integer; var Value:Word);
+    procedure CalibrateCenter;{current joystick position as center}
+    procedure CalibrateUpLeft;
+    procedure CalibrateDownRight;
+  published
+    { Published declarations }
+    property Active: Boolean read FActive;
+    property Enabled: Boolean read FEnabled write FEnabled;
+    property GamePort: TGamePort read FGamePort write SetGamePort;
+    property NotifyRange : Integer read FNotifyRange write SetNotifyRange
+             default 20;
+    property PollRate: Integer read FPollRate write SetPollRate
+             default 50;
+    property RepeatPosition: Boolean read FRepeatPosition
+             write FRepeatPosition;
+    property RepeatButton1: Boolean read FRepeatButton1
+             write FRepeatButton1;
+    property RepeatButton2: Boolean read FRepeatButton2
+             write FRepeatButton2;
+    property RepeatButton3: Boolean read FRepeatButton3
+             write FRepeatButton3;
+    property RepeatButton4: Boolean read FRepeatButton4
+             write FRepeatButton4;
+
+
+    property OnButton1: TButtonNotifyEvent read FOnButton1 write FOnButton1;
+    property OnButton2: TButtonNotifyEvent read FOnButton2 write FOnButton2;
+    property OnButton3: TButtonNotifyEvent read FOnButton3 write FOnButton3;
+    property OnButton4: TButtonNotifyEvent read FOnButton4 write FOnButton4;
+    property OnJoyMove: TJoyMoveEvent read FOnJoyMove write FOnJoyMove;
+
+  end;
+
+procedure Register;
+
+implementation
+
+procedure Register;
+begin
+  RegisterComponents('Addons', [TJoystick]);
+end;
+
+constructor TJoystick.Create(AOwner :TComponent);
+begin
+     inherited Create(AOwner);
+     SetDefaults;
+     MakeTimer;
+end;
+
+destructor TJoystick.Destroy;
+begin
+     DeActivate;
+     FTimer.Free;
+     inherited Destroy;
+end;
+
+procedure TJoystick.SetDefaults;
+begin
+     FActive := False;
+     Enabled := True;
+     PollRate := 50;
+     NotifyRange := 20;
+     GamePort := One;
+     RepeatPosition := True;
+     RepeatButton1 := False;
+     RepeatButton2 := False;
+     RepeatButton3 := False;
+     RepeatButton4 := False;
+
+     CenterX:=32768;
+     CenterY:=32768;
+     DeltaNegX:= 8192;
+     DeltaPosX:= 8192;
+     DeltaNegY:= 8192;
+     DeltaPosY:= 8192;
+
+
+end;
+
+procedure TJoystick.MakeTimer;
+begin
+     FTimer := TTimer.Create(Self);
+     FTimer.Enabled := False;
+     FTimer.Interval := 50;
+     FTimer.OnTimer := Translate;
+end;
+
+procedure TJoystick.SetNotifyRange( value:Integer );
+begin
+     if FActive = False then
+             FNotifyRange := value;
+end;
+
+procedure TJoystick.SetGamePort( value:TGamePort );
+begin
+     if FActive = False then
+     begin
+        FGamePort := value;
+        case value of
+             One: JoyId := JOYSTICKID1;
+             Two: JoyId := JOYSTICKID2;
+        else
+            JoyId := 0;
+        end;
+     end;
+end;
+
+procedure TJoystick.SetPollRate( value:Integer );
+begin
+     if FActive = False then
+        FPollRate := value;
+end;
+
+procedure TJoystick.Devices(var Value:Word);
+begin
+     Value := joyGetNumDevs;
+     if Value > 2 then
+        Value := 2;
+end;
+
+procedure TJoystick.Buttons( Port:Integer; var Value:Word);
+var
+   JID :Word;
+   JCaps: TJoyCaps;
+   rvalue :Word;
+begin
+     case Port of
+          1: JID := JOYSTICKID1;
+          2: JID := JOYSTICKID2;
+     else
+         JID := 0;
+     end;
+
+     rvalue := joyGetDevCaps( JID,@JCaps,SizeOf(JCaps) );
+
+     if rvalue = JOYERR_NOERROR then
+        Value := JCaps.wNumButtons
+     else
+         Value := 0;
+
+end;
+
+procedure TJoystick.CalibrateCenter;
+var
+   rvalue: Word;
+   JoyInfo: TJoyInfo;
+begin
+     rvalue:=joyGetPos( JoyID, @JoyInfo);
+     if rvalue = JOYERR_NOERROR then
+     begin
+          CenterX:= JoyInfo.wXpos;
+          CenterY:= JoyInfo.wYpos;
+     end
+     else
+     begin
+          CenterX := (JoyCaps.wXmax-JoyCaps.wXmin) div 2;
+          CenterY := (JoyCaps.wYmax-JoyCaps.wYmin) div 2;
+     end;
+end;
+
+procedure TJoystick.CalibrateUpLeft;
+var
+   rvalue: Word;
+   JoyInfo: TJoyInfo;
+begin
+     rvalue:=joyGetPos( JoyID, @JoyInfo);
+     if rvalue = JOYERR_NOERROR then
+     begin
+          DeltaNegX := (CenterX-JoyInfo.wXPos) div FNotifyRange;
+          DeltaNegY := (CenterY-JoyInfo.wYPos) div FNotifyRange;
+     end
+     else
+     begin
+          DeltaNegX := CenterX div FNotifyRange;
+          DeltaNegY := CenterY div FNotifyRange;
+     end;
+end;
+
+procedure TJoystick.CalibrateDownRight;
+var
+   rvalue: Word;
+   JoyInfo: TJoyInfo;
+begin
+     rvalue:=joyGetPos( JoyID, @JoyInfo);
+     if rvalue = JOYERR_NOERROR then
+     begin
+          DeltaPosX := (JoyInfo.wXPos-CenterX) div FNotifyRange;
+          DeltaPosY := (JoyInfo.wYPos-CenterY) div FNotifyRange;
+     end
+     else
+     begin
+          DeltaPosX := CenterX div FNotifyRange;
+          DeltaPosY := CenterY div FNotifyRange;
+     end;
+end;
+
+
+procedure TJoystick.Activate;
+var
+   rvalue: Word;
+begin
+
+     DeActivate;
+     rvalue := joyGetDevCaps(JoyID, @JoyCaps, SizeOf(JoyCaps) );
+     if rvalue = JOYERR_NOERROR then
+     begin
+          rvalue:=joyGetPos( JoyID, @JoyInfo);
+          { only activate if no errors returned }
+          if rvalue = JOYERR_NOERROR then
+          begin
+               FTimer.Interval := PollRate;
+               FTimer.Enabled := True;
+               FActive := True;
+          end;
+     end;
+     { if there is no device, it will remain InActive }
+
+end;
+
+procedure TJoystick.DeActivate;
+begin
+     if FActive = True then
+        FTimer.Enabled := False;
+      FActive := False;
+end;
+
+
+
+procedure TJoystick.Translate(Sender: TObject);
+var
+   rvalue: Word;
+begin
+    { only check joystick if the component is enabled and active}
+     if (FEnabled = True) and (FActive = True) then
+     begin
+          rvalue:=joyGetPos( JoyID, @JoyInfo);
+          { only evaluate if no errors returned }
+          if rvalue = JOYERR_NOERROR then
+          begin
+               DoButton1;
+               DoButton2;
+               DoButton3;
+               DoButton4;
+               DoJoystick;
+          end;
+     end;
+
+end;
+
+procedure TJoystick.DoButton1;
+var
+   pushed: Boolean;
+begin
+
+     if (JoyInfo.wButtons and JOY_BUTTON1)=JOY_BUTTON1 then
+        pushed := True
+     else
+         pushed := False;
+
+     if FRepeatButton1 = True then
+     begin
+          if (Assigned(FOnButton1)) then FOnButton1(Self,pushed)
+     end
+     else { logic to NOT call button if same as last }
+          if (Assigned(FOnButton1)) and not(pushed=LastButton1)
+             then FOnButton1(Self,pushed);
+
+     LastButton1 := pushed;
+end;
+
+procedure TJoystick.DoButton2;
+var
+   pushed: Boolean;
+begin
+     if (JoyInfo.wButtons and JOY_BUTTON2)=JOY_BUTTON2 then
+        pushed := True
+     else
+         pushed := False;
+
+     if FRepeatButton2 = True then
+     begin
+          if (Assigned(FOnButton2)) then FOnButton2(Self,pushed)
+     end
+     else { logic to NOT call button if same as last }
+          if (Assigned(FOnButton2)) and not(pushed=LastButton2)
+             then FOnButton2(Self,pushed);
+
+     LastButton2 := pushed;
+end;
+
+procedure TJoystick.DoButton3;
+var
+   pushed: Boolean;
+begin
+     if (JoyInfo.wButtons and JOY_BUTTON3)=JOY_BUTTON3 then
+        pushed := True
+     else
+         pushed := False;
+
+     if FRepeatButton3 = True then
+     begin
+          if (Assigned(FOnButton3)) then FOnButton3(Self,pushed)
+     end
+     else { logic to NOT call button if same as last }
+          if (Assigned(FOnButton3)) and not(pushed=LastButton3)
+             then FOnButton3(Self,pushed);
+
+     LastButton3 := pushed;
+end;
+
+procedure TJoystick.DoButton4;
+var
+   pushed: Boolean;
+begin
+     if (JoyInfo.wButtons and JOY_BUTTON4)=JOY_BUTTON4 then
+        pushed := True
+     else
+         pushed := False;
+
+     if FRepeatButton4 = True then
+     begin
+          if (Assigned(FOnButton4)) then FOnButton4(Self,pushed)
+     end
+     else { logic to NOT call button if same as last }
+          if (Assigned(FOnButton4)) and not(pushed=LastButton4)
+             then FOnButton4(Self,pushed);
+
+     LastButton4 := pushed;
+end;
+
+procedure TJoystick.DoJoystick;
+var
+   LocX,LocY: Integer;
+begin
+     LocX := 0;
+     LocY := 0;
+
+     if (JoyInfo.wXpos < CenterX ) then
+        LocX:= (JoyInfo.wXPos-CenterX) div DeltaNegX
+     else
+         LocX:= (JoyInfo.wXPos-CenterX) div DeltaPosX;
+
+     if (JoyInfo.wYpos < CenterY ) then
+        LocY:= (CenterY-JoyInfo.wYPos) div DeltaNegY
+     else
+         LocY:= (CenterY-JoyInfo.wYPos) div DeltaPosY;
+
+     if FRepeatPosition = True then
+     begin
+        if (Assigned(FOnJoyMove)) then FOnJoyMove(Self,LocX,LocY)
+     end
+     else
+         if (Assigned(FOnJoyMove)) and ((LocX<>LastJoyX) or (LocY<>LastJoyY))
+            then OnJoyMove(Self,LocX,LocY);
+
+     LastJoyX:= LocX;
+     LastJoyY:= LocY;
+
+end;
+
+
+end.

@@ -10,6 +10,7 @@ uses
   FMX.Dialogs,
   FMX.StdCtrls,
   FMX.Edit,
+  FMX.Objects3D,
   BASS;
 
 type
@@ -190,22 +191,22 @@ end;
 
 procedure TEMU_VIEW_MODE_VIDEO_MODEL3D.OnMouseClick(Sender: TObject);
 begin
-  if Emu_VM_Video_Var.favorites.game_is then
+  if TModel3D(Sender).Name = 'Emu_Game_Favorite_3D_Viewport' then
   begin
-    Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := Emu_VM_Video.GameMenu.Favorite.Material_Source;
+    if Emu_VM_Video_Var.favorites.game_is then
+      Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := Emu_VM_Video.GameMenu.Favorite.Material_Source
+    else
+      Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := nil;
     uView_Mode_Video_Actions.Favorites_Add;
-  end
-  else
-  begin
-    Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := nil;
-    uView_Mode_Video_Actions.Favorites_Add;
+    Emu_VM_Video.GameMenu.Favorite.Ani.Stop;
+    Emu_VM_Video.GameMenu.Favorite.Ani_Selected.Start;
   end;
 end;
 
 procedure TEMU_VIEW_MODE_VIDEO_MODEL3D.OnMouseEnter(Sender: TObject);
 begin
   Emu_VM_Video.GameMenu.Favorite.View.Cursor := crHandPoint;
-  Emu_VM_Video.GameMenu.Favorite.Ani.Duration := 0.5;
+  Emu_VM_Video.GameMenu.Favorite.Ani.Duration := 0.8;
 end;
 
 procedure TEMU_VIEW_MODE_VIDEO_MODEL3D.OnMouseLeave(Sender: TObject);

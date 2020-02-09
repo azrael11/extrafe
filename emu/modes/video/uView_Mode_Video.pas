@@ -15,6 +15,7 @@ uses
   FMX.Layouts,
   FMX.Dialogs,
   FMX.Edit,
+  FMX.Graphics,
   FmxPasLibVlcPlayerUnit,
   PasLibVlcUnit,
   Xml.xmldom,
@@ -52,6 +53,7 @@ procedure Load_XML_Variables(vPath: String);
 var
   vXML: IXMLDocument;
   vRoot, vNode: IXMLNode;
+  vMain_Upper: TBitmap;
 
 implementation
 
@@ -130,6 +132,47 @@ begin
         Emu_XML.game.games := vNode.ChildNodes['games'].Text;
         Emu_XML.game.play_count_refresh_status := vNode.ChildNodes['refresh_play_count'].Text;
         Emu_XML.game.favorites := vNode.ChildNodes['favorites'].Text;
+        { Game Menu Icons Variables }
+        vNode_Temp :=  vNode.ChildNodes[3];
+        if  vNode_Temp.NodeName = 'icons' then
+        begin
+          for vk := 0 to vNode_Temp.ChildNodes.Count - 1 do
+          begin
+            if vNode_Temp.ChildNodes[vk].NodeName = 'icon' then
+            begin
+              if vNode_Temp.ChildNodes[vk].Attributes['name'] = 'play' then
+              begin
+                Emu_XML.game.menu.play.image := vNode_Temp.ChildNodes[vk].Text;
+                Emu_XML.game.menu.play.width := vNode_Temp.ChildNodes[vk].Attributes['width'];
+                Emu_XML.game.menu.play.height := vNode_Temp.ChildNodes[vk].Attributes['height'];
+              end
+              else if vNode_Temp.ChildNodes[vk].Attributes['name'] = 'open_folder' then
+              begin
+                Emu_XML.game.menu.open_folder.image := vNode_Temp.ChildNodes[vk].Text;
+                Emu_XML.game.menu.open_folder.width := vNode_Temp.ChildNodes[vk].Attributes['width'];
+                Emu_XML.game.menu.open_folder.height := vNode_Temp.ChildNodes[vk].Attributes['height'];
+              end
+              else if vNode_Temp.ChildNodes[vk].Attributes['name'] = 'fullscreen' then
+              begin
+                Emu_XML.game.menu.fullscreen.image := vNode_Temp.ChildNodes[vk].Text;
+                Emu_XML.game.menu.fullscreen.width := vNode_Temp.ChildNodes[vk].Attributes['width'];
+                Emu_XML.game.menu.fullscreen.height := vNode_Temp.ChildNodes[vk].Attributes['height'];
+              end
+              else if vNode_Temp.ChildNodes[vk].Attributes['name'] = 'favorite' then
+              begin
+                Emu_XML.game.menu.favorite.image := vNode_Temp.ChildNodes[vk].Text;
+                Emu_XML.game.menu.favorite.width := vNode_Temp.ChildNodes[vk].Attributes['width'];
+                Emu_XML.game.menu.favorite.height := vNode_Temp.ChildNodes[vk].Attributes['height'];
+              end
+              else if vNode_Temp.ChildNodes[vk].Attributes['name'] = 'list' then
+              begin
+                Emu_XML.game.menu.list.image := vNode_Temp.ChildNodes[vk].Text;
+                Emu_XML.game.menu.list.width := vNode_Temp.ChildNodes[vk].Attributes['width'];
+                Emu_XML.game.menu.list.height := vNode_Temp.ChildNodes[vk].Attributes['height'];
+              end
+            end;
+          end;
+        end;
       end;
     end;
 
@@ -171,6 +214,7 @@ begin
   Emu_VM_Video.config.right.Parent := Emu_VM_Video.config.main;
   Emu_VM_Video.config.right.SetBounds(150, 30, 550, 600);
   Emu_VM_Video.config.right.Visible := True;
+
 end;
 
 procedure Free_Configuarion;
@@ -225,47 +269,93 @@ begin
   Emu_VM_Video.Blur.BlurAmount := 0;
   Emu_VM_Video.Blur.Enabled := False;
 
-  // Create_Configuration(Emu_VM_Video.Main);
+  Emu_VM_Video.main.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Background.image);
+  vMain_Upper := Emu_VM_Video.main.Bitmap;
 
-  Emu_VM_Video.right := TImage.Create(Emu_VM_Video.main);
+  Emu_VM_Video.main_upper := TImage.Create(Emu_VM_Video.main);
+  Emu_VM_Video.main_upper.name := 'Emu_Main_Upper';
+  Emu_VM_Video.main_upper.Parent := Emu_VM_Video.main;
+  Emu_VM_Video.main_upper.Align := TAlignLayout.Client;
+  // Emu_VM_Video.main_upper.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Background.image);
+  Emu_VM_Video.main_upper.WrapMode := TImageWrapMode.Original;
+  Emu_VM_Video.main_upper.Visible := True;
+
+  Emu_VM_Video.main_upper_ani := TFloatAnimation.Create(Emu_VM_Video.main_upper);
+  Emu_VM_Video.main_upper_ani.name := 'Emu_Main_Upper_Animation';
+  Emu_VM_Video.main_upper_ani.Parent := Emu_VM_Video.main_upper;
+  Emu_VM_Video.main_upper_ani.PropertyName := 'Opacity';
+  Emu_VM_Video.main_upper_ani.OnFinish := uView_Mode_Video_AllTypes.vAll_ANI.OnFinish;
+  Emu_VM_Video.main_upper_ani.Enabled := False;
+
+  Emu_VM_Video.right_layout := TLayout.Create(Emu_VM_Video.main);
+  Emu_VM_Video.right_layout.name := 'Emu_Right_Layout';
+  Emu_VM_Video.right_layout.Parent := Emu_VM_Video.main;
+  Emu_VM_Video.right_layout.SetBounds((Emu_VM_Video.main.width / 2), 0, (Emu_VM_Video.main.width / 2), (Emu_VM_Video.main.height));
+  Emu_VM_Video.right_layout.Visible := True;
+
+  Emu_VM_Video.right := TImage.Create(Emu_VM_Video.right_layout);
   Emu_VM_Video.right.name := 'Main_Right';
-  Emu_VM_Video.right.Parent := Emu_VM_Video.main;
-  Emu_VM_Video.right.SetBounds((Emu_VM_Video.main.width / 2), 0, (Emu_VM_Video.main.width / 2), (Emu_VM_Video.main.height));
-  Emu_VM_Video.right.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Background.image);
+  Emu_VM_Video.right.Parent := Emu_VM_Video.right_layout;
+  Emu_VM_Video.right.Align := TAlignLayout.Client;
   Emu_VM_Video.right.WrapMode := TImageWrapMode.Original;
   Emu_VM_Video.right.BitmapMargins.left := -(Emu_VM_Video.main.width / 2);
   Emu_VM_Video.right.Visible := True;
 
-  Emu_VM_Video.Right_Ani := TFloatAnimation.Create(Emu_VM_Video.right);
+  Emu_VM_Video.Right_Ani := TFloatAnimation.Create(Emu_VM_Video.right_layout);
   Emu_VM_Video.Right_Ani.name := 'Main_Right_Animation';
-  Emu_VM_Video.Right_Ani.Parent := Emu_VM_Video.right;
+  Emu_VM_Video.Right_Ani.Parent := Emu_VM_Video.right_layout;
   Emu_VM_Video.Right_Ani.Duration := Emu_XML.config.Right_Duration.ToSingle;;
   Emu_VM_Video.Right_Ani.Interpolation := TInterpolationType.Cubic;
   Emu_VM_Video.Right_Ani.PropertyName := 'Position.X';
   Emu_VM_Video.Right_Ani.OnFinish := Emu_VM_Video_Var.Ani.config.OnFinish;
   Emu_VM_Video.Right_Ani.Enabled := False;
 
+  Emu_VM_Video.Right_Ani_Opacity := TFloatAnimation.Create(Emu_VM_Video.right);
+  Emu_VM_Video.Right_Ani_Opacity.name := 'Main_Right_Animation_Opacity';
+  Emu_VM_Video.Right_Ani_Opacity.Parent := Emu_VM_Video.right;
+  Emu_VM_Video.Right_Ani_Opacity.Duration := 1;
+  Emu_VM_Video.Right_Ani_Opacity.Interpolation := TInterpolationType.Cubic;
+  Emu_VM_Video.Right_Ani_Opacity.PropertyName := 'Opacity';
+  Emu_VM_Video.Right_Ani_Opacity.StartValue := 0;
+  Emu_VM_Video.Right_Ani_Opacity.StopValue := 1;
+  Emu_VM_Video.Right_Ani_Opacity.Enabled := False;
+
   Emu_VM_Video.Right_Blur := TBlurEffect.Create(Emu_VM_Video.right);
   Emu_VM_Video.Right_Blur.name := 'Main_Blur_Right';
   Emu_VM_Video.Right_Blur.Parent := Emu_VM_Video.right;
   Emu_VM_Video.Right_Blur.Enabled := False;
 
-  Emu_VM_Video.left := TImage.Create(Emu_VM_Video.main);
+  Emu_VM_Video.left_layout := TLayout.Create(Emu_VM_Video.main);
+  Emu_VM_Video.left_layout.name := 'Emu_Left_Layout';
+  Emu_VM_Video.left_layout.Parent := Emu_VM_Video.main;
+  Emu_VM_Video.left_layout.SetBounds(0, 0, (Emu_VM_Video.main.width / 2), (Emu_VM_Video.main.height));
+  Emu_VM_Video.left_layout.Visible := True;
+
+  Emu_VM_Video.left := TImage.Create(Emu_VM_Video.left_layout);
   Emu_VM_Video.left.name := 'Main_Left';
-  Emu_VM_Video.left.Parent := Emu_VM_Video.main;
-  Emu_VM_Video.left.SetBounds(0, 0, (Emu_VM_Video.main.width / 2), (Emu_VM_Video.main.height));
-  Emu_VM_Video.left.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Background.image);
+  Emu_VM_Video.left.Parent := Emu_VM_Video.left_layout;
+  Emu_VM_Video.left.Align := TAlignLayout.Client;
   Emu_VM_Video.left.WrapMode := TImageWrapMode.Original;
   Emu_VM_Video.left.Visible := True;
 
-  Emu_VM_Video.Left_Ani := TFloatAnimation.Create(Emu_VM_Video.left);
+  Emu_VM_Video.Left_Ani := TFloatAnimation.Create(Emu_VM_Video.left_layout);
   Emu_VM_Video.Left_Ani.name := 'Main_Left_Animation';
-  Emu_VM_Video.Left_Ani.Parent := Emu_VM_Video.left;
+  Emu_VM_Video.Left_Ani.Parent := Emu_VM_Video.left_layout;
   Emu_VM_Video.Left_Ani.Duration := Emu_XML.config.Left_Duration.ToSingle;;
   Emu_VM_Video.Left_Ani.Interpolation := TInterpolationType.Cubic;
   Emu_VM_Video.Left_Ani.PropertyName := 'Position.X';
   Emu_VM_Video.Left_Ani.OnFinish := Emu_VM_Video_Var.Ani.config.OnFinish;
   Emu_VM_Video.Left_Ani.Enabled := False;
+
+  Emu_VM_Video.Left_Ani_Opacity := TFloatAnimation.Create(Emu_VM_Video.left);
+  Emu_VM_Video.Left_Ani_Opacity.name := 'Main_Left_Animation_Opacity';
+  Emu_VM_Video.Left_Ani_Opacity.Parent := Emu_VM_Video.left;
+  Emu_VM_Video.Left_Ani_Opacity.Duration := 1;
+  Emu_VM_Video.Left_Ani_Opacity.Interpolation := TInterpolationType.Cubic;
+  Emu_VM_Video.Left_Ani_Opacity.PropertyName := 'Opacity';
+  Emu_VM_Video.Left_Ani_Opacity.StartValue := 0;
+  Emu_VM_Video.Left_Ani_Opacity.StopValue := 1;
+  Emu_VM_Video.Left_Ani_Opacity.Enabled := False;
 
   Emu_VM_Video.Left_Blur := TBlurEffect.Create(Emu_VM_Video.left);
   Emu_VM_Video.Left_Blur.name := 'Main_Blur_Left';
@@ -551,25 +641,22 @@ begin
   Emu_VM_Video.Gamelist.Search.Edit := TEdit.Create(Emu_VM_Video.Gamelist.Search.Back);
   Emu_VM_Video.Gamelist.Search.Edit.name := 'Emu_Gamelist_Search_Edit';
   Emu_VM_Video.Gamelist.Search.Edit.Parent := Emu_VM_Video.Gamelist.Search.Back;
-  Emu_VM_Video.Gamelist.Search.Edit.SetBounds(34, 1, 0, 30);
+  Emu_VM_Video.Gamelist.Search.Edit.SetBounds(34, 1, 0, 24);
   Emu_VM_Video.Gamelist.Search.Edit.StyledSettings := Emu_VM_Video.Gamelist.Search.Edit.StyledSettings - [TStyledSetting.Size, TStyledSetting.FontColor];
   Emu_VM_Video.Gamelist.Search.Edit.Text := '';
   Emu_VM_Video.Gamelist.Search.Edit.TextSettings.FontColor := TAlphaColorRec.White;
-  Emu_VM_Video.Gamelist.Search.Edit.TextSettings.Font.Size := 20;
+  Emu_VM_Video.Gamelist.Search.Edit.TextSettings.Font.Size := 16;
   Emu_VM_Video.Gamelist.Search.Edit.OnTyping := Emu_VM_Video_Mouse.Edit.OnTyping;
   Emu_VM_Video.Gamelist.Search.Edit.Visible := True;
 
-
   Emu_VM_Video.Gamelist.Search.Edit_Ani := TFloatAnimation.Create(Emu_VM_Video.Gamelist.Search.Edit);
-  Emu_VM_Video.Gamelist.Search.Edit_Ani.Name := 'Emu_Gamelist_Search_Edit_Animation';
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.name := 'Emu_Gamelist_Search_Edit_Animation';
   Emu_VM_Video.Gamelist.Search.Edit_Ani.Parent := Emu_VM_Video.Gamelist.Search.Edit;
   Emu_VM_Video.Gamelist.Search.Edit_Ani.PropertyName := 'Width';
-  Emu_VM_Video.Gamelist.Search.Edit_Ani.Duration := 0.4;
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.Duration := 0.2;
   Emu_VM_Video.Gamelist.Search.Edit_Ani.StartValue := 0;
-  Emu_VM_Video.Gamelist.Search.Edit_Ani.StopValue := 706;
-//  Emu_VM_Video.Gamelist.Search.Edit_Ani.OnFinish := vSearch.Actions.Anim.OnFinish;
+  Emu_VM_Video.Gamelist.Search.Edit_Ani.StopValue := 716;
   Emu_VM_Video.Gamelist.Search.Edit_Ani.Enabled := False;
-
 end;
 
 procedure Create_Gamelist;

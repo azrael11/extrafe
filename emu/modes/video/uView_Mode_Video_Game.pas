@@ -47,6 +47,7 @@ procedure Show_Game_State;
 
 procedure Run_State;
 procedure Run_Game;
+procedure Run_Favorite;
 
 procedure Return;
 
@@ -78,41 +79,6 @@ begin
   extrafe.Prog.State := 'emu_mame_game';
   vGame_Main := Emu_VM_Video_Var.gamelist.Selected;
 
-  for vi := 0 to 20 do
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Text := '';
-
-  for vi := 10 to 20 do
-  begin
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Text := cGame_Menu[vi - 10];
-    if vi = 11 then
-    begin
-      if not FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.pdf') then
-        Emu_VM_Video.Gamelist.Games.Line[vi].Text.Color := TAlphaColorRec.Red;
-    end;
-    if vi = 14 then
-    begin
-      if not FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.zip') then
-        Emu_VM_Video.Gamelist.Games.Line[14].Text.Color := TAlphaColorRec.Red;
-    end;
-  end;
-  if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.png') then
-  begin
-    // vMame.Scene.Left.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png');
-    // vMame.Scene.Right.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png');
-    // vMame.Scene.Right.BitmapMargins.Left := -960;
-  end;
-
-  if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.png') then
-  begin
-    // vMame.Scene.GameMenu.Stamp := TImage.Create(vMame.Scene.Media.Back);
-    // vMame.Scene.GameMenu.Stamp.Name := 'Mame_Game_Info_Stamp';
-    // vMame.Scene.GameMenu.Stamp.Parent := vMame.Scene.Media.Back;
-    // vMame.Scene.GameMenu.Stamp.SetBounds((vMame.Scene.Media.Back.Width / 2) - (400 / 2), 30, 400, 150);
-    // vMame.Scene.GameMenu.Stamp.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps + mame.Gamelist.ListGames[mame.Gamelist.Selected] + '.png');
-    // vMame.Scene.GameMenu.Stamp.WrapMode := TImageWrapMode.Fit;
-    // vMame.Scene.GameMenu.Stamp.Visible := True;
-  end;
-
   Info_Box;
   Manual_Box;
   Media_Box;
@@ -127,10 +93,10 @@ begin
   Emu_VM_Video.Media.Video.Video_Back.Visible := False;
   if Emu_VM_Video.Media.Video.Video.IsPlay then
     Emu_VM_Video.Media.Video.Video.Pause;
-  Emu_VM_Video.Gamelist.Info.Back.Visible := False;
-  Emu_VM_Video.Gamelist.Filters.Back.Visible := False;
-  Emu_VM_Video.Gamelist.Search.Back.Visible := False;
-  Emu_VM_Video.Gamelist.Lists.Back.Visible := False;
+  Emu_VM_Video.gamelist.Info.Back.Visible := False;
+  Emu_VM_Video.gamelist.Filters.Back.Visible := False;
+  Emu_VM_Video.gamelist.Search.Back.Visible := False;
+  Emu_VM_Video.gamelist.Lists.Back.Visible := False;
   Emu_VM_Video.Settings.TextSettings.FontColor := TAlphaColorRec.Limegreen;
 
   Refresh;
@@ -184,9 +150,9 @@ begin
   Emu_VM_Video.GameMenu.Info.Box.Visible := true;
 
   if Emu_VM_Video_Var.Favorites_Open then
-    vQuery := 'SELECT * FROM ' + Emu_XML.Game.Games + ' WHERE ROMNAME="' + Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '"'
+    vQuery := 'SELECT * FROM ' + Emu_XML.Game.Games + ' WHERE ROMNAME="' + Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.gamelist.Selected] + '"'
   else
-    vQuery := 'SELECT * FROM ' + Emu_XML.Game.Games + ' WHERE ROMNAME="' + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '"';
+    vQuery := 'SELECT * FROM ' + Emu_XML.Game.Games + ' WHERE ROMNAME="' + Emu_VM_Video_Var.gamelist.Roms[Emu_VM_Video_Var.gamelist.Selected] + '"';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Add(vQuery);
@@ -495,6 +461,16 @@ begin
   Emu_VM_Video.GameMenu.Favorite.Ani.Loop := true;
   Emu_VM_Video.GameMenu.Favorite.Ani.Enabled := False;
 
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected := TFloatAnimation.Create(Emu_VM_Video.GameMenu.Favorite.Heart);
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.Name := 'Emu_Game_Favorite_3D_Selected_Animation';
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.Parent := Emu_VM_Video.GameMenu.Favorite.Heart;
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.Duration := 0.2;
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.PropertyName := 'RotationAngle.Y';
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.StartValue := 0;
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.StopValue := 360;
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.OnFinish := uView_Mode_Video_AllTypes.vAll_ANI.OnFinish;
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.Enabled := False;
+
   Emu_VM_Video.GameMenu.Favorite.Material_Source := TColorMaterialSource.Create(Emu_VM_Video.GameMenu.Favorite.View);
   Emu_VM_Video.GameMenu.Favorite.Material_Source.Name := 'Emu_Game_Favorite_3D_MaterialSource';
   Emu_VM_Video.GameMenu.Favorite.Material_Source.Parent := Emu_VM_Video.GameMenu.Favorite.View;
@@ -546,7 +522,7 @@ end;
 
 procedure Return;
 begin
-  {Remove Game Mode}
+  { Remove Game Mode }
   Emu_VM_Video_Var.Game_Mode := False;
   FreeAndNil(Emu_VM_Video.GameMenu.Info.Layout);
   FreeAndNil(Emu_VM_Video.GameMenu.Manual.Layout);
@@ -555,17 +531,17 @@ begin
   FreeAndNil(Emu_VM_Video.GameMenu.Soundtrack.Layout);
   FreeAndNil(Emu_VM_Video.GameMenu.Favorite.Layout);
   FreeAndNil(Emu_VM_Video.GameMenu.Playlist.Layout);
-  {Enable All The Disable}
+  { Enable All The Disable }
   Emu_VM_Video.Settings.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   Emu_VM_Video.Media.Bar.Back.Visible := true;
   Emu_VM_Video.Media.Video.Video_Back.Visible := true;
   if Emu_VM_Video.Media.Video.Video.IsPause then
     Emu_VM_Video.Media.Video.Video.Resume;
-  Emu_VM_Video.Gamelist.Info.Back.Visible := true;
-  Emu_VM_Video.Gamelist.Filters.Back.Visible := true;
-  Emu_VM_Video.Gamelist.Search.Back.Visible := True;
-  Emu_VM_Video.Gamelist.Lists.Back.Visible := true;
-  {Refresh the list}
+  Emu_VM_Video.gamelist.Info.Back.Visible := true;
+  Emu_VM_Video.gamelist.Filters.Back.Visible := true;
+  Emu_VM_Video.gamelist.Search.Back.Visible := true;
+  Emu_VM_Video.gamelist.Lists.Back.Visible := true;
+  { Refresh the list }
   Emu_VM_Video_Var.gamelist.Selected := vGame_Main;
   uView_Mode_Video_Actions.Refresh;
 end;
@@ -574,7 +550,7 @@ procedure Splash;
 begin
   Emu_VM_Video.Left_Blur.Enabled := true;
   Emu_VM_Video.Right_Blur.Enabled := true;
-  Emu_VM_Video.Gamelist.Games.List.Visible := False;
+  Emu_VM_Video.gamelist.Games.List.Visible := False;
   Emu_VM_Video.Media.Video.Back.Visible := False;
 
   Emu_VM_Video.GameMenu.PopUp.Back := TImage.Create(Emu_VM_Video.main);
@@ -609,9 +585,9 @@ begin
   Emu_VM_Video.GameMenu.PopUp.Line2.Parent := Emu_VM_Video.GameMenu.PopUp.Back;
   Emu_VM_Video.GameMenu.PopUp.Line2.SetBounds(0, 30, 500, 50);
   if Emu_VM_Video_Var.Favorites_Open then
-    Emu_VM_Video.GameMenu.PopUp.Line2.Text := Emu_VM_Video_Var.favorites.Games[Emu_VM_Video_Var.Gamelist.Selected]
+    Emu_VM_Video.GameMenu.PopUp.Line2.Text := Emu_VM_Video_Var.favorites.Games[Emu_VM_Video_Var.gamelist.Selected]
   else
-    Emu_VM_Video.GameMenu.PopUp.Line2.Text := Emu_VM_Video_Var.Gamelist.Games[Emu_VM_Video_Var.Gamelist.Selected];
+    Emu_VM_Video.GameMenu.PopUp.Line2.Text := Emu_VM_Video_Var.gamelist.Games[Emu_VM_Video_Var.gamelist.Selected];
   Emu_VM_Video.GameMenu.PopUp.Line2.Font.Family := 'Tahoma';
   Emu_VM_Video.GameMenu.PopUp.Line2.Font.Size := 18;
   Emu_VM_Video.GameMenu.PopUp.Line2.TextSettings.HorzAlign := TTextAlign.Center;
@@ -626,10 +602,10 @@ begin
   Emu_VM_Video.GameMenu.PopUp.Snap.SetBounds(60, 80, 380, 380);
   if Emu_VM_Video_Var.Favorites_Open then
     Emu_VM_Video.GameMenu.PopUp.Snap.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + Emu_VM_Video_Var.favorites.Roms
-      [Emu_VM_Video_Var.Gamelist.Selected] + '.png')
+      [Emu_VM_Video_Var.gamelist.Selected] + '.png')
   else
-    Emu_VM_Video.GameMenu.PopUp.Snap.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + Emu_VM_Video_Var.Gamelist.Roms
-      [Emu_VM_Video_Var.Gamelist.Selected] + '.png');
+    Emu_VM_Video.GameMenu.PopUp.Snap.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + Emu_VM_Video_Var.gamelist.Roms
+      [Emu_VM_Video_Var.gamelist.Selected] + '.png');
   Emu_VM_Video.GameMenu.PopUp.Snap.WrapMode := TImageWrapMode.Stretch;
   Emu_VM_Video.GameMenu.PopUp.Snap.Visible := true;
 
@@ -651,10 +627,10 @@ begin
   Emu_VM_Video.GameMenu.PopUp.Play_V.SetBounds(90, 460, 200, 30);
   if Emu_VM_Video_Var.Favorites_Open then
     Emu_VM_Video.GameMenu.PopUp.Play_V.Text := uDB.Query_Select(Emu_VM_Video_Var.Query, 'play_count_id_' + Emu_VM_Video_Var.User_Num.ToString,
-      Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.Gamelist.Selected])
+      Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.gamelist.Selected])
   else
     Emu_VM_Video.GameMenu.PopUp.Play_V.Text := uDB.Query_Select(Emu_VM_Video_Var.Query, 'play_count_id_' + Emu_VM_Video_Var.User_Num.ToString,
-      Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected]);
+      Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Video_Var.gamelist.Roms[Emu_VM_Video_Var.gamelist.Selected]);
   Emu_VM_Video.GameMenu.PopUp.Play_V.Font.Family := 'Tahoma';
   Emu_VM_Video.GameMenu.PopUp.Play_V.Font.Size := 18;
   Emu_VM_Video.GameMenu.PopUp.Play_V.TextSettings.HorzAlign := TTextAlign.Leading;
@@ -710,7 +686,7 @@ begin
     4:
       ;
     5:
-      ;
+      Run_Favorite;
     6:
       ;
   end;
@@ -727,37 +703,89 @@ begin
   vGame_Timer.Enabled := true;
 end;
 
+procedure Run_Favorite;
+begin
+  if Emu_VM_Video.gamelist.Games.Line[10].Text.Text = 'Add to favorites' then
+  begin
+    Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := nil;
+    Emu_VM_Video.gamelist.Games.Line[10].Text.Text := 'Remove from favorites';
+  end
+  else if Emu_VM_Video.gamelist.Games.Line[10].Text.Text = 'Remove from favorites' then
+  begin
+    Emu_VM_Video.GameMenu.Favorite.Heart.MeshCollection[0].MaterialSource := Emu_VM_Video.GameMenu.Favorite.Material_Source;
+    Emu_VM_Video.gamelist.Games.Line[10].Text.Text := 'Add to favorites';
+  end;
+  uView_Mode_Video_Actions.Favorites_Add;
+  Emu_VM_Video.GameMenu.Favorite.Ani.Stop;
+  Emu_VM_Video.GameMenu.Favorite.Ani_Selected.Start;
+end;
+
 procedure Refresh;
 var
   vi, ri: Integer;
 begin
   for vi := 0 to 20 do
   begin
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Text := '';
-    Emu_VM_Video.Gamelist.Games.Line[vi].Text.Color := TAlphaColorRec.White;
+    Emu_VM_Video.gamelist.Games.Line[vi].Text.Text := '';
+    Emu_VM_Video.gamelist.Games.Line[vi].Text.Color := TAlphaColorRec.White;
+    Emu_VM_Video.gamelist.Games.Line[vi].Icon.Bitmap := nil;
   end;
 
   ri := 0;
   for vi := 10 - (Emu_VM_Video_Var.Game.Selected) to 20 - (Emu_VM_Video_Var.Game.Selected) do
   begin
-    if ri = 5 then
-    begin
-      if Emu_VM_Video_Var.favorites.game_is then
-        Emu_VM_Video.Gamelist.Games.Line[vi].Text.Text := 'Remove from favorites'
-      else
-        Emu_VM_Video.Gamelist.Games.Line[vi].Text.Text := 'Add to favorites';
-    end
-    else
-      Emu_VM_Video.Gamelist.Games.Line[vi].Text.Text := cGame_Menu[ri];
+    case ri of
+      0:
+        Emu_VM_Video.gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.Game.menu.Play.image);
+      1:
+        ;
+      2:
+        Emu_VM_Video.gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.Game.menu.open_folder.image);
+      3:
+        Emu_VM_Video.gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.Game.menu.Fullscreen.image);
+      4:
+        ;
+      5:
+        begin
+          Emu_VM_Video.gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.Game.menu.Favorite.image);
+          if Emu_VM_Video_Var.favorites.game_is then
+            Emu_VM_Video.gamelist.Games.Line[vi].Text.Text := 'Remove from favorites'
+          else
+            Emu_VM_Video.gamelist.Games.Line[vi].Text.Text := 'Add to favorites';
+        end;
+      6:
+        Emu_VM_Video.gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.Game.menu.List.image);
+    end;
+    if ri <> 5 then
+      Emu_VM_Video.gamelist.Games.Line[vi].Text.Text := cGame_Menu[ri];
     inc(ri, 1);
   end;
-  if not FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.pdf') then
-    Emu_VM_Video.Gamelist.Games.Line[11 - (Emu_VM_Video_Var.Game.Selected)].Text.Color := TAlphaColorRec.Red;
-  if not FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.zip') then
-    Emu_VM_Video.Gamelist.Games.Line[14 - (Emu_VM_Video_Var.Game.Selected)].Text.Color := TAlphaColorRec.Red;
+  if not FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals + Emu_VM_Video_Var.gamelist.Roms[Emu_VM_Video_Var.gamelist.Selected] + '.pdf') then
+    Emu_VM_Video.gamelist.Games.Line[11 - (Emu_VM_Video_Var.Game.Selected)].Text.Color := TAlphaColorRec.Red;
+  if not FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks + Emu_VM_Video_Var.gamelist.Roms[Emu_VM_Video_Var.gamelist.Selected] + '.zip') then
+    Emu_VM_Video.gamelist.Games.Line[14 - (Emu_VM_Video_Var.Game.Selected)].Text.Color := TAlphaColorRec.Red;
 
-  Emu_VM_Video.Gamelist.Games.Selection.Enabled := False;
-  Emu_VM_Video.Gamelist.Games.Selection.Enabled := true;
+  { Add fanart and stamps in the future }
+  { if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.png') then
+    begin
+    // vMame.Scene.Left.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png');
+    // vMame.Scene.Right.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.png');
+    // vMame.Scene.Right.BitmapMargins.Left := -960;
+    end;
+
+    if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps + Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected] + '.png') then
+    begin
+    // vMame.Scene.GameMenu.Stamp := TImage.Create(vMame.Scene.Media.Back);
+    // vMame.Scene.GameMenu.Stamp.Name := 'Mame_Game_Info_Stamp';
+    // vMame.Scene.GameMenu.Stamp.Parent := vMame.Scene.Media.Back;
+    // vMame.Scene.GameMenu.Stamp.SetBounds((vMame.Scene.Media.Back.Width / 2) - (400 / 2), 30, 400, 150);
+    // vMame.Scene.GameMenu.Stamp.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps + mame.Gamelist.ListGames[mame.Gamelist.Selected] + '.png');
+    // vMame.Scene.GameMenu.Stamp.WrapMode := TImageWrapMode.Fit;
+    // vMame.Scene.GameMenu.Stamp.Visible := True;
+    end; }
+
+  Emu_VM_Video.gamelist.Games.Selection.Enabled := False;
+  Emu_VM_Video.gamelist.Games.Selection.Enabled := true;
 end;
 
 procedure Menu_Up;
@@ -788,9 +816,9 @@ var
   play_int: Integer;
 begin
   if Emu_VM_Video_Var.Favorites_Open then
-    romName := Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.Gamelist.Selected]
+    romName := Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.gamelist.Selected]
   else
-    romName := Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected];
+    romName := Emu_VM_Video_Var.gamelist.Roms[Emu_VM_Video_Var.gamelist.Selected];
   vGame_Timer.Enabled := False;
   uEmu_Commands.Run_Game(Emu_XML.emu.exe, romName, Emu_XML.emu.path, 0);
   play_int := Emu_VM_Video.GameMenu.PopUp.Play_V.Text.ToInteger;
@@ -798,15 +826,15 @@ begin
 
   if Emu_VM_Video_Var.Favorites_Open then
     uDB.Query_Update(uDB.Arcade_Query, Emu_XML.Game.play_count_refresh_status, 'play_count_id_' + uDB_AUser.Local.Num.ToString, play_int.ToString, 'romname',
-      Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.Gamelist.Selected])
+      Emu_VM_Video_Var.favorites.Roms[Emu_VM_Video_Var.gamelist.Selected])
   else
     uDB.Query_Update(uDB.Arcade_Query, Emu_XML.Game.play_count_refresh_status, 'play_count_id_' + uDB_AUser.Local.Num.ToString, play_int.ToString, 'romname',
-      Emu_VM_Video_Var.Gamelist.Roms[Emu_VM_Video_Var.Gamelist.Selected]);
+      Emu_VM_Video_Var.gamelist.Roms[Emu_VM_Video_Var.gamelist.Selected]);
 
   FreeAndNil(Emu_VM_Video.GameMenu.PopUp.Back);
   Emu_VM_Video.Left_Blur.Enabled := False;
   Emu_VM_Video.Right_Blur.Enabled := False;
-  Emu_VM_Video.Gamelist.Games.List.Visible := true;
+  Emu_VM_Video.gamelist.Games.List.Visible := true;
   Emu_VM_Video.Media.Video.Back.Visible := true;
   Emu_VM_Video.Settings.Visible := true;
   Emu_VM_Video.Settings_Ani.Start;
