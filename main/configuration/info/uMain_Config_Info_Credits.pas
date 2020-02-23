@@ -133,7 +133,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Name := 'Main_Config_Info_Credits_Image_' + vi.ToString;
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Parent := mainScene.Config.Main.R.Info.Credits.Left_Box[0];
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].SetBounds(5, 15 + (vi * 70), 110, 60);
-    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + cImages_Names_Programs[vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'info\' +cImages_Names_Programs[vi]);
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].OnClick := ex_main.Input.mouse_config.Image.OnMouseClick;
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].OnMouseEnter := ex_main.Input.mouse_config.Image.OnMouseEnter;
@@ -157,7 +157,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Name := 'Main_Config_Info_Credits_Image_' + vi.ToString;
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Parent := mainScene.Config.Main.R.Info.Credits.Left_Box[1];
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].SetBounds(5, 15 + (vi * 70), 110, 60);
-    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + cImages_Names_Comp[vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'info\' +cImages_Names_Comp[vi]);
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].OnClick := ex_main.Input.mouse_config.Image.OnMouseClick;
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].OnMouseEnter := ex_main.Input.mouse_config.Image.OnMouseEnter;

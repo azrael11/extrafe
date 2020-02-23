@@ -242,7 +242,7 @@ begin
     uWeather_Providers_Yahoo_Config.Towns_Add_New_Town(vTown_Num - 1, vTemp_NewTown);
 
     uDB.vColumns := 'USER_ID, TOWN_NUM, TOWN_WOEID, TOWN_NAME';
-    uDB.vValues := '"' + uDB_AUser.Local.Num.ToString + '", "' + (vTown_Num - 1).ToString + '", "' + vYahoo_Find_List[vNum].Woeid + '", "' +
+    uDB.vValues := '"' + uDB_AUser.Local.USER.Num.ToString + '", "' + (vTown_Num - 1).ToString + '", "' + vYahoo_Find_List[vNum].Woeid + '", "' +
       vTemp_NewTown.City_Name + '"';
 
     uDB.Query_Insert(uDB.ExtraFE_Query_Local, 'addon_weather_yahoo', uDB.vColumns, uDB.vValues);

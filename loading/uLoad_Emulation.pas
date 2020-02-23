@@ -177,7 +177,7 @@ procedure Get_Arcade_Media_Data;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM ARCADE_MEDIA WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  vQuery := 'SELECT * FROM ARCADE_MEDIA WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Add(vQuery);

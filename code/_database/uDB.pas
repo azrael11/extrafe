@@ -353,7 +353,7 @@ var
 begin
   CodeSite.Send('Start Creating Default Tables for Registered User');
   Result := False;
-  vLocal_Num := (uDB_AUser.Local.Num + 1).ToString;
+  vLocal_Num := (uDB_AUser.Local.USER.Num + 1).ToString;
 
   { User Settings }
   vPath[0] := extrafe.prog.Path;

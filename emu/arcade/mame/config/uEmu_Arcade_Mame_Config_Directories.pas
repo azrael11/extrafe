@@ -390,133 +390,133 @@ begin
       0:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artworks := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ARTWORKS', vdir, 'USER_ID',  uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ARTWORKS', vdir, 'USER_ID',  uDB_AUser.Local.USER.Num.ToString);
         end;
       1:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Cabinets := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'CABINETS', vdir, 'USER_ID',uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'CABINETS', vdir, 'USER_ID',uDB_AUser.Local.USER.Num.ToString);
         end;
       2:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Control_Panels := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'CONTROL_PANELS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'CONTROL_PANELS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       3:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Covers := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'COVERS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'COVERS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       4:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Flyers := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'FLYERS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'FLYERS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       5:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Fanart := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'FANART', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'FANART', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       6:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ICONS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ICONS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       7:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Manuals := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MANUALS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MANUALS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       8:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MARQUEES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MARQUEES', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       9:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Pcbs := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'PCBS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'PCBS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       10:
         begin
           TFile.Copy(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + 'image_not_found.png', vdir + 'image_not_found.png');
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SNAPSHOTS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SNAPSHOTS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       11:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Titles := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'TITLES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'TITLES', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       12:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Artwork_Preview := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ARTWORK_PREVIEW', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ARTWORK_PREVIEW', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       13:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Bosses := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'BOSSES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'BOSSES', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       14:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Ends := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ENDS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'ENDS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       15:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.How_To := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'HOW_TO', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'HOW_TO', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       16:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Logos := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'LOGOS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'LOGOS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       17:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Scores := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SCORES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SCORES', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       18:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Selects := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SELECTS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SELECTS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       19:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Versus := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'VERSUS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'VERSUS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       20:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Game_Over := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'GAME_OVER', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'GAME_OVER', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       21:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Warnings := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'WARNINGS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'WARNINGS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       22:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Stamps := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'STAMPS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'STAMPS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       23:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Soundtracks := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SOUNDTRACKS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SOUNDTRACKS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       24:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Support_Files := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SUPPORT_FILES', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SUPPORT_FILES', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       25:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'VIDEOS', vdir, 'USER_ID', uDB_AUser.Local.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'VIDEOS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
     end;
   end;

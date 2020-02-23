@@ -50,7 +50,7 @@ uses
   uEmu_Arcade_Mame_Config_MiscellaneousII,
   uEmu_Arcade_Mame_Config_Snap_Movie_Playback,
   {View Modes}
-  uView_Mode_Video_AllTypes;
+  uView_Mode_Default_AllTypes;
 
 procedure Get_ViewMode_Panels;
 begin

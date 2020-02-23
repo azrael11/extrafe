@@ -413,11 +413,10 @@ type
     Visual: TDATABASE_ACTIVE_USER_LOCAL_OPTIONS_VISUAL;
     Graphics: TDATABASE_ACTIVE_USER_LOCAL_OPTIONS_GRAPHICS;
     Sound: TDATABASE_ACTIVE_USER_LOCAL_OPTIONS_SOUND;
-    Input: TDATABASE_ACTIVE_USER_LOCAL_OPTIONS_INPUT;
   end;
 
 type
-  TDATABASE_ACTIVE_USER_LOCAL = record
+  TDATABASE_ACTIVE_USER_LOCAL_USER = record
     Num: Integer;
     Unique_ID: String;
     Username: String;
@@ -433,6 +432,101 @@ type
     Last_Visit_Online: String;
     Genre: Boolean;
     Active: Boolean;
+  end;
+
+type
+  DATABASE_ACTIVE_USER_LOCAL_MAP_KEYBOARD = record
+    Name: String;
+    Up: String;
+    Down: String;
+    Left: String;
+    Right: String;
+    Enter: String;
+    Esc: String;
+    Config: String;
+    Emu_Up: String;
+    Emu_Down: String;
+    Emu_Left: String;
+    Emu_Right: String;
+    Emu_Action: String;
+    Emu_Back: String;
+    Emu_Favorite: String;
+    Emu_FavoriteAdd: String;
+    Emu_Lists: String;
+    Emu_Search: String;
+    Emu_Config: String;
+    Emu_Filters: String;
+  end;
+
+type
+  DATABASE_ACTIVE_USER_LOCAL_MAP_MOUSE = record
+    Name: String;
+    Buttons_Num: String;
+    Dpi: String;
+    Y_Up: String;
+    Y_Down: String;
+    X_Left: String;
+    X_Right: String;
+    Button_1: String;
+    Button_2: String;
+    Button_3: String;
+    Button_4: String;
+    Button_5: String;
+    Button_6: String;
+  end;
+
+type
+  DATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK = record
+    Name: String;
+    vType: String;
+    Button_Num: String;
+    Calibrating: String;
+    ForceBack: String;
+    Up: String;
+    Down: String;
+    Left: String;
+    Right: String;
+    Button_1: String;
+    Button_2: String;
+    Button_3: String;
+    Button_4: String;
+    Button_5: String;
+    Button_6: String;
+    Button_7: String;
+    Button_8: String;
+    Button_9: String;
+    Button_10: String;
+    Button_11: String;
+    Button_12: String;
+    Emu_Up: String;
+    Emu_Down: String;
+    Emu_Left: String;
+    Emu_Right: String;
+    Emu_Button_1: String;
+    Emu_Button_2: String;
+    Emu_Button_3: String;
+    Emu_Button_4: String;
+    Emu_Button_5: String;
+    Emu_Button_6: String;
+    Emu_Button_7: String;
+    Emu_Button_8: String;
+    Emu_Button_9: String;
+    Emu_Button_10: String;
+    Emu_Button_11: String;
+    Emu_Button_12: String;
+  end;
+
+type
+  DATABASE_ACTIVE_USER_LOCAL_MAP = record
+    Keyboard: DATABASE_ACTIVE_USER_LOCAL_MAP_KEYBOARD;
+    Mouse: DATABASE_ACTIVE_USER_LOCAL_MAP_MOUSE;
+    Joystick: DATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK;
+  end;
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL = record
+    USER: TDATABASE_ACTIVE_USER_LOCAL_USER;
+    MAP: DATABASE_ACTIVE_USER_LOCAL_MAP;
     OPTIONS: TDATABASE_ACTIVE_USER_LOCAL_OPTIONS;
     ADDONS: TDATABASE_ACTIVE_USER_LOCAL_ADDONS;
     EMULATORS: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS;
@@ -495,21 +589,21 @@ begin
   uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
-  Local.Num := uDB.ExtraFE_Query_Local.FieldByName('USER_ID').AsInteger;
-  Local.Unique_ID := uDB.ExtraFE_Query_Local.FieldByName('UNIQUE_ID').AsString;
-  Local.Username := uDB.ExtraFE_Query_Local.FieldByName('USERNAME').AsString;
-  Local.Password := uDB.ExtraFE_Query_Local.FieldByName('PASSWORD').AsString;
-  Local.Email := uDB.ExtraFE_Query_Local.FieldByName('EMAIL').AsString;
-  Local.IP := uDB.ExtraFE_Query_Local.FieldByName('IP').AsString;
-  Local.Country := uDB.ExtraFE_Query_Local.FieldByName('COUNTRY').AsString;
-  Local.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
-  Local.Surname := uDB.ExtraFE_Query_Local.FieldByName('SURNAME').AsString;
-  Local.Avatar := uDB.ExtraFE_Query_Local.FieldByName('AVATAR').AsString;
-  Local.Registered := uDB.ExtraFE_Query_Local.FieldByName('REGISTERED').AsString;
-  Local.Last_Visit := uDB.ExtraFE_Query_Local.FieldByName('LAST_VISIT').AsString;
-  Local.Last_Visit_Online := uDB.ExtraFE_Query_Local.FieldByName('LAST_VISIT_ONLINE').AsString;
-  Local.Genre := uDB.ExtraFE_Query_Local.FieldByName('GENDER').AsBoolean;
-  Local.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_ONLINE').AsBoolean;
+  Local.USER.Num := uDB.ExtraFE_Query_Local.FieldByName('USER_ID').AsInteger;
+  Local.USER.Unique_ID := uDB.ExtraFE_Query_Local.FieldByName('UNIQUE_ID').AsString;
+  Local.USER.Username := uDB.ExtraFE_Query_Local.FieldByName('USERNAME').AsString;
+  Local.USER.Password := uDB.ExtraFE_Query_Local.FieldByName('PASSWORD').AsString;
+  Local.USER.Email := uDB.ExtraFE_Query_Local.FieldByName('EMAIL').AsString;
+  Local.USER.IP := uDB.ExtraFE_Query_Local.FieldByName('IP').AsString;
+  Local.USER.Country := uDB.ExtraFE_Query_Local.FieldByName('COUNTRY').AsString;
+  Local.USER.Name := uDB.ExtraFE_Query_Local.FieldByName('NAME').AsString;
+  Local.USER.Surname := uDB.ExtraFE_Query_Local.FieldByName('SURNAME').AsString;
+  Local.USER.Avatar := uDB.ExtraFE_Query_Local.FieldByName('AVATAR').AsString;
+  Local.USER.Registered := uDB.ExtraFE_Query_Local.FieldByName('REGISTERED').AsString;
+  Local.USER.Last_Visit := uDB.ExtraFE_Query_Local.FieldByName('LAST_VISIT').AsString;
+  Local.USER.Last_Visit_Online := uDB.ExtraFE_Query_Local.FieldByName('LAST_VISIT_ONLINE').AsString;
+  Local.USER.Genre := uDB.ExtraFE_Query_Local.FieldByName('GENDER').AsBoolean;
+  Local.USER.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_ONLINE').AsBoolean;
 
   vQuery := 'SELECT * FROM OPTIONS WHERE USER_ID=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
@@ -557,7 +651,7 @@ begin
   if Local.EMULATORS.Arcade_D.p_Images = '' then
   begin
     Local.EMULATORS.Arcade_D.p_Images := extrafe.prog.Path + 'emu\arcade\images\';
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'PATH_IMAGES', Local.EMULATORS.Arcade_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'PATH_IMAGES', Local.EMULATORS.Arcade_D.p_Images, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
 
   vQuery := 'SELECT * FROM COMPUTERS WHERE USER_ID=' + vUser_Num;
@@ -586,7 +680,7 @@ begin
   if Local.EMULATORS.Computers_D.p_Images = '' then
   begin
     Local.EMULATORS.Computers_D.p_Images := extrafe.prog.Path + 'emu\computers\images\';
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'computers', 'PATH_IMAGES', Local.EMULATORS.Computers_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'computers', 'PATH_IMAGES', Local.EMULATORS.Computers_D.p_Images, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
 
   vQuery := 'SELECT * FROM CONSOLES WHERE USER_ID=' + vUser_Num;
@@ -634,7 +728,7 @@ begin
   if Local.EMULATORS.Consoles_D.p_Images = '' then
   begin
     Local.EMULATORS.Consoles_D.p_Images := extrafe.prog.Path + 'emu\consoles\images\';
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'consoles', 'PATH_IMAGES', Local.EMULATORS.Consoles_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'consoles', 'PATH_IMAGES', Local.EMULATORS.Consoles_D.p_Images, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
 
   vQuery := 'SELECT * FROM HANDHELDS WHERE USER_ID=' + vUser_Num;
@@ -665,7 +759,7 @@ begin
   if Local.EMULATORS.Handhelds_D.p_Images = '' then
   begin
     Local.EMULATORS.Handhelds_D.p_Images := extrafe.prog.Path + 'emu\handhelds\images\';
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'handhelds', 'PATH_IMAGES', Local.EMULATORS.Handhelds_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'handhelds', 'PATH_IMAGES', Local.EMULATORS.Handhelds_D.p_Images, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
 
   vQuery := 'SELECT * FROM PINBALLS WHERE USER_ID=' + vUser_Num;
@@ -685,7 +779,7 @@ begin
   if Local.EMULATORS.Pinballs_D.p_Images = '' then
   begin
     Local.EMULATORS.Pinballs_D.p_Images := extrafe.prog.Path + 'emu\pinball\images\';
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'pinballs', 'PATH_IMAGES', Local.EMULATORS.Pinballs_D.p_Images, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'pinballs', 'PATH_IMAGES', Local.EMULATORS.Pinballs_D.p_Images, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
 
   vQuery := 'SELECT * FROM ADDONS WHERE USER_ID=' + vUser_Num;
@@ -725,12 +819,12 @@ begin
   vIP := uInternet_files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
   vIP_Value := vIP.GetValue<String>('ip');
   uDB.Query_Update_Online('USERS', 'IP', vIP_Value, Online.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'IP', vIP_Value, 'USER_ID', Local.Num.ToString);
-  Local.IP := vIP_Value;
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'IP', vIP_Value, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  Local.USER.IP := vIP_Value;
   Online.IP := vIP_Value;
   uDB.Query_Update_Online('USERS', 'LAST_VISIT', vCurFinal, Online.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT', vCurFinal, 'USER_ID', Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT_ONLINE', vCurFinal, 'USER_ID', Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT', vCurFinal, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'LAST_VISIT_ONLINE', vCurFinal, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 end;
 
 end.

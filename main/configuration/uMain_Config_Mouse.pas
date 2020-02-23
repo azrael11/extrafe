@@ -91,7 +91,9 @@ uses
   uMain_Config_Addons_Actions,
   uMain_Config_Themes,
   uMain_Config_Info,
+  uMain_Config_General,
   uMain_Config_General_Visual,
+  uMain_Config_General_Keyboard,
   uMain_Config_Info_Extrafe,
   uMain_Config_Info_Credits,
   uMain_Config_Profile_User;
@@ -273,6 +275,19 @@ begin
       else if TText(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
         uMain_Config_Addons.ShowInfo(TImage(Sender).Tag);
     end;
+  end
+  else if extrafe.prog.State = 'main_config_general' then
+  begin
+    if vKey_Waiting = False then
+    begin
+      if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
+        (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+      begin
+        vSelected_Tab := mainScene.Config.Main.R.General.Keyboard.TabControl.TabIndex;
+        vSelected_Label := TText(Sender).Tag;
+        uMain_Config_General_Keyboard.Click_To_Accept_Key;
+      end;
+    end;
   end;
   BASS_ChannelPlay(sound.str_fx.general[0], False);
 end;
@@ -321,6 +336,18 @@ begin
       mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := True
     else if TText(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
       mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True;
+  end
+  else if extrafe.prog.State = 'main_config_general' then
+  begin
+    if vKey_Waiting = False then
+    begin
+      if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
+        (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+      begin
+        TText(Sender).Text := 'Click to Change';
+        TText(Sender).TextSettings.FontColor := TAlphaColorRec.Black;
+      end;
+    end;
   end;
   TText(Sender).Cursor := crHandPoint;
 end;
@@ -368,6 +395,18 @@ begin
       mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := False
     else if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
       mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := False;
+  end
+  else if extrafe.prog.State = 'main_config_general' then
+  begin
+    if vKey_Waiting = False then
+    begin
+      if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
+        (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+      begin
+        TText(Sender).Text := 'Press any Key';
+        TText(Sender).TextSettings.FontColor := TAlphaColorRec.White;
+      end;
+    end;
   end;
 end;
 

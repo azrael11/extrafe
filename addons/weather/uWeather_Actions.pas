@@ -269,9 +269,9 @@ end;
 procedure CheckFirst(vCheched: Boolean);
 begin
   if vCheched then
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'FIRST_POP', '1', 'USER_ID', uDB_AUser.Local.Num.ToString)
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'FIRST_POP', '1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString)
   else
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'FIRST_POP', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'FIRST_POP', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB_AUser.Local.ADDONS.Weather_D.First_Pop := vCheched;
 end;
 
@@ -387,7 +387,7 @@ procedure Get_Data;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM ADDON_WEATHER WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  vQuery := 'SELECT * FROM ADDON_WEATHER WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
   uDB.ExtraFE_Query_Local.SQL.Add(vQuery);

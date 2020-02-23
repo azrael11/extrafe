@@ -358,38 +358,38 @@ begin
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version := '';
 
   { Clear from emulators table }
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'COUNT', uDB_AUser.Local.Emulators.Count.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'COUNT', uDB_AUser.Local.Emulators.Count.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   if uDB_AUser.Local.Emulators.Arcade then
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'ARCADE', '1', 'USER_ID', uDB_AUser.Local.Num.ToString)
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'ARCADE', '1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString)
   else
   begin
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'ARCADE', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'ARCADE', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
     uDB_AUser.Local.Emulators.Arcade := false;
   end;
 
   { Clear from arcade table }
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'COUNT', uDB_AUser.Local.Emulators.Arcade_D.Count.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'MAME', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'COUNT', uDB_AUser.Local.Emulators.Arcade_D.Count.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'MAME', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
   { Clear mame table }
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'INSTALLED', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EMU_POSITION', '-1', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EMU_ACTIVE', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_PATH', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_IMAGES', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_SOUNDS', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_VIEWS', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_NAME', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_PATH', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_INI', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_VERSION', '', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'INSTALLED', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EMU_POSITION', '-1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EMU_ACTIVE', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_PATH', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_IMAGES', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_SOUNDS', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'EXTRAFE_MAME_VIEWS', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_NAME', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_PATH', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_INI', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade_mame', 'MAME_VERSION', '', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
   if Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked then
   begin
     { Delete specific user mame columns }
-    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString);
-    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString);
-    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.Num.ToString);
+    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString);
+    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.USER.Num.ToString);
+    uDB.Query_Delete_Column(uDB.Arcade, uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.USER.Num.ToString);
   end;
 
   if Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked then

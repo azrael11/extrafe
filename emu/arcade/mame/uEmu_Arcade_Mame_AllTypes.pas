@@ -1076,7 +1076,7 @@ begin
     vMame.Scene.Media.T_Image.Image.Bitmap := vMame.Scene.Media.T_Image.Image_Fade.Target;
     vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Media.T_Players.Players_Value.Text := vPlayers;
-    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'fav_id_' + uDB_AUser.Local.Num.ToString, 'mame_status', 'romname',
+    vPlayers := uDB.Query_Select(uDB.Arcade_Query, 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, 'mame_status', 'romname',
       mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Media.T_Players.Favorite.Visible := vPlayers.ToBoolean;
   end;
@@ -1093,7 +1093,7 @@ begin
   vMame.Scene.Media.Video.Play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + mame.Gamelist.ListRoms[mame.Gamelist.Selected] + '.mp4');
   vMameVideoTimer.Enabled := False;
   vMame.Scene.Media.T_Players.Players_Value.Text := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
-  vMame.Scene.Media.T_Players.Favorite.Visible := uDB.Query_Select(uDB.Arcade_Query, 'fav_id_' + uDB_AUser.Local.Num.ToString, 'mame_status', 'romname',
+  vMame.Scene.Media.T_Players.Favorite.Visible := uDB.Query_Select(uDB.Arcade_Query, 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, 'mame_status', 'romname',
     mame.Gamelist.ListRoms[mame.Gamelist.Selected]).ToBoolean;
   vMame.Scene.Media.Video_Timer_Cont.Enabled := True;
 end;

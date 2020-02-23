@@ -46,7 +46,7 @@ uses
   {END MAME ARCADE}
 
   {View Modes Keyboard}
-  uView_Mode_Video_Key,
+  uView_Mode_Default_Key,
   {End View Modes Keyboard}
   emu;
 
@@ -110,7 +110,7 @@ begin
   vView_Mode := choose_view_mode;
 
   if vView_Mode = 'video' then
-    uView_Mode_Video_Key.Key(vKey);
+    uView_Mode_Default_Key.Key(vKey);
 end;
 
 end.

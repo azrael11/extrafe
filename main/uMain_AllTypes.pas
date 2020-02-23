@@ -20,7 +20,6 @@ uses
   FMX.Layouts,
   FMX.Controls,
   FMX.Listbox,
-  FMX.ILLed,
   ALFMXObjects,
   IdHTTP,
   IdComponent,
@@ -244,7 +243,7 @@ type
     Gender_Female_Glow: TGlowEffect;
     Apply_Changes: TButton;
     Status: TGroupBox;
-    Active_Led: TILLed;
+    Active_Led: TCircle;
     Active_Text: TText;
     Last_Active_Online: TText;
     Created: TText;
@@ -325,23 +324,32 @@ type
 
 type
   TMAIN_CONFIG_GENERAL_KEYBOARD = record
-
+    Image: TImage;
+    Panel: TPanel;
+    TabControl: TTabControl;
+    TabItems: array [0 .. 1] of TTabItem;
+    Gen_Labels: array [0 .. 6] of TLabel;
+    Gen_Panels: array [0 .. 6] of TRectangle;
+    Gen_Panels_Text: array [0 .. 6] of TText;
+    Emu_Labels: array [0 .. 11] of TLabel;
+    Emu_Panels: array [0 .. 11] of TRectangle;
+    Emu_Panels_Text: array [0 .. 11] of TText;
   end;
 
 type
   TMAIN_CONFIG_GENERAL_JOYSTICK = record
-    Select: TComboBox;
+    Image: TImage;
     Panel: TPanel;
     Place: TRectangle;
     Place_Circle: TCircle;
-    Place_Lines: array [0..1] of TLine;
     Place_dot: TCircle;
-    Buttons: array [0..15] of TCircle;
+    Buttons: array [0 .. 15] of TCircle;
   end;
 
 type
   TMAIN_CONFIG_GENERAL_MOUSE = record
-
+    Image: TImage;
+    Panel: TPanel;
   end;
 
 type
@@ -355,7 +363,7 @@ type
     Sound: TMAIN_CONFIG_GENERAL_SOUND;
     Keyboard: TMAIN_CONFIG_GENERAL_KEYBOARD;
     Joystick: TMAIN_CONFIG_GENERAL_JOYSTICK;
-    Mouse: TMAIN_CONFIG_GENERAL_MOUSE;
+    mouse: TMAIN_CONFIG_GENERAL_MOUSE;
   end;
 
   // Config Emulators

@@ -1,0 +1,294 @@
+unit uView_Mode_Default_Actions_Filters;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UITypes,
+  FMX.Types,
+  FMX.Objects,
+  FMX.Effects,
+  FMX.Listbox,
+  FMX.StdCtrls;
+
+procedure Create_Window;
+
+procedure Add;
+procedure Sort_Panels;
+
+procedure Close_Window;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uView_Mode_Default_Actions,
+  uView_Mode_Video_Mouse,
+  uView_Mode_Default_AllTypes;
+
+procedure Create_Window;
+var
+  vi: Integer;
+begin
+  if not Assigned(Emu_VM_Video.Gamelist.filters.Window.Panel) then
+  begin
+    Emu_VM_Video_Var.filters.Added := 0;
+    Emu_VM_Video_Var.filters.List := TStringList.Create;
+    Emu_VM_Video_Var.filters.List_Added := TStringList.Create;
+    Emu_VM_Video_Var.filters.List_Added.NameValueSeparator := '=';
+
+    for vi := 0 to Emu_XML.filters.main.Count - 1 do
+      Emu_VM_Video_Var.filters.List.Add(Emu_XML.filters.main[vi]);
+
+    Emu_VM_Video_Var.filters.Roms := TStringList.Create;
+    Emu_VM_Video_Var.filters.Games := TStringList.Create;
+
+    Emu_VM_Video.Gamelist.filters.Window.Panel := TPanel.Create(Emu_VM_Video.main);
+    Emu_VM_Video.Gamelist.filters.Window.Panel.name := 'Emu_Filters_Window';
+    Emu_VM_Video.Gamelist.filters.Window.Panel.Parent := Emu_VM_Video.main;
+    Emu_VM_Video.Gamelist.filters.Window.Panel.SetBounds(extrafe.res.Half_Width - 275, 250, 550, 300);
+    Emu_VM_Video.Gamelist.filters.Window.Panel.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Shadow := TShadowEffect.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Shadow.name := 'Emu_Filters_Window_Shadow';
+    Emu_VM_Video.Gamelist.filters.Window.Shadow.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Shadow.Enabled := True;
+
+    CreateHeader(Emu_VM_Video.Gamelist.filters.Window.Panel, 'IcoMoon-Free', #$ea5b, TAlphaColorRec.Deepskyblue, 'Select desire filters to narrow the list',
+      False, nil);
+
+    Emu_VM_Video.Gamelist.filters.Window.Info := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Info.name := 'Emu_Filters_Window_Info';
+    Emu_VM_Video.Gamelist.filters.Window.Info.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Info.SetBounds(10, 35, 400, 30);
+    Emu_VM_Video.Gamelist.filters.Window.Info.Font.Size := 14;
+    Emu_VM_Video.Gamelist.filters.Window.Info.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Info.HorzTextAlign := TTextAlign.Leading;
+    Emu_VM_Video.Gamelist.filters.Window.Info.Text := 'Filtering list games : ';
+    Emu_VM_Video.Gamelist.filters.Window.Info.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.name := 'Emu_Filters_Window_Games_Num';
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.SetBounds(136, 35, 400, 30);
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.Font.Size := 14;
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.TextSettings.FontColor := TAlphaColorRec.Limegreen;
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.HorzTextAlign := TTextAlign.Leading;
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.Text := Emu_VM_Video_Var.Gamelist.Total_Games.ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Games_Num.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Clear := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Clear.name := 'Emu_Filters_Window_Clear';
+    Emu_VM_Video.Gamelist.filters.Window.Clear.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.SetBounds(Emu_VM_Video.Gamelist.filters.Window.Panel.width - 80, 34, 30, 30);
+    Emu_VM_Video.Gamelist.filters.Window.Clear.Font.Family := 'IcoMoon-Free';
+    Emu_VM_Video.Gamelist.filters.Window.Clear.Font.Size := 24;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.TextSettings.FontColor := TAlphaColorRec.Grey;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.Text := #$e9ad;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.OnClick := Emu_VM_Video_Mouse.Text.OnMouseClick;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.OnMouseEnter := Emu_VM_Video_Mouse.Text.OnMouseEnter;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.OnMouseLeave := Emu_VM_Video_Mouse.Text.OnMouseLeave;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Clear_Glow := TGlowEffect.Create(Emu_VM_Video.Gamelist.filters.Window.Clear);
+    Emu_VM_Video.Gamelist.filters.Window.Clear_Glow.name := 'Emu_Filters_Window_Clear_Glow';
+    Emu_VM_Video.Gamelist.filters.Window.Clear_Glow.Parent := Emu_VM_Video.Gamelist.filters.Window.Clear;
+    Emu_VM_Video.Gamelist.filters.Window.Clear_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Clear_Glow.Softness := 0.9;
+    Emu_VM_Video.Gamelist.filters.Window.Clear_Glow.Enabled := False;
+
+    Emu_VM_Video.Gamelist.filters.Window.Add := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Add.name := 'Emu_Filters_Window_Add';
+    Emu_VM_Video.Gamelist.filters.Window.Add.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Add.SetBounds(Emu_VM_Video.Gamelist.filters.Window.Panel.width - 40, 34, 30, 30);
+    Emu_VM_Video.Gamelist.filters.Window.Add.Font.Family := 'IcoMoon-Free';
+    Emu_VM_Video.Gamelist.filters.Window.Add.Font.Size := 24;
+    Emu_VM_Video.Gamelist.filters.Window.Add.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Add.Text := #$ea0a;
+    Emu_VM_Video.Gamelist.filters.Window.Add.OnClick := Emu_VM_Video_Mouse.Text.OnMouseClick;
+    Emu_VM_Video.Gamelist.filters.Window.Add.OnMouseEnter := Emu_VM_Video_Mouse.Text.OnMouseEnter;
+    Emu_VM_Video.Gamelist.filters.Window.Add.OnMouseLeave := Emu_VM_Video_Mouse.Text.OnMouseLeave;
+    Emu_VM_Video.Gamelist.filters.Window.Add.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Add_Glow := TGlowEffect.Create(Emu_VM_Video.Gamelist.filters.Window.Add);
+    Emu_VM_Video.Gamelist.filters.Window.Add_Glow.name := 'Emu_Filters_Window_Add_Glow';
+    Emu_VM_Video.Gamelist.filters.Window.Add_Glow.Parent := Emu_VM_Video.Gamelist.filters.Window.Add;
+    Emu_VM_Video.Gamelist.filters.Window.Add_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Add_Glow.Softness := 0.9;
+    Emu_VM_Video.Gamelist.filters.Window.Add_Glow.Enabled := False;
+
+    Emu_VM_Video.Gamelist.filters.Window.OK := TButton.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.OK.name := 'Emu_Filters_Window_OK';
+    Emu_VM_Video.Gamelist.filters.Window.OK.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.OK.SetBounds(50, Emu_VM_Video.Gamelist.filters.Window.Panel.height - 40, 100, 30);
+    Emu_VM_Video.Gamelist.filters.Window.OK.Text := 'OK';
+    Emu_VM_Video.Gamelist.filters.Window.OK.Anchors := [TAnchorKind.akBottom, TAnchorKind.akLeft];
+    Emu_VM_Video.Gamelist.filters.Window.OK.OnClick := Emu_VM_Video_Mouse.Button.OnMouseClick;
+    Emu_VM_Video.Gamelist.filters.Window.OK.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Cancel := TButton.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Cancel.name := 'Emu_Filters_Window_Cancel';
+    Emu_VM_Video.Gamelist.filters.Window.Cancel.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Cancel.SetBounds(412, Emu_VM_Video.Gamelist.filters.Window.Panel.height - 40, 100, 30);
+    Emu_VM_Video.Gamelist.filters.Window.Cancel.Text := 'Cancel';
+    Emu_VM_Video.Gamelist.filters.Window.Cancel.Anchors := [TAnchorKind.akBottom, TAnchorKind.akRight];
+    Emu_VM_Video.Gamelist.filters.Window.Cancel.OnClick := Emu_VM_Video_Mouse.Button.OnMouseClick;
+    Emu_VM_Video.Gamelist.filters.Window.Cancel.Visible := True;
+  end
+  else
+    Emu_VM_Video.Gamelist.filters.Window.Panel.Visible := True;
+end;
+
+procedure Add;
+var
+  vi, vNum: Integer;
+  vPanel_Height: Integer;
+  vFilter_Index: Integer;
+begin
+  for vi := 0 to Emu_VM_Video_Var.filters.List_Added.Count - 1 do
+  begin
+    if Emu_VM_Video_Var.filters.List.IndexOf(Emu_VM_Video_Var.filters.List_Added.Names[vi]) <> -1 then
+    begin
+      vFilter_Index := Emu_VM_Video_Var.filters.List.IndexOf(Emu_VM_Video_Var.filters.List_Added.Names[vi]);
+      Emu_VM_Video_Var.filters.List.Delete(vFilter_Index);
+    end;
+  end;
+
+  for vi := 0 to Emu_VM_Video_Var.filters.List_Added.Count - 1 do
+  begin
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vi].Choose.Enabled := False;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vi].Sec_Choose.Enabled := False;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vi].Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
+  end;
+
+  if (Emu_VM_Video_Var.filters.Done) or (Emu_VM_Video_Var.filters.Added = 0) then
+  begin
+    vPanel_Height := 0;
+    inc(Emu_VM_Video_Var.filters.Added, 1);
+    SetLength(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels, Emu_VM_Video_Var.filters.Added);
+
+    vNum := Emu_VM_Video_Var.filters.Added - 1;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel := TPanel.Create(Emu_VM_Video.Gamelist.filters.Window.Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel.name := 'Mame_Window_Filters_Filter_Panel_' + (vNum).ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel.Parent := Emu_VM_Video.Gamelist.filters.Window.Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel.SetBounds(10, 70 + ((vNum) * 70), Emu_VM_Video.Gamelist.filters.Window.Panel.width - 20, 60);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.name := 'Mame_Window_Filters_Filter_Remove_' + (vNum).ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.Parent := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.SetBounds(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel.width - 36,
+      15, 30, 30);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.Font.Family := 'IcoMoon-Free';
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.Font.Size := 24;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.Text := #$e9ac;
+    // Emu_VM_Video.Gamelist.Filters.Window.Filter_Panels[vNum].Remove.OnClick := mame.Input.Mouse.Text.OnMouseClick;
+    // Emu_VM_Video.Gamelist.Filters.Window.Filter_Panels[vNum].Remove.OnMouseEnter := mame.Input.Mouse.Text.OnMouseEnter;
+    // Emu_VM_Video.Gamelist.Filters.Window.Filter_Panels[vNum].Remove.OnMouseLeave := mame.Input.Mouse.Text.OnMouseLeave;
+    // Emu_VM_Video.Gamelist.Filters.Window.Filter_Panels[vNum].Remove.OnMouseUp := mame.Input.Mouse.Text.OnMouseUp;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.Tag := vNum;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove_Glow := TGlowEffect.Create(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove_Glow.name := 'Mame_Window_Filter_Remove_Glow_' + vNum.ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove_Glow.Parent := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove_Glow.Softness := 0.9;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Remove_Glow.Enabled := False;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.name := 'Mame_Window_Filters_Filter_Name_' + (vNum).ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.Parent := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.SetBounds(10, 2, 300, 20);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.Text := 'Filter : ';
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.Font.Size := 14;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.HorzTextAlign := TTextAlign.Leading;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Filter_Name.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose := TComboBox.Create(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.name := 'Mame_Window_Filters_Filter_Combo_' + (vNum).ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.Parent := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.SetBounds(10, 25, 150, 28);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.Tag := Emu_VM_Video_Var.filters.Added - 1;
+    // Emu_VM_Video.Gamelist.Filters.Window.Filter_Panels[vNum].Choose.OnChange := mame.Input.Mouse.ComboBox.OnChange;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.Visible := True;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.name := 'Mame_Window_Filters_Filter_Result_' + (vNum).ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.Parent := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.SetBounds(340, 2, 150, 20);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.Text := 'Result';
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.Font.Size := 14;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.HorzTextAlign := TTextAlign.Center;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result.Visible := False;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.name := 'Mame_Window_Filters_Filter_Result_Num_' + (vNum).ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.Parent := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.SetBounds(340, 20, 150, 20);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.Text := '';
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.Font.Size := 14;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.TextSettings.FontColor := TAlphaColorRec.Limegreen;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.HorzTextAlign := TTextAlign.Center;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Num.Visible := False;
+
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games := TText.Create(Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.name := 'Mame_Window_Filters_Filter_Result_Games_' + (vNum).ToString;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.Parent := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Panel;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.SetBounds(340, 40, 150, 20);
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.Text := 'Games';
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.Font.Size := 14;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.HorzTextAlign := TTextAlign.Center;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Result_Games.Visible := False;
+
+    for vi := 0 to Emu_VM_Video_Var.filters.List.Count do
+    begin
+      if vi = 0 then
+        Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.Items.Add('Choose...')
+      else
+        Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.Items.Add(Emu_VM_Video_Var.filters.List.Strings[vi - 1]);
+    end;
+
+    // mame.Filters.Compo_Done := True;
+    Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vNum].Choose.ItemIndex := 0;
+    // mame.Filters.Compo_Done := False;
+    Emu_VM_Video_Var.filters.Done := False;
+
+    Sort_Panels;
+    Emu_VM_Video.Gamelist.filters.Window.Add.TextSettings.FontColor := TAlphaColorRec.Grey;
+    Emu_VM_Video.Gamelist.filters.Window.Clear.TextSettings.FontColor := TAlphaColorRec.Grey;
+    Emu_VM_Video.Gamelist.filters.Window.Add_Glow.Enabled := False;
+  end;
+end;
+
+procedure Sort_Panels;
+var
+  vi: Integer;
+  vSum_Height: Single;
+begin
+  if Emu_VM_Video_Var.filters.Added > -1 then
+  begin
+    vSum_Height := 0;
+    for vi := 0 to Emu_VM_Video_Var.filters.Added - 1 do
+      vSum_Height := Emu_VM_Video.Gamelist.filters.Window.Filter_Panels[vi].Panel.Position.Y;
+
+    if vSum_Height + 130 < 300 then
+      Emu_VM_Video.Gamelist.filters.Window.Panel.height := 300
+    else
+      Emu_VM_Video.Gamelist.filters.Window.Panel.height := vSum_Height + 130;
+  end;
+end;
+
+procedure Close_Window;
+begin
+  uView_Mode_Default_Actions.Filters_Action;
+end;
+
+end.
+

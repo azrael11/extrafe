@@ -61,7 +61,7 @@ procedure Get_Data;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM ADDON_TIME_TIME WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  vQuery := 'SELECT * FROM ADDON_TIME_TIME WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
   uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
@@ -188,7 +188,7 @@ begin
   end;
 
   uDB_AUser.Local.ADDONS.Time_D.Time.vType := vType;
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_TIME_TIME', 'CLOCK_TYPE', vType, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_TIME_TIME', 'CLOCK_TYPE', vType, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 end;
 
 /// /////////////////////////////////////////////////////////////////////////////
@@ -320,7 +320,7 @@ begin
 
     uDB_AUser.Local.ADDONS.Time_D.Time.Digital_Font := vFont_Family_Name;
     uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_TIME_TIME', 'TIME_CLOCK_DIGITAL_FONT', uDB_AUser.Local.ADDONS.Time_D.Time.Digital_Font, 'USER_ID',
-      uDB_AUser.Local.Num.ToString);
+      uDB_AUser.Local.USER.Num.ToString);
   end;
 end;
 
@@ -334,7 +334,7 @@ begin
 
   uDB_AUser.Local.ADDONS.Time_D.Time.Digital_Color := ColorToString(vFont_Color);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_TIME_TIME', 'TIME_CLOCK_DIGITAL_COLOR', uDB_AUser.Local.ADDONS.Time_D.Time.Digital_Color, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
 end;
 
 procedure uTime_Time_Actions_Digital_SetBackColor(vBack_Color: TAlphaColor);
@@ -359,7 +359,7 @@ begin
 
   uDB_AUser.Local.ADDONS.Time_D.Time.Digital_Sep := vSep;
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_TIME_TIME', 'TIME_CLOCK_DIGITAL_SEP', uDB_AUser.Local.ADDONS.Time_D.Time.Digital_Sep, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
 end;
 
 { TTIME_ADDON_TIMER }

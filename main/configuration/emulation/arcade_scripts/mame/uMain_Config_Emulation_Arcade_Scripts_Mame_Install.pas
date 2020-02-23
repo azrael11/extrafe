@@ -285,7 +285,7 @@ begin
   Script_Mame_Install.Main.Tab3.Edit.SetBounds(20, 60, Script_Mame_Install.Main.Tab3.Box.Width - 80, 26);
   Script_Mame_Install.Main.Tab3.Edit.Text := '';
   Script_Mame_Install.Main.Tab3.Edit.ReadOnly := True;
-  Script_Mame_Install.Main.Tab3.Edit.Caret.Color := TAlphaColorRec.Deepskyblue;
+  Script_Mame_Install.Main.Tab3.Edit.Caret.Color := TAlphaColorRec.DeepSkyBlue;
   Script_Mame_Install.Main.Tab3.Edit.Visible := True;
 
   Script_Mame_Install.Main.Tab3.Find := TButton.Create(Script_Mame_Install.Main.Tabs[2]);
@@ -423,59 +423,59 @@ begin
   inc(uDB_AUser.Local.Emulators.Count, 1);
   inc(uDB_AUser.Local.Emulators.Arcade_D.Count, 1);
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'ARCADE', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'COUNT', uDB_AUser.Local.Emulators.Count.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'MAME', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'COUNT', uDB_AUser.Local.Emulators.Arcade_D.Count.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'ARCADE', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'COUNT', uDB_AUser.Local.Emulators.Count.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'MAME', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'COUNT', uDB_AUser.Local.Emulators.Arcade_D.Count.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_PATH', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_IMAGES', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_SOUNDS', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE_VIEWS', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Views, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
 
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Installed := True;
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Active := True;
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position := 0;
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Unique := 0;
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'INSTALLED', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_ACTIVE', 'TRUE', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'INSTALLED', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_ACTIVE', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_POSITION', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE', '0.0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE', '0.0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_NAME', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_PATH', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_INI', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_INI', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_VERSION', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
 
-  if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString) then
+  if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString) then
   begin
     { Create message procedure to user select option from new fav or existence one }
   end
   else
-    uDB.Query_Create_New_Column(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString + ' BOOLEAN DEFAULT False');
+    uDB.Query_Create_New_Column(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString + ' BOOLEAN DEFAULT False');
 
-  if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString) then
+  if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.USER.Num.ToString) then
   begin
     { Create message procedure to user select option from new playcount or existence one }
   end
   else
-    uDB.Query_Create_New_Column(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString + ' INTEGER DEFAULT 0');
+    uDB.Query_Create_New_Column(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.USER.Num.ToString + ' INTEGER DEFAULT 0');
 
-  if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.Num.ToString) then
+  if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.USER.Num.ToString) then
   begin
     { Create message procedure to user select option from new hidden games  or existence one }
   end
   else
-    uDB.Query_Create_New_Column(uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.Num.ToString + ' BOOLEAN DEFAULT False');
+    uDB.Query_Create_New_Column(uDB.Arcade_Query, 'games', 'hidden_id_' + uDB_AUser.Local.USER.Num.ToString + ' BOOLEAN DEFAULT False');
 
 end;
 

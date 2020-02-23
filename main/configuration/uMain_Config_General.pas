@@ -11,6 +11,8 @@ uses
   FMX.StdCtrls;
 
 procedure Create;
+var
+  vKey_Waiting : Boolean;
 
 implementation
 
@@ -18,7 +20,9 @@ uses
   uLoad_AllTypes,
   uMain_AllTypes,
   uMain_Config_General_Visual,
-  uMain_Config_General_Joystick;
+  uMain_Config_General_Keyboard,
+  uMain_Config_General_Joystick,
+  uMain_Config_General_Mouse;
 
 procedure Create;
 const
@@ -26,6 +30,9 @@ const
 var
   vi: Integer;
 begin
+  extrafe.prog.State := 'main_config_general';
+  vKey_Waiting := False;
+
   mainScene.Config.Main.R.General.Panel := TPanel.Create(mainScene.Config.Main.R.Panel[1]);
   mainScene.Config.Main.R.General.Panel.Name := 'Main_Config_General';
   mainScene.Config.Main.R.General.Panel.Parent := mainScene.Config.Main.R.Panel[1];
@@ -55,8 +62,11 @@ begin
       mainScene.Config.Main.R.General.Tab_Item[vi].Visible := True;
   end;
 
+
   uMain_Config_General_Visual.Load;
+  uMain_Config_General_Keyboard.Load;
   uMain_Config_General_Joystick.Load;
+  uMain_Config_General_Mouse.Load;
 end;
 
 end.

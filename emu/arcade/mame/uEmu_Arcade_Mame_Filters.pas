@@ -45,7 +45,7 @@ uses
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Ini,
   {View Modes}
-  uView_Mode_Video_AllTypes;
+  uView_Mode_Default_AllTypes;
 
 procedure Load(vView_Mode: String);
 var

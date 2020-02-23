@@ -1,6 +1,7 @@
 unit uMain_Config_Keyboard;
 
 interface
+
 uses
   System.Classes,
   System.SysUtils,
@@ -9,30 +10,42 @@ uses
 procedure Set_Key(vKey: String);
 
 implementation
+
 uses
   uLoad_AllTypes,
-  uMain_Config;
+  uMain_Config,
+  uMain_Config_General,
+  uMain_Config_General_Keyboard;
 
 procedure Set_Key(vKey: String);
 begin
   if ContainsText(extrafe.prog.State, 'main_config') then
   begin
-    if UpperCase(vKey)= 'ESC' then
-      uMain_Config.ShowHide(extrafe.prog.State)
-    else if vKey= '1' then
-      uMain_Config.ShowPanel(0)
-    else if vKey= '2' then
-      uMain_Config.ShowPanel(1)
-    else if vKey= '3' then
-      uMain_Config.ShowPanel(2)
-    else if vKey= '4' then
-      uMain_Config.ShowPanel(3)
-    else if vKey= '5' then
-      uMain_Config.ShowPanel(4)
-    else if vKey= '6' then
-      uMain_Config.ShowPanel(5)
-    else if vKey= '7' then
-      uMain_Config.ShowPanel(6)
+    if vKey_Waiting = False then
+    begin
+        if UpperCase(vKey) = 'ESC' then
+        uMain_Config.ShowHide(extrafe.prog.State)
+      else if vKey = '1' then
+        uMain_Config.ShowPanel(0)
+      else if vKey = '2' then
+        uMain_Config.ShowPanel(1)
+      else if vKey = '3' then
+        uMain_Config.ShowPanel(2)
+      else if vKey = '4' then
+        uMain_Config.ShowPanel(3)
+      else if vKey = '5' then
+        uMain_Config.ShowPanel(4)
+      else if vKey = '6' then
+        uMain_Config.ShowPanel(5)
+      else if vKey = '7' then
+        uMain_Config.ShowPanel(6)
+    end;
+
+    if extrafe.prog.State = 'main_config_general' then
+    begin
+      if vKey_Waiting = True then
+        uMain_Config_General_Keyboard.Set_Key(vKey);
+    end
   end;
 end;
 

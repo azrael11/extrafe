@@ -1,0 +1,34 @@
+unit uMain_Config_Keyboard;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.StrUtils;
+
+procedure Set_Key(vKey: String);
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uMain_Config,
+  uMain_Config_General,
+  uMain_Config_General_Keyboard;
+
+procedure Set_Key(vKey: String);
+begin
+  if ContainsText(extrafe.prog.State, 'main_config') then
+  begin
+    if extrafe.prog.State = 'main_config_general' then
+    begin
+      if vKey_Waiting = True then
+      begin
+
+      end
+    end
+  end;
+end;
+
+end.

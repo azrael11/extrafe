@@ -275,7 +275,7 @@ begin
   mainScene.Header.Avatar.Name := 'Main_Header_Avatar';
   mainScene.Header.Avatar.Parent := mainScene.Header.Back;
   mainScene.Header.Avatar.SetBounds(mainScene.Header.Back.Width - 179, 5, 120, 120);
-  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.Avatar + '.png');
+  mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.USER.Avatar + '.png');
   mainScene.Header.Avatar.WrapMode := TImageWrapMode.Fit;
   mainScene.Header.Avatar.OnClick := ex_main.input.mouse.Image.OnMouseClick;
   mainScene.Header.Avatar.OnMouseEnter := ex_main.input.mouse.Image.OnMouseEnter;

@@ -155,7 +155,7 @@ procedure Get_Data;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM ADDON_SOUNDPLAYER WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  vQuery := 'SELECT * FROM ADDON_SOUNDPLAYER WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
   uDB.ExtraFE_Query_Local.SQL.Add(vQuery);

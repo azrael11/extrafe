@@ -26,14 +26,14 @@ uses
   uEmu_Arcade_Mame_Actions,
   uEmu_Arcade_Mame_Sounds,
   {View Modes}
-  uView_Mode_Video_Actions;
+  uView_Mode_Default_Actions;
 
 procedure Load;
 var
   vi: integer;
 begin
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'emulators', 'ACTIVE_UNIQUE', uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Unique.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   extrafe.prog.State := 'emu_mame';
 
   // Timers
@@ -60,7 +60,7 @@ end;
 procedure Start_View_Mode;
 begin
   if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
-    uView_Mode_Video_Actions.Start_View_Mode(0, mame.Gamelist.Games_Count, mame.Gamelist.ListGames, mame.Gamelist.ListRoms, mame.Emu.Ini.CORE_SEARCH_rompath);
+    uView_Mode_Default_Actions.Start_View_Mode(0, mame.Gamelist.Games_Count, mame.Gamelist.ListGames, mame.Gamelist.ListRoms, mame.Emu.Ini.CORE_SEARCH_rompath);
 end;
 
 procedure Main;

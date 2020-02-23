@@ -191,7 +191,7 @@ begin
       vWeather.Config.main.Right.Provider.Prov[1].Check.IsChecked := False;
 
     uDB_AUser.Local.ADDONS.Weather_D.Provider := 'yahoo';
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', 'yahoo', 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', 'yahoo', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
     vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
     vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_yahoo.png');

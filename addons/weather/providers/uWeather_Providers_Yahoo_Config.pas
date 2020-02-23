@@ -308,7 +308,7 @@ begin
   while not uDB.ExtraFE_Query_Local.Eof do
   begin
     if vi <> uDB.ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger then
-      uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather_yahoo', 'TOWN_NUM', vi.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
+      uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather_yahoo', 'TOWN_NUM', vi.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
     Inc(vi, 1);
     uDB.ExtraFE_Query_Local.Next;
   end;
@@ -519,7 +519,7 @@ begin
       end;
     end;
     uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric := vType;
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_METRIC', vType, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_METRIC', vType, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
     vWeather.Scene.Blur.Enabled := False;
     vWeather.Scene.Blur.Enabled := True;
   end;
@@ -978,9 +978,9 @@ begin
     uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Selected := vSelected;
     uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset := uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets[vSelected];
     uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'YAHOO_ICONSET', uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset, 'USER_ID',
-      uDB_AUser.Local.Num.ToString);
+      uDB_AUser.Local.USER.Num.ToString);
     uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'YAHOO_ICONSET_SELECTED', uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Selected.ToString,
-      'USER_ID', uDB_AUser.Local.Num.ToString);
+      'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
     Set_New_Iconset_Check(vSelected);
     New_Iconset_Reload(vSelected);

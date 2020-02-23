@@ -42,16 +42,14 @@ begin
   mainScene.Config.main.R.Themes.Box := TVertScrollBox.Create(mainScene.Config.main.R.Themes.Panel);
   mainScene.Config.main.R.Themes.Box.Name := 'Main_Config_Themes_Box';
   mainScene.Config.main.R.Themes.Box.Parent := mainScene.Config.main.R.Themes.Panel;
-  mainScene.Config.main.R.Themes.Box.SetBounds(10, 10, mainScene.Config.main.R.Themes.Panel.Width - 20,
-    mainScene.Config.main.R.Themes.Panel.Height - 60);
+  mainScene.Config.main.R.Themes.Box.SetBounds(10, 10, mainScene.Config.main.R.Themes.Panel.Width - 20, mainScene.Config.main.R.Themes.Panel.Height - 60);
   mainScene.Config.main.R.Themes.Box.Visible := True;
   for vi := 0 to 0 do
   begin
     mainScene.Config.main.R.Themes.Frame[vi] := TPanel.Create(mainScene.Config.main.R.Themes.Box);
     mainScene.Config.main.R.Themes.Frame[vi].Name := 'Main_Config_Themes_Theme_' + vi.ToString;
     mainScene.Config.main.R.Themes.Frame[vi].Parent := mainScene.Config.main.R.Themes.Box;
-    mainScene.Config.main.R.Themes.Frame[vi].SetBounds(10, 5 + (90 * vi),
-      mainScene.Config.main.R.Themes.Box.Width - 20, 80);
+    mainScene.Config.main.R.Themes.Frame[vi].SetBounds(10, 5 + (90 * vi), mainScene.Config.main.R.Themes.Box.Width - 20, 80);
     mainScene.Config.main.R.Themes.Frame[vi].Visible := True;
 
     mainScene.Config.main.R.Themes.Check[vi] := TCheckBox.Create(mainScene.Config.main.R.Themes.Frame[vi]);
@@ -65,8 +63,7 @@ begin
     mainScene.Config.main.R.Themes.Image[vi].Name := 'Main_Config_Themes_Image_' + vi.ToString;
     mainScene.Config.main.R.Themes.Image[vi].Parent := mainScene.Config.main.R.Themes.Frame[vi];
     mainScene.Config.main.R.Themes.Image[vi].SetBounds(40, 2, 134, 78);
-    mainScene.Config.main.R.Themes.Image[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images +
-      'config_theme_default.png');
+    mainScene.Config.main.R.Themes.Image[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'themes\' + 'config_theme_default.png');
     mainScene.Config.main.R.Themes.Image[vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.main.R.Themes.Image[vi].Visible := True;
 
@@ -81,7 +78,8 @@ begin
   mainScene.Config.main.R.Themes.Apply := TButton.Create(mainScene.Config.main.R.Themes.Panel);
   mainScene.Config.main.R.Themes.Apply.Name := 'Main_Config_Themes_Apply';
   mainScene.Config.main.R.Themes.Apply.Parent := mainScene.Config.main.R.Themes.Panel;
-  mainScene.Config.main.R.Themes.Apply.SetBounds((mainScene.Config.main.R.Themes.Panel.Width / 2) - 100, mainScene.Config.main.R.Themes.Panel.Height - 40, 200, 30);
+  mainScene.Config.main.R.Themes.Apply.SetBounds((mainScene.Config.main.R.Themes.Panel.Width / 2) - 100, mainScene.Config.main.R.Themes.Panel.Height -
+    40, 200, 30);
   mainScene.Config.main.R.Themes.Apply.Text := 'Apply new theme';
   mainScene.Config.main.R.Themes.Apply.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
   mainScene.Config.main.R.Themes.Apply.Visible := True;

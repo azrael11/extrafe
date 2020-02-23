@@ -403,7 +403,7 @@ procedure Is_Favorites_Closed;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT gamename, romname FROM mame_status WHERE fav_id_' + uDB_AUser.Local.Num.ToString + '="1" order by gamename asc';
+  vQuery := 'SELECT gamename, romname FROM mame_status WHERE fav_id_' + uDB_AUser.Local.USER.Num.ToString + '="1" order by gamename asc';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -426,7 +426,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  mame.Gamelist.Games_Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '1');
+  mame.Gamelist.Games_Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, '1');
 
   vMame.Scene.Media.Up_Favorites.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vMame.Scene.Media.Up_Favorites_Glow.GlowColor := TAlphaColorRec.Grey;
@@ -456,7 +456,7 @@ procedure Add_To_Favorites;
 begin
   if mame.Favorites.Open then
   begin
-    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     dec(mame.Favorites.Count, 1);
     Is_Favorites_Closed;
     uEmu_Arcade_Mame.Main;
@@ -465,13 +465,13 @@ begin
   begin
     if vMame.Scene.Media.T_Players.Favorite.Visible then
     begin
-      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '0', 'romname',
+      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, '0', 'romname',
         mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
       dec(mame.Favorites.Count, 1);
     end
     else
     begin
-      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '1', 'romname',
+      uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, '1', 'romname',
         mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
       inc(mame.Favorites.Count, 1);
     end;

@@ -83,7 +83,7 @@ uses
   uEmu_Arcade_Mame,
   uEmu_Arcade_Mame_AllTypes,
   uEmu_Arcade_Mame_Ini,
-  uView_Mode_Video;
+  uView_Mode_Default;
 
 procedure Create_Configuration;
 begin
@@ -557,7 +557,7 @@ begin
   vMame.Scene.Media.Up_Favorites_Glow.Softness := 0.9;
   vMame.Scene.Media.Up_Favorites_Glow.Enabled := False;
 
-  mame.Favorites.Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '1');
+  mame.Favorites.Count := uDB.Query_Count(Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, '1');
   mame.Favorites.Open := False;
 
   vMame.Scene.Media.Black_Image := TImage.Create(vMame.Scene.Right);
@@ -613,7 +613,7 @@ begin
   vMame.Scene.Main.Visible := True;
 
   if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
-    uView_Mode_Video.Create_Scene(uDB_AUser.Local.Num, uDB.Arcade_Query, vMame.Scene.Main, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Views,
+    uView_Mode_Default.Create_Scene(uDB_AUser.Local.USER.Num, uDB.Arcade_Query, vMame.Scene.Main, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Views,
       uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Sounds);
 
   { vMame.Scene.Main_Blur := TGaussianBlurEffect.Create(vMame.Scene.Main);
@@ -677,7 +677,7 @@ begin
     vMame.Scene.Settings_Glow.Enabled := False;
 
     if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
-    uView_Mode_Video.Create_Scene;
+    uView_Mode_Default.Create_Scene;
 
     //  Create_GameList;
     //  Create_Media(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode);
@@ -826,7 +826,7 @@ begin
   mame.Gamelist.ListMonochrome.Sort;
   mame.Gamelist.ListLanguages.Sort;
 
-  vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + uDB_AUser.Local.Num.ToString;
+  vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
   uDB.ExtraFE_Query_Local.SQL.Add(vQuery);

@@ -48,11 +48,11 @@ procedure Login;
 begin
   ex_load.Scene.Progress.Visible := True;
   ex_load.Scene.Progress_Text.Visible := True;
-  if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.Username) and (ex_load.Login.Pass_V.Text = uDB_AUser.Local.Password) then
+  if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.USER.Username) and (ex_load.Login.Pass_V.Text = uDB_AUser.Local.USER.Password) then
     uLoad.Start_ExtraFE
   else
   begin
-    if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.Username) then
+    if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.USER.Username) then
       ex_load.Login.Warning.Text := 'Password is incorrect';
     ex_load.Login.Warning.Visible := True;
     ex_load.Login.Forget_Pass.Visible := True;
@@ -143,9 +143,9 @@ begin
     if vUser_Num <> 0 then
     begin
       uDB_AUser.Get_Local_Data((vUser_Num).ToString);
-      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.Avatar + '.png');
-      ex_load.Login.Last_Visit.Text := 'Last Visit : ' + uDB_AUser.Local.Last_Visit;
-      uDB_AUser.Get_Online_Data(uDB_AUser.Local.Unique_ID);
+      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.USER.Avatar + '.png');
+      ex_load.Login.Last_Visit.Text := 'Last Visit : ' + uDB_AUser.Local.USER.Last_Visit;
+      uDB_AUser.Get_Online_Data(uDB_AUser.Local.USER.Unique_ID);
     end
     else
     begin

@@ -65,7 +65,7 @@ begin
   begin
     FreeAndNil(mainScene.Header.Addon_Icon.Frame[vDeletedIcon]);
     uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_' + UpperCase(uDB_AUser.Local.addons.Names[vDeletedIcon]), 'MENU_POSITION', '-1', 'USER_ID',
-      uDB_AUser.Local.Num.ToString);
+      uDB_AUser.Local.USER.Num.ToString);
     uDB_AUser.Local.addons.Names[vDeletedIcon] := '';
   end
   else
@@ -75,7 +75,7 @@ begin
       mainScene.Header.Addon_Icon.Icons[vi - 1] := mainScene.Header.Addon_Icon.Icons[vi];
       uDB_AUser.Local.addons.Names[vi - 1] := uDB_AUser.Local.addons.Names[vi];
       uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_' + UpperCase(uDB_AUser.Local.addons.Names[vi - 1]), 'MENU_POSITION', (vi - 1).ToString, 'USER_ID',
-        uDB_AUser.Local.Num.ToString);
+        uDB_AUser.Local.USER.Num.ToString);
       if vi = uDB_AUser.Local.addons.Active then
       begin
         FreeAndNil(mainScene.Header.Addon_Icon.Frame[vi]);
@@ -154,25 +154,25 @@ begin
   uDB_AUser.Local.addons.Soundplayer_D.Total_Play_Click := -1;
   uDB_AUser.Local.addons.Soundplayer_D.Total_Play_Time := '00:00:00';
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'SOUNDPLAYER', '1', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'SOUNDPLAYER', '1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'MENU_POSITION', uDB_AUser.Local.addons.Soundplayer_D.Menu_Position.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'FIRST_POP', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'FIRST_POP', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'VOLUME', uDB_AUser.Local.addons.Soundplayer_D.Volume.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'LAST_VISIT', uDB_AUser.Local.addons.Soundplayer_D.Last_Visit, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'LAST_PLAY_SONG_NUM', uDB_AUser.Local.addons.Soundplayer_D.Last_Play_Song_Num.ToString,
-    'USER_ID', uDB_AUser.Local.Num.ToString);
+    'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'LAST_PLAYLIST_NUM', uDB_AUser.Local.addons.Soundplayer_D.Last_Playlist_Num.ToString,
-    'USER_ID', uDB_AUser.Local.Num.ToString);
+    'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'PLAYLIST_COUNT', uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'TOTAL_PLAY_CLICK', uDB_AUser.Local.addons.Soundplayer_D.Total_Play_Click.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'TOTAL_PLAY_TIME', uDB_AUser.Local.addons.Soundplayer_D.Total_Play_Time, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
 
   mainScene.Config.main.R.addons.Icons_Info[3].Activeted.Text := 'Active';
   mainScene.Config.main.R.addons.Icons_Info[3].Activeted.Color := TAlphaColorRec.Lime;
@@ -210,7 +210,8 @@ begin
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, TAlphaColorRec.DeepSkyBlue, 'Activate Soundplayer addon', False, nil);
+  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, TAlphaColorRec.Deepskyblue, 'Activate Soundplayer addon',
+    False, nil);
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Actv.Panel);
   mainScene.Config.main.R.addons.soundplayer.Msg_Actv.main.Panel.Name := 'Main_Config_Addons_Soundplayer_Activate_Msg_Main';
@@ -311,9 +312,9 @@ begin
   uDB_AUser.Local.addons.soundplayer := False;
   uDB_AUser.Local.addons.Soundplayer_D.Menu_Position := -1;
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'SOUNDPLAYER', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'MENU_POSITION', '-1', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'SOUNDPLAYER', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', 'MENU_POSITION', '-1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
   mainScene.Config.main.R.addons.Icons_Info[3].Activeted.Text := 'Inactive';
   mainScene.Config.main.R.addons.Icons_Info[3].Activeted.Color := TAlphaColorRec.Red;
@@ -350,7 +351,8 @@ begin
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, TAlphaColorRec.DeepSkyBlue, 'Deactivate Soundplayer addon', False, nil);
+  CreateHeader(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, TAlphaColorRec.Deepskyblue, 'Deactivate Soundplayer addon',
+    False, nil);
 
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.Panel);
   mainScene.Config.main.R.addons.soundplayer.Msg_Deactv.main.Panel.Name := 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main';
@@ -443,7 +445,7 @@ begin
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Actv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, TAlphaColorRec.DeepSkyBlue, 'Activate Weather addon', False, nil);
+  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel, 'IcoMoon-Free', #$e997, TAlphaColorRec.Deepskyblue, 'Activate Weather addon', False, nil);
 
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Actv.Panel);
   mainScene.Config.main.R.addons.weather.Msg_Actv.main.Panel.Name := 'Main_Config_Addons_Weather_Activate_Msg_Main';
@@ -532,7 +534,7 @@ begin
   uDB_AUser.Local.addons.Weather_D.Yahoo.Iconset_Count := 3;
   uDB_AUser.Local.addons.Weather_D.Yahoo.Iconset := 'default';
   uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count := -1;
-  uDB_AUser.Local.addons.Weather_D.Yahoo.Metric:= 'imperial';
+  uDB_AUser.Local.addons.Weather_D.Yahoo.Metric := 'imperial';
   uDB_AUser.Local.addons.Weather_D.Yahoo.Degree := 'celcius';
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Iconset_Count := 1;
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Iconset := 'default';
@@ -542,37 +544,37 @@ begin
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.API := '';
   uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Language := 'english';
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'WEATHER', '1', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'WEATHER', '1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'MENU_POSITION', uDB_AUser.Local.addons.Weather_D.Menu_Position.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'FIRST_POP', uDB_AUser.Local.addons.Weather_D.First_Pop.ToInteger.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OLD_BACKUP', uDB_AUser.Local.addons.Weather_D.Old_Backup.ToInteger.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER_COUNT', uDB_AUser.Local.addons.Weather_D.Provider_Count.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', uDB_AUser.Local.addons.Weather_D.Provider, 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', uDB_AUser.Local.addons.Weather_D.Provider, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_ICONSET_COUNT', uDB_AUser.Local.addons.Weather_D.Yahoo.Iconset_Count.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_ICONSET', uDB_AUser.Local.addons.Weather_D.Yahoo.Iconset, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_METRIC', uDB_AUser.Local.addons.Weather_D.Yahoo.Metric, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'YAHOO_DEGREE_TYPE', uDB_AUser.Local.addons.Weather_D.Yahoo.Degree, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_ICONSET_COUNT', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Iconset_Count.ToString,
-    'USER_ID', uDB_AUser.Local.Num.ToString);
+    'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_ICONSET', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Iconset, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_METRIC', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Metric, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_DEGREE_TYPE', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Degree, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_APIKEY', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.API, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'OWM_LANGUAGE', uDB_AUser.Local.addons.Weather_D.OpenWeatherMap.Language, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
 
   mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Text := 'Active';
   mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Lime;
@@ -615,7 +617,8 @@ begin
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Position.Y := (mainScene.Config.Panel.Height / 2) - 100;
   mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel.Visible := True;
 
-  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, TAlphaColorRec.DeepSkyBlue, 'Deactivate Weather addon', False, nil);
+  CreateHeader(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel, 'IcoMoon-Free', #$e996, TAlphaColorRec.Deepskyblue, 'Deactivate Weather addon',
+    False, nil);
 
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel := TPanel.Create(mainScene.Config.main.R.addons.weather.Msg_Deactv.Panel);
   mainScene.Config.main.R.addons.weather.Msg_Deactv.main.Panel.Name := 'Main_Config_Addons_Weather_Deactivate_Msg_Main';
@@ -691,8 +694,8 @@ begin
   Dec(uDB_AUser.Local.addons.Active, 1);
   uDB_AUser.Local.addons.weather := False;
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'WEATHER', 'FALSE', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'WEATHER', 'FALSE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
   mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Text := 'Inactive';
   mainScene.Config.main.R.addons.Icons_Info[2].Activeted.Color := TAlphaColorRec.Red;
@@ -724,10 +727,10 @@ begin
   uDB_AUser.Local.addons.Azplay := True;
   uDB_AUser.Local.addons.Azplay_D.Menu_Position := uDB_AUser.Local.addons.Active;
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'AZPLAY', '1', 'USER_ID', uDB_AUser.Local.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'ACTIVE', uDB_AUser.Local.addons.Active.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDONS', 'AZPLAY', '1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_AZPLAY', 'MENU_POSITION', uDB_AUser.Local.addons.Azplay_D.Menu_Position.ToString, 'USER_ID',
-    uDB_AUser.Local.Num.ToString);
+    uDB_AUser.Local.USER.Num.ToString);
 
   mainScene.Config.main.R.addons.Icons_Info[4].Activeted.Text := 'Active';
   mainScene.Config.main.R.addons.Icons_Info[4].Activeted.Color := TAlphaColorRec.Lime;

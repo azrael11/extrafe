@@ -42,9 +42,9 @@ procedure Update_Virtual_Keyboard(vState: Boolean);
 begin
   uDB_AUser.Local.OPTIONS.Visual.Virtual_Keyboard := vState;
   if vState then
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'options', 'virtual_keyboard', '1', 'USER_ID', uDB_AUser.Local.Num.ToString)
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'options', 'virtual_keyboard', '1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString)
   else
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'options', 'virtual_keyboard', '0', 'USER_ID', uDB_AUser.Local.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'options', 'virtual_keyboard', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 end;
 
 end.

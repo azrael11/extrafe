@@ -75,7 +75,7 @@ begin
     0:
       begin
         uEmu_Arcade_Mame_Game_SetAll.Create_Loading_Game;
-        play_count := uDB.Query_Select(uDB.Arcade_Query, 'play_count_id_'+ uDB_AUser.Local.Num.ToString , 'mame_status', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+        play_count := uDB.Query_Select(uDB.Arcade_Query, 'play_count_id_'+ uDB_AUser.Local.USER.Num.ToString , 'mame_status', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
         vMame.Scene.PopUp.Line3_Value.Text := play_count;
         vGame_Timer := TTimer.Create(Emu_Form);
         vGame_Timer.Interval := 2500;
@@ -119,13 +119,13 @@ procedure Add_To_Favorites;
 begin
   if vMame.Scene.Gamelist.List_Line[10].Text.Text = 'Add to favorites' then
   begin
-    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '1', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, '1', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Gamelist.List_Line[10].Text.Text := 'Remove from favorites';
     inc(mame.Favorites.Count, 1);
   end
   else
   begin
-    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.Num.ToString, '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+    uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString, '0', 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
     vMame.Scene.Gamelist.List_Line[10].Text.Text := 'Add to favorites';
     dec(mame.Favorites.Count, 1);
   end;
@@ -144,7 +144,7 @@ begin
   uEmu_Commands.Run_Game(emulation.Arcade[0].Name_Exe, romName, emulation.Arcade[0].Emu_Path, 0);
   play_int := play_count.ToInteger;
   inc(play_int, 1);
-  uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.Num.ToString, play_int.ToString, 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
+  uDB.Query_Update(uDB.Arcade_Query, 'mame_status', 'play_count_id_' + uDB_AUser.Local.USER.Num.ToString, play_int.ToString, 'romname', mame.Gamelist.ListRoms[mame.Gamelist.Selected]);
   FreeAndNil(vMame.Scene.PopUp.Back);
   vMame.Scene.Left_Blur.Enabled := False;
   vMame.Scene.Right_Blur.Enabled := False;

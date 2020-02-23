@@ -88,7 +88,7 @@ begin
     mainScene.Config.main.R.Emulators.Images[vi].Name := 'Main_Config_Emulators_Image_' + IntToStr(vi);
     mainScene.Config.main.R.Emulators.Images[vi].Parent := mainScene.Config.main.R.Emulators.Groupbox;
     mainScene.Config.main.R.Emulators.Images[vi].SetBounds(4 + (vi * 118), 20, 70, 70);
-    mainScene.Config.main.R.Emulators.Images[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + cImages_Names[vi]);
+    mainScene.Config.main.R.Emulators.Images[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'emu\'+ cImages_Names[vi]);
     mainScene.Config.main.R.Emulators.Images[vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.main.R.Emulators.Images[vi].OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
     mainScene.Config.main.R.Emulators.Images[vi].OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
