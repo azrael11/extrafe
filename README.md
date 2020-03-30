@@ -5,7 +5,7 @@
 
 My Source repository for ExtraFE
 
-Current work in progress build version : <b> 0.9.2.25 </b>
+Current work in progress build version : <b> 0.9.2.26 </b>
 
 
 # Coding In ExtraFE
