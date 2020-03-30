@@ -1,3 +1,0 @@
-inherited MainForm_Windows: TMainForm_Windows
-  DesignerMasterStyle = 0
-end

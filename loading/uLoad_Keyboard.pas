@@ -19,8 +19,6 @@ uses
   uLoad_Login;
 
 procedure SetKey(vKey: String);
-var
-  vStr: String;
 begin
   if (UpperCase(vKey) <> 'SHIFT') and (UpperCase(vKey) <> '') then
   begin

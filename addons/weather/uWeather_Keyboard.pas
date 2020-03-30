@@ -23,8 +23,6 @@ uses
   uWeather_SetAll;
 
 procedure uWeather_Keyboard_SetKey(vKey: String);
-var
-  vi: Integer;
 begin
   if extrafe.prog.State = 'addon_weather_config_towns_add' then
   begin

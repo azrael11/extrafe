@@ -24,6 +24,7 @@ var
   vDots: Integer;
   vTimes: Integer;
   vTimer: TKEYBOARD_TIMER;
+  vBefore_Text: String;
 
 procedure Load;
 
@@ -42,9 +43,9 @@ uses
 
 procedure Load;
 const
-  cGen_Labels: array [0 .. 6] of string = ('Move UP', 'Move DOWN', 'Move LEFT', 'Move RIGHT', 'ACTION', 'ESCAPE', 'CONFIGURATION');
-  cEmu_Labels: array [0 .. 11] of string = ('Move UP', 'Move DOWN', 'Move LEFT', 'Move RIGHT', 'ACTION', 'ESCAPE', 'FAVORITE LIST', 'ADD FAVORITE',
-    'LISTS PANEL', 'FILTERS PANEL', 'SEARCH', 'CONFIGURATION');
+  cGen_Labels: array [0 .. 6] of string = ('MOVE UP', 'MOVE DOWN', 'MOVE LEFT', 'MOVE RIGHT', 'ACTION', 'ESCAPE', 'CONFIGURATION');
+  cEmu_Labels: array [0 .. 12] of string = ('MOVE UP', 'MOVE DOWN', 'MOVE LEFT', 'MOVE RIGHT', 'ACTION', 'ESCAPE', 'FAVORITE LIST', 'ADD FAVORITE',
+    'LISTS PANEL', 'FILTERS PANEL', 'SEARCH', 'SCREEN SAVER', 'CONFIGURATION');
 var
   vi, vk, vl: Integer;
 begin
@@ -81,7 +82,7 @@ begin
     mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Visible := True;
   end;
 
-  { General }
+  { Main }
   vl := 0;
   vk := 20;
   for vi := 0 to 6 do
@@ -108,7 +109,22 @@ begin
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Parent := mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi];
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Align := TAlignLayout.Client;
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].TextSettings.FontColor := TAlphaColorRec.White;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := 'Press Key ';
+    case vi of
+      0:
+        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Up;
+      1:
+        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Down;
+      2:
+        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Left;
+      3:
+        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Right;
+      4:
+        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Action;
+      5:
+        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Escape;
+      6:
+        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Config;
+    end;
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].TextSettings.HorzAlign := TTextAlign.Center;
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Font.Style := mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Font.Style +
       [TFontStyle.fsBold];
@@ -129,7 +145,7 @@ begin
   { Emulators }
   vl := 0;
   vk := 20;
-  for vi := 0 to 11 do
+  for vi := 0 to 12 do
   begin
     mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi] := TLabel.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[1]);
     mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Name := 'Main_Config_General_Keyboard_Emu_Label_' + vi.ToString;
@@ -153,7 +169,34 @@ begin
     mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Parent := mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi];
     mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Align := TAlignLayout.Client;
     mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].TextSettings.FontColor := TAlphaColorRec.White;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := 'Press Key ';
+    case vi of
+      0:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Up;
+      1:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Down;
+      2:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Left;
+      3:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Right;
+      4:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Action;
+      5:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Escape;
+      6:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Favorite;
+      7:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_FavoriteAdd;
+      8:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Lists;
+      9:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Search;
+      10:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Filters;
+      11:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_ScreenSaver;
+      12:
+        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Config;
+    end;
     mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].TextSettings.HorzAlign := TTextAlign.Center;
     mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Font.Style := mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Font.Style +
       [TFontStyle.fsBold];
@@ -202,52 +245,125 @@ end;
 
 procedure Save_To_Database(vKey: String);
 begin
+  if UpperCase(vKey) = 'LEFT' then
+    vKey := 'LEFT_ARROW'
+  else if UpperCase(vKey) = 'RIGHT' then
+    vKey := 'RIGHT_ARROW'
+  else if UpperCase(vKey) = 'UP' then
+    vKey := 'UP_ARROW'
+  else if UpperCase(vKey) = 'DOWN' then
+    vKey := 'DOWN_ARROW'
+  else
+    vKey := UpperCase(vKey);
+
   if vSelected_Tab = 0 then
   begin
     case vSelected_Label of
       0:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'up', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'main_up', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Up := vKey;
+        end;
       1:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'down', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'main_down', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Down := vKey;
+        end;
       2:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'left', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'main_left', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Left := vKey;
+        end;
       3:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'right', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'main_right', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Right := vKey;
+        end;
       4:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'enter', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'main_action', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Action := vKey;
+        end;
       5:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'esc', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'main_esc', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Escape := vKey;
+        end;
       6:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'config', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'main_config', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Config := vKey;
+        end;
     end;
   end
   else
   begin
     case vSelected_Label of
       0:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_up', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_up', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Up := vKey;
+        end;
       1:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_down', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_down', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Down := vKey;
+        end;
       2:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_left', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_left', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Left := vKey;
+        end;
       3:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_right', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_right', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Right := vKey;
+        end;
       4:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_action', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_action', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Action := vKey;
+        end;
       5:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_back', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_esc', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Escape := vKey;
+        end;
       6:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_favorite', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_fav', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Favorite := vKey;
+        end;
       7:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_addfavorite', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_addfav', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_FavoriteAdd := vKey;
+        end;
       8:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_lists', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_lists', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Lists := vKey;
+        end;
       9:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_search', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_search', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Search := vKey;
+        end;
       10:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_filters', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_filters', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Filters := vKey;
+        end;
       11:
-        uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_config', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_screensaver', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_ScreenSaver := vKey;
+        end;
+      12:
+        begin
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'map_keyboard', 'emu_config', vKey, 'user_id', uDB_AUser.Local.USER.Num.ToString);
+          uDB_AUser.Local.MAP.Keyboard.Emu_Config := vKey;
+        end;
     end;
   end;
 end;
@@ -304,13 +420,13 @@ begin
   begin
     if vSelected_Tab = 0 then
     begin
-      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].Text := 'Press Key';
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].Text := vBefore_Text;
       mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].TextSettings.FontColor := TAlphaColorRec.White;
       mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vSelected_Label].Fill.Color := TAlphaColorRec.Deepskyblue;
     end
-    else
+    else if vSelected_Tab = 1 then         
     begin
-      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vSelected_Label].Text := 'Press Key';
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vSelected_Label].Text := vBefore_Text;
       mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vSelected_Label].TextSettings.FontColor := TAlphaColorRec.White;
       mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vSelected_Label].Fill.Color := TAlphaColorRec.Deepskyblue;
     end;

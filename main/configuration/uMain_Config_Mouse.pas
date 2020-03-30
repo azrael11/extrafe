@@ -344,6 +344,7 @@ begin
       if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
         (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
       begin
+        uMain_Config_General_Keyboard.vBefore_Text := TText(Sender).Text;
         TText(Sender).Text := 'Click to Change';
         TText(Sender).TextSettings.FontColor := TAlphaColorRec.Black;
       end;
@@ -403,7 +404,7 @@ begin
       if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
         (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
       begin
-        TText(Sender).Text := 'Press any Key';
+        TText(Sender).Text := vBefore_Text;
         TText(Sender).TextSettings.FontColor := TAlphaColorRec.White;
       end;
     end;

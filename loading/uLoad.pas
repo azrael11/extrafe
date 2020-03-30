@@ -48,6 +48,7 @@ uses
   uLoad_Addons,
   uLoad_Emulation,
   uLoad_Sound,
+  uLoad_Video,
   uLoad_Stats,
   uDB,
   uDB_AUser;
@@ -179,7 +180,8 @@ begin
   if Default_Load = False then
   begin
     extrafe.prog.State := 'loading';
-    uLoad_Sound.Start_Sound_System;
+    uLoad_Sound.Load;
+    uLoad_Video.Load;
     SetLoadingScreen;
     extrafe.user_login := False;
     Default_Load := True;

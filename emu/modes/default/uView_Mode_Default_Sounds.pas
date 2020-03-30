@@ -16,20 +16,24 @@ uses
 
 procedure Load;
 begin
+  { General Click }
+  Emu_VM_Default_Var.Sounds.Gen_Click := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'gen_click.mp3'), 0, 0, 0
+{$IFDEF UNICODE} or BASS_UNICODE
+{$ENDIF});
   { Favorite }
-  Emu_VM_Video_Var.Sounds.Fav_add := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'fav.mp3'), 0, 0, 0
+  Emu_VM_Default_Var.Sounds.Fav_add := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'fav.mp3'), 0, 0, 0
 {$IFDEF UNICODE} or BASS_UNICODE
 {$ENDIF});
 
-  Emu_VM_Video_Var.Sounds.Fav_remove := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'fav_r.mp3'), 0, 0, 0
+  Emu_VM_Default_Var.Sounds.Fav_remove := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'fav_r.mp3'), 0, 0, 0
 {$IFDEF UNICODE} or BASS_UNICODE
 {$ENDIF});
   { Virtual Keyboard }
-  Emu_VM_Video_Var.Sounds.VK_Click := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'vk_click.mp3'), 0, 0, 0
+  Emu_VM_Default_Var.Sounds.VK_Click := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'vk_click.mp3'), 0, 0, 0
 {$IFDEF UNICODE} or BASS_UNICODE
 {$ENDIF});
 
-  Emu_VM_Video_Var.Sounds.VK_Wrong := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'vk_wrong.mp3'), 0, 0, 0
+  Emu_VM_Default_Var.Sounds.VK_Wrong := BASS_StreamCreateFile(False, PChar(Emu_XML.Sounds_Path + 'vk_wrong.mp3'), 0, 0, 0
 {$IFDEF UNICODE} or BASS_UNICODE
 {$ENDIF});
 
@@ -37,8 +41,8 @@ end;
 
 procedure Free;
 begin
-  BASS_StreamFree(Emu_VM_Video_Var.Sounds.Fav_add);
-  BASS_StreamFree(Emu_VM_Video_Var.Sounds.Fav_remove);
+  BASS_StreamFree(Emu_VM_Default_Var.Sounds.Fav_add);
+  BASS_StreamFree(Emu_VM_Default_Var.Sounds.Fav_remove);
 end;
 
 end.

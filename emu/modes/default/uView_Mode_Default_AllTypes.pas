@@ -95,12 +95,28 @@ type
   end;
 
 type
+  TEMU_VIEW_MODE_XML_LISTS_LIST = record
+    name: string;
+    path: string;
+    logo: string;
+    pcb: string;
+  end;
+
+type
+  TEMU_VIEW_MODE_XML_LISTS = record
+    path: String;
+    num: String;
+    list: array [0 .. 100] of TEMU_VIEW_MODE_XML_LISTS_LIST;
+  end;
+
+type
   TEMU_VIEW_MODE_XML = record
     emu: TEMU_VIEW_MODE_XML_EMU;
     main: TEMU_VIEW_MODE_XML_MAIN;
     config: TEMU_VIEW_MODE_XML_CONFIG;
     game: TEMU_VIEW_MODE_XML_GAME;
     filters: TEMU_VIEW_MODE_XML_FILTERS;
+    lists: TEMU_VIEW_MODE_XML_LISTS;
     Images_Path: String;
     Sounds_Path: String;
   end;
@@ -120,6 +136,7 @@ type
 type
   TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS_WINDOW_PANELS = record
     Panel: TPanel;
+    Combine: TRectangle;
     Filter_Name: TText;
     Choose: TComboBox;
     Sec_Choose: TComboBox;
@@ -156,10 +173,23 @@ type
 
 type
   TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_LIST = record
+    item: TImage;
+    item_ref: TReflectionEffect;
+    item_glow: TGlowEffect;
     image: TImage;
-    OutLine: TRadiantRectangle;
-    OutLine_Glow: TGlowEffect;
     Text: TText;
+    Panel: TPanel;
+  end;
+
+type
+  TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_CALL = record
+    Panel: TCalloutPanel;
+    pcb: TImage;
+    Count: TText;
+    Count_Value: TText;
+    Text: TText;
+    Black: TRectangle;
+    Lines: array [0 .. 9] of TText;
   end;
 
 type
@@ -172,12 +202,13 @@ type
     List_Control: TTabControl;
     List_Control_Item: array of TTabItem;
     list: array of TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_LIST;
+    call: array of TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_CALL;
   end;
 
 type
   TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS = record
     Back: TImage;
-    Lists: TText;
+    lists: TText;
     Lists_Glow: TGlowEffect;
     Lists_Text: TText;
     Window: TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_WINDOW;
@@ -211,7 +242,7 @@ type
   TEMU_VIEW_MODE_VIDEO_GAMELIST = record
     Info: TEMU_VIEW_MODE_VIDEO_GAMELIST_INFO;
     games: TEMU_VIEW_MODE_VIDEO_GAMELIST_GAMES;
-    Lists: TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS;
+    lists: TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS;
     filters: TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS;
     Search: TEMU_VIEW_MODE_VIDEO_GAMELIST_SEARCH;
     Gamelist: TEMU_VIEW_MODE_VIDEO_GAMELIST_INFO;
@@ -237,10 +268,13 @@ type
 type
   TEMU_VIEW_MODE_VIDEO_MEDIA_VIDEO = record
     Back: TImage;
+    Marquee: TImage;
     Game_Info: TEMU_VIEW_MODE_VIDEO_MEDIA_ACTION_GAMEINFO;
     Video_Back: TImage;
     Video: TFmxPasLibVlcPlayer;
     Video_Timer_Cont: TTimer;
+    Video_Logo_Fullscreen: TImage;
+    Video_Text_Fullscreen: TText;
   end;
 
 type
@@ -284,6 +318,8 @@ type
     Headline: TText;
     Line: TRadiantLine;
     Box: TALVertScrollBox;
+    Categories: array [0 .. 30] of TText;
+
   end;
 
 type
@@ -388,6 +424,8 @@ type
     Active_Video: String;
     Old_Width: Integer;
     Loaded: Boolean;
+    Screensaver: Boolean;
+    Times: Integer;
   end;
 
 type
@@ -397,17 +435,23 @@ type
     Roms: TstringList;
     Paths: TstringList;
     Selected: Integer;
+    Old_Selected: Integer;
     Total_Games: Integer;
   end;
 
 type
   TEMU_VIEW_MODE_VIDEO_VARIABLES_FILTERS = record
-    Roms: TstringList;
-    games: TstringList;
+    Roms: TstringList; // Current Roms
+    games: TstringList; // Current Game names
+    Temp_Roms: TstringList; // Roms before action done
+    Temp_Games: TstringList; // Game names before action done
+    Temp_Roms_Final: TstringList; // Roms after done
+    Temp_Games_Final: TstringList; // Game names after done
     list: TstringList;
     List_Added: TstringList;
     Added: Integer;
     Done: Boolean;
+    First_Selection: Boolean;
   end;
 
 type
@@ -443,6 +487,7 @@ type
 
 type
   TEMU_VIEW_MODE_VIDEO_VARIABLES_SOUNDS = record
+    Gen_Click: HSAMPLE;
     Fav_add: HSAMPLE;
     Fav_remove: HSAMPLE;
     VK_Click: HSAMPLE;
@@ -452,7 +497,7 @@ type
 type
   TEMU_VIEW_MODE_VIDEO_VARIABLES_FAVORITES = record
     game_is: Boolean;
-    count: Integer;
+    Count: Integer;
     Roms: TstringList;
     games: TstringList;
   end;
@@ -469,6 +514,7 @@ type
     Query: TFDQuery;
     User_Num: Integer;
     Config_Open: Boolean;
+    Lists_Open: Boolean;
     Filters_Open: Boolean;
     Game_Mode: Boolean;
     Game_Loading: Boolean;
@@ -495,9 +541,9 @@ type
 procedure load_images(vPath: String);
 
 var
-  Emu_VM_Video: TEMU_VIEW_MODE_VIDEO;
+  Emu_VM_Default: TEMU_VIEW_MODE_VIDEO;
   Emu_XML: TEMU_VIEW_MODE_XML;
-  Emu_VM_Video_Var: TEMU_VIEW_MODE_VIDEO_VARIABLES;
+  Emu_VM_Default_Var: TEMU_VIEW_MODE_VIDEO_VARIABLES;
 
   vBack_Task: ITask;
   vAll_ANI: TEMU_VIEW_MODE_ANIMATIONS;
@@ -531,16 +577,24 @@ begin
         RaiseLastWandError(aWand);
       vWidth := ALImageMagickLib.MagickGetImageWidth(aWand);
       vHeight := ALImageMagickLib.MagickGetImageHeight(aWand);
-      if ALImageMagickLib.MagickResizeImage(aWand, 1920, 1080, LanczosFilter) <> MagickTrue then
-        RaiseLastWandError(aWand);
+      if vWidth > vHeight then
+      begin
+        if ALImageMagickLib.MagickResizeImage(aWand, 1920, vHeight, BoxFilter) <> MagickTrue then
+          RaiseLastWandError(aWand)
+      end
+      else
+      begin
+        if ALImageMagickLib.MagickResizeImage(aWand, vWidth, 1080, BoxFilter) <> MagickTrue then
+          RaiseLastWandError(aWand)
+      end;
       vWidth := ALImageMagickLib.MagickGetImageWidth(aWand);
       vHeight := ALImageMagickLib.MagickGetImageHeight(aWand);
-      if ALImageMagickLib.MagickWriteImage(aWand, PAnsiChar(AnsiString(extrafe.prog.path + 'temp.png'))) <> MagickTrue then
+      if ALImageMagickLib.MagickWriteImage(aWand, PAnsiChar(AnsiString(Emu_XML.Images_Path + 'temp.png'))) <> MagickTrue then
         RaiseLastWandError(aWand);
       ALImageMagickLib.DestroyMagickWand(aWand);
     end);
   vBack_Task.Start;
-  Emu_VM_Video.main_upper_ani.Enabled := False;
+  Emu_VM_Default.main_upper_ani.Enabled := False;
 end;
 
 { TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG }
@@ -549,8 +603,8 @@ procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG.OnFinish(Sender: TObj
 begin
   if TFloatAnimation(Sender).name = 'Main_Right_Animation' then
   begin
-    if Emu_VM_Video_Var.Config_Open then
-      uView_Mode_Default.Create_Configuration(Emu_VM_Video.main);
+    if Emu_VM_Default_Var.Config_Open then
+      uView_Mode_Default.Create_Configuration(Emu_VM_Default.main);
     uEmu_Emu.Mouse_Action('Emu_Settings');
   end;
 end;
@@ -559,14 +613,15 @@ end;
 
 procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST.OnTimer(Sender: TObject);
 begin
-  if Emu_VM_Video.Gamelist.Gamelist.Timer.Enabled then
+  if Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled then
   begin
-    if Emu_VM_Video_Var.Favorites_Open then
-      uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Video_Var.Gamelist.Selected, Emu_VM_Video_Var.favorites.Roms)
+    if Emu_VM_Default_Var.Favorites_Open then
+      uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.favorites.Roms)
     else
-      uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Video_Var.Gamelist.Selected, Emu_VM_Video_Var.Gamelist.Roms);
-    Emu_VM_Video_Var.Gamelist.Loaded := True;
-    Emu_VM_Video.Gamelist.Gamelist.Timer.Enabled := False;
+      uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Roms);
+    uView_Mode_Default_Actions.Refresh_Get_BarInfo;
+    Emu_VM_Default_Var.Gamelist.Loaded := True;
+    Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled := False;
   end;
 end;
 
@@ -575,45 +630,90 @@ end;
 procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO.OnTimer(Sender: TObject);
 var
   vWidth, vHeight: Cardinal;
+  vRandom_Video: Integer;
+  vVideo_Find: Boolean;
 begin
-  if Emu_VM_Video_Var.Video.Loaded = False then
+  if Emu_VM_Default_Var.Video.Loaded = False then
   begin
-    if Emu_VM_Video.Media.Video.Video.GetVideoDimension(vWidth, vHeight) then
+    if Emu_VM_Default.Media.Video.Video.GetVideoDimension(vWidth, vHeight) then
     begin
-      if Emu_VM_Video.Media.Video.Video.GetVideoWidth <> 0 then
+      if Emu_VM_Default.Media.Video.Video.GetVideoWidth <> 0 then
       begin
-        Emu_VM_Video_Var.Video.Loaded := True;
-        if Emu_VM_Video.Media.Video.Video.GetVideoWidth <> Emu_VM_Video_Var.Video.Old_Width then
+        Emu_VM_Default_Var.Video.Loaded := True;
+        if Emu_VM_Default.Media.Video.Video.GetVideoWidth <> Emu_VM_Default_Var.Video.Old_Width then
         begin
-          if Emu_VM_Video.Media.Video.Video.GetVideoWidth > Emu_VM_Video.Media.Video.Video.GetVideoHeight then
-            Emu_VM_Video.Media.Video.Video_Back.SetBounds(50, 150, 650, 488)
+          if Emu_VM_Default.Media.Video.Video.GetVideoWidth > Emu_VM_Default.Media.Video.Video.GetVideoHeight then
+            Emu_VM_Default.Media.Video.Video_Back.SetBounds(50, 130, 650, 488)
           else
-            Emu_VM_Video.Media.Video.Video_Back.SetBounds(137, 100, 488, 650);
+            Emu_VM_Default.Media.Video.Video_Back.SetBounds(137, 130, 488, 650);
         end;
-        Emu_VM_Video.Media.Video.Game_Info.Layout.SetBounds(0, -50, Emu_VM_Video.Media.Video.Video_Back.width, 50);
-        Emu_VM_Video.Media.Video.Game_Info.favorite.SetBounds(Emu_VM_Video.Media.Video.Game_Info.Layout.width - 60, 5, 60, 50);
-        Emu_VM_Video_Var.Video.Old_Width := Emu_VM_Video.Media.Video.Video.GetVideoWidth;
+        if Emu_VM_Default_Var.Favorites_Open then
+        begin
+          if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.Gamelist.Selected] + '.png')
+          then
+            Emu_VM_Default.Media.Video.Marquee.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.favorites.Roms
+              [Emu_VM_Default_Var.Gamelist.Selected] + '.png')
+          else
+            Emu_VM_Default.Media.Video.Marquee.Bitmap := nil;
+        end
+        else
+        begin
+          if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.Gamelist.Roms[Emu_VM_Default_Var.Gamelist.Selected] + '.png')
+          then
+            Emu_VM_Default.Media.Video.Marquee.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.Gamelist.Roms
+              [Emu_VM_Default_Var.Gamelist.Selected] + '.png')
+          else
+            Emu_VM_Default.Media.Video.Marquee.Bitmap := nil;
+        end;
+        Emu_VM_Default.Media.Video.Game_Info.Layout.SetBounds(0, -50, Emu_VM_Default.Media.Video.Video_Back.width, 50);
+        Emu_VM_Default.Media.Video.Game_Info.favorite.SetBounds(Emu_VM_Default.Media.Video.Game_Info.Layout.width - 60, 5, 60, 50);
+        Emu_VM_Default_Var.Video.Old_Width := Emu_VM_Default.Media.Video.Video.GetVideoWidth;
         Refresh_Load_Flyers;
       end;
     end;
   end;
 
-  if Emu_VM_Video_Var.Video.Loaded then
+  if (Emu_VM_Default_Var.Video.Loaded) and (Emu_VM_Default_Var.Video.Screensaver = False) then
   begin
-    if Emu_VM_Video.Media.Video.Video.GetVideoPosInPercent > 98 then
-      Emu_VM_Video.Media.Video.Video.play(Emu_VM_Video_Var.Video.Active_Video);
+    if Emu_VM_Default.Media.Video.Video.GetVideoPosInPercent > 98 then
+    begin
+      if Emu_VM_Default_Var.Video.Times < 2 then
+      begin
+        Emu_VM_Default.Media.Video.Video.play(Emu_VM_Default_Var.Video.Active_Video);
+        Inc(Emu_VM_Default_Var.Video.Times, 1);
+      end
+      else
+        uView_Mode_Default_Actions.Screensaver;
+    end;
+  end
+  else if (Emu_VM_Default_Var.Video.Loaded) and (Emu_VM_Default_Var.Video.Screensaver) then
+  begin
+    if Emu_VM_Default.Media.Video.Video.GetVideoPosInPercent > 98 then
+    begin
+      vVideo_Find := False;
+      repeat
+        Randomize;
+        vRandom_Video := Random(Emu_VM_Default_Var.Gamelist.Total_Games);
+        if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + Emu_VM_Default_Var.Gamelist.Roms[vRandom_Video] + '.mp4') then
+        begin
+          Emu_VM_Default.Media.Video.Video.play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + Emu_VM_Default_Var.Gamelist.Roms[vRandom_Video] + '.mp4');
+          Emu_VM_Default.Media.Video.Video_Text_Fullscreen.Text := Emu_VM_Default_Var.Gamelist.games[vRandom_Video];
+          vVideo_Find := True;
+        end;
+      until vVideo_Find = True;
+    end;
   end;
 
   if vBack_Task <> nil then
   begin
-    if (vBack_Task.Status = TTaskStatus.Completed) and (FileExists(extrafe.prog.path + 'temp.png')) then
+    if (vBack_Task.Status = TTaskStatus.Completed) and (FileExists(Emu_XML.Images_Path + 'temp.png')) then
     begin
-      if Emu_VM_Video.main_upper_ani.Enabled = False then
+      if Emu_VM_Default.main_upper_ani.Enabled = False then
       begin
-        Emu_VM_Video.main_upper_ani.Duration := 0.05;
-        Emu_VM_Video.main_upper_ani.StartValue := 1;
-        Emu_VM_Video.main_upper_ani.StopValue := 0;
-        Emu_VM_Video.main_upper_ani.Start;
+        Emu_VM_Default.main_upper_ani.Duration := 0.05;
+        Emu_VM_Default.main_upper_ani.StartValue := 1;
+        Emu_VM_Default.main_upper_ani.StopValue := 0;
+        Emu_VM_Default.main_upper_ani.Start;
       end;
     end;
   end;
@@ -625,21 +725,23 @@ procedure TEMU_VIEW_MODE_ANIMATIONS.OnFinish(Sender: TObject);
 begin
   if TFloatAnimation(Sender).name = 'Emu_Main_Upper_Animation' then
   begin
-    if Emu_VM_Video.main_upper.Opacity <> 1 then
+    if Emu_VM_Default.main_upper.Opacity <> 1 then
     begin
-      Emu_VM_Video.main_upper.Bitmap.LoadFromFile(extrafe.prog.path + 'temp.png');
-      Emu_VM_Video.main_upper_ani.Duration := 0.2;
-      Emu_VM_Video.main_upper_ani.StartValue := 0;
-      Emu_VM_Video.main_upper_ani.StopValue := 1;
-      Emu_VM_Video.main_upper_ani.Start;
-      TFile.Delete(extrafe.prog.path + 'temp.png');
+      if FileExists(Emu_XML.Images_Path + 'temp.png') then
+      begin
+        Emu_VM_Default.main_upper.Bitmap.LoadFromFile(Emu_XML.Images_Path + 'temp.png');
+        Emu_VM_Default.main_upper_ani.Duration := 0.2;
+        Emu_VM_Default.main_upper_ani.StartValue := 0;
+        Emu_VM_Default.main_upper_ani.StopValue := 1;
+        Emu_VM_Default.main_upper_ani.Start;
+        TFile.Delete(Emu_XML.Images_Path + 'temp.png');
+      end;
     end;
   end
   else if TFloatAnimation(Sender).name = 'Emu_Game_Favorite_3D_Selected_Animation' then
   begin
-    Emu_VM_Video.GameMenu.favorite.Ani.Start;
+    Emu_VM_Default.GameMenu.favorite.Ani.Start;
   end;
-
 end;
 
 end.

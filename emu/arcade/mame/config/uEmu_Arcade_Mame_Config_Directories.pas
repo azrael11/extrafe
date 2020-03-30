@@ -430,7 +430,7 @@ begin
       8:
         begin
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees := vdir;
-          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MARQUEES', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+          uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'MARQUEESS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
       9:
         begin

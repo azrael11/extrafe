@@ -192,7 +192,9 @@ uses
   uView_Mode_Default_Joy in 'emu\modes\default\uView_Mode_Default_Joy.pas',
   uView_Mode_Default_Key in 'emu\modes\default\uView_Mode_Default_Key.pas',
   uView_Mode_Default_Mouse in 'emu\modes\default\uView_Mode_Default_Mouse.pas',
-  uView_Mode_Default_Sounds in 'emu\modes\default\uView_Mode_Default_Sounds.pas';
+  uView_Mode_Default_Sounds in 'emu\modes\default\uView_Mode_Default_Sounds.pas',
+  uView_Mode_Default_Actions_Lists in 'emu\modes\default\uView_Mode_Default_Actions_Lists.pas',
+  uLoad_Video in 'loading\uLoad_Video.pas';
 
 {$R *.res}
 

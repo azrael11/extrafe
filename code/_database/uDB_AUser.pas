@@ -259,6 +259,7 @@ type
     Position: Integer;
     Name: String;
     p_Images: String;
+    p_Videos: String;
     Media: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_MEDIA;
     Mame: Boolean;
     Mame_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_ARCADE_MAME;
@@ -287,6 +288,7 @@ type
     Position: Integer;
     Name: String;
     p_Images: String;
+    p_Videos: String;
     Acorn_Archimedes: Boolean;
     Amiga: Boolean;
     Amstrad: Boolean;
@@ -307,6 +309,7 @@ type
     Position: Integer;
     Name: String;
     p_Images: String;
+    p_Videos: String;
     Panasonic_3DO: Boolean;
     Amiga_CD32: Boolean;
     Atari_2600: Boolean;
@@ -346,6 +349,7 @@ type
     Position: Integer;
     Name: String;
     p_Images: String;
+    p_Videos: String;
     Atari_Lynx: Boolean;
     Neo_Geo_Pocket: Boolean;
     GameGear: Boolean;
@@ -368,6 +372,7 @@ type
     Position: Integer;
     Name: String;
     p_Images: String;
+    p_Videos: String;
     Visual_Pinball: Boolean;
     Future_Pinball: Boolean;
   end;
@@ -441,21 +446,22 @@ type
     Down: String;
     Left: String;
     Right: String;
-    Enter: String;
-    Esc: String;
+    Action: String;
+    Escape: String;
     Config: String;
     Emu_Up: String;
     Emu_Down: String;
     Emu_Left: String;
     Emu_Right: String;
     Emu_Action: String;
-    Emu_Back: String;
+    Emu_Escape: String;
     Emu_Favorite: String;
     Emu_FavoriteAdd: String;
     Emu_Lists: String;
     Emu_Search: String;
     Emu_Config: String;
     Emu_Filters: String;
+    Emu_ScreenSaver: String;
   end;
 
 type
@@ -605,6 +611,7 @@ begin
   Local.USER.Genre := uDB.ExtraFE_Query_Local.FieldByName('GENDER').AsBoolean;
   Local.USER.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_ONLINE').AsBoolean;
 
+  {GENERAL}
   vQuery := 'SELECT * FROM OPTIONS WHERE USER_ID=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
@@ -613,6 +620,36 @@ begin
   uDB.ExtraFE_Query_Local.First;
   Local.OPTIONS.Visual.Virtual_Keyboard := uDB.ExtraFE_Query_Local.FieldByName('VIRTUAL_KEYBOARD').AsBoolean;
 
+  vQuery := 'SELECT * FROM map_keyboard WHERE user_id='+ vUser_Num;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+
+  Local.MAP.Keyboard.Up:= uDB.ExtraFE_Query_Local.FieldByName('main_up').AsString;
+  Local.MAP.Keyboard.Down:= uDB.ExtraFE_Query_Local.FieldByName('main_down').AsString;
+  Local.MAP.Keyboard.Left:= uDB.ExtraFE_Query_Local.FieldByName('main_left').AsString;
+  Local.MAP.Keyboard.Right:= uDB.ExtraFE_Query_Local.FieldByName('main_right').AsString;
+  Local.MAP.Keyboard.Action:= uDB.ExtraFE_Query_Local.FieldByName('main_action').AsString;
+  Local.MAP.Keyboard.Escape:= uDB.ExtraFE_Query_Local.FieldByName('main_escape').AsString;
+  Local.MAP.Keyboard.Config:= uDB.ExtraFE_Query_Local.FieldByName('main_config').AsString;
+  Local.MAP.Keyboard.Emu_Up:= uDB.ExtraFE_Query_Local.FieldByName('emu_up').AsString;
+  Local.MAP.Keyboard.Emu_Down:= uDB.ExtraFE_Query_Local.FieldByName('emu_down').AsString;
+  Local.MAP.Keyboard.Emu_Left:= uDB.ExtraFE_Query_Local.FieldByName('emu_left').AsString;
+  Local.MAP.Keyboard.Emu_Right:= uDB.ExtraFE_Query_Local.FieldByName('emu_right').AsString;
+  Local.MAP.Keyboard.Emu_Action:= uDB.ExtraFE_Query_Local.FieldByName('emu_action').AsString;
+  Local.MAP.Keyboard.Emu_Escape:= uDB.ExtraFE_Query_Local.FieldByName('emu_escape').AsString;
+  Local.MAP.Keyboard.Emu_Favorite:= uDB.ExtraFE_Query_Local.FieldByName('emu_fav').AsString;
+  Local.MAP.Keyboard.Emu_FavoriteAdd:= uDB.ExtraFE_Query_Local.FieldByName('emu_addfav').AsString;
+  Local.MAP.Keyboard.Emu_Filters:= uDB.ExtraFE_Query_Local.FieldByName('emu_filters').AsString;
+  Local.MAP.Keyboard.Emu_Lists:= uDB.ExtraFE_Query_Local.FieldByName('emu_lists').AsString;
+  Local.MAP.Keyboard.Emu_Search:= uDB.ExtraFE_Query_Local.FieldByName('emu_search').AsString;
+  Local.MAP.Keyboard.Emu_Config:= uDB.ExtraFE_Query_Local.FieldByName('emu_config').AsString;
+  Local.MAP.Keyboard.Emu_Screensaver:= uDB.ExtraFE_Query_Local.FieldByName('emu_screensaver').AsString;
+
+
+  {EMULATORS}
   vQuery := 'SELECT * FROM EMULATORS WHERE USER_ID=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
@@ -652,6 +689,12 @@ begin
   begin
     Local.EMULATORS.Arcade_D.p_Images := extrafe.prog.Path + 'emu\arcade\images\';
     uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'PATH_IMAGES', Local.EMULATORS.Arcade_D.p_Images, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  end;
+
+  if Local.EMULATORS.Arcade_D.p_Videos = '' then
+  begin
+    Local.EMULATORS.Arcade_D.p_Videos := extrafe.prog.Path + 'emu\arcade\videos\';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'arcade', 'PATH_VIDEOS', Local.EMULATORS.Arcade_D.p_Videos, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
 
   vQuery := 'SELECT * FROM COMPUTERS WHERE USER_ID=' + vUser_Num;

@@ -261,13 +261,7 @@ end;
 /// /////////////////////////////////////////////////////////////////////////////
 procedure Open_Filters;
 begin
-  if not ContainsText(extrafe.Prog.State, 'mame_filters') then
-  begin
-//    uEmu_Arcade_Mame_Filters.Load(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode);
-    extrafe.Prog.State := 'emu_mame_filters';
-  end
-  else
-    extrafe.Prog.State := 'emu_mame';
+  extrafe.Prog.State := 'emu_mame';
 end;
 
 procedure Open_Lists;

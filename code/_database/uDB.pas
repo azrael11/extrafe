@@ -66,7 +66,6 @@ procedure Query_Delete_Column(vDB_Conn: TFDConnection; vQuery: TFDQuery; vTable_
 procedure Query_Delete_Row(vQuery: TFDQuery; vTable_Name, vRec, vWhere: String);
 procedure Query_Delete_ALL_From_Table(vQuery: TFDQuery; vTable_Name: String);
 
-
 function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): String; Overload;
 // function Query_Select(vQuery: TFDQuery; vColumn, vTable, vRec, vWhere: String): TStringList; Overload;
 function Query_Count(vQuery: TFDQuery; vTable, vWhere, vCont: String): Integer;
@@ -136,9 +135,15 @@ begin
     //  ExtraFE_DB.Database := 'epiz_23299538_extrafe';
     //  ExtraFE_DB.Port := 3306; }
 
-  ExtraFE_DB.HostName := 'db4free.net';
+  { ExtraFE_DB.HostName := 'db4free.net';  Is working but bcs it is free it is very slow some times and not good for debugging
+    ExtraFE_DB.Port := 3306;
+    ExtraFE_DB.User := 'azrael11';
+    ExtraFE_DB.Password := '11azrael';
+    ExtraFE_DB.Database := 'extrafe'; }
+
+  ExtraFE_DB.HostName := 'localhost';
   ExtraFE_DB.Port := 3306;
-  ExtraFE_DB.User := 'azrael11';
+  ExtraFE_DB.User := 'arcazrael_11';
   ExtraFE_DB.Password := '11azrael';
   ExtraFE_DB.Database := 'extrafe';
 
@@ -353,7 +358,7 @@ var
 begin
   CodeSite.Send('Start Creating Default Tables for Registered User');
   Result := False;
-  vLocal_Num := (uDB_AUser.Local.USER.Num + 1).ToString;
+  vLocal_Num := (uDB_AUser.Local.User.Num + 1).ToString;
 
   { User Settings }
   vPath[0] := extrafe.prog.Path;
@@ -387,6 +392,21 @@ begin
   vValues := '"0"';
   Query_Insert(ExtraFE_Query_Local, 'OPTIONS', vColumns, vValues);
   CodeSite.Send(csmLevel4, 'Option Table Adding Successfully');
+
+  vColumns := 'user_id';
+  vValues := '"' + vLocal_Num + '"';
+  Query_Insert(ExtraFE_Query_Local, 'map_keyboard', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Keyboard mapping Table Adding Successfully');
+
+  vColumns := 'user_id';
+  vValues := '"' + vLocal_Num + '"';
+  Query_Insert(ExtraFE_Query_Local, 'map_mouse', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Mouse mapping Table Adding Successfully');
+
+  vColumns := 'user_id';
+  vValues := '"' + vLocal_Num + '"';
+  Query_Insert(ExtraFE_Query_Local, 'map_joystick', vColumns, vValues);
+  CodeSite.Send(csmLevel4, 'Joystick mapping Table Adding Successfully');
 
   { User Statistics data }
   vColumns := 'USER_ID';

@@ -697,7 +697,7 @@ begin
   uDB.Arcade_Query.Open;
   mame.Gamelist.Games_Count := uDB.Arcade_Query.Fields[0].AsInteger;
 
-  vQuery := 'select gamename, romname from games order by gamename asc';
+  vQuery := 'SELECT gamename, romname FROM games ORDER BY gamename ASC';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -726,7 +726,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  vQuery := 'select distinct year from games';
+  vQuery := 'SELECT DISTINCT year FROM games';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -745,7 +745,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  vQuery := 'select distinct manufacturer from games';
+  vQuery := 'SELECT DISTINCT manufacturer FROM games';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -764,7 +764,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  vQuery := 'select distinct genre from games';
+  vQuery := 'SELECT DISTINCT genre FROM games';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -783,7 +783,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  vQuery := 'select distinct monochrome from games';
+  vQuery := 'SELECT DISTINCT monochrome FROM games';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -802,7 +802,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  vQuery := 'select distinct languages from games';
+  vQuery := 'SELECT DISTINCT languages FROM games';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;

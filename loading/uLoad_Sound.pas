@@ -10,7 +10,7 @@ uses
   Bass,
   Bass_FX;
 
-procedure Start_Sound_System;
+procedure Load;
 procedure Load_Sounds;
 
 implementation
@@ -19,8 +19,10 @@ uses
   main,
   uLoad_AllTypes;
 
-procedure Start_Sound_System;
+procedure Load;
 begin
+
+
   // Edo ola prepei na mpoune se katastasi try with expections.
   if (HiWord(BASS_GetVersion)) <> BASSVERSION then
   begin

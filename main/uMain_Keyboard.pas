@@ -9,10 +9,13 @@ uses
 
 procedure SetKey(vKey: String);
 
+
 implementation
 
 uses
+  uDB_AUser,
   uMain,
+  uKeyboard,
   uLoad_AllTypes,
   uMain_Actions,
   uMain_Config,
@@ -23,16 +26,16 @@ procedure SetKey(vKey: String);
 begin
   if extrafe.prog.State = 'main' then
   begin
-    if UpperCase(vKey) = 'RIGHT' then
+    if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Right then
       uMain_Emulation.Slide_Right
-    else if UpperCase(vKey) = 'LEFT' then
+    else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Left then
       uMain_Emulation.Slide_Left
-    else if UpperCase(vKey) = 'ENTER' then
+    else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Action then
     begin
       if extrafe.prog.State = 'main' then
         uMain_Emulation.Trigger_Click(emulation.Selection.TabIndex)
     end
-    else if UpperCase(vKey) = 'ESC' then
+    else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Escape then
     begin
       if emulation.Level <> 0 then
       begin
@@ -42,7 +45,7 @@ begin
       else
         uMain.Exit;
     end
-    else if UpperCase(vKey) = 'S' then
+    else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Config then
       uMain_Config.ShowHide(extrafe.prog.State)
     else if UpperCase(vKey) = '1' then
       uMain_Actions.ShowHide_Addon(1000, extrafe.prog.State, 'time')
@@ -51,7 +54,7 @@ begin
   end
   else if extrafe.prog.State = 'main_exit' then
   begin
-    if UpperCase(vKey) = 'ESC' then
+    if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Escape then
       uMain.Exit_Stay
   end
   else if ContainsText(extrafe.prog.State, 'main_config') then

@@ -7,12 +7,14 @@ uses
   System.SysUtils,
   System.UITypes,
   System.UIConsts,
+  System.Math,
   FMX.Objects,
   FMX.Graphics,
   FMX.Effects,
   FMX.Ani,
   FMX.Types,
   FMX.Filter.Effects,
+  FmxPasLibVlcPlayerUnit,
   ALFmxTabControl;
 
 type
@@ -30,9 +32,15 @@ type
   end;
 
 type
+  TEMULATOR_INPUT_MOUSE_TABCONTROL = class
+    procedure AniTransition(const Sender: TObject; const ATransition: TALTabTransition; const aVelocity: Double; const aAnimation: TFloatAnimation);
+  end;
+
+type
   TEMULATOR_INPUT_MOUSE = record
     Image: TEMULATOR_INPUT_MOUSE_IMAGE;
     Text: TEMULATOR_INPUT_MOUSE_TEXT;
+    TabControl: TEMULATOR_INPUT_MOUSE_TABCONTROL;
   end;
 
 type
@@ -46,6 +54,8 @@ function Get_Computers_Image(vNum: Integer; vType: String): TBitmap;
 function Get_Consoles_Image(vNum: Integer; vType: String): TBitmap;
 function Get_Handhelds_Image(vNum: Integer; vType: String): TBitmap;
 function Get_Pinballs_Image(vNum: Integer; vType: String): TBitmap;
+
+function GetVideo(vNum, vLevel: Integer): String;
 
 procedure Create_Selection_Control;
 procedure Clear_Selection_Control;
@@ -161,21 +171,21 @@ begin
     Result := Get_Handhelds_Image(vNum, vType)
   else if emulation.Category[vNum].Name = 'pinballs' then
     Result := Get_Pinballs_Image(vNum, vType);
+end;
 
-  // if vType = 'logo' then
-  // begin
-  // if vLevel = 0 then
-  // Result.LoadFromFile(emulation.Category[vNum].Logo)
-  // else if vLevel = 1 then
-  // Result.LoadFromFile(emulation.Arcade[vNum].Logo);
-  // end
-  // else if vType = 'background' then
-  // begin
-  // if vLevel = 0 then
-  // Result.LoadFromFile(emulation.Category[vNum].Background)
-  // else if vLevel = 1 then
-  // Result.LoadFromFile(emulation.Arcade[vNum].Background);
-  // end;
+function GetVideo(vNum, vLevel: Integer): String;
+begin
+  if emulation.Category[vNum].Name = 'arcade' then
+    Result := uDB_AUser.Local.EMULATORS.Arcade_D.p_Videos + 'main_video.mp4'
+  else if emulation.Category[vNum].Name = 'computers' then
+    Result := uDB_AUser.Local.EMULATORS.Computers_D.p_Videos + 'main_video.mp4'
+  else if emulation.Category[vNum].Name = 'consoles' then
+    Result := uDB_AUser.Local.EMULATORS.Consoles_D.p_Videos + 'main_video.mp4'
+  else if emulation.Category[vNum].Name = 'handhelds' then
+    Result := uDB_AUser.Local.EMULATORS.Handhelds_D.p_Videos + 'main_video.mp4'
+  else if emulation.Category[vNum].Name = 'pinballs' then
+    Result := uDB_AUser.Local.EMULATORS.Pinballs_D.p_Videos + 'main_video.mp4'
+
 end;
 
 procedure Create_Selection_Control;
@@ -187,6 +197,7 @@ begin
   emulation.Selection.Parent := mainScene.Selection.Back;
   emulation.Selection.Width := mainScene.Selection.Back.Width;
   emulation.Selection.Height := mainScene.Selection.Back.Height;
+  emulation.Selection.OnAniTransitionInit := vEmu_Input.mouse.TabControl.AniTransition;
   emulation.Selection.Visible := True;
 
   emulation.Selection_Ani := TFloatAnimation.Create(emulation.Selection);
@@ -214,6 +225,15 @@ begin
   emulation.Selection_Tab[vTab].Background.Visible := True;
   emulation.Selection_Tab[vTab].Background.Bitmap := GetBitmap(vTab, vLevel, 'background');
 
+  emulation.Selection_Tab[vTab].Video_Pre := TFmxPasLibVlcPlayer.Create(emulation.Selection_Tab[vTab].Tab);
+  emulation.Selection_Tab[vTab].Video_Pre.Name := 'Emulator_Video_' + vTab.ToString;
+  emulation.Selection_Tab[vTab].Video_Pre.Parent := emulation.Selection_Tab[vTab].Tab;
+  emulation.Selection_Tab[vTab].Video_Pre.Width := 400;
+  emulation.Selection_Tab[vTab].Video_Pre.Height := 400;
+  emulation.Selection_Tab[vTab].Video_Pre.SetVideoAspectRatio('4:3');
+  emulation.Selection_Tab[vTab].Video_Pre.WrapMode := TImageWrapMode.Fit;
+  emulation.Selection_Tab[vTab].Video_Pre.Visible := isActive;
+
   emulation.Selection_Tab[vTab].Logo := TImage.Create(emulation.Selection_Tab[vTab].Tab);
   emulation.Selection_Tab[vTab].Logo.Name := 'Emulator_Logo_' + vTab.ToString;
   emulation.Selection_Tab[vTab].Logo.Parent := emulation.Selection_Tab[vTab].Tab;
@@ -228,9 +248,9 @@ begin
   emulation.Selection_Tab[vTab].Logo.Tag := vTab;
   emulation.Selection_Tab[vTab].Logo.Visible := True;
 
-  emulation.Selection_Tab[vTab].Logo_Gray := TMonochromeEffect.Create(emulation.Selection_Tab[vTab].Logo);
+  emulation.Selection_Tab[vTab].Logo_Gray := TMonochromeEffect.Create(emulation.Selection_Tab[vTab].Tab);
   emulation.Selection_Tab[vTab].Logo_Gray.Name := 'Emulator_Logo_Gray_' + IntToStr(vTab);
-  emulation.Selection_Tab[vTab].Logo_Gray.Parent := emulation.Selection_Tab[vTab].Logo;
+  emulation.Selection_Tab[vTab].Logo_Gray.Parent := emulation.Selection_Tab[vTab].Tab;
   emulation.Selection_Tab[vTab].Logo_Gray.Enabled := not isActive;
 
   emulation.Selection_Tab[vTab].Logo_Glow := TGlowEffect.Create(emulation.Selection_Tab[vTab].Logo);
@@ -274,6 +294,8 @@ begin
     emulation.Selection_Tab[vTab].Back_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
     emulation.Selection_Tab[vTab].Back_Glow.Enabled := False;
   end;
+
+  emulation.Number := 0;
 end;
 
 procedure Trigger_Emulator;
@@ -378,7 +400,13 @@ procedure Slide_Right;
 begin
   if extrafe.prog.State = 'main' then
     if emulation.Selection.TabCount - 1 <> emulation.Selection.TabIndex then
-      emulation.Selection.Next()
+    begin
+      emulation.Selection.Next();
+      emulation.Number := emulation.Selection.TabIndex;
+      if emulation.Selection_Tab[emulation.Active_Num].Logo_Gray.Enabled = False then
+        emulation.Selection_Tab[emulation.Active_Num].Video_Pre.Resume;
+    end;
+
 end;
 
 procedure Slide_Left;
@@ -436,6 +464,26 @@ procedure TEMULATOR_INPUT_MOUSE_TEXT.OnMouseLeave(Sender: TObject);
 begin
   if TText(Sender).Name = 'Emulator_Back_Level_' + TText(Sender).Tag.ToString then
     emulation.Selection_Tab[TText(Sender).Tag].Back_Glow.Enabled := False;
+end;
+
+{ TEMULATOR_INPUT_MOUSE_TABCONTROL }
+
+procedure TEMULATOR_INPUT_MOUSE_TABCONTROL.AniTransition(const Sender: TObject; const ATransition: TALTabTransition; const aVelocity: Double;
+  const aAnimation: TFloatAnimation);
+begin
+  // aVelocity = pixels per seconds given by the anicalculations
+  // ALTabControl1.Width - abs(ALTabControl1.activeTab.Position.X) = the number of pixel we need to scroll
+  // 6 = factor i choose to compensate the deceleration made by the quartic Interpolation
+  if CompareValue(aVelocity, 0) <> 0 then
+    aAnimation.Duration := abs((emulation.Selection.Width - abs(emulation.Selection.activeTab.Position.X)) / aVelocity) * 6
+  else
+    aAnimation.Duration := 0.8;
+  if aAnimation.Duration > 0.8 then
+    aAnimation.Duration := 0.8
+  else if aAnimation.Duration < 0.1 then
+    aAnimation.Duration := 0.1;
+  aAnimation.AnimationType := TAnimationType.out;
+  aAnimation.Interpolation := TInterpolationType.circular;
 end;
 
 initialization

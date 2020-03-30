@@ -56,9 +56,9 @@ procedure Get_ViewMode_Panels;
 begin
   if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
   begin
-    mame_config_panel := Emu_VM_Video.Config.main;
-    mame_config_left := Emu_VM_Video.Config.left;
-    mame_config_right := Emu_VM_Video.Config.right;
+    mame_config_panel := Emu_VM_Default.Config.main;
+    mame_config_left := Emu_VM_Default.Config.left;
+    mame_config_right := Emu_VM_Default.Config.right;
   end;
 end;
 

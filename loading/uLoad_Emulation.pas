@@ -7,7 +7,14 @@ uses
   System.SysUtils,
   System.Inifiles,
   FMX.Forms,
-  FMX.Graphics;
+  FMX.Graphics,
+  FMX.ViewPort3d,
+  FMX.Objects3d,
+  FMX.MaterialSources,
+  FMX.Controls3d,
+  FMX.OBJ.Importer,
+  FMX.Types3d,
+  FMX.Layers3D;
 
 procedure uLoad_Emulation_FirstTime;
 procedure Load;
@@ -29,6 +36,7 @@ uses
   uLoad_AllTypes,
   uDB,
   uDB_AUser,
+  uMain_AllTypes,
   uEmu_Arcade_Mame,
   uEmu_Arcade_Mame_SetAll;
 
@@ -97,58 +105,58 @@ begin
   SetLength(emulation.Emu[3], 255);
   SetLength(emulation.Emu[4], 255);
 
+
   //
 
+  { emulation.Category[0].Active := true;
+    emulation.Category[0].Active_Place := 0;
+    emulation.Category[0].Name := 'Arcade';
+    emulation.Category[0].Menu_Image_Path := emulation.Path + 'arcade\images\';
+    emulation.Category[0].Logo := emulation.Category[0].Menu_Image_Path + 'arcade.png';
+    emulation.Category[0].Background := emulation.Category[0].Menu_Image_Path + 'background.png';
+    emulation.Category[0].Second_Level := -1;
+    emulation.Category[0].Installed := uDB_AUser.Local.EMULATORS.Arcade;
+    emulation.Category[0].Unique_Num := -1;
 
-{  emulation.Category[0].Active := true;
-  emulation.Category[0].Active_Place := 0;
-  emulation.Category[0].Name := 'Arcade';
-  emulation.Category[0].Menu_Image_Path := emulation.Path + 'arcade\images\';
-  emulation.Category[0].Logo := emulation.Category[0].Menu_Image_Path + 'arcade.png';
-  emulation.Category[0].Background := emulation.Category[0].Menu_Image_Path + 'background.png';
-  emulation.Category[0].Second_Level := -1;
-  emulation.Category[0].Installed := uDB_AUser.Local.EMULATORS.Arcade;
-  emulation.Category[0].Unique_Num := -1;
+    emulation.Category[1].Active := true;
+    emulation.Category[1].Active_Place := 1;
+    emulation.Category[1].Name := 'Computers';
+    emulation.Category[1].Menu_Image_Path := emulation.Path + 'computers\images\';
+    emulation.Category[1].Logo := emulation.Category[1].Menu_Image_Path + 'computers.png';
+    emulation.Category[1].Background := emulation.Category[1].Menu_Image_Path + 'background.png';
+    emulation.Category[1].Second_Level := -1;
+    emulation.Category[1].Installed := uDB_AUser.Local.EMULATORS.Computers;
+    emulation.Category[1].Unique_Num := -1;
 
-  emulation.Category[1].Active := true;
-  emulation.Category[1].Active_Place := 1;
-  emulation.Category[1].Name := 'Computers';
-  emulation.Category[1].Menu_Image_Path := emulation.Path + 'computers\images\';
-  emulation.Category[1].Logo := emulation.Category[1].Menu_Image_Path + 'computers.png';
-  emulation.Category[1].Background := emulation.Category[1].Menu_Image_Path + 'background.png';
-  emulation.Category[1].Second_Level := -1;
-  emulation.Category[1].Installed := uDB_AUser.Local.EMULATORS.Computers;
-  emulation.Category[1].Unique_Num := -1;
+    emulation.Category[2].Active := true;
+    emulation.Category[2].Active_Place := 2;
+    emulation.Category[2].Name := 'Consoles';
+    emulation.Category[2].Menu_Image_Path := emulation.Path + 'consoles\images\';
+    emulation.Category[2].Logo := emulation.Category[2].Menu_Image_Path + 'consoles.png';
+    emulation.Category[2].Background := emulation.Category[2].Menu_Image_Path + 'background.png';
+    emulation.Category[2].Second_Level := -1;
+    emulation.Category[2].Installed := uDB_AUser.Local.EMULATORS.Consoles;
+    emulation.Category[2].Unique_Num := -1;
 
-  emulation.Category[2].Active := true;
-  emulation.Category[2].Active_Place := 2;
-  emulation.Category[2].Name := 'Consoles';
-  emulation.Category[2].Menu_Image_Path := emulation.Path + 'consoles\images\';
-  emulation.Category[2].Logo := emulation.Category[2].Menu_Image_Path + 'consoles.png';
-  emulation.Category[2].Background := emulation.Category[2].Menu_Image_Path + 'background.png';
-  emulation.Category[2].Second_Level := -1;
-  emulation.Category[2].Installed := uDB_AUser.Local.EMULATORS.Consoles;
-  emulation.Category[2].Unique_Num := -1;
+    emulation.Category[3].Active := true;
+    emulation.Category[3].Active_Place := 3;
+    emulation.Category[3].Name := 'Handhelds';
+    emulation.Category[3].Menu_Image_Path := emulation.Path + 'handhelds\images\';
+    emulation.Category[3].Logo := emulation.Category[3].Menu_Image_Path + 'handhelds.png';
+    emulation.Category[3].Background := emulation.Category[3].Menu_Image_Path + 'background.png';
+    emulation.Category[3].Second_Level := -1;
+    emulation.Category[3].Installed := uDB_AUser.Local.EMULATORS.Handhelds;
+    emulation.Category[3].Unique_Num := -1;
 
-  emulation.Category[3].Active := true;
-  emulation.Category[3].Active_Place := 3;
-  emulation.Category[3].Name := 'Handhelds';
-  emulation.Category[3].Menu_Image_Path := emulation.Path + 'handhelds\images\';
-  emulation.Category[3].Logo := emulation.Category[3].Menu_Image_Path + 'handhelds.png';
-  emulation.Category[3].Background := emulation.Category[3].Menu_Image_Path + 'background.png';
-  emulation.Category[3].Second_Level := -1;
-  emulation.Category[3].Installed := uDB_AUser.Local.EMULATORS.Handhelds;
-  emulation.Category[3].Unique_Num := -1;
-
-  emulation.Category[4].Active := true;
-  emulation.Category[4].Active_Place := 4;
-  emulation.Category[4].Name := 'Pinball';
-  emulation.Category[4].Menu_Image_Path := emulation.Path + 'pinball\images\';
-  emulation.Category[4].Logo := emulation.Category[4].Menu_Image_Path + 'pinballs.png';
-  emulation.Category[4].Background := emulation.Category[4].Menu_Image_Path + 'background.png';
-  emulation.Category[4].Second_Level := -1;
-  emulation.Category[4].Installed := uDB_AUser.Local.EMULATORS.Pinballs;
-  emulation.Category[4].Unique_Num := -1;           }
+    emulation.Category[4].Active := true;
+    emulation.Category[4].Active_Place := 4;
+    emulation.Category[4].Name := 'Pinball';
+    emulation.Category[4].Menu_Image_Path := emulation.Path + 'pinball\images\';
+    emulation.Category[4].Logo := emulation.Category[4].Menu_Image_Path + 'pinballs.png';
+    emulation.Category[4].Background := emulation.Category[4].Menu_Image_Path + 'background.png';
+    emulation.Category[4].Second_Level := -1;
+    emulation.Category[4].Installed := uDB_AUser.Local.EMULATORS.Pinballs;
+    emulation.Category[4].Unique_Num := -1; }
 
   SetTabs;
 

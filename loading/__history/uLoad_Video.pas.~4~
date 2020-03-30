@@ -1,0 +1,24 @@
+unit uLoad_Video;
+
+interface
+
+uses
+  System.Classes;
+
+procedure Load;
+
+implementation
+
+procedure Load;
+begin
+{$IFDEF WIN32}
+  libvlc_dynamic_dll_init_with_path('C:\Program Files (x86)\VideoLAN\VLC');
+{$ENDIF}
+  if (libvlc_dynamic_dll_error <> '') then
+  begin
+    ShowMessage(libvlc_dynamic_dll_error);
+    Exit;
+  end;
+end;
+
+end.
