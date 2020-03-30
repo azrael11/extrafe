@@ -5,7 +5,7 @@
 
 My Source repository for ExtraFE
 
-Current work in progress build version : <b> 0.9.2.26 </b>
+Current work in progress build version : <b> 0.2.9.26 </b>
 
 
 # Coding In ExtraFE
@@ -13,7 +13,12 @@ Current work in progress build version : <b> 0.9.2.26 </b>
 For start coding in ExtraFE exept for cloning the master git you must download and install additional below components
 
 1. JCL Library from https://github.com/project-jedi/jcl
-2. InstrumentLab from mitov software http://www.mitov.com/products/instrumentlab#overview use the free version for fmx.
+2. Alcione from https://github.com/Zeus64/alcinoe
+3. BASS SOUND LIBRARY from http://www.un4seen.com/
+4. BASS FX Addon for BASS from http://www.un4seen.com/ you find in addons area
+4. PasLibVLC https://prog.olsztyn.pl/paslibvlc/
+5. Zeoslib https://sourceforge.net/projects/zeoslib/
+6. Hooks https://github.com/JensBorrisholt/Hooks
 
 # Info
 
@@ -22,4 +27,14 @@ Homepage       : http://extrafe.epizy.com
 Documentation  : http://extrafe.epizy.com/doc/index.html
 
 Forum          : http://extrafe.epizy.com/smf/index.php 
+
+# Roadmap
+
+Version Stable <b>0.3.0</b>
+
+1. Run the program with less minor problems and bugs
+2. Run at least well on Emulator with all the goodies and one Addon
+3. Run in al least in Windows 32bit and Windows 64bit
+4. Have a minimal Home Page active
+
 
