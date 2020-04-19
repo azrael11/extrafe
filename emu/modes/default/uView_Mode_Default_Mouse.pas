@@ -15,6 +15,7 @@ uses
   FMX.Objects3D,
   FMX.ListBox,
   FMX.Graphics,
+  FMX.Types,
   BASS;
 
 type
@@ -66,7 +67,7 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_MOUSE = record
+  TEMU_VIEW_MODE_DEFAULT_MOUSE = record
     Image: TEMU_VIEW_MODE_DEFAULT_IMAGE;
     Text: TEMU_VIEW_MODE_DEFAULT_TEXT;
     Button: TEMU_VIEW_MODE_DEFAULT_BUTTON;
@@ -77,7 +78,7 @@ type
   end;
 
 var
-  Emu_VM_Default_Mouse: TEMU_VIEW_MODE_VIDEO_MOUSE;
+  Emu_VM_Default_Mouse: TEMU_VIEW_MODE_DEFAULT_MOUSE;
 
 implementation
 
@@ -88,7 +89,7 @@ uses
   uView_Mode_Default_Actions_Lists,
   uEmu_Emu;
 
-{ TEMU_VIEW_MODE_VIDEO_IMAGE }
+{ TEMU_VIEW_MODE_DEFAULT_IMAGE }
 
 procedure TEMU_VIEW_MODE_DEFAULT_IMAGE.OnMouseClick(Sender: TObject);
 begin
@@ -110,13 +111,18 @@ begin
 
 end;
 
-{ TEMU_VIEW_MODE_VIDEO_TEXT }
+{ TEMU_VIEW_MODE_DEFAULT_TEXT }
 
 procedure TEMU_VIEW_MODE_DEFAULT_TEXT.OnMouseClick(Sender: TObject);
 begin
   if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
   begin
-    if Emu_VM_Default_Var.Filters_Open then
+    if Emu_VM_Default_Var.Lists_Open then
+    begin
+      if TText(Sender).Name = 'Emu_Lists_Remove_Selected' then
+        uView_Mode_Default_Actions_Lists.Clear_List;
+    end
+    else if Emu_VM_Default_Var.Filters_Open then
     begin
       if TText(Sender).Name = 'Emu_Filters_Window_Clear' then
         uView_Mode_Default_Actions_Filters.Clear_Filters
@@ -136,7 +142,7 @@ begin
       else if TText(Sender).Name = 'Emu_Gamelist_Search_Icon' then
         uView_Mode_Default_Actions.Search_Open
       else
-        uEmu_Emu.Mouse_Action(TText(Sender).Name);
+        Exit_Action('Mouse');
     end;
     BASS_ChannelPlay(Emu_VM_Default_Var.sounds.Gen_Click, False);
   end;
@@ -146,28 +152,49 @@ procedure TEMU_VIEW_MODE_DEFAULT_TEXT.OnMouseEnter(Sender: TObject);
 begin
   if TText(Sender).Name = 'Emu_Media_Bar_Favorites' then
   begin
-    TText(Sender).Cursor := crHandPoint;
-    Emu_VM_Default.Media.Bar.Favorites_Glow.Enabled := True;
+    if (Emu_VM_Default_Var.Filters_Open = False) and (Emu_VM_Default_Var.Lists_Open = False) then
+    begin
+      TText(Sender).Cursor := crHandPoint;
+      Emu_VM_Default.Media.Bar.Favorites_Glow.Enabled := True;
+    end;
   end;
   if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
   begin
-    TText(Sender).Cursor := crHandPoint;
     if Emu_VM_Default_Var.Lists_Open then
     begin
       if TText(Sender).Name = 'Emu_Lists_Add' then
+      begin
+        TText(Sender).Cursor := crHandPoint;
         Emu_VM_Default.Gamelist.Lists.Window.Add_Glow.Enabled := True;
+      end
+      else if TText(Sender).Name = 'Emu_Lists_Remove_Selected' then
+      begin
+        TText(Sender).Cursor := crHandPoint;
+        Emu_VM_Default.Gamelist.Lists.Window.Remove.Font.Style := Emu_VM_Default.Gamelist.Lists.Window.Remove.Font.Style + [TFontStyle.fsUnderline];
+        Emu_VM_Default.Gamelist.Lists.Window.Remove.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+      end;
     end
     else if Emu_VM_Default_Var.Filters_Open then
     begin
       if TText(Sender).Name = 'Emu_Filters_Window_Clear' then
+      begin
+        TText(Sender).Cursor := crHandPoint;
         Emu_VM_Default.Gamelist.Filters.Window.Clear_Glow.Enabled := True
+      end
       else if TText(Sender).Name = 'Emu_Filters_Window_Add' then
+      begin
+        TText(Sender).Cursor := crHandPoint;
         Emu_VM_Default.Gamelist.Filters.Window.Add_Glow.Enabled := True
+      end
       else if TText(Sender).Name = 'Emu_Filters_Window_Filter_Remove_' + TText(Sender).Tag.ToString then
+      begin
+        TText(Sender).Cursor := crHandPoint;
         Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[TText(Sender).Tag].Remove_Glow.Enabled := True;
+      end;
     end
     else
     begin
+      TText(Sender).Cursor := crHandPoint;
       if TText(Sender).Name = 'Emu_Exit' then
         Emu_VM_Default.Exit_Glow.Enabled := True
       else if TText(Sender).Name = 'Emu_Settings' then
@@ -187,7 +214,12 @@ begin
   if Emu_VM_Default_Var.Lists_Open then
   begin
     if TText(Sender).Name = 'Emu_Lists_Add' then
-      Emu_VM_Default.Gamelist.Lists.Window.Add_Glow.Enabled := False;
+      Emu_VM_Default.Gamelist.Lists.Window.Add_Glow.Enabled := False
+    else if TText(Sender).Name = 'Emu_Lists_Remove_Selected' then
+    begin
+      Emu_VM_Default.Gamelist.Lists.Window.Remove.Font.Style := Emu_VM_Default.Gamelist.Lists.Window.Remove.Font.Style - [TFontStyle.fsUnderline];
+      Emu_VM_Default.Gamelist.Lists.Window.Remove.TextSettings.FontColor := TAlphaColorRec.White;
+    end;
   end
   else if Emu_VM_Default_Var.Filters_Open then
   begin
@@ -224,7 +256,7 @@ begin
   end;
 end;
 
-{ TEMU_VIEW_MODE_VIDEO_BUTTON }
+{ TEMU_VIEW_MODE_DEFAULT_BUTTON }
 
 procedure TEMU_VIEW_MODE_DEFAULT_BUTTON.OnMouseClick(Sender: TObject);
 begin
@@ -248,7 +280,7 @@ begin
 
 end;
 
-{ TEMU_VIEW_MODE_VIDEO_MODEL3D }
+{ TEMU_VIEW_MODE_DEFAULT_MODEL3D }
 
 procedure TEMU_VIEW_MODE_DEFAULT_MODEL3D.OnMouseClick(Sender: TObject);
 begin
@@ -275,7 +307,7 @@ begin
   Emu_VM_Default.GameMenu.Favorite.Ani.Duration := 2;
 end;
 
-{ TEMU_VIEW_MODE_VIDEO_EDIT }
+{ TEMU_VIEW_MODE_DEFAULT_EDIT }
 
 procedure TEMU_VIEW_MODE_DEFAULT_EDIT.OnMouseClick(Sender: TObject);
 begin
@@ -315,19 +347,13 @@ procedure TEMU_VIEW_MODE_DEFAULT_PANEL.OnMouseEnter(Sender: TObject);
 begin
   TPanel(Sender).Cursor := crHandPoint;
   if TPanel(Sender).Name = 'Lists_List_Item_Overlay_' + TPanel(Sender).Tag.ToString then
-  begin
-    // Emu_VM_Default.Gamelist.Lists.Window.list[TPanel(Sender).Tag].item_glow.Enabled := True;
-    uView_Mode_Default_Actions_Lists.Create_Callout(TPanel(Sender).Tag, TPanel(Sender).TagString.ToInteger);
-  end;
+    uView_Mode_Default_Actions_Lists.Show_Info(TPanel(Sender).Tag, TPanel(Sender).TagString.ToInteger);
 end;
 
 procedure TEMU_VIEW_MODE_DEFAULT_PANEL.OnMouseLeave(Sender: TObject);
 begin
   if TPanel(Sender).Name = 'Lists_List_Item_Overlay_' + TPanel(Sender).Tag.ToString then
-  begin
-    // Emu_VM_Default.Gamelist.Lists.Window.list[TPanel(Sender).Tag].item_glow.Enabled := False;
-    Emu_VM_Default.Gamelist.Lists.Window.call[TPanel(Sender).Tag].Panel.Visible := False;
-  end;
+    uView_Mode_Default_Actions_Lists.Clear_Info(TPanel(Sender).Tag);
 end;
 
 initialization

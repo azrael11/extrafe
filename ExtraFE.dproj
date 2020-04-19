@@ -134,13 +134,13 @@
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <VerInfo_Release>9</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.26;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.27;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
         <Icon_MainIcon>ExtraFE_Icon_64.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>26</VerInfo_Build>
+        <VerInfo_Build>27</VerInfo_Build>
         <DCC_ExeOutput>F:\my_projects\exe\debug\ExtraFE\win64\</DCC_ExeOutput>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-        <DCC_UnitSearchPath>C:\Program Files (x86)\Embarcadero\Studio\20.0\LabPacks\10.3\Win64\Debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\OpenWire\10.3\Win64\Debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\lib\win64\debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\lib\win64\release;C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\code\direct_x\Clootie_DirectX92\JEDI;F:\my_projects\components\zeoslib\src;F:\my_projects\components\zeoslib\src\component;F:\my_projects\components\zeoslib\src\core;F:\my_projects\components\zeoslib\src\dbc;F:\my_projects\components\zeoslib\src\parsesql;F:\my_projects\components\zeoslib\src\plain;F:\my_projects\components\PasLibVlc\source;F:\my_projects\components\PasLibVlc\source.fmx;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\APEv2 Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Flac Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\ID3v2 Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\MP4 Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Ogg Vorbis and Opus Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WAV Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WMA Tag Library\Delphi;F:\my_projects\components\bass\bass24\delphi;F:\my_projects\components\bass\bass_fx24\Delphi;F:\my_projects\components\hook;F:\my_projects\components\alcinoe\alcinoe _rio\source;F:\my_projects\components\hook\Hooks</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Program Files (x86)\Embarcadero\Studio\20.0\LabPacks\10.3\Win64\Debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\OpenWire\10.3\Win64\Debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\lib\win64\debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\lib\win64\release;F:\my_projects\components\zeoslib\src;F:\my_projects\components\zeoslib\src\component;F:\my_projects\components\zeoslib\src\core;F:\my_projects\components\zeoslib\src\dbc;F:\my_projects\components\zeoslib\src\parsesql;F:\my_projects\components\zeoslib\src\plain;F:\my_projects\components\PasLibVlc\source;F:\my_projects\components\PasLibVlc\source.fmx;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\APEv2 Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Flac Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\ID3v2 Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\MP4 Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Ogg Vorbis and Opus Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WAV Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WMA Tag Library\Delphi;F:\my_projects\components\bass\bass24\delphi;F:\my_projects\components\bass\bass_fx24\Delphi;F:\my_projects\components\hook;F:\my_projects\components\alcinoe\alcinoe _rio\source;F:\my_projects\components\hook\Hooks</DCC_UnitSearchPath>
         <BRCC_IncludePath>C:\Users\spooo\Documents\My_Projects\components\bass\bass24\delphi;$(BRCC_IncludePath)</BRCC_IncludePath>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
     </PropertyGroup>
@@ -217,12 +217,8 @@
         <DCCReference Include="emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Miscellaneous.pas"/>
         <DCCReference Include="emu\arcade\mame\config\uEmu_Arcade_Mame_Config_MiscellaneousII.pas"/>
         <DCCReference Include="emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Snap_Movie_Playback.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Gamelist.pas"/>
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_SetAll.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Actions.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Game_SetAll.pas"/>
         <DCCReference Include="code\_snippets\uKeyboard.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Filters.pas"/>
         <DCCReference Include="code\_snippets\uVirtual_Keyboard.pas"/>
         <DCCReference Include="main\uMain_Keyboard.pas"/>
         <DCCReference Include="main\uMain_Emulation.pas"/>
@@ -248,7 +244,6 @@
         <DCCReference Include="emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Keyboard.pas"/>
         <DCCReference Include="emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Joystick.pas"/>
         <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_AllTypes.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Game_Actions.pas"/>
         <DCCReference Include="addons\soundplayer\uSoundplayer_AllTypes.pas"/>
         <DCCReference Include="code\_snippets\uSnippet_Image.pas"/>
         <DCCReference Include="addons\soundplayer\uSoundplayer_Keyboard.pas"/>
@@ -317,7 +312,6 @@
         <DCCReference Include="main\configuration\general\uMain_Config_General_Sound.pas"/>
         <DCCReference Include="addons\play\uPlay_Sounds.pas"/>
         <DCCReference Include="code\_snippets\uSnippet_Search.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas"/>
         <DCCReference Include="addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas"/>
         <DCCReference Include="addons\soundplayer\scrapers\uSoundplayer_Scrapers_Lastfm.pas"/>
         <DCCReference Include="addons\soundplayer\scrapers\uSoundplayer_Scrapers_Flicker.pas"/>
@@ -338,7 +332,6 @@
         <DCCReference Include="addons\time\time\config\uTIme_Time_Config_General.pas"/>
         <DCCReference Include="addons\time\time\config\uTIme_Time_Config_Digital.pas"/>
         <DCCReference Include="addons\time\time\config\uTIme_Time_Config_Analog.pas"/>
-        <DCCReference Include="emu\arcade\mame\uEmu_Arcade_Mame_Lists.pas"/>
         <DCCReference Include="code\_database\uDB_Check.pas"/>
         <DCCReference Include="main\uMain_Widgets.pas"/>
         <DCCReference Include="emu\uEmu_Mouse.pas"/>
@@ -361,6 +354,7 @@
         <DCCReference Include="emu\modes\default\uView_Mode_Default_Sounds.pas"/>
         <DCCReference Include="emu\modes\default\uView_Mode_Default_Actions_Lists.pas"/>
         <DCCReference Include="loading\uLoad_Video.pas"/>
+        <DCCReference Include="emu\modes\uView_Mode.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -387,9 +381,9 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="$(IBREDISTDIR)\reg_iblite.txt" Configuration="Release" Class="File">
-                    <Platform Name="Win64">
-                        <RemoteDir>interbase\license\</RemoteDir>
+                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\libibtogo.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -535,9 +529,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="F:\my_projects\exe\debug\ExtraFE\win64\ExtraFE.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\exe\debug\ExtraFE\win64\ExtraFE.rsm" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win64">
-                        <RemoteName>ExtraFE.exe</RemoteName>
+                        <RemoteName>ExtraFE.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -598,6 +592,12 @@
                 <DeployFile LocalName="$(IBREDISTDIR)\android\interbase\license.txt" Configuration="Release" Class="File">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\interbase\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\..\exe\debug\ExtraFE\win64\ExtraFE.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>ExtraFE.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -782,12 +782,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="F:\my_projects\exe\debug\ExtraFE\win64\ExtraFE.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win64">
-                        <RemoteName>ExtraFE.rsm</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(IBREDISTDIR)\win64_togo\ibtogo64.dll" Configuration="Release" Class="File">
                     <Platform Name="Win64">
                         <Overwrite>true</Overwrite>
@@ -905,7 +899,25 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Release" Class="File">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(IBREDISTDIR)\win32_togo\interbase\license.txt" Configuration="Release" Class="File">
+                    <Platform Name="Win32">
+                        <RemoteDir>interbase\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\admin.ib" Configuration="Debug" Class="File">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Debug" Class="File">
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -923,27 +935,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\libibtogo.dylib" Configuration="Release" Class="File">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(IBREDISTDIR)\win32_togo\interbase\license.txt" Configuration="Release" Class="File">
-                    <Platform Name="Win32">
-                        <RemoteDir>interbase\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Release" Class="File">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(IBREDISTDIR)\osx32_togo\interbase\ibconfig" Configuration="Debug" Class="File">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\Resources\StartUp\interbase\</RemoteDir>
+                <DeployFile LocalName="$(IBREDISTDIR)\reg_iblite.txt" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteDir>interbase\license\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

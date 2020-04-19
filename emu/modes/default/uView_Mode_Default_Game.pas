@@ -31,7 +31,7 @@ const
   cGame_Menu: array [0 .. 10] of string = ('Play game', 'Read manual', 'Open media folder', 'View images', 'Sound Tracks', '', 'Add to playlist', '',
     '', '', '');
 
-procedure Load;
+procedure Load_Menu;
 
 procedure Splash;
 
@@ -74,7 +74,7 @@ uses
   uView_Mode_Default_AllTypes,
   uView_Mode_Default_Mouse;
 
-procedure Load;
+procedure Load_Menu;
 var
   vi: Integer;
 begin
@@ -107,8 +107,8 @@ end;
 
 procedure Info_Box;
 const
-  cGameLabels: array [0 .. 12] of string = ('Game Name', 'Rom Name', 'Year', 'Manufacturer', 'Game Type', 'Refresh Rate', 'Width', 'Height', 'Sound Channels', 'Savestate',
-    'Emulation', 'Overall Status', 'Support Hiscore');
+  cGameLabels: array [0 .. 12] of string = ('Game Name', 'Rom Name', 'Year', 'Manufacturer', 'Game Type', 'Refresh Rate', 'Width', 'Height', 'Sound Channels',
+    'Savestate', 'Emulation', 'Overall Status', 'Support Hiscore');
 var
   vi: Integer;
   vQuery: String;
@@ -201,7 +201,7 @@ begin
     case vi of
       0:
         Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('gamename').AsString;
-      1 :
+      1:
         Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('romname').AsString;
       2:
         Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('year').AsString;
@@ -617,6 +617,7 @@ begin
   Emu_VM_Default.gamelist.Lists.Back.Visible := true;
   { Refresh the list }
   Emu_VM_Default_Var.gamelist.Selected := vGame_Main;
+  Emu_VM_Default_Var.gamelist.Old_Selected := -100;
   uView_Mode_Default_Actions.Refresh;
 end;
 
@@ -917,3 +918,54 @@ begin
 end;
 
 end.
+
+{ procedure Change_Categeroy(vDirection: String);
+  const
+  cSnapCategory: array [0 .. 17] of string = ('video', 'Snapshots', 'Cabinets', 'Control Panels', 'Flyers', 'Marquees', 'Pcbs', 'Artwork Preview', 'Bosses',
+  'How To', 'Logos', 'Scores', 'Selects', 'Titles', 'Versus', 'Game Over', 'Ends', 'Warnings');
+  begin
+  if vDirection = 'left' then
+  begin
+  if mame.Main.SnapCategory_Num > 0 then
+  begin
+  dec(mame.Main.SnapCategory_Num, 1);
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.View_Mode := cSnapCategory[mame.Main.SnapCategory_Num];
+  end;
+  end
+  else
+  begin
+  if mame.Main.SnapCategory_Num < 17 then
+  begin
+  inc(mame.Main.SnapCategory_Num, 1);
+  uDB_AUser.Local.Emulators.Arcade_D.Mame_D.View_Mode := cSnapCategory[mame.Main.SnapCategory_Num];
+  end;
+  end;
+  uEmu_Arcade_Mame_Actions.Show_Media;
+  end;
+
+
+  function uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath: String): TstringList;
+  var
+  vZip: TZipFile;
+  vLocalHeader: TZipHeader;
+  vStream: TMemoryStream;
+  vi: Integer;
+  vString: String;
+  begin
+  if FileExists(vGameSoundPath) then
+  begin
+  Result:= TStringList.Create;
+  vZip:= TZipFile.Create;
+  vZip.Open(vGameSoundPath, zmRead);
+  vStream:= TMemoryStream.Create;
+  for vi:= 0 to vZip.FileCount- 1 do
+  begin
+  if ExtractFileExt(vZip.FileName[vi])= '.mp3' then
+  Result.Add(vZip.FileName[vi]);
+  //          vString:= Result.Strings[vi];
+  //          vZip.Read(vString, vStream, vLocalHeader);
+  end;
+  end
+  else
+  Result:= nil;
+  end; }

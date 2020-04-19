@@ -125,7 +125,7 @@ type
 
   { Game list objects }
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_SEARCH = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_SEARCH = record
     Back: TImage;
     Search: TText;
     Glow: TGlowEffect;
@@ -134,7 +134,7 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS_WINDOW_PANELS = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_FILTERS_WINDOW_PANELS = record
     Panel: TPanel;
     Combine: TRectangle;
     Filter_Name: TText;
@@ -148,7 +148,7 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS_WINDOW = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_FILTERS_WINDOW = record
     Panel: TPanel;
     Shadow: TShadowEffect;
     Clear: TText;
@@ -157,24 +157,23 @@ type
     Add_Glow: TGlowEffect;
     Info: TText;
     Games_Num: TText;
-    Filter_Panels: array of TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS_WINDOW_PANELS;
+    Filter_Panels: array of TEMU_VIEW_MODE_DEFAULT_GAMELIST_FILTERS_WINDOW_PANELS;
     OK: TButton;
     Cancel: TButton;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_FILTERS = record
     Back: TImage;
     Filter: TText;
     Filter_Glow: TGlowEffect;
     Filter_Text: TText;
-    Window: TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS_WINDOW;
+    Window: TEMU_VIEW_MODE_DEFAULT_GAMELIST_FILTERS_WINDOW;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_LIST = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS_LIST = record
     item: TImage;
-    item_ref: TReflectionEffect;
     item_glow: TGlowEffect;
     image: TImage;
     Text: TText;
@@ -182,9 +181,11 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_CALL = record
-    Panel: TCalloutPanel;
-    pcb: TImage;
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS_WINDOW_INFO = record
+    Panel: TLayout;
+    Info: TPanel;
+    Back: TImage;
+    image: TImage;
     Count: TText;
     Count_Value: TText;
     Text: TText;
@@ -193,45 +194,48 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_WINDOW = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS_WINDOW = record
     Panel: TLayout;
+    Selected: TText;
+    Selected_Value: TText;
     Back: TImage;
     Add_Panel: TImage;
     Add: TText;
     Add_Glow: TGlowEffect;
+    Remove: TText;
+    Info: TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS_WINDOW_INFO;
     List_Control: TTabControl;
     List_Control_Item: array of TTabItem;
-    list: array of TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_LIST;
-    call: array of TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_CALL;
+    list: array of TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS_LIST;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS = record
     Back: TImage;
     lists: TText;
     Lists_Glow: TGlowEffect;
     Lists_Text: TText;
-    Window: TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS_WINDOW;
+    Window: TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS_WINDOW;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_GAMES_LINE = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES_LINE = record
     Back: TImage;
     Icon: TImage;
     Text: TText;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_GAMES = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES = record
     list: TImage;
     List_Blur: TBlurEffect;
     Listbox: TVertScrollBox;
-    Line: array [0 .. 20] of TEMU_VIEW_MODE_VIDEO_GAMELIST_GAMES_LINE;
+    Line: array [0 .. 20] of TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES_LINE;
     Selection: TGlowEffect;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST_INFO = record
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_INFO = record
     Back: TImage;
     Games_Count: TText;
     Version: TText;
@@ -239,19 +243,19 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_GAMELIST = record
-    Info: TEMU_VIEW_MODE_VIDEO_GAMELIST_INFO;
-    games: TEMU_VIEW_MODE_VIDEO_GAMELIST_GAMES;
-    lists: TEMU_VIEW_MODE_VIDEO_GAMELIST_LISTS;
-    filters: TEMU_VIEW_MODE_VIDEO_GAMELIST_FILTERS;
-    Search: TEMU_VIEW_MODE_VIDEO_GAMELIST_SEARCH;
-    Gamelist: TEMU_VIEW_MODE_VIDEO_GAMELIST_INFO;
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST = record
+    Info: TEMU_VIEW_MODE_DEFAULT_GAMELIST_INFO;
+    games: TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES;
+    lists: TEMU_VIEW_MODE_DEFAULT_GAMELIST_LISTS;
+    filters: TEMU_VIEW_MODE_DEFAULT_GAMELIST_FILTERS;
+    Search: TEMU_VIEW_MODE_DEFAULT_GAMELIST_SEARCH;
+    Gamelist: TEMU_VIEW_MODE_DEFAULT_GAMELIST_INFO;
   end;
   { End of Game list objects }
 
   { Media objects }
 type
-  TEMU_VIEW_MODE_VIDEO_MEDIA_ACTION_GAMEINFO = record
+  TEMU_VIEW_MODE_DEFAULT_MEDIA_ACTION_GAMEINFO = record
     Layout: TLayout;
     Players: TText;
     Players_Value: TText;
@@ -259,17 +263,17 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_MEDIA_BAR = record
+  TEMU_VIEW_MODE_DEFAULT_MEDIA_BAR = record
     Back: TImage;
     favorites: TText;
     Favorites_Glow: TGlowEffect;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_MEDIA_VIDEO = record
+  TEMU_VIEW_MODE_DEFAULT_MEDIA_VIDEO = record
     Back: TImage;
     Marquee: TImage;
-    Game_Info: TEMU_VIEW_MODE_VIDEO_MEDIA_ACTION_GAMEINFO;
+    Game_Info: TEMU_VIEW_MODE_DEFAULT_MEDIA_ACTION_GAMEINFO;
     Video_Back: TImage;
     Video: TFmxPasLibVlcPlayer;
     Video_Timer_Cont: TTimer;
@@ -278,9 +282,9 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_MEDIA = record
-    Bar: TEMU_VIEW_MODE_VIDEO_MEDIA_BAR;
-    Video: TEMU_VIEW_MODE_VIDEO_MEDIA_VIDEO;
+  TEMU_VIEW_MODE_DEFAULT_MEDIA = record
+    Bar: TEMU_VIEW_MODE_DEFAULT_MEDIA_BAR;
+    Video: TEMU_VIEW_MODE_DEFAULT_MEDIA_VIDEO;
   end;
 
   { End Of Media Objects }
@@ -363,7 +367,7 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_GAMEMENU = record
+  TEMU_VIEW_MODE_DEFAULT_GAMEMENU = record
     Stamp: TImage;
     Info: TEMU_VIEW_MODE_GAMEMENU_INFO;
     Manual: TEMU_VIEW_MODE_GAMEMENU_MANUAL;
@@ -380,7 +384,7 @@ type
   { Configuration objects }
 
 type
-  TEMU_VIEW_MODE_VIDEO_CONFIGURATION = record
+  TEMU_VIEW_MODE_DEFAULT_CONFIGURATION = record
     main: TPanel;
     left: TPanel;
     right: TPanel;
@@ -390,7 +394,7 @@ type
   { End of Configuration objects }
 
 type
-  TEMU_VIEW_MODE_VIDEO = record
+  TEMU_VIEW_MODE_DEFAULT = record
     main: TImage;
     main_upper: TImage;
     main_upper_ani: TFloatAnimation;
@@ -405,10 +409,10 @@ type
     Right_Ani: TFloatAnimation;
     Right_Ani_Opacity: TFloatAnimation;
     Right_Blur: TBlurEffect;
-    config: TEMU_VIEW_MODE_VIDEO_CONFIGURATION;
-    Gamelist: TEMU_VIEW_MODE_VIDEO_GAMELIST;
-    Media: TEMU_VIEW_MODE_VIDEO_MEDIA;
-    GameMenu: TEMU_VIEW_MODE_GAMEMENU;
+    config: TEMU_VIEW_MODE_DEFAULT_CONFIGURATION;
+    Gamelist: TEMU_VIEW_MODE_DEFAULT_GAMELIST;
+    Media: TEMU_VIEW_MODE_DEFAULT_MEDIA;
+    GameMenu: TEMU_VIEW_MODE_DEFAULT_GAMEMENU;
     Settings: TText;
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
@@ -420,7 +424,7 @@ type
 
   { Variables needed }
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_VIDEO = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_VIDEO = record
     Active_Video: String;
     Old_Width: Integer;
     Loaded: Boolean;
@@ -429,7 +433,7 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_GAMELIST = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_GAMELIST = record
     Loaded: Boolean;
     games: TstringList;
     Roms: TstringList;
@@ -440,7 +444,12 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_FILTERS = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_LISTS = record
+    Selected: String;
+  end;
+
+type
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_FILTERS = record
     Roms: TstringList; // Current Roms
     games: TstringList; // Current Game names
     Temp_Roms: TstringList; // Roms before action done
@@ -455,38 +464,38 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG = class(TObject)
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_ANIMATIONS_CONFIG = class(TObject)
     procedure OnFinish(Sender: TObject);
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS = record
-    config: TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG;
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_ANIMATIONS = record
+    config: TEMU_VIEW_MODE_DEFAULT_VARIABLES_ANIMATIONS_CONFIG;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST = class(TObject)
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_GAMELIST = class(TObject)
     procedure OnTimer(Sender: TObject);
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO = class(TObject)
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_VIDEO = class(TObject)
     procedure OnTimer(Sender: TObject);
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS = record
-    Gamelist: TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST;
-    Video: TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO;
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS = record
+    Gamelist: TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_GAMELIST;
+    Video: TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_VIDEO;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_GAME = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_GAME = record
     Selected: Integer;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_SOUNDS = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_SOUNDS = record
     Gen_Click: HSAMPLE;
     Fav_add: HSAMPLE;
     Fav_remove: HSAMPLE;
@@ -495,7 +504,7 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_FAVORITES = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_FAVORITES = record
     game_is: Boolean;
     Count: Integer;
     Roms: TstringList;
@@ -503,14 +512,14 @@ type
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES_SEARCH = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES_SEARCH = record
     Selected: Integer;
     vstring: String;
     vkey: String;
   end;
 
 type
-  TEMU_VIEW_MODE_VIDEO_VARIABLES = record
+  TEMU_VIEW_MODE_DEFAULT_VARIABLES = record
     Query: TFDQuery;
     User_Num: Integer;
     Config_Open: Boolean;
@@ -520,15 +529,16 @@ type
     Game_Loading: Boolean;
     Favorites_Open: Boolean;
     Search_Open: Boolean;
-    Search: TEMU_VIEW_MODE_VIDEO_VARIABLES_SEARCH;
-    game: TEMU_VIEW_MODE_VIDEO_VARIABLES_GAME;
-    filters: TEMU_VIEW_MODE_VIDEO_VARIABLES_FILTERS;
-    favorites: TEMU_VIEW_MODE_VIDEO_VARIABLES_FAVORITES;
-    Gamelist: TEMU_VIEW_MODE_VIDEO_VARIABLES_GAMELIST;
-    Video: TEMU_VIEW_MODE_VIDEO_VARIABLES_VIDEO;
-    Ani: TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS;
-    Timer: TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS;
-    sounds: TEMU_VIEW_MODE_VIDEO_VARIABLES_SOUNDS;
+    Search: TEMU_VIEW_MODE_DEFAULT_VARIABLES_SEARCH;
+    game: TEMU_VIEW_MODE_DEFAULT_VARIABLES_GAME;
+    lists: TEMU_VIEW_MODE_DEFAULT_VARIABLES_LISTS;
+    filters: TEMU_VIEW_MODE_DEFAULT_VARIABLES_FILTERS;
+    favorites: TEMU_VIEW_MODE_DEFAULT_VARIABLES_FAVORITES;
+    Gamelist: TEMU_VIEW_MODE_DEFAULT_VARIABLES_GAMELIST;
+    Video: TEMU_VIEW_MODE_DEFAULT_VARIABLES_VIDEO;
+    Ani: TEMU_VIEW_MODE_DEFAULT_VARIABLES_ANIMATIONS;
+    Timer: TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS;
+    sounds: TEMU_VIEW_MODE_DEFAULT_VARIABLES_SOUNDS;
   end;
 
   { End of Variables needed }
@@ -541,9 +551,9 @@ type
 procedure load_images(vPath: String);
 
 var
-  Emu_VM_Default: TEMU_VIEW_MODE_VIDEO;
+  Emu_VM_Default: TEMU_VIEW_MODE_DEFAULT;
   Emu_XML: TEMU_VIEW_MODE_XML;
-  Emu_VM_Default_Var: TEMU_VIEW_MODE_VIDEO_VARIABLES;
+  Emu_VM_Default_Var: TEMU_VIEW_MODE_DEFAULT_VARIABLES;
 
   vBack_Task: ITask;
   vAll_ANI: TEMU_VIEW_MODE_ANIMATIONS;
@@ -597,9 +607,9 @@ begin
   Emu_VM_Default.main_upper_ani.Enabled := False;
 end;
 
-{ TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG }
+{ TEMU_VIEW_MODE_DEFAULT_VARIABLES_ANIMATIONS_CONFIG }
 
-procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_ANIMATIONS_CONFIG.OnFinish(Sender: TObject);
+procedure TEMU_VIEW_MODE_DEFAULT_VARIABLES_ANIMATIONS_CONFIG.OnFinish(Sender: TObject);
 begin
   if TFloatAnimation(Sender).name = 'Main_Right_Animation' then
   begin
@@ -609,9 +619,9 @@ begin
   end;
 end;
 
-{ TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST }
+{ TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_GAMELIST }
 
-procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_GAMELIST.OnTimer(Sender: TObject);
+procedure TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_GAMELIST.OnTimer(Sender: TObject);
 begin
   if Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled then
   begin
@@ -625,9 +635,9 @@ begin
   end;
 end;
 
-{ TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO }
+{ TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_VIDEO }
 
-procedure TEMU_VIEW_MODE_VIDEO_VARIABLES_TIMERS_VIDEO.OnTimer(Sender: TObject);
+procedure TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_VIDEO.OnTimer(Sender: TObject);
 var
   vWidth, vHeight: Cardinal;
   vRandom_Video: Integer;

@@ -9,31 +9,18 @@ uses
 procedure uEmu_LoadEmulator(vNum: Integer);
 procedure uEmu_Actions_Exit;
 
-procedure uEmu_Actions_VirtualKeyboard_SetKey(vKey: String);
-
-procedure Search(vEmulator: String; vAction: Boolean);
-
 procedure Key(vKey: String);
 
 implementation
 uses
   emu,
   uEmu_Emu,
-  uLoad,
-  uLoad_AllTypes,
   main,
   uMain_AllTypes,
+  {Arcade}
   //Mame
-  uEmu_Arcade_Mame,
-  uEmu_Arcade_Mame_Actions,
-  uEmu_Arcade_Mame_Keyboard;
+  uEmu_Arcade_Mame;
 
-procedure uEmu_Actions_VirtualKeyboard_SetKey(vKey: String);
-begin
-  case emulation.Active_Num of
-    0 : uEmu_Arcade_Mame_Keyboard.VirtualKeyboard_SetKey(vKey);
-  end;
-end;
 
 procedure uEmu_LoadEmulator(vNum: Integer);
 begin
@@ -52,12 +39,6 @@ begin
   mainScene.Main.Down_Level_Ani.Start;
   Emu_Form.Close;
   Main_Form.ShowModal;
-end;
-
-procedure Search(vEmulator: String; vAction: Boolean);
-begin
-  if vEmulator = 'mame' then
-    uEmu_Arcade_Mame_Actions.Search(vAction);
 end;
 
 procedure Key(vKey: String);

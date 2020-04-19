@@ -86,8 +86,6 @@ function Search_String(vString: String): String;
 
 procedure key(vKey: string);
 
-procedure Emu_Actions_Search(vStart: Boolean);
-
 implementation
 
 uses
@@ -161,7 +159,6 @@ begin
   vSearch.Actions.CanIType := False;
   vSearch.Actions.Search_Str := '';
   vSearch.Scene.Back.SetFocus;
-  Emu_Actions_Search(False);
 end;
 
 function Search_String(vString: String): String;
@@ -180,11 +177,6 @@ begin
     vSearch.Actions.Search_Str := vSearch.Actions.Search_Str + ' '
   else
     vSearch.Actions.Search_Str := Search_String(vSearch.Actions.Search_Str + UpperCase(vKey));
-end;
-
-procedure Emu_Actions_Search(vStart: Boolean);
-begin
-  uEmu_Actions.Search(extrafe.prog.State, vStart);
 end;
 
 { TSEARCH_IMAGE }
@@ -246,7 +238,6 @@ procedure TSEARCH_TEXT.OnMouseClick(Sender: TObject);
 begin
   if vSearch.Scene.Edit.Width = 0 then
     vSearch.Scene.Edit_Ani.Start;
-  Emu_Actions_Search(True);
   BASS_ChannelPlay(sound.str_fx.general[0], False);
 end;
 

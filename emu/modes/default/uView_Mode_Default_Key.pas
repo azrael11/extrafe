@@ -39,7 +39,7 @@ begin
         if Emu_VM_Default_Var.Search_Open = false then
         begin
           if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Escape then
-            uView_Mode_Default_Actions.Exit_Action
+            uView_Mode_Default_Actions.Exit_Action('Keyboard')
           else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Action then
             if uVirtual_Keyboard.vKey.Enter_Pressed then
               uVirtual_Keyboard.vKey.Enter_Pressed := false
@@ -80,8 +80,16 @@ begin
           else if Emu_VM_Default_Var.game.Selected = 3 then
           begin
             if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Left then
-              //here to go from one panel to another
+              // here to go from one panel to another
           end;
+        end
+        else if Emu_VM_Default_Var.Lists_Open then
+        begin
+
+        end
+        else if Emu_VM_Default_Var.Filters_Open then
+        begin
+
         end
         else
         begin
@@ -128,7 +136,7 @@ var
   vStringResult: String;
   vIntegerResult: Integer;
   vGameName: String;
-  vi, ri: Integer;
+  vi, ri, vk: Integer;
   vFoundResult: Boolean;
   vFoundDrop: Boolean;
 begin
@@ -167,28 +175,62 @@ begin
         begin
           Emu_VM_Default_Var.gamelist.Selected := vi;
           if Emu_VM_Default_Var.Favorites_Open then
-            uVirtual_Keyboard.vKey.Construct.Title.Text.Text := 'Found "' + Emu_VM_Default_Var.favorites.games[vi] + '"'
+          begin
+            uVirtual_Keyboard.vKey.Construct.Title.Text.Text := Emu_VM_Default_Var.favorites.games[vi];
+            if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.gamelist.Selected] + '.ico')
+            then
+              uVirtual_Keyboard.vKey.Construct.Title.Game_Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons +
+                Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.gamelist.Selected] + '.ico')
+            else
+              uVirtual_Keyboard.vKey.Construct.Title.Game_Icon.Bitmap.LoadFromFile(Emu_XML.Images_Path + 'emu_mame.png');
+          end
           else
-            uVirtual_Keyboard.vKey.Construct.Title.Text.Text := 'Found "' + Emu_VM_Default_Var.gamelist.games[vi] + '"';
+          begin
+            uVirtual_Keyboard.vKey.Construct.Title.Text.Text := Emu_VM_Default_Var.gamelist.games[vi];
+            if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected] + '.ico') then
+              uVirtual_Keyboard.vKey.Construct.Title.Game_Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons +
+                Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected] + '.ico')
+            else
+              uVirtual_Keyboard.vKey.Construct.Title.Game_Icon.Bitmap.LoadFromFile(Emu_XML.Images_Path + 'emu_mame.png');
+          end;
           inc(vi, 1);
           uView_Mode_Default_Actions.Refresh;
           uVirtual_Keyboard.Clear_Drop;
+          vk := 0;
           for ri := 0 to 20 do
           begin
-            vGameName := Copy(Emu_VM_Default_Var.gamelist.games[vi + ri], 0, vIntegerResult);
-            if UpperCase(vStringResult) = UpperCase(vGameName) then
+            if vi < Emu_VM_Default_Var.gamelist.Total_Games then
             begin
-              if ri = 20 then
-                uVirtual_Keyboard.Drop(ri, '...', '')
+              if Emu_VM_Default_Var.Favorites_Open then
+                vGameName := Copy(Emu_VM_Default_Var.favorites.games[vi + ri], 0, vIntegerResult)
               else
+                vGameName := Copy(Emu_VM_Default_Var.gamelist.games[vi + ri], 0, vIntegerResult);
+              if UpperCase(vStringResult) = UpperCase(vGameName) then
               begin
-                if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + Emu_VM_Default_Var.gamelist.Roms[vi + ri] + '.ico') then
-                  uVirtual_Keyboard.Drop(ri, Emu_VM_Default_Var.gamelist.games[vi + ri], uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons +
-                    Emu_VM_Default_Var.gamelist.Roms[vi + ri] + '.ico')
+                if (ri = 20) and (vk = 20) then
+                  uVirtual_Keyboard.Drop(vk, '...', '')
                 else
-                  uVirtual_Keyboard.Drop(ri, Emu_VM_Default_Var.gamelist.games[vi + ri], Emu_XML.Images_Path + 'emu_mame.png');
-              end;
-            end
+                begin
+                  if Emu_VM_Default_Var.Favorites_Open then
+                  begin
+                    if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + Emu_VM_Default_Var.favorites.Roms[vi + ri] + '.ico') then
+                      uVirtual_Keyboard.Drop(vk, Emu_VM_Default_Var.favorites.games[vi + ri], uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons +
+                        Emu_VM_Default_Var.favorites.Roms[vi + ri] + '.ico')
+                    else
+                      uVirtual_Keyboard.Drop(vk, Emu_VM_Default_Var.favorites.games[vi + ri], Emu_XML.Images_Path + 'emu_mame.png');
+                  end
+                  else
+                  begin
+                    if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + Emu_VM_Default_Var.gamelist.Roms[vi + ri] + '.ico') then
+                      uVirtual_Keyboard.Drop(vk, Emu_VM_Default_Var.gamelist.games[vi + ri], uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons +
+                        Emu_VM_Default_Var.gamelist.Roms[vi + ri] + '.ico')
+                    else
+                      uVirtual_Keyboard.Drop(vk, Emu_VM_Default_Var.gamelist.games[vi + ri], Emu_XML.Images_Path + 'emu_mame.png');
+                  end;
+                  inc(vk);
+                end;
+              end
+            end;
           end;
         end
         else
@@ -199,12 +241,21 @@ begin
           uVirtual_Keyboard.vKey.Construct.Edit.Edit.SelStart := Length(uVirtual_Keyboard.vKey.Construct.Edit.Edit.Text);
           BASS_ChannelPlay(Emu_VM_Default_Var.sounds.VK_Click, false);
         end;
-
       end;
     end
     else
     begin
-      if UpperCase(vKey) = 'ESC' then
+      if UpperCase(vKey) = 'UP' then
+      begin
+        Dec(Emu_VM_Default_Var.gamelist.Selected);
+        uView_Mode_Default_Actions.Refresh;
+      end
+      else if UpperCase(vKey) = 'DOWN' then
+      begin
+        inc(Emu_VM_Default_Var.gamelist.Selected);
+        uView_Mode_Default_Actions.Refresh;
+      end
+      else if UpperCase(vKey) = 'ESC' then
       begin
         if not uVirtual_Keyboard.vKey.Enter_Pressed then
         begin
@@ -257,7 +308,10 @@ begin
   begin
     for vi := 0 to Emu_VM_Default_Var.gamelist.Total_Games - 1 do
     begin
-      vGameName := Copy(Emu_VM_Default_Var.gamelist.games[vi], 0, Length(vString));
+      if Emu_VM_Default_Var.Favorites_Open then
+        vGameName := Copy(Emu_VM_Default_Var.favorites.games[vi], 0, Length(vString))
+      else
+        vGameName := Copy(Emu_VM_Default_Var.gamelist.games[vi], 0, Length(vString));
       if UpperCase(vString) = UpperCase(vGameName) then
       begin
         Emu_VM_Default_Var.gamelist.Selected := vi;

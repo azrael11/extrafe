@@ -1,0 +1,38 @@
+unit uEmu_Arcade_Mame_Actions;
+
+interface
+
+uses
+  System.Classes,
+  System.StrUtils,
+  FMX.Types;
+
+procedure Open_Global_Configuration;
+
+var
+  vMameVideoTimer: TTimer;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uEmu_Arcade_Mame_Config;
+
+/// /////////////////////////////////////////////////////////////////////////////
+
+procedure Open_Global_Configuration;
+var
+  vi: Integer;
+begin
+  if not ContainsText(extrafe.Prog.State, 'mame_config') then
+  begin
+    uEmu_Arcade_Mame_Config.Load;
+    extrafe.Prog.State := 'emu_mame_config';
+  end
+  else
+    extrafe.Prog.State := 'emu_mame';
+end;
+
+end.
+
+

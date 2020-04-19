@@ -18,8 +18,6 @@ const
 
 procedure Load;
 
-procedure Get_ViewMode_Panels;
-
 procedure Free_Panel(vFreePanel_Num: Integer);
 procedure Show_Panel(vShow: Integer);
 
@@ -49,24 +47,13 @@ uses
   uEmu_Arcade_Mame_Config_Miscellaneous,
   uEmu_Arcade_Mame_Config_MiscellaneousII,
   uEmu_Arcade_Mame_Config_Snap_Movie_Playback,
-  {View Modes}
-  uView_Mode_Default_AllTypes;
-
-procedure Get_ViewMode_Panels;
-begin
-  if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'video' then
-  begin
-    mame_config_panel := Emu_VM_Default.Config.main;
-    mame_config_left := Emu_VM_Default.Config.left;
-    mame_config_right := Emu_VM_Default.Config.right;
-  end;
-end;
+  uView_Mode;
 
 procedure Load;
 var
   vi: Integer;
 begin
-  Get_ViewMode_Panels;
+  uView_Mode.Set_Config_Panels(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode, mame_config_panel, mame_config_left, mame_config_right);
 
   if extrafe.prog.State = 'mame' then
     uLoad_AllTypes.CreateHeader(mame_config_panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.DeepSkyBlue, 'Mame Global Configuration', False, nil)

@@ -109,7 +109,7 @@ var
 begin
   vView_Mode := choose_view_mode;
 
-  if vView_Mode = 'video' then
+  if vView_Mode = 'default' then
     uView_Mode_Default_Key.Key(vKey);
 end;
 

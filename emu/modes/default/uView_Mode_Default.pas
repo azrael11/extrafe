@@ -27,12 +27,15 @@ uses
 
 { Creation }
 
+function get_view_name: String;
+
 { Create Scene }
 procedure Create_Scene(vUser_Num: Integer; vQuery: TFDQuery; vMain: TImage; vPath, vImages, vSounds: String);
 
 { Create the configuration standard part }
 procedure Create_Configuration(vMain: TImage);
 procedure Free_Configuarion;
+procedure Set_Panels_Configurtaion(vMain, vLeft, vRight: TPanel);
 
 { Create the Gamelist part }
 procedure Create_Gamelist;
@@ -53,6 +56,9 @@ procedure Load_XML_Variables(vPath: String);
 { Load extra files }
 procedure Load_Files;
 
+{Start Default ViewMode}
+procedure Start_View_Mode(vSelected, vGames_Count: Integer; vList_Games, vList_Roms, vList_Path: TStringlist);
+
 var
   vXML: IXMLDocument;
   vRoot, vNode: IXMLNode;
@@ -64,10 +70,17 @@ uses
   uLoad_AllTypes,
   uDB,
   uDB_AUser,
+  uView_Mode_Default_Actions,
   uView_Mode_Default_Game,
   uView_Mode_Default_Sounds,
   uView_Mode_Default_AllTypes,
   uView_Mode_Default_Mouse;
+
+function get_view_name: String;
+begin
+  if extrafe.prog.State = 'emu_mame' then
+    Result := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode + '\';
+end;
 
 procedure Load_XML_Variables(vPath: String);
 var
@@ -76,7 +89,7 @@ var
 
 begin
   vXML := TXMLDocument.Create('');
-  vXML.LoadFromFile(vPath + 'video.xml');
+  vXML.LoadFromFile(vPath + 'default.xml');
   if vXML.IsEmptyDoc = False then
   begin
     vRoot := vXML.DocumentElement;
@@ -243,13 +256,20 @@ begin
   FreeAndNil(Emu_VM_Default.config.main);
 end;
 
+procedure Set_Panels_Configurtaion(vMain, vLeft, vRight: TPanel);
+begin
+  vMain := Emu_VM_Default.config.main;
+  vLeft := Emu_VM_Default.config.left;
+  vRight := Emu_VM_Default.config.right;
+end;
+
 procedure Create_Scene(vUser_Num: Integer; vQuery: TFDQuery; vMain: TImage; vPath, vImages, vSounds: String);
 begin
   Emu_VM_Default.main := vMain;
 
   Load_XML_Variables(vPath);
-  Emu_XML.Images_Path := vImages + 'video\';
-  Emu_XML.Sounds_Path := vSounds + 'video\';
+  Emu_XML.Images_Path := vImages + get_view_name;
+  Emu_XML.Sounds_Path := vSounds + get_view_name;
 
   { Load all view mode (video) sounds }
   uView_Mode_Default_Sounds.Load;
@@ -260,6 +280,7 @@ begin
   Emu_VM_Default_Var.Config_Open := False;
   Emu_VM_Default_Var.Filters_Open := False;
   Emu_VM_Default_Var.Lists_Open := False;
+  Emu_VM_Default_Var.lists.Selected := 'None';
   Emu_VM_Default_Var.Game_Mode := False;
   Emu_VM_Default_Var.Gamelist.Loaded := False;
   Emu_VM_Default_Var.Favorites_Open := False;
@@ -588,6 +609,7 @@ begin
   Emu_VM_Default.Gamelist.lists.Lists_Text.Font.Family := 'Tahoma';
   Emu_VM_Default.Gamelist.lists.Lists_Text.Font.Size := 20;
   Emu_VM_Default.Gamelist.lists.Lists_Text.TextSettings.HorzAlign := TTextAlign.Leading;
+  Emu_VM_Default.Gamelist.lists.Lists_Text.Text := Emu_VM_Default_Var.lists.Selected;
   Emu_VM_Default.Gamelist.lists.Lists_Text.Visible := True;
 end;
 
@@ -829,5 +851,22 @@ procedure Load_Files;
 begin
 
 end;
+
+procedure Start_View_Mode(vSelected, vGames_Count: Integer; vList_Games, vList_Roms, vList_Path: TStringlist);
+begin
+  Emu_VM_Default_Var.Gamelist.Games := TStringlist.Create;
+  Emu_VM_Default_Var.Gamelist.Roms := TStringlist.Create;
+  Emu_VM_Default_Var.Gamelist.Paths := TStringlist.Create;
+
+  Emu_VM_Default_Var.Gamelist.Selected := vSelected;
+  Emu_VM_Default_Var.Gamelist.Total_Games := vGames_Count;
+  Emu_VM_Default_Var.Gamelist.Roms := vList_Roms;
+  Emu_VM_Default_Var.Gamelist.Games := vList_Games;
+  Emu_VM_Default_Var.Gamelist.Paths := vList_Path;
+
+  uView_Mode_Default_Actions.Refresh;
+
+end;
+
 
 end.

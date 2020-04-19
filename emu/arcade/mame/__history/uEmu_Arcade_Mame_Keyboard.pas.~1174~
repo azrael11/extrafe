@@ -1,0 +1,28 @@
+unit uEmu_Arcade_Mame_Keyboard;
+
+interface
+
+uses
+  System.Classes;
+
+procedure Action(vAction: String);
+
+implementation
+
+uses
+//  uDB_AUser,
+//  uLoad_AllTypes,
+  uEmu_Arcade_Mame;
+//  uVirtual_Keyboard,
+//  uSnippet_Search,
+//  uEmu_Arcade_Mame_AllTypes,
+//  uEmu_Arcade_Mame_Actions,
+//  uEmu_Arcade_Mame_Game_Actions;
+
+procedure Action(vAction: String);
+begin
+  if vAction = 'Exit' then
+    uEmu_Arcade_Mame.Exit;
+end;
+
+end.

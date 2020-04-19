@@ -16,6 +16,7 @@ uses
   Winapi.Winsock,
   Winapi.WinInet,
   Winapi.Messages,
+  Winapi.TlHelp32,
   ActiveX,
   comobj,
   FMX.Platform.Win,
@@ -24,6 +25,7 @@ uses
   scktComp,
 {$ENDIF}
   uLoad_AllTypes;
+
 
 { program info build }
 function Version_Get_info(mFileName: string): TStringlist;
@@ -43,12 +45,12 @@ function File_Names(vDir: String; vFileType: String): TStringlist;
 function File_Is_In_Use(FileName: TFileName): Boolean;
 function File_Get_Size(const aFilename: String): int64;
 
-{machine info}
+{ machine info }
 function Os_Architecture(Const vOsArch: TOSVersion.TArchitecture): String;
 function Os_Platform(Const vOsPlatform: TOSVersion.TPlatform): String;
 function Os_Platform_Point: Integer;
 
-{Fonts}
+{ Fonts }
 procedure Fonts_Get(FontList: TStringlist);
 
 implementation
@@ -63,7 +65,7 @@ const
   iphlpapidll = 'iphlpapi.dll';
 {$ENDIF}
 
-  // Just gets the version info
+// Just gets the version info
 function Version_Get_info(mFileName: string): TStringlist;
 var
   VerInfoSize: Cardinal;
@@ -311,7 +313,7 @@ end;
 
 function Os_Platform_Point: Integer;
 begin
-  Result := SizeOf(Pointer) * 8;
+  Result := sizeof(Pointer) * 8;
 end;
 
 procedure Fonts_Get(FontList: TStringlist);
@@ -356,7 +358,7 @@ begin
 {$ENDIF}
 {$IFDEF MSWINDOWS}
   DC := GetDC(0);
-  FillChar(LFont, SizeOf(LFont), 0);
+  FillChar(LFont, sizeof(LFont), 0);
   LFont.lfCharset := DEFAULT_CHARSET;
   EnumFontFamiliesEx(DC, LFont, @EnumFontsProc, Winapi.Windows.LPARAM(FontList), 0);
   ReleaseDC(0, DC);

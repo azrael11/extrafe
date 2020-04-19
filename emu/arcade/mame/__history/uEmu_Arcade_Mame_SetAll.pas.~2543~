@@ -1,0 +1,235 @@
+unit uEmu_Arcade_Mame_SetAll;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UITypes,
+  FMX.StdCtrls,
+  FMX.Objects,
+  FMX.Types,
+  FMX.Effects,
+  FMX.Ani,
+  FMX.Filter.Effects;
+
+procedure Load;
+procedure Create_Configuration;
+
+procedure Get_Set_Mame_Data;
+procedure Set_Mame_Data;
+
+implementation
+
+uses
+  uDB,
+  uDB_AUser,
+  uLoad_AllTypes,
+  emu,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Ini,
+  uView_Mode_Default;
+
+procedure Load;
+begin
+  vMame.Scene.Main := TImage.Create(Emu_Form);
+  vMame.Scene.Main.Name := 'Mame_Main';
+  vMame.Scene.Main.Parent := Emu_Form;
+  vMame.Scene.Main.SetBounds(0, 0, Emu_Form.Width, Emu_Form.Height);
+  vMame.Scene.Main.WrapMode := TImageWrapMode.Stretch;
+  vMame.Scene.Main.Visible := True;
+
+  if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode = 'default' then
+    uView_Mode_Default.Create_Scene(uDB_AUser.Local.USER.Num, uDB.Arcade_Query, vMame.Scene.Main, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Views,
+      uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Sounds);
+end;
+
+procedure Get_Set_Mame_Data;
+var
+  vQuery: String;
+  vi: integer;
+begin
+
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := 'SELECT COUNT(*) FROM GAMES';
+  uDB.Arcade_Query.Open;
+  mame.Gamelist.Games_Count := uDB.Arcade_Query.Fields[0].AsInteger;
+
+  vQuery := 'SELECT gamename, romname FROM games ORDER BY gamename ASC';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  mame.Gamelist.ListGames := TStringlist.Create;
+  mame.Gamelist.ListRoms := TStringlist.Create;
+
+  mame.Gamelist.ListYear := TStringlist.Create;
+  mame.Gamelist.ListManufaturer := TStringlist.Create;
+  mame.Gamelist.ListGenre := TStringlist.Create;
+  mame.Gamelist.ListMonochrome := TStringlist.Create;
+  mame.Gamelist.ListLanguages := TStringlist.Create;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListGames.Add(uDB.Arcade_Query.FieldByName('gamename').AsString);
+      mame.Gamelist.ListRoms.Add(uDB.Arcade_Query.FieldByName('romname').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  vQuery := 'SELECT DISTINCT year FROM games';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListYear.Add(uDB.Arcade_Query.FieldByName('year').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  vQuery := 'SELECT DISTINCT manufacturer FROM games';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListManufaturer.Add(uDB.Arcade_Query.FieldByName('manufacturer').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  vQuery := 'SELECT DISTINCT genre FROM games';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListGenre.Add(uDB.Arcade_Query.FieldByName('genre').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  vQuery := 'SELECT DISTINCT monochrome FROM games';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListMonochrome.Add(uDB.Arcade_Query.FieldByName('monochrome').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  vQuery := 'SELECT DISTINCT languages FROM games';
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := vQuery;
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      mame.Gamelist.ListLanguages.Add(uDB.Arcade_Query.FieldByName('languages').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  mame.Gamelist.ListManufaturer.Sort;
+  mame.Gamelist.ListYear.Sort;
+  mame.Gamelist.ListMonochrome.Sort;
+  mame.Gamelist.ListLanguages.Sort;
+
+  vQuery := 'SELECT * FROM ARCADE_MAME WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+  uDB.ExtraFE_Query_Local.Open;
+  uDB.ExtraFE_Query_Local.First;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Installed := uDB.ExtraFE_Query_Local.FieldByName('INSTALLED').AsBoolean;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Active := uDB.ExtraFE_Query_Local.FieldByName('EMU_ACTIVE').AsBoolean;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Position := uDB.ExtraFE_Query_Local.FieldByName('EMU_POSITION').AsInteger;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Unique := uDB.ExtraFE_Query_Local.FieldByName('EMU_UNIQUE').AsSingle;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode := uDB.ExtraFE_Query_Local.FieldByName('VIEW_MODE').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Path := uDB.ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_PATH').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_IMAGES').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Sounds := uDB.ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_SOUNDS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Views := uDB.ExtraFE_Query_Local.FieldByName('EXTRAFE_MAME_VIEWS').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name := uDB.ExtraFE_Query_Local.FieldByName('MAME_NAME').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Path := uDB.ExtraFE_Query_Local.FieldByName('MAME_PATH').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini := uDB.ExtraFE_Query_Local.FieldByName('MAME_INI').AsString;
+  uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Version := uDB.ExtraFE_Query_Local.FieldByName('MAME_VERSION').AsString;
+
+  uDB.ExtraFE_Query_Local.Close;
+
+  Set_Mame_Data;
+end;
+
+procedure Set_Mame_Data;
+begin
+  if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini) then
+  begin
+    emulation.emu[0, 0] := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name;
+    emulation.Arcade[0].Prog_Path := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Path;
+    emulation.Arcade[0].Emu_Path := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Path;
+    emulation.Arcade[0].Active := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Active;
+    emulation.Arcade[0].Active_Place := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Position;
+    emulation.Arcade[0].Name := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name;
+    emulation.Arcade[0].Name_Exe := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Name;
+    emulation.Arcade[0].Menu_Image_Path := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images;
+    emulation.Arcade[0].Background := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'main_background.png';
+    emulation.Arcade[0].Logo := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images + 'mame.png';
+    emulation.Arcade[0].Second_Level := -1;
+    emulation.Arcade[0].Unique_Num := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Unique;
+    emulation.Arcade[0].Installed := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Installed;
+
+    uEmu_Arcade_Mame_Ini.Load;
+  end;
+end;
+
+end.

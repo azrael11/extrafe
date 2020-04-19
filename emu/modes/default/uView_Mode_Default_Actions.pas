@@ -12,8 +12,6 @@ uses
   FMX.Objects,
   BASS;
 
-procedure Start_View_Mode(vSelected, vGames_Count: Integer; vList_Games, vList_Roms, vList_Path: TStringlist);
-
 procedure Configuration_Action;
 procedure Filters_Action;
 procedure Lists_Action;
@@ -25,7 +23,8 @@ procedure Refresh_Load_Icons(vSelected, vGames_Count: Integer; vList_Roms: TStri
 procedure Refresh_Load_Flyers;
 procedure Refresh_Get_BarInfo;
 
-procedure Exit_Action;
+procedure Exit_Default;
+procedure Exit_Action(vComes: String);
 procedure Move_Gamelist(vMove_Action: String);
 procedure Refresh_After_Key;
 
@@ -95,7 +94,6 @@ begin
   if Emu_VM_Default_Var.Lists_Open then
   begin
     uView_Mode_Default_Actions_Lists.Free;
-    Emu_VM_Default.Settings.Visible := False;
     if Emu_VM_Default.Media.Video.Video.IsPause then
       Emu_VM_Default.Media.Video.Video.Resume;
     Emu_VM_Default.Gamelist.Lists.Lists_Glow.Enabled := False;
@@ -105,9 +103,11 @@ begin
     uView_Mode_Default_Actions_Lists.Load;
     if Emu_VM_Default.Media.Video.Video.IsPlay then
       Emu_VM_Default.Media.Video.Video.Pause;
-    Emu_VM_Default.Settings.Visible := True;
-    Emu_VM_Default.Settings_Ani.Stop;
   end;
+
+  Emu_VM_Default.Settings.Visible := Emu_VM_Default_Var.Lists_Open;
+  Emu_VM_Default.Settings_Ani.Start;
+
   Emu_VM_Default.Left_Blur.Enabled := not Emu_VM_Default_Var.Lists_Open;
   Emu_VM_Default.Right_Blur.Enabled := not Emu_VM_Default_Var.Lists_Open;
 
@@ -199,7 +199,12 @@ begin
       if ((vSelected + 10) + vi < 20) or (vSelected + vi >= vGames_Count + 10) then
         ri := -1
       else
-        inc(ri, 1);
+      begin
+        if vi = 0 then
+          ri := vSelected - 10
+        else
+          inc(ri);
+      end;
       if (ri > -1) and (ri < vGames_Count) then
       begin
         if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri] + '.ico') then
@@ -316,21 +321,6 @@ begin
   Emu_VM_Default.Media.Video.Game_Info.Favorite.Visible := Emu_VM_Default_Var.favorites.game_is;
 end;
 
-procedure Start_View_Mode(vSelected, vGames_Count: Integer; vList_Games, vList_Roms, vList_Path: TStringlist);
-begin
-  Emu_VM_Default_Var.Gamelist.Games := TStringlist.Create;
-  Emu_VM_Default_Var.Gamelist.Roms := TStringlist.Create;
-  Emu_VM_Default_Var.Gamelist.Paths := TStringlist.Create;
-
-  Emu_VM_Default_Var.Gamelist.Selected := vSelected;
-  Emu_VM_Default_Var.Gamelist.Total_Games := vGames_Count;
-  Emu_VM_Default_Var.Gamelist.Roms := vList_Roms;
-  Emu_VM_Default_Var.Gamelist.Games := vList_Games;
-  Emu_VM_Default_Var.Gamelist.Paths := vList_Path;
-
-  Refresh;
-end;
-
 procedure Refresh_After_Key;
 begin
   if Emu_VM_Default_Var.Favorites_Open then
@@ -396,7 +386,7 @@ begin
   end;
 end;
 
-procedure Exit_Action;
+procedure Exit_Action(vComes: String);
 begin
   if Emu_VM_Default_Var.Config_Open then
     Configuration_Action
@@ -407,7 +397,13 @@ begin
   else if Emu_VM_Default_Var.Lists_Open then
     Lists_Action
   else
-    uEmu_Emu.Key_Action('Exit');
+  begin
+    Exit_Default;
+    if vComes = 'Keyboard' then
+      uEmu_Emu.Key_Action('Exit')
+    else if vComes = 'Mouse' then
+      uEmu_Emu.Mouse_Action('Emu_Exit');
+  end;
 end;
 
 procedure Enter;
@@ -415,7 +411,7 @@ begin
   if Emu_VM_Default_Var.Game_Mode then
     uView_Mode_Default_Game.Run_State
   else
-    uView_Mode_Default_Game.Load;
+    uView_Mode_Default_Game.Load_Menu;
 end;
 
 procedure Favorites_Open;
@@ -649,6 +645,75 @@ begin
   Emu_VM_Default_Var.Video.Screensaver := False;
   Emu_VM_Default.Media.Video.Video.WrapMode := TImageWrapMode.Stretch;
   Emu_VM_Default.Media.Video.Video.Play(Emu_VM_Default_Var.Video.Active_Video);
+end;
+
+procedure Exit_Default;
+begin
+  { Lists }
+  Emu_VM_Default_Var.Lists.Selected := 'None';
+
+  { Filters }
+  Emu_VM_Default_Var.Filters.Added := 0;
+  if Emu_VM_Default_Var.Filters.List_Added <> nil then
+  begin
+    Emu_VM_Default_Var.Filters.List_Added.Clear;
+    Emu_VM_Default_Var.Filters.Temp_Roms_Final.Clear;
+    Emu_VM_Default_Var.Filters.Temp_Games_Final.Clear;
+    Emu_VM_Default_Var.Filters.Temp_Roms.Clear;
+    Emu_VM_Default_Var.Filters.Temp_Games.Clear;
+    vState_Filters.year := False;
+    vState_Filters.year_v.Clear;
+    vState_Filters.manufacturer := False;
+    vState_Filters.manufacturer_v.Clear;
+    vState_Filters.genre := False;
+    vState_Filters.genre_v.Clear;
+    vState_Filters.adult := False;
+    vState_Filters.adult_v.Clear;
+    vState_Filters.original := False;
+    vState_Filters.original_v.Clear;
+    vState_Filters.mechanical := False;
+    vState_Filters.mechanical_v.Clear;
+    vState_Filters.working := False;
+    vState_Filters.working_v.Clear;
+    vState_Filters.monochrome := False;
+    vState_Filters.monochrome_v.Clear;
+    vState_Filters.screenless := False;
+    vState_Filters.screenless_v.Clear;
+    vState_Filters.languages := False;
+    vState_Filters.languages_v.Clear;
+    FreeAndNil(Emu_VM_Default.Gamelist.Filters.Window);
+  end;
+
+  Emu_VM_Default_Var.Gamelist.Games.Clear;
+  Emu_VM_Default_Var.Gamelist.Roms.Clear;
+
+  uDB.Arcade_Query.Close;
+  uDB.Arcade_Query.SQL.Clear;
+  uDB.Arcade_Query.SQL.Text := 'SELECT gamename, romname FROM games ORDER BY gamename ASC';
+  uDB.Arcade_Query.DisableControls;
+  uDB.Arcade_Query.Open;
+  uDB.Arcade_Query.First;
+
+  try
+    uDB.Arcade_Query.First;
+    while not uDB.Arcade_Query.Eof do
+    begin
+      Emu_VM_Default_Var.Gamelist.Games.Add(uDB.Arcade_Query.FieldByName('gamename').AsString);
+      Emu_VM_Default_Var.Gamelist.Roms.Add(uDB.Arcade_Query.FieldByName('romname').AsString);
+      uDB.Arcade_Query.Next;
+    end;
+  finally
+    uDB.Arcade_Query.EnableControls;
+  end;
+
+  Emu_VM_Default_Var.Gamelist.Total_Games := uDB.Arcade_Query.RecordCount;
+  Emu_VM_Default.Gamelist.Lists.Lists_Text.Text := Emu_VM_Default_Var.Lists.Selected;
+  Emu_VM_Default_Var.Gamelist.Selected := 0;
+  Emu_VM_Default_Var.Gamelist.Old_Selected := -100;
+
+  uView_Mode_Default_Actions.Refresh;
+
+  // When user check to save its locations of things
 end;
 
 end.

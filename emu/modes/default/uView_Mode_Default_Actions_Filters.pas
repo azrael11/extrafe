@@ -17,15 +17,25 @@ uses
 type
   TFILTERS = record
     year: Boolean;
+    year_v: TStringList;
     manufacturer: Boolean;
+    manufacturer_v: TStringList;
     genre: Boolean;
+    genre_v: TStringList;
     adult: Boolean;
+    adult_v: TStringList;
     original: Boolean;
+    original_v: TStringList;
     mechanical: Boolean;
+    mechanical_v: TStringList;
     working: Boolean;
+    working_v: TStringList;
     monochrome: Boolean;
+    monochrome_v: TStringList;
     screenless: Boolean;
+    screenless_v: TStringList;
     languages: Boolean;
+    languages_v: TStringList;
   end;
 
 procedure Create_Window;
@@ -49,6 +59,13 @@ procedure set_filter(vName: String; vState: Boolean);
 
 function Get_List(vList: String): TStringList;
 
+procedure add_result_to_list(vFilter, vResponse: String);
+procedure revome_filter(vFilter, vValue: String);
+
+const
+  cFilters_Colors: array [0 .. 9] of TAlphaColor = ($FF63CBFC, $FFFFFFFF, $FF000000, $FFF6ED41, $FFE12424, $FF2FF05B, $FF0A3714, $FF4A1264, $FFDEB2F3,
+    $FF312D32);
+
 var
   vState_Filters: TFILTERS;
 
@@ -68,7 +85,7 @@ procedure Create_Window;
 var
   vi: Integer;
 begin
-  if not Assigned(Emu_VM_Default.Gamelist.Filters.Window.Panel) then
+  if Emu_VM_Default.Gamelist.Filters.Window.Panel = nil then
   begin
     Emu_VM_Default_Var.Filters.Added := 0;
     Emu_VM_Default_Var.Filters.List := TStringList.Create;
@@ -177,6 +194,18 @@ begin
     Emu_VM_Default.Gamelist.Filters.Window.Cancel.Anchors := [TAnchorKind.akBottom, TAnchorKind.akRight];
     Emu_VM_Default.Gamelist.Filters.Window.Cancel.OnClick := Emu_VM_Default_Mouse.Button.OnMouseClick;
     Emu_VM_Default.Gamelist.Filters.Window.Cancel.Visible := True;
+
+    vState_Filters.year_v := TStringList.Create;
+    vState_Filters.manufacturer_v := TStringList.Create;
+    vState_Filters.genre_v := TStringList.Create;
+    vState_Filters.adult_v := TStringList.Create;
+    vState_Filters.original_v := TStringList.Create;
+    vState_Filters.mechanical_v := TStringList.Create;
+    vState_Filters.working_v := TStringList.Create;
+    vState_Filters.monochrome_v := TStringList.Create;
+    vState_Filters.year_v := TStringList.Create;
+    vState_Filters.screenless_v := TStringList.Create;
+    vState_Filters.languages_v := TStringList.Create;
   end
   else
     Emu_VM_Default.Gamelist.Filters.Window.Panel.Visible := True;
@@ -214,7 +243,7 @@ begin
     Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Combine.Parent := Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Panel;
     Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Combine.SetBounds(10, 6, 14, 14);
     Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Combine.Fill.Kind := TBrushKind.Solid;
-    Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Combine.Visible := False;
+    Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Combine.Visible := True;
 
     Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Remove := TText.Create(Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Panel);
     Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vNum].Remove.name := 'Emu_Filters_Window_Filter_Remove_' + (vNum).ToString;
@@ -338,25 +367,55 @@ begin
   Emu_VM_Default_Var.Filters.First_Selection := True;
   case IndexStr(vName, ['Year', 'Manufacturer', 'Genre', 'Adult', 'Original', 'Mechanical', 'Working', 'Monochrome', 'Screenless', 'Languages']) of
     0:
-      Combo_Create_Filter('Year', vPanel);
+      begin
+        Combo_Create_Filter('Year', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[0];
+      end;
     1:
-      Combo_Create_Filter('Manufacturer', vPanel);
+      begin
+        Combo_Create_Filter('Manufacturer', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[1];
+      end;
     2:
-      Combo_Create_Filter('Genre', vPanel);
+      begin
+        Combo_Create_Filter('Genre', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[2];
+      end;
     3:
-      Combo_Create_Filter('Adult', vPanel);
+      begin
+        Combo_Create_Filter('Adult', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[3];
+      end;
     4:
-      Combo_Create_Filter('Original', vPanel);
+      begin
+        Combo_Create_Filter('Original', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[4];
+      end;
     5:
-      Combo_Create_Filter('Mechanical', vPanel);
+      begin
+        Combo_Create_Filter('Mechanical', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[5];
+      end;
     6:
-      Combo_Create_Filter('Working', vPanel);
+      begin
+        Combo_Create_Filter('Working', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[6];
+      end;
     7:
-      Combo_Create_Filter('Monochrome', vPanel);
+      begin
+        Combo_Create_Filter('Monochrome', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[7];
+      end;
     8:
-      Combo_Create_Filter('Screenless', vPanel);
+      begin
+        Combo_Create_Filter('Screenless', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[8];
+      end;
     9:
-      Combo_Create_Filter('Languages', vPanel);
+      begin
+        Combo_Create_Filter('Languages', vPanel);
+        Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Combine.Fill.Color := cFilters_Colors[9];
+      end;
   end;
   Emu_VM_Default_Var.Filters.First_Selection := False;
 end;
@@ -463,8 +522,6 @@ end;
 procedure Filter_Result(vFilter, vResponse: String; vPanel: Integer);
 var
   vQuery, vTitle, vValue: String;
-  vFilter_Index, vi: Integer;
-  vFilter_Found: Boolean;
   vList_Filters: String;
 begin
   Emu_VM_Default_Var.Filters.Temp_Roms.Clear;
@@ -510,6 +567,8 @@ begin
       Emu_VM_Default_Var.Filters.List_Added.Delete(vPanel + 1);
   end;
 
+  add_result_to_list(vFilter, vValue);
+  set_filter(vFilter, True);
   List_Result;
   Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel].Remove.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
 end;
@@ -539,108 +598,95 @@ begin
 end;
 
 procedure List_Result;
-const
-  first= TAlphaColorRec.Deepskyblue;
-  second = TAlphaColorRec.Red;
-  third = TAlphaColorRec.Pink;
-  fourth = TAlphaColorRec.Green;
-  fifth = TAlphaColorRec.Black;
-
 var
-  vQuery, vConditions, vFilter_name, vFilter_Value: String;
-  vi, vk, vl: Integer;
-  vList_Filters: String;
+  vQuery: String;
+  vi, vk: Integer;
   vFilter: TStringList;
   vFinal_Condition: String;
-  vFilter_Multple: String;
-  vCount: Integer;
+  vCondition: array [0 .. 9] of String;
 
-  function is_Filter_set(vName: String): Boolean;
+  function create_condition(vFilter: String; vList: TStringList): String;
+  var
+    vi: Integer;
+    vFirst: String;
   begin
-    if vName = 'Year' then
-      Result := vState_Filters.year
-    else if vName = 'Manufactorer' then
-      Result := vState_Filters.manufacturer
-    else if vName = 'Genre' then
-      Result := vState_Filters.genre
-    else if vName = 'Adult' then
-      Result := vState_Filters.adult
-    else if vName = 'Original' then
-      Result := vState_Filters.original
-    else if vName = 'Mechanical' then
-      Result := vState_Filters.mechanical
-    else if vName = 'Working' then
-      Result := vState_Filters.working
-    else if vName = 'Monochrome' then
-      Result := vState_Filters.monochrome
-    else if vName = 'Screenless' then
-      Result := vState_Filters.screenless
-    else if vName = 'Languages' then
-      Result := vState_Filters.languages;
-  end;
-
-begin
-  if Assigned(Emu_VM_Default_Var.Filters.Temp_Roms_Final) then
-    FreeAndNil(Emu_VM_Default_Var.Filters.Temp_Roms_Final);
-  if Assigned(Emu_VM_Default_Var.Filters.Temp_Games_Final) then
-    FreeAndNil(Emu_VM_Default_Var.Filters.Temp_Games_Final);
-
-  Emu_VM_Default_Var.Filters.Temp_Roms_Final := TStringList.Create;
-  Emu_VM_Default_Var.Filters.Temp_Games_Final := TStringList.Create;
-
-  vFilter := TStringList.Create;
-
-  vCount := 0;
-  vConditions := '';
-  for vi := 0 to Emu_VM_Default_Var.Filters.List_Added.Count - 1 do
-  begin
-    vList_Filters := 'Year Manufacturer Genre Monochrome Languages';
-    if AnsiContainsStr(vList_Filters, Emu_VM_Default_Var.Filters.List_Added.Names[vi]) then
-      vFilter_Value := Emu_VM_Default_Var.Filters.List_Added.ValueFromIndex[vi]
-    else
-      vFilter_Value := LowerCase(Emu_VM_Default_Var.Filters.List_Added.ValueFromIndex[vi]);
-    vFilter.Add(Emu_VM_Default_Var.Filters.List_Added.Names[vi] + '=' + vFilter_Value);
-    vFilter_name := Emu_VM_Default_Var.Filters.List_Added.Names[vi];
-
-    for vk := 0 to vFilter.Count - 1 do
-      if (vFilter.Names[vk] = vFilter_name) and (vk <> vi) and (is_Filter_set(vFilter.Names[vi]) = True) then
+    for vi := 0 to vList.Count - 1 do
+    begin
+      if vi = 0 then
       begin
-        vFinal_Condition := '';
-        for vl := 0 to vFilter.Count - 1 do
-        begin
-          vFilter_Multple := vFilter.Names[vl];
-          if vFilter_Multple = vFilter_name then
-          begin
-            if vFinal_Condition = '' then
-              vFinal_Condition := vFilter_name + ' IN ("' + vFilter.ValueFromIndex[vl] + '"'
-            else
-              vFinal_Condition := vFinal_Condition + ', "' + vFilter.ValueFromIndex[vl] + '"';
-          end;
-        end;
-        if vCount = 0 then
-          vConditions := vFinal_Condition + ')'
-        else
-          vConditions := vConditions + ' AND ' + vFinal_Condition + ')';
-        inc(vCount, 1);
+        vFirst := vList.Strings[vi];
+        Result := vFilter + '="' + vList.Strings[vi] + '"';
       end
       else
       begin
-        if is_Filter_set(vFilter.Names[vi]) = False then
-        begin
-          if vConditions <> '' then
-            vConditions := vConditions + ' AND ' + vFilter.Names[vi] + '="' + vFilter_Value + '" '
-          else
-            vConditions := vFilter.Names[vi] + '="' + vFilter_Value + '" ';
-        end;
-
-        if is_Filter_set(vFilter.Names[vi]) = False then
-          set_filter(vFilter.Names[vi], True);
+        if vi = 1 then
+          Result := vFilter + ' IN ("' + vFirst + '", "' + vList.Strings[vi] + '"'
+        else
+          Result := Result + ', "' + vList.Strings[vi] + '"';
       end;
+    end;
+
+    if vList.Count - 1 > 0 then
+      Result := Result + ')';
   end;
 
-  if vConditions <> '' then
+begin
+  if not Assigned(Emu_VM_Default_Var.Filters.Temp_Roms_Final) then
   begin
-    vQuery := 'SELECT romname, gamename FROM games  WHERE ' + vConditions;
+    Emu_VM_Default_Var.Filters.Temp_Roms_Final := TStringList.Create;
+    Emu_VM_Default_Var.Filters.Temp_Games_Final := TStringList.Create;
+  end;
+
+  Emu_VM_Default_Var.Filters.Temp_Roms_Final.Clear;
+  Emu_VM_Default_Var.Filters.Temp_Games_Final.Clear;
+
+  if vState_Filters.year_v.Count <> 0 then
+    vCondition[0] := create_condition('Year', vState_Filters.year_v);
+
+  if vState_Filters.manufacturer_v.Count <> 0 then
+    vCondition[1] := create_condition('Manufacturer', vState_Filters.manufacturer_v);
+
+  if vState_Filters.genre_v.Count <> 0 then
+    vCondition[2] := create_condition('Genre', vState_Filters.genre_v);
+
+  if vState_Filters.adult_v.Count <> 0 then
+    vCondition[3] := create_condition('Adult', vState_Filters.adult_v);
+
+  if vState_Filters.original_v.Count <> 0 then
+    vCondition[4] := create_condition('Original', vState_Filters.original_v);
+
+  if vState_Filters.mechanical_v.Count <> 0 then
+    vCondition[5] := create_condition('Mechanical', vState_Filters.mechanical_v);
+
+  if vState_Filters.working_v.Count <> 0 then
+    vCondition[6] := create_condition('Working', vState_Filters.working_v);
+
+  if vState_Filters.monochrome_v.Count <> 0 then
+    vCondition[7] := create_condition('Monochrome', vState_Filters.monochrome_v);
+
+  if vState_Filters.screenless_v.Count <> 0 then
+    vCondition[8] := create_condition('Screenless', vState_Filters.screenless_v);
+
+  if vState_Filters.languages_v.Count <> 0 then
+    vCondition[9] := create_condition('Languages', vState_Filters.languages_v);
+
+  vFinal_Condition := '';
+  vk := 0;
+  for vi := 0 to 9 do
+  begin
+    if vCondition[vi] <> '' then
+    begin
+      if vk = 0 then
+        vFinal_Condition := vCondition[vi]
+      else
+        vFinal_Condition := vFinal_Condition + ' AND ' + vCondition[vi];
+      inc(vk);
+    end;
+  end;
+
+  if vFinal_Condition <> '' then
+  begin
+    vQuery := 'SELECT romname, gamename FROM games  WHERE ' + vFinal_Condition + ' ORDER BY gamename ASC';
     uDB.Arcade_Query.Close;
     uDB.Arcade_Query.SQL.Clear;
     uDB.Arcade_Query.SQL.Text := vQuery;
@@ -729,15 +775,172 @@ begin
   Emu_VM_Default.Gamelist.Filters.Window.Games_Num.Text := Emu_VM_Default_Var.Filters.Temp_Roms_Final.Count.ToString;
   Emu_VM_Default.Gamelist.Filters.Window.Clear.TextSettings.FontColor := TAlphaColorRec.Grey;
   Emu_VM_Default.Gamelist.Filters.Window.Add.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+
+  vState_Filters.year := False;
+  vState_Filters.year_v.Clear;
+  vState_Filters.manufacturer := False;
+  vState_Filters.manufacturer_v.Clear;
+  vState_Filters.genre := False;
+  vState_Filters.genre_v.Clear;
+  vState_Filters.adult := False;
+  vState_Filters.adult_v.Clear;
+  vState_Filters.original := False;
+  vState_Filters.original_v.Clear;
+  vState_Filters.mechanical := False;
+  vState_Filters.mechanical_v.Clear;
+  vState_Filters.working := False;
+  vState_Filters.working_v.Clear;
+  vState_Filters.monochrome := False;
+  vState_Filters.monochrome_v.Clear;
+  vState_Filters.screenless := False;
+  vState_Filters.screenless_v.Clear;
+  vState_Filters.languages := False;
+  vState_Filters.languages_v.Clear;
+end;
+
+procedure revome_filter(vFilter, vValue: String);
+var
+  vIndex: Integer;
+begin
+  if vFilter = 'Year' then
+  begin
+    if vState_Filters.year_v.Count = 1 then
+    begin
+      vState_Filters.year := False;
+      vState_Filters.year_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.year_v.IndexOf(vValue);
+      vState_Filters.year_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Manufactorer' then
+  begin
+    if vState_Filters.manufacturer_v.Count = 1 then
+    begin
+      vState_Filters.manufacturer := False;
+      vState_Filters.manufacturer_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.manufacturer_v.IndexOf(vValue);
+      vState_Filters.manufacturer_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Genre' then
+  begin
+    if vState_Filters.genre_v.Count = 1 then
+    begin
+      vState_Filters.genre := False;
+      vState_Filters.genre_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.genre_v.IndexOf(vValue);
+      vState_Filters.genre_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Adult' then
+  begin
+    if vState_Filters.adult_v.Count = 1 then
+    begin
+      vState_Filters.adult := False;
+      vState_Filters.adult_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.adult_v.IndexOf(vValue);
+      vState_Filters.adult_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Original' then
+  begin
+    if vState_Filters.original_v.Count = 1 then
+    begin
+      vState_Filters.original := False;
+      vState_Filters.original_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.original_v.IndexOf(vValue);
+      vState_Filters.original_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Mechanical' then
+  begin
+    if vState_Filters.mechanical_v.Count = 1 then
+    begin
+      vState_Filters.mechanical := False;
+      vState_Filters.mechanical_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.mechanical_v.IndexOf(vValue);
+      vState_Filters.mechanical_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Working' then
+  begin
+    if vState_Filters.working_v.Count = 1 then
+    begin
+      vState_Filters.working := False;
+      vState_Filters.working_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.working_v.IndexOf(vValue);
+      vState_Filters.working_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Monochrome' then
+  begin
+    if vState_Filters.monochrome_v.Count = 1 then
+    begin
+      vState_Filters.monochrome := False;
+      vState_Filters.monochrome_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.monochrome_v.IndexOf(vValue);
+      vState_Filters.monochrome_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Screenless' then
+  begin
+    if vState_Filters.screenless_v.Count = 1 then
+    begin
+      vState_Filters.screenless := False;
+      vState_Filters.screenless_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.screenless_v.IndexOf(vValue);
+      vState_Filters.screenless_v.Delete(vIndex);
+    end;
+  end
+  else if vFilter = 'Languages' then
+  begin
+    if vState_Filters.languages_v.Count = 1 then
+    begin
+      vState_Filters.languages := False;
+      vState_Filters.languages_v.Clear;
+    end
+    else
+    begin
+      vIndex := vState_Filters.languages_v.IndexOf(vValue);
+      vState_Filters.languages_v.Delete(vIndex);
+    end;
+  end;
 end;
 
 procedure Remove(vPanel_Num: Integer);
 var
   vi: Integer;
   vSum_Height: Single;
-  vQuery: String;
   vFilter_name, vFilter_Name_Curent: String;
   vCount: Integer;
+  vFilter_Value: String;
 begin
   vFilter_name := Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel_Num].Choose.Items
     [Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels[vPanel_Num].Choose.ItemIndex];
@@ -757,11 +960,14 @@ begin
   if vCount <= 1 then
     set_filter(vFilter_name, False);
 
-  Dec(Emu_VM_Default_Var.Filters.Added, 1);
+  Dec(Emu_VM_Default_Var.Filters.Added);
+  vFilter_Value := Emu_VM_Default_Var.Filters.List_Added.ValueFromIndex[vPanel_Num];
   Emu_VM_Default_Var.Filters.List_Added.Delete(vPanel_Num);
   SetLength(Emu_VM_Default.Gamelist.Filters.Window.Filter_Panels, Emu_VM_Default_Var.Filters.Added + 1);
 
   vSum_Height := 0;
+
+  revome_filter(vFilter_name, vFilter_Value);
 
   if Emu_VM_Default_Var.Filters.Added = 0 then
   begin
@@ -822,6 +1028,7 @@ begin
   Emu_VM_Default_Var.Gamelist.Total_Games := Emu_VM_Default_Var.Gamelist.Roms.Count;
 
   Emu_VM_Default_Var.Gamelist.Selected := 0;
+  Emu_VM_Default_Var.Gamelist.Old_Selected := -100;
   uView_Mode_Default_Actions.Refresh;
 
   if Emu_VM_Default_Var.Filters.Added = 0 then
@@ -838,6 +1045,30 @@ begin
     end;
   end;
   Close_Window;
+end;
+
+procedure add_result_to_list(vFilter, vResponse: String);
+begin
+  if vFilter = 'Year' then
+    vState_Filters.year_v.Add(vResponse)
+  else if vFilter = 'Manufactorer' then
+    vState_Filters.manufacturer_v.Add(vResponse)
+  else if vFilter = 'Genre' then
+    vState_Filters.genre_v.Add(vResponse)
+  else if vFilter = 'Adult' then
+    vState_Filters.adult_v.Add(vResponse)
+  else if vFilter = 'Original' then
+    vState_Filters.original_v.Add(vResponse)
+  else if vFilter = 'Mechanical' then
+    vState_Filters.mechanical_v.Add(vResponse)
+  else if vFilter = 'Working' then
+    vState_Filters.working_v.Add(vResponse)
+  else if vFilter = 'Monochrome' then
+    vState_Filters.monochrome_v.Add(vResponse)
+  else if vFilter = 'Screenless' then
+    vState_Filters.screenless_v.Add(vResponse)
+  else if vFilter = 'Languages' then
+    vState_Filters.languages_v.Add(vResponse);
 end;
 
 end.

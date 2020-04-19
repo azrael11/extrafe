@@ -1,0 +1,27 @@
+unit uEmu_Arcade_Mame_Actions;
+
+interface
+
+uses
+  System.Classes,
+  System.StrUtils,
+  FMX.Types;
+
+procedure Open_Global_Configuration;
+
+var
+  vMameVideoTimer: TTimer;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uEmu_Arcade_Mame_Config;
+
+/// /////////////////////////////////////////////////////////////////////////////
+
+
+
+end.
+
+

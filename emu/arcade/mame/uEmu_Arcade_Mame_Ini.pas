@@ -730,9 +730,6 @@ begin
   mame.Emu.Ini.CORE_SEARCH_rompath := TStringList.Create;
   mame.Emu.Ini.CORE_SEARCH_inipath := TStringList.Create;
 
-  // Gameinit support
-  mame.Support.GameInit := TStringList.Create;
-
   AssignFile(vText, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini);
   Reset(vText);
   while not Eof(vText) do
@@ -773,6 +770,7 @@ var
     else
       Result := '0';
   end;
+
   function RomPaths(vPaths: TStringList): WideString;
   var
     vi: Integer;
@@ -787,6 +785,7 @@ var
         Result := Result + ';' + vRomPath;
     end;
   end;
+
   function InisPaths(vPaths: TStringList): WideString;
   var
     vi: Integer;

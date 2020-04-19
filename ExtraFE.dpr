@@ -5,6 +5,8 @@ uses
   System.SysUtils,
   CodeSiteLogging,
   FMX.Forms,
+  FMX.Dialogs,
+  WinApi.Windows,
   JCLSysInfo,
   main in 'main.pas' {Main_Form},
   uLoad in 'loading\uLoad.pas',
@@ -53,12 +55,8 @@ uses
   uEmu_Arcade_Mame_Config_Miscellaneous in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Miscellaneous.pas',
   uEmu_Arcade_Mame_Config_MiscellaneousII in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_MiscellaneousII.pas',
   uEmu_Arcade_Mame_Config_Snap_Movie_Playback in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Snap_Movie_Playback.pas',
-  uEmu_Arcade_Mame_Gamelist in 'emu\arcade\mame\uEmu_Arcade_Mame_Gamelist.pas',
   uEmu_Arcade_Mame_SetAll in 'emu\arcade\mame\uEmu_Arcade_Mame_SetAll.pas',
-  uEmu_Arcade_Mame_Actions in 'emu\arcade\mame\uEmu_Arcade_Mame_Actions.pas',
-  uEmu_Arcade_Mame_Game_SetAll in 'emu\arcade\mame\uEmu_Arcade_Mame_Game_SetAll.pas',
   uKeyboard in 'code\_snippets\uKeyboard.pas',
-  uEmu_Arcade_Mame_Filters in 'emu\arcade\mame\uEmu_Arcade_Mame_Filters.pas',
   uVirtual_Keyboard in 'code\_snippets\uVirtual_Keyboard.pas',
   uMain_Keyboard in 'main\uMain_Keyboard.pas',
   uMain_Emulation in 'main\uMain_Emulation.pas',
@@ -84,7 +82,6 @@ uses
   uEmu_Arcade_Mame_Config_Keyboard in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Keyboard.pas',
   uEmu_Arcade_Mame_Config_Joystick in 'emu\arcade\mame\config\uEmu_Arcade_Mame_Config_Joystick.pas',
   uEmu_Arcade_Mame_AllTypes in 'emu\arcade\mame\uEmu_Arcade_Mame_AllTypes.pas',
-  uEmu_Arcade_Mame_Game_Actions in 'emu\arcade\mame\uEmu_Arcade_Mame_Game_Actions.pas',
   uSoundplayer_AllTypes in 'addons\soundplayer\uSoundplayer_AllTypes.pas',
   uSnippet_Image in 'code\_snippets\uSnippet_Image.pas',
   uSoundplayer_Keyboard in 'addons\soundplayer\uSoundplayer_Keyboard.pas',
@@ -153,7 +150,6 @@ uses
   uMain_Config_General_Sound in 'main\configuration\general\uMain_Config_General_Sound.pas',
   uPlay_Sounds in 'addons\play\uPlay_Sounds.pas',
   uSnippet_Search in 'code\_snippets\uSnippet_Search.pas',
-  uEmu_Arcade_Mame_Sounds in 'emu\arcade\mame\uEmu_Arcade_Mame_Sounds.pas',
   uSoundplayer_Playlist_Const in 'addons\soundplayer\playlist\uSoundplayer_Playlist_Const.pas',
   uSoundplayer_Scrapers_Lastfm in 'addons\soundplayer\scrapers\uSoundplayer_Scrapers_Lastfm.pas',
   uSoundplayer_Scrapers_Flicker in 'addons\soundplayer\scrapers\uSoundplayer_Scrapers_Flicker.pas',
@@ -172,7 +168,6 @@ uses
   uTIme_Time_Config_General in 'addons\time\time\config\uTIme_Time_Config_General.pas',
   uTIme_Time_Config_Digital in 'addons\time\time\config\uTIme_Time_Config_Digital.pas',
   uTIme_Time_Config_Analog in 'addons\time\time\config\uTIme_Time_Config_Analog.pas',
-  uEmu_Arcade_Mame_Lists in 'emu\arcade\mame\uEmu_Arcade_Mame_Lists.pas',
   uDB_Check in 'code\_database\uDB_Check.pas',
   uMain_Widgets in 'main\uMain_Widgets.pas',
   uEmu_Mouse in 'emu\uEmu_Mouse.pas',
@@ -194,39 +189,46 @@ uses
   uView_Mode_Default_Mouse in 'emu\modes\default\uView_Mode_Default_Mouse.pas',
   uView_Mode_Default_Sounds in 'emu\modes\default\uView_Mode_Default_Sounds.pas',
   uView_Mode_Default_Actions_Lists in 'emu\modes\default\uView_Mode_Default_Actions_Lists.pas',
-  uLoad_Video in 'loading\uLoad_Video.pas';
+  uLoad_Video in 'loading\uLoad_Video.pas',
+  uView_Mode in 'emu\modes\uView_Mode.pas';
 
 {$R *.res}
 
 var
   Destination: TCodeSiteDestination;
+  vOne_Instance: THandle;
 
 begin
-  Application.Initialize;
-  // Disable the KMP_AFFINITY for non Intel CPUS
-  if CPUID.CpuType <> CPU_TYPE_INTEL then
-    SetEnvironmentVar('KMP_AFFINITY', 'disabled');
-  Application.CreateForm(TLoading, Loading);
+  vOne_Instance := CreateMutex(nil, True, 'ExtraFE_FrontEnd');
+  if (vOne_Instance = 0) or (GetLastError = ERROR_ALREADY_EXISTS) then
+    ShowMessage('ExtraFE already running')
+  else
+  begin
+    Application.Initialize;
+    // Disable the KMP_AFFINITY for non Intel CPUS
+    if CPUID.CpuType <> CPU_TYPE_INTEL then
+      SetEnvironmentVar('KMP_AFFINITY', 'disabled');
+    Application.CreateForm(TLoading, Loading);
   Application.CreateForm(TMain_Form, Main_Form);
   Application.CreateForm(TEmu_Form, Emu_Form);
   Application.MainForm := load.Loading;
 {$IFDEF DEBUG}
-  CodeSite.Enabled := True;
-  CodeSite.Enabled := CodeSite.Installed;
-  if CodeSite.Enabled then
-  begin
-  {Here can activate the log destination file}
-//    Destination := TCodeSiteDestination.Create(Main_Form);
-//    Destination.LogFile.Active := True;
-//    Destination.LogFile.FileName := ChangeFileExt('ExtraFE', '.xml');
-//    Destination.LogFile.FilePath := ExtractFilePath(ParamStr(0));
-//    CodeSite.Destination := Destination;
-    CodeSite.Clear;
-  end;
+    CodeSite.Enabled := True;
+    CodeSite.Enabled := CodeSite.Installed;
+    if CodeSite.Enabled then
+    begin
+      { Here can activate the log destination file }
+      // Destination := TCodeSiteDestination.Create(Main_Form);
+      // Destination.LogFile.Active := True;
+      // Destination.LogFile.FileName := ChangeFileExt('ExtraFE', '.xml');
+      // Destination.LogFile.FilePath := ExtractFilePath(ParamStr(0));
+      // CodeSite.Destination := Destination;
+      CodeSite.Clear;
+    end;
 
 {$ELSE}
-  CodeSite.Enabled := False;
+    CodeSite.Enabled := False;
 {$ENDIF}
-  Application.Run;
-
+    Application.Run;
+  end;
 end.

@@ -54,7 +54,7 @@ type
 type
   TCONTRUCTION_TITLE = record
     Back: TRectangle;
-    Icon: TText;
+    Game_Icon: TImage;
     Text: TText;
   end;
 
@@ -62,6 +62,7 @@ type
   TCONTRUCTION_EDIT = record
     Back: TRectangle;
     Edit: TEdit;
+    Icon: TText;
   end;
 
 type
@@ -239,21 +240,18 @@ begin
   VKey.Construct.Title.Back.Corners := VKey.Construct.Title.Back.Corners - [TCorner.BottomLeft, TCorner.BottomRight];
   VKey.Construct.Title.Back.Visible := True;
 
-  VKey.Construct.Title.Icon := TText.Create(VKey.Construct.Title.Back);
-  VKey.Construct.Title.Icon.Name := 'Virtual_Keyboard_IconTitle';
-  VKey.Construct.Title.Icon.Parent := VKey.Construct.Title.Back;
-  VKey.Construct.Title.Icon.SetBounds(1, 1, 28, 28);
-  VKey.Construct.Title.Icon.Font.Family := 'IcoMoon-Free';
-  VKey.Construct.Title.Icon.Font.Size := 20;
-  VKey.Construct.Title.Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  VKey.Construct.Title.Icon.Text := #$e986;
-  VKey.Construct.Title.Icon.Visible := True;
+  VKey.Construct.Title.Game_Icon := TImage.Create(VKey.Construct.Title.Back);
+  VKey.Construct.Title.Game_Icon.Name := 'Virtual_Keyboard_Game_Icon';
+  VKey.Construct.Title.Game_Icon.Parent :=  VKey.Construct.Title.Back;
+  VKey.Construct.Title.Game_Icon.SetBounds(10, 2, 28, 28);
+  VKey.Construct.Title.Game_Icon.WrapMode := TImageWrapMode.Fit;
+  VKey.Construct.Title.Game_Icon.Visible := True;
 
   VKey.Construct.Title.Text := TText.Create(VKey.Construct.Title.Back);
   VKey.Construct.Title.Text.Name := 'Virtual_Keyboard_Title';
   VKey.Construct.Title.Text.Parent := VKey.Construct.Title.Back;
-  VKey.Construct.Title.Text.SetBounds(34, 1, VKey.Construct.Title.Back.Width - 30, 28);
-  VKey.Construct.Title.Text.Color := TAlphaColorRec.White;
+  VKey.Construct.Title.Text.SetBounds(42, 1, VKey.Construct.Title.Back.Width - 42, 28);
+  VKey.Construct.Title.Text.Color := TAlphaColorRec.Deepskyblue;
   VKey.Construct.Title.Text.Font.Family := 'Tahoma';
   VKey.Construct.Title.Text.Font.Size := 16;
   VKey.Construct.Title.Text.Font.Style := VKey.Construct.Title.Text.Font.Style + [TFontStyle.fsBold];
@@ -286,6 +284,16 @@ begin
   VKey.Construct.Edit.Edit.StyledSettings := VKey.Construct.Edit.Edit.StyledSettings - [TStyledSetting.FontColor, TStyledSetting.Size];
   VKey.Construct.Edit.Edit.TextSettings.HorzAlign := TTextAlign.Center;
   VKey.Construct.Edit.Edit.Visible := True;
+
+  VKey.Construct.Edit.Icon := TText.Create(VKey.Construct.Edit.Edit);
+  VKey.Construct.Edit.Icon.Name := 'Virtual_Keyboard_Icon_Edit';
+  VKey.Construct.Edit.Icon.Parent := VKey.Construct.Edit.Edit;
+  VKey.Construct.Edit.Icon.SetBounds(1, 1, 28, 28);
+  VKey.Construct.Edit.Icon.Font.Family := 'IcoMoon-Free';
+  VKey.Construct.Edit.Icon.Font.Size := 20;
+  VKey.Construct.Edit.Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  VKey.Construct.Edit.Icon.Text := #$e986;
+  VKey.Construct.Edit.Icon.Visible := True;
 
   VKey.Construct.Drop.Back := TRectangle.Create(VKey.Construct.Back);
   VKey.Construct.Drop.Back.Name := 'Virtual_Keyboard_Drop_Background';
@@ -760,6 +768,7 @@ begin
           VKey.Construct.Drop.Box.ScrollBy(0, 1000)
         else
           VKey.Construct.Drop.Box.ScrollBy(0, vScrollByNum);
+      Press(UpperCase(vActionKey));
     end;
   end
   else if UpperCase(vActionKey) = 'DOWN' then
@@ -783,6 +792,7 @@ begin
             VKey.Construct.Drop.Box.ScrollBy(0, -1000)
           else
             VKey.Construct.Drop.Box.ScrollBy(0, -vScrollByNum);
+        Press(UpperCase(vActionKey));
       end;
     end;
   end

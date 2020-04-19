@@ -1,0 +1,84 @@
+unit uEmu_Arcade_Mame_Actions;
+
+interface
+
+uses
+  System.Classes,
+//  System.SysUtils,
+  System.StrUtils,
+//  System.UiTypes,
+//  System.Zip,
+//  System.IOUtils,
+//  FMX.Objects,
+  FMX.Types;
+//  FMX.Layouts,
+//  FMX.Graphics,
+//  FMX.Effects,
+//  ALImageMagick;
+
+procedure Open_Global_Configuration;
+
+var
+  vMameVideoTimer: TTimer;
+
+implementation
+
+uses
+  uDB,
+  uDB_AUser,
+  emu,
+  uLoad_AllTypes,
+  uVirtual_Keyboard,
+  uSnippet_Search,
+  uEmu_Arcade_Mame,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_SetAll,
+  uEmu_Arcade_Mame_Gamelist,
+  uEmu_Arcade_Mame_Ini,
+  // uEmu_Arcade_Mame_Filters,
+  // uEmu_Arcade_Mame_Lists,
+  uEmu_Arcade_Mame_Game_SetAll,
+  uEmu_Arcade_Mame_Config;
+
+/// /////////////////////////////////////////////////////////////////////////////
+
+procedure Open_Global_Configuration;
+var
+  vi: Integer;
+begin
+  if not ContainsText(extrafe.Prog.State, 'mame_config') then
+  begin
+    uEmu_Arcade_Mame_Config.Load;
+    extrafe.Prog.State := 'emu_mame_config';
+  end
+  else
+    extrafe.Prog.State := 'emu_mame';
+end;
+
+end.
+
+{ function uEmu_Arcade_Mame_Actions_LoadGameList(vGameSoundPath: String): TstringList;
+  var
+  vZip: TZipFile;
+  vLocalHeader: TZipHeader;
+  vStream: TMemoryStream;
+  vi: Integer;
+  vString: String;
+  begin
+  if FileExists(vGameSoundPath) then
+  begin
+  Result:= TStringList.Create;
+  vZip:= TZipFile.Create;
+  vZip.Open(vGameSoundPath, zmRead);
+  vStream:= TMemoryStream.Create;
+  for vi:= 0 to vZip.FileCount- 1 do
+  begin
+  if ExtractFileExt(vZip.FileName[vi])= '.mp3' then
+  Result.Add(vZip.FileName[vi]);
+  //          vString:= Result.Strings[vi];
+  //          vZip.Read(vString, vStream, vLocalHeader);
+  end;
+  end
+  else
+  Result:= nil;
+  end; }
