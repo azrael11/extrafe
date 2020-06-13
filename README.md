@@ -10,8 +10,7 @@ Current work in progress build version : <b> 0.2.9.28 </b>
 
 # Coding In ExtraFE
 
-<img src="index.png" width="64" height="24" style="vertical-align:middle">
-Programming environment : Delphi Community Edition 10.3.3 
+<img src="index.png" width="64" height="64" style="vertical-align:middle"> Programming environment : Delphi Community Edition 10.3.3 
 
 
 
