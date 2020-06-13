@@ -15,7 +15,7 @@ Current work in progress build version : <b> 0.2.9.28 </b>
 Programming environment : Delphi Community Edition 10.3.3 
 
 
-For start coding in ExtraFE exept for cloning the master git you must download and install additional below components
+For start coding in ExtraFE except cloning the master git, you must download and install additional below components
 
 1. JCL Library from https://github.com/project-jedi/jcl
 2. Alcione from https://github.com/Zeus64/alcinoe
@@ -27,11 +27,17 @@ For start coding in ExtraFE exept for cloning the master git you must download a
 
 # Info
 
-Homepage       : http://extrafe.epizy.com
+Homepage         : http://extrafe.epizy.com
 
-Documentation  : http://extrafe.epizy.com/doc/index.html
+Documentation    : http://extrafe.epizy.com/doc/index.html
 
-Forum          : http://extrafe.epizy.com/smf/index.php 
+Forum            : http://extrafe.epizy.com/smf/index.php 
+
+You Tube Channel : https://www.youtube.com/user/azrael11tube/
+
+# Media (as posible in current stage)
+
+
 
 # Roadmap
 
