@@ -5,7 +5,7 @@
 
 My Source repository for ExtraFE
 
-Current work in progress build version : <b> 0.2.9.26 </b>
+Current work in progress build version : <b> 0.2.9.28 </b>
 
 
 # Coding In ExtraFE
@@ -33,8 +33,8 @@ Forum          : http://extrafe.epizy.com/smf/index.php
 Version Stable <b>0.3.0</b>
 
 1. Run the program with less minor problems and bugs
-2. Run at least well on Emulator with all the goodies and one Addon
-3. Run in al least in Windows 32bit and Windows 64bit
+2. Run at least well one Emulator with all the goodies and one Addon
+3. Run in at least in Windows 32bit and Windows 64bit
 4. Have a minimal Home Page active
 
 
