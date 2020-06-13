@@ -1,0 +1,163 @@
+unit uJoystick_mms;
+
+interface
+
+uses
+  System.Classes,
+  System.StrUtils,
+  uJoystick_MMSystem;
+
+type
+  TMYJOY_1 = class(TObject)
+    procedure Move_Joy(Sender: uJoystick_MMSystem.TMMJoystick; const vJoy_Pos: uJoystick_MMSystem.TJoyRelPos; const vButtons: uJoystick_MMSystem.TJoyButtons);
+    procedure Button_Down(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+    procedure Button_Up(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+  end;
+
+type
+  TMYJOY_2 = class(TObject)
+    procedure Move_Joy(Sender: uJoystick_MMSystem.TMMJoystick; const vJoy_Pos: uJoystick_MMSystem.TJoyRelPos; const vButtons: uJoystick_MMSystem.TJoyButtons);
+    procedure Button_Down(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+    procedure Button_Up(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+  end;
+
+procedure Refresh_Joys;
+
+var
+  vJoy_mm_1: TMMJoystick;
+  vJoy_mm_2: TMMJoystick;
+
+  vJoy1: TMYJOY_1;
+  vJoy2: TMYJOY_2;
+  old_x, old_y: Double;
+
+implementation
+
+uses
+  main,
+  uload,
+  uLoad_AllTypes,
+  uEmu_Actions,
+  uMain_Joystick_MMSystem,
+  uView_Mode_Default_Joy_MMSystem;
+
+procedure Refresh_Joys;
+begin
+  vJoy_mm_1 := TMMJoystick.Create(main.Main_Form);
+  vJoy_mm_1.Advanced := True;
+  vJoy_mm_1.OnMove := vJoy1.Move_Joy;
+  vJoy_mm_1.OnButtonDown := vJoy1.Button_Down;
+  vJoy_mm_1.OnButtonUp := vJoy1.Button_Up;
+
+  vJoy_mm_2 := TMMJoystick.Create(main.Main_Form);
+  vJoy_mm_2.Advanced := True;
+end;
+
+{ TMYJOY_1 }
+
+procedure TMYJOY_1.Button_Down(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+var
+  vAction: String;
+begin
+  if ContainsText(extrafe.prog.State, 'main') then
+    uMain_Joystick_MMSystem.Joy_1_Set_Button_Down_Action(Buttons);
+
+end;
+
+procedure TMYJOY_1.Button_Up(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+begin
+  if ContainsText(extrafe.prog.State, 'main') then
+    uMain_Joystick_MMSystem.Joy_1_Set_Button_Up_Action(Buttons);
+end;
+
+procedure TMYJOY_1.Move_Joy(Sender: uJoystick_MMSystem.TMMJoystick; const vJoy_Pos: uJoystick_MMSystem.TJoyRelPos;
+  const vButtons: uJoystick_MMSystem.TJoyButtons);
+var
+  vAction: String;
+begin
+  if (old_x <> vJoy_Pos.X) or (old_y <> vJoy_Pos.Y) then
+  begin
+
+    if (Round(vJoy_Pos.X) = 0) and (Round(vJoy_Pos.Y) = 0) then
+      vAction := 'center';
+
+    if (vJoy_Pos.X = 1) and (vJoy_Pos.Y = -1) then
+      vAction := 'up_right'
+    else if (vJoy_Pos.X = 1) and (vJoy_Pos.Y = 1) then
+      vAction := 'down_right'
+    else if (vJoy_Pos.X = -1) and (vJoy_Pos.Y = -1) then
+      vAction := 'up_left'
+    else if (vJoy_Pos.X = -1) and (vJoy_Pos.Y = 1) then
+      vAction := 'down_left'
+    else
+    begin
+      if vJoy_Pos.X = 1 then
+        vAction := 'right';
+
+      if vJoy_Pos.Y = 1 then
+        vAction := 'down';
+
+      if vJoy_Pos.X = -1 then
+        vAction := 'left';
+
+      if vJoy_Pos.Y = -1 then
+        vAction := 'up'
+    end;
+    if ContainsText(extrafe.prog.State, 'main') then
+      uMain_Joystick_MMSystem.Joy_1_Set_Move_Action(vAction)
+    else if ContainsText(extrafe.prog.State, 'emu') then
+      uView_Mode_
+  end;
+  //
+  old_x := vJoy_Pos.X;
+  old_y := vJoy_Pos.Y;
+end;
+
+{ TMYJOY_2 }
+
+procedure TMYJOY_2.Button_Down(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+begin
+
+end;
+
+procedure TMYJOY_2.Button_Up(Sender: uJoystick_MMSystem.TMMJoystick; const Buttons: TJoyButtons);
+begin
+
+end;
+
+procedure TMYJOY_2.Move_Joy(Sender: uJoystick_MMSystem.TMMJoystick; const vJoy_Pos: uJoystick_MMSystem.TJoyRelPos;
+  const vButtons: uJoystick_MMSystem.TJoyButtons);
+begin
+
+end;
+
+initialization
+
+vJoy1 := TMYJOY_1.Create;
+vJoy2 := TMYJOY_2.Create;
+
+finalization
+
+vJoy1.Free;
+vJoy2.Free;
+
+end.
+
+
+
+
+
+
+// if uSnippet_Search.vSearch.Actions.Active then
+// if uSnippet_Search.vSearch.Actions.CanIType then
+// uSnippet_Search.Key(vKey);
+// if extrafe.prog.State = 'virtual_keyboard' then
+// uVirtual_Keyboard.Key(vKey)
+// else if ContainsText(extrafe.prog.State, 'load') then
+// uLoad_Keyboard.SetKey(vKey)
+// else if ContainsText(extrafe.prog.State, 'emu') then
+// uEmu_Actions.Key(vKey)
+// else if ContainsText(extrafe.prog.State, 'addon_weather') then
+// uWeather_Keyboard_SetKey(vKey)
+// else if ContainsText(extrafe.prog.State, 'addon_soundplayer') then
+// uSoundplayer_Keyboard_SetKey(vKey);

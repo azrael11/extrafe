@@ -184,13 +184,20 @@ uses
   uView_Mode_Default_Actions_Filters in 'emu\modes\default\uView_Mode_Default_Actions_Filters.pas',
   uView_Mode_Default_AllTypes in 'emu\modes\default\uView_Mode_Default_AllTypes.pas',
   uView_Mode_Default_Game in 'emu\modes\default\uView_Mode_Default_Game.pas',
-  uView_Mode_Default_Joy in 'emu\modes\default\uView_Mode_Default_Joy.pas',
+  uView_Mode_Default_Joy_MMSystem in 'emu\modes\default\uView_Mode_Default_Joy_MMSystem.pas',
   uView_Mode_Default_Key in 'emu\modes\default\uView_Mode_Default_Key.pas',
   uView_Mode_Default_Mouse in 'emu\modes\default\uView_Mode_Default_Mouse.pas',
   uView_Mode_Default_Sounds in 'emu\modes\default\uView_Mode_Default_Sounds.pas',
   uView_Mode_Default_Actions_Lists in 'emu\modes\default\uView_Mode_Default_Actions_Lists.pas',
   uLoad_Video in 'loading\uLoad_Video.pas',
-  uView_Mode in 'emu\modes\uView_Mode.pas';
+  uView_Mode in 'emu\modes\uView_Mode.pas',
+  NLDJoystick in 'code\_snippets\NLDJoystick.pas',
+  uJoystick_mmsystem in 'code\_snippets\uJoystick_mmsystem.pas',
+  uMain_Config_General_Joystick_MMSystem in 'main\configuration\general\joystick\uMain_Config_General_Joystick_MMSystem.pas',
+  uJoystick_mms in 'code\_snippets\uJoystick_mms.pas',
+  uMain_Joystick_MMSystem in 'main\uMain_Joystick_MMSystem.pas',
+  uLoad_Joysticks in 'loading\uLoad_Joysticks.pas',
+  uEmu_Joystick in 'emu\uEmu_Joystick.pas';
 
 {$R *.res}
 

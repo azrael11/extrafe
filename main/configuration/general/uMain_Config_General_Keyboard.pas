@@ -18,7 +18,8 @@ type
   end;
 
 var
-  vSelected_Tab: Integer;
+  vKey_Waiting : Boolean;
+  vSelected_Key_Tab: Integer;
   vSelected_Label: Integer;
   vSelected_Timer: TTimer;
   vDots: Integer;
@@ -49,6 +50,8 @@ const
 var
   vi, vk, vl: Integer;
 begin
+  extrafe.prog.State := 'main_config_general_keyboard';
+
   mainScene.Config.Main.R.General.Keyboard.Image := TImage.Create(mainScene.Config.Main.R.General.Tab_Item[3]);
   mainScene.Config.Main.R.General.Keyboard.Image.Name := 'Main_Config_General_Keyboard_Image';
   mainScene.Config.Main.R.General.Keyboard.Image.Parent := mainScene.Config.Main.R.General.Tab_Item[3];
@@ -218,7 +221,7 @@ end;
 
 procedure Click_To_Accept_Key;
 begin
-  if vSelected_Tab = 0 then
+  if vSelected_Key_Tab = 0 then
   begin
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].Text := 'Waiting ...';
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].TextSettings.FontColor := TAlphaColorRec.White;
@@ -256,7 +259,7 @@ begin
   else
     vKey := UpperCase(vKey);
 
-  if vSelected_Tab = 0 then
+  if vSelected_Key_Tab = 0 then
   begin
     case vSelected_Label of
       0:
@@ -370,7 +373,7 @@ end;
 
 procedure Set_Key(vKey: String);
 begin
-  if vSelected_Tab = 0 then
+  if vSelected_Key_Tab = 0 then
   begin
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].Text := vKey;
     mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].TextSettings.FontColor := TAlphaColorRec.White;
@@ -411,20 +414,20 @@ begin
         end;
     end;
 
-    if vSelected_Tab = 0 then
+    if vSelected_Key_Tab = 0 then
       mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].Text := vPhrase
     else
       mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vSelected_Label].Text := vPhrase;
   end
   else
   begin
-    if vSelected_Tab = 0 then
+    if vSelected_Key_Tab = 0 then
     begin
       mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].Text := vBefore_Text;
       mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vSelected_Label].TextSettings.FontColor := TAlphaColorRec.White;
       mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vSelected_Label].Fill.Color := TAlphaColorRec.Deepskyblue;
     end
-    else if vSelected_Tab = 1 then         
+    else if vSelected_Key_Tab = 1 then
     begin
       mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vSelected_Label].Text := vBefore_Text;
       mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vSelected_Label].TextSettings.FontColor := TAlphaColorRec.White;

@@ -23,15 +23,7 @@ uses
   ALFmxLayouts,
   Radiant.Shapes,
   BASS,
-  FMX.Controls,
-  Mitov.FMXTypes,
-  FMX.LPControl,
-  FMX.SLControlCollection,
-  FMX.VLCommonDisplay,
-  FMX.VLImageDisplay,
-  Mitov.Types,
-  VLBasicVideoPlayer,
-  VLLAVVideoPlayer;
+  FMX.Controls;
 
 /// /////////////////////////////////////////////////////////////////////////////
 ///

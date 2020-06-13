@@ -22,7 +22,6 @@ procedure Load_First_User_Settings;
 procedure Load_Default_Settings;
 
 procedure Prepare;
-procedure SetLoadingScreen;
 
 procedure Start_ExtraFE;
 procedure Play_Intro_Video;
@@ -30,14 +29,12 @@ procedure Skip_Intro;
 
 var
   Default_Load: Boolean;
-  KBHook: HHook;
 
 implementation
 
 uses
   uWindows,
   uInternet_Files,
-  uKeyboard,
   load,
   main,
   uMain,
@@ -49,6 +46,7 @@ uses
   uLoad_Emulation,
   uLoad_Sound,
   uLoad_Video,
+  uLoad_Joysticks,
   uLoad_Stats,
   uDB,
   uDB_AUser;
@@ -62,8 +60,6 @@ begin
   extrafe.prog.Version.Build := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[3];
   { Code Name }
   extrafe.prog.Desc := 'Code name: Mnimi';
-  { Virtual Keybord show }
-  extrafe.prog.Virtual_Keyboard := False;
   { Main Defaults }
   ex_main.Paths.Flags_Images := extrafe.prog.Path + 'data\main\flags\';
   ex_main.Paths.Avatar_Images := extrafe.prog.Path + 'data\main\avatars\';
@@ -164,17 +160,11 @@ begin
   uMain_Config_Themes.ApplyTheme(extrafe.style.Name);
   load.Loading.StyleBook := mainScene.main.style;
 
-  ex_load.Path.Images := extrafe.prog.Path + 'data\loading\';
+  ex_load.Path.Load := extrafe.prog.Path + 'data\loading\';
+  ex_load.Path.Images := extrafe.prog.Path + 'data\loading\images\';
 
   Start_ExtraFE;
   Play_Intro_Video;
-end;
-
-procedure SetLoadingScreen;
-begin
-  uKeyboard_HookKeyboard;
-  FHook.Active := True;
-  uLoad_SetAll.load;
 end;
 
 procedure Start_ExtraFE;
@@ -184,7 +174,7 @@ begin
     extrafe.prog.State := 'loading';
     uLoad_Sound.Load;
     uLoad_Video.Load;
-    SetLoadingScreen;
+    uLoad_SetAll.load;
     extrafe.user_login := False;
     Default_Load := True;
     CodeSite.ExitMethod('Loading ExtraFE Is Done');
@@ -201,6 +191,7 @@ begin
     uDB_AUser.update_time;
     uLoad_Emulation.load;
     uLoad_Addons.load;
+    uLoad_Joysticks.Get_MMSystem_Joysticks;
     ex_load.Scene.Back_Fade.Start;
     ex_load.Scene.Progress.Value := 100;
     ex_load.Scene.Progress_Text.Text := 'Loading Complete. Accessing the ExtraFE.';

@@ -10,10 +10,14 @@ uses
   BASS;
 
 procedure Key(vKey: String);
+procedure Key_Up(vKey: String);
 
 procedure VK_Key(vKey: String);
 
 procedure Search_Key(vString: String);
+
+var
+  vOldKey_State: String;
 
 implementation
 
@@ -28,106 +32,126 @@ uses
 
 procedure Key(vKey: String);
 begin
-  if Emu_VM_Default_Var.Video.Screensaver = false then
+  if vKey <> vOldKey_State then
   begin
-    if (uDB_AUser.Local.OPTIONS.Visual.Virtual_Keyboard) and (Emu_VM_Default_Var.Search_Open) then
-      VK_Key(vKey)
-    else
+    if Emu_VM_Default_Var.Video.Screensaver = false then
     begin
-      if Emu_VM_Default_Var.Game_Loading = false then
+      if (uDB_AUser.Local.OPTIONS.Visual.Virtual_Keyboard) and (Emu_VM_Default_Var.Search_Open) then
+        VK_Key(vKey)
+      else
       begin
-        if Emu_VM_Default_Var.Search_Open = false then
+        if Emu_VM_Default_Var.Game_Loading = false then
         begin
-          if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Escape then
-            uView_Mode_Default_Actions.Exit_Action('Keyboard')
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Action then
-            if uVirtual_Keyboard.vKey.Enter_Pressed then
-              uVirtual_Keyboard.vKey.Enter_Pressed := false
-            else
-              uView_Mode_Default_Actions.Enter;
-        end;
-        if Emu_VM_Default_Var.Search_Open then
-        begin
-          if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Escape then
+          if Emu_VM_Default_Var.Search_Open = false then
           begin
-            uView_Mode_Default_Actions.Search_Open;
-            Emu_VM_Default_Var.gamelist.Selected := Emu_VM_Default_Var.search.Selected;
-            uView_Mode_Default_Actions.Refresh;
+            if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Escape then
+              uView_Mode_Default_Actions.Exit_Action('Keyboard')
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Action then
+              if uVirtual_Keyboard.vKey.Enter_Pressed then
+                uVirtual_Keyboard.vKey.Enter_Pressed := false
+              else
+                uView_Mode_Default_Actions.Enter;
+          end;
+          if Emu_VM_Default_Var.Search_Open then
+          begin
+            if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Escape then
+            begin
+              uView_Mode_Default_Actions.Search_Open;
+              Emu_VM_Default_Var.gamelist.Selected := Emu_VM_Default_Var.search.Selected;
+              uView_Mode_Default_Actions.Refresh;
+            end
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Action then
+              uView_Mode_Default_Actions.Search_Open
+            else if UpperCase(vKey) = 'BACKSPACE' then
+              uView_Mode_Default_Actions.Search_Backspace
+            else if UpperCase(vKey) = 'SPACE' then
+              Emu_VM_Default_Var.search.vString := Emu_VM_Default_Var.search.vString + ' '
+            else
+            begin
+              if AnsiContainsText('A B C D E F G H I G K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 0 '' ( ) @ ! $ % ^ & * : < > ?', vKey) then
+              begin
+                if Emu_VM_Default_Var.search.vString = 'First' then
+                  Emu_VM_Default_Var.search.vString := '';
+                Emu_VM_Default_Var.search.vString := Emu_VM_Default_Var.search.vString + vKey;
+                Emu_VM_Default_Var.search.vKey := vKey;
+              end;
+            end;
           end
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Action then
-            uView_Mode_Default_Actions.Search_Open
-          else if UpperCase(vKey) = 'BACKSPACE' then
-            uView_Mode_Default_Actions.Search_Backspace
-          else if UpperCase(vKey) = 'SPACE' then
-            Emu_VM_Default_Var.search.vString := Emu_VM_Default_Var.search.vString + ' '
+          else if Emu_VM_Default_Var.Game_Mode then
+          begin
+            if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Down then
+              uView_Mode_Default_Game.Menu_Down
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Up then
+              uView_Mode_Default_Game.Menu_Up
+            else if Emu_VM_Default_Var.game.Selected = 3 then
+            begin
+              if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Left then
+                // here to go from one panel to another
+            end;
+          end
+          else if Emu_VM_Default_Var.Lists_Open then
+          begin
+
+          end
+          else if Emu_VM_Default_Var.Filters_Open then
+          begin
+
+          end
           else
           begin
-            if AnsiContainsText('A B C D E F G H I G K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9 0 '' ( ) @ ! $ % ^ & * : < > ?', vKey) then
+            if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Down then
+              uView_Mode_Default_Actions.Move_Gamelist('DOWN')
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Up then
+              uView_Mode_Default_Actions.Move_Gamelist('UP')
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Left then
+              uView_Mode_Default_Actions.Move_Gamelist('PAGE UP')
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Right then
+              uView_Mode_Default_Actions.Move_Gamelist('PAGE DOWN')
+            else if UpperCase(vKey) = 'HOME' then
+              uView_Mode_Default_Actions.Move_Gamelist('HOME')
+            else if UpperCase(vKey) = 'END' then
+              uView_Mode_Default_Actions.Move_Gamelist('END')
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Favorite then
+              uView_Mode_Default_Actions.Favorites_Open
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_FavoriteAdd then
+              uView_Mode_Default_Actions.Favorites_Add
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Search then
             begin
-              if Emu_VM_Default_Var.search.vString = 'First' then
-                Emu_VM_Default_Var.search.vString := '';
-              Emu_VM_Default_Var.search.vString := Emu_VM_Default_Var.search.vString + vKey;
-              Emu_VM_Default_Var.search.vKey := vKey;
-            end;
+              Emu_VM_Default_Var.search.vString := 'First';
+              uView_Mode_Default_Actions.Search_Open;
+            end
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Lists then
+              uView_Mode_Default_Actions.Lists_Action
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Filters then
+              uView_Mode_Default_Actions.Filters_Action
+            else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_ScreenSaver then
+              uView_Mode_Default_Actions.Screensaver;
           end;
-        end
-        else if Emu_VM_Default_Var.Game_Mode then
-        begin
-          if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Down then
-            uView_Mode_Default_Game.Menu_Down
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Up then
-            uView_Mode_Default_Game.Menu_Up
-          else if Emu_VM_Default_Var.game.Selected = 3 then
-          begin
-            if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Left then
-              // here to go from one panel to another
-          end;
-        end
-        else if Emu_VM_Default_Var.Lists_Open then
-        begin
-
-        end
-        else if Emu_VM_Default_Var.Filters_Open then
-        begin
-
-        end
-        else
-        begin
-          if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Down then
-            uView_Mode_Default_Actions.Move_Gamelist('DOWN')
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Up then
-            uView_Mode_Default_Actions.Move_Gamelist('UP')
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Left then
-            uView_Mode_Default_Actions.Move_Gamelist('PAGE UP')
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Right then
-            uView_Mode_Default_Actions.Move_Gamelist('PAGE DOWN')
-          else if UpperCase(vKey) = 'HOME' then
-            uView_Mode_Default_Actions.Move_Gamelist('HOME')
-          else if UpperCase(vKey) = 'END' then
-            uView_Mode_Default_Actions.Move_Gamelist('END')
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Favorite then
-            uView_Mode_Default_Actions.Favorites_Open
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_FavoriteAdd then
-            uView_Mode_Default_Actions.Favorites_Add
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Search then
-          begin
-            Emu_VM_Default_Var.search.vString := 'First';
-            uView_Mode_Default_Actions.Search_Open;
-          end
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Lists then
-            uView_Mode_Default_Actions.Lists_Action
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Filters then
-            uView_Mode_Default_Actions.Filters_Action
-          else if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_ScreenSaver then
-            uView_Mode_Default_Actions.Screensaver;
         end;
       end;
+    end
+    else
+    begin
+      if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Escape then
+        uView_Mode_Default_Actions.Screensaver_Leave;
     end;
-  end
-  else
+  end;
+  vOldKey_State := vKey;
+end;
+
+procedure Key_Up(vKey: String);
+begin
+  if (Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Down) or (Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Up) or
+    (Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Left) or (Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Right) then
   begin
-    if Right_VKey(vKey) = uDB_AUser.Local.MAP.Keyboard.Emu_Escape then
-      uView_Mode_Default_Actions.Screensaver_Leave;
+    vOldKey_State := '';
+    uView_Mode_Default_Actions.vMove_Timer.Enabled := false;
+    if Emu_VM_Default_Var.Favorites_Open then
+      Refresh_Load_Icons(Emu_VM_Default_Var.gamelist.Selected, Emu_VM_Default_Var.gamelist.Total_Games, Emu_VM_Default_Var.favorites.Roms)
+    else
+      Refresh_Load_Icons(Emu_VM_Default_Var.gamelist.Selected, Emu_VM_Default_Var.gamelist.Total_Games, Emu_VM_Default_Var.gamelist.Roms);
+
+    Emu_VM_Default.gamelist.gamelist.Timer.Enabled := True;
   end;
 end;
 

@@ -344,13 +344,61 @@ type
   end;
 
 type
-  TMAIN_CONFIG_GENERAL_JOYSTICK = record
-    Image: TImage;
+  TMAIN_CONFIG_GENERAL_OPTIONS = record
     Panel: TPanel;
+    Main: TPanel;
+    Info: TText;
+    VBox: TVertScrollBox;
+    VBox_Items: array [0 .. 31] of TRectangle;
+    VBox_Texts: array [0 .. 31] of TText;
+    Wait: TText;
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM_STUFF = record
+    Layout: TLayout;
+    Name: TText;
+    Top, Down, Left, Right: TRectangle;
+    Top_Name, Down_Name, Left_Name, Right_Name: TText;
     Place: TRectangle;
     Place_Circle: TCircle;
     Place_dot: TCircle;
     Buttons: array [0 .. 15] of TCircle;
+    Buttons_Names: array [0 .. 15] of TText;
+    Info: TGroupBox;
+    Info_Current: TText;
+    Info_Standard: TText;
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM = record
+    Joy: TComboBox;
+    Control: TTabControl;
+    Items: array [0 .. 1] of TTabItem;
+    General: TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM_STUFF;
+    Emulators: TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM_STUFF;
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_JOYSTICK_DIRECTX = record
+
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_JOYSTICK_XINPUT = record
+
+  end;
+
+type
+  TMAIN_CONFIG_GENERAL_JOYSTICK = record
+    Image: TImage;
+    Panel: TPanel;
+    Control: TTabControl;
+    Items: array [0 .. 2] of TTabItem;
+    Generic: TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM;
+    DirextX: TMAIN_CONFIG_GENERAL_JOYSTICK_DIRECTX;
+    XInput: TMAIN_CONFIG_GENERAL_JOYSTICK_XINPUT;
+    Options: TMAIN_CONFIG_GENERAL_OPTIONS;
   end;
 
 type

@@ -14,8 +14,7 @@ uses
   FMX.Effects,
   FMX.Filter.Effects,
   FMX.Edit,
-  FMX.Graphics,
-  FMX.LPTransparentControl;
+  FMX.Graphics;
 
 type
   TPERSONAL = record

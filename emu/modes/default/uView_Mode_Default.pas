@@ -56,7 +56,10 @@ procedure Load_XML_Variables(vPath: String);
 { Load extra files }
 procedure Load_Files;
 
-{Start Default ViewMode}
+{ Create Main Movement Timer }
+procedure Create_Movement_Timer;
+
+{ Start Default ViewMode }
 procedure Start_View_Mode(vSelected, vGames_Count: Integer; vList_Games, vList_Roms, vList_Path: TStringlist);
 
 var
@@ -137,7 +140,7 @@ begin
       else if vNode.NodeName = 'filters' then
       begin
         { List of filters }
-        Emu_XML.filters.main := TStringList.Create;
+        Emu_XML.filters.main := TStringlist.Create;
         Emu_XML.filters.main_num := vNode.ChildNodes['list'].Attributes['num'];
 
         for vk := 0 to Emu_XML.filters.main_num.ToInteger do
@@ -295,7 +298,7 @@ begin
   { Gamelist refresh timer }
   Emu_VM_Default.Gamelist.Gamelist.Timer := TTimer.Create(Emu_VM_Default.main);
   Emu_VM_Default.Gamelist.Gamelist.Timer.name := 'Emu_Gamelist_Timer';
-  Emu_VM_Default.Gamelist.Gamelist.Timer.Interval := 500;
+  Emu_VM_Default.Gamelist.Gamelist.Timer.Interval := 200;
   Emu_VM_Default.Gamelist.Gamelist.Timer.OnTimer := Emu_VM_Default_Var.Timer.Gamelist.OnTimer;
   Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled := False;
 
@@ -462,6 +465,7 @@ begin
   Favorite_Box;
 
   Load_Files;
+  Create_Movement_Timer;
 end;
 
 { Creation of the gamelist part }
@@ -854,19 +858,31 @@ end;
 
 procedure Start_View_Mode(vSelected, vGames_Count: Integer; vList_Games, vList_Roms, vList_Path: TStringlist);
 begin
-  Emu_VM_Default_Var.Gamelist.Games := TStringlist.Create;
+  Emu_VM_Default_Var.Gamelist.games := TStringlist.Create;
   Emu_VM_Default_Var.Gamelist.Roms := TStringlist.Create;
   Emu_VM_Default_Var.Gamelist.Paths := TStringlist.Create;
 
   Emu_VM_Default_Var.Gamelist.Selected := vSelected;
   Emu_VM_Default_Var.Gamelist.Total_Games := vGames_Count;
   Emu_VM_Default_Var.Gamelist.Roms := vList_Roms;
-  Emu_VM_Default_Var.Gamelist.Games := vList_Games;
+  Emu_VM_Default_Var.Gamelist.games := vList_Games;
   Emu_VM_Default_Var.Gamelist.Paths := vList_Path;
 
   uView_Mode_Default_Actions.Refresh;
-
+  uView_Mode_Default_Actions.Refresh_Scene(vSelected, vList_Roms);
+  uView_Mode_Default_Actions.Refresh_Load_Icons(vSelected, vGames_Count, vList_Roms);
 end;
 
+procedure Create_Movement_Timer;
+begin
+  uView_Mode_Default_Actions.vMove_Timer_Interval := 15;
+
+  uView_Mode_Default_Actions.vMove_Timer := TTimer.Create(Emu_VM_Default.main);
+  uView_Mode_Default_Actions.vMove_Timer.name := 'View_Mode_Movement_Timer';
+  uView_Mode_Default_Actions.vMove_Timer.Parent := Emu_VM_Default.main;
+  uView_Mode_Default_Actions.vMove_Timer.Interval := uView_Mode_Default_Actions.vMove_Timer_Interval;
+  uView_Mode_Default_Actions.vMove_Timer.OnTimer := uView_Mode_Default_Actions.vMove_Timer_Class.OnTimer;
+  uView_Mode_Default_Actions.vMove_Timer.Enabled := False;
+end;
 
 end.

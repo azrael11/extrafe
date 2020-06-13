@@ -618,7 +618,19 @@ begin
   { Refresh the list }
   Emu_VM_Default_Var.gamelist.Selected := vGame_Main;
   Emu_VM_Default_Var.gamelist.Old_Selected := -100;
+  uView_Mode_Default_Actions.Clear_Icons;
   uView_Mode_Default_Actions.Refresh;
+  if Emu_VM_Default_Var.Favorites_Open then
+  begin
+    uView_Mode_Default_Actions.Refresh_Load_Icons(Emu_VM_Default_Var.gamelist.Selected, Emu_VM_Default_Var.favorites.Count, Emu_VM_Default_Var.favorites.Roms);
+    uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Default_Var.gamelist.Selected, Emu_VM_Default_Var.favorites.Roms);
+  end
+  else
+  begin
+    uView_Mode_Default_Actions.Refresh_Load_Icons(Emu_VM_Default_Var.gamelist.Selected, Emu_VM_Default_Var.gamelist.Total_Games,
+      Emu_VM_Default_Var.gamelist.Roms);
+    uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Default_Var.gamelist.Selected, Emu_VM_Default_Var.gamelist.Roms);
+  end;
 end;
 
 procedure Splash;

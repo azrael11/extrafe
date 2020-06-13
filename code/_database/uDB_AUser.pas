@@ -440,7 +440,7 @@ type
   end;
 
 type
-  DATABASE_ACTIVE_USER_LOCAL_MAP_KEYBOARD = record
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_KEYBOARD = record
     Name: String;
     Up: String;
     Down: String;
@@ -465,7 +465,7 @@ type
   end;
 
 type
-  DATABASE_ACTIVE_USER_LOCAL_MAP_MOUSE = record
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_MOUSE = record
     Name: String;
     Buttons_Num: String;
     Dpi: String;
@@ -482,12 +482,7 @@ type
   end;
 
 type
-  DATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK = record
-    Name: String;
-    vType: String;
-    Button_Num: String;
-    Calibrating: String;
-    ForceBack: String;
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_GENERAL = record
     Up: String;
     Down: String;
     Left: String;
@@ -504,35 +499,88 @@ type
     Button_10: String;
     Button_11: String;
     Button_12: String;
-    Emu_Up: String;
-    Emu_Down: String;
-    Emu_Left: String;
-    Emu_Right: String;
-    Emu_Button_1: String;
-    Emu_Button_2: String;
-    Emu_Button_3: String;
-    Emu_Button_4: String;
-    Emu_Button_5: String;
-    Emu_Button_6: String;
-    Emu_Button_7: String;
-    Emu_Button_8: String;
-    Emu_Button_9: String;
-    Emu_Button_10: String;
-    Emu_Button_11: String;
-    Emu_Button_12: String;
+    Button_13: String;
+    Button_14: String;
+    Button_15: String;
+    Button_16: String;
   end;
 
 type
-  DATABASE_ACTIVE_USER_LOCAL_MAP = record
-    Keyboard: DATABASE_ACTIVE_USER_LOCAL_MAP_KEYBOARD;
-    Mouse: DATABASE_ACTIVE_USER_LOCAL_MAP_MOUSE;
-    Joystick: DATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK;
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_EMULATORS = record
+    Up: String;
+    Down: String;
+    Left: String;
+    Right: String;
+    Button_1: String;
+    Button_2: String;
+    Button_3: String;
+    Button_4: String;
+    Button_5: String;
+    Button_6: String;
+    Button_7: String;
+    Button_8: String;
+    Button_9: String;
+    Button_10: String;
+    Button_11: String;
+    Button_12: String;
+    Button_13: String;
+    Button_14: String;
+    Button_15: String;
+    Button_16: String;
+  end;
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_MMSYSTEM = record
+    Name: String;
+    Manufacturer: String;
+    Product: String;
+    Reg: String;
+    OEM: String;
+    Button_Num: String;
+    POV: String;
+    ForceBack: String;
+    General: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_GENERAL;
+    Emulators: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_EMULATORS;
+  end;
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_JOY_MMSYSTEM= record
+    Joy_1: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_MMSYSTEM;
+    Joy_2: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_MMSYSTEM;
+  end;
+
+
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_DIRECT_INPUT = record
+//    General:
+//    Emulators:
+  end;
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_DIRECT_X = record
+//    General:
+//    Emulators:
+  end;
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK = record
+    mmSystem: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_JOY_MMSYSTEM;
+//    Direct_Input: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_JOY;
+//    Dirext_X: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK_JOY;
+  end;
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL_MAP = record
+    Keyboard: TDATABASE_ACTIVE_USER_LOCAL_MAP_KEYBOARD;
+    Mouse: TDATABASE_ACTIVE_USER_LOCAL_MAP_MOUSE;
+    Joystick: TDATABASE_ACTIVE_USER_LOCAL_MAP_JOYSTICK;
   end;
 
 type
   TDATABASE_ACTIVE_USER_LOCAL = record
     USER: TDATABASE_ACTIVE_USER_LOCAL_USER;
-    MAP: DATABASE_ACTIVE_USER_LOCAL_MAP;
+    MAP: TDATABASE_ACTIVE_USER_LOCAL_MAP;
     OPTIONS: TDATABASE_ACTIVE_USER_LOCAL_OPTIONS;
     ADDONS: TDATABASE_ACTIVE_USER_LOCAL_ADDONS;
     EMULATORS: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS;
@@ -611,7 +659,7 @@ begin
   Local.USER.Genre := uDB.ExtraFE_Query_Local.FieldByName('GENDER').AsBoolean;
   Local.USER.Active := uDB.ExtraFE_Query_Local.FieldByName('ACTIVE_ONLINE').AsBoolean;
 
-  {GENERAL}
+  { GENERAL }
   vQuery := 'SELECT * FROM OPTIONS WHERE USER_ID=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
@@ -620,36 +668,35 @@ begin
   uDB.ExtraFE_Query_Local.First;
   Local.OPTIONS.Visual.Virtual_Keyboard := uDB.ExtraFE_Query_Local.FieldByName('VIRTUAL_KEYBOARD').AsBoolean;
 
-  vQuery := 'SELECT * FROM map_keyboard WHERE user_id='+ vUser_Num;
+  vQuery := 'SELECT * FROM map_keyboard WHERE user_id=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
   uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
 
-  Local.MAP.Keyboard.Up:= uDB.ExtraFE_Query_Local.FieldByName('main_up').AsString;
-  Local.MAP.Keyboard.Down:= uDB.ExtraFE_Query_Local.FieldByName('main_down').AsString;
-  Local.MAP.Keyboard.Left:= uDB.ExtraFE_Query_Local.FieldByName('main_left').AsString;
-  Local.MAP.Keyboard.Right:= uDB.ExtraFE_Query_Local.FieldByName('main_right').AsString;
-  Local.MAP.Keyboard.Action:= uDB.ExtraFE_Query_Local.FieldByName('main_action').AsString;
-  Local.MAP.Keyboard.Escape:= uDB.ExtraFE_Query_Local.FieldByName('main_escape').AsString;
-  Local.MAP.Keyboard.Config:= uDB.ExtraFE_Query_Local.FieldByName('main_config').AsString;
-  Local.MAP.Keyboard.Emu_Up:= uDB.ExtraFE_Query_Local.FieldByName('emu_up').AsString;
-  Local.MAP.Keyboard.Emu_Down:= uDB.ExtraFE_Query_Local.FieldByName('emu_down').AsString;
-  Local.MAP.Keyboard.Emu_Left:= uDB.ExtraFE_Query_Local.FieldByName('emu_left').AsString;
-  Local.MAP.Keyboard.Emu_Right:= uDB.ExtraFE_Query_Local.FieldByName('emu_right').AsString;
-  Local.MAP.Keyboard.Emu_Action:= uDB.ExtraFE_Query_Local.FieldByName('emu_action').AsString;
-  Local.MAP.Keyboard.Emu_Escape:= uDB.ExtraFE_Query_Local.FieldByName('emu_escape').AsString;
-  Local.MAP.Keyboard.Emu_Favorite:= uDB.ExtraFE_Query_Local.FieldByName('emu_fav').AsString;
-  Local.MAP.Keyboard.Emu_FavoriteAdd:= uDB.ExtraFE_Query_Local.FieldByName('emu_addfav').AsString;
-  Local.MAP.Keyboard.Emu_Filters:= uDB.ExtraFE_Query_Local.FieldByName('emu_filters').AsString;
-  Local.MAP.Keyboard.Emu_Lists:= uDB.ExtraFE_Query_Local.FieldByName('emu_lists').AsString;
-  Local.MAP.Keyboard.Emu_Search:= uDB.ExtraFE_Query_Local.FieldByName('emu_search').AsString;
-  Local.MAP.Keyboard.Emu_Config:= uDB.ExtraFE_Query_Local.FieldByName('emu_config').AsString;
-  Local.MAP.Keyboard.Emu_Screensaver:= uDB.ExtraFE_Query_Local.FieldByName('emu_screensaver').AsString;
+  Local.MAP.Keyboard.Up := uDB.ExtraFE_Query_Local.FieldByName('main_up').AsString;
+  Local.MAP.Keyboard.Down := uDB.ExtraFE_Query_Local.FieldByName('main_down').AsString;
+  Local.MAP.Keyboard.Left := uDB.ExtraFE_Query_Local.FieldByName('main_left').AsString;
+  Local.MAP.Keyboard.Right := uDB.ExtraFE_Query_Local.FieldByName('main_right').AsString;
+  Local.MAP.Keyboard.Action := uDB.ExtraFE_Query_Local.FieldByName('main_action').AsString;
+  Local.MAP.Keyboard.Escape := uDB.ExtraFE_Query_Local.FieldByName('main_escape').AsString;
+  Local.MAP.Keyboard.Config := uDB.ExtraFE_Query_Local.FieldByName('main_config').AsString;
+  Local.MAP.Keyboard.Emu_Up := uDB.ExtraFE_Query_Local.FieldByName('emu_up').AsString;
+  Local.MAP.Keyboard.Emu_Down := uDB.ExtraFE_Query_Local.FieldByName('emu_down').AsString;
+  Local.MAP.Keyboard.Emu_Left := uDB.ExtraFE_Query_Local.FieldByName('emu_left').AsString;
+  Local.MAP.Keyboard.Emu_Right := uDB.ExtraFE_Query_Local.FieldByName('emu_right').AsString;
+  Local.MAP.Keyboard.Emu_Action := uDB.ExtraFE_Query_Local.FieldByName('emu_action').AsString;
+  Local.MAP.Keyboard.Emu_Escape := uDB.ExtraFE_Query_Local.FieldByName('emu_escape').AsString;
+  Local.MAP.Keyboard.Emu_Favorite := uDB.ExtraFE_Query_Local.FieldByName('emu_fav').AsString;
+  Local.MAP.Keyboard.Emu_FavoriteAdd := uDB.ExtraFE_Query_Local.FieldByName('emu_addfav').AsString;
+  Local.MAP.Keyboard.Emu_Filters := uDB.ExtraFE_Query_Local.FieldByName('emu_filters').AsString;
+  Local.MAP.Keyboard.Emu_Lists := uDB.ExtraFE_Query_Local.FieldByName('emu_lists').AsString;
+  Local.MAP.Keyboard.Emu_Search := uDB.ExtraFE_Query_Local.FieldByName('emu_search').AsString;
+  Local.MAP.Keyboard.Emu_Config := uDB.ExtraFE_Query_Local.FieldByName('emu_config').AsString;
+  Local.MAP.Keyboard.Emu_ScreenSaver := uDB.ExtraFE_Query_Local.FieldByName('emu_screensaver').AsString;
 
-
-  {EMULATORS}
+  { EMULATORS }
   vQuery := 'SELECT * FROM EMULATORS WHERE USER_ID=' + vUser_Num;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;

@@ -447,6 +447,7 @@ type
 
 type
   TLOADING_PATHS = record
+    load: String;
     Images: String;
   end;
 

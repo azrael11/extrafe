@@ -1,0 +1,350 @@
+unit uMain_Mouse;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.StrUtils,
+  System.UiTypes,
+  FMX.Ani,
+  FMX.Objects,
+  FMX.Dialogs,
+  FMX.Effects,
+  FMX.StdCtrls,
+  FMX.Layouts,
+  uMain_Config_Mouse,
+  uMain_Config_Emulation_Arcade_Scripts_Mouse,
+  uMain_Config_Emulation_Consoles_Scripts_Mouse,
+  BASS;
+
+type
+  TMAIN_IMAGE = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_BUTTON = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_TEXT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_EDIT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+    procedure OnTyping(Sender: TObject);
+  end;
+
+type
+  TMAIN_LAYOUT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_PANEL = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_COMBOBOX = class(TObject)
+    procedure OnChange(Sender: TObject);
+  end;
+
+type
+  TMAIN_MOUSE_ACTIONS = record
+    Image: TMAIN_IMAGE;
+    Button: TMAIN_BUTTON;
+    Text: TMAIN_TEXT;
+    Edit: TMAIN_EDIT;
+    Panel: TMAIN_PANEL;
+    Layout: TMAIN_LAYOUT;
+    ComboBox: TMAIN_COMBOBOX;
+  end;
+
+type
+  TMAIN_INPUT = record
+    mouse: TMAIN_MOUSE_ACTIONS;
+    mouse_config: TMAIN_MOUSE_CONFIG_ACTIONS;
+    mouse_script_arcade: TMAIN_MOUSE_CONFIG_EMULATION_ARCADE_ACTIONS;
+    mouse_script_consoles: TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_ACTIONS;
+  end;
+
+implementation
+
+uses
+  uDB,
+  uDB_AUser,
+  uLoad_AllTypes,
+  uMain,
+  uMain_Actions,
+  uMain_Emulation,
+  uMain_Config,
+  uMain_SetAll,
+  uMain_AllTypes,
+  uMain_Config_Emulators,
+  uWeather_Actions,
+  uTime_SetAll,
+  uTime_AllTypes,
+  uTime_Actions,
+  uCalendar_SetAll,
+  uWeather_AllTypes,
+  uWeather_SetAll,
+  uSoundplayer_SetAll,
+  uSoundplayer_Actions,
+  uSoundplayer_AllTypes,
+  uPlay_AllTypes,
+  uPlay_SetAll,
+  uPlay_Actions;
+
+{ TMAIN_IMAGE }
+procedure TMAIN_IMAGE.OnMouseClick(Sender: TObject);
+begin
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if not ContainsText(extrafe.prog.State, 'main_config') then
+    begin
+      if TImage(Sender).Name = 'Main_Header_Exit' then
+        uMain.Exit
+      else if TImage(Sender).Name = 'Main_Header_Minimize' then
+        uMain.Minimized
+      else if TImage(Sender).Name = 'Main_Header_Avatar' then
+      begin
+        if extrafe.prog.State = 'main' then
+          uMain_Actions.ShowAvatar;
+      end;
+    end;
+    BASS_ChannelPlay(sound.str_fx.general[0], False);
+  end;
+end;
+
+procedure TMAIN_IMAGE.OnMouseEnter(Sender: TObject);
+begin
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if not ContainsText(extrafe.prog.State, 'main_config') then
+    begin
+      if TImage(Sender).Name = 'Main_Header_Exit' then
+        mainScene.Header.Exit_Glow.Enabled := True
+      else if TImage(Sender).Name = 'Main_Header_Minimize' then
+        mainScene.Header.Minimize_Glow.Enabled := True
+      else if TImage(Sender).Name = 'Main_Header_Avatar' then
+      begin
+        if extrafe.prog.State = 'main' then
+          mainScene.Header.Avatar_Glow.Enabled := True
+      end
+    end;
+    TImage(Sender).Cursor := crHandPoint;
+  end;
+end;
+
+procedure TMAIN_IMAGE.OnMouseLeave(Sender: TObject);
+begin
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if not ContainsText(extrafe.prog.State, 'main_config') then
+    begin
+      if TImage(Sender).Name = 'Main_Header_Exit' then
+        mainScene.Header.Exit_Glow.Enabled := False
+      else if TImage(Sender).Name = 'Main_Header_Minimize' then
+        mainScene.Header.Minimize_Glow.Enabled := False
+      else if TImage(Sender).Name = 'Main_Header_Avatar' then
+      begin
+        if extrafe.prog.State = 'main' then
+          mainScene.Header.Avatar_Glow.Enabled := False
+      end
+    end;
+  end;
+end;
+
+{ TMAIN_BUTTON }
+
+procedure TMAIN_BUTTON.OnMouseClick(Sender: TObject);
+begin
+  if TButton(Sender).Name = 'Main_Exit_Main_Yes' then
+    uMain.Exit_Exit
+  else if TButton(Sender).Name = 'Main_Exit_Main_No' then
+    uMain.Exit_Stay;
+end;
+
+procedure TMAIN_BUTTON.OnMouseEnter(Sender: TObject);
+begin
+  TButton(Sender).Cursor := crHandPoint;
+  if TButton(Sender).Name = 'Main_Exit_Main_Yes' then
+    uMain.Exit_OnOverText('Yes', False)
+  else if TButton(Sender).Name = 'Main_Exit_Main_No' then
+    uMain.Exit_OnOverText('No', False);
+end;
+
+procedure TMAIN_BUTTON.OnMouseLeave(Sender: TObject);
+begin
+  if TButton(Sender).Name = 'Main_Exit_Main_Yes' then
+    uMain.Exit_OnOverText('Yes', True)
+  else if TButton(Sender).Name = 'Main_Exit_Main_No' then
+    uMain.Exit_OnOverText('No', True);
+end;
+
+{ TMAIN_TEXT }
+
+procedure TMAIN_TEXT.OnMouseClick(Sender: TObject);
+begin
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
+    begin
+      if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
+        uMain_Actions.ShowHide_Addon(TText(Sender).Tag, extrafe.prog.State, uDB_AUser.Local.addons.Names[TText(Sender).Tag])
+    end
+    else if TText(Sender).Name = 'Main_Footer_Settings' then
+    begin
+      if mainScene.Footer.Back_Blur.Enabled = False then
+        uMain_Config.ShowHide(extrafe.prog.State);
+    end;
+  end;
+end;
+
+procedure TMAIN_TEXT.OnMouseEnter(Sender: TObject);
+begin
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if TText(Sender).Name = 'Emulator_Back_Level' + TText(Sender).Tag.ToString then
+      emulation.Selection_Tab[TText(Sender).Tag].Back_Glow.Enabled := True
+    else if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
+    begin
+      if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
+        mainScene.Header.Addon_Icon.Glow[TText(Sender).Tag].Enabled := True;
+    end
+    else if TImage(Sender).Name = 'Main_Footer_Settings' then
+    begin
+      if mainScene.Footer.Back_Blur.Enabled = False then
+        mainScene.Footer.Settings_Glow.Enabled := True;
+    end;
+  end;
+  TText(Sender).Cursor := crHandPoint;
+end;
+
+procedure TMAIN_TEXT.OnMouseLeave(Sender: TObject);
+begin
+  if extrafe.prog.State <> 'main_exit' then
+  begin
+    if TText(Sender).Name = 'Emulator_Back_Level' + TText(Sender).Tag.ToString then
+      emulation.Selection_Tab[TText(Sender).Tag].Back_Glow.Enabled := False
+    else if TText(Sender).Name = 'Main_Header_Addon_Icon_' + TText(Sender).Tag.ToString then
+    begin
+      if (addons.Active_Now_Num = -1) or (addons.Active_Now_Num = TText(Sender).Tag) then
+        mainScene.Header.Addon_Icon.Glow[TText(Sender).Tag].Enabled := False;
+    end
+    else if TImage(Sender).Name = 'Main_Footer_Settings' then
+    begin
+      if mainScene.Footer.Back_Blur.Enabled = False then
+        mainScene.Footer.Settings_Glow.Enabled := False;
+    end;
+  end;
+end;
+
+{ TMAIN_EDIT }
+
+procedure TMAIN_EDIT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_EDIT.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_EDIT.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_EDIT.OnTyping(Sender: TObject);
+begin
+
+end;
+
+{ TMAIN_LAYOUT }
+
+procedure TMAIN_LAYOUT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_LAYOUT.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_LAYOUT.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+{ TMAIN_PANEL }
+
+procedure TMAIN_PANEL.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_PANEL.OnMouseEnter(Sender: TObject);
+begin
+  TPanel(Sender).Cursor := crHandPoint;
+  if TPanel(Sender).Name = 'Main_Footer_Widget_Calenadar_Above' then
+  begin
+    TPanel(Sender).Opacity := 0.4;
+    mainScene.Footer.Widgets.Calendar.Panel_Glow.Enabled := True;
+  end;
+end;
+
+procedure TMAIN_PANEL.OnMouseLeave(Sender: TObject);
+begin
+  if TPanel(Sender).Name = 'Main_Footer_Widget_Calenadar_Above' then
+  begin
+    TPanel(Sender).Opacity := 0;
+    mainScene.Footer.Widgets.Calendar.Panel_Glow.Enabled := True;
+  end;
+end;
+
+{ TMAIN_COMBOBOX }
+
+procedure TMAIN_COMBOBOX.OnChange(Sender: TObject);
+begin
+
+end;
+
+initialization
+
+ex_main.input.mouse.Image := TMAIN_IMAGE.Create;
+ex_main.input.mouse.Button := TMAIN_BUTTON.Create;
+ex_main.input.mouse.Text := TMAIN_TEXT.Create;
+ex_main.input.mouse.Edit := TMAIN_EDIT.Create;
+ex_main.input.mouse.Layout := TMAIN_LAYOUT.Create;
+ex_main.input.mouse.Panel := TMAIN_PANEL.Create;
+
+finalization
+
+ex_main.input.mouse.Image.Free;
+ex_main.input.mouse.Button.Free;
+ex_main.input.mouse.Text.Free;
+ex_main.input.mouse.Edit.Free;
+ex_main.input.mouse.Layout.Free;
+ex_main.input.mouse.Panel.Free;
+
+end.

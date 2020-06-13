@@ -1,0 +1,13 @@
+unit uLoad_Joystics;
+
+interface
+uses
+  System.Classes;
+
+procedure Get_MMSystem_Joysticks;
+procedure Get_Direct_Input_Joysticks;
+procedure Get_X_Input_Joysticks;
+
+implementation
+
+end.

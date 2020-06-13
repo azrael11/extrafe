@@ -1,0 +1,263 @@
+unit uLoad;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  System.Threading,
+  CodeSiteLogging,
+  IniFiles,
+  Winapi.Windows,
+  FMX.Objects,
+  FMX.Controls,
+  FMX.Types,
+  FMX.Layouts,
+  FMX.Ani,
+  FmxPasLibVlcPlayerUnit;
+
+procedure Load_Consts;
+procedure Load_First_User_Settings;
+procedure Load_Default_Settings;
+
+procedure Prepare;
+
+procedure Start_ExtraFE;
+procedure Play_Intro_Video;
+procedure Skip_Intro;
+
+var
+  Default_Load: Boolean;
+
+implementation
+
+uses
+  uWindows,
+  uInternet_Files,
+  load,
+  main,
+  uMain,
+  uMain_AllTypes,
+  uMain_Config_Themes,
+  uLoad_SetAll,
+  uLoad_AllTypes,
+  uLoad_Addons,
+  uLoad_Emulation,
+  uLoad_Sound,
+  uLoad_Video,
+  uLoad_Stats,
+  uDB,
+  uDB_AUser;
+
+procedure Load_Consts;
+begin
+  { Version }
+  extrafe.prog.Version.Major := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[0];
+  extrafe.prog.Version.Minor := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[1];
+  extrafe.prog.Version.Realeash := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[2];
+  extrafe.prog.Version.Build := uWindows.Version_Get_info(extrafe.prog.Path + extrafe.prog.Name).Strings[3];
+  { Code Name }
+  extrafe.prog.Desc := 'Code name: Mnimi';
+  { Main Defaults }
+  ex_main.Paths.Flags_Images := extrafe.prog.Path + 'data\main\flags\';
+  ex_main.Paths.Avatar_Images := extrafe.prog.Path + 'data\main\avatars\';
+  ex_main.Paths.Images := extrafe.prog.Path + 'data\main\images\';
+  ex_main.Paths.Config_Images := extrafe.prog.Path + 'data\main\config_images\';
+  ex_main.Paths.Sounds := extrafe.prog.Path + 'data\main\sounds\';
+
+end;
+
+procedure Load_First_User_Settings;
+begin
+  extrafe.res.Width := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'RESOLUTION_WIDTH', 'SETTINGS', 'USER_ID', '1').ToInteger;
+  extrafe.res.Height := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'RESOLUTION_HEIGHT', 'SETTINGS', 'USER_ID', '1').ToInteger;
+  extrafe.res.Half_Width := extrafe.res.Width div 2;
+  extrafe.res.Half_Height := extrafe.res.Height div 2;
+  extrafe.res.Fullscreen := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'FOULSCREEN', 'SETTINGS', 'USER_ID', '1').ToBoolean;
+  if extrafe.res.Width <> extrafe.res.Monitor.Horizontal then
+  begin
+
+  end;
+
+  load.Loading.Width := extrafe.res.Width;
+  load.Loading.Height := extrafe.res.Height;
+  load.Loading.Fullscreen := extrafe.res.Fullscreen;
+
+  extrafe.prog.Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PATH', 'SETTINGS', 'USER_ID', '1');
+  extrafe.prog.Name := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'NAME', 'SETTINGS', 'USER_ID', '1');
+  extrafe.prog.Lib_Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PATH_LIB', 'SETTINGS', 'USER_ID', '1');
+  extrafe.prog.History_Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PATH_HISTORY', 'SETTINGS', 'USER_ID', '1');
+  extrafe.prog.Fonts_Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PATH_FONTS', 'SETTINGS', 'USER_ID', '1');
+
+  extrafe.style.Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'THEME_PATH', 'SETTINGS', 'USER_ID', '1');
+  extrafe.style.Name := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'THEME_NAME', 'SETTINGS', 'USER_ID', '1');
+  extrafe.style.Num := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'THEME_NUM', 'SETTINGS', 'USER_ID', '1').ToInteger;
+
+  emulation.Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PATH', 'EMULATORS', 'USER_ID', '1');
+
+  Load_Consts;
+end;
+
+procedure Load_Default_Settings;
+begin
+  extrafe.res.Width := extrafe.res.Monitor.Horizontal;
+  extrafe.res.Height := extrafe.res.Monitor.Vertical;
+  extrafe.res.Half_Width := extrafe.res.Width div 2;
+  extrafe.res.Half_Height := extrafe.res.Height div 2;
+
+  load.Loading.Width := extrafe.res.Width;
+  load.Loading.Height := extrafe.res.Height;
+  load.Loading.Fullscreen := True;
+
+  extrafe.prog.Path := ExtractFilePath(ParamStr(0));
+  extrafe.prog.Name := ExtractFileName(ParamStr(0));
+
+  extrafe.prog.Lib_Path := extrafe.prog.Path + 'lib\';
+  extrafe.prog.History_Path := extrafe.prog.Path + 'data\database\history\';
+  extrafe.prog.Fonts_Path := extrafe.prog.Path + 'data\main\fonts\';
+
+  extrafe.style.Path := extrafe.prog.Path + 'data\themes\';
+  extrafe.style.Name := 'Air';
+  extrafe.style.Num := 20;
+
+  Load_Consts;
+end;
+
+procedure Prepare;
+const
+  res_4_3: array [0 .. 8] of string = ('1024x768', '1152x864', '1280x960', '1400x1050', '1600x1200', '2048x1536', '3200x2400', '4000x3000', '6400x4800');
+  res_16_9: array [0 .. 7] of string = ('852x480', '1280x720', '1365x768', '1600x900', '1920x1080', '2560x1440', '3840x2160', '4096x2160');
+  res_16_10: array [0 .. 5] of string = ('1440x900', '1680x1050', '1920x1200', '2560x1600', '3840x2400', '7680x4800');
+begin
+
+
+  CodeSite.EnterMethod('Loadign ExtraFE Procedure');
+  extrafe.users_total := -1;
+  uDB.Local_Create;
+  extrafe.databases.local_connected := uDB.Local_Connect;
+
+  extrafe.users_total := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'users', '', '');
+  extrafe.res.Monitor := uWindows.Monitor_Get_Res;
+
+  if extrafe.users_total > 0 then
+    Load_First_User_Settings
+  else
+    Load_Default_Settings;
+
+  extrafe.Internet_Active := uInternet_Files.Internet_Connected;
+  if extrafe.Internet_Active then
+  begin
+    uDB.Online_Create;
+    extrafe.databases.online_connected := uDB.Online_Connect;
+  end;
+
+  mainScene.main.style := TStyleBook.Create(Main_Form);
+  mainScene.main.style.Name := 'Main_StyleBook';
+  mainScene.main.style.Parent := Main_Form;
+
+  uMain_Config_Themes.ApplyTheme(extrafe.style.Name);
+  load.Loading.StyleBook := mainScene.main.style;
+
+  ex_load.Path.Images := extrafe.prog.Path + 'data\loading\';
+
+  Start_ExtraFE;
+  Play_Intro_Video;
+end;
+
+procedure SetLoadingScreen;
+begin
+
+end;
+
+procedure Start_ExtraFE;
+begin
+  if Default_Load = False then
+  begin
+    extrafe.prog.State := 'loading';
+    uLoad_Sound.Load;
+    uLoad_Video.Load;
+    uLoad_SetAll.load;
+    extrafe.user_login := False;
+    Default_Load := True;
+    CodeSite.ExitMethod('Loading ExtraFE Is Done');
+    CodeSite.Send(csmLevel5, 'User is in login mode');
+  end
+  else
+  begin
+    ex_load.Login.Login.Text := '';
+    ex_load.Login.Exit_ExtraFE.Enabled := False;
+    ex_load.Login.User_V.Enabled := False;
+    ex_load.Login.Pass_V.Enabled := False;
+    ex_load.Login.Login_Indicator.Visible := True;
+    ex_load.Login.Login_Indicator.Enabled := True;
+    uDB_AUser.update_time;
+    uLoad_Emulation.load;
+    uLoad_Addons.load;
+    ex_load.Scene.Back_Fade.Start;
+    ex_load.Scene.Progress.Value := 100;
+    ex_load.Scene.Progress_Text.Text := 'Loading Complete. Accessing the ExtraFE.';
+  end;
+end;
+
+procedure Play_Intro_Video;
+begin
+  ex_load.Intro.Back := TLayout.Create(load.Loading);
+  ex_load.Intro.Back.Name := 'Loading_Intro_Back';
+  ex_load.Intro.Back.Parent := load.Loading;
+  ex_load.Intro.Back.Align := TAlignLayout.Client;
+  ex_load.Intro.Back.Cursor := crDefault;
+  ex_load.Intro.Back.Visible := True;
+
+  ex_load.Intro.Video := TFmxPasLibVlcPlayer.Create(ex_load.Intro.Back);
+  ex_load.Intro.Video.Name := 'Loading_Intro';
+  ex_load.Intro.Video.Parent := ex_load.Intro.Back;
+  ex_load.Intro.Video.Align := TAlignLayout.Client;
+  // ex_load.Intro.Video.Play(ex_load.Path.Images + 'intro.mp4');
+  ex_load.Intro.Video.WrapMode := TImageWrapMode.Stretch;
+  ex_load.Intro.Video.Cursor := crDefault;
+  ex_load.Intro.Video.OnMouseMove := ex_load.Input.mouse.Layout.OnMouseMove;
+  ex_load.Intro.Video.Visible := True;
+
+  ex_load.Intro.Text := TText.Create(ex_load.Intro.Video);
+  ex_load.Intro.Text.Name := 'Loading_Intro_Text';
+  ex_load.Intro.Text.Parent := ex_load.Intro.Video;
+  ex_load.Intro.Text.SetBounds(extrafe.res.Width - 310, 10, 300, 30);
+  ex_load.Intro.Text.Font.Family := 'IcoMoon-Free';
+  ex_load.Intro.Text.Text := 'Skip Video ' + #$ea14;
+  ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.White;
+  ex_load.Intro.Text.TextSettings.Font.Size := 24;
+  ex_load.Intro.Text.Opacity := 1;
+  ex_load.Intro.Text.TextSettings.HorzAlign := TTextAlign.Trailing;
+  ex_load.Intro.Text.OnClick := ex_load.Input.mouse.Text.OnMouseClick;
+  ex_load.Intro.Text.OnMouseEnter := ex_load.Input.mouse.Text.OnMouseEnter;
+  ex_load.Intro.Text.OnMouseLeave := ex_load.Input.mouse.Text.OnMouseLeave;
+  ex_load.Intro.Text.Visible := True;
+
+  ex_load.Intro.Text_Ani := TFloatAnimation.Create(ex_load.Intro.Text);
+  ex_load.Intro.Text_Ani.Name := 'Loading_Intro_Text_Ani';
+  ex_load.Intro.Text_Ani.Parent := ex_load.Intro.Text;
+  ex_load.Intro.Text_Ani.Duration := 0.3;
+  ex_load.Intro.Text_Ani.StopValue := 0;
+  ex_load.Intro.Text_Ani.PropertyName := 'Opacity';
+  ex_load.Intro.Text_Ani.Enabled := False;
+
+  ex_load.Intro.Timer := TTimer.Create(load.Loading);
+  ex_load.Intro.Timer.Name := 'Loading_Intro_Timer';
+  ex_load.Intro.Timer.Parent := load.Loading;
+  ex_load.Intro.Timer.Interval := 1;
+  ex_load.Intro.Timer.OnTimer := ex_load.Scene.Timer_Pros.OnTimer;
+  ex_load.Intro.Timer.Enabled := True;
+
+  ex_load.Intro.Fade_Count := 0;
+end;
+
+procedure Skip_Intro;
+begin
+  ex_load.Intro.Video.Stop;
+  FreeAndNil(ex_load.Intro.Back);
+  ex_load.Intro.Timer.Enabled := False;
+  ex_load.Scene.Back.Visible := True;
+end;
+
+end.

@@ -1,0 +1,21 @@
+unit uEmu_Joystick;
+
+interface
+uses
+  System.Classes;
+
+procedure Joy_1_Set_Move_Action(vAction: String);
+
+implementation
+uses
+  uDB_AUser,
+  uView_Mode_Default_Joy_MMSystem;
+
+procedure Joy_1_Set_Move_Action(vAction: String);
+begin
+  if vView_Mode = 'default' then
+    uView_Mode_Default_Joy_MMSystem.Move(vAction);
+  
+end;
+
+end.

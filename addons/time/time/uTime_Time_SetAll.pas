@@ -17,7 +17,6 @@ uses
   FMX.StdCtrls,
   FMX.TabControl,
   FMX.Listbox,
-  FMX.ILAnalogClock,
   Radiant.Shapes;
 
 procedure Load;

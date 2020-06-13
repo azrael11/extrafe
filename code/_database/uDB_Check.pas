@@ -77,6 +77,38 @@ begin
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "options" is checked and corrected');
 
+  // Map Keyboard
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Text :=
+    'CREATE TABLE IF NOT EXISTS map_keyboard ("map_key_id" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "user_id" Integer, "main_up" Text, "main_down" Text, "main_left" Text, '
+    + '"main_right" Text, "main_action" Text, "main_escape" Text, "main_config" Text, "emu_up" Text, "emu_down" Text, "emu_left" Text, "emu_right" Text, "emu_action" Text, "emu_escape" Text, '
+    + '"emu_fav" Text, "emu_addfav" Text, "emu_filters" Text, "emu_lists" Text, "emu_search" Text, "emu_config" Text, "emu_screensaver" Text);';
+  ExtraFE_Query_Local.ExecSQL;
+  CodeSite.Send('Table "map keyboard" is checked and corrected');
+
+  // Map Mouse
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Text :=
+    'CREATE TABLE IF NOT EXISTS map_mouse ("map_mouse_id" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "user_id" Integer, "name" Text, "buttons_num" Text, "mouse_x_left" Text, '
+    + '"mouse_x_right" Text, "mouse_y_top" Text, "mouse_y_bottom" Text, "button_1" Text, "button_2" Text, "button_3" Text, "button_4" Text, "button_5" Text, "button_6" Text, "dpi" Text);';
+  ExtraFE_Query_Local.ExecSQL;
+  CodeSite.Send('Table "map mouse" is checked and corrected');
+
+  // Map Joystick MMSystem
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Text :=
+    'CREATE TABLE IF NOT EXISTS map_mouse ("map_joy_id" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "user_id" Integer, "up" Text, "down" Text, "left" Text, "right" Text, "button_1" Text, '
+    + '"button_2" Text, "button_3" Text, "button_4" Text, "button_5" Text, "button_6" Text, "button_7" Text, "button_8" Text, "button_9" Text, "button_10" Text, "button_11" Text, "button_12" Text, '
+    + '"button_13" Text, "button_14" Text, "button_15" Text, "button_16" Text, "emu_up" Text, "emu_down" Text, "emu_left" Text, "emu_right" Text, "emu_button_1" Text, "emu_button_2" Text, '
+    + '"emu_button_3" Text, "emu_button_4" Text, "emu_button_5" Text, "emu_button_6" Text, "emu_button_7" Text, "emu_button_8" Text, "emu_button_9" Text, "emu_button_10" Text, "emu_button_11" Text, '
+    + '"emu_button_12" Text, "emu_button_13" Text, "emu_button_14" Text, "emu_button_15" Text, "emu_button_16" Text, "button_num" Text, "manufacturer_name" Text, "product_name" Text, "pov" Text, '
+    + '"forceback" Text, "regkey" Text, "szoem" Text, "position" Text, "name" Text);';
+  ExtraFE_Query_Local.ExecSQL;
+  CodeSite.Send('Table "map joystick mmsystem" is checked and corrected');
+
   // Addons ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;

@@ -15,7 +15,6 @@ uses
   FMX.TabControl,
   FMX.Listbox,
   FMX.Colors,
-  FMX.ILAnalogClock,
   Radiant.Shapes;
 
 type
@@ -35,7 +34,7 @@ type
     Options_ShowHours: TCheckBox;
     Options_ShowMinutes: TCheckBox;
     Options_ShowSecondsIndicator: TCheckBox;
-    Analog_Full: TILAnalogClock;
+//    Analog_Full: TILAnalogClock;
     Analog: TGroupBox;
     Circle_Label: TLabel;
     Circle: TEdit;

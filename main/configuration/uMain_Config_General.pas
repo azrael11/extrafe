@@ -11,8 +11,6 @@ uses
   FMX.StdCtrls;
 
 procedure Create;
-var
-  vKey_Waiting : Boolean;
 
 implementation
 

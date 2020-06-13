@@ -11,6 +11,7 @@ uses
   FMX.Objects,
   FMX.Edit,
   FMX.TABControl,
+  FMX.ListBox,
   BASS;
 
 type
@@ -62,6 +63,13 @@ type
 type
   TMAIN_CONFIG_TABITEM = class(TObject)
     procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TMAIN_CONFIG_COMBOBOX = class(TObject)
+    procedure OnChange(Sender: TObject);
   end;
 
 type
@@ -74,6 +82,7 @@ type
     Speedbutton: TMAIN_CONFIG_SPEEDBUTTON;
     Checkbox: TMAIN_CONFIG_CHECKBOX;
     TabItem: TMAIN_CONFIG_TABITEM;
+    ComboBox: TMAIN_CONFIG_COMBOBOX;
   end;
 
 implementation
@@ -94,6 +103,8 @@ uses
   uMain_Config_General,
   uMain_Config_General_Visual,
   uMain_Config_General_Keyboard,
+  uMain_Config_General_Joystick,
+  uMain_Config_General_Joystick_MMSystem,
   uMain_Config_Info_Extrafe,
   uMain_Config_Info_Credits,
   uMain_Config_Profile_User;
@@ -276,16 +287,40 @@ begin
         uMain_Config_Addons.ShowInfo(TImage(Sender).Tag);
     end;
   end
-  else if extrafe.prog.State = 'main_config_general' then
+  else if ContainsText(extrafe.prog.State, 'main_config_general') then
   begin
-    if vKey_Waiting = False then
+    if extrafe.prog.State = 'main_config_general_keyboard' then
     begin
-      if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
-        (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+      if uMain_Config_General_Keyboard.vKey_Waiting = False then
       begin
-        vSelected_Tab := mainScene.Config.Main.R.General.Keyboard.TabControl.TabIndex;
-        vSelected_Label := TText(Sender).Tag;
-        uMain_Config_General_Keyboard.Click_To_Accept_Key;
+        if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
+          (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+        begin
+          uMain_Config_General_Keyboard.vSelected_key_Tab := mainScene.Config.Main.R.general.Keyboard.TABControl.TabIndex;
+          uMain_Config_General_Keyboard.vSelected_Label := TText(Sender).Tag;
+          uMain_Config_General_Keyboard.Click_To_Accept_Key;
+        end;
+      end;
+    end
+    else if extrafe.prog.State = 'main_config_general_joystick_mmsystem' then
+    begin
+      if not Assigned(vSelected_joy_Timer) then
+      begin
+        if mainScene.Config.Main.R.general.Joystick.Options.Panel = nil then
+        begin
+          uMain_Config_General_Joystick.vSelected_joy_Type := mainScene.Config.Main.R.general.Joystick.Control.TabIndex;
+          uMain_Config_General_Joystick.vSelected_joy_Tab := mainScene.Config.Main.R.general.Joystick.Generic.Control.TabIndex;
+          uMain_Config_General_Joystick.vSelected_joy_label := TText(Sender).TagString;
+        end;
+        if (ContainsText(TText(Sender).Name, 'Main_Config_General_Joystick_MMSystem_Generic_Button_')) or
+          (ContainsText(TText(Sender).Name, 'Main_Config_General_Joystick_MMSystem_Generic_Emulators_Button_')) then
+          uMain_Config_General_Joystick_MMSystem.Wait_To_Set_Key_Action(TText(Sender).Tag.ToString, TText(Sender).TagString);
+      end
+      else
+      begin
+        if TText(Sender).Name = 'Main_Config_General_Joystick_MMSystem_Generic_General_Options_VBox_Text_' + TText(Sender).Tag.ToString then
+          uMain_Config_General_Joystick.Set_Value_To_Database(uMain_Config_General_Joystick.vSelected_joy_label, TText(Sender).Text,
+            uMain_Config_General_Joystick.vSelected);
       end;
     end;
   end;
@@ -304,6 +339,7 @@ begin
   end
   else if extrafe.prog.State = 'main_config_profile_user' then
   begin
+    TText(Sender).Cursor := crHandPoint;
     if TText(Sender).Name = 'Main_Config_Profile_Main_Avatar_Change' then
       uMain_Config_Profile_User.AVatar_Glow(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Profile_Main_Password_Change' then
@@ -321,6 +357,7 @@ begin
   end
   else if extrafe.prog.State = 'main_config_info' then
   begin
+    TText(Sender).Cursor := crHandPoint;
     if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Homepage_V' then
       uSnippets.HyperLink_OnMouseOver(TText(Sender))
     else if TText(Sender).Name = 'Main_Config_Info_ExtraFE_Documentation_V' then
@@ -330,6 +367,7 @@ begin
   end
   else if extrafe.prog.State = 'main_config_addons' then
   begin
+    TText(Sender).Cursor := crHandPoint;
     if TText(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
       mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := True
     else if TText(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
@@ -337,20 +375,36 @@ begin
     else if TText(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
       mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True;
   end
-  else if extrafe.prog.State = 'main_config_general' then
+  else if ContainsText(extrafe.prog.State, 'main_config_general') then
   begin
-    if vKey_Waiting = False then
+    if extrafe.prog.State = 'main_config_general_keyboard' then
     begin
-      if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
-        (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+      if uMain_Config_General_Keyboard.vKey_Waiting = False then
       begin
-        uMain_Config_General_Keyboard.vBefore_Text := TText(Sender).Text;
-        TText(Sender).Text := 'Click to Change';
-        TText(Sender).TextSettings.FontColor := TAlphaColorRec.Black;
+        if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
+          (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+        begin
+          if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+          begin
+            TText(Sender).Cursor := crHandPoint;
+            uMain_Config_General_Keyboard.vBefore_Text := TText(Sender).Text;
+            TText(Sender).Text := 'Click to Change';
+            TText(Sender).TextSettings.FontColor := TAlphaColorRec.Black;
+          end;
+        end
       end;
+    end
+    else if extrafe.prog.State = 'main_config_general_joystick_mmsystem' then
+    begin
+      TText(Sender).Cursor := crHandPoint;
+      if ContainsText(TText(Sender).Name, 'Main_Config_General_Joystick_MMSystem_Generic_Button_') then
+        uMain_Config_General_Joystick.UpDate_Info(TText(Sender).Tag.ToString, TText(Sender).TagString, 0, 0);
+      if ContainsText(TText(Sender).Name, 'Main_Config_General_Joystick_MMSystem_Generic_Emulators_Button_') then
+        uMain_Config_General_Joystick.UpDate_Info(TText(Sender).Tag.ToString, TText(Sender).TagString, 0, 1);
+      if TText(Sender).Name = 'Main_Config_General_Joystick_MMSystem_Generic_General_Options_VBox_Text_' + TText(Sender).Tag.ToString then
+        mainScene.Config.Main.R.general.Joystick.Options.VBox_Items[TText(Sender).Tag].Fill.Color := TAlphaColorRec.Deepskyblue;
     end;
   end;
-  TText(Sender).Cursor := crHandPoint;
 end;
 
 procedure TMAIN_CONFIG_TEXT.OnMouseLeave(Sender: TObject);
@@ -397,15 +451,30 @@ begin
     else if TImage(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
       mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := False;
   end
-  else if extrafe.prog.State = 'main_config_general' then
+  else if ContainsText(extrafe.prog.State, 'main_config_general') then
   begin
-    if vKey_Waiting = False then
+    if extrafe.prog.State = 'main_config_general_keyboard' then
     begin
-      if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
-        (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+      if uMain_Config_General_Keyboard.vKey_Waiting = False then
       begin
-        TText(Sender).Text := vBefore_Text;
-        TText(Sender).TextSettings.FontColor := TAlphaColorRec.White;
+        if (TText(Sender).Name = 'Main_Config_General_Keyboard_General_Panel_Text_' + TText(Sender).Tag.ToString) or
+          (TText(Sender).Name = 'Main_Config_General_Keyboard_Emu_Panel_Text_' + TText(Sender).Tag.ToString) then
+        begin
+          TText(Sender).Text := vBefore_Text;
+          TText(Sender).TextSettings.FontColor := TAlphaColorRec.White;
+        end
+      end;
+    end
+    else if extrafe.prog.State = 'main_config_general_joystick_mmsystem' then
+    begin
+      if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+      begin
+        if ContainsText(TText(Sender).Name, 'Main_Config_General_Joystick_MMSystem_Generic_Button_') then
+          uMain_Config_General_Joystick.Remove_Info(TText(Sender).Tag.ToString, TText(Sender).TagString, 0, 0);
+        if ContainsText(TText(Sender).Name, 'Main_Config_General_Joystick_MMSystem_Generic_Emulators_Button_') then
+          uMain_Config_General_Joystick.Remove_Info(TText(Sender).Tag.ToString, TText(Sender).TagString, 0, 1);
+        if TText(Sender).Name = 'Main_Config_General_Joystick_MMSystem_Generic_General_Options_VBox_Text_' + TText(Sender).Tag.ToString then
+          mainScene.Config.Main.R.general.Joystick.Options.VBox_Items[TText(Sender).Tag].Fill.Color := TAlphaColorRec.White;
       end;
     end;
   end;
@@ -582,10 +651,38 @@ end;
 
 procedure TMAIN_CONFIG_TABITEM.OnMouseClick(Sender: TObject);
 begin
-  if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_0' then
-    vTab_Selected := 0
-  else if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_1' then
-    vTab_Selected := 1;
+  if extrafe.prog.State = 'main_config_info' then
+  begin
+    if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_0' then
+      uMain_Config_Info_Credits.vTab_Selected := 0
+    else if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_1' then
+      uMain_Config_Info_Credits.vTab_Selected := 1;
+  end
+  else if extrafe.prog.State = 'main_config_general_joystick_mmsystem' then
+  begin
+    if TTabItem(Sender).Name = 'Main_Config_General_Joystick_Generic_Item_0' then
+      uMain_Config_General_Joystick.vSelected_joy_Tab := 0
+    else if TTabItem(Sender).Name = 'Main_Config_General_Joystick_Generic_Item_1' then
+      uMain_Config_General_Joystick.vSelected_joy_Tab := 1;
+  end;
+end;
+
+procedure TMAIN_CONFIG_TABITEM.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TMAIN_CONFIG_TABITEM.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+{ TMAIN_CONFIG_COMBOBOX }
+
+procedure TMAIN_CONFIG_COMBOBOX.OnChange(Sender: TObject);
+begin
+  if TComboBox(Sender).Name = 'Main_Config_General_Joystick_MMSystem_Joy' then
+    uMain_Config_General_Joystick_MMSystem.Select_Joy(TComboBox(Sender).ItemIndex);
 end;
 
 initialization
@@ -598,6 +695,7 @@ ex_main.Input.mouse_config.Radio := TMAIN_CONFIG_RADIOBUTTON.Create;
 ex_main.Input.mouse_config.Speedbutton := TMAIN_CONFIG_SPEEDBUTTON.Create;
 ex_main.Input.mouse_config.Checkbox := TMAIN_CONFIG_CHECKBOX.Create;
 ex_main.Input.mouse_config.TabItem := TMAIN_CONFIG_TABITEM.Create;
+ex_main.Input.mouse_config.ComboBox := TMAIN_CONFIG_COMBOBOX.Create;
 
 finalization
 
@@ -609,5 +707,6 @@ ex_main.Input.mouse_config.Radio.Free;
 ex_main.Input.mouse_config.Speedbutton.Free;
 ex_main.Input.mouse_config.Checkbox.Free;
 ex_main.Input.mouse_config.TabItem.Free;
+ex_main.Input.mouse_config.ComboBox.Free;
 
 end.

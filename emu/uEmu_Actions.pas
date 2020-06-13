@@ -4,22 +4,43 @@ interface
 uses
   System.Classes,
   System.UITypes,
+  System.SysUtils,
   FMX.Forms;
 
 procedure uEmu_LoadEmulator(vNum: Integer);
 procedure uEmu_Actions_Exit;
 
 procedure Key(vKey: String);
+procedure Key_Up(vKey: String);
+
+var
+  vCurrent_View_Mode: String;
 
 implementation
 uses
   emu,
+  uDB_AUser,
   uEmu_Emu,
   main,
   uMain_AllTypes,
   {Arcade}
   //Mame
   uEmu_Arcade_Mame;
+
+function choose_view_mode: String;
+var
+  vInt: Integer;
+  vInt2: Integer;
+begin
+  vInt := Trunc(uDB_AUser.Local.EMULATORS.Active_Unique);
+  vInt2 := FloatToStr(Frac(uDB_AUser.Local.EMULATORS.Active_Unique)).ToInteger;
+  case vInt of
+    0 :
+      case vInt2 of
+        0 : Result := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode;
+      end;
+  end;
+end;
 
 
 procedure uEmu_LoadEmulator(vNum: Integer);
@@ -28,6 +49,7 @@ begin
   case vNum of
     0: uEmu_Arcade_Mame.Load;
   end;
+  vCurrent_View_Mode := choose_view_mode;
 end;
 
 procedure uEmu_Actions_Exit;
@@ -44,6 +66,11 @@ end;
 procedure Key(vKey: String);
 begin
   uEmu_Emu.Key_View_Mode(vKey);
+end;
+
+procedure Key_Up(vKey: String);
+begin
+  uEmu_Emu.Key_View_Mode_Up(vKey);
 end;
 
 end.

@@ -12,9 +12,16 @@ uses
   FMX.Objects,
   BASS;
 
+type
+  TMOVE_TIMER = class
+    procedure OnTimer(Sender: TObject);
+  end;
+
 procedure Configuration_Action;
 procedure Filters_Action;
 procedure Lists_Action;
+
+procedure Clear_Icons;
 
 procedure Refresh;
 procedure Refresh_Gamelist(vSelected, Old_Selected, vGames_Count: Integer; vList_Games, vList_Roms, vList_Path: TStringlist);
@@ -44,6 +51,10 @@ procedure Screensaver_Leave;
 
 var
   vMain_Upper_Back: TBitmap;
+  vMove_Timer: TTimer;
+  vMove_Timer_Class: TMOVE_TIMER;
+  vMove_Action: String;
+  vMove_Timer_Interval: Integer;
 
 implementation
 
@@ -144,14 +155,22 @@ begin
   begin
     Refresh_Gamelist(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Old_Selected, Emu_VM_Default_Var.Gamelist.Total_Games,
       Emu_VM_Default_Var.favorites.Games, Emu_VM_Default_Var.favorites.Roms, Emu_VM_Default_Var.Gamelist.Paths);
-    Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.favorites.Roms);
+    // Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.favorites.Roms);
   end
   else
   begin
     Refresh_Gamelist(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Old_Selected, Emu_VM_Default_Var.Gamelist.Total_Games,
       Emu_VM_Default_Var.Gamelist.Games, Emu_VM_Default_Var.Gamelist.Roms, Emu_VM_Default_Var.Gamelist.Paths);
-    Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Roms);
+    // Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Roms);
   end;
+end;
+
+procedure Clear_Icons;
+var
+  vi: Integer;
+begin
+  for vi := 0 to 19 do
+    Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap := nil;
 end;
 
 procedure Refresh_Load_Icons(vSelected, vGames_Count: Integer; vList_Roms: TStringlist);
@@ -159,62 +178,15 @@ var
   vi, ri: Integer;
 begin
   ri := vSelected - 10;
-  if vSelected - Emu_VM_Default_Var.Gamelist.Old_Selected = 1 then
+  for vi := 0 to 19 do
   begin
-    for vi := 0 to 19 do
-    begin
-      if (ri + vi) <= vGames_Count then
-        Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap := Emu_VM_Default.Gamelist.Games.Line[vi + 1].Icon.Bitmap
-      else
-        Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap := nil;
-    end;
-    if (ri + vi) < vGames_Count then
+    if ((ri + vi) <= vGames_Count) and ((ri + vi) >= 0) then
     begin
       if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri + vi] + '.ico') then
-        Emu_VM_Default.Gamelist.Games.Line[20].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri + vi] + '.ico')
-      else
-        Emu_VM_Default.Gamelist.Games.Line[20].Icon.Bitmap := nil;
+        Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri + vi] + '.ico')
     end
     else
-      Emu_VM_Default.Gamelist.Games.Line[20].Icon.Bitmap := nil;
-  end
-  else if vSelected - Emu_VM_Default_Var.Gamelist.Old_Selected = -1 then
-  begin
-    for vi := 20 downto 1 do
-      Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap := Emu_VM_Default.Gamelist.Games.Line[vi - 1].Icon.Bitmap;
-    if ri > -1 then
-    begin
-      if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri] + '.ico') then
-        Emu_VM_Default.Gamelist.Games.Line[0].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri] + '.ico')
-      else
-        Emu_VM_Default.Gamelist.Games.Line[0].Icon.Bitmap := nil;
-    end
-    else
-      Emu_VM_Default.Gamelist.Games.Line[0].Icon.Bitmap := nil;
-  end
-  else
-  begin
-    for vi := 0 to 20 do
-    begin
-      if ((vSelected + 10) + vi < 20) or (vSelected + vi >= vGames_Count + 10) then
-        ri := -1
-      else
-      begin
-        if vi = 0 then
-          ri := vSelected - 10
-        else
-          inc(ri);
-      end;
-      if (ri > -1) and (ri < vGames_Count) then
-      begin
-        if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri] + '.ico') then
-          Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri] + '.ico')
-        else
-          Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap := nil;
-      end
-      else
-        Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap := nil;
-    end;
+      Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap := nil;
   end;
 end;
 
@@ -255,8 +227,6 @@ begin
     end;
     inc(ri, 1);
   end;
-
-  Refresh_Load_Icons(vSelected, vGames_Count, vList_Roms);
 
   Emu_VM_Default.Gamelist.Info.Games_Count.Text := IntToStr(vSelected + 1) + '/' + IntToStr(vGames_Count);
 
@@ -329,48 +299,41 @@ begin
   else
     Refresh_Gamelist(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Old_Selected, Emu_VM_Default_Var.Gamelist.Total_Games,
       Emu_VM_Default_Var.Gamelist.Games, Emu_VM_Default_Var.Gamelist.Roms, Emu_VM_Default_Var.Gamelist.Paths);
-  Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled := True;
 end;
 
 procedure Move_Gamelist(vMove_Action: String);
 begin
-  Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled := False;
   if vMove_Action = 'DOWN' then
   begin
-    if Emu_VM_Default_Var.Gamelist.Selected < Emu_VM_Default_Var.Gamelist.Total_Games - 1 then
-    begin
-      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
-      inc(Emu_VM_Default_Var.Gamelist.Selected, 1);
-      Refresh_After_Key;
-    end;
+    uView_Mode_Default_Actions.vMove_Action := 'DOWN';
+    uView_Mode_Default_Actions.vMove_Timer_Interval := 15;
+    uView_Mode_Default_Actions.vMove_Timer.Interval := uView_Mode_Default_Actions.vMove_Timer_Interval;
+    uView_Mode_Default_Actions.Clear_Icons;
+    uView_Mode_Default_Actions.vMove_Timer.Enabled := True;
   end
   else if vMove_Action = 'UP' then
   begin
-    if Emu_VM_Default_Var.Gamelist.Selected > 0 then
-    begin
-      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
-      Dec(Emu_VM_Default_Var.Gamelist.Selected, 1);
-      Refresh_After_Key
-    end;
+    uView_Mode_Default_Actions.vMove_Action := 'UP';
+    uView_Mode_Default_Actions.vMove_Timer_Interval := 15;
+    uView_Mode_Default_Actions.vMove_Timer.Interval := uView_Mode_Default_Actions.vMove_Timer_Interval;
+    uView_Mode_Default_Actions.Clear_Icons;
+    uView_Mode_Default_Actions.vMove_Timer.Enabled := True;
   end
   else if vMove_Action = 'PAGE UP' then
   begin
-    if Emu_VM_Default_Var.Gamelist.Selected > 20 then
-    begin
-      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
-      Dec(Emu_VM_Default_Var.Gamelist.Selected, 20);
-      Refresh_After_Key;
-    end;
+    uView_Mode_Default_Actions.vMove_Action := 'PAGE UP';
+    uView_Mode_Default_Actions.vMove_Timer_Interval := 15;
+    uView_Mode_Default_Actions.vMove_Timer.Interval := uView_Mode_Default_Actions.vMove_Timer_Interval;
+    uView_Mode_Default_Actions.Clear_Icons;
+    uView_Mode_Default_Actions.vMove_Timer.Enabled := True;
   end
   else if vMove_Action = 'PAGE DOWN' then
   begin
-    Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
-    if Emu_VM_Default_Var.Gamelist.Selected < Emu_VM_Default_Var.Gamelist.Total_Games - 20 then
-    begin
-      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
-      inc(Emu_VM_Default_Var.Gamelist.Selected, 20);
-      Refresh_After_Key;
-    end;
+    uView_Mode_Default_Actions.vMove_Action := 'PAGE DOWN';
+    uView_Mode_Default_Actions.vMove_Timer_Interval := 15;
+    uView_Mode_Default_Actions.vMove_Timer.Interval := uView_Mode_Default_Actions.vMove_Timer_Interval;
+    uView_Mode_Default_Actions.Clear_Icons;
+    uView_Mode_Default_Actions.vMove_Timer.Enabled := True;
   end
   else if vMove_Action = 'HOME' then
   begin
@@ -409,7 +372,10 @@ end;
 procedure Enter;
 begin
   if Emu_VM_Default_Var.Game_Mode then
-    uView_Mode_Default_Game.Run_State
+  begin
+    if Emu_VM_Default_Var.Game_Loading = False then
+      uView_Mode_Default_Game.Run_State
+  end
   else
     uView_Mode_Default_Game.Load_Menu;
 end;
@@ -469,7 +435,10 @@ begin
 
   Emu_VM_Default_Var.Gamelist.Selected := 0;
   Emu_VM_Default_Var.Gamelist.Old_Selected := 100;
+  Clear_Icons;
   Refresh;
+  Refresh_Load_Icons(0, Emu_VM_Default_Var.favorites.Count, Emu_VM_Default_Var.favorites.Roms);
+  Refresh_Scene(0, Emu_VM_Default_Var.favorites.Roms);
 end;
 
 procedure Favorites_Free;
@@ -484,6 +453,8 @@ begin
   Emu_VM_Default_Var.Gamelist.Old_Selected := 100;
   Emu_VM_Default_Var.Gamelist.Selected := 0;
   Refresh;
+  Refresh_Load_Icons(0, Emu_VM_Default_Var.Gamelist.Total_Games, Emu_VM_Default_Var.Gamelist.Roms);
+  Refresh_Scene(0, Emu_VM_Default_Var.Gamelist.Roms);
 end;
 
 procedure Favorites_Add;
@@ -714,6 +685,81 @@ begin
   uView_Mode_Default_Actions.Refresh;
 
   // When user check to save its locations of things
+end;
+
+{ TMOVE_TIMER }
+
+procedure TMOVE_TIMER.OnTimer(Sender: TObject);
+begin
+  if vMove_Action = 'DOWN' then
+  begin
+    if Emu_VM_Default_Var.Gamelist.Selected < Emu_VM_Default_Var.Gamelist.Total_Games - 1 then
+    begin
+      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
+      inc(Emu_VM_Default_Var.Gamelist.Selected, 1);
+      Refresh_After_Key;
+    end;
+  end
+  else if vMove_Action = 'UP' then
+  begin
+    if Emu_VM_Default_Var.Gamelist.Selected > 0 then
+    begin
+      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
+      Dec(Emu_VM_Default_Var.Gamelist.Selected, 1);
+      Refresh_After_Key
+    end;
+  end
+  else if vMove_Action = 'PAGE UP' then
+  begin
+    if Emu_VM_Default_Var.Gamelist.Selected > 20 then
+    begin
+      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
+      Dec(Emu_VM_Default_Var.Gamelist.Selected, 20);
+      Refresh_After_Key;
+    end;
+  end
+  else if vMove_Action = 'PAGE DOWN' then
+  begin
+    Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
+    if Emu_VM_Default_Var.Gamelist.Selected < Emu_VM_Default_Var.Gamelist.Total_Games - 20 then
+    begin
+      Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
+      inc(Emu_VM_Default_Var.Gamelist.Selected, 20);
+      Refresh_After_Key;
+    end;
+  end
+  else if vMove_Action = 'HOME' then
+  begin
+    Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
+    Emu_VM_Default_Var.Gamelist.Selected := 0;
+    Refresh_After_Key;
+  end
+  else if vMove_Action = 'END' then
+  begin
+    Emu_VM_Default_Var.Gamelist.Old_Selected := Emu_VM_Default_Var.Gamelist.Selected;
+    Emu_VM_Default_Var.Gamelist.Selected := Emu_VM_Default_Var.Gamelist.Total_Games - 1;
+    Refresh_After_Key;
+  end;
+
+  if vMove_Timer_Interval = 800 then
+    vMove_Timer.Interval := 600
+  else if vMove_Timer_Interval = 600 then
+    vMove_Timer.Interval := 450
+  else if vMove_Timer_Interval = 450 then
+    vMove_Timer.Interval := 300
+  else if vMove_Timer_Interval = 300 then
+    vMove_Timer.Interval := 200
+  else if vMove_Timer_Interval = 200 then
+    vMove_Timer.Interval := 100
+  else if vMove_Timer_Interval = 100 then
+    vMove_Timer.Interval := 50
+  else if vMove_Timer_Interval = 50 then
+    vMove_Timer.Interval := 20
+  else if vMove_Timer_Interval = 15 then
+    vMove_Timer.Interval := 800;
+
+  vMove_Timer_Interval := vMove_Timer.Interval;
+
 end;
 
 end.

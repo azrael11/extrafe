@@ -32,14 +32,14 @@ procedure Mouse_Action(vAction: String);
 procedure Key_Action(vAction: String);
 procedure Joy_Action(vAction: String);
 
-
-function choose_view_mode: String;
 procedure Key_View_Mode(vKey: String);
+procedure Key_View_Mode_Up(vKey: String);
 
 implementation
 
 uses
   uDB_AUser,
+  uEmu_Actions,
   {MAME ARCADE}
   uEmu_Arcade_Mame_Mouse,
   uEmu_Arcade_Mame_Keyboard,
@@ -60,9 +60,11 @@ begin
   case vInt of
     0:
       case vInt2 of
-        0: uEmu_Arcade_Mame_Mouse.Action(vAction);
+        0:
+          uEmu_Arcade_Mame_Mouse.Action(vAction);
       end;
-    1 : ;
+    1:
+      ;
   end;
 
 end;
@@ -77,9 +79,11 @@ begin
   case vInt of
     0:
       case vInt2 of
-        0: uEmu_Arcade_Mame_Keyboard.Action(vAction);
+        0:
+          uEmu_Arcade_Mame_Keyboard.Action(vAction);
       end;
-    1 : ;
+    1:
+      ;
   end;
 end;
 
@@ -88,29 +92,16 @@ begin
 
 end;
 
-function choose_view_mode: String;
-var
-  vInt: Integer;
-  vInt2: Integer;
+procedure Key_View_Mode(vKey: String);
 begin
-  vInt := Trunc(uDB_AUser.Local.EMULATORS.Active_Unique);
-  vInt2 := FloatToStr(Frac(uDB_AUser.Local.EMULATORS.Active_Unique)).ToInteger;
-  case vInt of
-    0 :
-      case vInt2 of
-        0 : Result := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode;
-      end;
-  end;
+  if uEmu_Actions.vCurrent_View_Mode = 'default' then
+    uView_Mode_Default_Key.Key(vKey);
 end;
 
-procedure Key_View_Mode(vKey: String);
-var
-  vView_Mode: String;
+procedure Key_View_Mode_Up(vKey: String);
 begin
-  vView_Mode := choose_view_mode;
-
-  if vView_Mode = 'default' then
-    uView_Mode_Default_Key.Key(vKey);
+  if uEmu_Actions.vCurrent_View_Mode = 'default' then
+    uView_Mode_Default_Key.Key_Up(vKey);
 end;
 
 end.
