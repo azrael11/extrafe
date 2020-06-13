@@ -10,6 +10,10 @@ Current work in progress build version : <b> 0.2.9.28 </b>
 
 # Coding In ExtraFE
 
+Programming environment : Delphi Community Edition 10.3.3 
+<img src="data/main/images/index.png">
+
+
 For start coding in ExtraFE exept for cloning the master git you must download and install additional below components
 
 1. JCL Library from https://github.com/project-jedi/jcl
