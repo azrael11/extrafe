@@ -13,7 +13,7 @@ Here you can find the latest release https://github.com/azrael11/extrafe/release
 Consider that is way to far complete version, so download your responsibility. 
 If you find any issuses please right https://github.com/azrael11/extrafe/issues so i can fix it or help you.
 
-<h2>Minimum  Windows 64bit Req<br></h2>
+# Minimum  Windows 64bit Req
 <br>
 
 * CPU        : Intel Pentium 4 and up, AMD Athlon 64 and up.
