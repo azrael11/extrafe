@@ -51,7 +51,30 @@ You Tube Channel : https://www.youtube.com/user/azrael11tube/
 
 # Media (as posible in current stage)
 
+| Fully Login System  | Fully Register System |
+| ------------------- | --------------------- |
+| ![login_system](https://i.imgur.com/iJoNMJx.png) | ![register_system](https://i.imgur.com/pJqVMt0.png) |
 
+|ExtraFE Main Screen (Not Ready Yet) | ExtraFE Main Configuration |
+| ------------------- | --------------------- |
+| ![extrafe_main](https://i.imgur.com/Ge42S8h.png) | ![extrafe_configuration](https://i.imgur.com/YGA4c7n.png) |
+
+
+Emulators section (only MAME for now)
+
+| Here is the selection game screen. | Here search the gamelist for a game (This is really fast) |
+| ------------------- | --------------------- |
+|![mame_selection_game](https://i.imgur.com/NBlJRhJ.png) | ![search_a_game_global](https://i.imgur.com/l58i0a1.png) |
+
+Fully Addon System (All addons created by me)
+
+|Here is the weather addon and the selected provider is "Yahoo"| And here is the "OpenWeatherMap" provider selected |
+| ------------------- | --------------------- |
+|![addon_weather_yahoo](https://i.imgur.com/dvoucRc.png) | ![addon_weather_owm](https://i.imgur.com/0yJ1gba.png) |
+
+|Here is the soundplayer addon. Support for now Mp3, Ogg files with lyrics downloaded from internet and a lot of other goodies.This addon is not completed a lot of options missing but is ready to hear your music. |
+| ------------------- |
+|![addon_soundplayer](https://i.imgur.com/8bN7WpF.png) |
 
 # Roadmap
 
