@@ -5,7 +5,21 @@
 
 My Source repository for ExtraFE
 
+ExtraFE is a fun platform that brings Retro Emulation to its best supported almost any emulator out there and make it easy to new users and make tricky to advance users. Also comes with plenty of addons that can load any time and listen music, show the forecast weather of your town, watch your favarite videos and so many others.
+
 Current work in progress build version : <b> 0.2.9.28 </b>
+
+Here you can find the latest release https://github.com/azrael11/extrafe/releases
+Consider that is way to far complete version, so download your responsibility. 
+If you find any issuses please right https://github.com/azrael11/extrafe/issues so i can fix it or help you.
+
+<h2>Minimum  Windows 64bit Req<br></h2>
+<br>
+
+* CPU        : Intel Pentium 4 and up, AMD Athlon 64 and up.
+* Ram        : 2GB
+* Hard       : 200Mb (install) and more for contents from internet.
+* Video Card : Any with 1GB Ram
 
 
 # Coding In ExtraFE
