@@ -9,8 +9,8 @@ ExtraFE is a fun platform that brings Retro Emulation to its best supported almo
 
 Current work in progress build version : <b> 0.2.9.28 </b>
 
-Here you can find the latest release https://github.com/azrael11/extrafe/releases
-Consider that is way to far complete version, so download your responsibility. 
+Here you can find the latest release https://github.com/azrael11/extrafe/releases <br>
+Consider that is way to far complete version, so download your responsibility. <br>
 If you find any issuses please right https://github.com/azrael11/extrafe/issues so i can fix it or help you.
 
 # Minimum  Windows 64bit Req
