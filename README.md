@@ -7,7 +7,7 @@ My Source repository for ExtraFE
 
 ExtraFE is a fun platform that brings Retro Emulation to its best supported almost any emulator out there and make it easy to new users and make tricky to advance users. Also comes with plenty of addons that can load any time and listen music, show the forecast weather of your town, watch your favarite videos and so many others.
 
-Current work in progress build version : <b> 0.2.9.28 </b>
+Current work in progress build version : <b> 0.2.9.29 </b>
 
 Here you can find the latest release https://github.com/azrael11/extrafe/releases <br>
 Consider that is way to far complete version, so download your responsibility. <br>
