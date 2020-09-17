@@ -18,7 +18,7 @@ type
   end;
 
 var
-  vKey_Waiting : Boolean;
+  vKey_Waiting: Boolean;
   vSelected_Key_Tab: Integer;
   vSelected_Label: Integer;
   vSelected_Timer: TTimer;
@@ -55,7 +55,7 @@ begin
   mainScene.Config.Main.R.General.Keyboard.Image := TImage.Create(mainScene.Config.Main.R.General.Tab_Item[3]);
   mainScene.Config.Main.R.General.Keyboard.Image.Name := 'Main_Config_General_Keyboard_Image';
   mainScene.Config.Main.R.General.Keyboard.Image.Parent := mainScene.Config.Main.R.General.Tab_Item[3];
-  mainScene.Config.Main.R.General.Keyboard.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'general\keyboard.png');
+  mainScene.Config.Main.R.General.Keyboard.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.General + 'keyboard.png');
   mainScene.Config.Main.R.General.Keyboard.Image.SetBounds(mainScene.Config.Main.R.General.Contol.Width - 84, 2, 64, 64);
   mainScene.Config.Main.R.General.Keyboard.Image.WrapMode := TImageWrapMode.Stretch;
   mainScene.Config.Main.R.General.Keyboard.Image.Visible := True;

@@ -405,7 +405,7 @@ begin
 
   vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'map_joystick', vColumns, vValues);
+  Query_Insert(ExtraFE_Query_Local, 'map_joystick_mmsystem', vColumns, vValues);
   CodeSite.Send(csmLevel4, 'Joystick mapping Table Adding Successfully');
 
   { User Statistics data }

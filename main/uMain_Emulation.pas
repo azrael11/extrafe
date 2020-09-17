@@ -185,7 +185,6 @@ begin
     Result := uDB_AUser.Local.EMULATORS.Handhelds_D.p_Videos + 'main_video.mp4'
   else if emulation.Category[vNum].Name = 'pinballs' then
     Result := uDB_AUser.Local.EMULATORS.Pinballs_D.p_Videos + 'main_video.mp4'
-
 end;
 
 procedure Create_Selection_Control;
@@ -225,14 +224,14 @@ begin
   emulation.Selection_Tab[vTab].Background.Visible := True;
   emulation.Selection_Tab[vTab].Background.Bitmap := GetBitmap(vTab, vLevel, 'background');
 
-  emulation.Selection_Tab[vTab].Video_Pre := TFmxPasLibVlcPlayer.Create(emulation.Selection_Tab[vTab].Tab);
+  {emulation.Selection_Tab[vTab].Video_Pre := TFmxPasLibVlcPlayer.Create(emulation.Selection_Tab[vTab].Tab);
   emulation.Selection_Tab[vTab].Video_Pre.Name := 'Emulator_Video_' + vTab.ToString;
   emulation.Selection_Tab[vTab].Video_Pre.Parent := emulation.Selection_Tab[vTab].Tab;
   emulation.Selection_Tab[vTab].Video_Pre.Width := 400;
   emulation.Selection_Tab[vTab].Video_Pre.Height := 400;
   emulation.Selection_Tab[vTab].Video_Pre.SetVideoAspectRatio('4:3');
   emulation.Selection_Tab[vTab].Video_Pre.WrapMode := TImageWrapMode.Fit;
-  emulation.Selection_Tab[vTab].Video_Pre.Visible := isActive;
+  emulation.Selection_Tab[vTab].Video_Pre.Visible := isActive;}
 
   emulation.Selection_Tab[vTab].Logo := TImage.Create(emulation.Selection_Tab[vTab].Tab);
   emulation.Selection_Tab[vTab].Logo.Name := 'Emulator_Logo_' + vTab.ToString;
@@ -403,8 +402,8 @@ begin
     begin
       emulation.Selection.Next();
       emulation.Number := emulation.Selection.TabIndex;
-      if emulation.Selection_Tab[emulation.Active_Num].Logo_Gray.Enabled = False then
-        emulation.Selection_Tab[emulation.Active_Num].Video_Pre.Resume;
+//      if emulation.Selection_Tab[emulation.Active_Num].Logo_Gray.Enabled = False then
+//        emulation.Selection_Tab[emulation.Active_Num].Video_Pre.Resume;
     end;
 
 end;

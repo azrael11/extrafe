@@ -1,0 +1,22 @@
+unit uMain_Config_Addons_Calendar;
+
+interface
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UITypes,
+  FMX.Objects,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Layouts,
+  ALFmxObjects;
+
+
+implementation
+
+uses
+  uMain_AllTypes,
+  uLoad_AllTypes,
+  uDB_AUser;
+
+end.

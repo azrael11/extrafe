@@ -110,17 +110,32 @@ uses
 
 procedure TWEATHER_ADDON_IMAGE.OnMouseClick(Sender: TObject);
 begin
-
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  begin
+    if TImage(Sender).Name = 'A_W_Provider_OpenWeatherMap_Powered_By_OpenWeatherMap_Icon_' + TImage(Sender).Tag.ToString then
+      uWeather_Providers_OpenWeatherMap.Go_To_Website;
+  end;
 end;
 
 procedure TWEATHER_ADDON_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  begin
+    if TImage(Sender).Name = 'A_W_Provider_OpenWeatherMap_Powered_By_OpenWeatherMap_Icon_' + TImage(Sender).Tag.ToString then
+    begin
+      TImage(Sender).Cursor := crHandPoint;
+      vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Server.Icon_Glow.Enabled := True;
+    end;
+  end;
 end;
 
 procedure TWEATHER_ADDON_IMAGE.OnMouseLeave(Sender: TObject);
 begin
-
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  begin
+    if TImage(Sender).Name = 'A_W_Provider_OpenWeatherMap_Powered_By_OpenWeatherMap_Icon_' + TImage(Sender).Tag.ToString then
+      vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].Server.Icon_Glow.Enabled := False;
+  end;
 end;
 
 { TWEATHER_ADDON_BUTTON }
@@ -150,8 +165,11 @@ procedure TWEATHER_ADDON_PANEL.OnMouseClick(Sender: TObject);
 begin
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
-    if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
-      uWeather_Providers_OpenWeatherMap.Show_Selected_Time_Forecast(TPanel(Sender).Tag, TPanel(Sender).TagString.ToInteger);
+    if extrafe.prog.state <> 'addon_weather_owm_five_info' then
+    begin
+      if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
+        uWeather_Providers_OpenWeatherMap.Show_Selected_Time_Forecast(TPanel(Sender).Tag, TPanel(Sender).TagString.ToInteger);
+    end;
   end;
 end;
 
@@ -159,13 +177,16 @@ procedure TWEATHER_ADDON_PANEL.OnMouseEnter(Sender: TObject);
 begin
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
-    if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
+    if extrafe.prog.state <> 'addon_weather_owm_five_info' then
     begin
-      if TPanel(Sender).Locked = False then
+      if TPanel(Sender).Name = 'A_W_Provider_OpenWeatherMap_Five_Day_Over_Layout_' + TPanel(Sender).Tag.ToString + '_' + TPanel(Sender).TagString then
       begin
-        vWeather.Scene.Tab_OWM[TPanel(Sender).TagFloat.ToString.ToInteger].Five.Day[TPanel(Sender).Tag].Hour[TPanel(Sender).TagString.ToInteger]
-          .Panel_Glow.Enabled := True;
-        TPanel(Sender).Cursor := crHandPoint;
+        if TPanel(Sender).Locked = False then
+        begin
+          vWeather.Scene.Tab_OWM[TPanel(Sender).TagFloat.ToString.ToInteger].Five.Day[TPanel(Sender).Tag].Hour[TPanel(Sender).TagString.ToInteger]
+            .Panel_Glow.Enabled := True;
+          TPanel(Sender).Cursor := crHandPoint;
+        end;
       end;
     end;
   end;
@@ -191,9 +212,15 @@ end;
 procedure TWEATHER_ADDON_TEXT.OnMouseClick(Sender: TObject);
 begin
   if TText(Sender).Name = 'A_W_Arrow_Left' then
-    uWeather_Actions.Control_Slide_Left
+  begin
+    if extrafe.prog.state <> 'addon_weather_owm_five_info' then
+      uWeather_Actions.Control_Slide_Left
+  end
   else if TText(Sender).Name = 'A_W_Arrow_Right' then
-    uWeather_Actions.Control_Slide_Right
+  begin
+    if extrafe.prog.state <> 'addon_weather_owm_five_info' then
+      uWeather_Actions.Control_Slide_Right
+  end
   else if TText(Sender).Name = 'A_W_Map_Close' then
     uWeather_Actions.Close_Map;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
@@ -234,7 +261,10 @@ begin
   else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
     if (TText(Sender).Name = 'A_W_Provider_OpenWeatherMap_Earth_' + TText(Sender).TagString) then
-      uWeather_Providers_OpenWeatherMap.Show_Map(TText(Sender).TagString);
+      if extrafe.prog.state <> 'addon_weather_owm_five_info' then
+      begin
+        uWeather_Providers_OpenWeatherMap.Show_Map(TText(Sender).TagString);
+      end;
   end;
   if extrafe.prog.state = 'addon_weather' then
   begin
@@ -257,13 +287,19 @@ begin
   begin
     if TText(Sender).Name = 'A_W_Arrow_Left' then
     begin
-      TText(Sender).Cursor := crHandPoint;
-      vWeather.Scene.Arrow_Left_Glow.Enabled := True;
+      if extrafe.prog.state <> 'addon_weather_owm_five_info' then
+      begin
+        TText(Sender).Cursor := crHandPoint;
+        vWeather.Scene.Arrow_Left_Glow.Enabled := True;
+      end;
     end
     else if TText(Sender).Name = 'A_W_Arrow_Right' then
     begin
-      TText(Sender).Cursor := crHandPoint;
-      vWeather.Scene.Arrow_Right_Glow.Enabled := True;
+      if extrafe.prog.state <> 'addon_weather_owm_five_info' then
+      begin
+        TText(Sender).Cursor := crHandPoint;
+        vWeather.Scene.Arrow_Right_Glow.Enabled := True;
+      end;
     end
     else if TText(Sender).Name = 'A_W_Map_Close' then
     begin
@@ -297,7 +333,7 @@ begin
         if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
         begin
           TText(Sender).Cursor := crHandPoint;
-          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_F_Glow.Enabled := True;
+          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Temprature_Unit_F_Glow.Enabled := True;
         end;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Unit_C' then
@@ -305,42 +341,45 @@ begin
         if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
         begin
           TText(Sender).Cursor := crHandPoint;
-          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C_Glow.Enabled := True;
+          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Temprature_Unit_C_Glow.Enabled := True;
         end;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Refresh' then
       begin
         TText(Sender).Cursor := crHandPoint;
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Refresh_Glow.Enabled := True;
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Refresh_Glow.Enabled := True;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_ShowImage' then
       begin
         TText(Sender).Cursor := crHandPoint;
-        if vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.ShowImage_Blur.Enabled = False then
-          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.ShowImage_Glow.Enabled := True;
+        if vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.ShowImage_Blur.Enabled = False then
+          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.ShowImage_Glow.Enabled := True;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Left_Arrow' then
       begin
         TText(Sender).Cursor := crHandPoint;
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Town_Image_Left_Arrow_Glow.Enabled := True;
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Town_Image_Left_Arrow_Glow.Enabled := True;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Right_Arrow' then
       begin
         TText(Sender).Cursor := crHandPoint;
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Town_Image_Right_Arrow_Glow.Enabled := True;
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Town_Image_Right_Arrow_Glow.Enabled := True;
       end
       else if (TText(Sender).Name = 'A_W_Provider_Yahoo_Earth_' + TText(Sender).TagString) then
       begin
         TText(Sender).Cursor := crHandPoint;
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Earth_Glow.Enabled := True;
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Earth_Glow.Enabled := True;
       end;
     end
     else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     begin
       if (TText(Sender).Name = 'A_W_Provider_OpenWeatherMap_Earth_' + TText(Sender).TagString) then
       begin
-        TText(Sender).Cursor := crHandPoint;
-        vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].country.Earth_Glow.Enabled := True;
+        if extrafe.prog.state <> 'addon_weather_owm_five_info' then
+        begin
+          TText(Sender).Cursor := crHandPoint;
+          vWeather.Scene.Tab_OWM[vWeather.Scene.Control.TabIndex].country.Earth_Glow.Enabled := True;
+        end;
       end;
     end;
     if extrafe.prog.state = 'addon_weather' then
@@ -399,26 +438,26 @@ begin
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Unit_F' then
       begin
         if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
-          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_F_Glow.Enabled := False;
+          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Temprature_Unit_F_Glow.Enabled := False;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Unit_C' then
       begin
         if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Deepskyblue then
-          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C_Glow.Enabled := False;
+          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Temprature_Unit_C_Glow.Enabled := False;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Refresh' then
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Refresh_Glow.Enabled := False
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Refresh_Glow.Enabled := False
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_ShowImage' then
       begin
-        if vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.ShowImage_Blur.Enabled = False then
-          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.ShowImage_Glow.Enabled := False;
+        if vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.ShowImage_Blur.Enabled = False then
+          vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.ShowImage_Glow.Enabled := False;
       end
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Left_Arrow' then
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Town_Image_Left_Arrow_Glow.Enabled := False
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Town_Image_Left_Arrow_Glow.Enabled := False
       else if TText(Sender).Name = 'A_W_Provider_Yahoo_Town_Image_Right_Arrow' then
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Town_Image_Right_Arrow_Glow.Enabled := False
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Town_Image_Right_Arrow_Glow.Enabled := False
       else if (TText(Sender).Name = 'A_W_Provider_Yahoo_Earth_' + TText(Sender).TagString) then
-        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Earth_Glow.Enabled := False;
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].general.Earth_Glow.Enabled := False;
     end
     else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
     begin

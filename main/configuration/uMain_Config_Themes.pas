@@ -63,7 +63,7 @@ begin
     mainScene.Config.main.R.Themes.Image[vi].Name := 'Main_Config_Themes_Image_' + vi.ToString;
     mainScene.Config.main.R.Themes.Image[vi].Parent := mainScene.Config.main.R.Themes.Frame[vi];
     mainScene.Config.main.R.Themes.Image[vi].SetBounds(40, 2, 134, 78);
-    mainScene.Config.main.R.Themes.Image[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'themes\' + 'config_theme_default.png');
+    mainScene.Config.main.R.Themes.Image[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images.Themes + 'config_theme_default.png');
     mainScene.Config.main.R.Themes.Image[vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.main.R.Themes.Image[vi].Visible := True;
 

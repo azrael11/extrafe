@@ -21,7 +21,7 @@ begin
   mainScene.Config.Main.R.General.Mouse.Image := TImage.Create(mainScene.Config.Main.R.General.Tab_Item[5]);
   mainScene.Config.Main.R.General.Mouse.Image.Name := 'Main_Config_General_Mouse_Image';
   mainScene.Config.Main.R.General.Mouse.Image.Parent := mainScene.Config.Main.R.General.Tab_Item[5];
-  mainScene.Config.Main.R.General.Mouse.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'general\mouse.png');
+  mainScene.Config.Main.R.General.Mouse.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.general + 'mouse.png');
   mainScene.Config.Main.R.General.Mouse.Image.SetBounds(mainScene.Config.Main.R.General.Contol.Width - 76, 6, 56, 56);
   mainScene.Config.Main.R.General.Mouse.Image.WrapMode := TImageWrapMode.Stretch;
   mainScene.Config.Main.R.General.Mouse.Image.Visible := True;

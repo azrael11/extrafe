@@ -815,6 +815,7 @@ type
   TSERVER_OWM_INFO = record
     Powered_By: TText;
     Icon: TImage;
+    Icon_Glow: TGlowEffect;
   end;
 
 type
@@ -863,7 +864,11 @@ type
   TFIVE_DAY_FORECAST_OWM_DAY_INFO = record
     Panel: TPanel;
     date_time: TText;
+    Temp_Info: TText;
     Temp: TText;
+    Icon_Info: TText;
+    Icon: TText;
+    Thermo_Info: TText;
     Thermo: TText;
     Temp_Min_Arrow: TText;
     Temp_Min: TText;
@@ -876,11 +881,13 @@ type
     sea_level: TText;
     ground_level: TText;
     temp_kf: TText;
-    description: TText;
-    Icon: TText;
+    Description_Info: TText;
+    Description: TText;
+    Wind_Info: TText;
     Wind_Icon: TText;
-    Wind_speed: TText;
-    Wind_degree: TText;
+    Wind_Speed: TText;
+    Wind_Degree_Info : TText;
+    Wind_Degree: TText;
     Clouds_Icon: TText;
     Clouds: TText;
     Day: TText;
@@ -983,10 +990,10 @@ type
 type
   TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV = record
     Panel: TPanel;
-    Check: TCheckBox;
+    Rect: TRectangle;
     Icon: TImage;
+    Icon_Glow: TGlowEffect;
     Desc: TALText;
-    Check_Old: TCheckBox;
   end;
 
 type
@@ -996,6 +1003,7 @@ type
     Prov: array [0 .. 1] of TWEATHER_CONFOG_PANEL_RIGHT_PROVIDER_PROV;
     Text: TLabel;
     Text_No: TText;
+    PBar: TProgressBar;
   end;
 
 type

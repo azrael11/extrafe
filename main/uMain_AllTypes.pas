@@ -40,9 +40,18 @@ type
   end;
 
 type
+  TCONFIG_IMAGES_PATHS = record
+    path: String;
+    emu: String;
+    general: String;
+    info: String;
+    themes: String;
+  end;
+
+type
   TMAIN_PATHS = record
     Images: String;
-    Config_Images: String;
+    Config_Images: TCONFIG_IMAGES_PATHS;
     Avatar_Images: String;
     Flags_Images: String;
     Sounds: String;
@@ -291,11 +300,25 @@ type
     Local_IP_V: TLabel;
     Public_IP: TLabel;
     Public_IP_V: TLabel;
+    Mac_Address: TLabel;
+    Mac_Address_V: TLabel;
+    HostName: TLabel;
+    HostName_V: TLabel;
+    City: TLabel;
+    City_V: TLabel;
+    Region: TLabel;
+    Region_V: TLabel;
+    Country_Symbol: TLabel;
+    Country_Symbol_V: TLabel;
+    Localization: TLabel;
+    Localization_V: TLabel;
+    Time_Zone: TLabel;
+    Time_Zone_V: TLabel;
   end;
 
 type
   TMAIN_CONFIG_PROFILE_MACHINE = record
-    Panel: TPanel;
+    VBox: TVertScrollBox;
     OS: TCONFIG_PROFILE_MACHINE_OS;
     Net: TCONFIG_PROFILE_MACHINE_INTERNET;
   end;

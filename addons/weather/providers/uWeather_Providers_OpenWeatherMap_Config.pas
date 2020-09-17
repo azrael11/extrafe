@@ -18,7 +18,6 @@ uses
   ALFMXObjects;
 
 procedure Load;
-procedure Load_Config;
 
 procedure Create_Towns;
 procedure Towns_Add_New_Town(vNumPanel: Integer; vNewTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL);
@@ -27,11 +26,15 @@ procedure Towns_Go_To(vDirection: String);
 procedure Create_Options;
 procedure Options_Check_System_Type(vSystem_Type: String);
 procedure Options_Lock(vLock: Boolean);
+procedure Options_ChangeLang(vNum: Integer);
 
 procedure Create_Iconsets;
 procedure Create_MiniPreview(vNum: Integer);
 
 procedure Get_Data;
+
+var
+  vStart: Boolean = False;
 
 implementation
 
@@ -45,62 +48,10 @@ uses
 
 procedure Load;
 begin
-//  addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'openweathermap');
+  // addons.weather.Ini.Ini.WriteString('Provider', 'Name', 'openweathermap');
   uDB_AUser.Local.ADDONS.Weather_D.Provider := 'openweathermap';
   vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
-  vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Images + 'w_provider_openweathermap.png');
-  Load_Config;
-end;
-
-procedure Load_Config;
-begin
-{ if addons.weather.Ini.Ini.ValueExists('openweathermap', 'total') then
-   addons.weather.Action.OWM.Total_WoeID := addons.weather.Ini.Ini.ReadInteger('openweathermap', 'total', addons.weather.Action.OWM.Total_WoeID)
-  else
-  begin
-    addons.weather.Action.OWM.Total_WoeID := -1;
-    addons.weather.Ini.Ini.WriteInteger('openweathermap', 'total', addons.weather.Action.OWM.Total_WoeID);
-  end;
-
-  if addons.weather.Ini.Ini.ValueExists('openweathermap', 'selected_unit') then
-    addons.weather.Action.OWM.Selected_Unit := addons.weather.Ini.Ini.ReadString('openweathermap', 'selected_unit', addons.weather.Action.OWM.Selected_Unit)
-  else
-  begin
-    addons.weather.Action.OWM.Selected_Unit := 'imperial';
-    addons.weather.Ini.Ini.WriteString('openweathermap', 'selected_unit', addons.weather.Action.OWM.Selected_Unit);
-  end;
-
-  addons.weather.Action.OWM.Iconset_Names := TStringList.Create;
-  addons.weather.Action.OWM.Iconset_Names := uWindows_GetFolderNames(uDB_AUser.Local.addons.Weather_D.p_Icons + 'openweathermap\');
-  addons.weather.Action.OWM.Iconset_Names.Insert(0, 'default');
-  if addons.weather.Ini.Ini.ValueExists('openweathermap', 'iconset_count') then
-  begin
-    addons.weather.Action.OWM.Iconset_Count := addons.weather.Ini.Ini.ReadInteger('openweathermap', 'iconset_count', addons.weather.Action.OWM.Iconset_Count);
-    addons.weather.Action.OWM.Iconset_Selected := addons.weather.Ini.Ini.ReadInteger('openweathermap', 'iconset', addons.weather.Action.OWM.Iconset_Selected);
-    addons.weather.Action.OWM.Iconset_Name := addons.weather.Ini.Ini.ReadString('openweathermap', 'iconset_name', addons.weather.Action.OWM.Iconset_Name);
-  end
-  else
-  begin
-    addons.weather.Action.OWM.Iconset_Count := 1;
-    addons.weather.Action.OWM.Iconset_Selected := 0;
-    addons.weather.Action.OWM.Iconset_Name := 'default';
-    addons.weather.Ini.Ini.WriteInteger('openweathermap', 'iconset_count', addons.weather.Action.OWM.Iconset_Count);
-    addons.weather.Ini.Ini.WriteInteger('openweathermap', 'iconset', addons.weather.Action.OWM.Iconset_Selected);
-    addons.weather.Ini.Ini.WriteString('openweathermap', 'iconset_name', addons.weather.Action.OWM.Iconset_Name);
-  end;
-
-  if addons.weather.Ini.Ini.ValueExists('openweathermap', 'language') then
-    addons.weather.Action.OWM.Language := addons.weather.Ini.Ini.ReadString('openweathermap', 'language', addons.weather.Action.OWM.Language)
-  else
-  begin
-    addons.weather.Action.OWM.Language := 'en';
-    addons.weather.Ini.Ini.WriteString('openweathermap', 'language', addons.weather.Action.OWM.Language);
-  end;
-
-  if addons.weather.Ini.Ini.ValueExists('openweathermap', 'selected_unit') then
-    addons.weather.Action.OWM.Selected_Unit := addons.weather.Ini.Ini.ReadString('openweathermap', 'selected_unit', addons.weather.Action.OWM.Selected_Unit);}
-
-  uWeather_Providers_OpenWeatherMap.Woeid_List;
+  vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_openweathermap.png');
 end;
 
 procedure Create_Towns;
@@ -108,14 +59,13 @@ var
   vi: Integer;
   vTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL;
 begin
-  if weather.Action.OWM.Total_WoeID <> -1 then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
   begin
-    for vi := 0 to weather.Action.OWM.Total_WoeID do
+    for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count - 1 do
     begin
       // Get Data
       vTown.Time_Results := ConvertTime(weather.Action.OWM.Data_Town[vi].Current.Date_Time, '').Full;
-      vTown.Forecast_Image := Get_Icon_Text(weather.Action.OWM.Data_Town[vi].Current.weather.ID,
-        weather.Action.OWM.Data_Town[vi].Current.weather.Icon);
+      vTown.Forecast_Image := Get_Icon_Text(weather.Action.OWM.Data_Town[vi].Current.weather.ID, weather.Action.OWM.Data_Town[vi].Current.weather.Icon);
       vTown.Temperature := weather.Action.OWM.Data_Town[weather.Action.OWM.Total_WoeID].Current.main.Temp;
       vTown.Temrerature_Unit := 'C';
       vTown.Temperature_Description := weather.Action.OWM.Data_Town[vi].Current.weather.Description;
@@ -312,11 +262,11 @@ begin
     weather.Action.OWM.Towns_List.Delete(weather.Config.Selected_Town);
     weather.Action.OWM.Towns_List.Insert(vTemp_Pos, vTemp_Ini_Town);
 
-//    for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
-//      addons.weather.Ini.Ini.DeleteKey('openweathermap', 'woeid_' + vi.ToString);
-//    for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
-//      addons.weather.Ini.Ini.WriteString('openweathermap', 'woeid_' + vi.ToString, addons.weather.Action.Yahoo.Woeid_List[vi] + '_' +
-//        addons.weather.Action.OWM.Towns_List[vi]);
+    // for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
+    // addons.weather.Ini.Ini.DeleteKey('openweathermap', 'woeid_' + vi.ToString);
+    // for vi := 0 to addons.weather.Action.OWM.Total_WoeID do
+    // addons.weather.Ini.Ini.WriteString('openweathermap', 'woeid_' + vi.ToString, addons.weather.Action.Yahoo.Woeid_List[vi] + '_' +
+    // addons.weather.Action.OWM.Towns_List[vi]);
 
     // Change the position to main
     // uWeather_Providers_Yahoo.Apply_New_Forecast_To_Tonw(addons.weather.Action.Yahoo.Data_Town[vTemp_Pos], vTemp_Pos);
@@ -357,6 +307,7 @@ end;
 /// /////////////
 procedure Create_Options;
 begin
+  vStart := True;
   vWeather.Config.main.Right.Panels[2] := TPanel.Create(vWeather.Config.main.Right.Panel);
   vWeather.Config.main.Right.Panels[2].Name := 'Weather_Config_Panels_2';
   vWeather.Config.main.Right.Panels[2].Parent := vWeather.Config.main.Right.Panel;
@@ -386,7 +337,7 @@ begin
   vWeather.Config.main.Right.Options_OWM.Metric.Parent := vWeather.Config.main.Right.Options_OWM.System_Type;
   vWeather.Config.main.Right.Options_OWM.Metric.SetBounds(20, 70, 200, 20);
   vWeather.Config.main.Right.Options_OWM.Metric.Text := 'Metric';
-  if weather.Action.OWM.Selected_Unit = 'metric' then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'metric' then
     vWeather.Config.main.Right.Options_OWM.Metric.IsChecked := True;
   vWeather.Config.main.Right.Options_OWM.Metric.Font.Style := vWeather.Config.main.Right.Options_OWM.Metric.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Options_OWM.Metric.OnClick := weather.Input.mouse_config.Checkbox.OnMouseClick;
@@ -399,7 +350,7 @@ begin
   vWeather.Config.main.Right.Options_OWM.Imperial.Parent := vWeather.Config.main.Right.Options_OWM.System_Type;
   vWeather.Config.main.Right.Options_OWM.Imperial.SetBounds(vWeather.Config.main.Right.Options_OWM.System_Type.Width - 210, 70, 200, 20);
   vWeather.Config.main.Right.Options_OWM.Imperial.Text := 'Imperial';
-  if weather.Action.OWM.Selected_Unit = 'imperial' then
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric = 'imperial' then
     vWeather.Config.main.Right.Options_OWM.Imperial.IsChecked := True;
   vWeather.Config.main.Right.Options_OWM.Imperial.Font.Style := vWeather.Config.main.Right.Options_OWM.Imperial.Font.Style + [TFontStyle.fsBold];
   vWeather.Config.main.Right.Options_OWM.Imperial.OnClick := weather.Input.mouse_config.Checkbox.OnMouseClick;
@@ -425,41 +376,54 @@ begin
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Name := 'A_W_Providers_OpenWeatherMap_Config_Options_MultiLanguage_Select';
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Parent := vWeather.Config.main.Right.Options_OWM.MultiLanguage;
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.SetBounds(10, 50, vWeather.Config.main.Right.Options_OWM.MultiLanguage.Width / 2, 30);
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Afrikaans');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Albanian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Arabic');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Azerbaijani');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Bulgarian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Catalan');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Czech');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Danish');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('German');
-  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Ellinika');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Greek');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('English');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Basque');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Persian (Farsi)');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Finnish');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('French');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Galician');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Hebrew');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Hindi');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Croatian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Hungarian');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Indonesian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Italian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Japanese');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Korean');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Latvian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Lithuanian');
-  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Skopje');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Macedonian');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Norwegian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Dutch');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Polish');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Portuguese');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Portugues Brasil');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Romanian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Russian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Swedish');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Slovak');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Slovenian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Spanish');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Serbian');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Thai');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Turkish');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Ukrainian');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Vietnamese');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Chinese Simplified');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Chinese Traditional');
+  vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Add('Zulu');
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.ItemIndex := uWeather_Providers_OpenWeatherMap.Get_Language_Num
-    (weather.Action.OWM.Language);
+    (uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Language);
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.OnChange := weather.Input.mouse_config.Combobox.OnChange;
   vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Visible := True;
 
@@ -502,6 +466,10 @@ begin
   vWeather.Config.main.Right.Options_OWM.API_Key.Parent := vWeather.Config.main.Right.Options_OWM.API;
   vWeather.Config.main.Right.Options_OWM.API_Key.SetBounds(100, 35, vWeather.Config.main.Right.Options_OWM.API.Width - 110, 22);
   vWeather.Config.main.Right.Options_OWM.API_Key.Enabled := False;
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.API = '0' then
+    vWeather.Config.main.Right.Options_OWM.API_Key.Text := 'ExtraFE default Key'
+  else
+    vWeather.Config.main.Right.Options_OWM.API_Key.Text := uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.API;
   vWeather.Config.main.Right.Options_OWM.API_Key.Visible := True;
 
   vWeather.Config.main.Right.Options_OWM.API_Desc := TALText.Create(vWeather.Config.main.Right.Options_OWM.API);
@@ -538,7 +506,7 @@ begin
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Name := 'A_W_Providers_OpenWeatherMap_Config_Options_Selected_System_Type';
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Parent := vWeather.Config.main.Right.Panels[2];
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.SetBounds(10, vWeather.Config.main.Right.Panels[2].Height - 50, 300, 20);
-  vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Text := 'Selected System Type : ' + weather.Action.OWM.Selected_Unit;
+  vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Text := 'Selected System Type : ' + uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric;
   vWeather.Config.main.Right.Options_OWM.Selected_System_Type.Visible := True;
 
   vWeather.Config.main.Right.Options_OWM.Selected_Language := TLabel.Create(vWeather.Config.main.Right.Panels[2]);
@@ -546,19 +514,23 @@ begin
   vWeather.Config.main.Right.Options_OWM.Selected_Language.Parent := vWeather.Config.main.Right.Panels[2];
   vWeather.Config.main.Right.Options_OWM.Selected_Language.SetBounds(10, vWeather.Config.main.Right.Panels[2].Height - 30, 300, 20);
   vWeather.Config.main.Right.Options_OWM.Selected_Language.Text := 'Selected Language : ' + uWeather_Providers_OpenWeatherMap.Get_Language_From_Short_Desc
-    (weather.Action.OWM.Language);
+    (uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Language);
   vWeather.Config.main.Right.Options_OWM.Selected_Language.Visible := True;
+  vStart := False;
 end;
 
 procedure Options_Check_System_Type(vSystem_Type: String);
 begin
-  if vSystem_Type = 'metric' then
+  if vStart = False then
   begin
-    vWeather.Config.main.Right.Options_OWM.Imperial.IsChecked := False;
-  end
-  else if vSystem_Type = 'imperial' then
-  begin
-    vWeather.Config.main.Right.Options_OWM.Metric.IsChecked := False;
+    if vSystem_Type = 'metric' then
+    begin
+      vWeather.Config.main.Right.Options_OWM.Imperial.IsChecked := False;
+    end
+    else if vSystem_Type = 'imperial' then
+    begin
+      vWeather.Config.main.Right.Options_OWM.Metric.IsChecked := False;
+    end;
   end;
 end;
 
@@ -839,7 +811,7 @@ begin
           vi.ToString;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Parent := vWeather.Config.main.Right.Iconsets.Mini[vNum].Panel;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].SetBounds(50 * vi, 2, 50, 50);
-        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(uDB_AUser.Local.addons.Weather_D.p_Icons +
+        vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Icons +
           uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets[vNum] + '\w_w_' + IntToStr(RandomRange(0, 49)) + '.png');
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].Tag := vi;
         vWeather.Config.main.Right.Iconsets.Mini[vNum].Image[vi].TagString := vNum.ToString;
@@ -867,14 +839,28 @@ begin
   ExtraFE_Query_Local.Open;
   ExtraFE_Query_Local.First;
 
-  for vi := 0 to uDB_AUser.Local.addons.Weather_D.Yahoo.Towns_Count do
+  for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
   begin
-    SetLength(uDB_AUser.Local.addons.Weather_D.Yahoo.Towns, vi + 2);
-    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Name := ExtraFE_Query_Local.FieldByName('TOWN_NAME').AsString;
-    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Num := ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger;
-    uDB_AUser.Local.addons.Weather_D.Yahoo.Towns[vi].Woeid := ExtraFE_Query_Local.FieldByName('TOWN_WOEID').AsInteger;
+    SetLength(uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns, vi + 2);
+    uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns[vi].Name := ExtraFE_Query_Local.FieldByName('TOWN_NAME').AsString;
+    uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns[vi].Num := ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger;
+    uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns[vi].Woeid := ExtraFE_Query_Local.FieldByName('TOWN_WOEID').AsInteger;
     ExtraFE_Query_Local.Next;
   end;
+end;
+
+procedure Options_ChangeLang(vNum: Integer);
+var
+  vLang, vSort_Lang: String;
+begin
+  vLang := vWeather.Config.main.Right.Options_OWM.MultiLanguage_Select.Items.Strings[vNum];
+  vSort_Lang := uWeather_Providers_OpenWeatherMap.Get_Sort_Language_From_Full(vLang);
+
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Text := 'UPDATE addon_weather SET OWM_LANG=''' + vSort_Lang + '''';
+  uDB.ExtraFE_Query_Local.ExecSQL;
+
 end;
 
 end.

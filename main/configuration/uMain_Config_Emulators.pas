@@ -88,7 +88,7 @@ begin
     mainScene.Config.main.R.Emulators.Images[vi].Name := 'Main_Config_Emulators_Image_' + IntToStr(vi);
     mainScene.Config.main.R.Emulators.Images[vi].Parent := mainScene.Config.main.R.Emulators.Groupbox;
     mainScene.Config.main.R.Emulators.Images[vi].SetBounds(4 + (vi * 118), 20, 70, 70);
-    mainScene.Config.main.R.Emulators.Images[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'emu\'+ cImages_Names[vi]);
+    mainScene.Config.main.R.Emulators.Images[vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + cImages_Names[vi]);
     mainScene.Config.main.R.Emulators.Images[vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.main.R.Emulators.Images[vi].OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
     mainScene.Config.main.R.Emulators.Images[vi].OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -160,7 +160,7 @@ begin
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.Name := 'Main_Config_Emulators_Arcade_' + cEmu_Names[vNum] + '_Logo';
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.Parent := mainScene.Config.main.R.Emulators.Arcade[vNum].Panel_Image;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.SetBounds(4, 4, 92, 92);
-  mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + '\emu\arcade\' + cEmu_Image_Names[vNum]);
+  mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'arcade\' + cEmu_Image_Names[vNum]);
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -171,7 +171,7 @@ begin
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.Name := 'Main_Config_Emulators_Arcade_' + cEmu_Names[vNum] + '_Logo_Check';
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.Parent := mainScene.Config.main.R.Emulators.Arcade[vNum].Logo;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.SetBounds(2, 2, 34, 34);
-  mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_check.png');
+  mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'config_check.png');
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Logo_Check.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -208,7 +208,7 @@ begin
   mainScene.Config.main.R.Emulators.Arcade[vNum].Action.StyledSettings := mainScene.Config.main.R.Emulators.Arcade[vNum].Action.StyledSettings -
     [TStyledSetting.FontColor];
   mainScene.Config.main.R.Emulators.Arcade[vNum].Action.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
-  mainScene.Config.main.R.Emulators.Arcade[vNum].Action.OnMouseEnter := ex_main.Input.mouse_config.Button.OnMouseEnter;
+  mainScene.Config.main.R.Emulators.Arcade[vNum].Action.OnMouseEnter := ex_main.input.mouse_config.Button.OnMouseEnter;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Action.TagFloat := 1000;
   mainScene.Config.main.R.Emulators.Arcade[vNum].Action.Tag := vNum;
 
@@ -315,7 +315,7 @@ begin
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo.Name := 'Main_Config_Emulators_Computers_' + cEmu_Panel_Names[vNum] + '_Logo';
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo.Parent := mainScene.Config.main.R.Emulators.Computers[vNum].Panel_Image;
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo.SetBounds(4, 4, 92, 92);
-  mainScene.Config.main.R.Emulators.Computers[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + '\emu\computers\' + cEmu_Image_Names[vNum]);
+  mainScene.Config.main.R.Emulators.Computers[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'computers\' + cEmu_Image_Names[vNum]);
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -326,7 +326,7 @@ begin
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.Name := 'Main_Config_Emulators_Computers_' + cEmu_Panel_Names[vNum] + '_Logo_Check';
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.Parent := mainScene.Config.main.R.Emulators.Computers[vNum].Logo;
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.SetBounds(2, 2, 34, 34);
-  mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_check.png');
+  mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'config_check.png');
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Computers[vNum].Logo_Check.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -468,7 +468,7 @@ begin
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.Name := 'Main_Config_Emulators_Consoles_' + cEmu_Panel_Names[vNum] + '_Logo';
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.Parent := mainScene.Config.main.R.Emulators.Consoles[vNum].Panel_Image;
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.SetBounds(4, 4, 92, 92);
-  mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + '\emu\consoles\' + cEmu_Image_Names[vNum]);
+  mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'consoles\' + cEmu_Image_Names[vNum]);
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -479,7 +479,7 @@ begin
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.Name := 'Main_Config_Emulators_Consoles_' + cEmu_Panel_Names[vNum] + '_Logo_Check';
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.Parent := mainScene.Config.main.R.Emulators.Consoles[vNum].Logo;
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.SetBounds(2, 2, 34, 34);
-  mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_check.png');
+  mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'config_check.png');
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Consoles[vNum].Logo_Check.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -522,36 +522,66 @@ begin
   mainScene.Config.main.R.Emulators.Consoles[vNum].Action.Visible := True;
 
   case vNum of
-    0: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Panasonic_3DO;
-    1: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Amiga_CD32;
-    2: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_2600;
-    3: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_5200;
-    4: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_7800;
-    5: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Atari_Jaguar;
-    6: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Neo_Geo;
-    7: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Neo_Geo_CD;
-    8: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.NES;
-    9: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.SNES;
-    10: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Nintendo_64;
-    11: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Gamecube;
-    12: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Wii;
-    13: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Wii_U;
-    14: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Nintendo_Switch;
-    15: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.PC_Engine;
-    16: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.PC_Engine_CD;
-    17: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.PX_FX;
-    18: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Playstation;
-    19: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Playstation_2;
-    20: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Playstation_3;
-    21: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.SG_1000;
-    22: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Master_System;
-    23: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Mega_Drive;
-    24: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Mega_Drive_32X;
-    25: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Mega_Drive_CD;
-    26: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Saturn;
-    27: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.Dreamcast;
-    28: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.XBOX;
-    29: vInstalled := uDB_AUser.Local.EMULATORS.Consoles_D.XBOX_ONE;
+    0:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Panasonic_3DO;
+    1:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Amiga_CD32;
+    2:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Atari_2600;
+    3:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Atari_5200;
+    4:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Atari_7800;
+    5:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Atari_Jaguar;
+    6:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Neo_Geo;
+    7:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Neo_Geo_CD;
+    8:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.NES;
+    9:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.SNES;
+    10:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Nintendo_64;
+    11:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Gamecube;
+    12:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Wii;
+    13:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Wii_U;
+    14:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Nintendo_Switch;
+    15:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.PC_Engine;
+    16:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.PC_Engine_CD;
+    17:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.PX_FX;
+    18:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Playstation;
+    19:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Playstation_2;
+    20:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Playstation_3;
+    21:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.SG_1000;
+    22:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Master_System;
+    23:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Mega_Drive;
+    24:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Mega_Drive_32X;
+    25:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Mega_Drive_CD;
+    26:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Saturn;
+    27:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.Dreamcast;
+    28:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.XBOX;
+    29:
+      vInstalled := uDB_AUser.Local.Emulators.Consoles_D.XBOX_ONE;
   end;
 
   if vInstalled then
@@ -631,14 +661,14 @@ end;
 
 procedure CreateHandheldsPanel(vNum: Integer);
 const
-  cEmu_Names: array [0 .. 12] of string = ('Atari Lynx', 'NeoGeo Pocket', 'GameGear', 'Game & Watch', 'Gameboy', 'Gameboy Color', 'Gameboy VirtualBoy', 'Gameboy Advance',
-    'Nintendo DS', 'Nintendo 3DS', 'PSP', 'PSP Vita', 'Wonderswan');
+  cEmu_Names: array [0 .. 12] of string = ('Atari Lynx', 'NeoGeo Pocket', 'GameGear', 'Game & Watch', 'Gameboy', 'Gameboy Color', 'Gameboy VirtualBoy',
+    'Gameboy Advance', 'Nintendo DS', 'Nintendo 3DS', 'PSP', 'PSP Vita', 'Wonderswan');
   cEmu_Panel_Names: array [0 .. 12] of string = ('Atari_Lynx', 'NeoGeo_Pocket', 'GameGear', 'Game_Watch', 'Gameboy', 'Gameboy_Color', 'Gameboy_VirtualBoy',
     'Gameboy_Advance', 'Nintendo_DS', 'Nintendo_3DS', 'PSP', 'PSP_Vita', 'Wonderswan');
   cEmu_Image_Names: array [0 .. 12] of string = ('lynx.png', 'neogeo_pocket.png', 'game_gear.png', 'game_watch.png', 'gameboy.png', 'gameboy_color.png',
     'gameboy_virtualboy.png', 'gameboy_advance.png', 'nintendo_ds.png', 'nintendo_3ds.png', 'psp.png', 'psp_vita.png', 'wonderswan.png');
-  var
-    vInstalled: Boolean;
+var
+  vInstalled: Boolean;
 begin
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Panel := TPanel.Create(mainScene.Config.main.R.Emulators.ScrollBox[3]);
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Panel.Name := 'Main_Config_Emulators_Handhelds_' + cEmu_Panel_Names[vNum] + '_Panel';
@@ -656,7 +686,7 @@ begin
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.Name := 'Main_Config_Emulators_Handhelds_' + cEmu_Panel_Names[vNum] + '_Logo';
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.Parent := mainScene.Config.main.R.Emulators.Handhelds[vNum].Panel_Image;
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.SetBounds(4, 4, 92, 92);
-  mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + '\emu\handhelds\' + cEmu_Image_Names[vNum]);
+  mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'handhelds\' + cEmu_Image_Names[vNum]);
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -667,7 +697,7 @@ begin
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.Name := 'Main_Config_Emulators_Handhelds_' + cEmu_Panel_Names[vNum] + '_Logo_Check';
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.Parent := mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo;
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.SetBounds(2, 2, 34, 34);
-  mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_check.png');
+  mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'config_check.png');
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Check.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -713,19 +743,32 @@ begin
   mainScene.Config.main.R.Emulators.Handhelds[vNum].Logo_Gray.Enabled := True;
 
   case vNum of
-    0: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Atari_Lynx;
-    1: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Neo_Geo_Pocket;
-    2: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.GameGear;
-    3: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Game_And_Watch;
-    4: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy;
-    5: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy_Color;
-    6: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy_VirtualBoy;
-    7: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Gameboy_Advance;
-    8: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Nintendo_DS;
-    9: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Nintendo_3DS;
-    10: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.PSP;
-    11: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.PSP_Vita;
-    12: vInstalled := uDB_AUser.Local.EMULATORS.Handhelds_D.Wonderswan;
+    0:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Atari_Lynx;
+    1:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Neo_Geo_Pocket;
+    2:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.GameGear;
+    3:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Game_And_Watch;
+    4:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Gameboy;
+    5:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Gameboy_Color;
+    6:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Gameboy_VirtualBoy;
+    7:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Gameboy_Advance;
+    8:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Nintendo_DS;
+    9:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Nintendo_3DS;
+    10:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.PSP;
+    11:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.PSP_Vita;
+    12:
+      vInstalled := uDB_AUser.Local.Emulators.Handhelds_D.Wonderswan;
   end;
 
   if vInstalled then
@@ -794,7 +837,7 @@ begin
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.Name := 'Main_Config_Emulators_Pinballs_' + cEmu_Panel_Names[vNum] + '_Logo';
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.Parent := mainScene.Config.main.R.Emulators.Pinballs[vNum].Panel_Image;
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.SetBounds(4, 4, 92, 92);
-  mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + '\emu\pinballs\' + cEmu_Image_Names[vNum]);
+  mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'pinballs\' + cEmu_Image_Names[vNum]);
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -805,7 +848,7 @@ begin
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.Name := 'Main_Config_Emulators_Pinballs_' + cEmu_Panel_Names[vNum] + '_Logo_Check';
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.Parent := mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo;
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.SetBounds(2, 2, 34, 34);
-  mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'config_check.png');
+  mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.emu + 'config_check.png');
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.WrapMode := TImageWrapMode.Fit;
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Check.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
@@ -850,8 +893,10 @@ begin
   mainScene.Config.main.R.Emulators.Pinballs[vNum].Logo_Gray.Enabled := True;
 
   case vNum of
-    0: vInstalled := uDB_AUser.Local.EMULATORS.Pinballs_D.Visual_Pinball;
-    1: vInstalled := uDB_AUser.Local.EMULATORS.Pinballs_D.Future_Pinball;
+    0:
+      vInstalled := uDB_AUser.Local.Emulators.Pinballs_D.Visual_Pinball;
+    1:
+      vInstalled := uDB_AUser.Local.Emulators.Pinballs_D.Future_Pinball;
   end;
 
   if vInstalled then

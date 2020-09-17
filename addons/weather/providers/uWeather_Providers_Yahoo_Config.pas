@@ -110,7 +110,7 @@ var
   vi: Integer;
   vTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL;
 begin
-  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count <> 0 then
+  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
   begin
     for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count - 1 do
     begin
@@ -296,7 +296,7 @@ var
 begin
   vSelected := weather.Config.Selected_Town;
 
-  {Delete from database}
+  { Delete from database }
   uDB.Query_Delete_Row(uDB.ExtraFE_Query_Local, 'addon_weather_yahoo', 'TOWN_WOEID', weather.Action.Yahoo.Data_Town[weather.Config.Selected_Town].WoeID);
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
@@ -304,7 +304,7 @@ begin
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
 
-  vi:= 0;
+  vi := 0;
   while not uDB.ExtraFE_Query_Local.Eof do
   begin
     if vi <> uDB.ExtraFE_Query_Local.FieldByName('TOWN_NUM').AsInteger then
@@ -313,7 +313,7 @@ begin
     uDB.ExtraFE_Query_Local.Next;
   end;
 
-  {Delete town form main reorganizend main}
+  { Delete town form main reorganizend main }
   for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
   begin
     if vi = uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count then
@@ -331,7 +331,7 @@ begin
   end;
   vWeather.Scene.Control.TabIndex := 0;
 
-  {Set selected first and blur color first red}
+  { Set selected first and blur color first red }
   for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count + 1 do
   begin
     if vi = uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count + 1 then
@@ -1010,7 +1010,6 @@ begin
     uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns[vi].WoeID := ExtraFE_Query_Local.FieldByName('TOWN_WOEID').AsInteger;
     ExtraFE_Query_Local.Next;
   end;
-
 end;
 
 end.

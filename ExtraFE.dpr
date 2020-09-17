@@ -197,7 +197,12 @@ uses
   uJoystick_mms in 'code\_snippets\uJoystick_mms.pas',
   uMain_Joystick_MMSystem in 'main\uMain_Joystick_MMSystem.pas',
   uLoad_Joysticks in 'loading\uLoad_Joysticks.pas',
-  uEmu_Joystick in 'emu\uEmu_Joystick.pas';
+  uEmu_Joystick in 'emu\uEmu_Joystick.pas',
+  uMain_Config_Addons_Weather in 'main\configuration\addons\uMain_Config_Addons_Weather.pas',
+  uMain_Config_Addons_Soundplayer in 'main\configuration\addons\uMain_Config_Addons_Soundplayer.pas',
+  uMain_Config_Addons_Time in 'main\configuration\addons\uMain_Config_Addons_Time.pas',
+  uMain_Config_Addons_AzPlay in 'main\configuration\addons\uMain_Config_Addons_AzPlay.pas',
+  uMain_Config_Addons_Calendar in 'main\configuration\addons\uMain_Config_Addons_Calendar.pas';
 
 {$R *.res}
 

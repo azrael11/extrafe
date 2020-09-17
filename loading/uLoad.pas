@@ -64,7 +64,11 @@ begin
   ex_main.Paths.Flags_Images := extrafe.prog.Path + 'data\main\flags\';
   ex_main.Paths.Avatar_Images := extrafe.prog.Path + 'data\main\avatars\';
   ex_main.Paths.Images := extrafe.prog.Path + 'data\main\images\';
-  ex_main.Paths.Config_Images := extrafe.prog.Path + 'data\main\config_images\';
+  ex_main.Paths.Config_Images.path := extrafe.prog.Path + 'data\main\config_images\';
+  ex_main.Paths.Config_Images.emu := ex_main.Paths.Config_Images.path + 'emu\';
+  ex_main.Paths.Config_Images.general := ex_main.Paths.Config_Images.path + 'general\';
+  ex_main.Paths.Config_Images.info := ex_main.Paths.Config_Images.path + 'info\';
+  ex_main.Paths.Config_Images.themes := ex_main.Paths.Config_Images.path + 'themes\';
   ex_main.Paths.Sounds := extrafe.prog.Path + 'data\main\sounds\';
 
 end;
@@ -182,6 +186,7 @@ begin
   end
   else
   begin
+
     ex_load.Login.Login.Text := '';
     ex_load.Login.Exit_ExtraFE.Enabled := False;
     ex_load.Login.User_V.Enabled := False;

@@ -81,7 +81,7 @@ begin
   mainScene.Config.main.R.General.Joystick.Image := TImage.Create(mainScene.Config.main.R.General.Tab_Item[4]);
   mainScene.Config.main.R.General.Joystick.Image.Name := 'Main_Config_General_Joystick_Image';
   mainScene.Config.main.R.General.Joystick.Image.Parent := mainScene.Config.main.R.General.Tab_Item[4];
-  mainScene.Config.main.R.General.Joystick.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'general\joystick.png');
+  mainScene.Config.main.R.General.Joystick.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.general+ 'joystick.png');
   mainScene.Config.main.R.General.Joystick.Image.SetBounds(mainScene.Config.main.R.General.Contol.Width - 76, 6, 56, 56);
   mainScene.Config.main.R.General.Joystick.Image.WrapMode := TImageWrapMode.Stretch;
   mainScene.Config.main.R.General.Joystick.Image.Visible := True;

@@ -91,7 +91,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Control := TTabControl.Create(mainScene.Config.Main.R.Info.Credits.Groupbox_Other);
   mainScene.Config.Main.R.Info.Credits.Control.Name := 'Main_Config_Info_Credits_TabControl';
   mainScene.Config.Main.R.Info.Credits.Control.Parent := mainScene.Config.Main.R.Info.Credits.Groupbox_Other;
-  mainScene.Config.Main.R.Info.Credits.Control.SetBounds(2, 22, mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width - 4, mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height - 22);
+  mainScene.Config.Main.R.Info.Credits.Control.SetBounds(2, 22, mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Width - 4,
+    mainScene.Config.Main.R.Info.Credits.Groupbox_Other.Height - 22);
   mainScene.Config.Main.R.Info.Credits.Control.Visible := True;
 
   for vi := 0 to 1 do
@@ -99,7 +100,8 @@ begin
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi] := TTabItem.Create(mainScene.Config.Main.R.Info.Credits.Control);
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Name := 'Main_Config_Info_Credits_TabItem_' + vi.ToString;
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Parent := mainScene.Config.Main.R.Info.Credits.Control;
-    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].SetBounds(0, 0, mainScene.Config.Main.R.Info.Credits.Control.Width, mainScene.Config.Main.R.Info.Credits.Control.Height);
+    mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].SetBounds(0, 0, mainScene.Config.Main.R.Info.Credits.Control.Width,
+      mainScene.Config.Main.R.Info.Credits.Control.Height);
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Text := cTab_Names[vi];
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].OnClick := ex_main.Input.mouse_config.TabItem.OnMouseClick;
     mainScene.Config.Main.R.Info.Credits.Tab_Item[vi].Tag := vi;
@@ -133,7 +135,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Name := 'Main_Config_Info_Credits_Image_' + vi.ToString;
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Parent := mainScene.Config.Main.R.Info.Credits.Left_Box[0];
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].SetBounds(5, 15 + (vi * 70), 110, 60);
-    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'info\' +cImages_Names_Programs[vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand[0, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images.Info + cImages_Names_Programs[vi]);
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].OnClick := ex_main.Input.mouse_config.Image.OnMouseClick;
     mainScene.Config.Main.R.Info.Credits.Brand[0, vi].OnMouseEnter := ex_main.Input.mouse_config.Image.OnMouseEnter;
@@ -157,7 +159,7 @@ begin
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Name := 'Main_Config_Info_Credits_Image_' + vi.ToString;
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Parent := mainScene.Config.Main.R.Info.Credits.Left_Box[1];
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].SetBounds(5, 15 + (vi * 70), 110, 60);
-    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images + 'info\' +cImages_Names_Comp[vi]);
+    mainScene.Config.Main.R.Info.Credits.Brand[1, vi].Bitmap.LoadFromFile(ex_main.Paths.Config_Images.info + cImages_Names_Comp[vi]);
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].WrapMode := TImageWrapMode.Fit;
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].OnClick := ex_main.Input.mouse_config.Image.OnMouseClick;
     mainScene.Config.Main.R.Info.Credits.Brand[1, vi].OnMouseEnter := ex_main.Input.mouse_config.Image.OnMouseEnter;
@@ -222,7 +224,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0] := TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[0]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Name := 'Main_Config_Info_Credits_VBox_Right_0';
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Parent := mainScene.Config.Main.R.Info.Credits.Tab_Item[0];
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120, mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] := TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 0]);
@@ -235,8 +238,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextIsHtml := True;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].WordWrap := True;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text :=
-    '   <b><font color="#ff63cbfc">ExtraFE</font></b> created, builded with <font color="#f21212">"Delphi Community Edition"</font> from <b>Embracedero</b> company.' +
-    'This IDE tool for pascal language with many new features and new style pascal is free with a restricted lincesce.' +
+    '   <b><font color="#ff63cbfc">ExtraFE</font></b> created, builded with <font color="#f21212">"Delphi Community Edition"</font> from <b>Embracedero</b> company.'
+    + 'This IDE tool for pascal language with many new features and new style pascal is free with a restricted lincesce.' +
     'Go to <b>Embarcadero''s</b> web site and dowloading for <b><font color="#ff63cbfc">free</font></b> and create fabulus applications.';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
 
@@ -248,7 +251,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.VertAlign := TTextAlign.Leading;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Text := '   Embarcadero tools are built for elite developers who build and maintain the world’s most critical applications.' +
+  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Text :=
+    '   Embarcadero tools are built for elite developers who build and maintain the world’s most critical applications.' +
     ' Our customers choose Embarcadero because we are the champion of developers, and we help them build more secure and ' +
     'scalable enterprise applications faster than any other tools on the market. In fact, ninety of the Fortune 100 and an' +
     ' active community of more than three million users worldwide have relied on Embarcadero'' s award-winning products for' + ' over 30 years.';
@@ -262,7 +266,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].TextSettings.VertAlign := TTextAlign.Leading;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[2].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Text := '   If you’re trying to build a business-critical application in a demanding vertical, Embarcadero is for' +
+  mainScene.Config.Main.R.Info.Credits.Paragraphs[2].Text :=
+    '   If you’re trying to build a business-critical application in a demanding vertical, Embarcadero is for' +
     ' you. If you’re looking to write steadfast code quickly that will pass stringent code reviews faster than any other,' +
     ' Embarcadero is for you. We’re here to support elite developers who understand the scalability and stability of C++' +
     ' and Delphi and depend on the decades of innovation those languages bring to development.';
@@ -300,7 +305,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1] := TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[0]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Name := 'Main_Config_Info_Credits_VBox_Right';
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Parent := mainScene.Config.Main.R.Info.Credits.Tab_Item[0];
-  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120, mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] := TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1]);
@@ -312,8 +318,10 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextIsHtml := True;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text := '   <b><font color="#ff63cbfc">ExtraFE</font></b> uses <font color="#f21212">"Gimp"</font> as the main image manipulation program.' +
-    'This tool is free, very powerfull and has nothing to jelius about commercials programs.' + 'Go to <b>Gimp''s</b> web site and dowloading for <b><font color="#ff63cbfc">free</font></b>.';
+  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text :=
+    '   <b><font color="#ff63cbfc">ExtraFE</font></b> uses <font color="#f21212">"Gimp"</font> as the main image manipulation program.' +
+    'This tool is free, very powerfull and has nothing to jelius about commercials programs.' +
+    'Go to <b>Gimp''s</b> web site and dowloading for <b><font color="#ff63cbfc">free</font></b>.';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1] := TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[0, 1]);
@@ -336,7 +344,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0] := TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[1]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Name := 'Main_Config_Info_Credits_VBox_Right';
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Parent := mainScene.Config.Main.R.Info.Credits.Tab_Item[1];
-  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120, mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] := TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1, 0]);
@@ -348,7 +357,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextIsHtml := True;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text := '   <b><font color="#ff63cbfc">ExtraFE</font></b> uses <font color="#f21212">"BASS"</font> as the main sound and effects library.' +
+  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text :=
+    '   <b><font color="#ff63cbfc">ExtraFE</font></b> uses <font color="#f21212">"BASS"</font> as the main sound and effects library.' +
     'The library is free for non comercial products. It is very powerfull, easy, with great addons and in ExtraFE i use it in my Addons too.' +
     'Go to <b>BASS''s</b> web site and dowloading for <b><font color="#ff63cbfc">free</font></b>. It is worth it.';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
@@ -373,7 +383,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1] := TVertScrollBox.Create(mainScene.Config.Main.R.Info.Credits.Tab_Item[1]);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Name := 'Main_Config_Info_Credits_VBox_Right';
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Parent := mainScene.Config.Main.R.Info.Credits.Tab_Item[1];
-  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120, mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
+  mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].SetBounds(120, 0, mainScene.Config.Main.R.Info.Credits.Control.Width - 120,
+    mainScene.Config.Main.R.Info.Credits.Control.Height - 24);
   mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1].Visible := True;
 
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0] := TALText.Create(mainScene.Config.Main.R.Info.Credits.Right_Box[1, 1]);
@@ -385,8 +396,9 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextSettings.VertAlign := TTextAlign.Leading;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].TextIsHtml := True;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text := '   <b><font color="#ff63cbfc">ExtraFE</font></b> uses <font color="#f21212">"PasLibVlc"</font> as the main video encoder/decoder library.'
-    + 'The library is free. It is very powerfull, easy, and use the libvlc.dll to provide video.' +
+  mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Text :=
+    '   <b><font color="#ff63cbfc">ExtraFE</font></b> uses <font color="#f21212">"PasLibVlc"</font> as the main video encoder/decoder library.' +
+    'The library is free. It is very powerfull, easy, and use the libvlc.dll to provide video.' +
     'Go to <b>PasLibVlc''s</b> web site and dowloading for <b><font color="#ff63cbfc">free</font></b>. Use it to make your own video player.';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[0].Visible := True;
 
@@ -398,7 +410,8 @@ begin
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.Font.Size := 14;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].TextSettings.VertAlign := TTextAlign.Leading;
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].WordWrap := True;
-  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Text := '   PasLibVlc is interface to VideoLAN libvlc.dll and VCL player component for Delphi / FreePascal based on VideoLAN. ' +
+  mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Text :=
+    '   PasLibVlc is interface to VideoLAN libvlc.dll and VCL player component for Delphi / FreePascal based on VideoLAN. ' +
     ' Note: libvlc.dll is part of project VideoLAN. For more information please visit VideoLAN site.';
   mainScene.Config.Main.R.Info.Credits.Paragraphs[1].Visible := True;
 end;

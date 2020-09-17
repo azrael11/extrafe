@@ -8,6 +8,7 @@ uses
   System.UiTypes,
   FMX.Objects,
   FMX.StdCtrls,
+  FMX.ListBox,
   BASS;
 
 type
@@ -289,13 +290,6 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
-  if uWeather_Config_Provider.vFirst_Check = False then
-  begin
-    if TCheckBox(Sender).Name = 'A_W_Config_Provider_yahoo_CheckBox' then
-      uWeather_Config_Provider.Check_Yahoo
-    else if TCheckBox(Sender).Name = 'A_W_Config_Provider_openweathermap_CheckBox' then
-      uWeather_Config_Provider.Check_OpenWeatherMap;
-  end;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TCheckBox(Sender).Name = 'A_W_Provider_Yahoo_Config_Metric' then
@@ -380,6 +374,13 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_IMAGE.OnMouseClick(Sender: TObject);
 begin
+  if TImage(Sender).Name = 'A_W_Config_Provider_' + TImage(Sender).TagString + '_Image' then
+  begin
+    if TImage(Sender).TagString = 'yahoo' then
+      uWeather_Config_Provider.Check_Yahoo
+    else if TImage(Sender).TagString = 'openweathermap' then
+      uWeather_Config_Provider.Check_OpenWeatherMap;
+  end;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TImage(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Mini_Preview_Image_' + TImage(Sender).TagString + '_' + TImage(Sender).Tag.ToString then
@@ -396,26 +397,41 @@ procedure TWEATHER_ADDON_CONFIG_IMAGE.OnMouseEnter(Sender: TObject);
 var
   vi: Integer;
 begin
+  if TImage(Sender).Name = 'A_W_Config_Provider_' + TImage(Sender).TagString + '_Image' then
+  begin
+    if TImage(Sender).TagString = 'yahoo' then
+      vWeather.Config.main.Right.Provider.Prov[0].Icon_Glow.Enabled := True
+    else if TImage(Sender).TagString = 'openweathermap' then
+      vWeather.Config.main.Right.Provider.Prov[1].Icon_Glow.Enabled := True;
+    TImage(Sender).Cursor := crHandPoint;
+  end;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TImage(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Mini_Preview_Image_' + TImage(Sender).TagString + '_' + TImage(Sender).Tag.ToString then
     begin
       vWeather.Config.main.Right.Iconsets.Mini[TImage(Sender).TagString.ToInteger].Panel_Glow.Enabled := True;
       TImage(Sender).Cursor := crHandPoint;
-    end;
+    end
   end
   else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
   begin
-
-  end;
+    //
+  end
 end;
 
 procedure TWEATHER_ADDON_CONFIG_IMAGE.OnMouseLeave(Sender: TObject);
 begin
+  if TImage(Sender).Name = 'A_W_Config_Provider_' + TImage(Sender).TagString + '_Image' then
+  begin
+    if TImage(Sender).TagString = 'yahoo' then
+      vWeather.Config.main.Right.Provider.Prov[0].Icon_Glow.Enabled := False
+    else if TImage(Sender).TagString = 'openweathermap' then
+      vWeather.Config.main.Right.Provider.Prov[1].Icon_Glow.Enabled := False;
+  end;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
     if TImage(Sender).Name = 'A_W_Provider_Yahoo_Config_Iconsets_Mini_Preview_Image_' + TImage(Sender).TagString + '_' + TImage(Sender).Tag.ToString then
-      vWeather.Config.main.Right.Iconsets.Mini[TImage(Sender).TagString.ToInteger].Panel_Glow.Enabled:= False;
+      vWeather.Config.main.Right.Iconsets.Mini[TImage(Sender).TagString.ToInteger].Panel_Glow.Enabled := False;
   end
 end;
 
@@ -423,7 +439,7 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_COMBOBOX.OnChange(Sender: TObject);
 begin
-
+  uWeather_Providers_OpenWeatherMap_Config.Options_ChangeLang(TComboBox(Sender).ItemIndex);
 end;
 
 initialization

@@ -24,12 +24,7 @@ uses
 procedure uWeather_Config_ShowHide(mShow: Boolean);
 begin
   if mShow then
-  begin
-    extrafe.prog.State := 'addon_weather_config';
-    if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
-      if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
-        uWeather_Providers_Yahoo.vTime.Enabled := False;
-  end
+    extrafe.prog.State := 'addon_weather_config'
   else
   begin
     extrafe.prog.State := 'addon_weather';
@@ -38,7 +33,6 @@ begin
   vWeather.Scene.Blur.Enabled := mShow;
   vWeather.Config.Panel.Visible := mShow;
   weather.Config.Active_Panel := -1;
-
 end;
 
 procedure uWeather_COnfig_ClearConfig;
@@ -51,9 +45,6 @@ begin
     uWeather_Config_Options.Free
   else if Assigned(vWeather.Config.main.Right.Panels[3]) then
     uWeather_Config_Iconsets.Free;
-  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
-    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
-      uWeather_Providers_Yahoo.vTime.Enabled := True;
 end;
 
 procedure uWeather_Config_ShowPanel(mPanel: Integer);

@@ -1,0 +1,300 @@
+unit uWeather_Config_Provider;
+
+interface
+
+uses
+  System.Classes,
+  System.UiTypes,
+  System.SysUtils,
+  FMX.Forms,
+  FMX.StdCtrls,
+  FMX.Types,
+  FMX.Objects,
+  FMX.Layouts,
+  FMX.Effects,
+  ALFmxObjects;
+
+procedure Load;
+procedure Free;
+
+procedure Create(vName: String; vNum: Integer);
+
+procedure Check_Yahoo;
+procedure Check_OpenWeatherMap;
+
+procedure Clear_Weather_Addon(vClear: Boolean);
+
+var
+  vFirst_Check: Boolean;
+
+implementation
+
+uses
+  uload,
+  uDB_AUser,
+  uDB,
+  uLoad_AllTypes,
+  main,
+  uWeather_AllTypes,
+  uWeather_SetAll,
+  uWeather_Config_Mouse,
+  uWeather_Providers_Yahoo,
+  uWeather_Providers_Yahoo_Config,
+  uWeather_Providers_OpenWeatherMap,
+  uWeather_Providers_OpenWeatherMap_Config;
+
+procedure Create(vName: String; vNum: Integer);
+begin
+  vWeather.Config.main.Right.Provider.Prov[vNum].Panel := TPanel.Create(vWeather.Config.main.Right.Provider.Box);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Name := 'A_W_Config_Provider_' + vName;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Parent := vWeather.Config.main.Right.Provider.Box;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.SetBounds(10, 10 + (vNum * 125), vWeather.Config.main.Right.Provider.Box.Width - 20, 120);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Visible := True;
+
+  vWeather.Config.main.Right.Provider.Prov[vNum].Rect := TRectangle.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Rect.Name := 'A_W_Config_Provider_' + vName + '_Rect';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Rect.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Rect.SetBounds(20, 5, 150, 80);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Rect.Fill.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Rect.Visible := False;
+
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon := TImage.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Name := 'A_W_Config_Provider_' + vName + '_Image';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.SetBounds(25, 10, 140, 70);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_' + vName + '.png');
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.TagString := vName;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.OnClick := weather.Input.mouse_config.Image.OnMouseClick;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.OnMouseEnter := weather.Input.mouse_config.Image.OnMouseEnter;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.OnMouseLeave := weather.Input.mouse_config.Image.OnMouseLeave;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon.Visible := True;
+
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon_Glow := TGlowEffect.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Icon);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon_Glow.Name := 'A_W_Config_Provider_' + vName + '_Image_Glow';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon_Glow.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Icon;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon_Glow.Softness := 0.9;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Icon_Glow.Enabled := False;
+
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc := TALText.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Name := 'A_W_Config_Provider_' + vName + 'Desc';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.SetBounds(180, 5, vWeather.Config.main.Right.Provider.Prov[vNum].Panel.Width - 180, 80);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.TextIsHtml := True;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.WordWrap := True;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Color := TAlphaColorRec.White;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Visible := True;
+  if vName = 'yahoo' then
+  begin
+    vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text := 'Yahoo Weather! provides up to 255 towns and a 10 days forecast. ' + #13#10 +
+      'Provides Units, wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.';
+  end
+  else if vName = 'openweathermap' then
+  begin
+    vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text := 'OpenWeatherMap provides up to 255 towns and a 5 days/3 Hours forecast. ' + #13#10 +
+      'Provides Units + (kelvin), wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.';
+  end;
+end;
+
+procedure Load;
+var
+  vi: Integer;
+begin
+  vFirst_Check := True;
+
+  vWeather.Config.main.Right.Panels[0] := TPanel.Create(vWeather.Config.main.Right.Panel);
+  vWeather.Config.main.Right.Panels[0].Name := 'A_W_Config_Provider_Panels_0';
+  vWeather.Config.main.Right.Panels[0].Parent := vWeather.Config.main.Right.Panel;
+  vWeather.Config.main.Right.Panels[0].Align := TAlignLayout.Client;
+  vWeather.Config.main.Right.Panels[0].Visible := True;
+
+  vWeather.Config.main.Right.Provider.Choose := TLabel.Create(vWeather.Config.main.Right.Panels[0]);
+  vWeather.Config.main.Right.Provider.Choose.Name := 'A_W_Config_Provider_Choose_Label';
+  vWeather.Config.main.Right.Provider.Choose.Parent := vWeather.Config.main.Right.Panels[0];
+  vWeather.Config.main.Right.Provider.Choose.SetBounds(10, 10, 300, 20);
+  vWeather.Config.main.Right.Provider.Choose.Text := 'Choose "Provider" from the list below.';
+  vWeather.Config.main.Right.Provider.Choose.Font.Style := vWeather.Config.main.Right.Provider.Choose.Font.Style + [TFontStyle.fsBold];
+  vWeather.Config.main.Right.Provider.Choose.Visible := True;
+
+  vWeather.Config.main.Right.Provider.Box := TVertScrollBox.Create(vWeather.Config.main.Right.Panels[0]);
+  vWeather.Config.main.Right.Provider.Box.Name := 'A_W_Config_Provider_Box';
+  vWeather.Config.main.Right.Provider.Box.Parent := vWeather.Config.main.Right.Panels[0];
+  vWeather.Config.main.Right.Provider.Box.SetBounds(10, 25, vWeather.Config.main.Right.Panels[0].Width - 20, vWeather.Config.main.Right.Panels[0].Height - 35);
+  vWeather.Config.main.Right.Provider.Box.Visible := True;
+
+  for vi := 0 to 1 do
+  begin
+    if vi = 0 then
+      Create('yahoo', vi)
+    else
+      Create('openweathermap', vi)
+  end;
+
+  vWeather.Config.main.Right.Provider.Text := TLabel.Create(vWeather.Config.main.Right.Panels[0]);
+  vWeather.Config.main.Right.Provider.Text.Name := 'A_W_Config_Provider_Label';
+  vWeather.Config.main.Right.Provider.Text.Parent := vWeather.Config.main.Right.Panels[0];
+  vWeather.Config.main.Right.Provider.Text.SetBounds(10, vWeather.Config.main.Right.Panels[0].Height - 30, 300, 20);
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
+  vWeather.Config.main.Right.Provider.Text.Font.Style := vWeather.Config.main.Right.Provider.Text.Font.Style + [TFontStyle.fsBold];
+  vWeather.Config.main.Right.Provider.Text.Visible := True;
+
+  vWeather.Config.main.Right.Provider.PBar := TProgressBar.Create(vWeather.Config.main.Right.Panels[0]);
+  vWeather.Config.main.Right.Provider.PBar.Name := 'A_W_Config_Provider_ProgressBar';
+  vWeather.Config.main.Right.Provider.PBar.Parent := vWeather.Config.main.Right.Panels[0];
+  vWeather.Config.main.Right.Provider.PBar.SetBounds(vWeather.Config.main.Right.Panels[0].Width - 210, vWeather.Config.main.Right.Panels[0].Height -
+    30, 200, 20);
+  vWeather.Config.main.Right.Provider.PBar.Min := 0;
+  vWeather.Config.main.Right.Provider.PBar.Max := 100;
+  vWeather.Config.main.Right.Provider.PBar.Value := 0;
+  vWeather.Config.main.Right.Provider.PBar.Visible := False;
+
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    vWeather.Config.main.Right.Provider.Prov[0].Rect.Visible := True
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    vWeather.Config.main.Right.Provider.Prov[1].Rect.Visible := True;
+
+  vFirst_Check := False;
+end;
+
+procedure Free;
+begin
+  FreeAndNil(vWeather.Config.main.Right.Panels[0]);
+end;
+
+procedure Check_Yahoo;
+var
+  vi: Integer;
+  vProgress_Num: Single;
+begin
+  uDB_AUser.Local.ADDONS.Weather_D.Provider := 'yahoo';
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', 'yahoo', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
+  vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_yahoo.png');
+
+  FreeAndNil(vWeather.Scene.Control);
+  uWeather_SetAll.Control;
+
+  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
+  begin
+    if Assigned(vTime) then
+      FreeAndNil(vTime);
+    uWeather_Providers_Yahoo_Config.Get_Data;
+    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
+    begin
+      vWeather.Config.main.Right.Provider.PBar.Visible := True;
+      vWeather.Config.main.Right.Provider.PBar.Value := 0;
+      vWeather.Scene.Back.Bitmap := nil;
+      vProgress_Num := 100 / uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count;
+      Application.ProcessMessages;
+      for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count - 1 do
+      begin
+        SetLength(weather.Action.Yahoo.Data_Town, uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count + 1);
+        weather.Action.Yahoo.Data_Town[vi] := uWeather_Providers_Yahoo.Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_WOEID', 'addon_weather_yahoo', 'TOWN_NUM',
+          vi.ToString));
+        uWeather_Providers_Yahoo_Config.Main_Create_Town(weather.Action.OWM.Data_Town[vi], vi);
+        vWeather.Config.main.Right.Provider.PBar.Value := vWeather.Config.main.Right.Provider.PBar.Value + vProgress_Num;
+        Application.ProcessMessages;
+      end;
+      vWeather.Scene.Control.TabIndex := 0;
+
+      vWeather.Scene.Arrow_Right.Visible := False;
+      vWeather.Scene.Arrow_Left.Visible := False;
+
+      if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 1 then
+        vWeather.Scene.Arrow_Right.Visible := True;
+    end
+    else
+      vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
+  end;
+
+  vWeather.Config.main.Right.Provider.PBar.Visible := False;
+  vWeather.Config.main.Right.Provider.Prov[0].Rect.Visible := True;
+  vWeather.Config.main.Right.Provider.Prov[1].Rect.Visible := False;
+
+  vWeather.Scene.Blur.Enabled := False;
+  vWeather.Scene.Blur.Enabled := True;
+end;
+
+procedure Check_OpenWeatherMap;
+var
+  vi: Integer;
+  vProgress_Num: Single;
+begin
+
+  uDB_AUser.Local.ADDONS.Weather_D.Provider := 'openweathermap';
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', 'openweathermap', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
+  vWeather.Config.main.Left.Provider.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_provider_openweathermap.png');
+
+  FreeAndNil(vWeather.Scene.Control);
+
+  uWeather_SetAll.Control;
+
+  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
+  begin
+    if Assigned(vTime) then
+      FreeAndNil(vTime);
+    uWeather_Providers_OpenWeatherMap_Config.Get_Data;
+    if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
+    begin
+      vWeather.Config.main.Right.Provider.PBar.Visible := True;
+      vWeather.Config.main.Right.Provider.PBar.Value := 0;
+      vWeather.Scene.Back.Bitmap := nil;
+      vProgress_Num := 100 / uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count;
+      Application.ProcessMessages;
+      for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count - 1 do
+      begin
+        SetLength(weather.Action.OWM.Data_Town, uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count + 1);
+        weather.Action.OWM.Data_Town[vi] := uWeather_Providers_OpenWeatherMap.Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_WOEID', 'addon_weather_owm', 'TOWN_NUM',
+          vi.ToString));
+        uWeather_Providers_OpenWeatherMap.Main_Create_Town(weather.Action.OWM.Data_Town[vi], vi);
+        vWeather.Config.main.Right.Provider.PBar.Value := vWeather.Config.main.Right.Provider.PBar.Value + vProgress_Num;
+        Application.ProcessMessages;
+      end;
+      vWeather.Scene.Control.TabIndex := 0;
+
+      vWeather.Scene.Arrow_Right.Visible := False;
+      vWeather.Scene.Arrow_Left.Visible := False;
+
+      if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 1 then
+        vWeather.Scene.Arrow_Right.Visible := True;
+    end
+    else
+      vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
+  end;
+
+  vWeather.Config.main.Right.Provider.PBar.Visible := False;
+  vWeather.Config.main.Right.Provider.Prov[0].Rect.Visible := False;
+  vWeather.Config.main.Right.Provider.Prov[1].Rect.Visible := True;
+
+  vWeather.Scene.Blur.Enabled := False;
+  vWeather.Scene.Blur.Enabled := True;
+end;
+
+procedure Clear_Weather_Addon(vClear: Boolean);
+var
+  vi: Integer;
+begin
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  begin
+    FreeAndNil(uWeather_Providers_Yahoo.vTime);
+  end
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+  begin
+    //
+  end;
+  FreeAndNil(vWeather.Scene.Control);
+  uWeather_SetAll.Control;
+  uDB_AUser.Local.ADDONS.Weather_D.Provider := '';
+  vWeather.Config.main.Right.Provider.Text.Text := 'Selected "Provider" : ' + UpperCase(uDB_AUser.Local.ADDONS.Weather_D.Provider);
+  vWeather.Config.main.Left.Provider.Bitmap := nil;
+  vWeather.Scene.Arrow_Left.Visible := False;
+  vWeather.Scene.Arrow_Right.Visible := False;
+  vWeather.Scene.Blur.Enabled := False;
+  vWeather.Scene.Blur.Enabled := True;
+end;
+
+end.
