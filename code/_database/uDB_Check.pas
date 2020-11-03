@@ -184,15 +184,13 @@ begin
   ExtraFE_Query_Local.ExecSQL;
   CodeSite.Send('Table "addon_soundplayer" is checked and corrected');
 
-  { That i'll check it if has benefits from that
-
-    Addon_Soundplayer_Playlists
-    ExtraFE_Query_Local.Close;
-    ExtraFE_Query_Local.SQL.Clear;
-    ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_soundplayer_playlists ("game_num" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "sourcefile" Text,	"savestate" Boolean,	"width" Integer );';
-    ExtraFE_Query_Local.ExecSQL;
-    CodeSite.Send('Table "addon_soundplayer_playlists" is checked and corrected'); }
+  // Addon_Soundplayer_Playlists
+  ExtraFE_Query_Local.Close;
+  ExtraFE_Query_Local.SQL.Clear;
+  ExtraFE_Query_Local.SQL.Text :=
+    'CREATE TABLE IF NOT EXISTS addon_soundplayer_playlists ("Song_Name" Text,	"Song_Audio_Type" Text,	"Song_Path" Text,  "Song_Position" Integer, "Song_Time" Integer, "Song_Last" Boolean, "Playlist_Name" Text, Playlist_Num Integer);';
+  ExtraFE_Query_Local.ExecSQL;
+  CodeSite.Send('Table "addon_soundplayer_playlists" is checked and corrected');
 
   // Addon_AzPlay ->
   ExtraFE_Query_Local.Close;

@@ -89,9 +89,9 @@ begin
         // Set the maste volume of the song
         BASS_ChannelSetAttribute(sound.str_music[1], BASS_ATTRIB_VOL, soundplayer.player_actions.volume.Vol / 100);
         // Write to init the volume
-        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Master', soundplayer.player_actions.volume.Vol / 100);
-        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Left', soundplayer.player_actions.volume.Vol / 100);
-        addons.soundplayer.Ini.Ini.WriteFloat('Volume', 'Right', soundplayer.player_actions.volume.Vol / 100);
+        soundplayer.player_actions.volume.Master := soundplayer.player_actions.volume.Vol / 100;
+        soundplayer.player_actions.volume.Left := soundplayer.player_actions.volume.Vol / 100;
+        soundplayer.player_actions.volume.Right := soundplayer.player_actions.volume.Vol / 100;
         // Show the current text %;
         vSoundplayer.Player.Speaker_Left_Percent.Text :=
           FormatFloat('0', soundplayer.player_actions.volume.Vol) + '%';

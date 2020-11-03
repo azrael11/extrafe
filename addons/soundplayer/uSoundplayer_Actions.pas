@@ -5,14 +5,17 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  System.UiTypes;
+  System.UiTypes,
+  Bass;
 
 procedure Load;
 procedure Free;
 
-procedure Set_FirstTime;
-procedure Set_WithActivePlaylist(vPlaylist: Integer);
-procedure Set_WithActiveSong;
+function Playist_Data_Num(vList_Num: Integer): Integer;
+
+procedure Start_With_Active_Playlist;
+procedure Start_With_No_Playlist;
+procedure Start_With_Active_Song;
 
 procedure Hide_Animations;
 procedure Set_Animations;
@@ -20,6 +23,8 @@ procedure Set_Animations;
 procedure CheckFirst(vCheched: Boolean);
 
 procedure Get_Data;
+
+function Time_From_Seconds(vSeconds: Integer): String;
 
 implementation
 
@@ -36,86 +41,102 @@ uses
   uSoundplayer_Tag_Get,
   uSoundplayer_Tag_Mp3;
 
+procedure Start_With_Active_Playlist;
+begin
+  soundplayer.player_actions.Volume.Vol := uDB_AUser.Local.ADDONS.Soundplayer_D.Volume * 100;
+  soundplayer.player_actions.Song_State := 0;
+
+  soundplayer.player_actions.list_repeat.action := rNone;
+  soundplayer.player_actions.Suffle.active := True;
+
+  extrafe.prog.State := 'addon_soundplayer';
+  if uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[soundplayer.player_actions.Playlist_Now].Songs_Count = 0 then
+  begin
+    soundplayer.player_actions.Playing_Now := -1;
+    soundplayer.player := sNone;
+  end
+  else
+  begin
+    soundplayer.player_actions.Playing_Now := 0;
+    soundplayer.player := sStop;
+  end;
+
+  uSoundplayer_Player.State;
+  if soundplayer.player_actions.Playing_Now > -1 then
+  begin
+    uSoundplayer_Player.Refresh_GoTo(soundplayer.player_actions.Playing_Now);
+    uSoundplayer_Playlist.State;
+  end;
+  soundplayer.player_actions.Volume.State := 'Master';
+end;
+
+procedure Start_With_No_Playlist;
+begin
+  soundplayer.player := sNone;
+  uSoundplayer_Player.State;
+  if uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count = -1 then
+    if uDB_AUser.Local.ADDONS.Soundplayer_D.First_Pop = -1 then
+      uSoundplayer_SetAll.Set_First;
+end;
+
+procedure Start_With_Active_Song;
+begin
+  uSoundplayer_Playlist.State;
+  vSoundplayer.info.Playlist_Name.Text := uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[soundplayer.player_actions.Playlist_Now].Name;
+  // vSoundplayer.info.Playlist_Type_Kind.Text := ADDONS.soundplayer.Playlist.List.VType;
+  vSoundplayer.info.Total_Songs.Text := (soundplayer.player_actions.Playing_Now + 1).ToString + '/' + uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists
+    [soundplayer.player_actions.Playlist_Now].Songs_Count.ToString;
+  vSoundplayer.info.Time_Total.Text := '';
+  vSoundplayer.timer.Song.Enabled := True;
+  soundplayer.player_actions.Thumb_Active := False;
+  if soundplayer.player_actions.Suffle.active then
+  begin
+    uSoundplayer_Player.Repeat_Back;
+    uSoundplayer_Player.Suffle_Back;
+    uSoundplayer_Player.Set_Previous_Next;
+  end
+  else
+  begin
+    uSoundplayer_Player.Get_Tag(soundplayer.player_actions.Playing_Now);
+    uSoundplayer_Tag_Get.Set_Icon;
+    soundplayer.player_actions.Suffle.active := not soundplayer.player_actions.Suffle.active;
+    vSoundplayer.Playlist.List.Selected := soundplayer.player_actions.Playing_Now + 1;
+    uSoundplayer_Player.State;
+  end;
+  uSoundplayer_Player_Volume.Adjust(False);
+end;
+
 procedure Load;
 begin
   extrafe.prog.State := 'addon_soundplayer_loading';
 
   uSoundplayer_Sounds.Load;
+  soundplayer.player_actions.Playlist_Now := Playist_Data_Num(uDB_AUser.Local.ADDONS.Soundplayer_D.Last_Playlist_Num);
 
   if soundplayer.player = sPlay then
-    Set_WithActiveSong
+    Start_With_Active_Song
   else
   begin
-    if (uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count <> -1) then
-      Set_WithActivePlaylist(addons.Soundplayer.Playlist.Active)
+    if (uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count <> -1) then
+      Start_With_Active_Playlist
     else
-    begin
-      Set_FirstTime;
-      if uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count = -1 then
-        if uDB_AUser.Local.addons.Soundplayer_D.First_Pop then
-          uSoundplayer_SetAll.Set_First;
-    end;
+      Start_With_No_Playlist;
   end;
-
 
   Set_Animations;
   extrafe.prog.State := 'addon_soundplayer';
-  uSoundplayer_Player_Volume.Update(uDB_AUser.Local.addons.Soundplayer_D.Volume);
+  uSoundplayer_Player_Volume.Update(uDB_AUser.Local.ADDONS.Soundplayer_D.Volume);
 end;
 
 procedure Free;
 begin
-  if Assigned(vSoundplayer.scene.Soundplayer) then
+  if Assigned(vSoundplayer.scene.soundplayer) then
   begin
     if soundplayer.player = sPlay then
       uSoundplayer_Player_Volume.Adjust(True);
     uSoundplayer_Sounds.Free;
-    FreeAndNil(vSoundplayer.scene.Soundplayer);
+    FreeAndNil(vSoundplayer.scene.soundplayer);
   end;
-end;
-
-/// /////////////////////////////////////////////////////////////////////////////
-procedure Set_FirstTime;
-var
-  vi, ki: Integer;
-begin
-  uSoundplayer_Playlist.State('First', -1);
-  uSoundplayer_Player.State(False, False, False, False, False, '');
-end;
-
-procedure Set_WithActivePlaylist(vPlaylist: Integer);
-begin
-  soundplayer.player_actions.volume.Vol := soundplayer.player_actions.volume.Master * 100;
-  soundplayer.player_actions.Song_State := 0;
-
-  uSoundplayer_Playlist.State('Playlist', vPlaylist);
-//  uSoundplayer_Player.State(soundplayer.player = sPlay, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop, addons.Soundplayer.Player.Mute,
-//    soundplayer.player_actions.Suffle, '');
-end;
-
-procedure Set_WithActiveSong;
-var
-  vi: Integer;
-begin
-  uSoundplayer_Playlist.State('Song', -1);
-  vSoundplayer.info.Playlist_Name.Text := addons.Soundplayer.Playlist.List.Name;
-  vSoundplayer.info.Playlist_Type_Kind.Text := addons.Soundplayer.Playlist.List.VType;
-  vSoundplayer.info.Total_Songs.Text := (soundplayer.player_actions.Playing_Now + 1).ToString + '/' + addons.Soundplayer.Playlist.List.Songs_Num.ToString;
-  vSoundplayer.info.Time_Total.Text := addons.Soundplayer.Playlist.List.Songs_Total_Time;
-  vSoundplayer.timer.Song.Enabled := True;
-  soundplayer.player_actions.Thumb_Active := False;
-  if soundplayer.player_actions.Suffle then
-  begin
-    uSoundplayer_Player.Repeat_Back(soundplayer.player_actions.VRepeat);
-    uSoundplayer_Player.Suffle_Back;
-//    uSoundplayer_Player.Set_Play(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop,
-//      addons.Soundplayer.Player.Mute);
-    uSoundplayer_Player.Set_Previous_Next;
-  end;
-//  else
-//    uSoundplayer_Player.State(addons.Soundplayer.Player.Play, addons.Soundplayer.Player.Pause, addons.Soundplayer.Player.Stop, addons.Soundplayer.Player.Mute,
-//      soundplayer.player_actions.Suffle, soundplayer.player_actions.VRepeat);
-  uSoundplayer_Player_Volume.Adjust(False);
 end;
 
 procedure Set_Animations;
@@ -131,7 +152,7 @@ begin
   vSoundplayer.info.Back_Left_Ani.Start;
   vSoundplayer.info.Back_Right_Ani.Start;
 
-  addons.Soundplayer.info.isCoverInFullscreen := False;
+  ADDONS.soundplayer.info.isCoverInFullscreen := False;
 end;
 
 procedure Hide_Animations;
@@ -142,18 +163,31 @@ begin
   vSoundplayer.info.Back_Left.Position.X := -558;
   vSoundplayer.info.Back_Right.Position.X := 1878;
 
-  addons.Soundplayer.info.isCoverInFullscreen := False;
+  ADDONS.soundplayer.info.isCoverInFullscreen := False;
 end;
 
 procedure CheckFirst(vCheched: Boolean);
+var
+  vCheck: Integer;
 begin
-  addons.Soundplayer.Actions.First := vCheched;
-  addons.Soundplayer.Ini.Ini.WriteBool('General', 'First', vCheched);
+  ADDONS.soundplayer.Actions.First := vCheched;
+
+  vCheck := 0;
+  if vCheched then
+    vCheck := 1;
+
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Text := 'UPDATE addon_soundplayer SET First_Pop=''' + vCheck.ToString + ''' WHERE User_Id=''' +
+    uDB_AUser.Local.USER.Num.ToString + '''';
+  uDB.ExtraFE_Query_Local.ExecSQL;
+
 end;
 
 procedure Get_Data;
 var
   vQuery: String;
+  vi, vk, vl: Integer;
 begin
   vQuery := 'SELECT * FROM ADDON_SOUNDPLAYER WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
   uDB.ExtraFE_Query_Local.Close;
@@ -162,26 +196,102 @@ begin
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
 
-  uDB_AUser.Local.addons.Soundplayer_D.Menu_Position := uDB.ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
-  uDB_AUser.Local.addons.Soundplayer_D.First_Pop := uDB.ExtraFE_Query_Local.FieldByName('FIRST_POP').AsBoolean;
-  uDB_AUser.Local.addons.Soundplayer_D.Volume := uDB.ExtraFE_Query_Local.FieldByName('VOLUME').AsInteger;
-  uDB_AUser.Local.addons.Soundplayer_D.Last_Visit := uDB.ExtraFE_Query_Local.FieldByName('LAST_VISIT').AsString;
-  uDB_AUser.Local.addons.Soundplayer_D.Last_Play_Song_Num := uDB.ExtraFE_Query_Local.FieldByName('LAST_PLAY_SONG_NUM').AsInteger;
-  uDB_AUser.Local.addons.Soundplayer_D.Last_Playlist_Num := uDB.ExtraFE_Query_Local.FieldByName('LAST_PLAYLIST_NUM').AsInteger;
-  uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count := uDB.ExtraFE_Query_Local.FieldByName('PLAYLIST_COUNT').AsInteger;
-  uDB_AUser.Local.addons.Soundplayer_D.Total_Play_Click := uDB.ExtraFE_Query_Local.FieldByName('TOTAL_PLAY_CLICK').AsInteger;
-  uDB_AUser.Local.addons.Soundplayer_D.Total_Play_Time := uDB.ExtraFE_Query_Local.FieldByName('TOTAL_PLAY_TIME').AsString;
-  uDB_AUser.Local.addons.Soundplayer_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
-  uDB_AUser.Local.addons.Soundplayer_D.p_Playlists := uDB.ExtraFE_Query_Local.FieldByName('PATH_PLAYLISTS').AsString;
-  uDB_AUser.Local.addons.Soundplayer_D.p_Sounds := uDB.ExtraFE_Query_Local.FieldByName('PATH_SOUNDS').AsString;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.Menu_Position := uDB.ExtraFE_Query_Local.FieldByName('Menu_Position').AsInteger;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.First_Pop := uDB.ExtraFE_Query_Local.FieldByName('First_Pop').AsInteger;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.Volume := uDB.ExtraFE_Query_Local.FieldByName('Volume').AsInteger;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.Last_Visit := uDB.ExtraFE_Query_Local.FieldByName('Last_Visit').AsString;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.Last_Playlist_Num := uDB.ExtraFE_Query_Local.FieldByName('Last_Playlist_Num').AsInteger;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count := uDB.ExtraFE_Query_Local.FieldByName('Playlist_Count').AsInteger;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.Total_Play_Click := uDB.ExtraFE_Query_Local.FieldByName('Total_Play').AsInteger;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.Total_Play_Time := uDB.ExtraFE_Query_Local.FieldByName('Total_Time').AsInteger;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('Path_Images').AsString;
+  uDB_AUser.Local.ADDONS.Soundplayer_D.p_Sounds := uDB.ExtraFE_Query_Local.FieldByName('Path_Sounds').AsString;
 
-  if uDB_AUser.Local.addons.Soundplayer_D.Menu_Position <> -1 then
+  vl := 0;
+  if uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count <> -1 then
   begin
-    uDB_AUser.Local.addons.Names.Insert(uDB_AUser.Local.addons.Soundplayer_D.Menu_Position, 'soundplayer');
+    SetLength(uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists, uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count + 1);
+
+    for vi := 0 to uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count do
+    begin
+      vQuery := 'SELECT * FROM addon_soundplayer_playlists WHERE User_Id=''' + uDB_AUser.Local.USER.Num.ToString + '''';
+      uDB.ExtraFE_Query_Local.Close;
+      uDB.ExtraFE_Query_Local.SQL.Clear;
+      uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+      uDB.ExtraFE_Query_Local.Open;
+      uDB.ExtraFE_Query_Local.First;
+
+      uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Name := uDB.ExtraFE_Query_Local.FieldByName('Name').AsString;
+      uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Pos_Num := uDB.ExtraFE_Query_Local.FieldByName('Pos').AsInteger;
+      uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].ID := uDB.ExtraFE_Query_Local.FieldByName('Id').AsInteger;
+      uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs_Count := uDB.ExtraFE_Query_Local.FieldByName('Songs_Count').AsInteger;
+      uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].active := uDB.ExtraFE_Query_Local.FieldByName('Active').AsInteger;
+
+      if uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vi].Songs_Count > 0 then
+      begin
+
+        vQuery := 'SELECT * FROM addon_soundplayer_playlists_songs WHERE Playlist_Num=''' + uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl]
+          .ID.ToString + '''';
+        uDB.ExtraFE_Query_Local.Close;
+        uDB.ExtraFE_Query_Local.SQL.Clear;
+        uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
+        uDB.ExtraFE_Query_Local.Open;
+        uDB.ExtraFE_Query_Local.First;
+
+        SetLength(uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs, uDB.ExtraFE_Query_Local.RecordCount);
+
+        vk := 0;
+        while not uDB.ExtraFE_Query_Local.Eof do
+        begin
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Name := uDB.ExtraFE_Query_Local.FieldByName('Song_Name').AsString;
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Name := StringReplace(uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Name,
+            '~%', '''', [rfReplaceAll, rfIgnoreCase]);
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Artist := uDB.ExtraFE_Query_Local.FieldByName('Song_Artist').AsString;
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Path_Name := uDB.ExtraFE_Query_Local.FieldByName('Song_Path_Name').AsString;
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Path_Name :=
+            StringReplace(uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Path_Name, '~%', '''', [rfReplaceAll, rfIgnoreCase]);
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Path := uDB.ExtraFE_Query_Local.FieldByName('Song_Path').AsString;
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Audio_Type := uDB.ExtraFE_Query_Local.FieldByName('Song_Audio_Type').AsString;
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Pos := uDB.ExtraFE_Query_Local.FieldByName('Song_Position').AsInteger;
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Time := uDB.ExtraFE_Query_Local.FieldByName('Song_Time').AsInteger;
+          uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vl].Songs[vk].Last := uDB.ExtraFE_Query_Local.FieldByName('Song_Last').AsInteger;
+
+          inc(vk);
+          uDB.ExtraFE_Query_Local.Next;
+        end;
+      end
+      else
+        soundplayer.player_actions.Playing_Now := -1;
+
+      inc(vl);
+    end;
+  end;
+
+  if uDB_AUser.Local.ADDONS.Soundplayer_D.Menu_Position <> -1 then
+  begin
+    uDB_AUser.Local.ADDONS.Names.Insert(uDB_AUser.Local.ADDONS.Soundplayer_D.Menu_Position, 'soundplayer');
     uDB_AUser.Local.ADDONS.Names.Delete(uDB_AUser.Local.ADDONS.Soundplayer_D.Menu_Position + 1);
   end;
 
-  soundplayer.player := sStop;
+  if extrafe.prog.State <> 'addon_soundplayer' then
+    soundplayer.player := sStop;
+
+end;
+
+function Playist_Data_Num(vList_Num: Integer): Integer;
+var
+  vi: Integer;
+begin
+  for vi := 0 to uDB_AUser.Local.ADDONS.Soundplayer_D.Playlist_Count do
+    if uDB_AUser.Local.ADDONS.Soundplayer_D.Playlists[vi].ID = vList_Num then
+      Break;
+
+  Result := vi;
+end;
+
+function Time_From_Seconds(vSeconds: Integer): String;
+begin
+  Result := FormatDateTime('nn:ss', EncodeTime(0, vSeconds div 60, vSeconds mod 60, 0));
 end;
 
 end.

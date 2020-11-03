@@ -134,10 +134,10 @@
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <VerInfo_Release>9</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.28;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=Az-Creations;FileDescription=$(MSBuildProjectName);FileVersion=0.2.9.29;InternalName=;LegalCopyright=Freeware;LegalTrademarks=Free;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=Frontend for emulators with addons</VerInfo_Keys>
         <Icon_MainIcon>ExtraFE_Icon_64.ico</Icon_MainIcon>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>28</VerInfo_Build>
+        <VerInfo_Build>29</VerInfo_Build>
         <DCC_ExeOutput>F:\my_projects\exe\debug\ExtraFE\win64\</DCC_ExeOutput>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <DCC_UnitSearchPath>C:\Program Files (x86)\Embarcadero\Studio\20.0\LabPacks\10.3\Win64\Debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\OpenWire\10.3\Win64\Debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\lib\win64\debug;C:\Program Files (x86)\Embarcadero\Studio\20.0\lib\win64\release;F:\my_projects\components\zeoslib\src;F:\my_projects\components\zeoslib\src\component;F:\my_projects\components\zeoslib\src\core;F:\my_projects\components\zeoslib\src\dbc;F:\my_projects\components\zeoslib\src\parsesql;F:\my_projects\components\zeoslib\src\plain;F:\my_projects\components\PasLibVlc\source;F:\my_projects\components\PasLibVlc\source.fmx;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\APEv2 Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Flac Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\ID3v2 Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\MP4 Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\Ogg Vorbis and Opus Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WAV Tag Library\Delphi;F:\my_projects\components\bass\TagsLibrary\Delphi\Tagging Libraries\WMA Tag Library\Delphi;F:\my_projects\components\bass\bass24\delphi;F:\my_projects\components\bass\bass_fx24\Delphi;F:\my_projects\components\hook;F:\my_projects\components\alcinoe\alcinoe _rio\source;F:\my_projects\components\hook\Hooks</DCC_UnitSearchPath>
@@ -404,9 +404,8 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="$(IBREDISTDIR)\reg_iblite.txt" Configuration="Release" Class="File">
-                    <Platform Name="Win64">
-                        <RemoteDir>interbase\license\</RemoteDir>
+                <DeployFile LocalName="$(BDS)\Redist\osx64\libcgsqlite3.dylib" Class="DependencyModule">
+                    <Platform Name="OSX64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -966,8 +965,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\osx64\libcgsqlite3.dylib" Class="DependencyModule">
-                    <Platform Name="OSX64">
+                <DeployFile LocalName="$(IBREDISTDIR)\reg_iblite.txt" Configuration="Release" Class="File">
+                    <Platform Name="Win64">
+                        <RemoteDir>interbase\license\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

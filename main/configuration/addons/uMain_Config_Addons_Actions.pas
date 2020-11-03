@@ -37,8 +37,11 @@ uses
   uMain_SetAll,
   uMain_AllTypes,
   uMain_Config_Addons,
-  uSoundplayer_AllTypes, uMain_Config_Addons_Weather,
-  uMain_Config_Addons_Soundplayer, uMain_Config_Addons_AzPlay;
+  uSoundplayer_AllTypes,
+  uMain_Config_Addons_Weather,
+  uSoundplayer_Actions,
+  uMain_Config_Addons_Soundplayer,
+  uMain_Config_Addons_AzPlay;
 
 procedure Set_Icons(vDeletedIcon: integer);
 var
@@ -126,6 +129,8 @@ end;
 { Addon Soundplayer }
 procedure Soundplayer_Activate;
 begin
+  uSoundplayer_Actions.Get_Data;
+
   if uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count <> -1 then
     uMain_Config_Addons_Soundplayer.Show_Select_Message
   else

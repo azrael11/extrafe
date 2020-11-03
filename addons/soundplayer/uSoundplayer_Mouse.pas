@@ -286,7 +286,7 @@ begin
         vSoundplayer.scene.OpenDialog.Execute
       end
       else if TText(Sender).Name = 'A_SP_Player_Loop' then
-        uSoundplayer_Player.Repeat_Set(soundplayer.player_actions.VRepeat)
+        uSoundplayer_Player.Repeat_Set
       else if TText(Sender).Name = 'A_SP_Player_Loop_State' then
         uSoundplayer_Player.Repeat_Inc_LoopState
       else if TImage(Sender).Name = 'A_SP_Player_Suffle' then
@@ -311,7 +311,7 @@ begin
           uSoundplayer_Player.Lyrics
       end
       else if TText(Sender).Name = 'A_SP_Playlist_Manage' then
-        uSoundPlayer_Playlist_Manage_Panel
+        uSoundPlayer_Playlist_Manage.Load
       else if TText(Sender).Name = 'A_SP_Playlist_Add' then
         uSoundplayer_Playlist_Create.Load
       else if TText(Sender).Name = 'A_SP_Playlist_Remove' then
@@ -524,8 +524,7 @@ begin
   else if extrafe.prog.State = 'addon_soundplayer_create_playlist' then
   begin
     if TButton(Sender).Name = 'A_SP_Playlist_Create_CreateButton' then
-      uSoundplayer_Playlist_Create.New(vSoundplayer.Playlist.Create.main.Edit.Text, vSoundplayer.Playlist.Create.main.Main_Type.Items.Strings
-        [vSoundplayer.Playlist.Create.main.Main_Type.ItemIndex])
+      uSoundplayer_Playlist_Create.New(vSoundplayer.Playlist.Create.main.Edit.Text)
     else if TButton(Sender).Name = 'A_SP_Playlist_Create_CancelButton' then
       uSoundplayer_Playlist_Create.Free;
   end

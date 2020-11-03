@@ -18,20 +18,18 @@ uses
 
 procedure uSoundplayer_Keyboard_SetKey(vKey: string);
 begin
-  addons.soundplayer.Playlist.Manage_CtrlKey:= False;
+  addons.soundplayer.Playlist.Manage_CtrlKey := False;
   if extrafe.prog.State = 'addon_soundplayer_create_playlist' then
   begin
     if UpperCase(vKey) = 'ESC' then
-      uSoundPlayer_Playlist_Create.Free
+      uSoundplayer_Playlist_Create.Free
     else if UpperCase(vKey) = 'ENTER' then
-      uSoundPlayer_Playlist_Create.New(vSoundplayer.Playlist.Create.Main.Edit.Text,
-        vSoundplayer.Playlist.Create.Main.Main_Type.Items.Strings
-        [vSoundplayer.Playlist.Create.Main.Main_Type.ItemIndex]);
+      uSoundplayer_Playlist_Create.New(vSoundplayer.Playlist.Create.Main.Edit.Text);
   end
   else if extrafe.prog.State = 'addon_soundplayer_manage_playlists' then
   begin
-    if UpperCase(vKey)= 'CTRL' then
-      addons.soundplayer.Playlist.Manage_CtrlKey:= True;
+    if UpperCase(vKey) = 'CTRL' then
+      addons.soundplayer.Playlist.Manage_CtrlKey := True;
   end;
 
 end;

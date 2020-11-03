@@ -31,7 +31,7 @@ procedure Cover_Select;
 procedure Cover_Select_Cancel;
 procedure Cover_SetFromComputer(vSelection: Integer);
 procedure Cover_Remove;
-function Cover_Get_Image(vFullPath: String; out vDesk: String; out vImage: TBitmap): Boolean;
+function Cover_Get_Image(out vDesk: String; out vImage: TBitmap): Boolean;
 
 // Lyrics ID3v2
 procedure Lyrics_Add;
@@ -40,7 +40,6 @@ procedure Lyrics_Load;
 procedure Lyrics_Delete;
 procedure Lyrics_Get_Add;
 procedure Lyrics_Get_Cancel;
-
 
 // Rating System
 procedure Rating_Set;
@@ -104,6 +103,10 @@ begin
 end;
 
 procedure Get_ID3v2(vPath: String);
+var
+  vi: Integer;
+  vDescription: String;
+  vImage: TBitmap;
 begin
   soundplayer.player_actions.Tag.mp3.ID3v2 := TID3v2Tag.Create;
 
@@ -117,50 +120,75 @@ begin
   soundplayer.player_actions.Tag.mp3.ID3v2.ExtendedHeader := True;
   soundplayer.player_actions.Tag.mp3.ID3v2.ExtendedHeader3.CRCPresent := True;
 
-  soundplayer.player_actions.Tag.mp3.Info.General.Filename := soundplayer.player_actions.Tag.mp3.ID3v2.Filename;
-  soundplayer.player_actions.Tag.mp3.Info.General.Loaded := soundplayer.player_actions.Tag.mp3.ID3v2.Loaded;
-  soundplayer.player_actions.Tag.mp3.Info.General.MajorVersion := soundplayer.player_actions.Tag.mp3.ID3v2.MajorVersion;
-  soundplayer.player_actions.Tag.mp3.Info.General.MinorVersion := soundplayer.player_actions.Tag.mp3.ID3v2.MinorVersion;
-  soundplayer.player_actions.Tag.mp3.Info.General.Size := soundplayer.player_actions.Tag.mp3.ID3v2.Size;
-  soundplayer.player_actions.Tag.mp3.Info.General.FramesCount := soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount;
-  soundplayer.player_actions.Tag.mp3.Info.General.BitRate := soundplayer.player_actions.Tag.mp3.ID3v2.BitRate;
-  soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount := soundplayer.player_actions.Tag.mp3.ID3v2.CoverArtCount;
-  soundplayer.player_actions.Tag.mp3.Info.General.PlayTime := soundplayer.player_actions.Tag.mp3.ID3v2.PlayTime;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Title := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TIT2');
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Artist := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TPE1');
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Album := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TALB');
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Year := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TYER');
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Genre := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TCON');
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Track := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TRCK');
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Length := soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeText('TMED');
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Lyrics := Tstringlist.Create;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Lyrics.Add(soundplayer.player_actions.Tag.mp3.ID3v2.GetUnicodeLyrics('USLT',
+    soundplayer.player_actions.Tag.mp3.Lyrics_LanguageID, soundplayer.player_actions.Tag.mp3.Lyrics_Description));
 
-  soundplayer.player_actions.Tag.mp3.Info.MPEG.FrameSize := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.FrameSize;
-  soundplayer.player_actions.Tag.mp3.Info.MPEG.SampleRate := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.SampleRate;
-  soundplayer.player_actions.Tag.mp3.Info.MPEG.BitRate := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.BitRate;
-  soundplayer.player_actions.Tag.mp3.Info.MPEG.Padding := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Padding;
-  soundplayer.player_actions.Tag.mp3.Info.MPEG.Copyrighted := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Copyrighted;
-  soundplayer.player_actions.Tag.mp3.Info.MPEG.Quality := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Quality;
+  vi := 1;
+  if Cover_Get_Image(vDescription, vImage) then
+  begin
+    SetLength(soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Covers, vi);
+    SetLength(soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Cover_Description, vi);
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Covers[vi] := vImage;
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Cover_Description[vi] := vDescription;
+    inc(vi);
+  end;
+
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.Song.Rating := Rating_Get;
+
+  soundplayer.player_actions.Tag.mp3.ID3v2.Free;
+
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.Filename := soundplayer.player_actions.Tag.mp3.ID3v2.Filename;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.Loaded := soundplayer.player_actions.Tag.mp3.ID3v2.Loaded;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.MajorVersion := soundplayer.player_actions.Tag.mp3.ID3v2.MajorVersion;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.MinorVersion := soundplayer.player_actions.Tag.mp3.ID3v2.MinorVersion;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.Size := soundplayer.player_actions.Tag.mp3.ID3v2.Size;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.FramesCount := soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.BitRate := soundplayer.player_actions.Tag.mp3.ID3v2.BitRate;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.CoverArtCount := soundplayer.player_actions.Tag.mp3.ID3v2.CoverArtCount;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.PlayTime := soundplayer.player_actions.Tag.mp3.ID3v2.PlayTime;
+
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.FrameSize := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.FrameSize;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.SampleRate := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.SampleRate;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.BitRate := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.BitRate;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.Padding := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Padding;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.Copyrighted := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Copyrighted;
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.Quality := soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Quality;
   if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmUnknown then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Unknown Type'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ChannelMode := 'Unknown Type'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmMono then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Mono'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ChannelMode := 'Mono'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmDualChannel then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Dual'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ChannelMode := 'Dual'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmJointStereo then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Joint'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ChannelMode := 'Joint'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ChannelMode = TMPEGChannelMode.tmpegcmStereo then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ChannelMode := 'Stereo';
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ChannelMode := 'Stereo';
   if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpeglUnknown then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Unknown Type'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.Layer := 'Unknown Type'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl1 then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 1'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.Layer := 'Mpeg Layer 1'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl2 then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 2'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.Layer := 'Mpeg Layer 2'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.Layer = TMPEGLayer.tmpegl3 then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.Layer := 'Mpeg Layer 3';
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.Layer := 'Mpeg Layer 3';
   if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeUnknown then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'Unknown Type'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ExtensionMode := 'Unknown Type'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeNone then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'None'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ExtensionMode := 'None'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeIntensity then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'Intensity'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ExtensionMode := 'Intensity'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeMS then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'meMs'
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ExtensionMode := 'meMs'
   else if soundplayer.player_actions.Tag.mp3.ID3v2.MPEGInfo.ModeExtension = TMPEGModeExtension.tmpegmeIntensityMS then
-    soundplayer.player_actions.Tag.mp3.Info.MPEG.ExtensionMode := 'IntensityMS';
+    soundplayer.player_actions.Tag.mp3.Info_ID3v2.MPEG.ExtensionMode := 'IntensityMS';
 
 
   // Implentamentions of Wav, Aiff, DS, DFF variables that not needed for mpeg
@@ -278,7 +306,7 @@ begin
     soundplayer.player_actions.Tag.mp3.Lyrics.Add(vString);
   end;
   CloseFile(vTextFile);
-  DeleteFile(addons.soundplayer.Path.Files+ 'templyric.txt');
+  DeleteFile(addons.soundplayer.Path.Files + 'templyric.txt');
 
   vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.Clear;
   vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines.AddStrings(soundplayer.player_actions.Tag.mp3.Lyrics);
@@ -288,11 +316,11 @@ begin
   else
     vSoundplayer.Tag.mp3.ID3v2.Lyrics_Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
 
-  //  Count lines in one line with #10#13 seperators
+  // Count lines in one line with #10#13 seperators
   // vMemoChars: Integer;
   // vMemoChars := Length(StringReplace(StringReplace(vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Text, #10, '', [rfReplaceAll]), #13, '', [rfReplaceAll]));
 
-  if soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount = 0 then
+  if soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.CoverArtCount = 0 then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight.TextSettings.FontColor := TAlphaColorRec.Grey;
     vSoundplayer.Tag.mp3.ID3v2.Cover_Remove.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -303,7 +331,7 @@ begin
   APICIndex := 0;
 
   Cover_SetArrows;
-  if Cover_Get_Image(vPath, vDescription, vImage) then
+  if Cover_Get_Image(vDescription, vImage) then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
     vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
@@ -313,7 +341,7 @@ begin
   soundplayer.player_actions.Tag.mp3.ID3v2.Free;
 end;
 
-function Cover_Get_Image(vFullPath: String; out vDesk: String; out vImage: TBitmap): Boolean;
+function Cover_Get_Image(out vDesk: String; out vImage: TBitmap): Boolean;
 var
   PictureType: Integer;
   PictureStream: TStream;
@@ -322,7 +350,6 @@ var
   Description: String;
   vi: Integer;
 begin
-  Get_ID3v2(vFullPath);
   Result := False;
   try
     PictureStream := TMemoryStream.Create;
@@ -395,7 +422,7 @@ end;
 
 procedure Cover_SetArrows;
 begin
-  if soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount > 1 then
+  if soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.CoverArtCount > 1 then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -413,7 +440,7 @@ var
   vDescription: String;
   vImage: TBitmap;
 begin
-  Get_ID3v2(soundplayer.player_actions.Tag.mp3.Info.General.Filename);
+  Get_ID3v2(soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.Filename);
   for i := 0 to soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
     if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[i].ID, 'APIC') then
@@ -421,7 +448,7 @@ begin
       if i < APICIndex then
       begin
         APICIndex := i;
-        if Cover_Get_Image(vCurrentSongPath, vDescription, vImage) then
+        if Cover_Get_Image(vDescription, vImage) then
         begin
           vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
           vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
@@ -439,7 +466,7 @@ var
   vDescription: String;
   vImage: TBitmap;
 begin
-  Get_ID3v2(soundplayer.player_actions.Tag.mp3.Info.General.Filename);
+  Get_ID3v2(soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.Filename);
   for i := 0 to soundplayer.player_actions.Tag.mp3.ID3v2.FrameCount - 1 do
   begin
     if IsSameFrameID(soundplayer.player_actions.Tag.mp3.ID3v2.Frames[i].ID, 'APIC') then
@@ -447,7 +474,7 @@ begin
       if i > CurrentAPICIndex then
       begin
         APICIndex := i;
-        if Cover_Get_Image(vCurrentSongPath, vDescription, vImage) then
+        if Cover_Get_Image(vDescription, vImage) then
         begin
           vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
           vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
@@ -575,8 +602,8 @@ var
 begin
   vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := nil;
   soundplayer.player_actions.Tag.mp3.ID3v2.DeleteFrame(CurrentAPICIndex);
-  soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount := soundplayer.player_actions.Tag.mp3.ID3v2.CoverArtCount;
-  if soundplayer.player_actions.Tag.mp3.Info.General.CoverArtCount = 0 then
+  soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.CoverArtCount := soundplayer.player_actions.Tag.mp3.ID3v2.CoverArtCount;
+  if soundplayer.player_actions.Tag.mp3.Info_ID3v2.General.CoverArtCount = 0 then
   begin
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowLeft.TextSettings.FontColor := TAlphaColorRec.Grey;
     vSoundplayer.Tag.mp3.ID3v2.Cover_ArrowRight.TextSettings.FontColor := TAlphaColorRec.Grey;
@@ -587,7 +614,7 @@ begin
   else
   begin
     APICIndex := 0;
-    if Cover_Get_Image(vCurrentSongPath, vDescription, vImage) then
+    if Cover_Get_Image(vDescription, vImage) then
     begin
       vSoundplayer.Tag.mp3.ID3v2.Cover_Label.Text := vDescription;
       vSoundplayer.Tag.mp3.ID3v2.Cover.Bitmap := vImage;
@@ -651,7 +678,7 @@ end;
 
 procedure Lyrics_Get_Add;
 begin
-  vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines:= vSoundplayer.Tag.mp3.Lyrics_Int.Lyrics_Box.Lines;
+  vSoundplayer.Tag.mp3.ID3v2.Lyrics_Memo.Lines := vSoundplayer.Tag.mp3.Lyrics_Int.Lyrics_Box.Lines;
   Lyrics_Get_Cancel;
 end;
 
@@ -790,7 +817,7 @@ begin
   begin
     sound.str_music[1] := BASS_StreamCreateFile(False, PChar(addons.soundplayer.Playlist.List.Songs.Strings[soundplayer.player_actions.Playing_Now]), 0, 0,
       BASS_SAMPLE_FLOAT {$IFDEF UNICODE} or BASS_UNICODE {$ENDIF});
-    if soundplayer.player = sPlay then
+    if soundplayer.Player = sPlay then
     begin
       BASS_ChannelPlay(sound.str_music[1], True);
       BASS_ChannelSetPosition(sound.str_music[1], vGetSongPosition, BASS_POS_BYTE);

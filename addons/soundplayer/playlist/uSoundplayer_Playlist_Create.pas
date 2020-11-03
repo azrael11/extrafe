@@ -16,7 +16,7 @@ uses
 procedure Load;
 procedure Free;
 
-procedure New(vPlaylistName, vPlaylistType: string);
+procedure New(vPlaylistName: String);
 
 // Create playlist based types
 procedure m3u(mPlaylistName: string; mNum: SmallInt);
@@ -27,6 +27,7 @@ procedure wpl(mPlaylistName: string; mNum: SmallInt);
 procedure expl(mPlaylistName: string; mNum: SmallInt);
 
 implementation
+
 uses
   uLoad_AllTypes,
   uWindows,
@@ -34,7 +35,7 @@ uses
   uSoundplayer_Actions,
   uSoundplayer_Playlist,
   uSoundplayer_Player,
-  uSoundplayer_Playlist_Const;
+  uSoundplayer_Playlist_Const, uDB, uDB_AUser;
 
 procedure Load;
 begin
@@ -48,7 +49,7 @@ begin
   vSoundplayer.Playlist.Create.Panel.SetBounds((vSoundplayer.scene.soundplayer.Width / 2) - 250, (vSoundplayer.scene.soundplayer.Height / 2) - 125, 500, 150);
   vSoundplayer.Playlist.Create.Panel.Visible := True;
 
-  CreateHeader(vSoundplayer.Playlist.Create.Panel, 'IcoMoon-Free', #$ea0a, TAlphaColorRec.DeepSkyBlue,'Create a new playlist.', False, nil);
+  CreateHeader(vSoundplayer.Playlist.Create.Panel, 'IcoMoon-Free', #$ea0a, TAlphaColorRec.DeepSkyBlue, 'Create a new playlist.', False, nil);
 
   vSoundplayer.Playlist.Create.main.Panel := TPanel.Create(vSoundplayer.Playlist.Create.Panel);
   vSoundplayer.Playlist.Create.main.Panel.Name := 'A_SP_Playlist_Create_Panel_Main';
@@ -67,25 +68,9 @@ begin
   vSoundplayer.Playlist.Create.main.Edit := TEdit.Create(vSoundplayer.Playlist.Create.main.Panel);
   vSoundplayer.Playlist.Create.main.Edit.Name := 'A_SP_Playlist_Creat_Edit';
   vSoundplayer.Playlist.Create.main.Edit.Parent := vSoundplayer.Playlist.Create.main.Panel;
-  vSoundplayer.Playlist.Create.main.Edit.SetBounds(10, 35, 400, 24);
+  vSoundplayer.Playlist.Create.main.Edit.SetBounds(10, 35, 480, 24);
   vSoundplayer.Playlist.Create.main.Edit.Text := '';
   vSoundplayer.Playlist.Create.main.Edit.Visible := True;
-
-  vSoundplayer.Playlist.Create.main.Text_Type := TLabel.Create(vSoundplayer.Playlist.Create.main.Panel);
-  vSoundplayer.Playlist.Create.main.Text_Type.Name := 'A_SP_Playlist_Create_Label_Type';
-  vSoundplayer.Playlist.Create.main.Text_Type.Parent := vSoundplayer.Playlist.Create.main.Panel;
-  vSoundplayer.Playlist.Create.main.Text_Type.SetBounds(420, 12, 100, 24);
-  vSoundplayer.Playlist.Create.main.Text_Type.Text := 'Choose type';
-  vSoundplayer.Playlist.Create.main.Text_Type.Font.Style := vSoundplayer.Playlist.Create.main.Text_Type.Font.Style + [TFontStyle.fsBold];
-  vSoundplayer.Playlist.Create.main.Text_Type.Visible := True;
-
-  vSoundplayer.Playlist.Create.main.Main_Type := TComboBox.Create(vSoundplayer.Playlist.Create.main.Panel);
-  vSoundplayer.Playlist.Create.main.Main_Type.Name := 'A_SP_Playlist_Create_Type';
-  vSoundplayer.Playlist.Create.main.Main_Type.Parent := vSoundplayer.Playlist.Create.main.Panel;
-  vSoundplayer.Playlist.Create.main.Main_Type.SetBounds(420, 35, 70, 24);
-  vSoundplayer.Playlist.Create.main.Main_Type.Items.Add('.m3u');
-  vSoundplayer.Playlist.Create.main.Main_Type.ItemIndex := 0;
-  vSoundplayer.Playlist.Create.main.Main_Type.Visible := True;
 
   vSoundplayer.Playlist.Create.main.Create := TButton.Create(vSoundplayer.Playlist.Create.main.Panel);
   vSoundplayer.Playlist.Create.main.Create.Name := 'A_SP_Playlist_Create_CreateButton';
@@ -117,40 +102,50 @@ begin
   extrafe.prog.State := 'addon_soundplayer';
 end;
 
-procedure New(vPlaylistName, vPlaylistType: string);
+procedure New(vPlaylistName: String);
 var
-  mNum: SmallInt;
-  vLists: TStringList;
-  vi: Integer;
-  vFoundTheSame: Boolean;
+  vList_Pos: Integer;
 begin
-  vFoundTheSame := False;
-  vLists := TStringList.Create;
-  vLists := uWindows.File_Names(addons.soundplayer.Path.Playlists, '*.*');
-  for vi := 0 to vLists.Count - 1 do
-  begin
-    if (vPlaylistName + vPlaylistType) = vLists.Strings[vi] then
-      vFoundTheSame := True;
-  end;
+  uDB.ExtraFE_Query_Local.Close;
+  uDB.ExtraFE_Query_Local.SQL.Clear;
+  uDB.ExtraFE_Query_Local.SQL.Text := 'SELECT * FROM addon_soundplayer_playlists WHERE Name=''' + vPlaylistName + ''' AND User_Id=''' +
+    uDB_AUser.Local.USER.Num.ToString + '''';
+  uDB.ExtraFE_Query_Local.Open;
 
-  if vFoundTheSame = False then
+  if uDB.ExtraFE_Query_Local.RecordCount = 0 then
   begin
-    mNum := addons.soundplayer.Playlist.Total;
-    Inc(mNum, 1);
-    if vPlaylistType = '.m3u' then
-      uSoundplayer_Playlist_Create.m3u(vPlaylistName, mNum)
-    else if vPlaylistType = 'pls' then
-      uSoundplayer_Playlist_Create.pls(vPlaylistName, mNum)
-    else if vPlaylistType = 'asx' then
-      uSoundplayer_Playlist_Create.asx(vPlaylistName, mNum)
-    else if vPlaylistType = 'xspf' then
-      uSoundplayer_Playlist_Create.xspf(vPlaylistName, mNum)
-    else if vPlaylistType = 'wpl' then
-      uSoundplayer_Playlist_Create.wpl(vPlaylistName, mNum)
-    else if vPlaylistType = 'expl' then
-      uSoundplayer_Playlist_Create.expl(vPlaylistName, mNum);
+    uDB.ExtraFE_Query_Local.Close;
+    uDB.ExtraFE_Query_Local.SQL.Clear;
+    uDB.ExtraFE_Query_Local.SQL.Text := 'SELECT MAX(Pos) FROM addon_soundplayer_playlists WHERE  User_Id=''' + uDB_AUser.Local.USER.Num.ToString + '''';
+    uDB.ExtraFE_Query_Local.Open;
 
-    uSoundplayer_Playlist_Const.New_State(vPlaylistName, vPlaylistType);
+    if uDB.ExtraFE_Query_Local.Fields[0].AsString = '' then
+      vList_Pos := 1
+    else
+      vList_Pos := uDB.ExtraFE_Query_Local.FieldByName('Pos').AsInteger + 1;
+
+    uDB.ExtraFE_Query_Local.Close;
+    uDB.ExtraFE_Query_Local.SQL.Clear;
+    uDB.ExtraFE_Query_Local.SQL.Text := 'INSERT INTO addon_soundplayer_playlists (User_Id, Name, Songs_Count, Active, Pos) VALUES (''' +
+      uDB_AUser.Local.USER.Num.ToString + ''', ''' + vPlaylistName + ''', ''0'', ''1'', ''' + vList_Pos.ToString + ''')';
+    uDB.ExtraFE_Query_Local.ExecSQL;
+
+    uDB.ExtraFE_Query_Local.Close;
+    uDB.ExtraFE_Query_Local.SQL.Clear;
+    uDB.ExtraFE_Query_Local.SQL.Text := 'SELECT * FROM addon_soundplayer_playlists WHERE Name=''' + vPlaylistName + ''' AND User_Id=''' +
+      uDB_AUser.Local.USER.Num.ToString + '''';
+    uDB.ExtraFE_Query_Local.Open;
+
+    uDB_AUser.Local.addons.Soundplayer_D.Last_Playlist_Num := uDB.ExtraFE_Query_Local.FieldByName('Id').AsInteger;
+    inc(uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count);
+
+    uDB.ExtraFE_Query_Local.Close;
+    uDB.ExtraFE_Query_Local.SQL.Clear;
+    uDB.ExtraFE_Query_Local.SQL.Text := 'UPDATE addon_soundplayer SET Last_Playlist_Num=''' + uDB_AUser.Local.addons.Soundplayer_D.Last_Playlist_Num.ToString +
+      ''', Playlist_Count=''' + uDB_AUser.Local.addons.Soundplayer_D.Playlist_Count.ToString + '''  WHERE User_Id=''' +
+      uDB_AUser.Local.USER.Num.ToString + '''';
+    uDB.ExtraFE_Query_Local.ExecSQL;
+
     Free;
   end
   else
