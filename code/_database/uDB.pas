@@ -5,7 +5,6 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  CodeSiteLogging,
   FMX.Dialogs,
   FireDAC.Stan.Intf,
   FireDAC.Stan.Option,
@@ -88,6 +87,7 @@ var
 
   ExtraFE_DB_Local: TFDConnection; { Local SQLite }
   ExtraFE_Query_Local: TFDQuery; { Local SQLite }
+  ExtraFE_Query_Local_2: TFDQuery; { Local SQLite }
 
   ExtraFE_FDGUIxWaitCursor: TFDGUIxWaitCursor;
 
@@ -164,12 +164,10 @@ begin
   except
     on E: Exception do
     begin
-      ShowMessage(E.ToString);
+      // ShowMessage(E.ToString);
     end;
   end;
   Result := ExtraFE_DB.Connected;
-
-  Result := True;
 end;
 
 function Online_Disconnect: Boolean;
@@ -210,6 +208,11 @@ begin
   ExtraFE_Query_Local.Name := 'ExtraFE_Local_Query';
   ExtraFE_Query_Local.Connection := ExtraFE_DB_Local;
   ExtraFE_Query_Local.Active := False;
+
+  ExtraFE_Query_Local_2 := TFDQuery.Create(main.Main_Form);
+  ExtraFE_Query_Local_2.Name := 'ExtraFE_Local_Query';
+  ExtraFE_Query_Local_2.Connection := ExtraFE_DB_Local;
+  ExtraFE_Query_Local_2.Active := False;
 
   uDB_Check.Local_tables;
 
@@ -336,8 +339,8 @@ begin
   ExtraFE_Query.ParamCheck := False;
   ExtraFE_Query.SQL.Add('INSERT INTO USERS (USER_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT) VALUES ("' +
     User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' + User_Reg.Name +
-    '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered + '", "' +
-    User_Reg.Last_Visit + '")');
+    '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered.ToString + '", "' +
+    User_Reg.Last_Visit.ToString + '")');
   ExtraFE_Query.ExecSQL;
   Result := True;
 end;
@@ -356,7 +359,6 @@ var
   end;
 
 begin
-  CodeSite.Send('Start Creating Default Tables for Registered User');
   Result := False;
   vLocal_Num := (uDB_AUser.Local.User.Num + 1).ToString;
 
@@ -373,61 +375,76 @@ begin
   vPath[9] := vPath[0] + '\data\database\';
 
   vColumns :=
-    'RESOLUTION_WIDTH, RESOLUTION_HEIGHT, FOULSCREEN, PATH, NAME, PATH_LIB, PATH_HISTORY, PATH_FONTS, THEME_NAME, THEME_PATH, THEME_NUM, LOCAL_DATA, DATABASE_PATH';
+    'Resolution_Width, Resolution_Height, Foulscreen, Path, Name, Path_Lib, Path_History, Path_Fonts, Theme_Name, Theme_Path, Theme_Num, Local_Data, Path_Database';
   vValues := '"1920", "1080", "TRUE", "' + vPath[0] + '",  "' + vPath[1] + '",  "' + vPath[2] + '",  "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] +
     '", "' + vPath[6] + '", "' + vPath[7] + '", "' + vPath[8] + '", "' + vPath[9] + '"';
   Query_Insert(ExtraFE_Query_Local, 'SETTINGS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Settings Table Adding Successfully');
 
   { User data }
-  vColumns := 'UNIQUE_ID, USERNAME, PASSWORD, EMAIL, AVATAR, NAME, SURNAME, GENDER, IP, COUNTRY, REGISTERED, LAST_VISIT_ONLINE, LAST_VISIT, ACTIVE_ONLINE';
+  vColumns := 'Unique_ID, Username, Password, Email, Avatar, Name, Surname, Gender, IP, Country, Registered, Last_Visit_Online, Last_Visit, Active_Online';
   vValues := '"' + User_Reg.User_ID + '", "' + User_Reg.Username + '", "' + User_Reg.Password + '", "' + User_Reg.Email + '", "' + User_Reg.Avatar + '", "' +
-    User_Reg.Name + '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' + User_Reg.Registered +
-    '", "' + User_Reg.Last_Visit + '", "' + User_Reg.Last_Visit + '", "1"';
+    User_Reg.Name + '", "' + User_Reg.Surname + '", "' + User_Reg.Genre + '", "' + User_Reg.IP + '", "' + User_Reg.Country + '", "' +
+    User_Reg.Registered.ToString + '", "' + User_Reg.Last_Visit.ToString + '", "' + User_Reg.Last_Visit.ToString + '", "1"';
   Query_Insert(ExtraFE_Query_Local, 'USERS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Users Table Adding Successfully');
 
   { Option Data }
-  vColumns := 'VIRTUAL_KEYBOARD';
+  vColumns := 'Virtual_Keyboard';
   vValues := '"0"';
   Query_Insert(ExtraFE_Query_Local, 'OPTIONS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Option Table Adding Successfully');
 
-  vColumns := 'user_id';
-  vValues := '"' + vLocal_Num + '"';
+  free_vpath;
+  vPath[0] := 'UP_ARROW';
+  vPath[1] := 'DOWN_ARROW';
+  vPath[2] := 'LEFT_ARROW';
+  vPath[3] := 'RIGHT_ARROW';
+  vPath[4] := 'ENTER';
+  vPath[5] := 'ESCAPE';
+  vPath[6] := 'C';
+  vPath[7] := 'UP_ARROW';
+  vPath[8] := 'DOWN_ARROW';
+  vPath[9] := 'LEFT_ARROW';
+  vPath[10] := 'RIGHT_ARROW';
+  vPath[11] := 'ENTER';
+  vPath[12] := 'ESCAPE';
+  vPath[13] := 'R';
+  vPath[14] := 'E';
+  vPath[15] := 'F';
+  vPath[16] := 'L';
+  vPath[17] := 'S';
+  vPath[18] := 'C';
+  vPath[19] := 'Q';
+  vColumns :=
+    'User_Id, Main_Up, Main_Down, Main_Left, Main_Right, Main_Action, Main_Escape, Main_Config, Emu_Up, Emu_Down, Emu_Left, Emu_Right, Emu_Action, Emu_Escape, Emu_Fav, Emu_AddFav, Emu_Filters, Emu_Lists, Emu_Search, Emu_Config, Emu_Screensaver';
+  vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' +
+    vPath[6] + '", "' + vPath[7] + '", "' + vPath[8] + '", "' + vPath[9] + '", "' + vPath[10] + '", "' + vPath[11] + '", "' + vPath[12] + '", "' + vPath[13] +
+    '", "' + vPath[14] + '", "' + vPath[15] + '", "' + vPath[16] + '", "' + vPath[17] + '", "' + vPath[18] + '", "' + vPath[19] + '" ';
   Query_Insert(ExtraFE_Query_Local, 'map_keyboard', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Keyboard mapping Table Adding Successfully');
 
   vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'map_mouse', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Mouse mapping Table Adding Successfully');
 
   vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'map_joystick_mmsystem', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Joystick mapping Table Adding Successfully');
 
   { User Statistics data }
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'USERS_STATISTICS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Statistics Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Users_Statistics', vColumns, vValues);
 
   { Emulation data }
   free_vpath;
   vPath[0] := extrafe.prog.Path + 'emu\';
 
-  vColumns := 'USER_ID, PATH';
+  vColumns := 'user_id, Path';
   vValues := '"' + vLocal_Num + '", "' + vPath[0] + '"';
-  Query_Insert(ExtraFE_Query_Local, 'EMULATORS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Emulators Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Emulators', vColumns, vValues);
 
   { Arcade Section Start }
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'ARCADE', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Arcade Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Arcade', vColumns, vValues);
 
   { Media }
   free_vpath;
@@ -458,47 +475,40 @@ begin
   vPath[24] := extrafe.prog.Path + 'emu\arcade\media\support_files\';
   vPath[25] := extrafe.prog.Path + 'emu\arcade\media\videos\';
 
-  vColumns := 'ARTWORKS, CABINETS, CONTROL_PANELS, COVERS, FLYERS, FANART, GAME_OVER, ICONS, MANUALS, MARQUEESS, PCBS, SNAPSHOTS, TITLES, ' +
-    'ARTWORK_PREVIEW, BOSSES, ENDS, HOW_TO, LOGOS, SCORES, SELECTS, STAMPS, VERSUS, WARNINGS, SOUNDTRACKS, SUPPORT_FILES, VIDEOS';
+  vColumns := 'Artworks, Cabinets, Control_Panels, Covers, Flyers, Fanart, Game_Over, Icons, Manuals, Marqueess, PCBs, Snapshots, Titles, ' +
+    'Artwork_Preview, Bosses, Ends, How_To, Logos, Scores, Selects, Stamps, Versus, Warnings, Soundtracks, Support_Files, Videos';
   vValues := '"' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '", "' + vPath[4] + '", "' + vPath[5] + '", "' + vPath[6] + '", "' +
     vPath[7] + '", "' + vPath[8] + '", "' + vPath[9] + '", "' + vPath[10] + '" , "' + vPath[11] + '", "' + vPath[12] + '", "' + vPath[13] + '", "' + vPath[14] +
     '", "' + vPath[15] + '", "' + vPath[16] + '", "' + vPath[17] + '", "' + vPath[18] + '", "' + vPath[19] + '", "' + vPath[20] + '", "' + vPath[21] + '", "' +
     vPath[22] + '", "' + vPath[23] + '", "' + vPath[24] + '", "' + vPath[25] + '"';
-  Query_Insert(ExtraFE_Query_Local, 'ARCADE_MEDIA', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Arcade_Media Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Arcade_Media', vColumns, vValues);
 
   { Mame }
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'ARCADE_MAME', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Mame Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Arcade_Mame', vColumns, vValues);
   { Arcade Section End }
 
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'COMPUTERS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Computers Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Computers', vColumns, vValues);
 
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'CONSOLES', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Consoles Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Consoles', vColumns, vValues);
 
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'HANDHELDS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Handhelds Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Handhelds', vColumns, vValues);
 
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'PINBALLS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Pinballs Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Pinballs', vColumns, vValues);
 
   { Addons data }
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'ADDONS', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Addons Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Addons', vColumns, vValues);
 
   { Addons Time }
   free_vpath;
@@ -506,22 +516,19 @@ begin
   vPath[1] := extrafe.prog.Path + 'data\addons\time\sounds\';
   vPath[2] := extrafe.prog.Path + 'data\addons\time\clock\';
 
-  vColumns := 'USER_ID, MENU_POSITION, FIRST_POP, PATH_IMAGES, PATH_SOUNDS, PATH_CLOCKS';
+  vColumns := 'user_id, Menu_Position, First_Pop, Path_Images, Path_Sounds, Path_Clocks';
   vValues := '"' + vLocal_Num + '", "0", TRUE, "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
   Query_Insert(ExtraFE_Query_Local, 'ADDON_TIME', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Addon_Time Table Adding Successfully');
 
   { Addons Time Time Data }
-  vColumns := 'USER_ID';
+  vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
-  Query_Insert(ExtraFE_Query_Local, 'ADDON_TIME_TIME', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Addon_Time_Time Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Addon_Time_Time', vColumns, vValues);
 
   { Addons Calendar }
-  vColumns := 'USER_ID, MENU_POSITION';
+  vColumns := 'user_id, Menu_Position';
   vValues := '"' + vLocal_Num + '" , "1"';
-  Query_Insert(ExtraFE_Query_Local, 'ADDON_CALENDAR', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Addon_Calendar Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Addon_Calendar', vColumns, vValues);
 
   { Addons Weather }
   free_vpath;
@@ -530,10 +537,9 @@ begin
   vPath[2] := extrafe.prog.Path + 'data\addons\weather\sounds\';
   vPath[3] := extrafe.prog.Path + 'data\addons\weather\temp\';
 
-  vColumns := 'USER_ID, PATH_ICONS, PATH_IMAGES, PATH_SOUNDS, PATH_TEMP';
+  vColumns := 'user_id, Path_Icons, Path_Images, Path_Sounds, Path_Temp';
   vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '", "' + vPath[3] + '"';
-  Query_Insert(ExtraFE_Query_Local, 'ADDON_WEATHER', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Addon_Weather Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Addon_Weather', vColumns, vValues);
 
   { Addons SoundPlayer }
   free_vpath;
@@ -541,19 +547,15 @@ begin
   vPath[1] := extrafe.prog.Path + 'data\addons\soundplayer\playlists\';
   vPath[2] := extrafe.prog.Path + 'data\addons\soundplayer\sounds\';
 
-  vColumns := 'USER_ID, PATH_IMAGES, PATH_PLAYLISTS, PATH_SOUNDS';
+  vColumns := 'user_id, Path_Images, Path_Playlists, Path_Sounds';
   vValues := '"' + vLocal_Num + '", "' + vPath[0] + '", "' + vPath[1] + '", "' + vPath[2] + '"';
-  Query_Insert(ExtraFE_Query_Local, 'ADDON_SOUNDPLAYER', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Addon_Soundplayer Table Adding Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Addon_Soundplayer', vColumns, vValues);
 
   { Addons AzPlay }
 
-  vColumns := 'USER_ID, COUNT, ACTIVE, AZHUNG';
+  vColumns := 'user_id, Count, Active, AzHung';
   vValues := '"' + vLocal_Num + '", "4", "0", "1"';
-  Query_Insert(ExtraFE_Query_Local, 'ADDON_AZPLAY', vColumns, vValues);
-  CodeSite.Send(csmLevel4, 'Addon_AzPlay Table Adding Successfully');
-
-  CodeSite.Send('All Tables Registered User Creating Successfully');
+  Query_Insert(ExtraFE_Query_Local, 'Addon_AzPlay', vColumns, vValues);
 end;
 
 { Queries Actions Local }

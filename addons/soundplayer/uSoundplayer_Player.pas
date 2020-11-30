@@ -914,7 +914,7 @@ begin
   begin
     vSoundplayer.player.Song_Title_Ani.Stop;
     soundplayer.player_actions.Title_Ani := False;
-    vSoundplayer.player.Song_Title.Position.X := extrafe.res.Half_Width - 800;
+    vSoundplayer.player.Song_Title.Position.X := uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 800;
     vSoundplayer.player.Song_Title.TextSettings.HorzAlign := TTextAlign.Center;
   end
   else

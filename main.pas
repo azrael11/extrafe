@@ -13,7 +13,12 @@ uses
   IdComponent,
   IdTCPConnection,
   IdTCPClient,
-  IdHTTP, FireDAC.UI.Intf, FireDAC.FMXUI.Wait, FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Comp.UI;
+  IdHTTP,
+  FireDAC.UI.Intf,
+  FireDAC.FMXUI.Wait,
+  FireDAC.Comp.Client,
+  FireDAC.Stan.Intf,
+  FireDAC.Comp.UI;
 
 type
   TMain_Form = class(TForm)
@@ -45,8 +50,8 @@ uses
 
 procedure TMain_Form.FormDestroy(Sender: TObject);
 begin
-//  uDB.Online_Disconnect;
-  ReportMemoryLeaksOnShutdown:= False;
+  // uDB.Online_Disconnect;
+  ReportMemoryLeaksOnShutdown := False;
 end;
 
 end.

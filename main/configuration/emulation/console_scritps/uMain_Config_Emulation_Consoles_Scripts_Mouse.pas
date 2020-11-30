@@ -15,14 +15,14 @@ type
   end;
 
 type
-  TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_LISTBOX = class(TObject)
-    procedure OnMouseClick(Sender: TObject);
+  TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_TLISTBOXITEM = class(TObject)
+    procedure OnClick(Sender: TObject);
   end;
 
 type
   TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_ACTIONS = record
     Button: TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_BUTTON;
-    ListBox: TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_LISTBOX;
+    ListBoxItem: TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_TLISTBOXITEM;
   end;
 
 implementation
@@ -44,7 +44,7 @@ begin
   else if TButton(Sender).Name = 'Script_Nes_Install_Main_Back' then
     uEmulation_Consoles_Nes_Slide_To_Previous
   else if TButton(Sender).Name = 'Script_Nes_Install_Main_Tab4_Find' then
-    uMain_Config_Emulation_Consoles_Scripts_Nes_Install.Script_Nes_Install.Main.Tab4_1.Open_Dialog.Execute
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install.Nes_I.Main.Tab4_1.Open_Dialog.Execute
   else if TButton(Sender).Name = 'Script_Nes_Install_Main_Tab4_Start' then
     uEmulation_Consoles_Nes_Installation;
 
@@ -60,21 +60,22 @@ begin
 
 end;
 
-{ TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_LISTBOX }
 
-procedure TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_LISTBOX.OnMouseClick(Sender: TObject);
+{ TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_TLISTBOXITEM }
+
+procedure TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_TLISTBOXITEM.OnClick(Sender: TObject);
 begin
-  uEmulation_Consoles_Nes_ShowEmulatorInfo(TListBox(Sender).ItemIndex);
+  uEmulation_Consoles_Nes_ShowEmulatorInfo(TListBoxItem(Sender).Text);
 end;
 
 initialization
 
 ex_main.Input.mouse_script_consoles.Button := TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_BUTTON.Create;
-ex_main.Input.mouse_script_consoles.ListBox := TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_LISTBOX.Create;
+ex_main.Input.mouse_script_consoles.ListBoxItem := TMAIN_MOUSE_CONFIG_EMULATION_CONSOLES_TLISTBOXITEM.Create;
 
 finalization
 
 ex_main.Input.mouse_script_consoles.Button.Free;
-ex_main.Input.mouse_script_consoles.ListBox.Free;
+ex_main.Input.mouse_script_consoles.ListBoxItem.Free;
 
 end.

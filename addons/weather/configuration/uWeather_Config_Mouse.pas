@@ -240,7 +240,8 @@ begin
   if extrafe.prog.state = 'addon_weather_config' then
   begin
     if TButton(Sender).Name = 'A_W_Config_Left_Button_' + TButton(Sender).Tag.ToString then
-      uWeather_Config_ShowPanel(TButton(Sender).Tag);
+      if vWeather.Config.main.Left.Panel_Blur.Enabled = False then
+        uWeather_Config_ShowPanel(TButton(Sender).Tag);
   end;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
@@ -278,7 +279,8 @@ end;
 
 procedure TWEATHER_ADDON_CONFIG_BUTTON.OnMouseEnter(Sender: TObject);
 begin
-  TButton(Sender).Cursor := crHandPoint;
+  if vWeather.Config.main.Left.Panel_Blur.Enabled = False then
+    TButton(Sender).Cursor := crHandPoint;
 end;
 
 procedure TWEATHER_ADDON_CONFIG_BUTTON.OnMouseLeave(Sender: TObject);
@@ -377,9 +379,15 @@ begin
   if TImage(Sender).Name = 'A_W_Config_Provider_' + TImage(Sender).TagString + '_Image' then
   begin
     if TImage(Sender).TagString = 'yahoo' then
-      uWeather_Config_Provider.Check_Yahoo
+    begin
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider <> 'yahoo' then
+        uWeather_Config_Provider.Check_Yahoo;
+    end
     else if TImage(Sender).TagString = 'openweathermap' then
-      uWeather_Config_Provider.Check_OpenWeatherMap;
+    begin
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider <> 'openweathermap' then
+        uWeather_Config_Provider.Check_OpenWeatherMap;
+    end;
   end;
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin

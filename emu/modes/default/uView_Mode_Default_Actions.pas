@@ -180,7 +180,7 @@ begin
   ri := vSelected - 10;
   for vi := 0 to 19 do
   begin
-    if ((ri + vi) <= vGames_Count) and ((ri + vi) >= 0) then
+    if ((ri + vi) <= vGames_Count) and ((ri + vi) >= 0) and (vi < vList_Roms.Count) then
     begin
       if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri + vi] + '.ico') then
         Emu_VM_Default.Gamelist.Games.Line[vi].Icon.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Icons + vList_Roms[ri + vi] + '.ico')
@@ -238,11 +238,11 @@ procedure Refresh_Scene(vSelected: Integer; vList_Roms: TStringlist);
 begin
   if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4') then
   begin
-    Emu_VM_Default.Media.Video.Video_Timer_Cont.Enabled := False;
-    Emu_VM_Default_Var.Video.Loaded := False;
-    Emu_VM_Default_Var.Video.Active_Video := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4';
-    Emu_VM_Default.Media.Video.Video.Play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4');
-    Emu_VM_Default_Var.Video.Times := 0;
+    { Emu_VM_Default.Media.Video.Video_Timer_Cont.Enabled := False;
+      Emu_VM_Default_Var.Video.Loaded := False;
+      Emu_VM_Default_Var.Video.Active_Video := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4';
+      Emu_VM_Default.Media.Video.Video.Play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4');
+      Emu_VM_Default_Var.Video.Times := 0; }
   end
   else
   begin
@@ -681,10 +681,6 @@ begin
   Emu_VM_Default.Gamelist.Lists.Lists_Text.Text := Emu_VM_Default_Var.Lists.Selected;
   Emu_VM_Default_Var.Gamelist.Selected := 0;
   Emu_VM_Default_Var.Gamelist.Old_Selected := -100;
-
-  uView_Mode_Default_Actions.Refresh;
-
-  // When user check to save its locations of things
 end;
 
 { TMOVE_TIMER }

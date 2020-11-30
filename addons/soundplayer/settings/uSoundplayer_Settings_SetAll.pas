@@ -14,7 +14,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_Actions,
-  uSoundplayer_AllTypes;
+  uSoundplayer_AllTypes, uDB_AUser;
 
 procedure uSoundplayer_Settings_Set;
 begin
@@ -27,7 +27,7 @@ begin
   vSoundplayer.config.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.config.Panel.Name := 'A_SP_Settings';
   vSoundplayer.config.Panel.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.config.Panel.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Half_Height - 450, 800, 800);
+  vSoundplayer.config.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 400, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 450, 800, 800);
   vSoundplayer.config.Panel.Visible := True;
 
   CreateHeader(vSoundplayer.config.Panel, 'IcoMoon-Free', #$e995, TAlphaColorRec.DeepSkyBlue, 'Soundplayer configuration', False, nil);

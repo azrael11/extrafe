@@ -27,8 +27,7 @@ uses
   uTime_AllTypes,
   uSoundplayer_AllTypes,
   uWeather_AllTypes,
-  uPlay_AllTypes,
-  CodeSiteLogging;
+  uPlay_AllTypes;
 
 /// Global Window Header
 ///
@@ -84,24 +83,6 @@ type
   end;
 
 type
-  TEXTRAFE_RESOLUTION_MONITOR = record
-    Horizontal: Integer;
-    Vertical: Integer;
-    Refresh_Rate: Integer;
-    Bits_Per_Pixel: Integer;
-  end;
-
-type
-  TEXTRAFE_RESOLUTION = Record
-    Monitor: TEXTRAFE_RESOLUTION_MONITOR;
-    Fullscreen: Boolean;
-    Width: Integer;
-    Half_Width: Integer;
-    Height: Integer;
-    Half_Height: Integer;
-  end;
-
-type
   TEXTRAFE_STYLES = record
     Path: String;
     Num: Integer;
@@ -123,7 +104,6 @@ type
     users_active: Integer;
     users_total: Integer;
     user_login: Boolean;
-    res: TEXTRAFE_RESOLUTION;
     style: TEXTRAFE_STYLES;
   end;
   /// /////////////////////////////////////////////////////////////////////////////
@@ -327,6 +307,7 @@ type
     Pass_V: TEdit;
     Pass_Show: TText;
     Pass_Show_Glow: TGlowEffect;
+    Pass_Remember: TCheckBox;
     NotRegister: TText;
     Warning: Tlabel;
     Forget_Pass: TText;
@@ -626,23 +607,19 @@ procedure TLOADING_REGISTER_SUCCESS_TIMER.OnTimer(Sender: TObject);
 begin
   if uLoad_Register.vTask.Status = TTaskStatus.Completed then
   begin
-    CodeSite.Send('Threading task is completed');
     ex_load.Reg_Success.Timer.Enabled := False;
     if uLoad_Register.Is_user_registered then
     begin
-      CodeSite.Send('User is finally resistered. Begin actions to login');
       FreeAndNil(ex_load.Reg_Success.Panel);
       Inc(extrafe.users_total, 1);
       uLoad_Register.Cancel;
     end
     else
     begin
-      CodeSite.Send('User not registered. Beging actions to go back');
       FreeAndNil(ex_load.Reg_Success.Panel);
       ex_load.Reg.Panel.Visible := True;
       ex_load.Reg.Main.Data.Panel.Visible := True;
       uLoad_Register.Fail;
-      CodeSite.Send(csmLevel5, 'User is in login mode');
     end;
     FreeAndNil(ex_load.Reg_Success.Panel);
 

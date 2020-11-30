@@ -253,6 +253,7 @@ type
 type
   TADDON_WEATHER_PROVIDER_YAHOO = record
     Data_Town: array of TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN;
+    Spot_Stop: Single;
   end;
   { Yahoo Variables Area END }
 
@@ -482,6 +483,7 @@ type
 
 type
   TADDON_WEATHER_SETTINGS = record
+    Check_Provider: Boolean;
     Edit_Lock: Boolean;
     Selected_Town: Integer;
     Refresh_Once: Boolean;
@@ -505,6 +507,11 @@ type
   end;
 
 type
+  TWEATHER_ANIMATION_SPOT = class(TObject)
+    procedure OnAniFinish(Sender: TObject);
+  end;
+
+type
   TWEATHER_ANIMATION_MAIN = class(TObject)
     procedure OnAniStop(Sender: TObject);
   end;
@@ -512,6 +519,7 @@ type
 type
   TADDON_WEATHER_ANIMATIONS = record
     main: TWEATHER_ANIMATION_MAIN;
+    spot: TWEATHER_ANIMATION_SPOT;
     main_stop: Boolean;
   end;
 
@@ -553,6 +561,9 @@ type
 
 type
   TGENERAL_INFO = record
+    Line_Vert_1: TRadiantLine;
+    Line_Vert_2: TRadiantLine;
+    Line_Vert_3: TRadiantLine;
     Town_Image_Left_Arrow: TText;
     Town_Image_Left_Arrow_Glow: TGlowEffect;
     Town_Image_Right_Arrow: TText;
@@ -570,6 +581,7 @@ type
     Date: TText;
     Time: TText;
     Time_Icon: TText;
+    Line_Gen: TRadiantLine;
     Image: TImage;
     Text_Image: TText;
     Town_and_Country: TText;
@@ -589,21 +601,21 @@ type
     High: TText;
     High_Icon: TText;
     FeelsLike: TText;
-    Probability_Icon: TText;
-    Probability: TText;
-    Moon: TText;
-    Moon_Phase: TText;
     Refresh_Text: TText;
+    Refresh_Line: TRadiantLine;
     Refresh: TText;
     Refresh_Glow: TGlowEffect;
     ShowImage: TText;
     ShowImage_Blur: TGaussianBlurEffect;
     ShowImage_Glow: TGlowEffect;
+    Info_Line: TRadiantLine;
+    Info_Line_wind: TRadiantLine;
+    Info_Line_atmosphere: TRadiantLine;
   end;
 
 type
   TWIND_INFO = record
-    Text: TText;
+    Header: TText;
     Turbine: TImage;
     Turbine_Stand: TImage;
     Turbine_Animation: TFloatAnimation;
@@ -611,14 +623,17 @@ type
     Turbine_Small_Stand: TImage;
     Turbine_Small_Animation: TFloatAnimation;
     Speed: TText;
+    Speed_Icon: TText;
     Direction: TText;
-    Direction_Arrow: TText;
+    Direction_Text: TText;
+    Direction_Icon: TText;
     Chill: TText;
     Chill_Icon: TImage;
   end;
 
 type
   TATMOSPHERE_INFO = record
+    Header: TText;
     UV: TText;
     UV_Index: TText;
     Pressure: TText;
@@ -627,15 +642,21 @@ type
     Visibility_Icon: TText;
     Humidity: TText;
     Humidity_Icon: TText;
+    Probability_Icon: TText;
+    Probability: TText;
   end;
 
 type
   TASTRONOMY_INFO = record
+    Header: TText;
+    Line: TRadiantLine;
+    Moon: TText;
+    Moon_Phase: TText;
     Sunset: TText;
     Sunrise: TText;
     Sunrise_Image: TText;
     Sunset_Image: TText;
-    Spot: TImage;
+    spot: TText;
     Spot_Text: TText;
     Spot_Ani: TPathAnimation;
   end;
@@ -677,10 +698,7 @@ type
 type
   TFORECAST_HOURLY_INFO = record
     Title: TText;
-    Left: TText;
-    Left_Glow: TGlowEffect;
-    Right: TText;
-    Right_Glow: TGlowEffect;
+    Line: TRadiantLine;
     Box: THorzScrollBox;
     Hourly: array [0 .. 24] of TFORECAST_HOURLY_PANEL_INFO;
   end;
@@ -712,12 +730,9 @@ type
 
 type
   TFORECAST_DAILY_INFO = record
+    Title: TText;
     Line: TRadiantLine;
-    Up: TText;
-    Up_Glow: TGlowEffect;
     Box: TVertScrollBox;
-    Down: TText;
-    Down_Glow: TGlowEffect;
     Daily: array [0 .. 10] of TFORECAST_DAILY_PANEL_INFO;
   end;
 
@@ -738,9 +753,11 @@ type
 
 type
   TSERVER_INFO = record
+    Line: TRadiantLine;
     LastUpdate: TText;
     Powered_By: TText;
     Icon: TImage;
+    Icon_Glow: TGlowEffect;
   end;
 
 type
@@ -882,11 +899,11 @@ type
     ground_level: TText;
     temp_kf: TText;
     Description_Info: TText;
-    Description: TText;
+    description: TText;
     Wind_Info: TText;
     Wind_Icon: TText;
     Wind_Speed: TText;
-    Wind_Degree_Info : TText;
+    Wind_Degree_Info: TText;
     Wind_Degree: TText;
     Clouds_Icon: TText;
     Clouds: TText;
@@ -957,13 +974,19 @@ type
     Settings_Ani: TFloatAnimation;
     Settings_Glow: TGlowEffect;
     UpLine: TImage;
+    Text_Line_1: TText;
+    Text_Line_2: TText;
+    Text_Line_3: TText;
+    Line_Image: TText;
     MiddleLine: TImage;
     DownLine: TImage;
     Map: TADDON_WEATHER_MAP;
     Arrow_Left: TText;
     Arrow_Left_Glow: TGlowEffect;
+    Arrow_Left_Text: TText;
     Arrow_Right: TText;
     Arrow_Right_Glow: TGlowEffect;
+    Arrow_Right_Text: TText;
     Main_Timer: TTimer;
     Tab_Yahoo: array [0 .. 255] of TTAB_YAHOO_PANEL;
     Tab_OWM: array [0 .. 255] of TTAB_OWM_PANEL;
@@ -994,6 +1017,8 @@ type
     Icon: TImage;
     Icon_Glow: TGlowEffect;
     Desc: TALText;
+    Lay: TLayout;
+    Lay_Ani: TAniIndicator;
   end;
 
 type
@@ -1019,7 +1044,8 @@ type
     Cancel: TButton;
     ImageList: TImageList;
     Ani_Panel: TPanel;
-    Ani_Text: TLabel;
+    Ani_Text_Line_1: TLabel;
+    Ani_Text_Line_2: TLabel;
     Ani: TFloatAnimation;
   end;
 
@@ -1155,6 +1181,7 @@ type
 type
   TWEATHER_CONFIG_PANEL_LEFT = record
     Panel: TPanel;
+    Panel_Blur: TGaussianBlurEffect;
     Buttons: array [0 .. 3] of TButton;
     Provider: TImage;
   end;
@@ -1188,16 +1215,30 @@ implementation
 
 uses
   uWeather_Sounds,
-  uWeather_Providers_Yahoo;
+  uWeather_Providers_Yahoo, uDB_AUser, uWeather_Actions,
+  uWeather_Providers_OpenWeatherMap;
 
 { TADDON_WEATHER_MAINTIMER }
 
 procedure TADDON_WEATHER_MAINTIMER.OnTimer(Sender: TObject);
+var
+  vX, vY: String;
 begin
-  if TTimer(Sender).Name = 'A_W_Effect_Timer' then
-    uWeather_Sounds_Refresh_Effect
-  else if TTimer(Sender).Name = 'A_W_Providers_Yahoo_Time' then
-    uWeather_Providers_Yahoo.Update_Time(vWeather.Scene.Control.TabIndex);
+  if weather.Config.Check_Provider = False then
+  begin
+    if TTimer(Sender).Name = 'A_W_Effect_Timer' then
+      uWeather_Sounds.Refresh_Effect;
+    if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+    begin
+      if TTimer(Sender).Name = 'A_W_Providers_Yahoo_Time' then
+        uWeather_Providers_Yahoo.Update_Time(vWeather.Scene.Control.TabIndex);
+      uWeather_Providers_Yahoo.UpDate_SunSpot;
+    end
+    else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
+    begin
+      uWeather_Providers_OpenWeatherMap.UpDate_SunSpot;
+    end;
+  end;
 end;
 
 { TADDON_WEATHER_MAP }
@@ -1216,27 +1257,32 @@ end;
 
 procedure TWEATHER_ANIMATION_MAIN.OnAniStop(Sender: TObject);
 begin
-  //  if TPathAnimation(Sender).Name = 'A_W_Weather_Astronomy_Spot_Animation' then
-//  begin
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Text := TimeToStr(Now);
-//    vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := True;
-//  end
-//  else
-//  begin
-    weather.Ani.main_stop := True;
-    vWeather.Scene.Arrow_Left_Glow.Enabled := False;
-    vWeather.Scene.Arrow_Right_Glow.Enabled := False;
-//    FreeAndNil(vWeather.Scene.weather);
-//    addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Wind.Speed, True);
-//    uWeather_Actions_Show_AstronomyAnimation;
-//  end;
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  begin
+    begin
+      weather.Ani.main_stop := True;
+      vWeather.Scene.Arrow_Left_Glow.Enabled := False;
+      vWeather.Scene.Arrow_Right_Glow.Enabled := False;
+      uWeather_Actions.Show_AstronomyAnimation;
+    end;
+  end;
+end;
+
+{ TWEATHER_ANIMATION_SPOT }
+
+procedure TWEATHER_ANIMATION_SPOT.OnAniFinish(Sender: TObject);
+begin
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  begin
+    if TPathAnimation(Sender).Name = 'A_W_Weather_Astronomy_Spot_Animation_' + TPathAnimation(Sender).Tag.ToString then
+      TPathAnimation(Sender).Stop;
+  end;
 end;
 
 initialization
 
 weather.Timer.main := TADDON_WEATHER_MAINTIMER.Create;
 weather.Ani.main := TWEATHER_ANIMATION_MAIN.Create;
-
 
 finalization
 

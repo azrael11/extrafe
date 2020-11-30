@@ -29,16 +29,26 @@ uses
 
 procedure Load;
 begin
+  extrafe.prog.State := 'main_config_profile_machine';
 
-  mainScene.Config.main.R.Profile.Machine.VBox := TVertScrollBox.Create(mainScene.Config.main.R.Profile.TabItem[2]);
-  mainScene.Config.main.R.Profile.Machine.VBox.Name := 'Main_Config_Profile_Machine_VerticalScrollBox';
-  mainScene.Config.main.R.Profile.Machine.VBox.Parent := mainScene.Config.main.R.Profile.TabItem[2];
-  mainScene.Config.main.R.Profile.Machine.VBox.Align := TAlignLayout.Client;
-  mainScene.Config.main.R.Profile.Machine.VBox.Visible := True;
+  if mainScene.Config.main.R.Profile.Machine.Layout = nil then
+  begin
+    mainScene.Config.main.R.Profile.Machine.Layout := TLayout.Create(mainScene.Config.main.R.Profile.TabItem[2]);
+    mainScene.Config.main.R.Profile.Machine.Layout.Name := 'Main_Config_Profile_Machine';
+    mainScene.Config.main.R.Profile.Machine.Layout.Parent := mainScene.Config.main.R.Profile.TabItem[2];
+    mainScene.Config.main.R.Profile.Machine.Layout.SetBounds(0, 0, mainScene.Config.main.R.Profile.TabControl.Width,
+      mainScene.Config.main.R.Profile.TabControl.Height);
+    mainScene.Config.main.R.Profile.Machine.Layout.Visible := True;
 
-  Machine_Info;
-  Internet_Network_Info;
+    mainScene.Config.main.R.Profile.Machine.VBox := TVertScrollBox.Create(mainScene.Config.main.R.Profile.Machine.Layout);
+    mainScene.Config.main.R.Profile.Machine.VBox.Name := 'Main_Config_Profile_Machine_VerticalScrollBox';
+    mainScene.Config.main.R.Profile.Machine.VBox.Parent := mainScene.Config.main.R.Profile.Machine.Layout;
+    mainScene.Config.main.R.Profile.Machine.VBox.Align := TAlignLayout.Client;
+    mainScene.Config.main.R.Profile.Machine.VBox.Visible := True;
 
+    Machine_Info;
+    Internet_Network_Info;
+  end;
 end;
 
 procedure Machine_Info;
@@ -152,8 +162,8 @@ end;
 procedure Internet_Network_Info;
 var
   myJSON_Value: TJSONValue;
+  vOutValue: String;
 begin
-
   mainScene.Config.main.R.Profile.Machine.Net.Box := TGroupBox.Create(mainScene.Config.main.R.Profile.Machine.VBox);
   mainScene.Config.main.R.Profile.Machine.Net.Box.Name := 'Main_Config_Profile_Machine_Net_Box';
   mainScene.Config.main.R.Profile.Machine.Net.Box.Parent := mainScene.Config.main.R.Profile.Machine.VBox;
@@ -226,83 +236,88 @@ begin
   mainScene.Config.main.R.Profile.Machine.Net.HostName.Name := 'Main_Config_Profile_Machine_Net_HostName';
   mainScene.Config.main.R.Profile.Machine.Net.HostName.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
   mainScene.Config.main.R.Profile.Machine.Net.HostName.SetBounds(280, 20, 140, 24);
-  mainScene.Config.main.R.Profile.Machine.Net.HostName.Text := 'Hostname : ';
+  mainScene.Config.main.R.Profile.Machine.Net.HostName.Text := 'Organization : ';
   mainScene.Config.main.R.Profile.Machine.Net.HostName.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.HostName_V := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.HostName_V.Name := 'Main_Config_Profile_Machine_Net_HostName_V';
   mainScene.Config.main.R.Profile.Machine.Net.HostName_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.HostName_V.SetBounds(380, 20, 440, 24);
-  mainScene.Config.main.R.Profile.Machine.Net.HostName_V.Text := myJSON_Value.GetValue<String>('hostname');
+  mainScene.Config.main.R.Profile.Machine.Net.HostName_V.SetBounds(380, 20, 180, 50);
+  if myJSON_Value.TryGetValue('org', vOutValue) then
+    mainScene.Config.main.R.Profile.Machine.Net.HostName_V.Text := myJSON_Value.GetValue<String>('org')
+  else
+    mainScene.Config.main.R.Profile.Machine.Net.HostName_V.Text := 'unknown';
+  mainScene.Config.main.R.Profile.Machine.Net.HostName_V.TextSettings.VertAlign := TTextAlign.Leading;
+  mainScene.Config.main.R.Profile.Machine.Net.HostName_V.WordWrap := True;
   mainScene.Config.main.R.Profile.Machine.Net.HostName_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.City := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.City.Name := 'Main_Config_Profile_Machine_Net_City';
   mainScene.Config.main.R.Profile.Machine.Net.City.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.City.SetBounds(280, 44, 140, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.City.SetBounds(280, 68, 140, 24);
   mainScene.Config.main.R.Profile.Machine.Net.City.Text := 'City : ';
   mainScene.Config.main.R.Profile.Machine.Net.City.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.City_V := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.City_V.Name := 'Main_Config_Profile_Machine_Net_City_V';
   mainScene.Config.main.R.Profile.Machine.Net.City_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.City_V.SetBounds(380, 44, 440, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.City_V.SetBounds(380, 68, 440, 24);
   mainScene.Config.main.R.Profile.Machine.Net.City_V.Text := myJSON_Value.GetValue<String>('city');
   mainScene.Config.main.R.Profile.Machine.Net.City_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Region := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Region.Name := 'Main_Config_Profile_Machine_Net_Region';
   mainScene.Config.main.R.Profile.Machine.Net.Region.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Region.SetBounds(280, 68, 140, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Region.SetBounds(280, 92, 140, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Region.Text := 'Region : ';
   mainScene.Config.main.R.Profile.Machine.Net.Region.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Region_V := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Region_V.Name := 'Main_Config_Profile_Machine_Net_Region_V';
   mainScene.Config.main.R.Profile.Machine.Net.Region_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Region_V.SetBounds(380, 68, 440, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Region_V.SetBounds(380, 92, 440, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Region_V.Text := myJSON_Value.GetValue<String>('region');
   mainScene.Config.main.R.Profile.Machine.Net.Region_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol.Name := 'Main_Config_Profile_Machine_Net_Country_Symbol';
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol.SetBounds(280, 92, 140, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol.SetBounds(280, 116, 140, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol.Text := 'Country_Symbol : ';
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol_V := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol_V.Name := 'Main_Config_Profile_Machine_Net_Country_Symbol_V';
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol_V.SetBounds(380, 92, 440, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol_V.SetBounds(380, 116, 440, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol_V.Text := myJSON_Value.GetValue<String>('country');
   mainScene.Config.main.R.Profile.Machine.Net.Country_Symbol_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Localization := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Localization.Name := 'Main_Config_Profile_Machine_Net_Localization';
   mainScene.Config.main.R.Profile.Machine.Net.Localization.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Localization.SetBounds(280, 116, 140, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Localization.SetBounds(280, 140, 140, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Localization.Text := 'Localization : ';
   mainScene.Config.main.R.Profile.Machine.Net.Localization.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Localization_V := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Localization_V.Name := 'Main_Config_Profile_Machine_Net_Localization_V';
   mainScene.Config.main.R.Profile.Machine.Net.Localization_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Localization_V.SetBounds(380, 116, 440, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Localization_V.SetBounds(380, 140, 440, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Localization_V.Text := myJSON_Value.GetValue<String>('loc');
   mainScene.Config.main.R.Profile.Machine.Net.Localization_V.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone.Name := 'Main_Config_Profile_Machine_Net_Time_Zone';
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Time_Zone.SetBounds(280, 140, 140, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Time_Zone.SetBounds(280, 164, 140, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone.Text := 'Time Zone : ';
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone.Visible := True;
 
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone_V := TLabel.Create(mainScene.Config.main.R.Profile.Machine.Net.Box);
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone_V.Name := 'Main_Config_Profile_Machine_Net_Time_Zone_V';
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone_V.Parent := mainScene.Config.main.R.Profile.Machine.Net.Box;
-  mainScene.Config.main.R.Profile.Machine.Net.Time_Zone_V.SetBounds(380, 140, 440, 24);
+  mainScene.Config.main.R.Profile.Machine.Net.Time_Zone_V.SetBounds(380, 164, 440, 24);
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone_V.Text := myJSON_Value.GetValue<String>('timezone');
   mainScene.Config.main.R.Profile.Machine.Net.Time_Zone_V.Visible := True;
 

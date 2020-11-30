@@ -48,9 +48,9 @@ uses
 
 procedure uPlay_Actions_ReturnToMain(vIconsNum: Integer);
 begin
-  emulation.Selection_Ani.StartValue := extrafe.res.Height;
+  emulation.Selection_Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height;
   emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
-  mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
+  mainScene.Footer.Back_Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height;
   mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
   emulation.Selection_Ani.Enabled := True;
   vPlay.Main_Ani.Start;
@@ -72,7 +72,7 @@ begin
   vPlay.Img_Box_Ani.StartValue := vPlay.Img_Box.Position.X;
   vPlay.Img_Box_Ani.StopValue := -(vPlay.Img_Box.Width + 10);
   vPlay.Info_Ani.StartValue := vPlay.Info.Position.X;
-  vPlay.Info_Ani.StopValue := extrafe.res.Width + 10;
+  vPlay.Info_Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Width + 10;
   vPlay.Img_Box_Ani.Start;
   vPlay.Info_Ani.Start;
   addons.play.Actions.Game := vGame;

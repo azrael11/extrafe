@@ -13,7 +13,7 @@ uses
   FMX.Types,
   FMX.Filter.Effects,
   ALFmxTabControl,
-  uWeather_AllTypes;
+  uWeather_AllTypes, Radiant.Shapes, FMX.Graphics;
 
 procedure Load;
 procedure Control;
@@ -35,7 +35,7 @@ begin
   vWeather.Scene.Weather := TImage.Create(mainScene.main.Down_Level);
   vWeather.Scene.Weather.Name := 'A_Weather';
   vWeather.Scene.Weather.Parent := mainScene.main.Down_Level;
-  vWeather.Scene.Weather.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
+  vWeather.Scene.Weather.SetBounds(0, 130, uDB_AUser.Local.SETTINGS.Resolution.Width, uDB_AUser.Local.SETTINGS.Resolution.Height - 130);
   vWeather.Scene.Weather.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_back.png');
   vWeather.Scene.Weather.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.Weather.Visible := True;
@@ -64,23 +64,64 @@ begin
   vWeather.Scene.Blur.BlurAmount := 0.5;
   vWeather.Scene.Blur.Enabled := False;
 
-  vWeather.Scene.UpLine := TImage.Create(vWeather.Scene.Weather);
+  vWeather.Scene.UpLine := TImage.Create(vWeather.Scene.Back);
   vWeather.Scene.UpLine.Name := 'A_W_UpLine_Image';
-  vWeather.Scene.UpLine.Parent := vWeather.Scene.Weather;
+  vWeather.Scene.UpLine.Parent := vWeather.Scene.Back;
   vWeather.Scene.UpLine.SetBounds(0, 0, vWeather.Scene.Weather.Width, 10);
   vWeather.Scene.UpLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.UpLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.UpLine.Visible := True;
 
-  vWeather.Scene.MiddleLine := TImage.Create(vWeather.Scene.Weather);
+  vWeather.Scene.Text_Line_1 := TText.Create(vWeather.Scene.Back);
+  vWeather.Scene.Text_Line_1.Name := 'A_W_Text_Line_1';
+  vWeather.Scene.Text_Line_1.Parent := vWeather.Scene.Back;
+  vWeather.Scene.Text_Line_1.SetBounds(0, 300, uDB_AUser.Local.SETTINGS.Resolution.Width, 60);
+  vWeather.Scene.Text_Line_1.Font.Size := 48;
+  vWeather.Scene.Text_Line_1.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Text_Line_1.Text := '';
+  vWeather.Scene.Text_Line_1.TextSettings.Font.Style := vWeather.Scene.Text_Line_1.TextSettings.Font.Style + [TFontStyle.fsBold];
+  vWeather.Scene.Text_Line_1.Visible := False;
+
+  vWeather.Scene.Text_Line_2 := TText.Create(vWeather.Scene.Back);
+  vWeather.Scene.Text_Line_2.Name := 'A_W_Text_Line_2';
+  vWeather.Scene.Text_Line_2.Parent := vWeather.Scene.Back;
+  vWeather.Scene.Text_Line_2.SetBounds(0, 370, uDB_AUser.Local.SETTINGS.Resolution.Width, 60);
+  vWeather.Scene.Text_Line_2.Font.Size := 48;
+  vWeather.Scene.Text_Line_2.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Text_Line_2.Text := '';
+  vWeather.Scene.Text_Line_2.TextSettings.Font.Style := vWeather.Scene.Text_Line_1.TextSettings.Font.Style + [TFontStyle.fsBold];
+  vWeather.Scene.Text_Line_2.Visible := False;
+
+  vWeather.Scene.Text_Line_3 := TText.Create(vWeather.Scene.Back);
+  vWeather.Scene.Text_Line_3.Name := 'A_W_Text_Line_3';
+  vWeather.Scene.Text_Line_3.Parent := vWeather.Scene.Back;
+  vWeather.Scene.Text_Line_3.SetBounds(0, 440, uDB_AUser.Local.SETTINGS.Resolution.Width, 60);
+  vWeather.Scene.Text_Line_3.Font.Size := 48;
+  vWeather.Scene.Text_Line_3.Text := '';
+  vWeather.Scene.Text_Line_3.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Text_Line_3.TextSettings.Font.Style := vWeather.Scene.Text_Line_1.TextSettings.Font.Style + [TFontStyle.fsBold];
+  vWeather.Scene.Text_Line_3.Visible := False;
+
+  vWeather.Scene.Line_Image := TText.Create(vWeather.Scene.Back);
+  vWeather.Scene.Line_Image.Name := 'A_W_Line_Image';
+  vWeather.Scene.Line_Image.Parent := vWeather.Scene.Back;
+  vWeather.Scene.Line_Image.SetBounds(1740, 58, 180, 180);
+  vWeather.Scene.Line_Image.Font.Size := 78;
+  vWeather.Scene.Line_Image.Font.Family := 'IcoMoon-Free';
+  vWeather.Scene.Line_Image.Text := #$e969;
+  vWeather.Scene.Line_Image.RotationAngle := -72;
+  vWeather.Scene.Line_Image.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Line_Image.Visible := False;
+
+  vWeather.Scene.MiddleLine := TImage.Create(vWeather.Scene.Back);
   vWeather.Scene.MiddleLine.Name := 'A_W_MiddleLine_Image';
-  vWeather.Scene.MiddleLine.Parent := vWeather.Scene.Weather;
+  vWeather.Scene.MiddleLine.Parent := vWeather.Scene.Back;
   vWeather.Scene.MiddleLine.SetBounds(0, vWeather.Scene.Weather.Height - 162, vWeather.Scene.Weather.Width, 10);
   vWeather.Scene.MiddleLine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_spot.png');
   vWeather.Scene.MiddleLine.WrapMode := TImageWrapMode.Tile;
   vWeather.Scene.MiddleLine.Visible := True;
 
-  vWeather.Scene.Arrow_Left := TText.Create(vWeather.Scene.Weather);
+  vWeather.Scene.Arrow_Left := TText.Create(vWeather.Scene.Back);
   vWeather.Scene.Arrow_Left.Name := 'A_W_Arrow_Left';
   vWeather.Scene.Arrow_Left.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Arrow_Left.SetBounds(20, vWeather.Scene.Back.Height - 120, 64, 64);
@@ -99,7 +140,17 @@ begin
   vWeather.Scene.Arrow_Left_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Left_Glow.Enabled := False;
 
-  vWeather.Scene.Arrow_Right := TText.Create(vWeather.Scene.Weather);
+  vWeather.Scene.Arrow_Left_Text := TText.Create(vWeather.Scene.Back);
+  vWeather.Scene.Arrow_Left_Text.Name := 'A_W_Arrow_Left_Text';
+  vWeather.Scene.Arrow_Left_Text.Parent := vWeather.Scene.Back;
+  vWeather.Scene.Arrow_Left_Text.SetBounds(20, vWeather.Scene.Back.Height - 50, 400, 30);
+  vWeather.Scene.Arrow_Left_Text.Font.Size := 16;
+  vWeather.Scene.Arrow_Left_Text.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Arrow_Left_Text.Text := '';
+  vWeather.Scene.Arrow_Left_Text.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Scene.Arrow_Left_Text.Visible := False;
+
+  vWeather.Scene.Arrow_Right := TText.Create(vWeather.Scene.Back);
   vWeather.Scene.Arrow_Right.Name := 'A_W_Arrow_Right';
   vWeather.Scene.Arrow_Right.Parent := vWeather.Scene.Weather;
   vWeather.Scene.Arrow_Right.SetBounds(vWeather.Scene.Back.Width - 84, vWeather.Scene.Back.Height - 120, 64, 64);
@@ -118,6 +169,16 @@ begin
   vWeather.Scene.Arrow_Right_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Arrow_Right_Glow.Enabled := False;
 
+  vWeather.Scene.Arrow_Right_Text := TText.Create(vWeather.Scene.Back);
+  vWeather.Scene.Arrow_Right_Text.Name := 'A_W_Arrow_Right_Text';
+  vWeather.Scene.Arrow_Right_Text.Parent := vWeather.Scene.Back;
+  vWeather.Scene.Arrow_Right_Text.SetBounds(vWeather.Scene.Back.Width - 420, vWeather.Scene.Back.Height - 50, 400, 30);
+  vWeather.Scene.Arrow_Right_Text.Font.Size := 16;
+  vWeather.Scene.Arrow_Right_Text.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Arrow_Right_Text.Text := '';
+  vWeather.Scene.Arrow_Right_Text.TextSettings.HorzAlign := TTextAlign.Trailing;
+  vWeather.Scene.Arrow_Right_Text.Visible := False;
+
   vWeather.Scene.DownLine := TImage.Create(vWeather.Scene.Back);
   vWeather.Scene.DownLine.Name := 'A_W_DownLine_Image';
   vWeather.Scene.DownLine.Parent := vWeather.Scene.Back;
@@ -130,22 +191,22 @@ begin
   Control;
 
   // Settings
-  vWeather.Scene.Settings := TText.Create(vWeather.Scene.Weather);
-  vWeather.Scene.Settings.Name := 'A_W_Settings_Image';
-  vWeather.Scene.Settings.Parent := vWeather.Scene.Weather;
-  vWeather.Scene.Settings.SetBounds(vWeather.Scene.Weather.Width - 60, 20, 50, 50);
-  vWeather.Scene.Settings.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Settings.Font.Size := 48;
-  vWeather.Scene.Settings.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Settings.Text := #$e994;
-  vWeather.Scene.Settings.OnClick := Weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Settings.OnMouseEnter := Weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Settings.OnMouseLeave := Weather.Input.mouse.Text.OnMouseLeave;
-  vWeather.Scene.Settings.Visible := False;
+  vWeather.Scene.SETTINGS := TText.Create(vWeather.Scene.Weather);
+  vWeather.Scene.SETTINGS.Name := 'A_W_Settings_Image';
+  vWeather.Scene.SETTINGS.Parent := vWeather.Scene.Weather;
+  vWeather.Scene.SETTINGS.SetBounds(vWeather.Scene.Weather.Width - 60, 20, 50, 50);
+  vWeather.Scene.SETTINGS.Font.Family := 'IcoMoon-Free';
+  vWeather.Scene.SETTINGS.Font.Size := 48;
+  vWeather.Scene.SETTINGS.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.SETTINGS.Text := #$e994;
+  vWeather.Scene.SETTINGS.OnClick := Weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.SETTINGS.OnMouseEnter := Weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.SETTINGS.OnMouseLeave := Weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.SETTINGS.Visible := False;
 
-  vWeather.Scene.Settings_Ani := TFloatAnimation.Create(vWeather.Scene.Settings);
+  vWeather.Scene.Settings_Ani := TFloatAnimation.Create(vWeather.Scene.SETTINGS);
   vWeather.Scene.Settings_Ani.Name := 'A_W_Settings_Animation';
-  vWeather.Scene.Settings_Ani.Parent := vWeather.Scene.Settings;
+  vWeather.Scene.Settings_Ani.Parent := vWeather.Scene.SETTINGS;
   vWeather.Scene.Settings_Ani.Duration := 4;
   vWeather.Scene.Settings_Ani.Loop := True;
   vWeather.Scene.Settings_Ani.PropertyName := 'RotationAngle';
@@ -153,9 +214,9 @@ begin
   vWeather.Scene.Settings_Ani.StopValue := 360;
   vWeather.Scene.Settings_Ani.Enabled := False;
 
-  vWeather.Scene.Settings_Glow := TGlowEffect.Create(vWeather.Scene.Settings);
+  vWeather.Scene.Settings_Glow := TGlowEffect.Create(vWeather.Scene.SETTINGS);
   vWeather.Scene.Settings_Glow.Name := 'A_W_Settings_Glow';
-  vWeather.Scene.Settings_Glow.Parent := vWeather.Scene.Settings;
+  vWeather.Scene.Settings_Glow.Parent := vWeather.Scene.SETTINGS;
   vWeather.Scene.Settings_Glow.GlowColor := TAlphaColorRec.Lightblue;
   vWeather.Scene.Settings_Glow.Opacity := 0.9;
   vWeather.Scene.Settings_Glow.Softness := 0.4;
@@ -205,7 +266,7 @@ begin
   vWeather.Config.Panel_Blur.BlurAmount := 0.5;
   vWeather.Config.Panel_Blur.Enabled := False;
 
-  CreateHeader(vWeather.Config.Panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.DeepSkyBlue, 'Weather configuration.', False, nil);
+  CreateHeader(vWeather.Config.Panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.Deepskyblue, 'Weather configuration.', False, nil);
 
   vWeather.Config.main.Panel := Tpanel.Create(vWeather.Config.Panel);
   vWeather.Config.main.Panel.Name := 'A_W_Config_Main';
@@ -219,6 +280,12 @@ begin
   vWeather.Config.main.Left.Panel.Parent := vWeather.Config.main.Panel;
   vWeather.Config.main.Left.Panel.SetBounds(0, 0, 210, vWeather.Config.main.Panel.Height);
   vWeather.Config.main.Left.Panel.Visible := True;
+
+  vWeather.Config.main.Left.Panel_Blur :=  TGaussianBlurEffect.Create(vWeather.Config.main.Left.Panel);
+  vWeather.Config.main.Left.Panel_Blur.Name := 'Weather_Config_Left_Panel_Blur';
+  vWeather.Config.main.Left.Panel_Blur.Parent := vWeather.Config.main.Left.Panel;
+  vWeather.Config.main.Left.Panel_Blur.BlurAmount := 0.5;
+  vWeather.Config.main.Left.Panel_Blur.Enabled := False;
 
   for vi := 0 to 3 do
   begin

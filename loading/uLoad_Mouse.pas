@@ -312,7 +312,9 @@ end;
 procedure TLOADING_CHECKBOX.OnMouseClick(Sender: TObject);
 begin
   if TCheckBox(Sender).Name = 'Loading_Register_Terms_Check' then
-    uLoad_Register.Update_AcceptTerms(not TCheckBox(Sender).IsChecked);
+    uLoad_Register.Update_AcceptTerms(not TCheckBox(Sender).IsChecked)
+  else if TCheckBox(Sender).Name = 'Loading_Login_Pass_Remember'  then
+    uLoad_Login.Check_Password_Remember(not TCheckBox(Sender).IsChecked);
 end;
 
 procedure TLOADING_CHECKBOX.OnMouseEnter(Sender: TObject);

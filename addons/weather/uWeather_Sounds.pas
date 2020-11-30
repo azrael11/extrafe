@@ -6,15 +6,15 @@ uses
   System.Classes,
   Bass;
 
-procedure uWeather_Sounds_Load;
-procedure uWeather_Sounds_Free;
+procedure Load;
+procedure Free;
 
-procedure uWeather_Sounds_PlayEffect(vCode, vWindSpeed: String; vStart: Boolean);
-procedure uWeather_Sounds_Refresh_Effect;
+procedure PlayEffect(vCode, vWindSpeed: String; vStart: Boolean);
+procedure Refresh_Effect;
 
-procedure uWeather_Sounds_PlayMouse(vPlayEffect: string);
+procedure PlayMouse(vPlayEffect: string);
 
-procedure uWeather_Sounds_PlayWarning(vPlayEffect: String);
+procedure PlayWarning(vPlayEffect: String);
 
 implementation
 
@@ -23,7 +23,7 @@ uses
   uLoad_AllTypes,
   uWeather_AllTypes;
 
-procedure uWeather_Sounds_Load;
+procedure Load;
 begin
   // Effects
 
@@ -81,7 +81,7 @@ begin
 
 end;
 
-procedure uWeather_Sounds_Free;
+procedure Free;
 begin
   BASS_StreamFree(weather.Sound.effects[0]);
   BASS_StreamFree(weather.Sound.effects[1]);
@@ -99,7 +99,7 @@ end;
 
 ///
 
-procedure uWeather_Sounds_PlayEffect(vCode, vWindSpeed: String; vStart: Boolean);
+procedure PlayEffect(vCode, vWindSpeed: String; vStart: Boolean);
 begin
   if vStart then
   begin
@@ -122,7 +122,7 @@ begin
   end;
 end;
 
-procedure uWeather_Sounds_Refresh_Effect;
+procedure Refresh_Effect;
 begin
   if weather.Sound.Effect_Play then
   begin
@@ -135,7 +135,7 @@ begin
   end;
 end;
 
-procedure uWeather_Sounds_PlayMouse(vPlayEffect: string);
+procedure PlayMouse(vPlayEffect: string);
 begin
   if vPlayEffect = 'Slide' then
     BASS_ChannelPlay(weather.Sound.mouse[0], True)
@@ -145,7 +145,7 @@ begin
     BASS_ChannelPlay(weather.Sound.mouse[2], True)
 end;
 
-procedure uWeather_Sounds_PlayWarning(vPlayEffect: String);
+procedure PlayWarning(vPlayEffect: String);
 begin
   if vPlayEffect = 'Delete' then
     BASS_ChannelPlay(weather.Sound.warning[0], True)

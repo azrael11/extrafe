@@ -16,8 +16,7 @@ uses
   FMX.Memo,
   FMX.Filter.Effects,
   FMX.ListBox,
-  FMX.Layouts,
-  CodeSiteLogging;
+  FMX.Layouts;
 
 procedure Load;
 procedure Login;
@@ -43,10 +42,9 @@ uses
   uLoad_Register,
   uKeyboard;
 
-
 procedure Load;
 begin
-  {Hook The Keyboard}
+  { Hook The Keyboard }
   uKeyboard_HookKeyboard;
   FHook.Active := True;
 
@@ -54,7 +52,7 @@ begin
   ex_load.Scene.Back_Back := TImage.Create(Load.Loading);
   ex_load.Scene.Back_Back.Name := 'Loading_Back_Back';
   ex_load.Scene.Back_Back.Parent := Load.Loading;
-  ex_load.Scene.Back_Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
+  ex_load.Scene.Back_Back.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Monitor.Horizontal, uDB_AUser.Local.SETTINGS.Monitor.Vertical);
   ex_load.Scene.Back_Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back_Back.WrapMode := TImageWrapMode.Fit;
   ex_load.Scene.Back_Back.Visible := True;
@@ -62,7 +60,7 @@ begin
   ex_load.Scene.Back := TImage.Create(Load.Loading);
   ex_load.Scene.Back.Name := 'Loading_Back';
   ex_load.Scene.Back.Parent := Load.Loading;
-  ex_load.Scene.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
+  ex_load.Scene.Back.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Monitor.Horizontal, uDB_AUser.Local.SETTINGS.Monitor.Vertical);
   ex_load.Scene.Back.Bitmap.LoadFromFile(ex_load.Path.Images + 'load.png');
   ex_load.Scene.Back.WrapMode := TImageWrapMode.Fit;
   ex_load.Scene.Back.Visible := True;
@@ -115,7 +113,7 @@ begin
   ex_load.Scene.Code_Name := TText.Create(ex_load.Scene.Back);
   ex_load.Scene.Code_Name.Name := 'Loading_Code_Name';
   ex_load.Scene.Code_Name.Parent := ex_load.Scene.Back;
-  ex_load.Scene.Code_Name.SetBounds(extrafe.res.Width - 240, 90, 161, 26);
+  ex_load.Scene.Code_Name.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Width - 240, 90, 161, 26);
   ex_load.Scene.Code_Name.TextSettings.FontColor := TAlphaColorRec.White;
   ex_load.Scene.Code_Name.Text := extrafe.prog.Desc;
   ex_load.Scene.Code_Name.TextSettings.Font.Style := ex_load.Scene.Code_Name.TextSettings.Font.Style + [TFontstyle.fsBold];
@@ -126,9 +124,10 @@ begin
   ex_load.Scene.Ver := TText.Create(ex_load.Scene.Back);
   ex_load.Scene.Ver.Name := 'Loading_Version';
   ex_load.Scene.Ver.Parent := ex_load.Scene.Back;
-  ex_load.Scene.Ver.SetBounds(extrafe.res.Width - 350, 160, 260, 26);
+  ex_load.Scene.Ver.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Width - 350, 160, 260, 26);
   ex_load.Scene.Ver.TextSettings.FontColor := TAlphaColorRec.White;
-  ex_load.Scene.Ver.Text := 'Version: ' + extrafe.prog.Version.Major + '.' + extrafe.prog.Version.Minor + '.' + extrafe.prog.Version.Realeash + ' build ' + extrafe.prog.Version.Build;
+  ex_load.Scene.Ver.Text := 'Version: ' + extrafe.prog.Version.Major + '.' + extrafe.prog.Version.Minor + '.' + extrafe.prog.Version.Realeash + ' build ' +
+    extrafe.prog.Version.Build;
   ex_load.Scene.Ver.TextSettings.Font.Style := ex_load.Scene.Code_Name.TextSettings.Font.Style + [TFontstyle.fsBold];
   ex_load.Scene.Ver.RotationAngle := 38;
   ex_load.Scene.Ver.TextSettings.Font.Size := 16;
@@ -153,7 +152,7 @@ begin
   ex_load.Login.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.Login.Panel.Name := 'Loading_Login';
   ex_load.Login.Panel.Parent := ex_load.Scene.Back;
-  ex_load.Login.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
+  ex_load.Login.Panel.SetBounds((uDB_AUser.Local.SETTINGS.Monitor.Horizontal div 2) - 265, (uDB_AUser.Local.SETTINGS.Monitor.Vertical div 2) - 173, 530, 346);
   ex_load.Login.Panel.Opacity := 0.8;
   ex_load.Login.Panel.Visible := True;
 
@@ -178,7 +177,7 @@ begin
   ex_load.Login.Panel_Login_Correct.StartValue := 0.2;
   ex_load.Login.Panel_Login_Correct.Enabled := False;
 
-  CreateHeader(ex_load.Login.Panel, 'IcoMoon-Free', #$e971, TAlphaColorRec.DeepSkyBlue, 'Login', False, nil);
+  CreateHeader(ex_load.Login.Panel, 'IcoMoon-Free', #$e971, TAlphaColorRec.Deepskyblue, 'Login', False, nil);
 
   ex_load.Login.Main := TPanel.Create(ex_load.Login.Panel);
   ex_load.Login.Main.Name := 'Loading_Main';
@@ -281,6 +280,16 @@ begin
   ex_load.Login.Pass_Show_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
   ex_load.Login.Pass_Show_Glow.Opacity := 0.9;
   ex_load.Login.Pass_Show_Glow.Enabled := False;
+
+  ex_load.Login.Pass_Remember := TCheckBox.Create(ex_load.Login.Main);
+  ex_load.Login.Pass_Remember.Name := 'Loading_Login_Pass_Remember';
+  ex_load.Login.Pass_Remember.Parent :=   ex_load.Login.Main;
+  ex_load.Login.Pass_Remember.SetBounds(180, 142, 200, 30);
+  ex_load.Login.Pass_Remember.Text := 'Remember password';
+  ex_load.Login.Pass_Remember.OnClick := ex_load.Input.mouse.Checkbox.OnMouseClick;
+  ex_load.Login.Pass_Remember.OnMouseEnter := ex_load.Input.mouse.Checkbox.OnMouseEnter;
+  ex_load.Login.Pass_Remember.Visible := True;
+
 
   ex_load.Login.Login := TButton.Create(ex_load.Login.Main);
   ex_load.Login.Login.Name := 'Loading_Login_Login';
@@ -447,7 +456,7 @@ begin
     end;
   end;
 
-    ex_load.Login.User_V.ItemIndex := 0;
+  ex_load.Login.User_V.ItemIndex := 0;
 end;
 
 procedure Login_Forget_Password;
@@ -457,11 +466,11 @@ begin
   ex_load.F_Pass.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.F_Pass.Panel.Name := 'Loading_FPass';
   ex_load.F_Pass.Panel.Parent := ex_load.Scene.Back;
-  ex_load.F_Pass.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 100, 500, 200);
+  ex_load.F_Pass.Panel.SetBounds((uDB_AUser.Local.SETTINGS.Monitor.Horizontal div 2) - 250, (uDB_AUser.Local.SETTINGS.Monitor.Vertical div 2) - 100, 500, 200);
   ex_load.F_Pass.Panel.Opacity := 0.8;
   ex_load.F_Pass.Panel.Visible := True;
 
-  CreateHeader(ex_load.F_Pass.Panel, 'IcoMoon-Free', #$e98d, TAlphaColorRec.DeepSkyBlue, 'Forget my password', False, nil);
+  CreateHeader(ex_load.F_Pass.Panel, 'IcoMoon-Free', #$e98d, TAlphaColorRec.Deepskyblue, 'Forget my password', False, nil);
 
   ex_load.F_Pass.Main.Panel := TPanel.Create(ex_load.F_Pass.Panel);
   ex_load.F_Pass.Main.Panel.Name := 'Loading_FPass_Main';
@@ -545,7 +554,7 @@ begin
   ex_load.Reg.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.Reg.Panel.Name := 'Loading_Register';
   ex_load.Reg.Panel.Parent := ex_load.Scene.Back;
-  ex_load.Reg.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 600);
+  ex_load.Reg.Panel.SetBounds((uDB_AUser.Local.SETTINGS.Monitor.Horizontal div 2) - 250, (uDB_AUser.Local.SETTINGS.Monitor.Vertical div 2) - 260, 500, 600);
   ex_load.Reg.Panel.Opacity := 0.8;
   ex_load.Reg.Panel.Visible := True;
 
@@ -560,7 +569,7 @@ begin
 
   uLoad_Register.Create_Help;
 
-  CreateHeader(ex_load.Reg.Panel, 'IcoMoon-Free', #$e907, TAlphaColorRec.DeepSkyBlue, 'Register', False, nil);
+  CreateHeader(ex_load.Reg.Panel, 'IcoMoon-Free', #$e907, TAlphaColorRec.Deepskyblue, 'Register', False, nil);
 
   ex_load.Reg.Main.Panel := TPanel.Create(ex_load.Reg.Panel);
   ex_load.Reg.Main.Panel.Name := 'Loading_Register_Main';
@@ -828,8 +837,6 @@ begin
   ex_load.Reg.Main.Cancel.Visible := True;
 
   FreeAndNil(ex_load.Login.Panel);
-
-  CodeSite.Send(csmLevel5, 'User is in Registration mode');
 end;
 
 procedure Register_Terms;
@@ -837,10 +844,10 @@ begin
   ex_load.Terms.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.Terms.Panel.Name := 'Loading_Terms';
   ex_load.Terms.Panel.Parent := ex_load.Scene.Back;
-  ex_load.Terms.Panel.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 260, 500, 600);
+  ex_load.Terms.Panel.SetBounds((uDB_AUser.Local.SETTINGS.Monitor.Horizontal div 2) - 250, (uDB_AUser.Local.SETTINGS.Monitor.Vertical div 2) - 260, 500, 600);
   ex_load.Terms.Panel.Visible := True;
 
-  CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, TAlphaColorRec.DeepSkyBlue, 'Read the terms of ExtraFE.', False, nil);
+  CreateHeader(ex_load.Terms.Panel, 'IcoMoon-Free', #$e922, TAlphaColorRec.Deepskyblue, 'Read the terms of ExtraFE.', False, nil);
 
   ex_load.Terms.Main.Panel := TPanel.Create(ex_load.Terms.Panel);
   ex_load.Terms.Main.Panel.Name := 'Loading_Terms_Main';
@@ -874,10 +881,11 @@ begin
   ex_load.Reg_Error.Panel := TPanel.Create(ex_load.Scene.Back);
   ex_load.Reg_Error.Panel.Name := 'Loading_Register_Error';
   ex_load.Reg_Error.Panel.Parent := ex_load.Scene.Back;
-  ex_load.Reg_Error.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
+  ex_load.Reg_Error.Panel.SetBounds((uDB_AUser.Local.SETTINGS.Monitor.Horizontal div 2) - 265, (uDB_AUser.Local.SETTINGS.Monitor.Vertical div 2) - 173,
+    530, 346);
   ex_load.Reg_Error.Panel.Visible := True;
 
-  CreateHeader(ex_load.Reg_Error.Panel, 'IcoMoon-Free', #$e909, TAlphaColorRec.DeepSkyBlue, 'Something wrong with register', False, nil);
+  CreateHeader(ex_load.Reg_Error.Panel, 'IcoMoon-Free', #$e909, TAlphaColorRec.Deepskyblue, 'Something wrong with register', False, nil);
 
   ex_load.Reg_Error.Memo := TMemo.Create(ex_load.Reg_Error.Panel);
   ex_load.Reg_Error.Memo.Name := 'Loading_Register_Error_Main';
@@ -909,7 +917,8 @@ begin
   ex_load.Reg_Success.Panel := TLayout.Create(ex_load.Scene.Back);
   ex_load.Reg_Success.Panel.Name := 'Loading_Register_Success';
   ex_load.Reg_Success.Panel.Parent := ex_load.Scene.Back;
-  ex_load.Reg_Success.Panel.SetBounds(extrafe.res.Half_Width - 265, extrafe.res.Half_Height - 173, 530, 346);
+  ex_load.Reg_Success.Panel.SetBounds((uDB_AUser.Local.SETTINGS.Monitor.Horizontal div 2) - 265, (uDB_AUser.Local.SETTINGS.Monitor.Vertical div 2) - 173,
+    530, 346);
   ex_load.Reg_Success.Panel.Visible := True;
 
   ex_load.Reg_Success.Text := TText.Create(ex_load.Reg_Success.Panel);
@@ -917,7 +926,7 @@ begin
   ex_load.Reg_Success.Text.Parent := ex_load.Reg_Success.Panel;
   ex_load.Reg_Success.Text.SetBounds(10, 10, ex_load.Reg_Success.Panel.Width - 20, 30);
   ex_load.Reg_Success.Text.Font.Size := 18;
-  ex_load.Reg_Success.Text.Text := 'Please wait to complete the registeration...';
+  ex_load.Reg_Success.Text.Text := 'Please wait to complete the registration...';
   ex_load.Reg_Success.Text.TextSettings.FontColor := TAlphaColorRec.White;
   ex_load.Reg_Success.Text.Visible := True;
 

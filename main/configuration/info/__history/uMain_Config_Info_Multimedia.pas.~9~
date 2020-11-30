@@ -1,0 +1,31 @@
+unit uMain_Config_Info_Multimedia;
+
+interface
+
+uses
+  System.Classes, FMX.Layouts;
+
+procedure Load;
+
+implementation
+
+uses
+  uLoad_AllTypes, uMain_AllTypes;
+
+procedure Load;
+begin
+  extrafe.prog.State := 'main_config_info_multimedia';
+
+  if mainScene.Config.Main.R.info.Multimedia.Layout = nil then
+  begin
+
+    mainScene.Config.Main.R.info.Multimedia.Layout := TLayout.Create(mainScene.Config.Main.R.info.TabItem[2]);
+    mainScene.Config.Main.R.info.Multimedia.Layout.Name := 'Main_Config_Info_Multimedia';
+    mainScene.Config.Main.R.info.Multimedia.Layout.Parent := mainScene.Config.Main.R.info.TabItem[2];
+    mainScene.Config.Main.R.info.Multimedia.Layout.SetBounds(0, 0, mainScene.Config.Main.R.info.TabControl.Width,
+      mainScene.Config.Main.R.info.TabControl.Height);
+    mainScene.Config.Main.R.info.Multimedia.Layout.Visible := True;
+  end;
+end;
+
+end.

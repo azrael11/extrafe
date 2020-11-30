@@ -14,7 +14,7 @@ uses
   FMX.Effects,
   FMX.Filter.Effects,
   FMX.Edit,
-  FMX.Graphics;
+  FMX.Graphics, FMX.Layouts;
 
 type
   TPERSONAL = record
@@ -71,254 +71,258 @@ procedure Load;
 begin
   extrafe.prog.State := 'main_config_profile_user';
 
-  mainScene.Config.main.R.Profile.User.Panel := TPanel.Create(mainScene.Config.main.R.Profile.TabItem[0]);
-  mainScene.Config.main.R.Profile.User.Panel.Name := 'Main_Config_Profile_User';
-  mainScene.Config.main.R.Profile.User.Panel.Parent := mainScene.Config.main.R.Profile.TabItem[0];
-  mainScene.Config.main.R.Profile.User.Panel.SetBounds(0, 0, mainScene.Config.main.R.Profile.TabControl.Width,
-    mainScene.Config.main.R.Profile.TabControl.Height);
-  mainScene.Config.main.R.Profile.User.Panel.Visible := True;
+  if mainScene.Config.main.R.Profile.User.Layout = nil then
+  begin
 
-  mainScene.Config.main.R.Profile.User.Username := TLabel.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Username.Name := 'Main_Config_Profile_Main_Username_Label';
-  mainScene.Config.main.R.Profile.User.Username.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Username.SetBounds(10, 10, 300, 24);
-  mainScene.Config.main.R.Profile.User.Username.Text := 'Username : ';
-  mainScene.Config.main.R.Profile.User.Username.Visible := True;
+    mainScene.Config.main.R.Profile.User.Layout := TLayout.Create(mainScene.Config.main.R.Profile.TabItem[0]);
+    mainScene.Config.main.R.Profile.User.Layout.Name := 'Main_Config_Profile_User';
+    mainScene.Config.main.R.Profile.User.Layout.Parent := mainScene.Config.main.R.Profile.TabItem[0];
+    mainScene.Config.main.R.Profile.User.Layout.SetBounds(0, 0, mainScene.Config.main.R.Profile.TabControl.Width,
+      mainScene.Config.main.R.Profile.TabControl.Height);
+    mainScene.Config.main.R.Profile.User.Layout.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Username_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Username_V.Name := 'Main_Config_Profile_Main_Username_Edit';
-  mainScene.Config.main.R.Profile.User.Username_V.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Username_V.SetBounds(10, 30, 370, 24);
-  mainScene.Config.main.R.Profile.User.Username_V.Text := uDB_AUser.Local.User.Username;
-  mainScene.Config.main.R.Profile.User.Username_V.ReadOnly := True;
-  mainScene.Config.main.R.Profile.User.Username_V.TextSettings.HorzAlign := TTextAlign.Center;
-  mainScene.Config.main.R.Profile.User.Username_V.Visible := True;
+    mainScene.Config.main.R.Profile.User.Username := TLabel.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Username.Name := 'Main_Config_Profile_Main_Username_Label';
+    mainScene.Config.main.R.Profile.User.Username.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Username.SetBounds(10, 10, 300, 24);
+    mainScene.Config.main.R.Profile.User.Username.Text := 'Username : ';
+    mainScene.Config.main.R.Profile.User.Username.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Password := TLabel.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Password.Name := 'Main_Config_Profile_Main_Password_Label';
-  mainScene.Config.main.R.Profile.User.Password.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Password.SetBounds(10, 70, 300, 24);
-  mainScene.Config.main.R.Profile.User.Password.Text := 'Password : ';
-  mainScene.Config.main.R.Profile.User.Password.Visible := True;
+    mainScene.Config.main.R.Profile.User.Username_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Username_V.Name := 'Main_Config_Profile_Main_Username_Edit';
+    mainScene.Config.main.R.Profile.User.Username_V.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Username_V.SetBounds(10, 30, 370, 24);
+    mainScene.Config.main.R.Profile.User.Username_V.Text := uDB_AUser.Local.User.Username;
+    mainScene.Config.main.R.Profile.User.Username_V.ReadOnly := True;
+    mainScene.Config.main.R.Profile.User.Username_V.TextSettings.HorzAlign := TTextAlign.Center;
+    mainScene.Config.main.R.Profile.User.Username_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Password_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Password_V.Name := 'Main_Config_Profile_Main_Password_Edit';
-  mainScene.Config.main.R.Profile.User.Password_V.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Password_V.SetBounds(10, 90, 370, 24);
-  mainScene.Config.main.R.Profile.User.Password_V.Text := uDB_AUser.Local.User.Password;
-  mainScene.Config.main.R.Profile.User.Password_V.ReadOnly := True;
-  mainScene.Config.main.R.Profile.User.Password_V.TextSettings.HorzAlign := TTextAlign.Center;
-  mainScene.Config.main.R.Profile.User.Password_V.Password := True;
-  mainScene.Config.main.R.Profile.User.Password_V.Visible := True;
+    mainScene.Config.main.R.Profile.User.Password := TLabel.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Password.Name := 'Main_Config_Profile_Main_Password_Label';
+    mainScene.Config.main.R.Profile.User.Password.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Password.SetBounds(10, 70, 300, 24);
+    mainScene.Config.main.R.Profile.User.Password.Text := 'Password : ';
+    mainScene.Config.main.R.Profile.User.Password.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Password_Change := TText.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Password_Change.Name := 'Main_Config_Profile_Main_Password_Change';
-  mainScene.Config.main.R.Profile.User.Password_Change.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Password_Change.SetBounds(180, 120, 200, 24);
-  mainScene.Config.main.R.Profile.User.Password_Change.Text := 'Change Password';
-  mainScene.Config.main.R.Profile.User.Password_Change.HorzTextAlign := TTextAlign.Trailing;
-  mainScene.Config.main.R.Profile.User.Password_Change.TextSettings.FontColor := TAlphaColorRec.White;
-  mainScene.Config.main.R.Profile.User.Password_Change.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Password_Change.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Password_Change.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
-  mainScene.Config.main.R.Profile.User.Password_Change.Visible := True;
+    mainScene.Config.main.R.Profile.User.Password_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Password_V.Name := 'Main_Config_Profile_Main_Password_Edit';
+    mainScene.Config.main.R.Profile.User.Password_V.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Password_V.SetBounds(10, 90, 370, 24);
+    mainScene.Config.main.R.Profile.User.Password_V.Text := uDB_AUser.Local.User.Password;
+    mainScene.Config.main.R.Profile.User.Password_V.ReadOnly := True;
+    mainScene.Config.main.R.Profile.User.Password_V.TextSettings.HorzAlign := TTextAlign.Center;
+    mainScene.Config.main.R.Profile.User.Password_V.Password := True;
+    mainScene.Config.main.R.Profile.User.Password_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Email := TText.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Email.Name := 'Main_Config_Profile_Main_EMail';
-  mainScene.Config.main.R.Profile.User.Email.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Email.SetBounds(10, 135, 32, 32);
-  mainScene.Config.main.R.Profile.User.Email.Font.Family := 'IcoMoon-Free';
-  mainScene.Config.main.R.Profile.User.Email.Font.Size := 24;
-  mainScene.Config.main.R.Profile.User.Email.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  mainScene.Config.main.R.Profile.User.Email.Text := #$e945;
-  mainScene.Config.main.R.Profile.User.Email.Visible := True;
+    mainScene.Config.main.R.Profile.User.Password_Change := TText.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Password_Change.Name := 'Main_Config_Profile_Main_Password_Change';
+    mainScene.Config.main.R.Profile.User.Password_Change.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Password_Change.SetBounds(180, 120, 200, 24);
+    mainScene.Config.main.R.Profile.User.Password_Change.Text := 'Change Password';
+    mainScene.Config.main.R.Profile.User.Password_Change.HorzTextAlign := TTextAlign.Trailing;
+    mainScene.Config.main.R.Profile.User.Password_Change.TextSettings.FontColor := TAlphaColorRec.White;
+    mainScene.Config.main.R.Profile.User.Password_Change.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+    mainScene.Config.main.R.Profile.User.Password_Change.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+    mainScene.Config.main.R.Profile.User.Password_Change.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
+    mainScene.Config.main.R.Profile.User.Password_Change.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Email_Dir := TText.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Email_Dir.Name := 'Main_Config_Profile_Main_EMail_Dir';
-  mainScene.Config.main.R.Profile.User.Email_Dir.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Email_Dir.SetBounds(56, 141, 400, 24);
-  mainScene.Config.main.R.Profile.User.Email_Dir.Text := uDB_AUser.Local.User.Email;
-  mainScene.Config.main.R.Profile.User.Email_Dir.HorzTextAlign := TTextAlign.Leading;
-  mainScene.Config.main.R.Profile.User.Email_Dir.TextSettings.FontColor := TAlphaColorRec.White;
-  mainScene.Config.main.R.Profile.User.Email_Dir.Visible := True;
+    mainScene.Config.main.R.Profile.User.Email := TText.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Email.Name := 'Main_Config_Profile_Main_EMail';
+    mainScene.Config.main.R.Profile.User.Email.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Email.SetBounds(10, 135, 32, 32);
+    mainScene.Config.main.R.Profile.User.Email.Font.Family := 'IcoMoon-Free';
+    mainScene.Config.main.R.Profile.User.Email.Font.Size := 24;
+    mainScene.Config.main.R.Profile.User.Email.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    mainScene.Config.main.R.Profile.User.Email.Text := #$e945;
+    mainScene.Config.main.R.Profile.User.Email.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar_Show := TImage.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Name := 'Main_Config_Profile_Main_Avatar';
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Avatar_Show.SetBounds(410, 10, 150, 150);
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.User.Avatar + '.png');
-  mainScene.Config.main.R.Profile.User.Avatar_Show.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Profile.User.Avatar_Show.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Avatar_Show.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Avatar_Show.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
-  mainScene.Config.main.R.Profile.User.Avatar_Show.Visible := True;
+    mainScene.Config.main.R.Profile.User.Email_Dir := TText.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Email_Dir.Name := 'Main_Config_Profile_Main_EMail_Dir';
+    mainScene.Config.main.R.Profile.User.Email_Dir.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Email_Dir.SetBounds(56, 141, 400, 24);
+    mainScene.Config.main.R.Profile.User.Email_Dir.Text := uDB_AUser.Local.User.Email;
+    mainScene.Config.main.R.Profile.User.Email_Dir.HorzTextAlign := TTextAlign.Leading;
+    mainScene.Config.main.R.Profile.User.Email_Dir.TextSettings.FontColor := TAlphaColorRec.White;
+    mainScene.Config.main.R.Profile.User.Email_Dir.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar_Show_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar_Show);
-  mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Name := 'Main_Config_Profile_Main_Avatar_Glow';
-  mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Parent := mainScene.Config.main.R.Profile.User.Avatar_Show;
-  mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Softness := 0.9;
-  mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Enabled := False;
+    mainScene.Config.main.R.Profile.User.Avatar_Show := TImage.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Avatar_Show.Name := 'Main_Config_Profile_Main_Avatar';
+    mainScene.Config.main.R.Profile.User.Avatar_Show.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Avatar_Show.SetBounds(410, 10, 150, 150);
+    mainScene.Config.main.R.Profile.User.Avatar_Show.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.User.Avatar + '.png');
+    mainScene.Config.main.R.Profile.User.Avatar_Show.WrapMode := TImageWrapMode.Fit;
+    mainScene.Config.main.R.Profile.User.Avatar_Show.OnClick := ex_main.input.mouse_config.Image.OnMouseClick;
+    mainScene.Config.main.R.Profile.User.Avatar_Show.OnMouseEnter := ex_main.input.mouse_config.Image.OnMouseEnter;
+    mainScene.Config.main.R.Profile.User.Avatar_Show.OnMouseLeave := ex_main.input.mouse_config.Image.OnMouseLeave;
+    mainScene.Config.main.R.Profile.User.Avatar_Show.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Avatar_Change := TText.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Avatar_Change.Name := 'Main_Config_Profile_Main_Avatar_Change';
-  mainScene.Config.main.R.Profile.User.Avatar_Change.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.SetBounds(410, 160, 150, 24);
-  mainScene.Config.main.R.Profile.User.Avatar_Change.Text := 'Change Avatar';
-  mainScene.Config.main.R.Profile.User.Avatar_Change.HorzTextAlign := TTextAlign.Center;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.TextSettings.FontColor := TAlphaColorRec.White;
-  mainScene.Config.main.R.Profile.User.Avatar_Change.Visible := True;
+    mainScene.Config.main.R.Profile.User.Avatar_Show_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Avatar_Show);
+    mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Name := 'Main_Config_Profile_Main_Avatar_Glow';
+    mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Parent := mainScene.Config.main.R.Profile.User.Avatar_Show;
+    mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Softness := 0.9;
+    mainScene.Config.main.R.Profile.User.Avatar_Show_Glow.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Personal := TGroupBox.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Personal.Name := 'Main_Config_Profile_Main_Personal';
-  mainScene.Config.main.R.Profile.User.Personal.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Personal.SetBounds(10, 190, 370, 200);
-  mainScene.Config.main.R.Profile.User.Personal.Text := 'Personal';
-  mainScene.Config.main.R.Profile.User.Personal.Visible := True;
+    mainScene.Config.main.R.Profile.User.Avatar_Change := TText.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Avatar_Change.Name := 'Main_Config_Profile_Main_Avatar_Change';
+    mainScene.Config.main.R.Profile.User.Avatar_Change.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Avatar_Change.SetBounds(410, 160, 150, 24);
+    mainScene.Config.main.R.Profile.User.Avatar_Change.Text := 'Change Avatar';
+    mainScene.Config.main.R.Profile.User.Avatar_Change.HorzTextAlign := TTextAlign.Center;
+    mainScene.Config.main.R.Profile.User.Avatar_Change.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+    mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+    mainScene.Config.main.R.Profile.User.Avatar_Change.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
+    mainScene.Config.main.R.Profile.User.Avatar_Change.TextSettings.FontColor := TAlphaColorRec.White;
+    mainScene.Config.main.R.Profile.User.Avatar_Change.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Name := TLabel.Create(mainScene.Config.main.R.Profile.User.Personal);
-  mainScene.Config.main.R.Profile.User.Name.Name := 'Main_Config_Profile_Main_Name_Label';
-  mainScene.Config.main.R.Profile.User.Name.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Name.SetBounds(10, 40, 300, 24);
-  mainScene.Config.main.R.Profile.User.Name.Text := 'Name : ';
-  mainScene.Config.main.R.Profile.User.Name.Visible := True;
+    mainScene.Config.main.R.Profile.User.Personal := TGroupBox.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Personal.Name := 'Main_Config_Profile_Main_Personal';
+    mainScene.Config.main.R.Profile.User.Personal.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Personal.SetBounds(10, 190, 370, 200);
+    mainScene.Config.main.R.Profile.User.Personal.Text := 'Personal';
+    mainScene.Config.main.R.Profile.User.Personal.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Name_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Personal);
-  mainScene.Config.main.R.Profile.User.Name_V.Name := 'Main_Config_Profile_Main_Name_Edit';
-  mainScene.Config.main.R.Profile.User.Name_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Name_V.SetBounds(10, 60, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 24);
-  mainScene.Config.main.R.Profile.User.Name_V.Text := uDB_AUser.Local.User.Name;
-  mainScene.Config.main.R.Profile.User.Name_V.TextSettings.HorzAlign := TTextAlign.Center;
-  mainScene.Config.main.R.Profile.User.Name_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
-  mainScene.Config.main.R.Profile.User.Name_V.Visible := True;
+    mainScene.Config.main.R.Profile.User.Name := TLabel.Create(mainScene.Config.main.R.Profile.User.Personal);
+    mainScene.Config.main.R.Profile.User.Name.Name := 'Main_Config_Profile_Main_Name_Label';
+    mainScene.Config.main.R.Profile.User.Name.Parent := mainScene.Config.main.R.Profile.User.Personal;
+    mainScene.Config.main.R.Profile.User.Name.SetBounds(10, 40, 300, 24);
+    mainScene.Config.main.R.Profile.User.Name.Text := 'Name : ';
+    mainScene.Config.main.R.Profile.User.Name.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Surname := TLabel.Create(mainScene.Config.main.R.Profile.User.Personal);
-  mainScene.Config.main.R.Profile.User.Surname.Name := 'Main_Config_Profile_Main_Surname_Label';
-  mainScene.Config.main.R.Profile.User.Surname.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Surname.SetBounds(10, 90, 300, 24);
-  mainScene.Config.main.R.Profile.User.Surname.Text := 'Surname : ';
-  mainScene.Config.main.R.Profile.User.Surname.Visible := True;
+    mainScene.Config.main.R.Profile.User.Name_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Personal);
+    mainScene.Config.main.R.Profile.User.Name_V.Name := 'Main_Config_Profile_Main_Name_Edit';
+    mainScene.Config.main.R.Profile.User.Name_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
+    mainScene.Config.main.R.Profile.User.Name_V.SetBounds(10, 60, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 24);
+    mainScene.Config.main.R.Profile.User.Name_V.Text := uDB_AUser.Local.User.Name;
+    mainScene.Config.main.R.Profile.User.Name_V.TextSettings.HorzAlign := TTextAlign.Center;
+    mainScene.Config.main.R.Profile.User.Name_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
+    mainScene.Config.main.R.Profile.User.Name_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Surname_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Personal);
-  mainScene.Config.main.R.Profile.User.Surname_V.Name := 'Main_Config_Profile_Main_Surname_Edit';
-  mainScene.Config.main.R.Profile.User.Surname_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Surname_V.SetBounds(10, 110, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 24);
-  mainScene.Config.main.R.Profile.User.Surname_V.Text := uDB_AUser.Local.User.Surname;
-  mainScene.Config.main.R.Profile.User.Surname_V.TextSettings.HorzAlign := TTextAlign.Center;
-  mainScene.Config.main.R.Profile.User.Surname_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
-  mainScene.Config.main.R.Profile.User.Surname_V.Visible := True;
+    mainScene.Config.main.R.Profile.User.Surname := TLabel.Create(mainScene.Config.main.R.Profile.User.Personal);
+    mainScene.Config.main.R.Profile.User.Surname.Name := 'Main_Config_Profile_Main_Surname_Label';
+    mainScene.Config.main.R.Profile.User.Surname.Parent := mainScene.Config.main.R.Profile.User.Personal;
+    mainScene.Config.main.R.Profile.User.Surname.SetBounds(10, 90, 300, 24);
+    mainScene.Config.main.R.Profile.User.Surname.Text := 'Surname : ';
+    mainScene.Config.main.R.Profile.User.Surname.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Gender_Male := TText.Create(mainScene.Config.main.R.Profile.User.Personal);
-  mainScene.Config.main.R.Profile.User.Gender_Male.Name := 'Main_Config_Profile_Main_Gender_Male';
-  mainScene.Config.main.R.Profile.User.Gender_Male.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Gender_Male.SetBounds(mainScene.Config.main.R.Profile.User.Personal.Width - 62, 20, 28, 28);
-  mainScene.Config.main.R.Profile.User.Gender_Male.Font.Family := 'IcoMoon-Free';
-  mainScene.Config.main.R.Profile.User.Gender_Male.Font.Size := 24;
-  mainScene.Config.main.R.Profile.User.Gender_Male.Text := #$e9dc;
-  mainScene.Config.main.R.Profile.User.Gender_Male.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  mainScene.Config.main.R.Profile.User.Gender_Male.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
-  mainScene.Config.main.R.Profile.User.Gender_Male.Visible := True;
+    mainScene.Config.main.R.Profile.User.Surname_V := TEdit.Create(mainScene.Config.main.R.Profile.User.Personal);
+    mainScene.Config.main.R.Profile.User.Surname_V.Name := 'Main_Config_Profile_Main_Surname_Edit';
+    mainScene.Config.main.R.Profile.User.Surname_V.Parent := mainScene.Config.main.R.Profile.User.Personal;
+    mainScene.Config.main.R.Profile.User.Surname_V.SetBounds(10, 110, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 24);
+    mainScene.Config.main.R.Profile.User.Surname_V.Text := uDB_AUser.Local.User.Surname;
+    mainScene.Config.main.R.Profile.User.Surname_V.TextSettings.HorzAlign := TTextAlign.Center;
+    mainScene.Config.main.R.Profile.User.Surname_V.OnTyping := ex_main.input.mouse_config.Edit.OnTyping;
+    mainScene.Config.main.R.Profile.User.Surname_V.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Male);
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Name := 'Main_Config_Profile_Main_Gender_Male_Glow';
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Parent := mainScene.Config.main.R.Profile.User.Gender_Male;
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Opacity := 0.9;
-  mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Enabled := False;
+    mainScene.Config.main.R.Profile.User.Gender_Male := TText.Create(mainScene.Config.main.R.Profile.User.Personal);
+    mainScene.Config.main.R.Profile.User.Gender_Male.Name := 'Main_Config_Profile_Main_Gender_Male';
+    mainScene.Config.main.R.Profile.User.Gender_Male.Parent := mainScene.Config.main.R.Profile.User.Personal;
+    mainScene.Config.main.R.Profile.User.Gender_Male.SetBounds(mainScene.Config.main.R.Profile.User.Personal.Width - 62, 20, 28, 28);
+    mainScene.Config.main.R.Profile.User.Gender_Male.Font.Family := 'IcoMoon-Free';
+    mainScene.Config.main.R.Profile.User.Gender_Male.Font.Size := 24;
+    mainScene.Config.main.R.Profile.User.Gender_Male.Text := #$e9dc;
+    mainScene.Config.main.R.Profile.User.Gender_Male.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+    mainScene.Config.main.R.Profile.User.Gender_Male.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+    mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+    mainScene.Config.main.R.Profile.User.Gender_Male.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
+    mainScene.Config.main.R.Profile.User.Gender_Male.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Gender_Female := TText.Create(mainScene.Config.main.R.Profile.User.Personal);
-  mainScene.Config.main.R.Profile.User.Gender_Female.Name := 'Main_Config_Profile_Main_Gender_Female';
-  mainScene.Config.main.R.Profile.User.Gender_Female.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Gender_Female.SetBounds(mainScene.Config.main.R.Profile.User.Personal.Width - 30, 20, 28, 28);
-  mainScene.Config.main.R.Profile.User.Gender_Female.Font.Family := 'IcoMoon-Free';
-  mainScene.Config.main.R.Profile.User.Gender_Female.Font.Size := 24;
-  mainScene.Config.main.R.Profile.User.Gender_Female.Text := #$e9dd;
-  mainScene.Config.main.R.Profile.User.Gender_Female.TextSettings.FontColor := TAlphaColorRec.Pink;
-  mainScene.Config.main.R.Profile.User.Gender_Female.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
-  mainScene.Config.main.R.Profile.User.Gender_Female.Visible := True;
+    mainScene.Config.main.R.Profile.User.Gender_Male_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Male);
+    mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Name := 'Main_Config_Profile_Main_Gender_Male_Glow';
+    mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Parent := mainScene.Config.main.R.Profile.User.Gender_Male;
+    mainScene.Config.main.R.Profile.User.Gender_Male_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+    mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Opacity := 0.9;
+    mainScene.Config.main.R.Profile.User.Gender_Male_Glow.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Female);
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Name := 'Main_Config_Profile_Main_Gender_Female_Glow';
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Parent := mainScene.Config.main.R.Profile.User.Gender_Female;
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.GlowColor := TAlphaColorRec.Pink;
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Opacity := 0.9;
-  mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Enabled := False;
+    mainScene.Config.main.R.Profile.User.Gender_Female := TText.Create(mainScene.Config.main.R.Profile.User.Personal);
+    mainScene.Config.main.R.Profile.User.Gender_Female.Name := 'Main_Config_Profile_Main_Gender_Female';
+    mainScene.Config.main.R.Profile.User.Gender_Female.Parent := mainScene.Config.main.R.Profile.User.Personal;
+    mainScene.Config.main.R.Profile.User.Gender_Female.SetBounds(mainScene.Config.main.R.Profile.User.Personal.Width - 30, 20, 28, 28);
+    mainScene.Config.main.R.Profile.User.Gender_Female.Font.Family := 'IcoMoon-Free';
+    mainScene.Config.main.R.Profile.User.Gender_Female.Font.Size := 24;
+    mainScene.Config.main.R.Profile.User.Gender_Female.Text := #$e9dd;
+    mainScene.Config.main.R.Profile.User.Gender_Female.TextSettings.FontColor := TAlphaColorRec.Pink;
+    mainScene.Config.main.R.Profile.User.Gender_Female.OnClick := ex_main.input.mouse_config.Text.OnMouseClick;
+    mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseEnter := ex_main.input.mouse_config.Text.OnMouseEnter;
+    mainScene.Config.main.R.Profile.User.Gender_Female.OnMouseLeave := ex_main.input.mouse_config.Text.OnMouseLeave;
+    mainScene.Config.main.R.Profile.User.Gender_Female.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Apply_Changes := TButton.Create(mainScene.Config.main.R.Profile.User.Personal);
-  mainScene.Config.main.R.Profile.User.Apply_Changes.Name := 'Main_Config_Profile_Main_Apply_Changes';
-  mainScene.Config.main.R.Profile.User.Apply_Changes.Parent := mainScene.Config.main.R.Profile.User.Personal;
-  mainScene.Config.main.R.Profile.User.Apply_Changes.SetBounds(10, 155, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 30);
-  mainScene.Config.main.R.Profile.User.Apply_Changes.Text := 'Apply changes';
-  mainScene.Config.main.R.Profile.User.Apply_Changes.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
-  mainScene.Config.main.R.Profile.User.Apply_Changes.OnMouseEnter := ex_main.input.mouse_config.Button.OnMouseEnter;
-  mainScene.Config.main.R.Profile.User.Apply_Changes.Visible := True;
+    mainScene.Config.main.R.Profile.User.Gender_Female_Glow := TGlowEffect.Create(mainScene.Config.main.R.Profile.User.Gender_Female);
+    mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Name := 'Main_Config_Profile_Main_Gender_Female_Glow';
+    mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Parent := mainScene.Config.main.R.Profile.User.Gender_Female;
+    mainScene.Config.main.R.Profile.User.Gender_Female_Glow.GlowColor := TAlphaColorRec.Pink;
+    mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Opacity := 0.9;
+    mainScene.Config.main.R.Profile.User.Gender_Female_Glow.Enabled := False;
 
-  mainScene.Config.main.R.Profile.User.Country := TImage.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Country.Name := 'Main_Config_Profile_Main_Country';
-  mainScene.Config.main.R.Profile.User.Country.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Country.SetBounds(410, 232, 150, 120);
-  mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images + uDB_AUser.Local.User.Country + '.png');
-  mainScene.Config.main.R.Profile.User.Country.WrapMode := TImageWrapMode.Fit;
-  mainScene.Config.main.R.Profile.User.Country.Visible := True;
+    mainScene.Config.main.R.Profile.User.Apply_Changes := TButton.Create(mainScene.Config.main.R.Profile.User.Personal);
+    mainScene.Config.main.R.Profile.User.Apply_Changes.Name := 'Main_Config_Profile_Main_Apply_Changes';
+    mainScene.Config.main.R.Profile.User.Apply_Changes.Parent := mainScene.Config.main.R.Profile.User.Personal;
+    mainScene.Config.main.R.Profile.User.Apply_Changes.SetBounds(10, 155, mainScene.Config.main.R.Profile.User.Personal.Width - 20, 30);
+    mainScene.Config.main.R.Profile.User.Apply_Changes.Text := 'Apply changes';
+    mainScene.Config.main.R.Profile.User.Apply_Changes.OnClick := ex_main.input.mouse_config.Button.OnMouseClick;
+    mainScene.Config.main.R.Profile.User.Apply_Changes.OnMouseEnter := ex_main.input.mouse_config.Button.OnMouseEnter;
+    mainScene.Config.main.R.Profile.User.Apply_Changes.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Status := TGroupBox.Create(mainScene.Config.main.R.Profile.User.Panel);
-  mainScene.Config.main.R.Profile.User.Status.Name := 'Main_Config_Profile_Main_Status';
-  mainScene.Config.main.R.Profile.User.Status.Parent := mainScene.Config.main.R.Profile.User.Panel;
-  mainScene.Config.main.R.Profile.User.Status.SetBounds(10, 400, mainScene.Config.main.R.Profile.User.Panel.Width - 20,
-    mainScene.Config.main.R.Profile.User.Panel.Height - 440);
-  mainScene.Config.main.R.Profile.User.Status.Text := 'Status';
-  mainScene.Config.main.R.Profile.User.Status.Visible := True;
+    mainScene.Config.main.R.Profile.User.Country := TImage.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Country.Name := 'Main_Config_Profile_Main_Country';
+    mainScene.Config.main.R.Profile.User.Country.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Country.SetBounds(410, 232, 150, 120);
+    mainScene.Config.main.R.Profile.User.Country.Bitmap.LoadFromFile(ex_main.Paths.Flags_Images + uDB_AUser.Local.User.Country + '.png');
+    mainScene.Config.main.R.Profile.User.Country.WrapMode := TImageWrapMode.Fit;
+    mainScene.Config.main.R.Profile.User.Country.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Active_Led := TCircle.Create(mainScene.Config.main.R.Profile.User.Status);
-  mainScene.Config.main.R.Profile.User.Active_Led.Name := 'Main_Config_Profile_Main_Active_Led';
-  mainScene.Config.main.R.Profile.User.Active_Led.Parent := mainScene.Config.main.R.Profile.User.Status;
-  mainScene.Config.main.R.Profile.User.Active_Led.SetBounds(10, 30, 16, 16);
-  mainScene.Config.main.R.Profile.User.Active_Led.Fill.Kind := TBrushKind.Solid;
-  if uDB_AUser.Online.Active = 1 then
-    mainScene.Config.main.R.Profile.User.Active_Led.Fill.Color := TAlphaColorRec.Lime
-  else
-    mainScene.Config.main.R.Profile.User.Active_Led.Fill.Color := TAlphaColorRec.Grey;
-  mainScene.Config.main.R.Profile.User.Active_Led.Visible := True;
+    mainScene.Config.main.R.Profile.User.Status := TGroupBox.Create(mainScene.Config.main.R.Profile.User.Layout);
+    mainScene.Config.main.R.Profile.User.Status.Name := 'Main_Config_Profile_Main_Status';
+    mainScene.Config.main.R.Profile.User.Status.Parent := mainScene.Config.main.R.Profile.User.Layout;
+    mainScene.Config.main.R.Profile.User.Status.SetBounds(10, 400, mainScene.Config.main.R.Profile.User.Layout.Width - 20,
+      mainScene.Config.main.R.Profile.User.Layout.Height - 440);
+    mainScene.Config.main.R.Profile.User.Status.Text := 'Status';
+    mainScene.Config.main.R.Profile.User.Status.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Active_Text := TText.Create(mainScene.Config.main.R.Profile.User.Status);
-  mainScene.Config.main.R.Profile.User.Active_Text.Name := 'Main_Config_Profile_Main_Active_Led_Text';
-  mainScene.Config.main.R.Profile.User.Active_Text.Parent := mainScene.Config.main.R.Profile.User.Status;
-  mainScene.Config.main.R.Profile.User.Active_Text.SetBounds(40, 30, 200, 20);
-  mainScene.Config.main.R.Profile.User.Active_Text.HorzTextAlign := TTextAlign.Leading;
-  mainScene.Config.main.R.Profile.User.Active_Text.TextSettings.FontColor := TAlphaColorRec.White;
-  if uDB_AUser.Local.User.Active then
-    mainScene.Config.main.R.Profile.User.Active_Text.Text := 'User Is Active Online'
-  else
-    mainScene.Config.main.R.Profile.User.Active_Text.Text := 'User Is InActive Online';
-  mainScene.Config.main.R.Profile.User.Active_Text.Visible := True;
+    mainScene.Config.main.R.Profile.User.Active_Led := TCircle.Create(mainScene.Config.main.R.Profile.User.Status);
+    mainScene.Config.main.R.Profile.User.Active_Led.Name := 'Main_Config_Profile_Main_Active_Led';
+    mainScene.Config.main.R.Profile.User.Active_Led.Parent := mainScene.Config.main.R.Profile.User.Status;
+    mainScene.Config.main.R.Profile.User.Active_Led.SetBounds(10, 30, 16, 16);
+    mainScene.Config.main.R.Profile.User.Active_Led.Fill.Kind := TBrushKind.Solid;
+    if uDB_AUser.Online.Active = 1 then
+      mainScene.Config.main.R.Profile.User.Active_Led.Fill.Color := TAlphaColorRec.Lime
+    else
+      mainScene.Config.main.R.Profile.User.Active_Led.Fill.Color := TAlphaColorRec.Grey;
+    mainScene.Config.main.R.Profile.User.Active_Led.Visible := True;
 
-  mainScene.Config.main.R.Profile.User.Created := TText.Create(mainScene.Config.main.R.Profile.User.Status);
-  mainScene.Config.main.R.Profile.User.Created.Name := 'Main_Config_Profile_Main_Created';
-  mainScene.Config.main.R.Profile.User.Created.Parent := mainScene.Config.main.R.Profile.User.Status;
-  mainScene.Config.main.R.Profile.User.Created.SetBounds(10, 55, 500, 20);
-  mainScene.Config.main.R.Profile.User.Created.TextSettings.FontColor := TAlphaColorRec.White;
-  mainScene.Config.main.R.Profile.User.Created.TextSettings.Font.Size := 12;
-  mainScene.Config.main.R.Profile.User.Created.Text := 'User : was created on : ' + uDB_AUser.Local.User.Registered;
-  mainScene.Config.main.R.Profile.User.Created.TextSettings.HorzAlign := TTextAlign.Leading;
-  mainScene.Config.main.R.Profile.User.Created.Visible := True;
+    mainScene.Config.main.R.Profile.User.Active_Text := TText.Create(mainScene.Config.main.R.Profile.User.Status);
+    mainScene.Config.main.R.Profile.User.Active_Text.Name := 'Main_Config_Profile_Main_Active_Led_Text';
+    mainScene.Config.main.R.Profile.User.Active_Text.Parent := mainScene.Config.main.R.Profile.User.Status;
+    mainScene.Config.main.R.Profile.User.Active_Text.SetBounds(40, 30, 200, 20);
+    mainScene.Config.main.R.Profile.User.Active_Text.HorzTextAlign := TTextAlign.Leading;
+    mainScene.Config.main.R.Profile.User.Active_Text.TextSettings.FontColor := TAlphaColorRec.White;
+    if uDB_AUser.Local.User.Active then
+      mainScene.Config.main.R.Profile.User.Active_Text.Text := 'User Is Active Online'
+    else
+      mainScene.Config.main.R.Profile.User.Active_Text.Text := 'User Is InActive Online';
+    mainScene.Config.main.R.Profile.User.Active_Text.Visible := True;
 
-  vTemp_Personal.Name := uDB_AUser.Local.User.Name;
-  vTemp_Personal.Surname := uDB_AUser.Local.User.Surname;
-  vTemp_Personal.Genre := uDB_AUser.Local.User.Genre.ToInteger;
+    mainScene.Config.main.R.Profile.User.Created := TText.Create(mainScene.Config.main.R.Profile.User.Status);
+    mainScene.Config.main.R.Profile.User.Created.Name := 'Main_Config_Profile_Main_Created';
+    mainScene.Config.main.R.Profile.User.Created.Parent := mainScene.Config.main.R.Profile.User.Status;
+    mainScene.Config.main.R.Profile.User.Created.SetBounds(10, 55, 500, 20);
+    mainScene.Config.main.R.Profile.User.Created.TextSettings.FontColor := TAlphaColorRec.White;
+    mainScene.Config.main.R.Profile.User.Created.TextSettings.Font.Size := 12;
+    mainScene.Config.main.R.Profile.User.Created.Text := 'User : was created on : ' + uDB_AUser.Local.User.Registered;
+    mainScene.Config.main.R.Profile.User.Created.TextSettings.HorzAlign := TTextAlign.Leading;
+    mainScene.Config.main.R.Profile.User.Created.Visible := True;
 
-  Genre(vTemp_Personal.Genre.ToString);
+    vTemp_Personal.Name := uDB_AUser.Local.User.Name;
+    vTemp_Personal.Surname := uDB_AUser.Local.User.Surname;
+    vTemp_Personal.Genre := uDB_AUser.Local.User.Genre.ToInteger;
+
+    Genre(vTemp_Personal.Genre.ToString);
+  end;
 end;
 
 procedure Free;
 begin
-  FreeAndNil(mainScene.Config.main.R.Profile.User.Panel);
+  FreeAndNil(mainScene.Config.main.R.Profile.User.Layout);
   extrafe.prog.State := 'main_config';
 end;
 
@@ -371,26 +375,35 @@ end;
 
 procedure Apply_Changes;
 begin
-  if vTemp_Personal.Name <> uDB_AUser.Online.Name then
+  if vTemp_Personal.Name <> uDB_AUser.Local.User.Name then
   begin
-    uDB_AUser.Online.Name := vTemp_Personal.Name;
-    uDB.Query_Update_Online('USERS', 'NAME', vTemp_Personal.Name, uDB_AUser.Online.Num.ToString);
+    if extrafe.databases.online_connected then
+    begin
+      uDB_AUser.Online.Name := vTemp_Personal.Name;
+      uDB.Query_Update_Online('Users', 'Name', vTemp_Personal.Name, uDB_AUser.Online.Num.ToString);
+    end;
     uDB_AUser.Local.User.Name := vTemp_Personal.Name;
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'NAME', vTemp_Personal.Name, 'USER_ID', uDB_AUser.Local.User.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Users', 'Name', vTemp_Personal.Name, 'User_ID', uDB_AUser.Local.User.Num.ToString);
   end;
-  if vTemp_Personal.Surname <> uDB_AUser.Online.Surname then
+  if vTemp_Personal.Surname <> uDB_AUser.Local.User.Surname then
   begin
-    uDB_AUser.Online.Surname := vTemp_Personal.Surname;
-    uDB.Query_Update_Online('USERS', 'SURNAME', vTemp_Personal.Surname, uDB_AUser.Online.Num.ToString);
+    if extrafe.databases.online_connected then
+    begin
+      uDB_AUser.Online.Surname := vTemp_Personal.Surname;
+      uDB.Query_Update_Online('Users', 'Surname', vTemp_Personal.Surname, uDB_AUser.Online.Num.ToString);
+    end;
     uDB_AUser.Local.User.Surname := vTemp_Personal.Surname;
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'SURNAME', vTemp_Personal.Surname, 'USER_ID', uDB_AUser.Local.User.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Users', 'Surname', vTemp_Personal.Surname, 'User_ID', uDB_AUser.Local.User.Num.ToString);
   end;
-  if vTemp_Personal.Genre <> uDB_AUser.Online.Genre then
+  if vTemp_Personal.Genre <> uDB_AUser.Local.User.Genre.ToInteger then
   begin
-    uDB_AUser.Online.Genre := vTemp_Personal.Genre;
-    uDB.Query_Update_Online('USERS', 'GENDER', vTemp_Personal.Genre.ToString, uDB_AUser.Online.Num.ToString);
+    if extrafe.databases.online_connected then
+    begin
+      uDB_AUser.Online.Genre := vTemp_Personal.Genre;
+      uDB.Query_Update_Online('Users', 'Gender', vTemp_Personal.Genre.ToString, uDB_AUser.Online.Num.ToString);
+    end;
     uDB_AUser.Local.User.Genre := vTemp_Personal.Genre.ToBoolean;
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'GENDER', vTemp_Personal.Genre.ToString, 'USER_ID', uDB_AUser.Local.User.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Users', 'Gender', vTemp_Personal.Genre.ToString, 'User_ID', uDB_AUser.Local.User.Num.ToString);
   end;
 end;
 ///
@@ -611,8 +624,11 @@ end;
 
 procedure Avatar_Change;
 begin
-  uDB_AUser.Online.Avatar := vAvatar.Checked;
-  uDB.Query_Update_Online('USERS', 'AVATAR', vAvatar.Checked.ToString, uDB_AUser.Online.Num.ToString);
+  if extrafe.databases.online_connected then
+  begin
+    uDB_AUser.Online.Avatar := vAvatar.Checked;
+    uDB.Query_Update_Online('USERS', 'AVATAR', vAvatar.Checked.ToString, uDB_AUser.Online.Num.ToString);
+  end;
   uDB_AUser.Local.User.Avatar := vAvatar.Checked.ToString;
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'USERS', 'AVATAR', vAvatar.Checked.ToString, 'USER_ID', uDB_AUser.Local.User.Num.ToString);
   mainScene.Header.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + IntToStr(vAvatar.Checked) + '.png');

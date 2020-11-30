@@ -1,0 +1,16 @@
+unit uMain_Config_General_Sound;
+interface
+uses
+  System.Classes;
+
+procedure Load;
+
+implementation
+
+procedure Load;
+begin
+
+end;
+
+
+end.

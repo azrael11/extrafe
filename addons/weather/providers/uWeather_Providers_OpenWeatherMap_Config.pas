@@ -521,15 +521,17 @@ end;
 
 procedure Options_Check_System_Type(vSystem_Type: String);
 begin
-  if vStart = False then
+  if vSystem_Type <> uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric then
   begin
     if vSystem_Type = 'metric' then
     begin
       vWeather.Config.main.Right.Options_OWM.Imperial.IsChecked := False;
+      uWeather_Providers_OpenWeatherMap.Use_Metric;
     end
     else if vSystem_Type = 'imperial' then
     begin
       vWeather.Config.main.Right.Options_OWM.Metric.IsChecked := False;
+      uWeather_Providers_OpenWeatherMap.Use_Imperial;
     end;
   end;
 end;

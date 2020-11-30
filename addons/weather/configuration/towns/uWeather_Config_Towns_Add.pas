@@ -45,6 +45,8 @@ procedure FindTown(mTown: string);
 function Is_Town_Already_Exists(vID, vProvider: String): Boolean;
 procedure New_Town(vSelectedTown: Integer; vStay: Boolean);
 
+procedure Show_Add_Messeage(vAdd: Boolean; vMessage: String);
+
 var
   vAni: TWEATHER_CONFIG_TOWNS_ADD_FLOATANIMATION;
   vAni_End: Boolean;
@@ -83,7 +85,8 @@ begin
   vWeather.Config.main.Right.Towns.Add.Panel := TPanel.Create(vWeather.Scene.weather);
   vWeather.Config.main.Right.Towns.Add.Panel.name := 'A_W_Config_Towns_Add';
   vWeather.Config.main.Right.Towns.Add.Panel.Parent := vWeather.Scene.weather;
-  vWeather.Config.main.Right.Towns.Add.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 400, 600, 450);
+  vWeather.Config.main.Right.Towns.Add.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 300, uDB_AUser.Local.SETTINGS.Resolution.Half_Height -
+    400, 600, 450);
   vWeather.Config.main.Right.Towns.Add.Panel.Visible := True;
 
   CreateHeader(vWeather.Config.main.Right.Towns.Add.Panel, 'IcoMoon-Free', #$ea0a, TAlphaColorRec.DeepSkyBlue, 'Search and add new towns.', False, nil);
@@ -110,7 +113,7 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text := '';
   vWeather.Config.main.Right.Towns.Add.main.FindTown_V.StyledSettings := vWeather.Config.main.Right.Towns.Add.main.FindTown_V.StyledSettings -
     [TStyledSetting.Size];
-  vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Caret.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Caret.Color := TAlphaColorRec.DeepSkyBlue;
   vWeather.Config.main.Right.Towns.Add.main.FindTown_V.TextSettings.HorzAlign := TTextAlign.Center;
   vWeather.Config.main.Right.Towns.Add.main.FindTown_V.TextSettings.Font.Size := 16;
   vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Visible := True;
@@ -121,7 +124,7 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Search.SetBounds(vWeather.Config.main.Right.Towns.Add.main.Panel.Width - 44, 40, 24, 24);
   vWeather.Config.main.Right.Towns.Add.main.Search.Font.Family := 'IcoMoon-Free';
   vWeather.Config.main.Right.Towns.Add.main.Search.Font.Size := 24;
-  vWeather.Config.main.Right.Towns.Add.main.Search.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Add.main.Search.TextSettings.FontColor := TAlphaColorRec.DeepSkyBlue;
   vWeather.Config.main.Right.Towns.Add.main.Search.Text := #$e986;
   vWeather.Config.main.Right.Towns.Add.main.Search.OnClick := weather.Input.mouse_config.Text.OnMouseClick;
   vWeather.Config.main.Right.Towns.Add.main.Search.OnMouseEnter := weather.Input.mouse_config.Text.OnMouseEnter;
@@ -132,7 +135,7 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Search_Glow.name := 'A_W_Config_Towns_Add_Search_Glow';
   vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Parent := vWeather.Config.main.Right.Towns.Add.main.Search;
   vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Softness := 0.4;
-  vWeather.Config.main.Right.Towns.Add.main.Search_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Config.main.Right.Towns.Add.main.Search_Glow.GlowColor := TAlphaColorRec.DeepSkyBlue;
   vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Opacity := 0.9;
   vWeather.Config.main.Right.Towns.Add.main.Search_Glow.Enabled := False;
 
@@ -195,18 +198,27 @@ begin
   vWeather.Config.main.Right.Towns.Add.main.Ani.name := 'A_W_Config_Towns_Add_Ani';
   vWeather.Config.main.Right.Towns.Add.main.Ani.Parent := vWeather.Config.main.Right.Towns.Add.main.Ani_Panel;
   vWeather.Config.main.Right.Towns.Add.main.Ani.PropertyName := 'Opacity';
-  vWeather.Config.main.Right.Towns.Add.main.Ani.Duration := 2.5;
+  vWeather.Config.main.Right.Towns.Add.main.Ani.Duration := 4;
   vWeather.Config.main.Right.Towns.Add.main.Ani.StartValue := 1;
-  vWeather.Config.main.Right.Towns.Add.main.Ani.StopValue := 0.1;
+  vWeather.Config.main.Right.Towns.Add.main.Ani.StopValue := 0;
   vWeather.Config.main.Right.Towns.Add.main.Ani.OnFinish := vAni.OnFinish;
   vWeather.Config.main.Right.Towns.Add.main.Ani.Enabled := False;
 
-  vWeather.Config.main.Right.Towns.Add.main.Ani_Text := TLabel.Create(vWeather.Config.main.Right.Towns.Add.main.Ani_Panel);
-  vWeather.Config.main.Right.Towns.Add.main.Ani_Text.name := 'A_W_Config_Towns_Add_AniText';
-  vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Parent := vWeather.Config.main.Right.Towns.Add.main.Ani_Panel;
-  vWeather.Config.main.Right.Towns.Add.main.Ani_Text.SetBounds(10, 40, 380, 24);
-  vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Text := '';
-  vWeather.Config.main.Right.Towns.Add.main.Ani_Text.Visible := True;
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_1 := TLabel.Create(vWeather.Config.main.Right.Towns.Add.main.Ani_Panel);
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_1.name := 'A_W_Config_Towns_Add_AniText_Line_1';
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_1.Parent := vWeather.Config.main.Right.Towns.Add.main.Ani_Panel;
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_1.SetBounds(10, 40, 380, 24);
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_1.Text := '';
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_1.Visible := True;
+
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_2 := TLabel.Create(vWeather.Config.main.Right.Towns.Add.main.Ani_Panel);
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_2.name := 'A_W_Config_Towns_Add_AniText_Line_2';
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_2.Parent := vWeather.Config.main.Right.Towns.Add.main.Ani_Panel;
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_2.SetBounds(10, 70, 380, 24);
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_2.Text := '';
+  vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_2.Visible := True;
+
+
 
   Create_Grid;
 end;
@@ -299,13 +311,24 @@ procedure New_Town(vSelectedTown: Integer; vStay: Boolean);
 var
   vi: Integer;
 begin
+  vStayToADD := vStay;
   if uDB_AUser.Local.addons.Weather_D.Provider = 'yahoo' then
     uWeather_Providers_Yahoo.Add_NewTown(vSelectedTown)
   else if uDB_AUser.Local.addons.Weather_D.Provider = 'openweathermap' then
     uWeather_Providers_OpenWeatherMap.Add_NewTown(vSelectedTown);
-  if vStay = False then
-    Free;
 end;
+
+procedure Show_Add_Messeage(vAdd: Boolean; vMessage: String);
+begin
+  if vAdd then
+  begin
+    vWeather.Config.main.Right.Towns.Add.main.Ani_Panel.Visible := True;
+    vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_1.Text := 'Success!!!';
+    vWeather.Config.main.Right.Towns.Add.main.Ani_Text_Line_2.Text := vMessage;
+    vWeather.Config.main.Right.Towns.Add.main.Ani.Start;
+  end;
+end;
+
 
 { TWEATHER_CONFIG_TOWNS_DELETE_FLOATANIMATION }
 

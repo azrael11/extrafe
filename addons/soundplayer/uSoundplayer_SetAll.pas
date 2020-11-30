@@ -69,7 +69,7 @@ begin
   vSoundplayer.scene.soundplayer := TImage.Create(mainScene.main.Down_Level);
   vSoundplayer.scene.soundplayer.Name := 'A_Soundplayer';
   vSoundplayer.scene.soundplayer.Parent := mainScene.main.Down_Level;
-  vSoundplayer.scene.soundplayer.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
+  vSoundplayer.scene.soundplayer.SetBounds(0, 130, uDB_AUser.Local.SETTINGS.Resolution.Width, uDB_AUser.Local.SETTINGS.Resolution.Height - 130);
   vSoundplayer.scene.soundplayer.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back.png');
   vSoundplayer.scene.soundplayer.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.soundplayer.Visible := True;
@@ -117,7 +117,7 @@ begin
   vSoundplayer.scene.Back_Presentation := TImage.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.scene.Back_Presentation.Name := 'A_SP_Presentation';
   vSoundplayer.scene.Back_Presentation.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.scene.Back_Presentation.SetBounds(extrafe.res.Half_Width - 700, 20, 1400, 900);
+  vSoundplayer.scene.Back_Presentation.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 700, 20, 1400, 900);
   vSoundplayer.scene.Back_Presentation.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_back_info.png');
   vSoundplayer.scene.Back_Presentation.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.Back_Presentation.Visible := False;
@@ -148,7 +148,7 @@ begin
   vSoundplayer.scene.PlaylistLine := TImage.Create(vSoundplayer.scene.Back);
   vSoundplayer.scene.PlaylistLine.Name := 'A_SP_PlaylistLine_Image';
   vSoundplayer.scene.PlaylistLine.Parent := vSoundplayer.scene.Back;
-  vSoundplayer.scene.PlaylistLine.SetBounds(0, extrafe.res.Height - 410, vSoundplayer.scene.Back.Width, 10);
+  vSoundplayer.scene.PlaylistLine.SetBounds(0, uDB_AUser.Local.SETTINGS.Resolution.Height - 410, vSoundplayer.scene.Back.Width, 10);
   vSoundplayer.scene.PlaylistLine.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_spot.png');
   vSoundplayer.scene.PlaylistLine.WrapMode := TImageWrapMode.Tile;
   vSoundplayer.scene.PlaylistLine.Visible := True;
@@ -227,7 +227,7 @@ begin
   vSoundplayer.Player.Play := TText.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.Player.Play.Name := 'A_SP_Player_Play';
   vSoundplayer.Player.Play.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.Player.Play.SetBounds((extrafe.res.Width / 2) - 32, 137, 48, 48);
+  vSoundplayer.Player.Play.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 32, 137, 48, 48);
   vSoundplayer.Player.Play.Font.Family := 'IcoMoon-Free';
   vSoundplayer.Player.Play.Text := #$ea1c;
   vSoundplayer.Player.Play.TextSettings.Font.Size := 48;
@@ -486,7 +486,7 @@ begin
   vSoundplayer.Player.Song_Title := TText.Create(vSoundplayer.scene.Back_Player);
   vSoundplayer.Player.Song_Title.Name := 'A_SP_Player_SongTitle';
   vSoundplayer.Player.Song_Title.Parent := vSoundplayer.scene.Back_Player;
-  vSoundplayer.Player.Song_Title.SetBounds(extrafe.res.Half_Width - 800, 18, 1600, 80);
+  vSoundplayer.Player.Song_Title.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 800, 18, 1600, 80);
   vSoundplayer.Player.Song_Title.Font.Size := 44;
   vSoundplayer.Player.Song_Title.Color := TAlphaColorRec.White;
   vSoundplayer.Player.Song_Title.Text := '';
@@ -720,7 +720,7 @@ begin
   vSoundplayer.scene.Back_Info := TImage.Create(vSoundplayer.scene.Back);
   vSoundplayer.scene.Back_Info.Name := 'A_SP_BackInfo_Image';
   vSoundplayer.scene.Back_Info.Parent := vSoundplayer.scene.Back;
-  vSoundplayer.scene.Back_Info.SetBounds(0, 220, vSoundplayer.scene.Back.Width, (extrafe.res.Height - 410) - 220);
+  vSoundplayer.scene.Back_Info.SetBounds(0, 220, vSoundplayer.scene.Back.Width, (uDB_AUser.Local.SETTINGS.Resolution.Height - 410) - 220);
   vSoundplayer.scene.Back_Info.Bitmap.LoadFromFile(UDB_AUser.Local.ADDONS.Soundplayer_D.p_Images + 'sp_ilhm.png');
   vSoundplayer.scene.Back_Info.WrapMode := TImageWrapMode.Center;
   vSoundplayer.scene.Back_Info.Visible := True;
@@ -935,7 +935,7 @@ begin
   vSoundplayer.scene.Back_Playlist := TImage.Create(vSoundplayer.scene.Back);
   vSoundplayer.scene.Back_Playlist.Name := 'A_SP_BackPlaylist_Image';
   vSoundplayer.scene.Back_Playlist.Parent := vSoundplayer.scene.Back;
-  vSoundplayer.scene.Back_Playlist.SetBounds(0, extrafe.res.Height - 400, vSoundplayer.scene.Back.Width, 260);
+  vSoundplayer.scene.Back_Playlist.SetBounds(0, uDB_AUser.Local.SETTINGS.Resolution.Height - 400, vSoundplayer.scene.Back.Width, 260);
   vSoundplayer.scene.Back_Playlist.Visible := True;
 
   vSoundplayer.Playlist.List := TStringGrid.Create(vSoundplayer.scene.Back_Playlist);
@@ -1293,7 +1293,7 @@ begin
   vSoundplayer.scene.First.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.scene.First.Panel.Name := 'A_SP_First';
   vSoundplayer.scene.First.Panel.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.scene.First.Panel.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Half_Height - 500, 800, 600);
+  vSoundplayer.scene.First.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 400, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 500, 800, 600);
   vSoundplayer.scene.First.Panel.Visible := True;
 
   vSoundplayer.scene.First.Panel_Shadow := TShadowEffect.Create(vSoundplayer.scene.First.Panel);
@@ -1406,7 +1406,7 @@ begin
   vSoundplayer.Playlist.Remove_Song.Remove := TPanel.Create(vSoundplayer.scene.soundplayer);
   vSoundplayer.Playlist.Remove_Song.Remove.Name := 'A_SP_Playlist_Edit_Song_Remove';
   vSoundplayer.Playlist.Remove_Song.Remove.Parent := vSoundplayer.scene.soundplayer;
-  vSoundplayer.Playlist.Remove_Song.Remove.SetBounds(extrafe.res.Half_Width - 250, extrafe.res.Half_Height - 75, 500, 140);
+  vSoundplayer.Playlist.Remove_Song.Remove.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 250, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 75, 500, 140);
   vSoundplayer.Playlist.Remove_Song.Remove.Visible := True;
 
   CreateHeader(vSoundplayer.Playlist.Remove_Song.Remove, 'IcoMoon-Free', #$ea0f, TAlphaColorRec.Deepskyblue, 'remove this song from the playlist?', False, nil);

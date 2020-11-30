@@ -1,0 +1,45 @@
+unit uSoundplayer_Settings_SetAll;
+
+interface
+
+uses
+  System.Classes,
+  System.UITypes,
+  FMX.StdCtrls;
+
+procedure uSoundplayer_Settings_Set;
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uSoundplayer_Actions,
+  uSoundplayer_AllTypes, uDB_AUser;
+
+procedure uSoundplayer_Settings_Set;
+begin
+  extrafe.prog.State := 'addon_soundplayer_settings';
+
+  uSoundplayer_Actions.Hide_Animations;
+
+  vSoundplayer.scene.Back_Blur.Enabled := True;
+
+  vSoundplayer.config.Panel := TPanel.Create(vSoundplayer.scene.soundplayer);
+  vSoundplayer.config.Panel.Name := 'A_SP_Settings';
+  vSoundplayer.config.Panel.Parent := vSoundplayer.scene.soundplayer;
+  vSoundplayer.config.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 400, uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 450, 800, 800);
+  vSoundplayer.config.Panel.Visible := True;
+
+  CreateHeader(vSoundplayer.config.Panel, 'IcoMoon-Free', #$e995, TAlphaColorRec.DeepSkyBlue, 'Soundplayer configuration', False, nil);
+
+  vSoundplayer.config.Main.Panel := TPanel.Create(vSoundplayer.config.Panel);
+  vSoundplayer.config.Main.Panel.Name := 'A_SP_Settings_Main';
+  vSoundplayer.config.Main.Panel.Parent := vSoundplayer.config.Panel;
+  vSoundplayer.config.Main.Panel.Width := vSoundplayer.config.Panel.Width;
+  vSoundplayer.config.Main.Panel.Height := vSoundplayer.config.Panel.Height - 30;
+  vSoundplayer.config.Main.Panel.Position.X := 0;
+  vSoundplayer.config.Main.Panel.Position.Y := 30;
+  vSoundplayer.config.Main.Panel.Visible := True;
+end;
+
+end.

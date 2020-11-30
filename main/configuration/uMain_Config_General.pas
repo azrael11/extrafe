@@ -43,28 +43,26 @@ begin
   mainScene.Config.Main.R.General.Blur.BlurAmount := 0.5;
   mainScene.Config.Main.R.General.Blur.Enabled := False;
 
-  mainScene.Config.Main.R.General.Contol := TTabControl.Create(mainScene.Config.Main.R.General.Panel);
-  mainScene.Config.Main.R.General.Contol.Name := 'Main_Config_General_TabControl';
-  mainScene.Config.Main.R.General.Contol.Parent := mainScene.Config.Main.R.General.Panel;
-  mainScene.Config.Main.R.General.Contol.Align := TAlignLayout.Client;
-  mainScene.Config.Main.R.General.Contol.Visible := True;
+  mainScene.Config.Main.R.General.Control := TTabControl.Create(mainScene.Config.Main.R.General.Panel);
+  mainScene.Config.Main.R.General.Control.Name := 'Main_Config_General_TabControl';
+  mainScene.Config.Main.R.General.Control.Parent := mainScene.Config.Main.R.General.Panel;
+  mainScene.Config.Main.R.General.Control.Align := TAlignLayout.Client;
+  mainScene.Config.Main.R.General.Control.Visible := True;
 
   for vi := 0 to 5 do
   begin
-    mainScene.Config.Main.R.General.Tab_Item[vi] := TTabItem.Create(mainScene.Config.Main.R.General.Contol);
+    mainScene.Config.Main.R.General.Tab_Item[vi] := TTabItem.Create(mainScene.Config.Main.R.General.Control);
     mainScene.Config.Main.R.General.Tab_Item[vi].Name := 'Main_Config_General_Tab_Item_' + vi.ToString;
-    mainScene.Config.Main.R.General.Tab_Item[vi].Parent := mainScene.Config.Main.R.General.Contol;
-    mainScene.Config.Main.R.General.Tab_Item[vi].SetBounds(0, 0, mainScene.Config.Main.R.General.Contol.Width,
-      mainScene.Config.Main.R.General.Contol.Height);
-    mainScene.Config.Main.R.General.Tab_Item[vi].Text:= cItem_Names[vi];
-      mainScene.Config.Main.R.General.Tab_Item[vi].Visible := True;
+    mainScene.Config.Main.R.General.Tab_Item[vi].Parent := mainScene.Config.Main.R.General.Control;
+    mainScene.Config.Main.R.General.Tab_Item[vi].SetBounds(0, 0, mainScene.Config.Main.R.General.Control.Width, mainScene.Config.Main.R.General.Control.Height);
+    mainScene.Config.Main.R.General.Tab_Item[vi].Text := cItem_Names[vi];
+    mainScene.Config.Main.R.General.Tab_Item[vi].Tag := vi;
+    mainScene.Config.Main.R.General.Tab_Item[vi].OnClick := ex_main.Input.mouse_config.TabItem.OnMouseClick;
+    mainScene.Config.Main.R.General.Tab_Item[vi].Visible := True;
   end;
 
-
   uMain_Config_General_Visual.Load;
-  uMain_Config_General_Keyboard.Load;
-  uMain_Config_General_Joystick.Load;
-  uMain_Config_General_Mouse.Load;
+  mainScene.Config.Main.R.General.Control.TabIndex := 0;
 end;
 
 end.

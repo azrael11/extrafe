@@ -17,7 +17,8 @@ implementation
 uses
   uMain_AllTypes,
   uMain_Config_Profile_User,
-  uMain_Config_Profile_Machine;
+  uMain_Config_Profile_Machine,
+  uLoad_AllTypes;
 
 procedure Create;
 const
@@ -25,6 +26,8 @@ const
 var
   vi, li, ki: Integer;
 begin
+  extrafe.prog.State := 'main_config_profile';
+
   mainScene.Config.main.R.Profile.Panel := TPanel.Create(mainScene.Config.main.R.Panel[0]);
   mainScene.Config.main.R.Profile.Panel.Name := 'Main_Config_Profile_Main_Panel';
   mainScene.Config.main.R.Profile.Panel.Parent := mainScene.Config.main.R.Panel[0];
@@ -52,11 +55,14 @@ begin
     mainScene.Config.main.R.Profile.TabItem[vi].SetBounds(0, 0,
       mainScene.Config.main.R.Profile.TabControl.Width, mainScene.Config.main.R.Profile.TabControl.Height);
     mainScene.Config.main.R.Profile.TabItem[vi].Text := cTab_Names[vi];
+    mainScene.Config.main.R.Profile.TabItem[vi].Tag := vi;
+    mainScene.Config.main.R.Profile.TabItem[vi].OnClick := ex_main.Input.mouse_config.TabItem.OnMouseClick;
     mainScene.Config.main.R.Profile.TabItem[vi].Visible := True;
   end;
 
   uMain_Config_Profile_User.Load;
-  uMain_Config_Profile_Machine.Load;
+  mainScene.Config.main.R.Profile.TabControl.TabIndex := 0;
+
 end;
 
 end.

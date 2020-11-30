@@ -24,10 +24,16 @@ uses
 procedure uWeather_Config_ShowHide(mShow: Boolean);
 begin
   if mShow then
-    extrafe.prog.State := 'addon_weather_config'
+  begin
+    extrafe.prog.State := 'addon_weather_config';
+    vWeather.Scene.Arrow_Left.Parent := vWeather.Scene.Back;
+    vWeather.Scene.Arrow_Right.Parent := vWeather.Scene.Back;
+  end
   else
   begin
     extrafe.prog.State := 'addon_weather';
+    vWeather.Scene.Arrow_Left.Parent := vWeather.Scene.weather;
+    vWeather.Scene.Arrow_Right.Parent := vWeather.Scene.weather;
     uWeather_COnfig_ClearConfig;
   end;
   vWeather.Scene.Blur.Enabled := mShow;

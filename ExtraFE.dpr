@@ -3,7 +3,6 @@ program ExtraFE;
 uses
   System.StartUpCopy,
   System.SysUtils,
-  CodeSiteLogging,
   FMX.Forms,
   FMX.Dialogs,
   WinApi.Windows,
@@ -202,12 +201,14 @@ uses
   uMain_Config_Addons_Soundplayer in 'main\configuration\addons\uMain_Config_Addons_Soundplayer.pas',
   uMain_Config_Addons_Time in 'main\configuration\addons\uMain_Config_Addons_Time.pas',
   uMain_Config_Addons_AzPlay in 'main\configuration\addons\uMain_Config_Addons_AzPlay.pas',
-  uMain_Config_Addons_Calendar in 'main\configuration\addons\uMain_Config_Addons_Calendar.pas';
+  uMain_Config_Addons_Calendar in 'main\configuration\addons\uMain_Config_Addons_Calendar.pas',
+  uMain_Config_Info_Emulators in 'main\configuration\info\uMain_Config_Info_Emulators.pas',
+  uMain_Config_Info_Multimedia in 'main\configuration\info\uMain_Config_Info_Multimedia.pas',
+  uMain_Config_Info_Others in 'main\configuration\info\uMain_Config_Info_Others.pas';
 
 {$R *.res}
 
 var
-  Destination: TCodeSiteDestination;
   vOne_Instance: THandle;
 
 begin
@@ -224,23 +225,7 @@ begin
   Application.CreateForm(TMain_Form, Main_Form);
   Application.CreateForm(TEmu_Form, Emu_Form);
   Application.MainForm := load.Loading;
-{$IFDEF DEBUG}
-    CodeSite.Enabled := True;
-    CodeSite.Enabled := CodeSite.Installed;
-    if CodeSite.Enabled then
-    begin
-      { Here can activate the log destination file }
-      // Destination := TCodeSiteDestination.Create(Main_Form);
-      // Destination.LogFile.Active := True;
-      // Destination.LogFile.FileName := ChangeFileExt('ExtraFE', '.xml');
-      // Destination.LogFile.FilePath := ExtractFilePath(ParamStr(0));
-      // CodeSite.Destination := Destination;
-      CodeSite.Clear;
-    end;
-
-{$ELSE}
-    CodeSite.Enabled := False;
-{$ENDIF}
     Application.Run;
   end;
+
 end.

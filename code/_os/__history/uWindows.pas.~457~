@@ -1,0 +1,369 @@
+unit uWindows;
+
+interface
+
+uses
+{$IFDEF MACOS}
+  MacApi.Appkit,
+  MacApi.CoreFoundation,
+  MacApi.Foundation,
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+  System.SysUtils,
+  System.Classes,
+  Winapi.ShellApi,
+  Winapi.Windows,
+  Winapi.Winsock,
+  Winapi.WinInet,
+  Winapi.Messages,
+  Winapi.TlHelp32,
+  ActiveX,
+  comobj,
+  FMX.Platform.Win,
+  FMX.Graphics,
+  FMX.Forms,
+  scktComp,
+{$ENDIF}
+  uDB_AUser
+  uLoad_AllTypes;
+
+
+{ program info build }
+function Version_Get_info(mFileName: string): TStringlist;
+
+{ windows monitor resolutions }
+function Monitor_Get_Res: TEXTRAFE_RESOLUTION_MONITOR;
+function Monitor_Get_Avail_Res: TStringlist;
+function Monitor_Get_Avail_Refresh: TStringlist;
+
+{ Folders }
+function Folder_Count(vDir: String): Integer;
+function Folder_Names(vDir: String): TStringlist;
+
+{ Files }
+function File_Count(vDir: String; vType: String): Integer;
+function File_Names(vDir: String; vFileType: String): TStringlist;
+function File_Is_In_Use(FileName: TFileName): Boolean;
+function File_Get_Size(const aFilename: String): int64;
+
+{ machine info }
+function Os_Architecture(Const vOsArch: TOSVersion.TArchitecture): String;
+function Os_Platform(Const vOsPlatform: TOSVersion.TPlatform): String;
+function Os_Platform_Point: Integer;
+
+{ Fonts }
+procedure Fonts_Get(FontList: TStringlist);
+
+implementation
+
+uses
+  main,
+  load;
+
+// Dns server list const dll
+const
+{$IFDEF MSWINDOWS}
+  iphlpapidll = 'iphlpapi.dll';
+{$ENDIF}
+
+// Just gets the version info
+function Version_Get_info(mFileName: string): TStringlist;
+var
+  VerInfoSize: Cardinal;
+  VerValueSize: Cardinal;
+  Dummy: Cardinal;
+  PVerInfo: Pointer;
+  PVerValue: PVSFixedFileInfo;
+begin
+  Result := TStringlist.Create;
+  VerInfoSize := GetFileVersionInfoSize(PChar(mFileName), Dummy);
+  GetMem(PVerInfo, VerInfoSize);
+  try
+    if GetFileVersionInfo(PChar(mFileName), 0, VerInfoSize, PVerInfo) then
+      if VerQueryValue(PVerInfo, '\', Pointer(PVerValue), VerValueSize) then
+        with PVerValue^ do
+        begin
+          Result.Add(FloatToStr(HiWord(dwFileVersionMS)));
+          Result.Add(FloatToStr(LoWord(dwFileVersionMS)));
+          Result.Add(FloatToStr(HiWord(dwFileVersionLS)));
+          Result.Add(FloatToStr(LoWord(dwFileVersionLS)));
+        end;
+  finally
+    FreeMem(PVerInfo, VerInfoSize);
+  end;
+end;
+
+function Monitor_Get_Res: TEXTRAFE_RESOLUTION_MONITOR;
+var
+  DC: THandle;
+  Bits: Integer;
+  Hor: Integer;
+  Ver: Integer;
+  RR: Integer;
+  // DM: TDevMode;
+  // ModeNum: LongInt;
+begin
+  DC := GetDC(FmxHandleToHWND(load.Loading.Handle));
+  Bits := GetDeviceCaps(DC, BITSPIXEL);
+  Hor := GetDeviceCaps(DC, HORZRES);
+  Ver := GetDeviceCaps(DC, VERTRES);
+  RR := GetDeviceCaps(DC, VREFRESH);
+  Result.Horizontal := Hor;
+  Result.Vertical := Ver;
+  Result.Refresh_Rate := RR;
+  Result.Bits_Per_Pixel := Bits;
+  ReleaseDC(FmxHandleToHWND(load.Loading.Handle), DC);
+  {
+    // Show Current Resolution
+    Edit1.Text := Format('%d bit, %d x %d', [Bits, HRes, VRes]);
+    ReleaseDC(Handle, DC); // Show all modes available ModeNum := 0; // The 1st one
+    EnumDisplaySettings(nil, ModeNum, DM);
+    ListBox1.Items.Add(Format('%d bit, %d x %d bei %d Hz', [DM.dmBitsPerPel,
+    DM.dmPelsWidth, DM.dmPelsHeight, Dm.dmDisplayFrequency]));
+    Ok := True;
+    while Ok do
+    begin
+    Inc(ModeNum); // Get next one
+    Ok := EnumDisplaySettings(nil, ModeNum, DM);
+    ListBox1.Items.Add(Format('%d bit, %d x %d bei %d Hz', [DM.dmBitsPerPel,
+    DM.dmPelsWidth, DM.dmPelsHeight, Dm.dmDisplayFrequency]));
+    end;
+  }
+end;
+
+function Folder_Count(vDir: String): Integer;
+var
+  Rec: TSearchRec;
+  nFileCount: Integer;
+begin
+  nFileCount := 0;
+  if FindFirst(vDir, faAnyFile, Rec) { *Converted from FindFirst* } = 0 then
+    repeat
+      // Exclude directories from the list of files.
+      if ((Rec.Attr and faDirectory) <> faDirectory) then
+        Inc(nFileCount);
+    until FindNext(Rec) { *Converted from FindNext* } <> 0;
+  System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
+  Result := nFileCount;
+end;
+
+function File_Count(vDir: String; vType: String): Integer;
+var
+  Rec: TSearchRec;
+  nFileCount: Integer;
+begin
+  nFileCount := 0;
+  if FindFirst(vDir + '\' + vType, faArchive, Rec) { *Converted from FindFirst* } = 0 then
+    repeat
+      if (Rec.Name <> '.') and (Rec.Name <> '..') then
+        Inc(nFileCount);
+    until FindNext(Rec) { *Converted from FindNext* } <> 0;
+  System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
+  Result := nFileCount;
+end;
+
+function Folder_Names(vDir: String): TStringlist;
+var
+  Rec: TSearchRec;
+begin
+  Result := TStringlist.Create;
+  if FindFirst(vDir + '\*.*', faDirectory, Rec) { *Converted from FindFirst* } = 0 then
+    repeat
+      if ((Rec.Attr and faDirectory) = faDirectory) then
+        if (Rec.Name <> '.') and (Rec.Name <> '..') then
+          Result.Add(Rec.Name);
+    until FindNext(Rec) { *Converted from FindNext* } <> 0;
+  System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
+end;
+
+function File_Names(vDir: String; vFileType: String): TStringlist;
+var
+  Rec: TSearchRec;
+begin
+  Result := TStringlist.Create;
+  if FindFirst(vDir + '\' + vFileType, faDirectory, Rec) { *Converted from FindFirst* } = 0 then
+    repeat
+      if ((Rec.Attr and faAnyFile) <> 16) then
+        if (Rec.Name <> '.') and (Rec.Name <> '..') then
+          Result.Add(Rec.Name);
+    until FindNext(Rec) { *Converted from FindNext* } <> 0;
+  System.SysUtils.FindClose(Rec); { *Converted from FindClose* }
+end;
+
+function File_Is_In_Use(FileName: TFileName): Boolean;
+var
+  HFileRes: HFILE;
+begin
+  Result := False;
+  if not FileExists(FileName) then
+    Exit;
+  HFileRes := CreateFile(PChar(FileName), GENERIC_READ or GENERIC_WRITE, 0, nil, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+  Result := (HFileRes = INVALID_HANDLE_VALUE);
+  if not Result then
+    CloseHandle(HFileRes);
+end;
+
+function File_Get_Size(const aFilename: String): int64;
+var
+  info: TWin32FileAttributeData;
+begin
+  Result := -1;
+
+  if NOT GetFileAttributesEx(PWideChar(aFilename), GetFileExInfoStandard, @info) then
+    Exit;
+
+  Result := int64(info.nFileSizeLow) or int64(info.nFileSizeHigh shl 32);
+end;
+
+function Monitor_Get_Avail_Res: TStringlist;
+var
+  vi: Integer;
+  DevMode: TDeviceMode;
+begin
+  Result := TStringlist.Create;
+  vi := 0;
+{$IFOPT R+}
+{$DEFINE CKRANGE}
+{$R-} // range-checking of
+{$ENDIF}
+  Result.Sorted := True;
+  Result.Duplicates := dupIgnore;
+  while EnumDisplaySettings(nil, vi, DevMode) do
+  begin
+    with DevMode do
+      If (dmPelsWidth > 639) and (dmPelsHeight > 479) then
+        if dmBitsperPel > 4 then
+          Result.Add(Format('%dx%d', [dmPelsWidth, dmPelsHeight]));
+    // {1 shr dmBitsperPel,}dmDisplayFrequency]));
+    // %d bit depth of color in bit
+    Inc(vi);
+  end;
+{$IFDEF CKRANGE}
+{$UNDEF CKRANGE}
+{$R+}  // range-checking on
+{$ENDIF}
+end;
+
+function Monitor_Get_Avail_Refresh: TStringlist;
+var
+  vi: Integer;
+  DevMode: TDeviceMode;
+begin
+  Result := TStringlist.Create;
+  vi := 0;
+{$IFOPT R+}
+{$DEFINE CKRANGE}
+{$R-} // range-checking of
+{$ENDIF}
+  Result.Sorted := True;
+  Result.Duplicates := dupIgnore;
+  while EnumDisplaySettings(nil, vi, DevMode) do
+  begin
+    with DevMode do
+      If (dmPelsWidth > 639) and (dmPelsHeight > 479) then
+        if dmBitsperPel > 4 then
+          Result.Add(Format('%d Hz', [dmDisplayFrequency]));
+    // {1 shr dmBitsperPel,}]));
+    // %d bit depth of color in bit
+    Inc(vi);
+  end;
+{$IFDEF CKRANGE}
+{$UNDEF CKRANGE}
+{$R+}  // range-checking on
+{$ENDIF}
+end;
+
+/// /////////////////////////////////////////////////////////////////////////////
+// Machine os
+function Os_Architecture(Const vOsArch: TOSVersion.TArchitecture): String;
+begin
+  case vOsArch of
+    arIntelX86:
+      Result := 'Intel X86';
+    arIntelX64:
+      Result := 'Intel X64';
+    arARM32:
+      Result := 'ARM X32';
+    arARM64:
+      Result := 'ARM X64';
+  else
+    Result := 'UNKNOWN OS architecture';
+  end;
+end;
+
+function Os_Platform(Const vOsPlatform: TOSVersion.TPlatform): String;
+begin
+  case vOsPlatform of
+    pfWindows:
+      Result := 'Windows';
+    pfMacOS:
+      Result := 'MacOSX';
+    pfiOS:
+      Result := 'IOS';
+    pfAndroid:
+      Result := 'Android';
+    pfWinRT:
+      Result := 'Windows CE';
+    pfLinux:
+      Result := 'Linux';
+  else
+    Result := 'Unknown';
+  end
+
+end;
+
+function Os_Platform_Point: Integer;
+begin
+  Result := sizeof(Pointer) * 8;
+end;
+
+procedure Fonts_Get(FontList: TStringlist);
+var
+{$IFDEF MACOS}
+  fManager: NsFontManager;
+  list: NSArray;
+  lItem: NSString;
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+  DC: HDC;
+  LFont: TLogFont;
+{$ENDIF}
+  vi: Integer;
+{$IFDEF MSWINDOWS}
+  function EnumFontsProc(var LogFont: TLogFont; var TextMetric: TTextMetric; FontType: Integer; Data: Pointer): Integer; stdcall;
+  var
+    S: TStrings;
+    Temp: string;
+  begin
+    S := TStrings(Data);
+    Temp := LogFont.lfFaceName;
+    if (S.Count = 0) or (AnsiCompareText(S[S.Count - 1], Temp) <> 0) then
+      S.Add(Temp);
+    Result := 1;
+  end;
+{$ENDIF}
+
+begin
+
+{$IFDEF MACOS}
+  fManager := TNsFontManager.Wrap(TNsFontManager.OCClass.sharedFontManager);
+  list := fManager.availableFontFamilies;
+  if (list <> nil) and (list.Count > 0) then
+  begin
+    for vi := 0 to list.Count - 1 do
+    begin
+      lItem := TNSString.Wrap(list.objectAtIndex(vi));
+      FontList.Add(String(lItem.UTF8String))
+    end;
+  end;
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+  DC := GetDC(0);
+  FillChar(LFont, sizeof(LFont), 0);
+  LFont.lfCharset := DEFAULT_CHARSET;
+  EnumFontFamiliesEx(DC, LFont, @EnumFontsProc, Winapi.Windows.LPARAM(FontList), 0);
+  ReleaseDC(0, DC);
+{$ENDIF}
+end;
+
+end.

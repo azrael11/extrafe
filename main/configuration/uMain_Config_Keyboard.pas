@@ -41,7 +41,7 @@ begin
         uMain_Config.ShowPanel(6)
     end;
 
-    if extrafe.prog.State = 'main_config_general' then
+    if extrafe.prog.State = 'main_config_general_keyboard' then
     begin
       if vKey_Waiting = True then
         uMain_Config_General_Keyboard.Set_Key(vKey);

@@ -108,7 +108,7 @@ begin
     mainScene.Config.main.R.addons.Left_Num.Text := ex_main.Config.Addons_Tab_First.ToString;
     mainScene.Config.main.R.addons.Arrow_Left.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   end;
-  if ex_main.Config.Addons_Tab_Last = uDB_AUser.Local.addons.Active then
+  if ex_main.Config.Addons_Tab_Last = uDB_AUser.Local.addons.Count then
   begin
     mainScene.Config.main.R.addons.Right_Num.Visible := False;
     mainScene.Config.main.R.addons.Right_Num.Text := '0';

@@ -235,7 +235,7 @@ type
 
 type
   TMAIN_CONFIG_PROFILE_USER = record
-    Panel: TPanel;
+    Layout: TLayout;
     Avatar_Show: TImage;
     Avatar_Show_Glow: TGlowEffect;
     Avatar_Change: TText;
@@ -269,13 +269,13 @@ type
 
 type
   TMAIN_CONFIG_PROFILE_STATISTICS = record
-
+    Layout: TLayout;
   end;
 
 type
   TCONFIG_PROFILE_MACHINE_OS = record
     Box: TGroupBox;
-    Info: TLabel;
+    info: TLabel;
     Info_V: TLabel;
     Architecture: TLabel;
     Architecture_V: TLabel;
@@ -318,6 +318,7 @@ type
 
 type
   TMAIN_CONFIG_PROFILE_MACHINE = record
+    Layout: TLayout;
     VBox: TVertScrollBox;
     OS: TCONFIG_PROFILE_MACHINE_OS;
     Net: TCONFIG_PROFILE_MACHINE_INTERNET;
@@ -338,22 +339,24 @@ type
 
 type
   TMAIN_CONFIG_GENERAL_VISOUAL = record
+    Layout: TLayout;
     Keyboard_Group: TGroupBox;
     Virtual_Keyboard: TCheckBox;
   end;
 
 type
   TMAIN_CONFIG_GENERAL_GRAPHICS = record
-
+    Layout: TLayout;
   end;
 
 type
   TMAIN_CONFIG_GENERAL_SOUND = record
-
+    Layout: TLayout;
   end;
 
 type
   TMAIN_CONFIG_GENERAL_KEYBOARD = record
+    Layout: TLayout;
     Image: TImage;
     Panel: TPanel;
     TabControl: TTabControl;
@@ -361,16 +364,16 @@ type
     Gen_Labels: array [0 .. 6] of TLabel;
     Gen_Panels: array [0 .. 6] of TRectangle;
     Gen_Panels_Text: array [0 .. 6] of TText;
-    Emu_Labels: array [0 .. 11] of TLabel;
-    Emu_Panels: array [0 .. 11] of TRectangle;
-    Emu_Panels_Text: array [0 .. 11] of TText;
+    Emu_Labels: array [0 .. 12] of TLabel;
+    Emu_Panels: array [0 .. 12] of TRectangle;
+    Emu_Panels_Text: array [0 .. 12] of TText;
   end;
 
 type
   TMAIN_CONFIG_GENERAL_OPTIONS = record
     Panel: TPanel;
     Main: TPanel;
-    Info: TText;
+    info: TText;
     VBox: TVertScrollBox;
     VBox_Items: array [0 .. 31] of TRectangle;
     VBox_Texts: array [0 .. 31] of TText;
@@ -388,7 +391,7 @@ type
     Place_dot: TCircle;
     Buttons: array [0 .. 15] of TCircle;
     Buttons_Names: array [0 .. 15] of TText;
-    Info: TGroupBox;
+    info: TGroupBox;
     Info_Current: TText;
     Info_Standard: TText;
   end;
@@ -398,7 +401,7 @@ type
     Joy: TComboBox;
     Control: TTabControl;
     Items: array [0 .. 1] of TTabItem;
-    General: TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM_STUFF;
+    general: TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM_STUFF;
     Emulators: TMAIN_CONFIG_GENERAL_JOYSTICK_MMSYSTEM_STUFF;
   end;
 
@@ -414,6 +417,7 @@ type
 
 type
   TMAIN_CONFIG_GENERAL_JOYSTICK = record
+    Layout: TLayout;
     Image: TImage;
     Panel: TPanel;
     Control: TTabControl;
@@ -426,6 +430,7 @@ type
 
 type
   TMAIN_CONFIG_GENERAL_MOUSE = record
+    Layout: TLayout;
     Image: TImage;
     Panel: TPanel;
   end;
@@ -434,7 +439,7 @@ type
   TMAIN_CONFIG_GENERAL = record
     Panel: TPanel;
     Blur: TGaussianBlurEffect;
-    Contol: TTabControl;
+    Control: TTabControl;
     Tab_Item: array [0 .. 5] of TTabItem;
     Visual: TMAIN_CONFIG_GENERAL_VISOUAL;
     Graphics: TMAIN_CONFIG_GENERAL_GRAPHICS;
@@ -453,7 +458,7 @@ type
     Logo_Glow: TGlowEffect;
     Logo_Gray: TMonochromeEffect;
     Logo_Check: TImage;
-    Info: TALText;
+    info: TALText;
     Action: TButton;
     Add_New: TButton;
   end;
@@ -549,7 +554,7 @@ type
     Box: TVertScrollBox;
     Frame: array [0 .. 10] of TPanel;
     Check: array [0 .. 10] of TCheckBox;
-    Info: array [0 .. 10] of TLabel;
+    info: array [0 .. 10] of TLabel;
     Image: array [0 .. 10] of TImage;
     Apply: TButton;
   end;
@@ -557,6 +562,7 @@ type
   // Config Info
 type
   TMAIN_CONFIG_INFO_EXTRAFE = record
+    Layout: TLayout;
     Creator: TLabel;
     Creator_V: TLabel;
     Desc: TLabel;
@@ -583,14 +589,26 @@ type
 
 type
   TMAIN_CONFIG_INFO_EMULATORS = record
+    Layout: TLayout;
     Header: TLabel;
     ImageBox: TVertScrollBox;
     Image: array [0 .. 100] of TImage;
-    Info: TMemo;
+    info: TMemo;
+  end;
+
+type
+  TMAIN_CONFIG_INFO_MULTIMEDIA = record
+    Layout: TLayout;
+  end;
+
+type
+  TMAIN_CONFIG_INFO_OTHERS = record
+    Layout: TLayout;
   end;
 
 type
   TMAIN_CONFIG_INFO_CREDITS = record
+    Layout: TLayout;
     Panel: TPanel;
     Groupbox: TGroupBox;
     Text: TALText;
@@ -609,8 +627,10 @@ type
     Panel: TPanel;
     TabControl: TTabControl;
     TabItem: array [0 .. 4] of TTabItem;
-    Extrafe: TMAIN_CONFIG_INFO_EXTRAFE;
-    Emu: TMAIN_CONFIG_INFO_EMULATORS;
+    ExtraFE: TMAIN_CONFIG_INFO_EXTRAFE;
+    Emulators: TMAIN_CONFIG_INFO_EMULATORS;
+    Multimedia: TMAIN_CONFIG_INFO_MULTIMEDIA;
+    Others: TMAIN_CONFIG_INFO_OTHERS;
     Credits: TMAIN_CONFIG_INFO_CREDITS;
   end;
 
@@ -618,12 +638,12 @@ type
   TMAIN_CONFIG_RIGHT = record
     Panel: array [0 .. 6] of TPanel;
     Profile: TMAIN_CONFIG_PROFILE;
-    General: TMAIN_CONFIG_GENERAL;
+    general: TMAIN_CONFIG_GENERAL;
     Emulators: TMAIN_CONFIG_EMULATORS;
     PCGames: TMAIN_CONFIG_PCGAMES;
     Addons: TMAIN_CONFIG_ADDONS;
-    Themes: TMAIN_CONFIG_THEMES;
-    Info: TMAIN_CONFIG_INFO;
+    themes: TMAIN_CONFIG_THEMES;
+    info: TMAIN_CONFIG_INFO;
   end;
 
 type
@@ -664,7 +684,7 @@ var
 implementation
 
 uses
-  Emu,
+  emu,
   Main,
   uEmu_Actions,
   uLoad_AllTypes;

@@ -2,8 +2,8 @@
 <BorlandProject>
 	<Transactions>
     <Transaction>2018/02/04 11:31:31.000.224,=C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.pas</Transaction>
     <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.fmx=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.fmx</Transaction>
+    <Transaction>2018/02/04 11:32:16.000.143,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\main.pas</Transaction>
     <Transaction>2018/02/04 11:32:22.000.957,C:\Users\spooo\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\ExtraFE.dproj</Transaction>
     <Transaction>2018/02/04 11:32:53.000.005,=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas</Transaction>
     <Transaction>2018/02/04 11:33:07.000.527,C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\Unit2.pas=C:\Users\spooo\Documents\My_Projects\ExtraFe\code\ExtraFE_Multi\loading.pas</Transaction>
@@ -313,8 +313,8 @@
     <Transaction>2018/12/29 10:04:27.000.395,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\code\_database\uDatabase.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:38.000.709,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/06 10:12:51.000.456,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\play\azhung\uAzHung_Sound.pas</Transaction>
-    <Transaction>2019/01/16 10:35:54.000.622,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo.pas</Transaction>
     <Transaction>2019/01/16 10:35:54.000.583,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_OpenWeatherMap.pas</Transaction>
+    <Transaction>2019/01/16 10:35:54.000.622,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\addons\weather\providers\uWeather_Providers_Yahoo.pas</Transaction>
     <Transaction>2019/01/17 08:34:10.000.679,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
     <Transaction>2019/01/17 08:34:33.000.963,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\main\configuration\uMain_Config_Info_Credits.pas</Transaction>
     <Transaction>2019/01/29 11:39:49.000.946,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
@@ -408,8 +408,8 @@
     <Transaction>2019/09/21 13:29:30.000.633,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading_back.pas</Transaction>
     <Transaction>2019/09/21 13:29:30.000.633,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading.fmx=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading_back.fmx</Transaction>
     <Transaction>2019/09/21 13:29:38.000.363,=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas</Transaction>
-    <Transaction>2019/09/21 13:30:45.000.152,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.fmx=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\load.fmx</Transaction>
     <Transaction>2019/09/21 13:30:45.000.152,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\load.pas</Transaction>
+    <Transaction>2019/09/21 13:30:45.000.152,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\Unit1.fmx=C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\load.fmx</Transaction>
     <Transaction>2019/09/21 13:54:04.000.453,C:\Users\spooo\Documents\My_Projects\Program_Dev\ExtraFe\code\ExtraFE_Multi\loading_back.pas=</Transaction>
     <Transaction>2019/10/25 09:21:55.000.276,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons.pas</Transaction>
     <Transaction>2019/10/25 09:22:21.000.137,D:\Nikos_prg\main_prg\code\extrafe\main\configuration\uMain_Config_Addons.pas=D:\Nikos_prg\main_prg\code\extrafe\main\configuration\addons\uMain_Config_Addons.pas</Transaction>
@@ -471,14 +471,14 @@
     <Transaction>2020/02/14 22:45:48.000.431,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\code\_snippets\DirectX.pas</Transaction>
     <Transaction>2020/02/14 22:52:44.000.055,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\code\_snippets\DXConsts.pas</Transaction>
     <Transaction>2020/02/14 23:03:43.000.104,C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\code\_snippets\DXClass.pas=</Transaction>
-    <Transaction>2020/02/20 20:02:20.000.991,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Mouse.pas</Transaction>
     <Transaction>2020/02/20 20:02:20.000.627,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_AllTypes.pas</Transaction>
     <Transaction>2020/02/20 20:02:20.000.446,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Actions.pas</Transaction>
-    <Transaction>2020/02/20 20:02:20.000.358,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video.pas</Transaction>
+    <Transaction>2020/02/20 20:02:20.000.901,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Key.pas</Transaction>
     <Transaction>2020/02/20 20:02:20.000.535,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Actions_Filters.pas</Transaction>
     <Transaction>2020/02/20 20:02:20.000.808,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Joy.pas</Transaction>
-    <Transaction>2020/02/20 20:02:20.000.901,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Key.pas</Transaction>
     <Transaction>2020/02/20 20:02:20.000.717,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Game.pas</Transaction>
+    <Transaction>2020/02/20 20:02:20.000.991,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Mouse.pas</Transaction>
+    <Transaction>2020/02/20 20:02:20.000.358,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video.pas</Transaction>
     <Transaction>2020/02/20 20:02:21.000.082,=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Sounds.pas</Transaction>
     <Transaction>2020/02/20 20:03:48.000.359,C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Default.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video.pas</Transaction>
     <Transaction>2020/02/20 20:06:03.000.008,C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Default_Actions.pas=C:\Users\spooo\Documents\My_Projects\Program_Dev\code\ExtraFE_Multi\emu\modes\default\uView_Mode_Video_Actions.pas</Transaction>
@@ -528,6 +528,18 @@
     <Transaction>2020/07/10 10:42:24.000.745,F:\my_projects\code\ExtraFE\main\configuration\addons\uMain_Config_Addons_AzPlay.pas=F:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
     <Transaction>2020/07/10 11:06:38.000.416,=F:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
     <Transaction>2020/07/10 11:06:55.000.381,F:\my_projects\code\ExtraFE\main\configuration\addons\uMain_Config_Addons_Calendar.pas=F:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/25 13:03:13.000.917,=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/25 13:03:53.000.161,G:\my_projects\code\ExtraFE\Unit1.pas=G:\my_projects\code\ExtraFE\main\configuration\general\uMain_Config_General_Videopas.pas</Transaction>
+    <Transaction>2020/11/25 13:04:00.000.930,=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/25 13:04:46.000.239,G:\my_projects\code\ExtraFE\main\configuration\general\uMain_Config_General_Videopas.pas=G:\my_projects\code\ExtraFE\main\configuration\general\uMain_Config_General_Video.pas</Transaction>
+    <Transaction>2020/11/25 14:32:29.000.505,G:\my_projects\code\ExtraFE\main\configuration\general\uMain_Config_General_Video.pas=</Transaction>
+    <Transaction>2020/11/26 09:31:07.000.913,=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/26 09:31:41.000.420,G:\my_projects\code\ExtraFE\main\configuration\info\uMain_Config_Info_Emulation.pas=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/26 09:32:00.000.023,G:\my_projects\code\ExtraFE\main\configuration\info\uMain_Config_Info_Emulators.pas=G:\my_projects\code\ExtraFE\main\configuration\info\uMain_Config_Info_Emulation.pas</Transaction>
+    <Transaction>2020/11/26 09:38:30.000.330,=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/26 09:38:51.000.347,G:\my_projects\code\ExtraFE\main\configuration\info\uMain_Config_Info_Multimedia.pas=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/26 09:42:36.000.721,=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
+    <Transaction>2020/11/26 09:42:58.000.140,G:\my_projects\code\ExtraFE\main\configuration\info\uMain_Config_Info_Others.pas=G:\my_projects\code\ExtraFE\Unit1.pas</Transaction>
   </Transactions>
 	<ActiveMobileDevice>
 		<NoProfile iOSSimulator="iPhone5" Android=""/>
@@ -705,9 +717,9 @@
     <File Path="emu\modes\uView_Mode.pas"/>
     <File Path="emu\uEmu_Actions.pas"/>
     <File Path="emu\uEmu_Emu.pas"/>
+    <File Path="emu\uEmu_Joystick.pas"/>
     <File Path="emu\uEmu_Mouse.pas"/>
     <File Path="emu\uEmu_SetAll.pas"/>
-    <File Path="emu\uEmu_Joystick.pas"/>
     <File Path="loading"/>
     <File Path="loading\uLoad.pas"/>
     <File Path="loading\uLoad_Addons.pas"/>
@@ -727,11 +739,11 @@
     <File Path="main\configuration"/>
     <File Path="main\configuration\addons"/>
     <File Path="main\configuration\addons\uMain_Config_Addons_Actions.pas"/>
-    <File Path="main\configuration\addons\uMain_Config_Addons_Weather.pas"/>
-    <File Path="main\configuration\addons\uMain_Config_Addons_Soundplayer.pas"/>
-    <File Path="main\configuration\addons\uMain_Config_Addons_Time.pas"/>
     <File Path="main\configuration\addons\uMain_Config_Addons_AzPlay.pas"/>
     <File Path="main\configuration\addons\uMain_Config_Addons_Calendar.pas"/>
+    <File Path="main\configuration\addons\uMain_Config_Addons_Soundplayer.pas"/>
+    <File Path="main\configuration\addons\uMain_Config_Addons_Time.pas"/>
+    <File Path="main\configuration\addons\uMain_Config_Addons_Weather.pas"/>
     <File Path="main\configuration\emulation"/>
     <File Path="main\configuration\emulation\arcade_scripts"/>
     <File Path="main\configuration\emulation\arcade_scripts\mame"/>
@@ -753,7 +765,10 @@
     <File Path="main\configuration\general\uMain_Config_General_Visual.pas"/>
     <File Path="main\configuration\info"/>
     <File Path="main\configuration\info\uMain_Config_Info_Credits.pas"/>
+    <File Path="main\configuration\info\uMain_Config_Info_Emulators.pas"/>
     <File Path="main\configuration\info\uMain_Config_Info_Extrafe.pas"/>
+    <File Path="main\configuration\info\uMain_Config_Info_Multimedia.pas"/>
+    <File Path="main\configuration\info\uMain_Config_Info_Others.pas"/>
     <File Path="main\configuration\profile"/>
     <File Path="main\configuration\profile\uMain_Config_Profile_Machine.pas"/>
     <File Path="main\configuration\profile\uMain_Config_Profile_Statistics.pas"/>

@@ -3,6 +3,7 @@ unit uWeather_Convert;
 interface
 
 uses
+  System.TimeSpan,
   System.Classes,
   System.DateUtils,
   System.SysUtils,
@@ -10,23 +11,23 @@ uses
   System.IniFiles,
   FMX.Graphics;
 
-function uWeather_Convert_Day(vDay: WideString): WideString;
-function uWeather_Convert_Date(vDate: WideString): WideString;
-function uWeather_Convert_Month(vMonth: WideString): WideString;
+function Day(vDay: WideString): WideString;
+function Date(vDate: WideString): WideString;
+function Month(vMonth: WideString): WideString;
 
-function uWeather_Convert_Update(vUpdate: WideString): WideString;
+function Update(vUpdate: WideString): WideString;
 
-function uWeather_Convert_WindSpeed(vWindSpeed: Single): Single;
+function WindSpeed(vWindSpeed: Single): Single;
 
-function uWeather_Convert_FixAstronomy(vValue: WideString): WideString;
-function uWeather_Convert_SunSpot(vSunrise, vSunset: String): TPathData;
-
+function FixAstronomy(vValue: WideString): WideString;
+function SunSpot(vSunrise, vSunset: Single): Single;
 
 implementation
-uses
-  uWeather_AllTypes;
 
-function uWeather_Convert_Day(vDay: WideString): WideString;
+uses
+  uWeather_AllTypes, uDB_AUser, Winapi.Windows;
+
+function Day(vDay: WideString): WideString;
 begin
   if vDay = 'Mon' then
     Result := 'Monday'
@@ -46,7 +47,7 @@ begin
     Result := 'error...!!!';
 end;
 
-function uWeather_Convert_Date(vDate: WideString): WideString;
+function Date(vDate: WideString): WideString;
 var
   vPos: Integer;
   vNum: String;
@@ -58,13 +59,13 @@ begin
   vMonth := Trim(Copy(vDate, vPos + 1, 3));
   vYear := Trim(Copy(vDate, length(vDate) - 4, 5));
 
-  vMonth := uWeather_Convert_Month(vMonth);
+  vMonth := Month(vMonth);
 
   if Result <> 'error...!!!' then
     Result := vNum + ' ' + Result + ' ' + vYear;
 end;
 
-function uWeather_Convert_Month(vMonth: WideString): WideString;
+function Month(vMonth: WideString): WideString;
 begin
   if (vMonth = 'Jan') or (vMonth = '01') then
     Result := 'January'
@@ -80,7 +81,7 @@ begin
     Result := 'June'
   else if (vMonth = 'Jul') or (vMonth = '07') then
     Result := 'Jul'
-  else if (vMonth = 'Aug') or (vMonth = '08')  then
+  else if (vMonth = 'Aug') or (vMonth = '08') then
     Result := 'August'
   else if (vMonth = 'Sep') or (vMonth = '09') then
     Result := 'Septemper'
@@ -94,14 +95,14 @@ begin
     Result := 'error...!!!';
 end;
 
-function uWeather_Convert_Update(vUpdate: WideString): WideString;
+function Update(vUpdate: WideString): WideString;
 var
   viPos: Integer;
   vText, vText1: WideString;
 begin
   viPos := Pos(',', vUpdate);
   vText := Trim(Copy(vUpdate, 0, viPos - 1));
-  Result := uWeather_Convert_Day(vText);
+  Result := Day(vText);
   vText1 := Trim(Copy(vUpdate, viPos + 1, length(vUpdate) - viPos));
   viPos := Pos(' ', vText1);
   vText := Trim(Copy(vText1, 0, viPos));
@@ -110,11 +111,11 @@ begin
   viPos := Pos(' ', vText1);
   vText := Trim(Copy(vText1, 0, viPos));
   vText1 := Trim(Copy(vText1, viPos, length(vText1) - (viPos - 1)));
-  vText := uWeather_Convert_Month(vText);
+  vText := Month(vText);
   Result := Result + ' ' + vText + ' ' + vText1;
 end;
 
-function uWeather_Convert_WindSpeed(vWindSpeed: Single): Single;
+function WindSpeed(vWindSpeed: Single): Single;
 begin
   if vWindSpeed > 118 then
     Result := 0.05
@@ -136,7 +137,7 @@ begin
     Result := 0;
 end;
 
-function uWeather_Convert_FixAstronomy(vValue: WideString): WideString;
+function FixAstronomy(vValue: WideString): WideString;
 var
   vi, viPos: Integer;
   vt, vt1, vt2: String;
@@ -154,84 +155,48 @@ begin
   Result := vt + ':' + vt1 + ' ' + vt2;
 end;
 
-function uWeather_Convert_SunSpot(vSunrise, vSunset: String): TPathData;
+function SunSpot(vSunrise, vSunset: Single): Single;
 var
-  vi, viPos: Integer;
-  vHour_Sunrise, vMinutes_Sunrise, vState_Sunrise: String;
-  vSunrise_TotalMinutes: String;
-  vHour_Sunset, vMinutes_Sunset, vState_Sunset: String;
-  vSunset_TotalMinutes: String;
-  vTotal_SunMinutes: Integer;
-  vTimeNow: String;
-  vTimeNow_Hours, vTimeNow_Minutes, vTimeNow_State: String;
-  vTimeNow_TotalMinutes: String;
-  vTotal_TimeMinutes: Integer;
-  vTotal_End: Single;
-  vTotal_UpCurve: Single;
-  vTotal_Go: Single;
-  vTotal_High: Single;
+  vTime_Now: TTimeSpan;
+  vTime_Now_Sec: Single;
 
+  vTime_Now_Sel_Country: Single;
+
+  vTime_Total: Single;
+  vReal_Total: Single;
+  vReal_To_100: Single;
+
+  vZone: TTimeZoneInformation;
+  vSecods_zone: Single;
 begin
-  Result := TPathData.Create;
-  viPos := Pos(':', vSunrise);
-  vHour_Sunrise := Trim(Copy(vSunrise, 0, (viPos - 1)));
-  vState_Sunrise := Trim(Copy(vSunrise, viPos + 1, length(vSunrise) - (viPos)));
-  viPos := Pos(' ', vState_Sunrise);
-  vMinutes_Sunrise := Trim(Copy(vState_Sunrise, 0, (viPos - 1)));
-  vState_Sunrise := Trim(Copy(vState_Sunrise, viPos + 1, length(vSunrise) - (viPos)));
+  GetTimeZoneInformation(vZone);
+  vSecods_zone := (vZone.Bias.ToSingle) * 60;
 
-  vSunrise_TotalMinutes := MinuteOfTheDay(StrToTime(vHour_Sunrise + ':' + vMinutes_Sunrise + ':00')).ToString;
+  vTime_Now := TTimeSpan.Parse(FormatDateTime('hh:mm:ss', now));
+  vTime_Now_Sec := vTime_Now.TotalSeconds;
+  vTime_Now_Sec := vTime_Now_Sec + vSecods_zone;
 
-  viPos := Pos(':', vSunset);
-  vHour_Sunset := Trim(Copy(vSunset, 0, (viPos - 1)));
-  vState_Sunset := Trim(Copy(vSunset, viPos + 1, length(vSunset) - (viPos)));
-  viPos := Pos(' ', vState_Sunset);
-  vMinutes_Sunset := Trim(Copy(vState_Sunset, 0, (viPos - 1)));
-  vState_Sunset := Trim(Copy(vState_Sunset, viPos + 1, length(vSunset) - (viPos)));
-  if UpperCase(vState_Sunset) = 'PM' then
-    vHour_Sunset := (vHour_Sunset.ToInteger + 12).ToString;
-
-  vSunset_TotalMinutes := MinuteOfTheDay(StrToTime(vHour_Sunset + ':' + vMinutes_Sunset + ':00')).ToString;
-  vTotal_SunMinutes := vSunset_TotalMinutes.ToInteger - vSunrise_TotalMinutes.ToInteger;
-
-  vTimeNow := TimeToStr(Now);
-
-  viPos := Pos(':', vTimeNow);
-  vTimeNow_Hours := Trim(Copy(vTimeNow, 0, (viPos - 1)));
-  vTimeNow_Minutes := Trim(Copy(vTimeNow, viPos + 1, length(vTimeNow) - (viPos)));
-  viPos := Pos(':', vTimeNow_Minutes);
-  vTimeNow_State := Trim(Copy(vTimeNow_Minutes, viPos + 1, length(vTimeNow_Minutes) - (viPos)));
-  vTimeNow_Minutes := Trim(Copy(vTimeNow_Minutes, 0, (viPos - 1)));
-  viPos := Pos(' ', vTimeNow_State);
-  vTimeNow_State := Trim(Copy(vTimeNow_State, viPos + 1, length(vTimeNow_State) - viPos));
-  if (UpperCase(vTimeNow_State)= 'PM') and (vTimeNow_Hours.ToInteger<> 12) then
-    vTimeNow_Hours:= (vTimeNow_Hours.ToInteger+ 12).ToString;
-
-  vTimeNow_TotalMinutes := MinuteOfTheDay(StrToTime(vTimeNow_Hours + ':' + vTimeNow_Minutes + ':00'))
-    .ToString;
-
-  if (vTimeNow_TotalMinutes.ToInteger >= vSunrise_TotalMinutes.ToInteger) and
-    (vTimeNow_TotalMinutes.ToInteger <= vSunset_TotalMinutes.ToInteger) then
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
   begin
-    vTotal_TimeMinutes := vTimeNow_TotalMinutes.ToInteger - vSunrise_TotalMinutes.ToInteger;
-
-    vTotal_End := (vTotal_TimeMinutes * 300) / vTotal_SunMinutes;
-    vTotal_UpCurve := (vTotal_End * 200) / 300;
-    vTotal_Go := (vTotal_End * 150) / 300;
-    if vTotal_UpCurve > 100 then
-      vTotal_High := -(vTotal_UpCurve - 200)
-    else
-      vTotal_High := vTotal_UpCurve;
-
-    Result.MoveTo(PointF(0, 0));
-    Result.CurveTo(PointF(0, 0), PointF(vTotal_Go, -vTotal_UpCurve), PointF(vTotal_End, -vTotal_High));
-
-    weather.Action.PathAni_Show:= True;
+    vTime_Now_Sel_Country := StrToFloat(weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex].Location.OffSetSecs);
+    vTime_Now_Sel_Country := vTime_Now_Sec + vTime_Now_Sel_Country;
   end
   else
   begin
-    Result.MoveTo(PointF(-1000, 0));
-    weather.Action.PathAni_Show:= False;
+
   end;
+
+  if (vTime_Now_Sel_Country >= vSunrise) and (vTime_Now_Sel_Country <= vSunset) then
+  begin
+    vTime_Total := vSunset - vSunrise;
+    vReal_Total := vTime_Now_Sel_Country - vSunrise;
+
+    vReal_To_100 := (vReal_Total * 100) / vTime_Total;
+
+    Result := (vReal_To_100 * 250) / 100;
+  end
+  else
+    Result := -1;
 end;
+
 end.

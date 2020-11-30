@@ -10,7 +10,7 @@ uses
   FMX.StdCtrls,
   FMX.TabControl,
   FMX.Types,
-  FMX.Graphics;
+  FMX.Graphics, FMX.Layouts;
 
 type
   TKEYBOARD_TIMER = class(TObject)
@@ -52,171 +52,181 @@ var
 begin
   extrafe.prog.State := 'main_config_general_keyboard';
 
-  mainScene.Config.Main.R.General.Keyboard.Image := TImage.Create(mainScene.Config.Main.R.General.Tab_Item[3]);
-  mainScene.Config.Main.R.General.Keyboard.Image.Name := 'Main_Config_General_Keyboard_Image';
-  mainScene.Config.Main.R.General.Keyboard.Image.Parent := mainScene.Config.Main.R.General.Tab_Item[3];
-  mainScene.Config.Main.R.General.Keyboard.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.General + 'keyboard.png');
-  mainScene.Config.Main.R.General.Keyboard.Image.SetBounds(mainScene.Config.Main.R.General.Contol.Width - 84, 2, 64, 64);
-  mainScene.Config.Main.R.General.Keyboard.Image.WrapMode := TImageWrapMode.Stretch;
-  mainScene.Config.Main.R.General.Keyboard.Image.Visible := True;
-
-  mainScene.Config.Main.R.General.Keyboard.Panel := TPanel.Create(mainScene.Config.Main.R.General.Tab_Item[3]);
-  mainScene.Config.Main.R.General.Keyboard.Panel.Name := 'Main_Config_General_Keyboard_Panel';
-  mainScene.Config.Main.R.General.Keyboard.Panel.Parent := mainScene.Config.Main.R.General.Tab_Item[3];
-  mainScene.Config.Main.R.General.Keyboard.Panel.SetBounds(10, 66, mainScene.Config.Main.R.General.Contol.Width - 20,
-    mainScene.Config.Main.R.General.Contol.Height - 100);
-  mainScene.Config.Main.R.General.Keyboard.Panel.Visible := True;
-
-  mainScene.Config.Main.R.General.Keyboard.TabControl := TTabControl.Create(mainScene.Config.Main.R.General.Keyboard.Panel);
-  mainScene.Config.Main.R.General.Keyboard.TabControl.Name := 'Main_Config_General_Keyboard_TabControl';
-  mainScene.Config.Main.R.General.Keyboard.TabControl.Parent := mainScene.Config.Main.R.General.Keyboard.Panel;
-  mainScene.Config.Main.R.General.Keyboard.TabControl.Align := TAlignLayout.Client;
-  mainScene.Config.Main.R.General.Keyboard.TabControl.Visible := True;
-
-  for vi := 0 to 1 do
+  if mainScene.Config.Main.R.General.Keyboard.Layout = nil then
   begin
-    mainScene.Config.Main.R.General.Keyboard.TabItems[vi] := TTabItem.Create(mainScene.Config.Main.R.General.Keyboard.TabControl);
-    mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Name := 'Main_Config_General_Keyboard_TabItem_' + vi.ToString;
-    mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabControl;
-    if vi = 0 then
-      mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Text := 'General'
-    else if vi = 1 then
-      mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Text := 'Emulators';
-    mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Visible := True;
-  end;
 
-  { Main }
-  vl := 0;
-  vk := 20;
-  for vi := 0 to 6 do
-  begin
-    mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi] := TLabel.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[0]);
-    mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Name := 'Main_Config_General_Keyboard_General_Label_' + vi.ToString;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[0];
-    mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].SetBounds(10 + (140 * vl), vk, 200, 24);
-    mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Text := cGen_Labels[vi];
-    mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Visible := True;
+    mainScene.Config.Main.R.General.Keyboard.Layout := TLayout.Create(mainScene.Config.Main.R.General.Tab_Item[3]);
+    mainScene.Config.Main.R.General.Keyboard.Layout.Name := 'Main_Config_General_Keyboard';
+    mainScene.Config.Main.R.General.Keyboard.Layout.Parent := mainScene.Config.Main.R.General.Tab_Item[3];
+    mainScene.Config.Main.R.General.Keyboard.Layout.SetBounds(0, 0, mainScene.Config.Main.R.General.Control.Width,
+      mainScene.Config.Main.R.General.Control.Height);
+    mainScene.Config.Main.R.General.Keyboard.Layout.Visible := True;
 
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi] := TRectangle.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[0]);
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Name := 'Main_Config_General_Keyboard_General_Panel_' + vi.ToString;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[0];
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].SetBounds(10 + (140 * vl), vk + 22, 120, 24);
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Fill.Kind := TBrushKind.Solid;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Fill.Color := TAlphaColorRec.Deepskyblue;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Stroke.Thickness := 1;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Stroke.Color := TAlphaColorRec.Blue;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Visible := True;
+    mainScene.Config.Main.R.General.Keyboard.Image := TImage.Create(mainScene.Config.Main.R.General.Keyboard.Layout);
+    mainScene.Config.Main.R.General.Keyboard.Image.Name := 'Main_Config_General_Keyboard_Image';
+    mainScene.Config.Main.R.General.Keyboard.Image.Parent := mainScene.Config.Main.R.General.Keyboard.Layout;
+    mainScene.Config.Main.R.General.Keyboard.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.General + 'keyboard.png');
+    mainScene.Config.Main.R.General.Keyboard.Image.SetBounds(mainScene.Config.Main.R.General.Keyboard.Layout.Width - 84, 2, 64, 64);
+    mainScene.Config.Main.R.General.Keyboard.Image.WrapMode := TImageWrapMode.Stretch;
+    mainScene.Config.Main.R.General.Keyboard.Image.Visible := True;
 
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi] := TText.Create(mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi]);
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Name := 'Main_Config_General_Keyboard_General_Panel_Text_' + vi.ToString;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Parent := mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi];
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Align := TAlignLayout.Client;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].TextSettings.FontColor := TAlphaColorRec.White;
-    case vi of
-      0:
-        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Up;
-      1:
-        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Down;
-      2:
-        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Left;
-      3:
-        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Right;
-      4:
-        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Action;
-      5:
-        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Escape;
-      6:
-        mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Config;
-    end;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].TextSettings.HorzAlign := TTextAlign.Center;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Font.Style := mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Font.Style +
-      [TFontStyle.fsBold];
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].OnClick := ex_main.Input.mouse_config.Text.OnMouseClick;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].OnMouseEnter := ex_main.Input.mouse_config.Text.OnMouseEnter;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].OnMouseLeave := ex_main.Input.mouse_config.Text.OnMouseLeave;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Tag := vi;
-    mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Visible := True;
+    mainScene.Config.Main.R.General.Keyboard.Panel := TPanel.Create(mainScene.Config.Main.R.General.Keyboard.Layout);
+    mainScene.Config.Main.R.General.Keyboard.Panel.Name := 'Main_Config_General_Keyboard_Panel';
+    mainScene.Config.Main.R.General.Keyboard.Panel.Parent := mainScene.Config.Main.R.General.Keyboard.Layout;
+    mainScene.Config.Main.R.General.Keyboard.Panel.SetBounds(10, 66, mainScene.Config.Main.R.General.Keyboard.Layout.Width - 20,
+      mainScene.Config.Main.R.General.Keyboard.Layout.Height - 100);
+    mainScene.Config.Main.R.General.Keyboard.Panel.Visible := True;
 
-    Inc(vl, 1);
-    if vl = 4 then
+    mainScene.Config.Main.R.General.Keyboard.TabControl := TTabControl.Create(mainScene.Config.Main.R.General.Keyboard.Panel);
+    mainScene.Config.Main.R.General.Keyboard.TabControl.Name := 'Main_Config_General_Keyboard_TabControl';
+    mainScene.Config.Main.R.General.Keyboard.TabControl.Parent := mainScene.Config.Main.R.General.Keyboard.Panel;
+    mainScene.Config.Main.R.General.Keyboard.TabControl.Align := TAlignLayout.Client;
+    mainScene.Config.Main.R.General.Keyboard.TabControl.Visible := True;
+
+    for vi := 0 to 1 do
     begin
-      vl := 0;
-      vk := vk + 130;
+      mainScene.Config.Main.R.General.Keyboard.TabItems[vi] := TTabItem.Create(mainScene.Config.Main.R.General.Keyboard.TabControl);
+      mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Name := 'Main_Config_General_Keyboard_TabItem_' + vi.ToString;
+      mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabControl;
+      if vi = 0 then
+        mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Text := 'General'
+      else if vi = 1 then
+        mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Text := 'Emulators';
+      mainScene.Config.Main.R.General.Keyboard.TabItems[vi].Visible := True;
     end;
-  end;
 
-  { Emulators }
-  vl := 0;
-  vk := 20;
-  for vi := 0 to 12 do
-  begin
-    mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi] := TLabel.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[1]);
-    mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Name := 'Main_Config_General_Keyboard_Emu_Label_' + vi.ToString;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[1];
-    mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].SetBounds(10 + (140 * vl), vk, 200, 24);
-    mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Text := cEmu_Labels[vi];
-    mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Visible := True;
-
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi] := TRectangle.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[1]);
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Name := 'Main_Config_General_Keyboard_Emu_Panel_' + vi.ToString;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[1];
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].SetBounds(10 + (140 * vl), vk + 22, 120, 24);
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Fill.Kind := TBrushKind.Solid;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Fill.Color := TAlphaColorRec.Deepskyblue;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Stroke.Thickness := 1;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Stroke.Color := TAlphaColorRec.Blue;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Visible := True;
-
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi] := TText.Create(mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi]);
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Name := 'Main_Config_General_Keyboard_Emu_Panel_Text_' + vi.ToString;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Parent := mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi];
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Align := TAlignLayout.Client;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].TextSettings.FontColor := TAlphaColorRec.White;
-    case vi of
-      0:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Up;
-      1:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Down;
-      2:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Left;
-      3:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Right;
-      4:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Action;
-      5:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Escape;
-      6:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Favorite;
-      7:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_FavoriteAdd;
-      8:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Lists;
-      9:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Search;
-      10:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Filters;
-      11:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_ScreenSaver;
-      12:
-        mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Config;
-    end;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].TextSettings.HorzAlign := TTextAlign.Center;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Font.Style := mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Font.Style +
-      [TFontStyle.fsBold];
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].OnClick := ex_main.Input.mouse_config.Text.OnMouseClick;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].OnMouseEnter := ex_main.Input.mouse_config.Text.OnMouseEnter;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].OnMouseLeave := ex_main.Input.mouse_config.Text.OnMouseLeave;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Tag := vi;
-    mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Visible := True;
-
-    Inc(vl, 1);
-    if vl = 4 then
+    { Main }
+    vl := 0;
+    vk := 20;
+    for vi := 0 to 6 do
     begin
-      vl := 0;
-      vk := vk + 130;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi] := TLabel.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[0]);
+      mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Name := 'Main_Config_General_Keyboard_General_Label_' + vi.ToString;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[0];
+      mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].SetBounds(10 + (140 * vl), vk, 200, 24);
+      mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Text := cGen_Labels[vi];
+      mainScene.Config.Main.R.General.Keyboard.Gen_Labels[vi].Visible := True;
+
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi] := TRectangle.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[0]);
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Name := 'Main_Config_General_Keyboard_General_Panel_' + vi.ToString;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[0];
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].SetBounds(10 + (140 * vl), vk + 22, 120, 24);
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Fill.Kind := TBrushKind.Solid;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Fill.Color := TAlphaColorRec.Deepskyblue;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Stroke.Thickness := 1;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Stroke.Color := TAlphaColorRec.Blue;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi].Visible := True;
+
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi] := TText.Create(mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi]);
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Name := 'Main_Config_General_Keyboard_General_Panel_Text_' + vi.ToString;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Parent := mainScene.Config.Main.R.General.Keyboard.Gen_Panels[vi];
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Align := TAlignLayout.Client;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].TextSettings.FontColor := TAlphaColorRec.White;
+      case vi of
+        0:
+          mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Up;
+        1:
+          mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Down;
+        2:
+          mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Left;
+        3:
+          mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Right;
+        4:
+          mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Action;
+        5:
+          mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Escape;
+        6:
+          mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Config;
+      end;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].TextSettings.HorzAlign := TTextAlign.Center;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Font.Style := mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Font.Style +
+        [TFontStyle.fsBold];
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].OnClick := ex_main.Input.mouse_config.Text.OnMouseClick;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].OnMouseEnter := ex_main.Input.mouse_config.Text.OnMouseEnter;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].OnMouseLeave := ex_main.Input.mouse_config.Text.OnMouseLeave;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Tag := vi;
+      mainScene.Config.Main.R.General.Keyboard.Gen_Panels_Text[vi].Visible := True;
+
+      Inc(vl, 1);
+      if vl = 4 then
+      begin
+        vl := 0;
+        vk := vk + 130;
+      end;
+    end;
+
+    { Emulators }
+    vl := 0;
+    vk := 20;
+    for vi := 0 to 12 do
+    begin
+      mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi] := TLabel.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[1]);
+      mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Name := 'Main_Config_General_Keyboard_Emu_Label_' + vi.ToString;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[1];
+      mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].SetBounds(10 + (140 * vl), vk, 200, 24);
+      mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Text := cEmu_Labels[vi];
+      mainScene.Config.Main.R.General.Keyboard.Emu_Labels[vi].Visible := True;
+
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi] := TRectangle.Create(mainScene.Config.Main.R.General.Keyboard.TabItems[1]);
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Name := 'Main_Config_General_Keyboard_Emu_Panel_' + vi.ToString;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Parent := mainScene.Config.Main.R.General.Keyboard.TabItems[1];
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].SetBounds(10 + (140 * vl), vk + 22, 120, 24);
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Fill.Kind := TBrushKind.Solid;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Fill.Color := TAlphaColorRec.Deepskyblue;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Stroke.Thickness := 1;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Stroke.Color := TAlphaColorRec.Blue;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi].Visible := True;
+
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi] := TText.Create(mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi]);
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Name := 'Main_Config_General_Keyboard_Emu_Panel_Text_' + vi.ToString;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Parent := mainScene.Config.Main.R.General.Keyboard.Emu_Panels[vi];
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Align := TAlignLayout.Client;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].TextSettings.FontColor := TAlphaColorRec.White;
+      case vi of
+        0:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Up;
+        1:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Down;
+        2:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Left;
+        3:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Right;
+        4:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Action;
+        5:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Escape;
+        6:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Favorite;
+        7:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_FavoriteAdd;
+        8:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Lists;
+        9:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Search;
+        10:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Filters;
+        11:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_ScreenSaver;
+        12:
+          mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Text := uDB_AUser.Local.MAP.Keyboard.Emu_Config;
+      end;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].TextSettings.HorzAlign := TTextAlign.Center;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Font.Style := mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Font.Style +
+        [TFontStyle.fsBold];
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].OnClick := ex_main.Input.mouse_config.Text.OnMouseClick;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].OnMouseEnter := ex_main.Input.mouse_config.Text.OnMouseEnter;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].OnMouseLeave := ex_main.Input.mouse_config.Text.OnMouseLeave;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Tag := vi;
+      mainScene.Config.Main.R.General.Keyboard.Emu_Panels_Text[vi].Visible := True;
+
+      Inc(vl, 1);
+      if vl = 4 then
+      begin
+        vl := 0;
+        vk := vk + 130;
+      end;
     end;
   end;
-
 end;
 
 procedure Click_To_Accept_Key;

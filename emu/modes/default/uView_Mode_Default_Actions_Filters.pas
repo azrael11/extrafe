@@ -106,7 +106,7 @@ begin
     Emu_VM_Default.Gamelist.Filters.Window.Panel := TPanel.Create(Emu_VM_Default.main);
     Emu_VM_Default.Gamelist.Filters.Window.Panel.name := 'Emu_Filters_Window';
     Emu_VM_Default.Gamelist.Filters.Window.Panel.Parent := Emu_VM_Default.main;
-    Emu_VM_Default.Gamelist.Filters.Window.Panel.SetBounds(extrafe.res.Half_Width - 275, 250, 550, 300);
+    Emu_VM_Default.Gamelist.Filters.Window.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 275, 250, 550, 300);
     Emu_VM_Default.Gamelist.Filters.Window.Panel.Visible := True;
 
     Emu_VM_Default.Gamelist.Filters.Window.Shadow := TShadowEffect.Create(Emu_VM_Default.Gamelist.Filters.Window.Panel);

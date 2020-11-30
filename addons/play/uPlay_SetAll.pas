@@ -33,7 +33,7 @@ uses
   uMain_AllTypes,
   uPlay_AllTypes,
   uAzHung_AllTypes,
-  uPlay_Sounds;
+  uPlay_Sounds, uDB_AUser;
 
 procedure uPlay_SetAll_Set;
 var
@@ -42,14 +42,14 @@ begin
   vPlay.Main := TLayout.Create(mainScene.Main.Down_Level);
   vPlay.Main.Name := 'A_P_Main';
   vPlay.Main.Parent := mainScene.Main.Down_Level;
-  vPlay.Main.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
+  vPlay.Main.SetBounds(0, 130, uDB_AUser.Local.SETTINGS.Resolution.Width, uDB_AUser.Local.SETTINGS.Resolution.Height - 130);
   vPlay.Main.Visible := True;
 
-  vPlay.Main_Blur:= TGaussianBlurEffect.Create(vPlay.Main);
-  vPlay.Main_Blur.Name:= 'A_P_Main_Blur';
-  vPlay.Main_Blur.Parent:=  vPlay.Main;
-  vPlay.Main_Blur.BlurAmount:= 0.7;
-  vPlay.Main_Blur.Enabled:= False;
+  vPlay.Main_Blur := TGaussianBlurEffect.Create(vPlay.Main);
+  vPlay.Main_Blur.Name := 'A_P_Main_Blur';
+  vPlay.Main_Blur.Parent := vPlay.Main;
+  vPlay.Main_Blur.BlurAmount := 0.7;
+  vPlay.Main_Blur.Enabled := False;
 
   vPlay.Main_Ani := TFloatAnimation.Create(vPlay.Main);
   vPlay.Main_Ani.Name := 'A_P_Animation';
@@ -136,12 +136,11 @@ begin
   vPlay.Info.SetBounds(510, 10, vPlay.Main.Width - 510, vPlay.Main.Height - 20);
   vPlay.Info.Visible := True;
 
-  vPlay.Info_Blur:= TGaussianBlurEffect.Create(vPlay.Info);
-  vPlay.Info_Blur.Name:= 'A_P_Info_Blur';
-  vPlay.Info_Blur.Parent:=  vPlay.Info;
-  vPlay.Info_Blur.BlurAmount:= 0.7;
-  vPlay.Info_Blur.Enabled:= False;
-
+  vPlay.Info_Blur := TGaussianBlurEffect.Create(vPlay.Info);
+  vPlay.Info_Blur.Name := 'A_P_Info_Blur';
+  vPlay.Info_Blur.Parent := vPlay.Info;
+  vPlay.Info_Blur.BlurAmount := 0.7;
+  vPlay.Info_Blur.Enabled := False;
 
   vPlay.Info_Ani := TFloatAnimation.Create(vPlay.Info);
   vPlay.Info_Ani.Name := 'A_P_Info_Animation';
@@ -153,8 +152,7 @@ end;
 
 procedure uPlay_SetAll_AzHung;
 const
-  cMedia_Images: array [0 .. 7] of string = ('snap_0.png', 'snap_0.png', 'snap_2.png', 'snap_3.png',
-    'snap_0.png', 'snap_0.png', 'snap_0.png', 'snap_0.png');
+  cMedia_Images: array [0 .. 7] of string = ('snap_0.png', 'snap_0.png', 'snap_2.png', 'snap_3.png', 'snap_0.png', 'snap_0.png', 'snap_0.png', 'snap_0.png');
 var
   vi, vk: Integer;
 begin
@@ -189,8 +187,7 @@ begin
   vPlay.Info_Text[2].SetBounds(40, 130, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[2].Font.Family := 'Tahoma';
   vPlay.Info_Text[2].Font.Size := 20;
-  vPlay.Info_Text[2].Text :=
-    'The goal of the game is to find the word before all parts of the body found hanging out from the gallows.';
+  vPlay.Info_Text[2].Text := 'The goal of the game is to find the word before all parts of the body found hanging out from the gallows.';
   vPlay.Info_Text[2].Color := TAlphaColorRec.White;
   vPlay.Info_Text[2].Visible := True;
 
@@ -200,8 +197,7 @@ begin
   vPlay.Info_Text[3].SetBounds(40, 160, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[3].Font.Family := 'Tahoma';
   vPlay.Info_Text[3].Font.Size := 20;
-  vPlay.Info_Text[3].Text :=
-    'You have three lives to do that and you can challange up to three difficult levels and a secret one.';
+  vPlay.Info_Text[3].Text := 'You have three lives to do that and you can challange up to three difficult levels and a secret one.';
   vPlay.Info_Text[3].Color := TAlphaColorRec.White;
   vPlay.Info_Text[3].Visible := True;
 
@@ -211,8 +207,7 @@ begin
   vPlay.Info_Text[4].SetBounds(40, 190, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[4].Font.Family := 'Tahoma';
   vPlay.Info_Text[4].Font.Size := 20;
-  vPlay.Info_Text[4].Text :=
-    'Also there is a global score board so you have to be carefull what the next letter is.';
+  vPlay.Info_Text[4].Text := 'Also there is a global score board so you have to be carefull what the next letter is.';
   vPlay.Info_Text[4].Color := TAlphaColorRec.White;
   vPlay.Info_Text[4].Visible := True;
 
@@ -257,10 +252,10 @@ begin
     vPlay.Info_Img[vi].Visible := True;
     Inc(vk, 1);
 
-    vPlay.Info_Grey[vi]:= TMonochromeEffect.Create(vPlay.Info_Img[vi]);
-    vPlay.Info_Grey[vi].Name:= 'A_P_Info_Img_Grey_'+ vi.ToString;
-    vPlay.Info_Grey[vi].Parent:=   vPlay.Info_Img[vi];
-    vPlay.Info_Grey[vi].Enabled:= True;
+    vPlay.Info_Grey[vi] := TMonochromeEffect.Create(vPlay.Info_Img[vi]);
+    vPlay.Info_Grey[vi].Name := 'A_P_Info_Img_Grey_' + vi.ToString;
+    vPlay.Info_Grey[vi].Parent := vPlay.Info_Img[vi];
+    vPlay.Info_Grey[vi].Enabled := True;
 
     vPlay.Info_Img_Glow[vi] := TGlowEffect.Create(vPlay.Info_Img[vi]);
     vPlay.Info_Img_Glow[vi].Name := 'A_P_Info_Img_Glow_' + vi.ToString;
@@ -347,8 +342,7 @@ begin
   vPlay.Info_Text[2].SetBounds(40, 130, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[2].Font.Family := 'Tahoma';
   vPlay.Info_Text[2].Font.Size := 20;
-  vPlay.Info_Text[2].Text :=
-    'The goal of the game is to match same tiles so the tiles dissapear from the canvas to releash the image.';
+  vPlay.Info_Text[2].Text := 'The goal of the game is to match same tiles so the tiles dissapear from the canvas to releash the image.';
   vPlay.Info_Text[2].Color := TAlphaColorRec.White;
   vPlay.Info_Text[2].Visible := True;
 
@@ -499,8 +493,7 @@ begin
   vPlay.Info_Text[2].SetBounds(40, 130, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[2].Font.Family := 'Tahoma';
   vPlay.Info_Text[2].Font.Size := 20;
-  vPlay.Info_Text[2].Text :=
-    'The goal of the game is to always hit the ball so the opponent miss. You make 8 goals then you win';
+  vPlay.Info_Text[2].Text := 'The goal of the game is to always hit the ball so the opponent miss. You make 8 goals then you win';
   vPlay.Info_Text[2].Color := TAlphaColorRec.White;
   vPlay.Info_Text[2].Visible := True;
 
@@ -510,8 +503,7 @@ begin
   vPlay.Info_Text[3].SetBounds(40, 160, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[3].Font.Family := 'Tahoma';
   vPlay.Info_Text[3].Font.Size := 20;
-  vPlay.Info_Text[3].Text :=
-    'You have three lives to do that and you can challange up to three difficult levels.';
+  vPlay.Info_Text[3].Text := 'You have three lives to do that and you can challange up to three difficult levels.';
   vPlay.Info_Text[3].Color := TAlphaColorRec.White;
   vPlay.Info_Text[3].Visible := True;
 
@@ -650,8 +642,7 @@ begin
   vPlay.Info_Text[2].SetBounds(40, 130, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[2].Font.Family := 'Tahoma';
   vPlay.Info_Text[2].Font.Size := 20;
-  vPlay.Info_Text[2].Text :=
-    'The goal of the game is to complete the board with numbers that make conflit with no other same numbers.';
+  vPlay.Info_Text[2].Text := 'The goal of the game is to complete the board with numbers that make conflit with no other same numbers.';
   vPlay.Info_Text[2].Color := TAlphaColorRec.White;
   vPlay.Info_Text[2].Visible := True;
 
@@ -661,8 +652,7 @@ begin
   vPlay.Info_Text[3].SetBounds(40, 160, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[3].Font.Family := 'Tahoma';
   vPlay.Info_Text[3].Font.Size := 20;
-  vPlay.Info_Text[3].Text :=
-    'You have three lives to do that and you can challange up to four difficult levels and one for the kids.';
+  vPlay.Info_Text[3].Text := 'You have three lives to do that and you can challange up to four difficult levels and one for the kids.';
   vPlay.Info_Text[3].Color := TAlphaColorRec.White;
   vPlay.Info_Text[3].Visible := True;
 
@@ -802,8 +792,7 @@ begin
   vPlay.Info_Text[2].SetBounds(40, 130, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[2].Font.Family := 'Tahoma';
   vPlay.Info_Text[2].Font.Size := 20;
-  vPlay.Info_Text[2].Text :=
-    'The goal of the game is to start typing a word and complete it. Type as many falling words as you can to complete the level.';
+  vPlay.Info_Text[2].Text := 'The goal of the game is to start typing a word and complete it. Type as many falling words as you can to complete the level.';
   vPlay.Info_Text[2].Color := TAlphaColorRec.White;
   vPlay.Info_Text[2].Visible := True;
 
@@ -813,8 +802,7 @@ begin
   vPlay.Info_Text[3].SetBounds(40, 160, vPlay.Info.Width - 80, 80);
   vPlay.Info_Text[3].Font.Family := 'Tahoma';
   vPlay.Info_Text[3].Font.Size := 20;
-  vPlay.Info_Text[3].Text :=
-    'You have three lives to do that and you can challange up to five difficult levels and two levels for kids';
+  vPlay.Info_Text[3].Text := 'You have three lives to do that and you can challange up to five difficult levels and two levels for kids';
   vPlay.Info_Text[3].Color := TAlphaColorRec.White;
   vPlay.Info_Text[3].Visible := True;
 

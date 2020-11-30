@@ -13,10 +13,8 @@ uses
   FMX.Graphics,
   FMX.Effects,
   ALFmxObjects,
-  uWeather_AllTypes,
   Radiant.Shapes,
-  BASS,
-  CodeSiteLogging;
+  BASS;
 
 procedure Load;
 procedure ReturnToMain(vIconsNum: Integer);
@@ -37,6 +35,8 @@ procedure Close_Map;
 
 procedure Get_Data;
 
+procedure First_Info(vShow: Boolean; vStr1, vStr2, vStr3: String);
+
 var
   vTaskTimer: TTimer;
 
@@ -53,23 +53,23 @@ uses
   uWeather_Providers_Yahoo,
   uWeather_Providers_OpenWeatherMap,
   uWeather_Providers_Yahoo_Config,
-  uWeather_Providers_OpenWeatherMap_Config;
+  uWeather_Providers_OpenWeatherMap_Config, uWeather_AllTypes,
+  uWeather_Convert;
 
 procedure Load;
 var
   ki: Integer;
 begin
-  CodeSite.EnterMethod('User is in Addon Weather');
 
   // Create the effect timer
   vWeather.Scene.Main_Timer := TTimer.Create(vWeather.Scene.weather);
   vWeather.Scene.Main_Timer.Name := 'A_W_Effect_Timer';
   vWeather.Scene.Main_Timer.Parent := vWeather.Scene.weather;
-  vWeather.Scene.Main_Timer.Interval := 100;
+  vWeather.Scene.Main_Timer.Interval := 10;
   vWeather.Scene.Main_Timer.OnTimer := weather.Timer.main.OnTimer;
   vWeather.Scene.Main_Timer.Enabled := False;
 
-  uWeather_Sounds_Load;
+  uWeather_Sounds.Load;
   weather.Ani.main_stop := True;
 
   if uDB_AUser.Local.ADDONS.Weather_D.Provider <> '' then
@@ -93,7 +93,7 @@ begin
   else
     uWeather_Actions.ShowFirstTimeScene(uDB_AUser.Local.ADDONS.Weather_D.First_Pop);
 
-  vWeather.Scene.Main_Timer.Enabled:= True;
+  vWeather.Scene.Main_Timer.Enabled := True;
 end;
 
 procedure ShowTheForcast;
@@ -110,7 +110,15 @@ begin
   weather.Config.Edit_Lock := False;
 
   vWeather.Scene.Control_Ani.Start;
-  // uWeather_Actions_Show_AstronomyAnimation;
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  begin
+    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
+      Show_AstronomyAnimation;
+  end
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'owm' then
+  begin
+
+  end;
 end;
 
 procedure ReturnToMain(vIconsNum: Integer);
@@ -125,25 +133,30 @@ var
 begin
   if Assigned(vWeather.Scene.weather) then
     FreeAndNil(vWeather.Scene.weather);
-  uWeather_Sounds_Free;
-  CodeSite.ExitMethod('User leave of Addon Weather');
+  uWeather_Sounds.Free;
 end;
 
 procedure Show_AstronomyAnimation;
 begin
-  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := False;
-  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X := vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex]
-  // .Astronomy.Sunrise.Width + 120;
-  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.Y := 670;
-  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Path :=
-  // uWeather_Convert_SunSpot(addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunrise,
-  // addons.weather.Action.Choosen[vWeather.Scene.Control.TabIndex].Astronomy.Sunset);
-  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Text.Visible := False;
-  // if addons.weather.Action.PathAni_Show then
-  // begin
-  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := True;
-  // vWeather.Scene.Tab[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Start;
-  // end;
+  if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+  begin
+    weather.Action.Yahoo.Spot_Stop :=
+      Round(uWeather_Convert.SunSpot(StrToFloat(weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex].SunAndMoon.Sunrise),
+      StrToFloat(weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex].SunAndMoon.Sunset)));
+    if weather.Action.Yahoo.Spot_Stop <> -1 then
+    begin
+      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Enabled := True;
+      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X := 200;
+      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.Y := 680;
+      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Start
+    end
+    else
+      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Visible := False;
+  end
+  else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'owm' then
+  begin
+
+  end;
 end;
 
 procedure ShowFirstTimeScene(vFirst: Boolean);
@@ -155,7 +168,7 @@ begin
     vWeather.Scene.First.Panel := TPanel.Create(vWeather.Scene.weather);
     vWeather.Scene.First.Panel.Name := 'A_W_Fisrt';
     vWeather.Scene.First.Panel.Parent := vWeather.Scene.weather;
-    vWeather.Scene.First.Panel.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Half_Height - 500, 800, 600);
+    vWeather.Scene.First.Panel.SetBounds(uDB_AUser.Local.Settings.Resolution.Half_Width - 400, uDB_AUser.Local.Settings.Resolution.Half_Height - 500, 800, 600);
     vWeather.Scene.First.Panel.Visible := True;
 
     vWeather.Scene.First.Panel_Shadow := TShadowEffect.Create(vWeather.Scene.First.Panel);
@@ -264,58 +277,36 @@ begin
     vWeather.Scene.First.main.Done.OnClick := weather.Input.mouse.Button.OnMouseClick;
     vWeather.Scene.First.main.Done.Visible := True;
   end;
+  First_Info(True, 'Welcome to "Weather" addon.', 'Selecte Provider and add towns by click the spinnig gear from here', 'Enjoy the worldwide forcast.');
 end;
 
 procedure CheckFirst(vCheched: Boolean);
 begin
   if vCheched then
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'FIRST_POP', '1', 'USER_ID', uDB_AUser.Local.USER.Num.ToString)
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'First_Pop', '1', 'User_ID', uDB_AUser.Local.USER.Num.ToString)
   else
-    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'FIRST_POP', '0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'First_Pop', '0', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
   uDB_AUser.Local.ADDONS.Weather_D.First_Pop := vCheched;
 end;
 
 procedure Control_Slide_Right;
 begin
   if weather.Ani.main_stop then
-  begin
     if vWeather.Scene.Control.TabIndex <> vWeather.Scene.Control.TabCount - 1 then
-    begin
-      weather.Ani.main_stop := False;
-      uWeather_Sounds_PlayEffect('', '', False);
-      BASS_ChannelPlay(weather.Sound.mouse[0], True);
-      if vWeather.Scene.Control.TabIndex = vWeather.Scene.Control.TabCount - 2 then
-        vWeather.Scene.Arrow_Right.Visible := False
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+        uWeather_Providers_Yahoo.Slide_Right
       else
-        vWeather.Scene.Arrow_Right.Visible := True;
-      vWeather.Scene.Arrow_Left.Visible := True;
-      vWeather.Scene.Arrow_Right_Glow.Enabled := True;
-      Close_Map;
-//      vWeather.Scene.Control.TabIndex :=
-      vWeather.Scene.Control.Next;
-    end;
-  end;
+        uWeather_Providers_OpenWeatherMap.Slide_Right;
 end;
 
 procedure Control_Slide_Left;
 begin
   if weather.Ani.main_stop then
-  begin
     if vWeather.Scene.Control.TabIndex > 0 then
-    begin
-      weather.Ani.main_stop := False;
-      uWeather_Sounds_PlayEffect('', '', False);
-      BASS_ChannelPlay(weather.Sound.mouse[0], True);
-      if vWeather.Scene.Control.TabIndex = 1 then
-        vWeather.Scene.Arrow_Left.Visible := False
+      if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
+        uWeather_Providers_Yahoo.Slide_Left
       else
-        vWeather.Scene.Arrow_Left.Visible := True;
-      vWeather.Scene.Arrow_Right.Visible := True;
-      vWeather.Scene.Arrow_Left_Glow.Enabled := True;
-      Close_Map;
-      vWeather.Scene.Control.Previous;
-    end;
-  end;
+        uWeather_Providers_OpenWeatherMap.Slide_Left;
 end;
 
 procedure Show_Map(vProvider, vLat, vLon: String);
@@ -327,9 +318,9 @@ begin
     vWeather.Scene.Map.Rect := TRadiantRectangle.Create(vWeather.Scene.weather);
     vWeather.Scene.Map.Rect.Name := 'A_W_Map';
     vWeather.Scene.Map.Rect.Parent := vWeather.Scene.weather;
-    vWeather.Scene.Map.Rect.SetBounds(extrafe.res.Width + 10, 10, extrafe.res.Width - 500, 778);
+    vWeather.Scene.Map.Rect.SetBounds(uDB_AUser.Local.Settings.Resolution.Width + 10, 10, uDB_AUser.Local.Settings.Resolution.Width - 500, 778);
     vWeather.Scene.Map.Rect.Fill.Kind := TBrushKind.Solid;
-    vWeather.Scene.Map.Rect.Fill.Color := TAlphaColorRec.Deepskyblue;
+    vWeather.Scene.Map.Rect.Fill.Color := TAlphaColorRec.DeepSkyBlue;
     vWeather.Scene.Map.Rect.Visible := True;
 
     vWeather.Scene.Map.Close := TText.Create(vWeather.Scene.Map.Rect);
@@ -387,37 +378,37 @@ procedure Get_Data;
 var
   vQuery: String;
 begin
-  vQuery := 'SELECT * FROM ADDON_WEATHER WHERE USER_ID=' + uDB_AUser.Local.USER.Num.ToString;
+  vQuery := 'SELECT * FROM addon_weather WHERE User_ID=' + uDB_AUser.Local.USER.Num.ToString;
   uDB.ExtraFE_Query_Local.Close;
   uDB.ExtraFE_Query_Local.SQL.Clear;
   uDB.ExtraFE_Query_Local.SQL.Add(vQuery);
   uDB.ExtraFE_Query_Local.Open;
   uDB.ExtraFE_Query_Local.First;
 
-  uDB_AUser.Local.ADDONS.Weather_D.Menu_Position := uDB.ExtraFE_Query_Local.FieldByName('MENU_POSITION').AsInteger;
-  uDB_AUser.Local.ADDONS.Weather_D.First_Pop := uDB.ExtraFE_Query_Local.FieldByName('FIRST_POP').AsBoolean;
-  uDB_AUser.Local.ADDONS.Weather_D.Old_Backup := uDB.ExtraFE_Query_Local.FieldByName('OLD_BACKUP').AsBoolean;
-  uDB_AUser.Local.ADDONS.Weather_D.Provider_Count := uDB.ExtraFE_Query_Local.FieldByName('PROVIDER_COUNT').AsInteger;
-  uDB_AUser.Local.ADDONS.Weather_D.Provider := uDB.ExtraFE_Query_Local.FieldByName('PROVIDER').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.p_Icons := uDB.ExtraFE_Query_Local.FieldByName('PATH_ICONS').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('PATH_IMAGES').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.p_Sounds := uDB.ExtraFE_Query_Local.FieldByName('PATH_SOUNDS').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.p_Temp := uDB.ExtraFE_Query_Local.FieldByName('PATH_TEMP').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET_COUNT').AsInteger;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Selected := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_ICONSET_SELECTED').AsInteger;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Degree := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_DEGREE').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric := uDB.ExtraFE_Query_Local.FieldByName('YAHOO_METRIC').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET_COUNT').AsInteger;
-  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Selected := uDB.ExtraFE_Query_Local.FieldByName('OWM_ICONSET_SELECTED').AsInteger;
-  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric := uDB.ExtraFE_Query_Local.FieldByName('OWM_METRIC').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Degree := uDB.ExtraFE_Query_Local.FieldByName('OWM_DEGREE').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Menu_Position := uDB.ExtraFE_Query_Local.FieldByName('Menu_Position').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.First_Pop := uDB.ExtraFE_Query_Local.FieldByName('First_Pop').AsBoolean;
+  uDB_AUser.Local.ADDONS.Weather_D.Old_Backup := uDB.ExtraFE_Query_Local.FieldByName('Old_Backup').AsBoolean;
+  uDB_AUser.Local.ADDONS.Weather_D.Provider_Count := uDB.ExtraFE_Query_Local.FieldByName('Provider_Count').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.Provider := uDB.ExtraFE_Query_Local.FieldByName('Provider').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Icons := uDB.ExtraFE_Query_Local.FieldByName('Path_Icons').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Images := uDB.ExtraFE_Query_Local.FieldByName('Path_Images').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Sounds := uDB.ExtraFE_Query_Local.FieldByName('Path_Sounds').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.p_Temp := uDB.ExtraFE_Query_Local.FieldByName('Path_Temp').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('Yahoo_Iconset_Count').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset := uDB.ExtraFE_Query_Local.FieldByName('Yahoo_Iconset').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Selected := uDB.ExtraFE_Query_Local.FieldByName('Yahoo_Iconset_Selected').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Degree := uDB.ExtraFE_Query_Local.FieldByName('Yahoo_Degree').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric := uDB.ExtraFE_Query_Local.FieldByName('Yahoo_Metric').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Count := uDB.ExtraFE_Query_Local.FieldByName('OWM_Iconset_Count').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset := uDB.ExtraFE_Query_Local.FieldByName('OWM_Iconset').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Iconset_Selected := uDB.ExtraFE_Query_Local.FieldByName('OWM_Iconset_Selected').AsInteger;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Metric := uDB.ExtraFE_Query_Local.FieldByName('OWM_Metric').AsString;
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Degree := uDB.ExtraFE_Query_Local.FieldByName('OWM_Degree').AsString;
   uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.API := uDB.ExtraFE_Query_Local.FieldByName('OWM_API').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Language := uDB.ExtraFE_Query_Local.FieldByName('OWM_LANG').AsString;
-  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER_YAHOO', '','');
-  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER_OWM', '','');
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Language := uDB.ExtraFE_Query_Local.FieldByName('OWM_Lang').AsString;
 
+  uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'addon_weather_yahoo', '', '');
+  uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'addon_weather_owm', '', '');
 
   { Get Yahoo Iconsets }
   uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconsets := TStringList.Create;
@@ -426,16 +417,27 @@ begin
   { Get OpenWeatherMap Iconsets }
 
   { Get Towns Data }
-{  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
+  { if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
     uWeather_Providers_Yahoo_Config.Get_Data;
-  if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
-    uWeather_Providers_OpenWeatherMap_Config.Get_Data;}
+    if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
+    uWeather_Providers_OpenWeatherMap_Config.Get_Data; }
 
   if uDB_AUser.Local.ADDONS.Weather_D.Menu_Position <> -1 then
   begin
     uDB_AUser.Local.ADDONS.Names.Insert(uDB_AUser.Local.ADDONS.Weather_D.Menu_Position, 'weather');
     uDB_AUser.Local.ADDONS.Names.Delete(uDB_AUser.Local.ADDONS.Weather_D.Menu_Position + 1);
   end;
+end;
+
+procedure First_Info(vShow: Boolean; vStr1, vStr2, vStr3: String);
+begin
+  vWeather.Scene.Text_Line_1.Visible := vShow;
+  vWeather.Scene.Text_Line_2.Visible := vShow;
+  vWeather.Scene.Text_Line_3.Visible := vShow;
+  vWeather.Scene.Line_Image.Visible := vShow;
+  vWeather.Scene.Text_Line_1.Text := vStr1;
+  vWeather.Scene.Text_Line_2.Text := vStr2;
+  vWeather.Scene.Text_Line_3.Text := vStr3;
 end;
 
 end.

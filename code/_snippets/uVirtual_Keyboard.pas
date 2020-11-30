@@ -152,14 +152,14 @@ uses
   emu,
   uLoad,
   uLoad_AllTypes,
-  uEmu_Actions;
+  uEmu_Actions, uDB_AUser;
 
 procedure Animation(vState: Boolean);
 begin
   if vState then
   begin
-    VKey.Construct.Ani.StartValue := extrafe.res.Height + 1;
-    VKey.Construct.Ani.StopValue := extrafe.res.Half_Height - 250;
+    VKey.Construct.Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height + 1;
+    VKey.Construct.Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Height - 250;
     VKey.Construct.Ani.Start;
     VKey.Construct.Blur.Enabled := True;
     VKey.Construct.Blur_Ani.StartValue := 0;
@@ -169,8 +169,8 @@ begin
   else
   begin
     VKey.Enter_Pressed := True;
-    VKey.Construct.Ani.StartValue := extrafe.res.Half_Height - 250;
-    VKey.Construct.Ani.StopValue := extrafe.res.Height + 1;
+    VKey.Construct.Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height - 250;
+    VKey.Construct.Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Height + 1;
     VKey.Construct.Ani.Start;
     VKey.Construct.Blur_Ani.StartValue := 1;
     VKey.Construct.Blur_Ani.StopValue := 0;
@@ -210,7 +210,7 @@ begin
   VKey.Construct.Back := TRectangle.Create(VKey.Construct.Frame);
   VKey.Construct.Back.Name := 'Virtual_Keyboard';
   VKey.Construct.Back.Parent := VKey.Construct.Frame;
-  VKey.Construct.Back.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Height + 1, 800, 500);
+  VKey.Construct.Back.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 400, uDB_AUser.Local.SETTINGS.Resolution.Height + 1, 800, 500);
   VKey.Construct.Back.XRadius := 8;
   VKey.Construct.Back.YRadius := 8;
   VKey.Construct.Back.Stroke.Thickness := 8;
@@ -967,7 +967,7 @@ procedure TANIMATION.OnFinish(Sender: TObject);
 begin
   if TFloatAnimation(Sender).Name = 'Virtual_Keyboard_Animation' then
   begin
-    if VKey.Construct.Back.Position.Y = extrafe.res.Height + 1 then
+    if VKey.Construct.Back.Position.Y = uDB_AUser.Local.SETTINGS.Resolution.Height + 1 then
     begin
       VKey.Construct.Blur.Enabled := False;
       VK_Free;

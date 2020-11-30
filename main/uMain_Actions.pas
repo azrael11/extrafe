@@ -65,9 +65,9 @@ end;
 procedure GoTo_Addon_Animation(vAddon_Name: String);
 begin
   emulation.Selection_Ani.StartValue := ex_main.Settings.MainSelection_Pos.Y;
-  emulation.Selection_Ani.StopValue := extrafe.res.Height;
+  emulation.Selection_Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Height;
   mainScene.Footer.Back_Ani.StartValue := ex_main.Settings.Footer_Pos.Y;
-  mainScene.Footer.Back_Ani.StopValue := extrafe.res.Height;
+  mainScene.Footer.Back_Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Height;
   emulation.Selection_Ani.Enabled := True;
   mainScene.Footer.Back_Ani.Enabled := True;
   extrafe.prog.State := 'addon_' + vAddon_Name;
@@ -76,9 +76,9 @@ end;
 
 procedure Return_Main_Animation;
 begin
-  emulation.Selection_Ani.StartValue := extrafe.res.Height;
+  emulation.Selection_Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height;
   emulation.Selection_Ani.StopValue := ex_main.Settings.MainSelection_Pos.Y - 130;
-  mainScene.Footer.Back_Ani.StartValue := extrafe.res.Height;
+  mainScene.Footer.Back_Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height;
   mainScene.Footer.Back_Ani.StopValue := ex_main.Settings.Footer_Pos.Y;
   emulation.Selection_Ani.Enabled := True;
   mainScene.Footer.Back_Ani.Enabled := True;

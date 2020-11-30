@@ -6,8 +6,7 @@ uses
   System.Classes,
   System.SysUtils,
   System.UITypes,
-  FMX.Forms,
-  CodeSiteLogging;
+  FMX.Forms;
 
 procedure Load;
 
@@ -26,6 +25,7 @@ uses
   uLoad_AllTypes,
   uEmu_SetAll,
   uDB,
+  uDB_AUser,
   uMain_Emulation,
   uMain_SetAll,
   uMain_AllTypes;
@@ -33,9 +33,9 @@ uses
 procedure Load;
 begin
   // Set the form state
-  Main_Form.Width := extrafe.res.Width;
-  Main_Form.Height := extrafe.res.Height;
-  Main_Form.FullScreen := extrafe.res.FullScreen;
+  Main_Form.Width := uDB_AUser.Local.SETTINGS.Resolution.Width;
+  Main_Form.Height := uDB_AUser.Local.SETTINGS.Resolution.Height;
+  Main_Form.FullScreen := uDB_AUser.Local.SETTINGS.Resolution.Window;
   // Set all the components
   uMain_SetAll.Load;
   // Set the standard values
@@ -54,13 +54,12 @@ begin
   // if emulation.Active then
   // if emulation.ShowCat then
 
-  emulation.Level:= 0;
+  emulation.Level := 0;
   emulation.Category_Num := 0;
-  uMain_Emulation.Category(emulation.level, emulation.Category_Num);
+  uMain_Emulation.Category(emulation.Level, emulation.Category_Num);
 
   // extrafe state
   extrafe.prog.State := 'main';
-    CodeSite.Send(csmLevel5, 'User is in Main mode');
 end;
 
 procedure Exit;

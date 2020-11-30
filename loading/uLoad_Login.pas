@@ -28,6 +28,11 @@ procedure Update_Password(vValue: String);
 
 procedure Show_Password;
 procedure CapsLock(vActive: Boolean);
+procedure Check_Password_Remember(vCheck: Boolean);
+
+var
+  vPassword_Count: Integer;
+  vOn_User_Change: Boolean = false;
 
 implementation
 
@@ -41,15 +46,21 @@ uses
   uDB_AUser,
   uInternet_Files;
 
-var
-  vPassword_Count: Integer;
-
 procedure Login;
 begin
   ex_load.Scene.Progress.Visible := True;
   ex_load.Scene.Progress_Text.Visible := True;
-  if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.USER.Username) and (ex_load.Login.Pass_V.Text = uDB_AUser.Local.USER.Password) then
-    uLoad.Start_ExtraFE
+  if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.USER.Username) and
+    (ex_load.Login.Pass_V.Text = uDB_AUser.Local.USER.Password) then
+  begin
+    ex_load.Login.User_V.Enabled := false;
+    ex_load.Login.Pass_V.Enabled := false;
+    ex_load.Login.Pass_Remember.Enabled := false;
+    ex_load.Login.NotRegister.Enabled := false;
+    ex_load.Login.Login.Enabled := false;
+    ex_load.Login.Exit_ExtraFE.Enabled := false;
+    uLoad.Start_ExtraFE;
+  end
   else
   begin
     if (ex_load.Login.User_V.Items.Strings[ex_load.Login.User_V.ItemIndex] = uDB_AUser.Local.USER.Username) then
@@ -137,26 +148,46 @@ begin
 end;
 
 procedure Change_User(vUser_Num: Integer);
+var
+  vIs_Pass_Remember: Boolean;
 begin
-  if extrafe.databases.online_connected then
+  vOn_User_Change := True;
+  ex_load.Login.Pass_Remember.IsChecked := false;
+  vOn_User_Change := false;
+  if vUser_Num <> 0 then
   begin
-    if vUser_Num <> 0 then
+    uDB_AUser.Get_Local_Data((vUser_Num).ToString);
+    ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.USER.Avatar + '.png');
+    ex_load.Login.Last_Visit.Text := 'Last Visit : ' + uDB_AUser.Local.USER.Last_Visit;
+    vIs_Pass_Remember := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'Password_Remember', 'users', 'User_ID', uDB_AUser.Local.USER.Num.ToString).ToBoolean;
+    if vIs_Pass_Remember then
     begin
-      uDB_AUser.Get_Local_Data((vUser_Num).ToString);
-      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + uDB_AUser.Local.USER.Avatar + '.png');
-      ex_load.Login.Last_Visit.Text := 'Last Visit : ' + uDB_AUser.Local.USER.Last_Visit;
-      uDB_AUser.Get_Online_Data(uDB_AUser.Local.USER.Unique_ID);
-    end
+      ex_load.Login.Pass_V.Text := uDB_AUser.Local.USER.Password;
+      vOn_User_Change := True;
+      ex_load.Login.Pass_Remember.IsChecked := True;
+      vOn_User_Change := false;
+    end;
+
+    if extrafe.databases.online_connected then
+      uDB_AUser.Get_Online_Data(uDB_AUser.Local.USER.Unique_ID)
     else
     begin
-      ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
-      ex_load.Login.Last_Visit.Text := 'Last Visit : --/--/--';
-    end
+      // Exception (if not connectet to internet or online database)
+    end;
   end
   else
   begin
-    // Exception (if not connectet to internet or online database)
+    ex_load.Login.Avatar.Bitmap.LoadFromFile(ex_main.Paths.Avatar_Images + '0.png');
+    ex_load.Login.Last_Visit.Text := 'Last Visit : --/--/--';
   end;
+  ex_load.Login.Warning.Visible := false;
+  ex_load.Login.Forget_Pass.Visible := false;
+end;
+
+procedure Check_Password_Remember(vCheck: Boolean);
+begin
+  if vOn_User_Change = false then
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'users', 'Password_Remember', '' + vCheck.ToString + '', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
 end;
 
 end.

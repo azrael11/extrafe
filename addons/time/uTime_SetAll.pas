@@ -44,7 +44,7 @@ begin
   vTime.Time := Timage.Create(mainScene.Main.Down_Level);
   vTime.Time.Name := 'A_Time';
   vTime.Time.Parent := mainScene.Main.Down_Level;
-  vTime.Time.SetBounds(0, 130, extrafe.res.Width, extrafe.res.Height - 130);
+  vTime.Time.SetBounds(0, 130, uDB_AUser.Local.SETTINGS.Resolution.Width, uDB_AUser.Local.SETTINGS.Resolution.Height - 130);
   vTime.Time.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Time_D.Path.Images + 't_back.png');
   vTime.Time.WrapMode := TImageWrapMode.Tile;
   vTime.Time.Visible := True;

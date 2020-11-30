@@ -46,7 +46,7 @@ uses
   uSoundplayer_SetAll,
   uSoundplayer_AllTypes,
   uSoundplayer_Player,
-  uSoundplayer_Mouse;
+  uSoundplayer_Mouse, uDB_AUser;
 
 procedure Set_ID3v1_Frame;
 begin
@@ -1127,7 +1127,7 @@ begin
   vSoundplayer.tag.mp3.Cover_Select.Panel := TPanel.Create(vSoundplayer.scene.Soundplayer);
   vSoundplayer.tag.mp3.Cover_Select.Panel.Name := 'A_SP_Tag_Mp3_CoverSelet';
   vSoundplayer.tag.mp3.Cover_Select.Panel.Parent := vSoundplayer.scene.Soundplayer;
-  vSoundplayer.tag.mp3.Cover_Select.Panel.SetBounds(extrafe.res.Half_Width - 275, extrafe.res.Half_Height - 300, 550, 400);
+  vSoundplayer.tag.mp3.Cover_Select.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 275, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 300, 550, 400);
   vSoundplayer.tag.mp3.Cover_Select.Panel.Visible := True;
 
   CreateHeader(vSoundplayer.tag.mp3.Cover_Select.Panel, 'IcoMoon-Free', #$e90d, TAlphaColorRec.DeepSkyBlue, 'Choose cover type.', False, nil);
@@ -1196,7 +1196,7 @@ begin
   vSoundplayer.tag.mp3.Lyrics_Add.Panel := TPanel.Create(vSoundplayer.scene.Soundplayer);
   vSoundplayer.tag.mp3.Lyrics_Add.Panel.Name := 'A_SP_Tag_Mp3_LyricsAdd';
   vSoundplayer.tag.mp3.Lyrics_Add.Panel.Parent := vSoundplayer.scene.Soundplayer;
-  vSoundplayer.tag.mp3.Lyrics_Add.Panel.SetBounds(extrafe.res.Half_Width - 175, extrafe.res.Half_Height - 100, 350, 200);
+  vSoundplayer.tag.mp3.Lyrics_Add.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 175, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 100, 350, 200);
   vSoundplayer.tag.mp3.Lyrics_Add.Panel.Visible := True;
 
   CreateHeader(vSoundplayer.tag.mp3.Lyrics_Add.Panel, 'IcoMoon-Free', #$e922, TAlphaColorRec.DeepSkyBlue, 'How to add lyrics?', False, nil);
@@ -1248,7 +1248,7 @@ begin
   vSoundplayer.tag.mp3.Lyrics_Int.Panel := TPanel.Create(vSoundplayer.scene.Soundplayer);
   vSoundplayer.tag.mp3.Lyrics_Int.Panel.Name := 'A_SP_Tag_Mp3_Lyrics_Get';
   vSoundplayer.tag.mp3.Lyrics_Int.Panel.Parent := vSoundplayer.scene.Soundplayer;
-  vSoundplayer.tag.mp3.Lyrics_Int.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 450, 600, 700);
+  vSoundplayer.tag.mp3.Lyrics_Int.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 300, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 450, 600, 700);
   vSoundplayer.tag.mp3.Lyrics_Int.Panel.Visible := True;
 
   CreateHeader(vSoundplayer.tag.mp3.Lyrics_Int.Panel, 'IcoMoon-Free', #$e922, TAlphaColorRec.DeepSkyBlue, 'Lyrics from Internet', False, nil);

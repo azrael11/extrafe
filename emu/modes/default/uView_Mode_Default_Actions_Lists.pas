@@ -44,7 +44,7 @@ begin
   Emu_VM_Default.Gamelist.lists.Window.Panel := TLayout.Create(Emu_VM_Default.main);
   Emu_VM_Default.Gamelist.lists.Window.Panel.Name := 'Emu_Lists';
   Emu_VM_Default.Gamelist.lists.Window.Panel.Parent := Emu_VM_Default.main;
-  Emu_VM_Default.Gamelist.lists.Window.Panel.SetBounds(extrafe.res.Half_Width - 700, 0, 1400, 850);
+  Emu_VM_Default.Gamelist.lists.Window.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 700, 0, 1400, 850);
   Emu_VM_Default.Gamelist.lists.Window.Panel.Visible := True;
 
   Emu_VM_Default.Gamelist.lists.Window.List_Control := TTabControl.Create(Emu_VM_Default.Gamelist.lists.Window.Panel);
@@ -138,7 +138,7 @@ begin
   Emu_VM_Default.Gamelist.lists.Window.Info.Panel := TLayout.Create(Emu_VM_Default.main);
   Emu_VM_Default.Gamelist.lists.Window.Info.Panel.Name := 'Emu_Lists_Info';
   Emu_VM_Default.Gamelist.lists.Window.Info.Panel.Parent := Emu_VM_Default.main;
-  Emu_VM_Default.Gamelist.lists.Window.Info.Panel.SetBounds(extrafe.res.Half_Width - 700, 800, 1400, 300);
+  Emu_VM_Default.Gamelist.lists.Window.Info.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 700, 800, 1400, 300);
   Emu_VM_Default.Gamelist.lists.Window.Info.Panel.Visible := True;
 
   Emu_VM_Default.Gamelist.lists.Window.Info.Info := TPanel.Create(Emu_VM_Default.Gamelist.lists.Window.Info.Panel);

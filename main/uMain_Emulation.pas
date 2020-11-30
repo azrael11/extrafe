@@ -264,7 +264,7 @@ begin
   emulation.Selection_Tab[vTab].Story := TText.Create(emulation.Selection_Tab[vTab].Tab);
   emulation.Selection_Tab[vTab].Story.Name := 'Emulator_Story_' + IntToStr(vTab);
   emulation.Selection_Tab[vTab].Story.Parent := emulation.Selection_Tab[vTab].Tab;
-  emulation.Selection_Tab[vTab].Story.Position.X := extrafe.res.Width - 200;
+  emulation.Selection_Tab[vTab].Story.Position.X := uDB_AUser.Local.SETTINGS.Resolution.Width - 200;
   emulation.Selection_Tab[vTab].Story.Position.Y := 100;
   emulation.Selection_Tab[vTab].Story.TextSettings.FontColor := claWhite;
   emulation.Selection_Tab[vTab].Story.Text := 'gaksfgsakd';

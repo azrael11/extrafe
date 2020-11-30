@@ -22,11 +22,12 @@ uses
 
 procedure Create;
 const
+
   cTab_Names: array [0 .. 4] of string = ('ExtraFE', 'Emulators', 'Multimedia', 'Others', 'Credits');
 var
   vi: Integer;
 begin
-  extrafe.prog.State:= 'main_config_info';
+  extrafe.prog.State := 'main_config_info';
   mainScene.Config.Main.R.Info.Panel := TPanel.Create(mainScene.Config.Main.R.Panel[6]);
   mainScene.Config.Main.R.Info.Panel.Name := 'Main_Config_Info_Main_Panel';
   mainScene.Config.Main.R.Info.Panel.Parent := mainScene.Config.Main.R.Panel[6];
@@ -47,11 +48,13 @@ begin
     mainScene.Config.Main.R.Info.TabItem[vi].Text := cTab_Names[vi];
     mainScene.Config.Main.R.Info.TabItem[vi].Width := mainScene.Config.Main.R.Info.TabControl.Width;
     mainScene.Config.Main.R.Info.TabItem[vi].Height := mainScene.Config.Main.R.Info.TabControl.Height;
+    mainScene.Config.Main.R.Info.TabItem[vi].Tag := vi;
+    mainScene.Config.Main.R.Info.TabItem[vi].OnClick := ex_main.Input.mouse_config.TabItem.OnMouseClick;
     mainScene.Config.Main.R.Info.TabItem[vi].Visible := True;
   end;
 
   uMain_Config_Info_Extrafe.Load;
-  uMain_Config_Info_Credits.Load;
+  mainScene.Config.Main.R.Info.TabControl.TabIndex := 0;
 end;
 
 end.

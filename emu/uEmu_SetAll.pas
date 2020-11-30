@@ -28,12 +28,12 @@ uses
   uLoad,
   uLoad_AllTypes,
   emu,
-  main;
+  main, uDB_AUser;
 
 procedure uEmu_SetComponentsToRightPlace;
 begin
-  Emu_Form.Width:= extrafe.res.Width;
-  Emu_Form.Height:= extrafe.res.Height;
+  Emu_Form.Width:= uDB_AUser.Local.SETTINGS.Resolution.Width;
+  Emu_Form.Height:= uDB_AUser.Local.SETTINGS.Resolution.Height;
 
   Emu_Form.Emu_Stylebook.loadFromFile(extrafe.style.Path+ extrafe.style.Name+ '.style');
   Emu_Form.StyleBook:= Emu_Form.Emu_Stylebook;

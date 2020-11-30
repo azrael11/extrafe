@@ -107,8 +107,15 @@ uses
   uMain_Config_General_Joystick_MMSystem,
   uMain_Config_Info_Extrafe,
   uMain_Config_Info_Credits,
-  uMain_Config_Profile_User, uMain_Config_Addons_Weather,
-  uMain_Config_Addons_Soundplayer;
+  uMain_Config_Profile_User,
+  uMain_Config_Addons_Weather,
+  uMain_Config_Addons_Soundplayer,
+  uMain_Config_Profile_Statistics,
+  uMain_Config_Profile_Machine,
+  uMain_Config_General_Mouse,
+  uMain_Config_General_Sound, uMain_Config_General_Graphics,
+  uMain_Config_Info_Emulators, uMain_Config_Info_Multimedia,
+  uMain_Config_Info_Others;
 
 { TMAIN_CONFIG_IMAGE }
 
@@ -368,13 +375,16 @@ begin
   end
   else if extrafe.prog.State = 'main_config_addons' then
   begin
-    TText(Sender).Cursor := crHandPoint;
-    if TText(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
-      mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := True
-    else if TText(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
-      mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := True
-    else if TText(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
-      mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True;
+    if TText(Sender).TextSettings.FontColor <> TAlphaColorRec.Grey then
+    begin
+      TText(Sender).Cursor := crHandPoint;
+      if TText(Sender).Name = 'Main_Config_Addons_Arrow_Left' then
+        mainScene.Config.Main.R.Addons.Arrow_Left_Glow.Enabled := True
+      else if TText(Sender).Name = 'Main_Config_Addons_Arrow_Right' then
+        mainScene.Config.Main.R.Addons.Arrow_Right_Glow.Enabled := True
+      else if TText(Sender).Name = 'Main_Config_Addons_Groupbox_0_Image_' + IntToStr(TImage(Sender).Tag) then
+        mainScene.Config.Main.R.Addons.Icons_Glow[TImage(Sender).Tag].Enabled := True;
+    end;
   end
   else if ContainsText(extrafe.prog.State, 'main_config_general') then
   begin
@@ -561,14 +571,17 @@ begin
     end
     else if extrafe.prog.State = 'main_config_addons_actions' then
     begin
+      { Weather }
       if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_OK' then
-        uMain_Config_Addons_Soundplayer.Deactivate
+        uMain_Config_Addons_Weather.Deactivate
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Deactivate_Msg_Main_Cancel' then
-        uMain_Config_Addons_Soundplayer.Free
+        uMain_Config_Addons_Weather.Free
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_OK' then
         uMain_Config_Addons_Weather.Activate
       else if TButton(Sender).Name = 'Main_Config_Addons_Weather_Activate_Msg_Main_Cancel' then
         uMain_Config_Addons_Weather.Free_Select_Message
+
+        { Soundplayer }
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_OK' then
         uMain_Config_Addons_Soundplayer.Deactivate
       else if TButton(Sender).Name = 'Main_Config_Addons_Soundplayer_Deactivate_Msg_Main_Cancel' then
@@ -652,20 +665,69 @@ end;
 
 procedure TMAIN_CONFIG_TABITEM.OnMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'main_config_info' then
+  if AnsiContainsStr(extrafe.prog.State, 'main_config_profile') then
   begin
+    TTabItem(Sender).Cursor := crHourGlass;
+    case TTabItem(Sender).Tag of
+      0:
+        uMain_Config_Profile_User.Load;
+      1:
+        uMain_Config_Profile_Statistics.Load;
+      2:
+        uMain_Config_Profile_Machine.Load;
+    end;
+    TTabItem(Sender).Cursor := crDefault;
+  end
+  else if AnsiContainsStr(extrafe.prog.State, 'main_config_general') then
+  begin
+    if extrafe.prog.State = 'main_config_general_joystick_mmsystem' then
+    begin
+      if TTabItem(Sender).Name = 'Main_Config_General_Joystick_Generic_Item_0' then
+        uMain_Config_General_Joystick.vSelected_joy_Tab := 0
+      else if TTabItem(Sender).Name = 'Main_Config_General_Joystick_Generic_Item_1' then
+        uMain_Config_General_Joystick.vSelected_joy_Tab := 1;
+    end
+    else
+    begin
+      TTabItem(Sender).Cursor := crHourGlass;
+      case TTabItem(Sender).Tag of
+        0:
+          uMain_Config_General_Visual.Load;
+        1:
+          uMain_Config_General_Graphics.Load;
+        2:
+          uMain_Config_General_Sound.Load;
+        3:
+          uMain_Config_General_Keyboard.Load;
+        4:
+          uMain_Config_General_Joystick.Load;
+        5:
+          uMain_Config_General_Mouse.Load;
+      end;
+      TTabItem(Sender).Cursor := crDefault;
+    end;
+  end
+  else if AnsiContainsStr(extrafe.prog.State, 'main_config_info') then
+  begin
+    TTabItem(Sender).Cursor := crHourGlass;
+    case TTabItem(Sender).Tag of
+      0:
+        uMain_Config_Info_Extrafe.Load;
+      1:
+        uMain_Config_Info_Emulators.Load;
+      2:
+        uMain_Config_Info_Multimedia.Load;
+      3:
+        uMain_Config_Info_Others.Load;
+      4:
+        uMain_Config_Info_Credits.Load;
+    end;
+    TTabItem(Sender).Cursor := crDefault;
     if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_0' then
       uMain_Config_Info_Credits.vTab_Selected := 0
     else if TTabItem(Sender).Name = 'Main_Config_Info_Credits_TabItem_1' then
       uMain_Config_Info_Credits.vTab_Selected := 1;
   end
-  else if extrafe.prog.State = 'main_config_general_joystick_mmsystem' then
-  begin
-    if TTabItem(Sender).Name = 'Main_Config_General_Joystick_Generic_Item_0' then
-      uMain_Config_General_Joystick.vSelected_joy_Tab := 0
-    else if TTabItem(Sender).Name = 'Main_Config_General_Joystick_Generic_Item_1' then
-      uMain_Config_General_Joystick.vSelected_joy_Tab := 1;
-  end;
 end;
 
 procedure TMAIN_CONFIG_TABITEM.OnMouseEnter(Sender: TObject);

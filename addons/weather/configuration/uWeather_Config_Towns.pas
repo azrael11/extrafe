@@ -1124,9 +1124,9 @@ begin
   if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
     vActive_Woeid := uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count
   else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
-    vActive_Woeid := weather.Action.OWM.Total_WoeID;
+    vActive_Woeid := uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count;
 
-  if vActive_Woeid > -1 then
+  if vActive_Woeid > 0 then
   begin
     if vLock then
     begin
@@ -1145,12 +1145,12 @@ begin
       end
       else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       begin
-        if weather.Action.OWM.Total_WoeID > 0 then
+        if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 0 then
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Deepskyblue
         else
           vWeather.Config.main.Right.Towns.GoDown.TextSettings.FontColor := TAlphaColorRec.Grey;
       end;
-      uWeather_Sounds_PlayMouse('Lock');
+      uWeather_Sounds.PlayMouse('Lock');
     end
     else
     begin
@@ -1160,7 +1160,7 @@ begin
       vWeather.Config.main.Right.Towns.Delete_Icon.TextSettings.FontColor := TAlphaColorRec.Grey;
       if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'yahoo' then
       begin
-        for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count do
+        for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count - 1 do
         begin
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
@@ -1168,13 +1168,13 @@ begin
       end
       else if uDB_AUser.Local.ADDONS.Weather_D.Provider = 'openweathermap' then
       begin
-        for vi := 0 to weather.Action.OWM.Total_WoeID do
+        for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count - 1 do
         begin
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.GlowColor := TAlphaColorRec.Deepskyblue;
           vWeather.Config.main.Right.Towns.Town[vi].Glow_Panel.Enabled := False;
         end;
       end;
-      uWeather_Sounds_PlayMouse('Unlock');
+      uWeather_Sounds.PlayMouse('Unlock');
     end;
     weather.Config.Edit_Lock := vLock;
   end;

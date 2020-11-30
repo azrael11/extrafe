@@ -27,7 +27,8 @@ uses
   Data.Bind.ObjectScope,
   uWeather_AllTypes,
   Radiant.Shapes,
-  ALFmxTabControl;
+  ALFmxTabControl,
+  BASS, Winapi.ShellAPI;
 
 type
   TWEATHER_PROVIDER_YAHOO_FIND_LIST = record
@@ -37,11 +38,6 @@ type
     country: string;
     city: string;
     Text: string;
-  end;
-
-type
-  TWEATHER_PROVIDER_YAHOO_SLIDE = class(TObject)
-    procedure OnTimer(Sender: TObject);
   end;
 
 type
@@ -83,9 +79,6 @@ function Convert_To_Millibar(vImperial_Num: String): String;
 function Convert_To_Kilometres(vImperial_Num: String): String;
 function Get_Flag(vCountry: String): TBitmap;
 
-procedure Main_Slide(vSlidePosition: String);
-procedure Main_Slide_Free;
-
 procedure Use_Imperial;
 procedure Use_Metric;
 
@@ -100,14 +93,17 @@ procedure Show_Town_Image(vState: String);
 procedure Show_Map(vTab_Num: String);
 procedure Update_Time(vTab: Integer);
 
+procedure Slide_Right;
+procedure Slide_Left;
+
+procedure UpDate_SunSpot;
+
+procedure Go_To_Website;
+
 var
   vYahoo_Find_List: array [0 .. 100] of TWEATHER_PROVIDER_YAHOO_FIND_LIST;
   vFound_Locations: Integer;
   vBest_Img_Num: Integer;
-  // Slide
-  vSlide_Timer: TTimer;
-  vSlide_Timer_Obj: TWEATHER_PROVIDER_YAHOO_SLIDE;
-  vSlide_Position: String;
   // Time
   vTime: TTimer;
 
@@ -124,7 +120,7 @@ uses
   uWeather_Config_Towns,
   uWeather_Config_Towns_Add,
   uWeather_Convert,
-  uWeather_Providers_Yahoo_Config;
+  uWeather_Providers_Yahoo_Config, uWeather_Sounds;
 
 procedure Woeid_List;
 var
@@ -217,7 +213,7 @@ end;
 procedure Add_NewTown(vNum: Integer);
 var
   vTemp_NewTown: TADDON_WEATHER_CONFIG_TOWNS_NEWTOWNPANEL;
-  vTown_Num: Integer;
+  vi, vk, vTown_Num: Integer;
 begin
   if Is_Town_Exists(vYahoo_Find_List[vNum].Woeid) then
     ShowMessage('This town already exists in your list')
@@ -229,7 +225,7 @@ begin
     SetLength(weather.Action.Yahoo.Data_Town, vTown_Num + 1);
     weather.Action.Yahoo.Data_Town[vTown_Num - 1] := Get_Forecast(vTown_Num, vYahoo_Find_List[vNum].Woeid);
 
-    vTemp_NewTown.Time_Results := Convert_Time(weather.Action.Yahoo.Data_Town[vTown_Num].Observation.Time.TimeStamp,
+    vTemp_NewTown.Time_Results := Convert_Time(weather.Action.Yahoo.Data_Town[vTown_Num - 1].Observation.Time.TimeStamp,
       weather.Action.Yahoo.Data_Town[vTown_Num - 1].Observation.Time.WeekDay).Full;
     vTemp_NewTown.Forecast_Image := Get_Icon_From_Text(weather.Action.Yahoo.Data_Town[vTown_Num - 1].Observation.ConditionCode);
     vTemp_NewTown.Temperature := weather.Action.Yahoo.Data_Town[vTown_Num - 1].Observation.Tempreture.Now;
@@ -241,17 +237,26 @@ begin
 
     uWeather_Providers_Yahoo_Config.Towns_Add_New_Town(vTown_Num - 1, vTemp_NewTown);
 
-    uDB.vColumns := 'USER_ID, TOWN_NUM, TOWN_WOEID, TOWN_NAME';
+    uDB.vColumns := 'User_ID, Town_Num, Town_WOEID, Town_Name';
     uDB.vValues := '"' + uDB_AUser.Local.USER.Num.ToString + '", "' + (vTown_Num - 1).ToString + '", "' + vYahoo_Find_List[vNum].Woeid + '", "' +
       vTemp_NewTown.City_Name + '"';
 
     uDB.Query_Insert(uDB.ExtraFE_Query_Local, 'addon_weather_yahoo', uDB.vColumns, uDB.vValues);
 
-    Main_Create_Town(weather.Action.Yahoo.Data_Town[vTown_Num - 1], vTown_Num);
-    if vTown_Num - 1 > 0 then
+    Main_Create_Town(weather.Action.Yahoo.Data_Town[vTown_Num - 1], vWeather.Scene.Control.TabCount);
+    if vTown_Num > 1 then
       vWeather.Scene.Arrow_Right.Visible := True;
+
+    uWeather_Actions.First_Info(False, '', '', '');
+
+    vWeather.Config.main.Right.Towns.Add.main.FindTown_V.Text := '';
+    for vi := 0 to vWeather.Config.main.Right.Towns.Add.main.Grid.ColumnCount - 1 do
+      for vk := 0 to vWeather.Config.main.Right.Towns.Add.main.Grid.RowCount - 1 do
+        vWeather.Config.main.Right.Towns.Add.main.Grid.Cells[vi, vk] := '';
+
     vWeather.Scene.Blur.Enabled := False;
     vWeather.Scene.Blur.Enabled := True;
+    Show_Add_Messeage(True, '" ' + vTemp_NewTown.City_Name + ' " added successfully on your list.');
   end;
 end;
 
@@ -861,7 +866,7 @@ begin
     vIcon := TText.Create(vWeather.Scene.Back);
     vIcon.Name := 'A_W_Providers_Yahoo_Loading_Icon';
     vIcon.Parent := vWeather.Scene.Back;
-    vIcon.SetBounds(extrafe.res.Half_Width - 40, vWeather.Scene.Back.Height - 400, 100, 100);
+    vIcon.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 40, vWeather.Scene.Back.Height - 400, 100, 100);
     vIcon.Font.Family := 'Weather Icons';
     vIcon.Font.Size := 72;
     vIcon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -889,13 +894,13 @@ begin
     vProgress.Visible := True;
 
     vProgress_Num := 100 / uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count;
-    SetLength(weather.Action.Yahoo.Data_Town, uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count);
+    SetLength(weather.Action.Yahoo.Data_Town, uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count + 1);
     for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count - 1 do
     begin
-      vProgress_Text.Text := 'Getting forecast for "' + uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_NAME', 'addon_weather_yahoo', 'TOWN_NUM',
+      vProgress_Text.Text := 'Getting forecast for "' + uDB.Query_Select(uDB.ExtraFE_Query_Local, 'Town_Name', 'addon_weather_yahoo', 'Town_Num',
         vi.ToString) + '"';
       Application.ProcessMessages;
-      weather.Action.Yahoo.Data_Town[vi] := Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_WOEID', 'addon_weather_yahoo', 'TOWN_NUM',
+      weather.Action.Yahoo.Data_Town[vi] := Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'Town_WOEID', 'addon_weather_yahoo', 'Town_Num',
         vi.ToString));
       Main_Create_Town(weather.Action.Yahoo.Data_Town[vi], vi);
       weather.Action.Yahoo.Data_Town[vi].Photos.Picture_Used_Num := vBest_Img_Num;
@@ -910,17 +915,22 @@ begin
     vTime.OnTimer := weather.timer.main.OnTimer;
     vTime.Enabled := True;
 
-    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
+    if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 1 then
+    begin
       vWeather.Scene.Arrow_Right.Visible := True;
+      vWeather.Scene.Arrow_Right_Text.Visible := True;
+      vWeather.Scene.Arrow_Right_Text.Text := 'Next : ' + weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex + 2].Location.City_Name;
+    end;
 
     FreeAndNil(vProgress);
     FreeAndNil(vProgress_Text);
     FreeAndNil(vText);
     FreeAndNil(vIcon);
     FreeAndNil(vBackground);
+    uWeather_Actions.First_Info(False, '', '', '');
   end
   else
-    vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
+    uWeather_Actions.First_Info(True, 'Please to add towns select the spinning gear from here ', 'select "Towns" button and then press the + button', '');
 end;
 
 procedure Main_Create_Hourly(vTown: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN; vTab: Integer);
@@ -930,60 +940,30 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.Name := 'A_W_Provider_Yahoo_Hourly_Title';
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.SetBounds(500, 30, 600, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.SetBounds(540, 10, 600, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.Font.Size := 16;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.Text := 'Current day hourly forecast : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.Text := 'Hourly forecast : ';
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.TextSettings.FontColor := TAlphaColorRec.White;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.HorzTextAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.Tag := vTab;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Title.Visible := True;
 
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.Name := 'A_W_Provider_Yahoo_Hourly_Left';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.SetBounds(500, 136, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.Font.Size := 28;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.TextSettings.FontColor := TAlphaColorRec.Grey;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.Text := #$ea44;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.OnMouseEnter := weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.OnMouseLeave := weather.Input.mouse.Text.OnMouseLeave;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left.Visible := True;
-
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left_Glow := TGlowEffect.Create(vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left_Glow.Name := 'A_W_Provider_Yahoo_Hourly_LeftGlow';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left_Glow.Parent := vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left_Glow.Softness := 0.4;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left_Glow.Opacity := 0.9;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Left_Glow.Enabled := False;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.Name := 'A_W_Provider_Yahoo_Hourly_Line';
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.SetBounds(530, 40, 1110, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.LineSlope := TRadiantLineSlope.Horizontal;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Line.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Box := THorzScrollBox.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Box.Name := 'A_W_Provider_Yahoo_Hourly_Box';
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Box.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Box.SetBounds(540, 60, 1090, 190);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Box.ShowScrollBars := False;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Box.ShowScrollBars := True;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Box.Visible := True;
-
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.Name := 'A_W_Provider_Yahoo_Hourly_Right';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.SetBounds(1650, 136, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.Font.Size := 28;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.Text := #$ea42;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.OnMouseEnter := weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.OnMouseLeave := weather.Input.mouse.Text.OnMouseLeave;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right.Visible := True;
-
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right_Glow := TGlowEffect.Create(vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right_Glow.Name := 'A_W_Provider_Yahoo_Hourly_RightGlow';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right_Glow.Parent := vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right_Glow.Softness := 0.4;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right_Glow.Opacity := 0.9;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Hourly.Right_Glow.Enabled := False;
 
   for vi := 0 to 24 do
   begin
@@ -1157,27 +1137,25 @@ begin
   end;
 end;
 
-procedure Main_Slide(vSlidePosition: String);
-begin
-  vSlide_Timer := TTimer.Create(vWeather.Scene.weather);
-  vSlide_Timer.Interval := 15;
-  vSlide_Position := vSlidePosition;
-  vSlide_Timer.OnTimer := vSlide_Timer_Obj.OnTimer;
-end;
-
-procedure Main_Slide_Free;
-begin
-  FreeAndNil(vSlide_Timer);
-end;
-
 procedure Main_Create_Daily(vTown: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN; vTab: Integer);
 var
   vi: Integer;
 begin
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.Name := 'A_W_Provider_Yahoo_Daily_Title';
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.SetBounds(540, 246, 600, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.Text := 'Daily forecast : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.HorzTextAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.Tag := vTab;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Title.Visible := True;
+
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line.Name := 'A_W_Provider_Yahoo_Daily_Line';
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line.SetBounds(520, 276, 1070, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line.SetBounds(530, 276, 1110, 5);
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line.LineSlope := TRadiantLineSlope.Horizontal;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line.Stroke.Kind := TBrushKind.Solid;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Line.Stroke.Color := TAlphaColorRec.Deepskyblue;
@@ -1187,49 +1165,9 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box := TVertScrollBox.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box.Name := 'A_W_Provider_Yahoo_Daily_Box';
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box.SetBounds(500, 280, 1110, 480);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box.ShowScrollBars := False;
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box.SetBounds(540, 288, 1090, 472);
+  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box.ShowScrollBars := True;
   vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Box.Visible := True;
-
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.Name := 'A_W_Provider_Yahoo_Daily_Up';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.SetBounds(1650, 280, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.Font.Size := 28;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.Text := #$ea41;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.OnMouseEnter := weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.OnMouseLeave := weather.Input.mouse.Text.OnMouseLeave;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up.Visible := True;
-
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up_Glow := TGlowEffect.Create(vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up_Glow.Name := 'A_W_Provider_Yahoo_Daily_UpGlow';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up_Glow.Parent := vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up_Glow.Softness := 0.4;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up_Glow.Opacity := 0.9;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Up_Glow.Enabled := False;
-
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.Name := 'A_W_Provider_Yahoo_Daily_Down';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.SetBounds(1650, 728, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.Font.Size := 28;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.Text := #$ea43;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.OnMouseEnter := weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.OnMouseLeave := weather.Input.mouse.Text.OnMouseLeave;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down.Visible := True;
-
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down_Glow := TGlowEffect.Create(vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down);
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down_Glow.Name := 'A_W_Provider_Yahoo_Daily_DownGlow';
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down_Glow.Parent := vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down_Glow.Softness := 0.4;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down_Glow.Opacity := 0.9;
-  vWeather.Scene.Tab_Yahoo[vTab].Forecast_Daily.Down_Glow.Enabled := False;
 
   for vi := 0 to 10 do
   begin
@@ -1492,11 +1430,32 @@ end;
 procedure Main_Create_Town(vTown: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN; vTab: Integer);
 var
   vi: Integer;
+  vPath_Data: TPathData;
 begin
   vWeather.Scene.Tab_Yahoo[vTab].Tab := TALTabItem.Create(vWeather.Scene.Control);
   vWeather.Scene.Tab_Yahoo[vTab].Tab.Name := 'A_W_WeatherTab_Yahoo_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Tab.Parent := vWeather.Scene.Control;
   vWeather.Scene.Tab_Yahoo[vTab].Tab.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1 := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.Name := 'A_W_WeatherTab_Yahoo_Vert_Line_1_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.SetBounds(520, 18, 5, vWeather.Scene.Control.Height - 190);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.LineSlope := TRadiantLineSlope.Vertical;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_1.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2 := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.Name := 'A_W_WeatherTab_Yahoo_Vert_Line_2_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.SetBounds(1646, 18, 5, vWeather.Scene.Control.Height - 190);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.LineSlope := TRadiantLineSlope.Vertical;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_2.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image_Left_Arrow := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image_Left_Arrow.Name := 'A_W_Provider_Yahoo_Town_Image_Left_Arrow';
@@ -1563,7 +1522,7 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image := TImage.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image.Name := 'A_W_Provider_Yahoo_WeatherBackground_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image.SetBounds(500, 60, 1090, 700);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image.SetBounds(538, 60, 1090, 700);
   if vTown.Photos.ID <> '-1' then
     vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image.Bitmap := Get_Best_Img_Res(vTown, length(vTown.Photos.resolutions))
   else
@@ -1594,10 +1553,23 @@ begin
   else
     vWeather.Scene.Tab_Yahoo[vTab].General.Town_Image_Blur.Enabled := False;
 
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Name := 'A_W_Provider_Yahoo_ShowImage';
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.SetBounds(1580, 10, 32, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Font.Family := 'IcoMoon-Free';
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Text := #$e9ce;
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Font.Size := 24;
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.OnClick := weather.Input.mouse.Text.OnMouseClick;
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.OnMouseEnter := weather.Input.mouse.Text.OnMouseEnter;
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.OnMouseLeave := weather.Input.mouse.Text.OnMouseLeave;
+  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Visible := True;
+
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_F := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_F.Name := 'A_W_Provider_Yahoo_Unit_F';
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_F.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_F.SetBounds(16, 90, 42, 42);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_F.SetBounds(10, 70, 42, 42);
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_F.Font.Family := 'Weather Icons';
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_F.Font.Size := 36;
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'imperial' then
@@ -1622,7 +1594,7 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_C := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_C.Name := 'A_W_Provider_Yahoo_Unit_C';
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_C.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_C.SetBounds(16, 140, 42, 42);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_C.SetBounds(10, 120, 42, 42);
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_C.Font.Family := 'Weather Icons';
   vWeather.Scene.Tab_Yahoo[vTab].General.Temprature_Unit_C.Font.Size := 36;
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'metric' then
@@ -1675,18 +1647,25 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Time_Icon.HorzTextAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].General.Time_Icon.Visible := True;
 
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Name := 'A_W_Provider_Yahoo_ShowImage';
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.SetBounds(1540, 10, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Text := #$e9ce;
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Font.Size := 24;
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.OnClick := weather.Input.mouse.Text.OnMouseClick;
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.OnMouseEnter := weather.Input.mouse.Text.OnMouseEnter;
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.OnMouseLeave := weather.Input.mouse.Text.OnMouseLeave;
-  vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage.Visible := True;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.Name := 'A_W_Provider_Yahoo_Line_Gen' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.SetBounds(4, 40, 510, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.LineSlope := TRadiantLineSlope.Horizontal;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Gen.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3 := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.Name := 'A_W_WeatherTab_Yahoo_Vert_Line_3_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.SetBounds(42, 52, 5, vWeather.Scene.Control.Height - 224);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.LineSlope := TRadiantLineSlope.Vertical;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Line_Vert_3.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage_Glow := TGlowEffect.Create(vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage);
   vWeather.Scene.Tab_Yahoo[vTab].General.ShowImage_Glow.Name := 'A_W_Provider_Yahoo_ShowImage_Glow';
@@ -1872,55 +1851,105 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Night.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].General.Night.Visible := True;
 
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Name := 'A_W_Provider_Yahoo_Wind_' + IntToStr(vTab);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.SetBounds(160, 350, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Font.Size := 26;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Color := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Text := #$f050;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Visible := True;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Text.Width := 80;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.Name := 'A_W_WeatherTab_Yahoo_Info_Line_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.SetBounds(280, 344, 5, 230);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.LineSlope := TRadiantLineSlope.Vertical;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.Name := 'A_W_WeatherTab_Yahoo_Info_Line_Wind_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.SetBounds(52, 360, 224, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.LineSlope := TRadiantLineSlope.Horizontal;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_wind.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.Name := 'A_W_WeatherTab_Yahoo_Info_Line_Athmosphere_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.SetBounds(290, 360, 222, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.LineSlope := TRadiantLineSlope.Horizontal;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Info_Line_atmosphere.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.Name := 'A_W_Provider_Yahoo_Wind_Header_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.SetBounds(62, 332, 200, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.Text := 'Wind : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Header.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Name := 'A_W_Provider_Yahoo_Wind_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.SetBounds(60, 530, 32, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Font.Family := 'Weather Icons';
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Text := #$f050 + ' Speed : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Visible := True;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed_Icon.Width := 80;
 
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Name := 'A_W_Provider_Yahoo_WindSpeed' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.SetBounds(130, 404, 200, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.SetBounds(160, 530, 200, 32);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Color := TAlphaColorRec.White;
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'imperial' then
     vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Text := 'Speed : ' + vTown.Observation.WindSpeed + ' mph'
   else if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'metric' then
-    vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Text := 'Speed : ' + vTown.Observation.WindSpeed + ' kmph';
+    vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Text := vTown.Observation.WindSpeed + ' kmph';
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Speed.Visible := True;
 
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.Name := 'A_W_Provider_Yahoo_WindDirection_Icon_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.SetBounds(50, 490, 32, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.Font.Family := 'Weather Icons';
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.Font.Size := 26;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.Text := #$f058;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.RotationAngle := StrToFloat(vTown.Observation.WindDirection);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Icon.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.Name := 'A_W_Provider_Yahoo_WindDiretion_Text_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.SetBounds(84, 490, 200, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.Text := 'Direction : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Text.Visible := True;
+
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.Name := 'A_W_Provider_Yahoo_WindDiretion' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.Name := 'A_W_Provider_Yahoo_WindDiretion_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.SetBounds(160, 380, 200, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.SetBounds(160, 490, 200, 32);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.Text := vTown.Observation.WindDirectionCode;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction.Visible := True;
 
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.Name := 'A_W_Provider_Yahoo_WindDirection_Arrow' + IntToStr(vTab);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.SetBounds(240, 360, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.Font.Size := 26;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.Text := #$f0b1;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.RotationAngle := StrToFloat(vTown.Observation.WindDirection);
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Direction_Arrow.Visible := True;
-
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand := TImage.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand.Name := 'A_W_Provider_Yahoo_Wind_Small_Turbine_Stand_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand.SetBounds(100, 360, 43, 52);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand.SetBounds(100, 400, 43, 52);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand.WrapMode := TImageWrapMode.Fit;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small_Stand.Visible := True;
@@ -1928,7 +1957,7 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small := TImage.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small.Name := 'A_W_Provider_Yahoo_Wind_Small_Turbine_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small.SetBounds(94, 335, 54, 54);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small.SetBounds(94, 375, 54, 54);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small.WrapMode := TImageWrapMode.Stretch;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Small.Visible := True;
@@ -1949,7 +1978,7 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand := TImage.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand.Name := 'A_W_Provider_Yahoo_Wind_Turbine_Stand_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand.SetBounds(60, 370, 53, 64);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand.SetBounds(60, 410, 53, 64);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand.WrapMode := TImageWrapMode.Fit;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_stand.png');
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Stand.Visible := True;
@@ -1957,7 +1986,7 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine := TImage.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine.Name := 'A_W_Provider_Yahoo_Wind_Turbine_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine.SetBounds(54, 335, 64, 64);
+  vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine.SetBounds(54, 375, 64, 64);
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine.WrapMode := TImageWrapMode.Stretch;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_turbine.png');
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine.Visible := True;
@@ -1975,20 +2004,31 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Animation.Loop := True;
   vWeather.Scene.Tab_Yahoo[vTab].Wind.Turbine_Animation.Enabled := True;
 
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.Name := 'A_W_Provider_Yahoo_Atmosphere_Header_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.SetBounds(298, 332, 200, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.Text := 'Atmosphere : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Header.Visible := True;
+
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Name := 'A_W_Provider_Yahoo_Atmosphere_Pressure_Icon' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Name := 'A_W_Provider_Yahoo_Atmosphere_Pressure_Icon_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.SetBounds(60, 470, 32, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.SetBounds(292, 370, 200, 32);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Font.Size := 26;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Text := #$f079;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Text := #$f079 + ' Pressure : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure_Icon.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure.Name := 'A_W_Provider_Yahoo_Atmosphere_Pressure' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure.SetBounds(100, 470, 200, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure.SetBounds(410, 370, 200, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Pressure.Color := TAlphaColorRec.White;
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'imperial' then
@@ -2002,17 +2042,18 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Name := 'A_W_Provider_Yahoo_Atmosphere_Visibility_Icon' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.SetBounds(60, 510, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Font.Family := 'IcoMoon-Free';
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Font.Size := 26;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.SetBounds(292, 410, 200, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Font.Family := 'Weather Icons';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Text := #$e9ce;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Text := #$f075 + ' Visibility : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility_Icon.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility.Name := 'A_W_Provider_Yahoo_Atmosphere_Visibility' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility.SetBounds(100, 510, 200, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility.SetBounds(410, 410, 200, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Visibility.Color := TAlphaColorRec.White;
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'imperial' then
@@ -2026,17 +2067,18 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Name := 'A_W_Provider_Yahoo_Atmosphere_Humidity_Icon_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.SetBounds(60, 550, 32, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.SetBounds(292, 450, 200, 32);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Font.Size := 26;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Text := #$f07a;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Text := #$f07a + ' Humidity : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity_Icon.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity.Name := 'A_W_Provider_Yahoo_Atmosphere_Humidity' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity.SetBounds(100, 550, 200, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity.SetBounds(410, 450, 200, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Humidity.Text := vTown.Observation.Humidity + '%';
@@ -2046,48 +2088,91 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Name := 'A_W_Provider_Yahoo_Atmosphere_Ultraviolet_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.SetBounds(300, 470, 300, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.SetBounds(292, 490, 200, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Font.Family := 'Weather Icons';
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Color := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Text := 'Ultraviolet (UV)';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Text := #$f00d + ' UltraViolet : ';
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.Name := 'A_W_Provider_Yahoo_Atmosphere_Ultraviolet_Index' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.SetBounds(300, 490, 300, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.SetBounds(410, 490, 300, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.Color := TAlphaColorRec.White;;
-  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.Text := 'Index : ' + vTown.Observation.UVIndex + ' (' + vTown.Observation.UVDescription + ')';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.Text := vTown.Observation.UVIndex + ' (' + vTown.Observation.UVDescription + ')';
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.UV_Index.Visible := True;
 
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.Name := 'A_W_Provider_Yahoo_Rain_Probability_icon' + IntToStr(vTab);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.SetBounds(300, 550, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.Font.Size := 26;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.Color := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.Text := #$f019;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability_Icon.Visible := True;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.Name := 'A_W_Provider_Yahoo_Rain_Probability_Icon_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.SetBounds(292, 530, 200, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.Font.Family := 'Weather Icons';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.Text := #$f019 + ' Probability : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability_Icon.Visible := True;
 
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability.Name := 'A_W_Provider_Yahoo_Rain_Probability' + IntToStr(vTab);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability.SetBounds(340, 550, 32, 32);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability.Font.Size := 16;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability.Color := TAlphaColorRec.White;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability.Text := vTown.Observation.PrecipitationProbability + '%';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Probability.Visible := True;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.Name := 'A_W_Provider_Yahoo_Rain_Probability_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.SetBounds(410, 530, 200, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.Color := TAlphaColorRec.White;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.Text := vTown.Observation.PrecipitationProbability + '%';
+  vWeather.Scene.Tab_Yahoo[vTab].Atmosphere.Probability.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.Name := 'A_W_Provider_Yahoo_Astronomy_Header_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.SetBounds(62, 570, 200, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.TextSettings.FontColor := TAlphaColorRec.White;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.Text := 'Astronomy : ';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.TextSettings.HorzAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Header.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.Name := 'A_W_WeatherTab_Yahoo_Astronomy_Line_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.SetBounds(52, 600, 450, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.LineSlope := TRadiantLineSlope.Horizontal;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Line.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.Name := 'A_W_Provider_Yahoo_Moon';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.SetBounds(64, 660, 300, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.Text := 'Moon';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.HorzTextAlign := TTextAlign.Leading;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.Name := 'A_W_Provider_Yahoo_Moon_Phase';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.SetBounds(70, 626, 32, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.Font.Family := 'Weather Icons';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.Font.Size := 28;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.Text := Get_Moon_Phase(vTown.SunAndMoon.MoonPhase);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Moon_Phase.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.Name := 'A_W_Provider_Yahoo_Astronomy_Sunrise_Image_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.SetBounds(60, 710, 42, 42);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.SetBounds(200, 710, 42, 42);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.Font.Size := 36;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.Font.Size := 28;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.Text := #$f051;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise_Image.Visible := True;
@@ -2095,7 +2180,7 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise.Name := 'A_W_Provider_Yahoo_Astronomy_Sunrise_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise.SetBounds(60, 740, 100, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise.SetBounds(200, 740, 100, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunrise.Text := Convert_Astronomy(vTown.SunAndMoon.Sunrise);
@@ -2106,9 +2191,9 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.Name := 'A_W_Provider_Yahoo_Astronomy_Sunset_Image_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.SetBounds(430, 710, 42, 42);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.SetBounds(450, 710, 42, 42);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.Font.Size := 36;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.Font.Size := 28;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.Text := #$f052;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset_Image.Visible := True;
@@ -2116,7 +2201,7 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.Name := 'A_W_Provider_Yahoo_Astronomy_Sunset_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.SetBounds(430, 740, 100, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.SetBounds(450, 740, 100, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.Text := Convert_Astronomy(vTown.SunAndMoon.Sunset);
@@ -2124,34 +2209,85 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.Tag := vTab;
   vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Sunset.Visible := True;
 
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Name := 'A_W_Provider_Yahoo_Astronomy_Spot_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.SetBounds(200, 680, 40, 40);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Font.Family := 'Weather Icons';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Font.Size := 16;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Text := #$f00d;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Tag := vTab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Name := 'A_W_Provider_Yahoo_Astronomy_Spot_Text_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Parent := vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.SetBounds(0, -50, 100, 40);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Font.Family := '';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Font.Size := 12;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Text := '';
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Tag := vTab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Text.Visible := True;
+
+  vPath_Data := TPathData.Create;
+  vPath_Data.MoveTo(PointF(0, 0));
+  vPath_Data.CurveTo(PointF(0, 0), PointF(125, -160), PointF(250, 0));
+
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Ani := TPathAnimation.Create(vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot);
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Ani.Name := 'A_W_Weather_Astronomy_Spot_Animation_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Ani.Parent := vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Ani.Path := vPath_Data;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Ani.Tag := vTab;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Ani.Duration := 4;
+  vWeather.Scene.Tab_Yahoo[vTab].Astronomy.Spot_Ani.Enabled := False;
+
   vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Name := 'A_W_Provider_Yahoo_Powered_By_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.SetBounds(1664, 650, 300, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Font.Size := 16;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Color := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Position.Y := 710;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Text := 'Powered by : ';
   vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Tag := vTab;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.TextSettings.HorzAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Visible := True;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Width := uSnippet_Text_ToPixels(vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By);
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Position.X := vWeather.Scene.Tab_Yahoo[vTab].Tab.Width -
-    (vWeather.Scene.Tab_Yahoo[vTab].Server.Powered_By.Width + 70);
+
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.Name := 'A_W_WeatherTab_Yahoo_Server_Line_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.SetBounds(1658, 680, 286, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.LineSlope := TRadiantLineSlope.Horizontal;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Line.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].Server.Icon := TImage.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Name := 'A_W_Provider_Yahoo_Powered_By_Yahoo_Icon_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Name := 'A_W_Provider_Yahoo_Powered_By_Yahoo_Icon_' + vTab.ToString;
   vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Width := 64;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Height := 64;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Position.X := vWeather.Scene.Tab_Yahoo[vTab].Tab.Width - 70;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Position.Y := 700;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.SetBounds(vWeather.Scene.Tab_Yahoo[vTab].Tab.Width - 143, vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 240, 64, 64);
   vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.WrapMode := TImageWrapMode.Fit;
   vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_yahoo.png');
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Tag := vTab;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.OnClick := weather.Input.mouse.Image.OnMouseClick;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.OnMouseEnter := weather.Input.mouse.Image.OnMouseEnter;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.OnMouseLeave := weather.Input.mouse.Image.OnMouseLeave;
   vWeather.Scene.Tab_Yahoo[vTab].Server.Icon.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon_Glow := TGlowEffect.Create(vWeather.Scene.Tab_Yahoo[vTab].Server.Icon);
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon_Glow.Name := 'A_W_Provider_Yahoo_Powered_By_Yahoo_Icon_Glow_' + IntToStr(vTab);
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon_Glow.Parent := vWeather.Scene.Tab_Yahoo[vTab].Server.Icon;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon_Glow.Softness := 0.9;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon_Glow.GlowColor := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].Server.Icon_Glow.Enabled := False;
 
   vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate.Name := 'A_W_Provider_Yahoo_Last_UpDate';
   vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate.SetBounds(extrafe.res.Half_Width - 200, vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 146, 400, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 200,
+    vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 146, 400, 30);
   vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate.Color := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Tab_Yahoo[vTab].Server.LastUpDate.Text := 'Last Update: ' + Convert_Time(vTown.Observation.Time.TimeStamp, vTown.Observation.Time.Day).Full;
@@ -2161,7 +2297,8 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country.Name := 'A_W_Provider_Yahoo_TownAndCountry_' + IntToStr(vTab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country.SetBounds(0, vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 120, extrafe.res.Width, 50);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country.SetBounds(0, vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 120,
+    uDB_AUser.Local.SETTINGS.Resolution.Width, 60);
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country.Font.Size := 42;
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country.Color := TAlphaColorRec.White;
   vWeather.Scene.Tab_Yahoo[vTab].General.Town_and_Country.Text := vTown.Location.City_Name + ' - ' + vTown.Location.Country_Name;
@@ -2171,17 +2308,19 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Latidute := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.Name := 'A_W_Provider_Yahoo_CountryLatitude';
   vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.SetBounds(extrafe.res.Half_Width - 200, vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 60, 150, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 200,
+    vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 60, 200, 30);
   vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.TextSettings.FontColor := TAlphaColorRec.White;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.Text := 'Lat : ' + vTown.Location.Latitude;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.Text := 'Latitude : ' + vTown.Location.Latitude;
   vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.HorzTextAlign := TTextAlign.Center;
   vWeather.Scene.Tab_Yahoo[vTab].General.Latidute.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].General.Earth := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Earth.Name := 'A_W_Provider_Yahoo_Earth_' + vTab.ToString;
   vWeather.Scene.Tab_Yahoo[vTab].General.Earth.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Earth.SetBounds(extrafe.res.Half_Width - 16, vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 60, 32, 32);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Earth.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 16,
+    vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 60, 32, 32);
   vWeather.Scene.Tab_Yahoo[vTab].General.Earth.Font.Family := 'IcoMoon-Free';
   vWeather.Scene.Tab_Yahoo[vTab].General.Earth.Font.Size := 26;
   vWeather.Scene.Tab_Yahoo[vTab].General.Earth.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
@@ -2204,10 +2343,11 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Longidute := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.Name := 'A_W_Provider_Yahoo_Country_Longidute';
   vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.SetBounds(extrafe.res.Half_Width + 50, vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 60, 150, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width + 4,
+    vWeather.Scene.Tab_Yahoo[vTab].Tab.Height - 60, 200, 30);
   vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.TextSettings.FontColor := TAlphaColorRec.White;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.Text := 'Long : ' + vTown.Location.Longitude;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.Text := 'Longitude : ' + vTown.Location.Longitude;
   vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.HorzTextAlign := TTextAlign.Center;
   vWeather.Scene.Tab_Yahoo[vTab].General.Longidute.Visible := True;
 
@@ -2215,42 +2355,32 @@ begin
 
   Main_Create_Daily(vTown, vTab);
 
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.Name := 'A_W_Provider_Yahoo_Moon';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.SetBounds(1690, 60, 200, 30);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.Font.Size := 16;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.TextSettings.FontColor := TAlphaColorRec.White;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.Text := 'Moon Phase ';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.HorzTextAlign := TTextAlign.Center;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon.Visible := True;
-
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.Name := 'A_W_Provider_Yahoo_Moon_Phase';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.SetBounds(1770, 90, 48, 48);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.Font.Size := 32;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.Text := Get_Moon_Phase(vTown.SunAndMoon.MoonPhase);
-  vWeather.Scene.Tab_Yahoo[vTab].General.Moon_Phase.Visible := True;
-
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.Name := 'A_W_Provider_Yahoo_Refresh_Text';
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.SetBounds(1690, 200, 200, 30);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.SetBounds(1664, 520, 300, 30);
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.Font.Size := 16;
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.TextSettings.FontColor := TAlphaColorRec.White;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.Text := 'Refresh Current Town';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.HorzTextAlign := TTextAlign.Center;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.Text := 'Refresh : ';
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.HorzTextAlign := TTextAlign.Leading;
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Text.Visible := True;
+
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line := TRadiantLine.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.Name := 'A_W_WeatherTab_Yahoo_Vert_Refresh_Line_' + vTab.ToString;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.SetBounds(1658, 550, 286, 5);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.LineSlope := TRadiantLineSlope.Horizontal;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.Stroke.Kind := TBrushKind.Solid;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.Stroke.Color := TAlphaColorRec.Deepskyblue;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.Stroke.Thickness := 3;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh_Line.Visible := True;
 
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh := TText.Create(vWeather.Scene.Tab_Yahoo[vTab].Tab);
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.Name := 'A_W_Provider_Yahoo_Refresh';
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.Parent := vWeather.Scene.Tab_Yahoo[vTab].Tab;
-  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.SetBounds(1770, 230, 48, 48);
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.SetBounds(vWeather.Scene.Tab_Yahoo[vTab].Tab.Width - 140, 570, 60, 60);
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.Font.Family := 'Weather Icons';
-  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.Font.Size := 32;
+  vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.Font.Size := 48;
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.Text := #$f04c;
   vWeather.Scene.Tab_Yahoo[vTab].General.Refresh.OnClick := weather.Input.mouse.Text.OnMouseClick;
@@ -2280,7 +2410,7 @@ begin
         + #$f042;
       vWeather.Scene.Tab_Yahoo[vk].General.Low.Text := weather.Action.Yahoo.Data_Town[vk].Observation.Tempreture.Low + #$f042;
       vWeather.Scene.Tab_Yahoo[vk].General.High.Text := weather.Action.Yahoo.Data_Town[vk].Observation.Tempreture.High + #$f042;
-      vWeather.Scene.Tab_Yahoo[vk].Wind.Speed.Text := 'Speed : ' + weather.Action.Yahoo.Data_Town[vk].Observation.WindSpeed + ' mph';
+      vWeather.Scene.Tab_Yahoo[vk].Wind.Speed.Text := weather.Action.Yahoo.Data_Town[vk].Observation.WindSpeed + ' mph';
       vWeather.Scene.Tab_Yahoo[vk].Atmosphere.Pressure.Text := Round(weather.Action.Yahoo.Data_Town[vk].Observation.BarometricPressure.ToSingle).ToString
         + ' inHg';
       vWeather.Scene.Tab_Yahoo[vk].Atmosphere.Visibility.Text := Round(weather.Action.Yahoo.Data_Town[vk].Observation.Visibility.ToSingle).ToString + '  miles';
@@ -2301,8 +2431,9 @@ begin
     vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_F.Color := TAlphaColorRec.Deepskyblue;
     vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_F_Glow.Enabled := False;
     vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C.Color := TAlphaColorRec.White;
+    uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric := 'imperial';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'Yahoo_Metric', 'imperial', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
-
 end;
 
 procedure Use_Metric;
@@ -2318,7 +2449,7 @@ begin
         '' + #$f042;
       vWeather.Scene.Tab_Yahoo[vk].General.Low.Text := weather.Action.Yahoo.Data_Town[vk].Observation.Tempreture.Low_Metric + #$f042;
       vWeather.Scene.Tab_Yahoo[vk].General.High.Text := weather.Action.Yahoo.Data_Town[vk].Observation.Tempreture.High_Metric + #$f042;
-      vWeather.Scene.Tab_Yahoo[vk].Wind.Speed.Text := 'Speed : ' + weather.Action.Yahoo.Data_Town[vk].Observation.WindSpeed_Metric + ' kmph';
+      vWeather.Scene.Tab_Yahoo[vk].Wind.Speed.Text := weather.Action.Yahoo.Data_Town[vk].Observation.WindSpeed_Metric + ' kmph';
       vWeather.Scene.Tab_Yahoo[vk].Atmosphere.Pressure.Text := weather.Action.Yahoo.Data_Town[vk].Observation.BarometricPressure_Metric + ' mb';
       vWeather.Scene.Tab_Yahoo[vk].Atmosphere.Visibility.Text := weather.Action.Yahoo.Data_Town[vk].Observation.Visibility_Metric + '  kmph';
       for vi := 0 to 24 do
@@ -2338,6 +2469,8 @@ begin
     vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_F.Color := TAlphaColorRec.White;
     vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C.Color := TAlphaColorRec.Deepskyblue;
     vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].General.Temprature_Unit_C_Glow.Enabled := False;
+    uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric := 'metric';
+    uDB.Query_Update(uDB.ExtraFE_Query_Local, 'addon_weather', 'Yahoo_Metric', 'metric', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
   end;
 end;
 
@@ -2374,7 +2507,7 @@ begin
     vWeather.Scene.Tab_Yahoo[vIndex].General.FeelsLike.Text := 'Feels like : ' + vRefreshed_Data.Observation.Tempreture.FeelsLike + '' + #$f042
   else if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'metric' then
     vWeather.Scene.Tab_Yahoo[vIndex].General.FeelsLike.Text := 'Feels like : ' + vRefreshed_Data.Observation.Tempreture.FeelsLike_Metric + '' + #$f042;
-  vWeather.Scene.Tab_Yahoo[vIndex].General.Moon_Phase.Text := Get_Moon_Phase(vRefreshed_Data.SunAndMoon.MoonPhase);
+  vWeather.Scene.Tab_Yahoo[vIndex].Astronomy.Moon_Phase.Text := Get_Moon_Phase(vRefreshed_Data.SunAndMoon.MoonPhase);
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'imperial' then
     vWeather.Scene.Tab_Yahoo[vIndex].Wind.Turbine_Animation.Duration := Convert_Wind((Round(StrToFloat(vRefreshed_Data.Observation.WindSpeed) * 1.8) - 1))
   else if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'metric' then
@@ -2384,13 +2517,12 @@ begin
   else if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'metric' then
     vWeather.Scene.Tab_Yahoo[vIndex].Wind.Turbine_Small_Animation.Duration := Convert_Wind(vRefreshed_Data.Observation.WindSpeed.ToInteger);
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'imperial' then
-    vWeather.Scene.Tab_Yahoo[vIndex].Wind.Speed.Text := 'Speed : ' + vRefreshed_Data.Observation.WindSpeed + ' mph'
+    vWeather.Scene.Tab_Yahoo[vIndex].Wind.Speed.Text := vRefreshed_Data.Observation.WindSpeed + ' mph'
   else if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'metric' then
-    vWeather.Scene.Tab_Yahoo[vIndex].Wind.Speed.Text := 'Speed : ' + vRefreshed_Data.Observation.WindSpeed + ' kmph';
+    vWeather.Scene.Tab_Yahoo[vIndex].Wind.Speed.Text := vRefreshed_Data.Observation.WindSpeed + ' kmph';
   vWeather.Scene.Tab_Yahoo[vIndex].Wind.Direction.Text := vRefreshed_Data.Observation.WindDirectionCode;
-  vWeather.Scene.Tab_Yahoo[vIndex].Wind.Direction_Arrow.RotationAngle := StrToFloat(vRefreshed_Data.Observation.WindDirection);
-  vWeather.Scene.Tab_Yahoo[vIndex].Atmosphere.UV_Index.Text := 'Index : ' + vRefreshed_Data.Observation.UVIndex + ' (' +
-    vRefreshed_Data.Observation.UVDescription + ')';
+  vWeather.Scene.Tab_Yahoo[vIndex].Wind.Direction_Icon.RotationAngle := StrToFloat(vRefreshed_Data.Observation.WindDirection);
+  vWeather.Scene.Tab_Yahoo[vIndex].Atmosphere.UV_Index.Text := vRefreshed_Data.Observation.UVIndex + ' (' + vRefreshed_Data.Observation.UVDescription + ')';
   if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'imperial' then
     vWeather.Scene.Tab_Yahoo[vIndex].Atmosphere.Pressure.Text := Round(vRefreshed_Data.Observation.BarometricPressure.ToSingle).ToString + ' inHg'
   else if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Metric = 'metric' then
@@ -2403,8 +2535,8 @@ begin
   vWeather.Scene.Tab_Yahoo[vIndex].Astronomy.Sunset.Text := Convert_Astronomy(vRefreshed_Data.SunAndMoon.Sunset);
   vWeather.Scene.Tab_Yahoo[vIndex].Astronomy.Sunrise.Text := Convert_Astronomy(vRefreshed_Data.SunAndMoon.Sunrise);
   vWeather.Scene.Tab_Yahoo[vIndex].General.Town_and_Country.Text := vRefreshed_Data.Location.City_Name + ' - ' + vRefreshed_Data.Location.Country_Name;
-  vWeather.Scene.Tab_Yahoo[vIndex].General.Latidute.Text := 'Lat : ' + vRefreshed_Data.Location.Latitude;
-  vWeather.Scene.Tab_Yahoo[vIndex].General.Longidute.Text := 'Long : ' + vRefreshed_Data.Location.Longitude;
+  vWeather.Scene.Tab_Yahoo[vIndex].General.Latidute.Text := 'Latitude : ' + vRefreshed_Data.Location.Latitude;
+  vWeather.Scene.Tab_Yahoo[vIndex].General.Longidute.Text := 'Longitude : ' + vRefreshed_Data.Location.Longitude;
   for vi := 0 to 24 do
   begin
     if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Iconset_Selected = 0 then
@@ -2465,44 +2597,34 @@ var
   vInfo: TText;
   vRefreshed_Town: TADDON_WEATHER_PROVIDER_YAHOO_DATATOWN;
 begin
+  { This procedure must be in TTask Thread bcs Application.Proccess didt work well }
   vWeather.Scene.Blur.Enabled := True;
-
   vInfo := TText.Create(vWeather.Scene.weather);
   vInfo.Name := 'A_W_Provider_Yahoo_Refresh_Info';
   vInfo.Parent := vWeather.Scene.weather;
-  vInfo.SetBounds(extrafe.res.Half_Width - 400, extrafe.res.Half_Height - 100, 800, 100);
+  vInfo.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 400, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 100, 800, 100);
   vInfo.Font.Size := 48;
   vInfo.Text := 'Please Wait Getting Forecast....';
   vInfo.TextSettings.FontColor := TAlphaColorRec.White;
   vInfo.Visible := True;
 
-  // Application.ProcessMessages;
-
-  vRefreshed_Town := Get_Forecast(vTown_Index, uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns[vTown_Index].Woeid.ToString);
-
-  Application.ProcessMessages;
-
+  vRefreshed_Town := Get_Forecast(vTown_Index, weather.Action.Yahoo.Data_Town[vTown_Index].Woeid);
   Apply_New_Forecast_To_Tonw(vRefreshed_Town, vWeather.Scene.Control.TabIndex);
-
-  // Application.ProcessMessages;
 
   FreeAndNil(vInfo);
   vWeather.Scene.Blur.Enabled := False;
+  uWeather_Actions.Show_AstronomyAnimation;
 end;
 
 procedure Show_Hourly(IsShow: Boolean);
 begin
   vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Title.Visible := IsShow;
-  vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left.Visible := IsShow;
-  vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right.Visible := IsShow;
   vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Box.Visible := IsShow;
 end;
 
 procedure Show_Daily(IsShow: Boolean);
 begin
   vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Line.Visible := IsShow;
-  vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Up.Visible := IsShow;
-  vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Down.Visible := IsShow;
   vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Box.Visible := IsShow;
 end;
 
@@ -2596,65 +2718,74 @@ begin
   vWeather.Scene.Tab_Yahoo[vTab].General.Time_Icon.Text := Get_Icon_Time(FormatDateTime('hh', Now) + ':00');
 end;
 
-{ TWEATHER_PROVIDER_YAHOO_SLIDE }
-
-procedure TWEATHER_PROVIDER_YAHOO_SLIDE.OnTimer(Sender: TObject);
-var
-  vPoint: TPointF;
-  vWidth: Single;
+procedure Slide_Right;
 begin
-  if (vSlide_Position = 'right') or (vSlide_Position = 'left') then
+  vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Stop;
+  weather.Ani.main_stop := False;
+  uWeather_Sounds.PlayEffect('', '', False);
+  BASS_ChannelPlay(weather.Sound.mouse[0], True);
+  if vWeather.Scene.Control.TabIndex = vWeather.Scene.Control.TabCount - 2 then
   begin
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vPoint := vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Box.ViewportPosition;
-    if vSlide_Position = 'left' then
-      vPoint.X := vPoint.X - 16
-    else if vSlide_Position = 'right' then
-      vPoint.X := vPoint.X + 16;
-
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.ActiveTab.Index].Forecast_Hourly.Box.AniCalculations.Animation := True;
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.ActiveTab.Index].Forecast_Hourly.Box.ViewportPosition := vPoint;
-
-    if vPoint.X < 0 then
-    begin
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left.TextSettings.FontColor := TAlphaColorRec.Grey;
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Left_Glow.Enabled := False;
-      Main_Slide_Free;
-    end;
-    if (vPoint.X + 1090) > vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Box.ContentBounds.Width then
-    begin
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right.TextSettings.FontColor := TAlphaColorRec.Grey;
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Hourly.Right_Glow.Enabled := False;
-      Main_Slide_Free;
-    end;
+    vWeather.Scene.Arrow_Right.Visible := False;
+    vWeather.Scene.Arrow_Right_Text.Visible := False;
   end
-  else if (vSlide_Position = 'up') or (vSlide_Position = 'down') then
+  else
   begin
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Up.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Down.TextSettings.FontColor := TAlphaColorRec.Deepskyblue;
-    vPoint := vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Box.ViewportPosition;
-    if vSlide_Position = 'up' then
-      vPoint.Y := vPoint.Y - 16
-    else if vSlide_Position = 'down' then
-      vPoint.Y := vPoint.Y + 16;
-
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.ActiveTab.Index].Forecast_Daily.Box.AniCalculations.Animation := True;
-    vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.ActiveTab.Index].Forecast_Daily.Box.ViewportPosition := vPoint;
-
-    if vPoint.Y < 0 then
-    begin
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Up.TextSettings.FontColor := TAlphaColorRec.Grey;
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Up_Glow.Enabled := False;
-      Main_Slide_Free;
-    end;
-    if (vPoint.Y + 480) > vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Box.ContentBounds.Height then
-    begin
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Down.TextSettings.FontColor := TAlphaColorRec.Grey;
-      vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Forecast_Daily.Down_Glow.Enabled := False;
-      Main_Slide_Free;
-    end;
+    vWeather.Scene.Arrow_Right.Visible := True;
+    vWeather.Scene.Arrow_Right_Text.Visible := True;
+    vWeather.Scene.Arrow_Right_Text.Text := 'Next : ' + weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex + 2].Location.City_Name;
   end;
+  vWeather.Scene.Arrow_Left.Visible := True;
+  vWeather.Scene.Arrow_Left_Text.Visible := True;
+  vWeather.Scene.Arrow_Left_Text.Text := 'Previous : ' + weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex].Location.City_Name;
+  vWeather.Scene.Arrow_Right_Glow.Enabled := True;
+  Close_Map;
+  vWeather.Scene.Control.Next;
+end;
+
+procedure Slide_Left;
+begin
+  vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Stop;
+  weather.Ani.main_stop := False;
+  uWeather_Sounds.PlayEffect('', '', False);
+  BASS_ChannelPlay(weather.Sound.mouse[0], True);
+  if vWeather.Scene.Control.TabIndex = 1 then
+  begin
+    vWeather.Scene.Arrow_Left.Visible := False;
+    vWeather.Scene.Arrow_Left_Text.Visible := False;
+  end
+  else
+  begin
+    vWeather.Scene.Arrow_Left.Visible := True;
+    vWeather.Scene.Arrow_Left_Text.Visible := True;
+    vWeather.Scene.Arrow_Left_Text.Text := 'Previous : ' + weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex - 2].Location.City_Name;
+  end;
+  vWeather.Scene.Arrow_Right.Visible := True;
+  vWeather.Scene.Arrow_Right_Text.Visible := True;
+  vWeather.Scene.Arrow_Right_Text.Text := 'Next : ' + weather.Action.Yahoo.Data_Town[vWeather.Scene.Control.TabIndex].Location.City_Name;
+  vWeather.Scene.Arrow_Left_Glow.Enabled := True;
+  Close_Map;
+  vWeather.Scene.Control.Previous;
+end;
+
+procedure UpDate_SunSpot;
+begin
+  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
+  begin
+    if vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Enabled then
+      if weather.Action.Yahoo.Spot_Stop + 200 <= vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot.Position.X then
+      begin
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.StopAtCurrent;
+        vWeather.Scene.Tab_Yahoo[vWeather.Scene.Control.TabIndex].Astronomy.Spot_Ani.Enabled := False;
+      end;
+  end;
+end;
+
+procedure Go_To_Website;
+const
+  cURL = 'https://www.yahoo.com/news/weather/';
+begin
+  ShellExecute(0, PChar('open'), PChar(cURL), nil, nil, 0);
 end;
 
 end.

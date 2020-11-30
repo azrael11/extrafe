@@ -7,7 +7,6 @@ uses
   System.SysUtils,
   System.UiTypes,
   System.Threading,
-  CodeSiteLogging,
   IniFiles,
   Winapi.Windows,
   FMX.Objects,
@@ -64,31 +63,17 @@ begin
   ex_main.Paths.Flags_Images := extrafe.prog.Path + 'data\main\flags\';
   ex_main.Paths.Avatar_Images := extrafe.prog.Path + 'data\main\avatars\';
   ex_main.Paths.Images := extrafe.prog.Path + 'data\main\images\';
-  ex_main.Paths.Config_Images.path := extrafe.prog.Path + 'data\main\config_images\';
-  ex_main.Paths.Config_Images.emu := ex_main.Paths.Config_Images.path + 'emu\';
-  ex_main.Paths.Config_Images.general := ex_main.Paths.Config_Images.path + 'general\';
-  ex_main.Paths.Config_Images.info := ex_main.Paths.Config_Images.path + 'info\';
-  ex_main.Paths.Config_Images.themes := ex_main.Paths.Config_Images.path + 'themes\';
+  ex_main.Paths.Config_Images.Path := extrafe.prog.Path + 'data\main\config_images\';
+  ex_main.Paths.Config_Images.emu := ex_main.Paths.Config_Images.Path + 'emu\';
+  ex_main.Paths.Config_Images.general := ex_main.Paths.Config_Images.Path + 'general\';
+  ex_main.Paths.Config_Images.info := ex_main.Paths.Config_Images.Path + 'info\';
+  ex_main.Paths.Config_Images.themes := ex_main.Paths.Config_Images.Path + 'themes\';
   ex_main.Paths.Sounds := extrafe.prog.Path + 'data\main\sounds\';
 
 end;
 
 procedure Load_First_User_Settings;
 begin
-  extrafe.res.Width := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'RESOLUTION_WIDTH', 'SETTINGS', 'USER_ID', '1').ToInteger;
-  extrafe.res.Height := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'RESOLUTION_HEIGHT', 'SETTINGS', 'USER_ID', '1').ToInteger;
-  extrafe.res.Half_Width := extrafe.res.Width div 2;
-  extrafe.res.Half_Height := extrafe.res.Height div 2;
-  extrafe.res.Fullscreen := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'FOULSCREEN', 'SETTINGS', 'USER_ID', '1').ToBoolean;
-  if extrafe.res.Width <> extrafe.res.Monitor.Horizontal then
-  begin
-
-  end;
-
-  load.Loading.Width := extrafe.res.Width;
-  load.Loading.Height := extrafe.res.Height;
-  load.Loading.Fullscreen := extrafe.res.Fullscreen;
-
   extrafe.prog.Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PATH', 'SETTINGS', 'USER_ID', '1');
   extrafe.prog.Name := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'NAME', 'SETTINGS', 'USER_ID', '1');
   extrafe.prog.Lib_Path := uDB.Query_Select(uDB.ExtraFE_Query_Local, 'PATH_LIB', 'SETTINGS', 'USER_ID', '1');
@@ -106,14 +91,10 @@ end;
 
 procedure Load_Default_Settings;
 begin
-  extrafe.res.Width := extrafe.res.Monitor.Horizontal;
-  extrafe.res.Height := extrafe.res.Monitor.Vertical;
-  extrafe.res.Half_Width := extrafe.res.Width div 2;
-  extrafe.res.Half_Height := extrafe.res.Height div 2;
-
-  load.Loading.Width := extrafe.res.Width;
-  load.Loading.Height := extrafe.res.Height;
-  load.Loading.Fullscreen := True;
+  uDB_AUser.Local.SETTINGS.Resolution.Width := uDB_AUser.Local.SETTINGS.Monitor.Horizontal;
+  uDB_AUser.Local.SETTINGS.Resolution.Height := uDB_AUser.Local.SETTINGS.Monitor.Vertical;
+  uDB_AUser.Local.SETTINGS.Resolution.Half_Width := uDB_AUser.Local.SETTINGS.Resolution.Width div 2;
+  uDB_AUser.Local.SETTINGS.Resolution.Half_Height := uDB_AUser.Local.SETTINGS.Resolution.Height div 2;
 
   extrafe.prog.Path := ExtractFilePath(ParamStr(0));
   extrafe.prog.Name := ExtractFileName(ParamStr(0));
@@ -135,15 +116,17 @@ const
   res_16_9: array [0 .. 7] of string = ('852x480', '1280x720', '1365x768', '1600x900', '1920x1080', '2560x1440', '3840x2160', '4096x2160');
   res_16_10: array [0 .. 5] of string = ('1440x900', '1680x1050', '1920x1200', '2560x1600', '3840x2400', '7680x4800');
 begin
-
-
-  CodeSite.EnterMethod('Loadign ExtraFE Procedure');
   extrafe.users_total := -1;
   uDB.Local_Create;
   extrafe.databases.local_connected := uDB.Local_Connect;
+  uDB_AUser.Local.SETTINGS.Monitor := uWindows.Monitor_Get_Res;
+  Load_Default_Settings;
 
   extrafe.users_total := uDB.Query_Count(uDB.ExtraFE_Query_Local, 'users', '', '');
-  extrafe.res.Monitor := uWindows.Monitor_Get_Res;
+
+  load.Loading.Width := uDB_AUser.Local.SETTINGS.Monitor.Horizontal;
+  load.Loading.Height := uDB_AUser.Local.SETTINGS.Monitor.Vertical;
+  load.Loading.Fullscreen := True;
 
   if extrafe.users_total > 0 then
     Load_First_User_Settings
@@ -164,7 +147,7 @@ begin
   uMain_Config_Themes.ApplyTheme(extrafe.style.Name);
   load.Loading.StyleBook := mainScene.main.style;
 
-  ex_load.Path.Load := extrafe.prog.Path + 'data\loading\';
+  ex_load.Path.load := extrafe.prog.Path + 'data\loading\';
   ex_load.Path.Images := extrafe.prog.Path + 'data\loading\images\';
 
   Start_ExtraFE;
@@ -176,17 +159,14 @@ begin
   if Default_Load = False then
   begin
     extrafe.prog.State := 'loading';
-    uLoad_Sound.Load;
-    uLoad_Video.Load;
+    uLoad_Sound.load;
+    uLoad_Video.load;
     uLoad_SetAll.load;
     extrafe.user_login := False;
     Default_Load := True;
-    CodeSite.ExitMethod('Loading ExtraFE Is Done');
-    CodeSite.Send(csmLevel5, 'User is in login mode');
   end
   else
   begin
-
     ex_load.Login.Login.Text := '';
     ex_load.Login.Exit_ExtraFE.Enabled := False;
     ex_load.Login.User_V.Enabled := False;
@@ -225,7 +205,7 @@ begin
   ex_load.Intro.Text := TText.Create(ex_load.Intro.Video);
   ex_load.Intro.Text.Name := 'Loading_Intro_Text';
   ex_load.Intro.Text.Parent := ex_load.Intro.Video;
-  ex_load.Intro.Text.SetBounds(extrafe.res.Width - 310, 10, 300, 30);
+  ex_load.Intro.Text.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Width - 310, 10, 300, 30);
   ex_load.Intro.Text.Font.Family := 'IcoMoon-Free';
   ex_load.Intro.Text.Text := 'Skip Video ' + #$ea14;
   ex_load.Intro.Text.TextSettings.FontColor := TAlphaColorRec.White;

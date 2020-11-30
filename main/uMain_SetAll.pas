@@ -95,7 +95,7 @@ begin
   mainScene.main.Back := TImage.Create(Main_Form);
   mainScene.main.Back.Name := 'Main_Down_Back';
   mainScene.main.Back.Parent := Main_Form;
-  mainScene.main.Back.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
+  mainScene.main.Back.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Resolution.Width, uDB_AUser.Local.SETTINGS.Resolution.Height);
   mainScene.main.Back.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
   mainScene.main.Back.WrapMode := TImageWrapMode.Tile;
   mainScene.main.Back.Visible := True;
@@ -103,7 +103,7 @@ begin
   mainScene.main.Down_Level := TImage.Create(mainScene.main.Back);
   mainScene.main.Down_Level.Name := 'Main_Down';
   mainScene.main.Down_Level.Parent := mainScene.main.Back;
-  mainScene.main.Down_Level.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
+  mainScene.main.Down_Level.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Resolution.Width, uDB_AUser.Local.SETTINGS.Resolution.Height);
   mainScene.main.Down_Level.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
   mainScene.main.Down_Level.WrapMode := TImageWrapMode.Tile;
   mainScene.main.Down_Level.Visible := True;
@@ -122,7 +122,7 @@ begin
   mainScene.main.Up_Level := TImage.Create(mainScene.main.Down_Level);
   mainScene.main.Up_Level.Name := 'Main_Up';
   mainScene.main.Up_Level.Parent := mainScene.main.Down_Level;
-  mainScene.main.Up_Level.SetBounds(0, 0, extrafe.res.Width, extrafe.res.Height);
+  mainScene.main.Up_Level.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Resolution.Width, uDB_AUser.Local.SETTINGS.Resolution.Height);
   mainScene.main.Up_Level.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
   mainScene.main.Up_Level.WrapMode := TImageWrapMode.Tile;
   mainScene.main.Up_Level.Visible := True;
@@ -156,7 +156,7 @@ begin
   mainScene.main.Prog_Exit.Panel := TPanel.Create(mainScene.main.Down_Level);
   mainScene.main.Prog_Exit.Panel.Name := 'Main_Exit';
   mainScene.main.Prog_Exit.Panel.Parent := mainScene.main.Down_Level;
-  mainScene.main.Prog_Exit.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 150, 600, 300);
+  mainScene.main.Prog_Exit.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 300, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 150, 600, 300);
   mainScene.main.Prog_Exit.Panel.Visible := True;
 
   mainScene.main.Prog_Exit.Panel_Shadow := TShadowEffect.Create(mainScene.main.Prog_Exit.Panel);
@@ -222,7 +222,7 @@ begin
   mainScene.Header.Back := TImage.Create(mainScene.main.Down_Level);
   mainScene.Header.Back.Name := 'Main_Header';
   mainScene.Header.Back.Parent := mainScene.main.Down_Level;
-  mainScene.Header.Back.SetBounds(0, 0, extrafe.res.Width, 130);
+  mainScene.Header.Back.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Resolution.Width, 130);
   mainScene.Header.Back.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
   mainScene.Header.Back.WrapMode := TImageWrapMode.Tile;
   mainScene.Header.Back.Visible := True;
@@ -319,7 +319,7 @@ begin
   mainScene.Footer.Back := TImage.Create(mainScene.main.Down_Level);
   mainScene.Footer.Back.Name := 'Main_Footer';
   mainScene.Footer.Back.Parent := mainScene.main.Down_Level;
-  mainScene.Footer.Back.SetBounds(0, extrafe.res.Height - 226, extrafe.res.Width, 226);
+  mainScene.Footer.Back.SetBounds(0, uDB_AUser.Local.SETTINGS.Resolution.Height - 226, uDB_AUser.Local.SETTINGS.Resolution.Width, 226);
   mainScene.Footer.Back.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
   mainScene.Footer.Back.WrapMode := TImageWrapMode.Tile;
   mainScene.Footer.Back.Visible := True;
@@ -327,7 +327,7 @@ begin
   mainScene.Footer.Back_Line := TImage.Create(mainScene.Footer.Back);
   mainScene.Footer.Back_Line.Name := 'Main_Footer_Line';
   mainScene.Footer.Back_Line.Parent := mainScene.Footer.Back;
-  mainScene.Footer.Back_Line.SetBounds(0, 0, extrafe.res.Width, 10);
+  mainScene.Footer.Back_Line.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Resolution.Width, 10);
   mainScene.Footer.Back_Line.Bitmap.LoadFromFile(ex_main.Paths.Images + 'line.png');
   mainScene.Footer.Back_Line.WrapMode := TImageWrapMode.Tile;
   mainScene.Footer.Back_Line.Visible := True;
@@ -437,7 +437,7 @@ begin
   mainScene.Selection.Back := TImage.Create(mainScene.main.Down_Level);
   mainScene.Selection.Back.Name := 'Main_Selection_Back';
   mainScene.Selection.Back.Parent := mainScene.main.Down_Level;
-  mainScene.Selection.Back.SetBounds(0, 130, extrafe.res.Width, 724);
+  mainScene.Selection.Back.SetBounds(0, 130, uDB_AUser.Local.SETTINGS.Resolution.Width, 724);
   mainScene.Selection.Back.Bitmap.LoadFromFile(ex_main.Paths.Images + 'back.png');
   mainScene.Selection.Back.WrapMode := TImageWrapMode.Tile;
   mainScene.Selection.Back.Visible := True;
@@ -445,7 +445,7 @@ begin
   mainScene.Selection.Line := TImage.Create(mainScene.Selection.Back);
   mainScene.Selection.Line.Name := 'Main_Selection_Line';
   mainScene.Selection.Line.Parent := mainScene.Selection.Back;
-  mainScene.Selection.Line.SetBounds(0, 0, extrafe.res.Width, 10);
+  mainScene.Selection.Line.SetBounds(0, 0, uDB_AUser.Local.SETTINGS.Resolution.Width, 10);
   mainScene.Selection.Line.Bitmap.LoadFromFile(ex_main.Paths.Images + 'line.png');
   mainScene.Selection.Line.WrapMode := TImageWrapMode.Tile;
   mainScene.Selection.Line.Visible := True;

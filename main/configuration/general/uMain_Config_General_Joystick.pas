@@ -75,42 +75,54 @@ const
 var
   vI: Integer;
 begin
-  extrafe.prog.State := 'main_config_general_joystick_mmsystem';
+  extrafe.prog.State := 'main_config_general_joystick';
 
   vJoy_Mapping := False;
-  mainScene.Config.main.R.General.Joystick.Image := TImage.Create(mainScene.Config.main.R.General.Tab_Item[4]);
-  mainScene.Config.main.R.General.Joystick.Image.Name := 'Main_Config_General_Joystick_Image';
-  mainScene.Config.main.R.General.Joystick.Image.Parent := mainScene.Config.main.R.General.Tab_Item[4];
-  mainScene.Config.main.R.General.Joystick.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.general+ 'joystick.png');
-  mainScene.Config.main.R.General.Joystick.Image.SetBounds(mainScene.Config.main.R.General.Contol.Width - 76, 6, 56, 56);
-  mainScene.Config.main.R.General.Joystick.Image.WrapMode := TImageWrapMode.Stretch;
-  mainScene.Config.main.R.General.Joystick.Image.Visible := True;
 
-  mainScene.Config.main.R.General.Joystick.Panel := TPanel.Create(mainScene.Config.main.R.General.Tab_Item[4]);
-  mainScene.Config.main.R.General.Joystick.Panel.Name := 'Main_Config_General_Joystick_Panel';
-  mainScene.Config.main.R.General.Joystick.Panel.Parent := mainScene.Config.main.R.General.Tab_Item[4];
-  mainScene.Config.main.R.General.Joystick.Panel.SetBounds(10, 66, mainScene.Config.main.R.General.Contol.Width - 20,
-    mainScene.Config.main.R.General.Contol.Height - 100);
-  mainScene.Config.main.R.General.Joystick.Panel.Visible := True;
-
-  mainScene.Config.main.R.General.Joystick.Control := TTabControl.Create(mainScene.Config.main.R.General.Joystick.Panel);
-  mainScene.Config.main.R.General.Joystick.Control.Name := 'Main_Config_General_Joystick_Control';
-  mainScene.Config.main.R.General.Joystick.Control.Parent := mainScene.Config.main.R.General.Joystick.Panel;
-  mainScene.Config.main.R.General.Joystick.Control.Align := TAlignLayout.Client;
-  mainScene.Config.main.R.General.Joystick.Control.Visible := True;
-
-  for vI := 0 to 2 do
+  if mainScene.Config.main.R.General.Joystick.Layout = nil then
   begin
-    mainScene.Config.main.R.General.Joystick.Items[vI] := TTabItem.Create(mainScene.Config.main.R.General.Joystick.Control);
-    mainScene.Config.main.R.General.Joystick.Items[vI].Name := 'Main_Config_General_Joystick_Item_' + vI.ToString;
-    mainScene.Config.main.R.General.Joystick.Items[vI].Parent := mainScene.Config.main.R.General.Joystick.Control;
-    mainScene.Config.main.R.General.Joystick.Items[vI].Text := cItem_Names[vI];
-    mainScene.Config.main.R.General.Joystick.Items[vI].Visible := True;
-  end;
 
-  uMain_Config_General_Joystick_MMSystem.Create_MMSystem;
-  Create_DirectX_Input;
-  Create_XInput;
+    mainScene.Config.main.R.General.Joystick.Layout := TLayout.Create(mainScene.Config.main.R.General.Tab_Item[4]);
+    mainScene.Config.main.R.General.Joystick.Layout.Name := 'Main_Config_General_Joystick';
+    mainScene.Config.main.R.General.Joystick.Layout.Parent := mainScene.Config.main.R.General.Tab_Item[4];
+    mainScene.Config.main.R.General.Joystick.Layout.SetBounds(0, 0, mainScene.Config.main.R.General.Control.Width,
+      mainScene.Config.main.R.General.Control.Height);
+    mainScene.Config.main.R.General.Joystick.Layout.Visible := True;
+
+    mainScene.Config.main.R.General.Joystick.Image := TImage.Create(mainScene.Config.main.R.General.Joystick.Layout);
+    mainScene.Config.main.R.General.Joystick.Image.Name := 'Main_Config_General_Joystick_Image';
+    mainScene.Config.main.R.General.Joystick.Image.Parent := mainScene.Config.main.R.General.Joystick.Layout;
+    mainScene.Config.main.R.General.Joystick.Image.Bitmap.LoadFromFile(ex_main.Paths.Config_Images.General + 'joystick.png');
+    mainScene.Config.main.R.General.Joystick.Image.SetBounds(mainScene.Config.main.R.General.Joystick.Layout.Width - 76, 6, 56, 56);
+    mainScene.Config.main.R.General.Joystick.Image.WrapMode := TImageWrapMode.Stretch;
+    mainScene.Config.main.R.General.Joystick.Image.Visible := True;
+
+    mainScene.Config.main.R.General.Joystick.Panel := TPanel.Create(mainScene.Config.main.R.General.Joystick.Layout);
+    mainScene.Config.main.R.General.Joystick.Panel.Name := 'Main_Config_General_Joystick_Panel';
+    mainScene.Config.main.R.General.Joystick.Panel.Parent := mainScene.Config.main.R.General.Joystick.Layout;
+    mainScene.Config.main.R.General.Joystick.Panel.SetBounds(10, 66, mainScene.Config.main.R.General.Joystick.Layout.Width - 20,
+      mainScene.Config.main.R.General.Joystick.Layout.Height - 100);
+    mainScene.Config.main.R.General.Joystick.Panel.Visible := True;
+
+    mainScene.Config.main.R.General.Joystick.Control := TTabControl.Create(mainScene.Config.main.R.General.Joystick.Panel);
+    mainScene.Config.main.R.General.Joystick.Control.Name := 'Main_Config_General_Joystick_Control';
+    mainScene.Config.main.R.General.Joystick.Control.Parent := mainScene.Config.main.R.General.Joystick.Panel;
+    mainScene.Config.main.R.General.Joystick.Control.Align := TAlignLayout.Client;
+    mainScene.Config.main.R.General.Joystick.Control.Visible := True;
+
+    for vI := 0 to 2 do
+    begin
+      mainScene.Config.main.R.General.Joystick.Items[vI] := TTabItem.Create(mainScene.Config.main.R.General.Joystick.Control);
+      mainScene.Config.main.R.General.Joystick.Items[vI].Name := 'Main_Config_General_Joystick_Item_' + vI.ToString;
+      mainScene.Config.main.R.General.Joystick.Items[vI].Parent := mainScene.Config.main.R.General.Joystick.Control;
+      mainScene.Config.main.R.General.Joystick.Items[vI].Text := cItem_Names[vI];
+      mainScene.Config.main.R.General.Joystick.Items[vI].Visible := True;
+    end;
+
+    uMain_Config_General_Joystick_MMSystem.Create_MMSystem;
+    Create_DirectX_Input;
+    Create_XInput;
+  end;
 end;
 
 { Create DirextX Input }
@@ -927,3 +939,4 @@ finalization
 vTimer_Joy.Free;
 
 end.
+

@@ -18,7 +18,7 @@ implementation
 uses
   uLoad_AllTypes,
   uSoundplayer_AllTypes,
-  uSoundplayer_SetAll;
+  uSoundplayer_SetAll, uDB_AUser;
 
 procedure uSoundplayer_Info_Actions_StartAnimationCoverFullscreen;
 begin
@@ -37,12 +37,12 @@ begin
   vSoundplayer.info.Cover_Fullscreen_Ani_Pos_Y.Loop:= False;
 
   vSoundplayer.info.Cover_Fullscreen_Ani_Width.StartValue:= vSoundplayer.info.Back_Right.Width;
-  vSoundplayer.info.Cover_Fullscreen_Ani_Width.StopValue:= extrafe.res.Width;
+  vSoundplayer.info.Cover_Fullscreen_Ani_Width.StopValue:= uDB_AUser.Local.SETTINGS.Resolution.Width;
   vSoundplayer.info.Cover_Fullscreen_Ani_Width.AnimationType:= TAnimationType.&Out;
   vSoundplayer.info.Cover_Fullscreen_Ani_Width.Loop:= False;
 
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.StartValue:= vSoundplayer.info.Back_Right.Height;
-  vSoundplayer.info.Cover_Fullscreen_Ani_Height.StopValue:= extrafe.res.Height- 130;
+  vSoundplayer.info.Cover_Fullscreen_Ani_Height.StopValue:= uDB_AUser.Local.SETTINGS.Resolution.Height- 130;
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.AnimationType:= TAnimationType.&Out;
   vSoundplayer.info.Cover_Fullscreen_Ani_Height.Loop:= False;
 
@@ -107,7 +107,7 @@ procedure uSoundplayer_Info_Actions_ShowCoverFullscreen;
 begin
   vSoundplayer.info.Cover_Fullscreen.Text:= #$e98a;
 
-  vSoundplayer.info.Cover.Width:= extrafe.res.Width - 200;
+  vSoundplayer.info.Cover.Width:= uDB_AUser.Local.SETTINGS.Resolution.Width - 200;
   vSoundplayer.info.Cover.Height:= vSoundplayer.info.Back_Right.Height - 100;
   vSoundplayer.info.Cover.Position.X:= 100;
   vSoundplayer.info.Cover.Position.Y:= 50;

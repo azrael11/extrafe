@@ -24,6 +24,7 @@ uses
   FMX.Forms,
   scktComp,
 {$ENDIF}
+  uDB_AUser,
   uLoad_AllTypes;
 
 
@@ -31,7 +32,7 @@ uses
 function Version_Get_info(mFileName: string): TStringlist;
 
 { windows monitor resolutions }
-function Monitor_Get_Res: TEXTRAFE_RESOLUTION_MONITOR;
+function Monitor_Get_Res: TDATABASE_ACTIVE_USER_LOCAL_SETTINGS_MONITOR;
 function Monitor_Get_Avail_Res: TStringlist;
 function Monitor_Get_Avail_Refresh: TStringlist;
 
@@ -92,7 +93,7 @@ begin
   end;
 end;
 
-function Monitor_Get_Res: TEXTRAFE_RESOLUTION_MONITOR;
+function Monitor_Get_Res: TDATABASE_ACTIVE_USER_LOCAL_SETTINGS_MONITOR;
 var
   DC: THandle;
   Bits: Integer;

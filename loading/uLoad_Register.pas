@@ -16,8 +16,7 @@ uses
   FMX.StdCtrls,
   FMX.Ani,
   REST.Types,
-  BASS,
-  CodeSiteLogging;
+  BASS;
 
 type
   TUSER_ACOUNT_DATABASE = record
@@ -31,8 +30,8 @@ type
     Name: String;
     Surname: String;
     Avatar: String;
-    Registered: string;
-    Last_Visit: String;
+    Registered: Int64;
+    Last_Visit: Int64;
     Genre: String;
   end;
 
@@ -107,7 +106,7 @@ uses
   ULoad_SetAll,
   uInternet_Files,
   uDB,
-  uSnippet_Convert;
+  uSnippet_Convert, uDB_AUser;
 
 procedure Create_Captcha;
 var
@@ -127,7 +126,8 @@ begin
     if vi <> 0 then
       Distance := Random(10);
     Height := -15 + Random(30);
-    ex_load.Reg.Main.Capt_Img_Word[vi].SetBounds(10 + ((vi * 30) + Distance), ((ex_load.Reg.Main.Capt_Img.Height / 2) - 12) + Height, ex_load.Reg.Main.Capt_Img.Width - 20, 50);
+    ex_load.Reg.Main.Capt_Img_Word[vi].SetBounds(10 + ((vi * 30) + Distance), ((ex_load.Reg.Main.Capt_Img.Height / 2) - 12) + Height,
+      ex_load.Reg.Main.Capt_Img.Width - 20, 50);
     Color := Random(4);
     case Color of
       0:
@@ -164,9 +164,10 @@ end;
 
 function Check_Data: Boolean;
 begin
-  if (User.User_Empty = false) and (User.User_Total > 7) and (User.User_Total < 21) and (User.User_Num) and (User.User_Symbol) and (User.User_Cap) and (User.User_Online_Free) and
-    (User.Pass_Empty = false) and (User.Pass_Total > 5) and (User.Pass_Total < 21) and (User.RePass_Empty = false) and (User.RePass_Match) and (User.Email_Empty = false) and (User.Email_Correct) and
-    (User.Email_Online_Free) and (User.ReEmail_Empty = false) and (User.ReEmail_Match) and (User.Terms) and (User.Accept_Terms) and (User.Captcha_Empty = false) and (User.Captcha_Match) then
+  if (User.User_Empty = false) and (User.User_Total > 7) and (User.User_Total < 21) and (User.User_Num) and (User.User_Symbol) and (User.User_Cap) and
+    (User.User_Online_Free) and (User.Pass_Empty = false) and (User.Pass_Total > 5) and (User.Pass_Total < 21) and (User.RePass_Empty = false) and
+    (User.RePass_Match) and (User.Email_Empty = false) and (User.Email_Correct) and (User.Email_Online_Free) and (User.ReEmail_Empty = false) and
+    (User.ReEmail_Match) and (User.Terms) and (User.Accept_Terms) and (User.Captcha_Empty = false) and (User.Captcha_Match) then
     Result := True
   else
     Result := false;
@@ -184,45 +185,41 @@ begin
     procedure()
     begin
       Is_user_registered := false;
-      CodeSite.EnterMethod('Registration Start for new user');
       if Check_Data then
       begin
-        vIp := uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
-        Create_User_ID;
-        User_Reg.Username := ex_load.Reg.Main.User_V.Text;
-        User_Reg.Password := ex_load.Reg.Main.Pass_V.Text;
-        User_Reg.Email := ex_load.Reg.Main.Email_V.Text;
-        User_Reg.IP := vIp.GetValue<String>('ip');
-        User_Reg.Country := vIp.GetValue<String>('country');
-        User_Reg.Name := '';
-        User_Reg.Surname := '';
-        User_Reg.Avatar := '0';
-        User_Reg.Registered := FormatDateTime('dd/mm/yyyy  hh:mm:ss ampm', now);
-        User_Reg.Last_Visit := FormatDateTime('dd/mm/yyyy  hh:mm:ss ampm', now);
-        User_Reg.Genre := '0';
-        CodeSite.Category := 'Register New User in Online Database';
-        if uDB.Add_New_User_Online then
+        if uInternet_Files.Internet_Connected then
         begin
-          CodeSite.Send(csmlevel4, 'New user is on Online Database');
-          vQuery := 'SELECT * FROM USERS';
-          ExtraFE_Query.Close;
-          ExtraFE_Query.SQL.Clear;
-          ExtraFE_Query.SQL.Add(vQuery);
-          ExtraFE_Query.Open;
+          vIp := uInternet_Files.JSONValue('Register_IP_', 'http://ipinfo.io/json', TRESTRequestMethod.rmGET);
+          Create_User_ID;
+          User_Reg.Username := ex_load.Reg.Main.User_V.Text;
+          User_Reg.Password := ex_load.Reg.Main.Pass_V.Text;
+          User_Reg.Email := ex_load.Reg.Main.Email_V.Text;
+          User_Reg.IP := vIp.GetValue<String>('ip');
+          User_Reg.Country := vIp.GetValue<String>('country');
+          User_Reg.Name := '';
+          User_Reg.Surname := '';
+          User_Reg.Avatar := '0';
+          User_Reg.Registered := DateTimeToUnix(Now);
+          User_Reg.Last_Visit := User_Reg.Registered;
+          User_Reg.Genre := '0';
+          if uDB.Add_New_User_Online then
+          begin
+            vQuery := 'SELECT * FROM USERS';
+            ExtraFE_Query.Close;
+            ExtraFE_Query.SQL.Clear;
+            ExtraFE_Query.SQL.Add(vQuery);
+            ExtraFE_Query.Open;
 
-          User_Reg.Online_Num := ExtraFE_Query.RecordCount.ToString;
-          uDB.Add_New_User_Local;
-          CodeSite.Send('New user is on Local Database');
-          uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
-          Is_user_registered := True;
-          CodeSite.ExitMethod('Registration For New User is Successfully Done');
-        end
-        else
-        begin
-          CodeSite.Send(csmlevel1, 'Something wrong, server not respoding');
-          CodeSite.ExitMethod('Registration For New User Never Done. Something not goes well');
+            User_Reg.Online_Num := ExtraFE_Query.RecordCount.ToString;
+            uDB.Add_New_User_Local;
+            uInternet_Files.Send_HTML_Email(User_Reg.Email, 'register_user'); // Ready with no bgcolor
+            Is_user_registered := True;
+          end
+          else
+          begin
+
+          end;
         end;
-        CodeSite.Category := '';
       end;
     end);
   vTask.Start;
@@ -230,7 +227,8 @@ end;
 
 procedure Create_Help;
 const
-  cHeaders: array [0 .. 7] of string = ('Username : ', 'Password :', 'Retype Password :', 'Email :', 'Retype Email :', 'Terms :', 'Accept Terms :', 'Captcha :');
+  cHeaders: array [0 .. 7] of string = ('Username : ', 'Password :', 'Retype Password :', 'Email :', 'Retype Email :', 'Terms :', 'Accept Terms :',
+    'Captcha :');
 var
   vi: Integer;
   vCode, vIp, vPosition: String;
@@ -1129,7 +1127,6 @@ begin
   if Is_user_registered then
     ex_load.Login.Pass_V.Text := '';
   FreeAndNil(ex_load.Reg.Panel);
-  CodeSite.Send(csmLevel5, 'User is in login mode');
 end;
 
 procedure Fail;
@@ -1137,8 +1134,8 @@ var
   vi: Integer;
 begin
   BASS_ChannelPlay(sound.str_fx.general[1], false);
-  ex_load.Reg.Panel_Error.StartValue := extrafe.res.Half_Width - ((ex_load.Reg.Panel.Width / 2) - 10);
-  ex_load.Reg.Panel_Error.StopValue := extrafe.res.Half_Width - (ex_load.Reg.Panel.Width / 2);
+  ex_load.Reg.Panel_Error.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Half_Width - ((ex_load.Reg.Panel.Width / 2) - 10);
+  ex_load.Reg.Panel_Error.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Half_Width - (ex_load.Reg.Panel.Width / 2);
   ex_load.Reg.Panel_Error.Start;
   if User.User_Total > 20 then
     ex_load.Reg.Main.User_Max.TextSettings.FontColor := TAlphaColorRec.Red;

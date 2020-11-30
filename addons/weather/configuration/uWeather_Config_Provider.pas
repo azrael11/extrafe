@@ -41,7 +41,7 @@ uses
   uWeather_Providers_Yahoo,
   uWeather_Providers_Yahoo_Config,
   uWeather_Providers_OpenWeatherMap,
-  uWeather_Providers_OpenWeatherMap_Config;
+  uWeather_Providers_OpenWeatherMap_Config, uWeather_Actions;
 
 procedure Create(vName: String; vNum: Integer);
 begin
@@ -95,6 +95,20 @@ begin
     vWeather.Config.main.Right.Provider.Prov[vNum].Desc.Text := 'OpenWeatherMap provides up to 255 towns and a 5 days/3 Hours forecast. ' + #13#10 +
       'Provides Units + (kelvin), wind, atmoshpere, astronomy in to formats XML or Json. You choose witch in option menu.';
   end;
+
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay := TLayout.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Panel);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay.Name := 'A_W_Config_Provider_' + vName + '_Layout';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Panel;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay.Align := TAlignLayout.Client;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay.Visible := False;
+
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay_Ani := TAniIndicator.Create(vWeather.Config.main.Right.Provider.Prov[vNum].Lay);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay_Ani.Name := 'A_W_Config_Provider_' + vName + '_Layout_AniIndicator';
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay_Ani.Parent := vWeather.Config.main.Right.Provider.Prov[vNum].Lay;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay_Ani.SetBounds((vWeather.Config.main.Right.Provider.Prov[vNum].Lay.Width / 2) - 25,
+    (vWeather.Config.main.Right.Provider.Prov[vNum].Lay.Height / 2) - 25, 50, 50);
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay_Ani.Enabled := False;
+  vWeather.Config.main.Right.Provider.Prov[vNum].Lay_Ani.Visible := True;
 end;
 
 procedure Load;
@@ -167,6 +181,14 @@ var
   vi: Integer;
   vProgress_Num: Single;
 begin
+  weather.Config.Check_Provider := True;
+
+  vWeather.Config.main.Left.Panel_Blur.Enabled := True;
+  vWeather.Config.main.Right.Provider.Prov[0].Panel.Enabled := True;
+  vWeather.Config.main.Right.Provider.Prov[1].Panel.Enabled := False;
+  vWeather.Config.main.Right.Provider.Prov[0].Lay.Visible := True;
+  vWeather.Config.main.Right.Provider.Prov[0].Lay_Ani.Enabled := True;
+
   uDB_AUser.Local.ADDONS.Weather_D.Provider := 'yahoo';
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', 'yahoo', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
 
@@ -191,8 +213,8 @@ begin
       for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count - 1 do
       begin
         SetLength(weather.Action.Yahoo.Data_Town, uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count + 1);
-        weather.Action.Yahoo.Data_Town[vi] := uWeather_Providers_Yahoo.Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_WOEID', 'addon_weather_yahoo', 'TOWN_NUM',
-          vi.ToString));
+        weather.Action.Yahoo.Data_Town[vi] := uWeather_Providers_Yahoo.Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_WOEID',
+          'addon_weather_yahoo', 'TOWN_NUM', vi.ToString));
         uWeather_Providers_Yahoo.Main_Create_Town(weather.Action.Yahoo.Data_Town[vi], vi);
         vWeather.Config.main.Right.Provider.PBar.Value := vWeather.Config.main.Right.Provider.PBar.Value + vProgress_Num;
         Application.ProcessMessages;
@@ -204,17 +226,27 @@ begin
 
       if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 1 then
         vWeather.Scene.Arrow_Right.Visible := True;
+      uWeather_Actions.First_Info(False, '', '', '');
     end
-    else
-      vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
-  end;
+  end
+  else
+    uWeather_Actions.First_Info(True, 'Please to add towns select the spinning gear from here ', 'select "Towns" button and then press the + button', '');
 
   vWeather.Config.main.Right.Provider.PBar.Visible := False;
   vWeather.Config.main.Right.Provider.Prov[0].Rect.Visible := True;
   vWeather.Config.main.Right.Provider.Prov[1].Rect.Visible := False;
 
+  vWeather.Config.main.Left.Panel_Blur.Enabled := False;
+  vWeather.Config.main.Right.Provider.Prov[0].Panel.Enabled := True;
+  vWeather.Config.main.Right.Provider.Prov[1].Panel.Enabled := True;
+  vWeather.Config.main.Right.Provider.Prov[0].Lay.Visible := False;
+  vWeather.Config.main.Right.Provider.Prov[0].Lay_Ani.Enabled := False;
+
   vWeather.Scene.Blur.Enabled := False;
   vWeather.Scene.Blur.Enabled := True;
+  weather.Config.Check_Provider := False;
+  if uDB_AUser.Local.ADDONS.Weather_D.Yahoo.Towns_Count > 0 then
+    uWeather_Actions.Show_AstronomyAnimation;
 end;
 
 procedure Check_OpenWeatherMap;
@@ -222,6 +254,13 @@ var
   vi: Integer;
   vProgress_Num: Single;
 begin
+  weather.Config.Check_Provider := True;
+
+  vWeather.Config.main.Left.Panel_Blur.Enabled := True;
+  vWeather.Config.main.Right.Provider.Prov[0].Panel.Enabled := False;
+  vWeather.Config.main.Right.Provider.Prov[1].Panel.Enabled := False;
+  vWeather.Config.main.Right.Provider.Prov[1].Lay.Visible := True;
+  vWeather.Config.main.Right.Provider.Prov[1].Lay_Ani.Enabled := True;
 
   uDB_AUser.Local.ADDONS.Weather_D.Provider := 'openweathermap';
   uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ADDON_WEATHER', 'PROVIDER', 'openweathermap', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
@@ -248,8 +287,8 @@ begin
       for vi := 0 to uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count - 1 do
       begin
         SetLength(weather.Action.OWM.Data_Town, uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count + 1);
-        weather.Action.OWM.Data_Town[vi] := uWeather_Providers_OpenWeatherMap.Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_WOEID', 'addon_weather_owm', 'TOWN_NUM',
-          vi.ToString));
+        weather.Action.OWM.Data_Town[vi] := uWeather_Providers_OpenWeatherMap.Get_Forecast(vi, uDB.Query_Select(uDB.ExtraFE_Query_Local, 'TOWN_WOEID',
+          'addon_weather_owm', 'TOWN_NUM', vi.ToString));
         uWeather_Providers_OpenWeatherMap.Main_Create_Town(weather.Action.OWM.Data_Town[vi], vi);
         vWeather.Config.main.Right.Provider.PBar.Value := vWeather.Config.main.Right.Provider.PBar.Value + vProgress_Num;
         Application.ProcessMessages;
@@ -261,17 +300,25 @@ begin
 
       if uDB_AUser.Local.ADDONS.Weather_D.OpenWeatherMap.Towns_Count > 1 then
         vWeather.Scene.Arrow_Right.Visible := True;
+      uWeather_Actions.First_Info(False, '', '', '');
     end
-    else
-      vWeather.Scene.Back.Bitmap.LoadFromFile(uDB_AUser.Local.ADDONS.Weather_D.p_Images + 'w_addtowns.png');
-  end;
+  end
+  else
+    uWeather_Actions.First_Info(True, 'Please to add towns select the spinning gear from here ', 'select "Towns" button and then press the + button', '');
 
   vWeather.Config.main.Right.Provider.PBar.Visible := False;
   vWeather.Config.main.Right.Provider.Prov[0].Rect.Visible := False;
   vWeather.Config.main.Right.Provider.Prov[1].Rect.Visible := True;
 
+  vWeather.Config.main.Left.Panel_Blur.Enabled := False;
+  vWeather.Config.main.Right.Provider.Prov[0].Panel.Enabled := True;
+  vWeather.Config.main.Right.Provider.Prov[1].Panel.Enabled := True;
+  vWeather.Config.main.Right.Provider.Prov[1].Lay.Visible := False;
+  vWeather.Config.main.Right.Provider.Prov[1].Lay_Ani.Enabled := False;
+
   vWeather.Scene.Blur.Enabled := False;
   vWeather.Scene.Blur.Enabled := True;
+  weather.Config.Check_Provider := False;
 end;
 
 procedure Clear_Weather_Addon(vClear: Boolean);

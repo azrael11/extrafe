@@ -129,7 +129,7 @@ begin
   Script_Mame_Install.Panel := TPanel.Create(Main_Form);
   Script_Mame_Install.Panel.Name := 'Script_Mame_Install';
   Script_Mame_Install.Panel.Parent := Main_Form;
-  Script_Mame_Install.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 175, 600, 350);
+  Script_Mame_Install.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 300, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 175, 600, 350);
   Script_Mame_Install.Panel.Visible := True;
 
   CreateHeader(Script_Mame_Install.Panel, 'IcoMoon-Free', #$e997, TAlphaColorRec.DeepSkyBlue, 'Install a Mame emulator', false, nil);
@@ -423,18 +423,18 @@ begin
   inc(uDB_AUser.Local.Emulators.Count, 1);
   inc(uDB_AUser.Local.Emulators.Arcade_D.Count, 1);
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'ARCADE', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'EMULATORS', 'COUNT', uDB_AUser.Local.Emulators.Count.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'MAME', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE', 'COUNT', uDB_AUser.Local.Emulators.Arcade_D.Count.ToString, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Emulators', 'ARCADE', 'True', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Emulators', 'Count', uDB_AUser.Local.Emulators.Count.ToString, 'User_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade', 'Mame', 'True', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade', 'Count', uDB_AUser.Local.Emulators.Arcade_D.Count.ToString, 'User_ID', uDB_AUser.Local.USER.Num.ToString);
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_PATH', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'ExtraFE_Mame_Path', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Path, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_IMAGES', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'ExtraFE_Mame_Images', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Images, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EXTRAFE_MAME_SOUNDS', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'ExtraFE_Mame_Sounds', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Sounds, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE_VIEWS', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Views, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'ExtraFE_Mame_Views', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.p_Views, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
 
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Installed := True;
@@ -442,18 +442,18 @@ begin
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position := 0;
   uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Unique := 0;
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'INSTALLED', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_ACTIVE', 'TRUE', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_POSITION', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position.ToString, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Installed', 'True', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Emu_Active', 'TRUE', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Emu_Position', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Position.ToString, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'EMU_UNIQUE', '0.0', 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Emu_Unique', '0.0', 'User_ID', uDB_AUser.Local.USER.Num.ToString);
 
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_NAME', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Mame_Name', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Name, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_PATH', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Mame_Path', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Path, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_INI', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
-  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MAME', 'MAME_VERSION', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version, 'USER_ID',
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Mame_Ini', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Ini, 'User_ID', uDB_AUser.Local.USER.Num.ToString);
+  uDB.Query_Update(uDB.ExtraFE_Query_Local, 'Arcade_Mame', 'Mame_Version', uDB_AUser.Local.Emulators.Arcade_D.Mame_D.Version, 'User_ID',
     uDB_AUser.Local.USER.Num.ToString);
 
   if Query_Check_If_Column_Exists(uDB.Arcade_Query, 'mame_status', 'fav_id_' + uDB_AUser.Local.USER.Num.ToString) then

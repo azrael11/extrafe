@@ -1,0 +1,33 @@
+unit uMain_Config_General_Graphics;
+
+interface
+
+uses
+  System.Classes,
+  FMX.Layouts;
+
+procedure Load;
+
+implementation
+
+uses
+  uLoad_AllTypes, uMain_AllTypes;
+
+procedure Load;
+begin
+  extrafe.prog.State := 'main_config_profile_statistics';
+
+  if mainScene.Config.Main.R.General.Graphics.Layout = nil then
+  begin
+
+    mainScene.Config.Main.R.General.Graphics.Layout := TLayout.Create(mainScene.Config.Main.R.General.Tab_Item[1]);
+    mainScene.Config.Main.R.General.Graphics.Layout.Name := 'Main_Config_Profile_Statistics';
+    mainScene.Config.Main.R.General.Graphics.Layout.Parent := mainScene.Config.Main.R.General.Tab_Item[1];
+    mainScene.Config.Main.R.General.Graphics.Layout.SetBounds(0, 0, mainScene.Config.Main.R.General.Control.Width,
+      mainScene.Config.Main.R.General.Control.Height);
+    mainScene.Config.Main.R.General.Graphics.Layout.Visible := True;
+  end;
+
+end;
+
+end.

@@ -3,8 +3,7 @@
 interface
 
 uses
-  System.Classes,
-  CodeSiteLogging;
+  System.Classes;
 
 { Check if Tables exists and create the missing one }
 procedure Local_tables;
@@ -42,250 +41,222 @@ uses
 { Check if Tables exists and create the missing one }
 procedure Local_tables;
 begin
-  CodeSite.EnterMethod('Check Tables of Extrafe local database (SQLLite)');
   { 22 Tables }
   // Users ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS users ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "USERNAME" Text,	"PASSWORD" Text,	"NAME" Text, "SURNAME" Text, "IP" Text, "UNIQUE_ID" Integer, '
-    + '"REGISTERED" Text, "GENDER" Boolean, "AVATAR" Text, "LAST_VISIT" Text, "LAST_VISIT_ONLINE" Text, "EMAIL" Text, "COUNTRY" Text, "ACTIVE_ONLINE" Boolean);';
+    'CREATE TABLE IF NOT EXISTS users ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Username" Text,	"Password" Text, "Password_Remember" Boolean Default False,	"Name" Text, "Surname" Text, "IP" Text, "Unique_ID" Integer, '
+    + '"Registered" Text, "Gender" Boolean, "Avatar" Text, "Last_Visit" Text, "Last_Visit_Online" Text, "Email" Text, "Country" Text, "Active_Online" Boolean);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "users" is checked and corrected');
 
   // Users_Statistics ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
-  ExtraFE_Query_Local.SQL.Text := 'CREATE TABLE IF NOT EXISTS users_statistics ("USER_ID" Integer);';
+  ExtraFE_Query_Local.SQL.Text := 'CREATE TABLE IF NOT EXISTS users_statistics ("User_ID" Integer);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "users_statistics" is checked and corrected');
 
   // Settings ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS settings ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "THEME_PATH" Text,	"THEME_NUM" Integer,	"THEME_NAME" Text, "RESOLUTION_WIDTH" Integer, '
-    + '"RESOLUTION_HEIGHT" Integer, "NAME" Text, "PATH_LIB" Text, "PATH_HISTORY" Text, "PATH_FONTS" Text, "PATH" Text, "LOCAL_DATA" Boolean, "FOULSCREEN" Boolean, "DATABASE_PATH" Text );';
+    'CREATE TABLE IF NOT EXISTS settings ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Theme_Path" Text,	"Theme_Num" Integer,	"Theme_Name" Text, "Resolution_Width" Integer, '
+    + '"Resolution_Height" Integer, "Name" Text, "Path_Lib" Text, "Path_History" Text, "Path_Fonts" Text, "Path_Database" Text, "Path" Text, "Local_Data" Boolean, "Foulscreen" Boolean Default True);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "settings" is checked and corrected');
 
   // Options ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS options ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "VIRTUAL_KEYBOARD" Boolean);';
+    'CREATE TABLE IF NOT EXISTS options ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Virtual_Keyboard" Boolean);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "options" is checked and corrected');
 
   // Map Keyboard
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS map_keyboard ("map_key_id" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "user_id" Integer, "main_up" Text, "main_down" Text, "main_left" Text, '
-    + '"main_right" Text, "main_action" Text, "main_escape" Text, "main_config" Text, "emu_up" Text, "emu_down" Text, "emu_left" Text, "emu_right" Text, "emu_action" Text, "emu_escape" Text, '
-    + '"emu_fav" Text, "emu_addfav" Text, "emu_filters" Text, "emu_lists" Text, "emu_search" Text, "emu_config" Text, "emu_screensaver" Text);';
+    'CREATE TABLE IF NOT EXISTS map_keyboard ("Map_Key_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "User_ID" Integer, "Main_Up" Text, "Main_Down" Text, "Main_Left" Text, '
+    + '"Main_Right" Text, "Main_Action" Text, "Main_Escape" Text, "Main_Config" Text, "Emu_Up" Text, "Emu_Down" Text, "Emu_Left" Text, "Emu_Right" Text, "Emu_Action" Text, "Emu_Escape" Text, '
+    + '"Emu_Fav" Text, "Emu_AddFav" Text, "Emu_Filters" Text, "Emu_Lists" Text, "Emu_Search" Text, "Emu_Config" Text, "Emu_Screensaver" Text);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "map keyboard" is checked and corrected');
 
   // Map Mouse
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS map_mouse ("map_mouse_id" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "user_id" Integer, "name" Text, "buttons_num" Text, "mouse_x_left" Text, '
-    + '"mouse_x_right" Text, "mouse_y_top" Text, "mouse_y_bottom" Text, "button_1" Text, "button_2" Text, "button_3" Text, "button_4" Text, "button_5" Text, "button_6" Text, "dpi" Text);';
+    'CREATE TABLE IF NOT EXISTS map_mouse ("Map_Mouse_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "User_ID" Integer, "Name" Text, "Buttons_Num" Text, "Mouse_X_Left" Text, '
+    + '"Mouse_X_Right" Text, "Mouse_Y_Top" Text, "Mouse_Y_Bottom" Text, "Button_1" Text, "Button_2" Text, "Button_3" Text, "Button_4" Text, "Button_5" Text, "Button_6" Text, "Dpi" Text);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "map mouse" is checked and corrected');
 
   // Map Joystick MMSystem
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS map_mouse ("map_joy_id" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "user_id" Integer, "up" Text, "down" Text, "left" Text, "right" Text, "button_1" Text, '
-    + '"button_2" Text, "button_3" Text, "button_4" Text, "button_5" Text, "button_6" Text, "button_7" Text, "button_8" Text, "button_9" Text, "button_10" Text, "button_11" Text, "button_12" Text, '
-    + '"button_13" Text, "button_14" Text, "button_15" Text, "button_16" Text, "emu_up" Text, "emu_down" Text, "emu_left" Text, "emu_right" Text, "emu_button_1" Text, "emu_button_2" Text, '
-    + '"emu_button_3" Text, "emu_button_4" Text, "emu_button_5" Text, "emu_button_6" Text, "emu_button_7" Text, "emu_button_8" Text, "emu_button_9" Text, "emu_button_10" Text, "emu_button_11" Text, '
-    + '"emu_button_12" Text, "emu_button_13" Text, "emu_button_14" Text, "emu_button_15" Text, "emu_button_16" Text, "button_num" Text, "manufacturer_name" Text, "product_name" Text, "pov" Text, '
-    + '"forceback" Text, "regkey" Text, "szoem" Text, "position" Text, "name" Text);';
+    'CREATE TABLE IF NOT EXISTS map_joystick_mmsystem ("Map_Joy_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "User_ID" Integer, "Up" Text, "Down" Text, "Left" Text, "Right" Text, "Button_1" Text, '
+    + '"Button_2" Text, "Button_3" Text, "Button_4" Text, "Button_5" Text, "Button_6" Text, "Button_7" Text, "Button_8" Text, "Button_9" Text, "Button_10" Text, "Button_11" Text, "Button_12" Text, '
+    + '"Button_13" Text, "Button_14" Text, "Button_15" Text, "Button_16" Text, "Emu_Up" Text, "Emu_Down" Text, "Emu_Left" Text, "Emu_Right" Text, "Emu_Button_1" Text, "Emu_Button_2" Text, '
+    + '"Emu_Button_3" Text, "Emu_Button_4" Text, "Emu_Button_5" Text, "Emu_Button_6" Text, "Emu_Button_7" Text, "Emu_Button_8" Text, "Emu_Button_9" Text, "Emu_Button_10" Text, "Emu_Button_11" Text, '
+    + '"Emu_Button_12" Text, "Emu_Button_13" Text, "Emu_Button_14" Text, "Emu_Button_15" Text, "Emu_Button_16" Text, "Button_Num" Text, "Manufacturer_Name" Text, "Product_Name" Text, "POV" Text, '
+    + '"Forceback" Text, "RegKey" Text, "SzOEM" Text, "Position" Text, "Name" Text);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "map joystick mmsystem" is checked and corrected');
 
   // Addons ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addons ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ACTIVE" BOOLENAN DEFAULT True,	"COUNT" Integer DEFAULT 4,	"TIME" Boolean DEFAULT True, '
-    + '"CALENDAR" Boolean DEFAULT True, "WEATHER" Boolean DEFAULT False, "SOUNDPLAYER" Boolean DEFAULT False, "AZPLAY" Boolean DEFAULT False);';
+    'CREATE TABLE IF NOT EXISTS addons ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Active" BOOLENAN DEFAULT True,	"Count" Integer DEFAULT 4,	"Time" Boolean DEFAULT True, '
+    + '"Calendar" Boolean DEFAULT True, "Weather" Boolean DEFAULT False, "Soundplayer" Boolean DEFAULT False, "AzPlay" Boolean DEFAULT False);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addons" is checked and corrected');
 
   // Addon_Time ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_time ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "FIRST_POP" Boolean DEFAULT True,	"MENU_POSITION" Integer DEFAULT 0,	"PATH_CLOCKS" Text, '
-    + ' "PATH_IMAGES" Text, "PATH_SOUNDS" Text);';
+    'CREATE TABLE IF NOT EXISTS addon_time ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "First_Pop" Boolean DEFAULT True,	"Menu_Position" Integer DEFAULT 0,	"Path_Clocks" Text, '
+    + ' "Path_Images" Text, "Path_Sounds" Text);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_time" is checked and corrected');
 
   // Addon_Time_Time ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_time_time ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "CLOCK_TYPE" Text DEFAULT "digital", "ANALOG_WIDTH" Integer DEFAULT 400,'
-    + ' "ANALOG_HEIGHT" Integer DEFAULT 400, "ANALOG_X" Integer DEFAULT 400, "ANALOG_Y" Integer DEFAULT 50, "ANALOG_THEME" Text DEFAULT "default", "ANALOG_COLOR" Text DEFAULT "$FFFF1493", '
-    + ' "ANALOG_FONT" Text DEFAULT Arial, "ANALOG_INDICATORS" Boolean DEFAULT True, "ANALOG_NUMS" Boolean DEFAULT True, "ANALOG_TICK" Boolean DEFAULT False, "DIGITAL_WIDTH" Integer DEFAULT 400, '
-    + ' "DIGITAL_HEIGHT" Integer DEFAULT 200, "DIGITAL_X" Integer DEFAULT 400, "DIGITAL_Y" Integer DEFAULT 100, "DIGITAL_COLOR" Text DEFAULT "$FF483D8B", "DIGITAL_FONT" Text DEFAULT Arial, '
-    + ' "DIGITAL_FONT_COLOR" Text DEFAULT "$FFFF1493", "DIGITAL_SEPARATOR" Text DEFAULT ":", "DIGITAL_SEPARATOR_COLOR" Text DEFAULT "$FFFF1493");';
+    'CREATE TABLE IF NOT EXISTS addon_time_time ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Clock_Type" Text DEFAULT "digital", "Analog_Width" Integer DEFAULT 400,'
+    + ' "Analog_Height" Integer DEFAULT 400, "Analog_X" Integer DEFAULT 400, "Analog_Y" Integer DEFAULT 50, "Analog_Theme" Text DEFAULT "default", "Analog_Color" Text DEFAULT "$FFFF1493", '
+    + ' "Analog_Font" Text DEFAULT Arial, "Analog_Indicators" Boolean DEFAULT True, "Analog_Nums" Boolean DEFAULT True, "Analog_Tick" Boolean DEFAULT False, "Digital_Width" Integer DEFAULT 400, '
+    + ' "Digital_Height" Integer DEFAULT 200, "Digital_X" Integer DEFAULT 400, "Digital_Y" Integer DEFAULT 100, "Digital_Color" Text DEFAULT "$FF483D8B", "Digital_Font" Text DEFAULT Arial, '
+    + ' "Digital_Font_Color" Text DEFAULT "$FFFF1493", "Digital_Separator" Text DEFAULT ":", "Digital_Separator_Color" Text DEFAULT "$FFFF1493");';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_time_time" is checked and corrected');
 
   // Addon_Calendar ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_calendar ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "FIRST_POP" Boolean DEFAULT True, "MENU_POSITION" Integer DEFAULT 1);';
+    'CREATE TABLE IF NOT EXISTS addon_calendar ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "First_Pop" Boolean DEFAULT True, "Menu_Position" Integer DEFAULT 1);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_calendar" is checked and corrected');
 
   // Addon_Weather ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_weather ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "FIRST_POP" Boolean DEFAULT True, "MENU_POSITION" Integer, '
-    + ' "OLD_BACKUP" Boolean DEFAULT False, "PROVIDER_COUNT" Integer DEFAULT 1, "PROVIDER" Text, "PATH_ICONS" Text, "PATH_IMAGES" Text, "PATH_SOUNDS" Text, "PATH_TEMP" Text, '
-    + ' "YAHOO_ICONSET_COUNT" Integer DEFAULT 3, "YAHOO_ICONSET" Text DEFAULT "default", "YAHOO_ICONSET_SELECTED" Integer DEFAULT "0", "YAHOO_METRIC" Text DEFAULT "imperial", "YAHOO_DEGREE" Text DEFAULT "celcius", "OWM_ICONSET_COUNT" Integer DEFAULT 1, '
-    + ' "OWM_ICONSET" Text DEFAULT "default", "OWM_ICONSET_SELECTED" Integer DEFAULT "0", "OWM_METRIC" Text DEFAULT "imperial", "OWM_DEGREE" Text DEFAULT "celcius", "OWM_API" Text, "OWM_LANG" Text DEFAULT "english");';
+    'CREATE TABLE IF NOT EXISTS addon_weather ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "First_Pop" Boolean DEFAULT True, "Menu_Position" Integer, '
+    + ' "Old_Backup" Boolean DEFAULT False, "Provider_Count" Integer DEFAULT 1, "Provider" Text, "Path_Icons" Text, "Path_Images" Text, "Path_Sounds" Text, "Path_Temp" Text, '
+    + ' "Yahoo_Iconset_Count" Integer DEFAULT 3, "Yahoo_Iconset" Text DEFAULT "default", "Yahoo_Iconset_Selected" Integer DEFAULT "0", "Yahoo_Metric" Text DEFAULT "imperial", "Yahoo_Degree" Text DEFAULT "celcius", "OWM_Iconset_Count" Integer DEFAULT 1, '
+    + ' "OWM_Iconset" Text DEFAULT "default", "OWM_Iconset_Selected" Integer DEFAULT "0", "OWM_Metric" Text DEFAULT "imperial", "OWM_Degree" Text DEFAULT "celcius", "OWM_API" Text, "OWM_Lang" Text DEFAULT "english");';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_weather" is checked and corrected');
 
   // Addon_Weather_OWM  ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_weather_owm ("USER_ID" Integer , "TOWN_NUM" Integer, "TOWN_WOEID" Text,	"TOWN_NAME" Text );';
+    'CREATE TABLE IF NOT EXISTS addon_weather_owm ("User_ID" Integer , "Town_Num" Integer, "Town_WOEID" Text,	"Town_Name" Text );';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_weather_owm" is checked and corrected');
 
   // Addon_Weather_Yahoo ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_weather_yahoo ("USER_ID" Integer , "TOWN_NUM" Integer, "TOWN_WOEID" Text,	"TOWN_NAME" Text );';
+    'CREATE TABLE IF NOT EXISTS addon_weather_yahoo ("User_ID" Integer , "Town_Num" Integer, "Town_WOEID" Text,	"Town_Name" Text );';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_weather_yahoo" is checked and corrected');
 
   // Addon_Soundplayer ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_soundplayer ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "FIRST_POP" Boolean DEFAULT True, ' +
-    ' "MENU_POSITION" Integer, "PATH_IMAGES" Text, "PATH_SOUNDS" Text, "PATH_PLAYLISTS" Text, "VOLUME" Integer DEFAULT 80, "LAST_PLAYING_SONG_NUM" Integer DEFAULT "-1", '
-    + ' "PLAYLIST_COUNT" Integer DEFAULT "-1", "LAST_PLAYLIST" Integer DEFAULT "-1", "TOTAL_PLAY" Integer DEFAULT "-1", "TOTAL_TIME" Text DEFAULT "00:00:00");';
+    'CREATE TABLE IF NOT EXISTS addon_soundplayer ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "First_Pop" Boolean DEFAULT True, ' +
+    ' "Menu_Position" Integer, "Path_Images" Text, "Path_Sounds" Text, "Path_Playlists" Text, "Volume" Integer DEFAULT 80, "Last_Playing_Song_Num" Integer DEFAULT "-1", '
+    + ' "Playlist_Count" Integer DEFAULT "-1", "Last_Playlist" Integer DEFAULT "-1", "Total_Play" Integer DEFAULT "-1", "Total_Time" Integer DEFAULT "0");';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_soundplayer" is checked and corrected');
 
   // Addon_Soundplayer_Playlists
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_soundplayer_playlists ("Song_Name" Text,	"Song_Audio_Type" Text,	"Song_Path" Text,  "Song_Position" Integer, "Song_Time" Integer, "Song_Last" Boolean, "Playlist_Name" Text, Playlist_Num Integer);';
+    'CREATE TABLE IF NOT EXISTS addon_soundplayer_playlists ("User_ID" Integer, "Song_Name" Text,	"Song_Audio_Type" Text,	"Song_Path" Text,  "Song_Position" Integer, "Song_Time" Integer, "Song_Last" Boolean, "Playlist_Name" Text, Playlist_Num Integer);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_soundplayer_playlists" is checked and corrected');
 
   // Addon_AzPlay ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS addon_azplay ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "FIRST_POP" Boolean DEFAULT True, "MENU_POSITION" Integer, "COUNT" Integer DEFAULT 0, '
-    + ' "Active" Integer DEFAULT 0, "AZHUNG" Boolean DEFAULT True);';
+    'CREATE TABLE IF NOT EXISTS addon_azplay ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "First_Pop" Boolean DEFAULT True, "Menu_Position" Integer, "Count" Integer DEFAULT 0, '
+    + ' "Active" Integer DEFAULT 0, "AzHung" Boolean DEFAULT True);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "addon_azplay" is checked and corrected');
 
   // Emulators  ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS emulators ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "COUNT" Integer DEFAULT "-1", "ACTIVE_UNIQUE" Real DEFAULT "-1", '
-    + ' "PATH" Text,	"ARCADE" Boolean DEFAULT False, "COMPUTERS" Boolean DEFAULT False, "CONSOLES" Boolean DEFAULT False, "HANDHELDS" Boolean DEFAULT False,' +
-    ' "PINBALLS" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS emulators ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Count" Integer DEFAULT "-1", "Active_Unique" Real DEFAULT "-1", '
+    + ' "Path" Text,	"Arcade" Boolean DEFAULT False, "Computers" Boolean DEFAULT False, "Consoles" Boolean DEFAULT False, "Handhelds" Boolean DEFAULT False,' +
+    ' "Pinballs" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "emulators" is checked and corrected');
 
   // Arcade ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS arcade ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ACTIVE" Boolean DEFAULT "True","COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "0", "NAME" Text DEFAULT "arcade", '
-    + ' "PATH_IMAGES" Text,	"MAME" Boolean DEFAULT False,	"FBA" Boolean DEFAULT False, "ZINC" Boolean DEFAULT False, "DAPHNE" Boolean DEFAULT False, "RAINE" Boolean DEFAULT False, '
-    + ' "SUPERMODEL" Boolean DEFAULT False, "DEMUL" Boolean DEFAULT False, "WINKAWAKS" Boolean DEFAULT False, "MODEL2" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS arcade ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Active" Boolean DEFAULT "True","Count" Integer DEFAULT "-1", "Position" Integer DEFAULT "0", "Name" Text DEFAULT "arcade", '
+    + ' "Path_Images" Text,  "Path_Videos" Text, "Mame" Boolean DEFAULT False,	"FBA" Boolean DEFAULT False, "Zinc" Boolean DEFAULT False, "DAPHNE" Boolean DEFAULT False, "RAINE" Boolean DEFAULT False, '
+    + ' "SuperModel" Boolean DEFAULT False, "DEMUL" Boolean DEFAULT False, "WinKawaks" Boolean DEFAULT False, "Model2" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "arcade" is checked and corrected');
 
   // Arcade_Mame ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS arcade_mame ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "INSTALLED" Boolean DEFAULT False,	"EMU_POSITION" Integer DEFAULT "-1", '
-    + ' "EMU_ACTIVE" Boolean DEFAULT False, "EMU_UNIQUE" Real DEFAULT "0", "VIEW_MODE" Text DEFAULT "video" ,"EXTRAFE_MAME_VIEWS" Text, "EXTRAFE_MAME_PATH" Text, '
-    + ' "EXTRAFE_MAME_IMAGES" Text, "EXTRAFE_MAME_SOUNDS" Text, "MAME_NAME" Text, "MAME_PATH" Text, "MAME_INI" Text, "MAME_VERSION" Text);';
+    'CREATE TABLE IF NOT EXISTS arcade_mame ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Installed" Boolean DEFAULT False,	"Emu_Position" Integer DEFAULT "-1", '
+    + ' "Emu_Active" Boolean DEFAULT False, "Emu_Unique" Real DEFAULT "0", "View_Mode" Text DEFAULT "default" ,"ExtraFE_Mame_Views" Text, "ExtraFE_Mame_Path" Text, '
+    + ' "ExtraFE_Mame_Images" Text, "ExtraFE_Mame_Sounds" Text, "Mame_Name" Text, "Mame_Path" Text, "Mame_Ini" Text, "Mame_Version" Text);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "arcade_mame" is checked and corrected');
 
   // Arcade_Media ->
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS arcade_media ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ARTWORKS" Text, "CABINETS" Text,	"CONTROL_PANELS" Text, "COVERS" Text, "FLYERS" Text, '
-    + ' "FANART" Text, "GAME_OVER" Text, "ICONS" Text, "MANUALS" Text, "MARQUEESS" Text, "PCBS" Text, "SNAPSHOTS" Text, "TITLES" Text, "ARTWORK_PREVIEW" Text, "BOSSES" Text, "ENDS" Text, "HOW_TO" Text, '
-    + ' "LOGOS" Text, "SCORES" Text, "SELECTS" Text, "STAMPS" Text, "VERSUS" Text, "WARNINGS" Text, "SOUNDTRACKS" Text, "SUPPORT_FILES" Text, "VIDEOS" Text);';
+    'CREATE TABLE IF NOT EXISTS arcade_media ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Artworks" Text, "Cabinets" Text,	"Control_Panels" Text, "Covers" Text, "Flyers" Text, '
+    + ' "Fanart" Text, "Game_Over" Text, "Icons" Text, "Manuals" Text, "Marqueess" Text, "PCBs" Text, "Snapshots" Text, "Titles" Text, "Artwork_Preview" Text, "Bosses" Text, "Ends" Text, "How_To" Text, '
+    + ' "Logos" Text, "Scores" Text, "Selects" Text, "Stamps" Text, "Versus" Text, "Warnings" Text, "Soundtracks" Text, "Support_Files" Text, "Videos" Text);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "arcade_media" is checked and corrected');
 
   // Computers
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS computers ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "1", "NAME" Text DEFAULT "computers", '
-    + ' "PATH_IMAGES" Text,	"ACORN_ARCHIMEDES" Boolean DEFAULT False,	"AMIGA" Boolean DEFAULT False, "AMSTRAD" Boolean DEFAULT False, "ATARI_8BIT" Boolean DEFAULT False, "ATARI_ST" Boolean DEFAULT False, '
-    + ' "COMMODORE_64" Boolean DEFAULT False, "MSDOS" Boolean DEFAULT False, "OLD_PC_WINDOWS" Boolean DEFAULT False, "SCUMMVM" Boolean DEFAULT False, "SPECTRUM" Boolean DEFAULT False, "X68000" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS computers ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"Active" Boolean DEFAULT "True", "Count" Integer DEFAULT "-1", "Position" Integer DEFAULT "1", "Name" Text DEFAULT "computers", '
+    + ' "Path_Images" Text,	"Acorn_Archimedes" Boolean DEFAULT False,	"AMIGA" Boolean DEFAULT False, "Amstrad" Boolean DEFAULT False, "Atari_8Bit" Boolean DEFAULT False, "ATARI_ST" Boolean DEFAULT False, '
+    + ' "Commodore_64" Boolean DEFAULT False, "MsDOS" Boolean DEFAULT False, "Old_PC_Windows" Boolean DEFAULT False, "SCUMMVM" Boolean DEFAULT False, "Spectrum" Boolean DEFAULT False, "X68000" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "computers" is checked and corrected');
 
   // Consoles
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS consoles ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "2", "NAME" Text DEFAULT "consoles", '
-    + ' "PATH_IMAGES" Text,	"3DO" Boolean DEFAULT False,	"AMIGA_CD32" Boolean DEFAULT False, "ATARI_2600" Boolean DEFAULT False, "ATARI_5200" Boolean DEFAULT False, "ATARI_7800" Boolean DEFAULT False, '
-    + ' "ATARI_JAGUAR" Boolean DEFAULT False, "NEO_GEO" Boolean DEFAULT False, "NEO_GEO_CD" Boolean DEFAULT False, "NES" Boolean DEFAULT False, "SNES" Boolean DEFAULT False, "NINTENDO_64" Boolean DEFAULT False, '
-    + ' "GAMECUBE" Boolean DEFAULT False, "WII" Boolean DEFAULT False, "WII_U" Boolean DEFAULT False, "NINTENDO_SWITCH" Boolean DEFAULT False, "PC_ENGINE" Boolean DEFAULT False, "PC_ENGINE_CD" Boolean DEFAULT False, '
-    + ' "PC_FX" Boolean DEFAULT False, "PLAYSTATION" Boolean DEFAULT False, "PLAYSTATION_2" Boolean DEFAULT False, "PLAYSTATION_3" Boolean DEFAULT False, "SG_1000" Boolean DEFAULT False, '
-    + ' "MASTER_SYSTEM" Boolean DEFAULT False, "MEGA_DRIVE" Boolean DEFAULT False, "MEGA_DRIVE_32X" Boolean DEFAULT False, "MEGA_DRIVE_CD" Boolean DEFAULT False, "SATURN" Boolean DEFAULT False, '
-    + ' "DREAMCAST" Boolean DEFAULT False, "XBOX" Boolean DEFAULT False, "XBOX_ONE" Boolean DEFAULT False );';
+    'CREATE TABLE IF NOT EXISTS consoles ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"Active" Boolean DEFAULT "True", "Count" Integer DEFAULT "-1", "Position" Integer DEFAULT "2", "Name" Text DEFAULT "consoles", '
+    + ' "Path_Images" Text,	"3DO" Boolean DEFAULT False,	"AMIGA_CD32" Boolean DEFAULT False, "Atari_2600" Boolean DEFAULT False, "Atari_5200" Boolean DEFAULT False, "Atari_7800" Boolean DEFAULT False, '
+    + ' "Atari_JAGUAR" Boolean DEFAULT False, "NEO_GEO" Boolean DEFAULT False, "NEO_GEO_CD" Boolean DEFAULT False, "NES" Boolean DEFAULT False, "SNES" Boolean DEFAULT False, "Nintendo_64" Boolean DEFAULT False, '
+    + ' "GameCube" Boolean DEFAULT False, "WII" Boolean DEFAULT False, "WII_U" Boolean DEFAULT False, "Nintendo_SWITCH" Boolean DEFAULT False, "PC_Engine" Boolean DEFAULT False, "PC_Engine_CD" Boolean DEFAULT False, '
+    + ' "PC_FX" Boolean DEFAULT False, "Playstation" Boolean DEFAULT False, "Playstation_2" Boolean DEFAULT False, "Playstation_3" Boolean DEFAULT False, "SG_1000" Boolean DEFAULT False, '
+    + ' "Master_System" Boolean DEFAULT False, "Mega_Drive" Boolean DEFAULT False, "Mega_Drive_32X" Boolean DEFAULT False, "Mega_Drive_CD" Boolean DEFAULT False, "Saturn" Boolean DEFAULT False, '
+    + ' "Dreamcast" Boolean DEFAULT False, "XBOX" Boolean DEFAULT False, "XBOX_ONE" Boolean DEFAULT False );';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "consoles" is checked and corrected');
 
   // Handhelds
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS handhelds ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "3", "NAME" Text DEFAULT "handhelds", '
-    + ' "PATH_IMAGES" Text, "ATARI_LYNX" Boolean DEFAULT False, "NEO_GEO_POCKET" Boolean DEFAULT False, "GAMEGEAR" Boolean DEFAULT False, "GAME_AND_WATCH" Boolean DEFAULT False, "GAMEBOY" Boolean DEFAULT False, '
-    + ' "GAMEBOY_COLOR" Boolean DEFAULT False, "GAMEBOY_VIRTUALBOY" Boolean DEFAULT False, "GAMEBOY_ADVANCE" Boolean DEFAULT False, "NINTENDO_DS" Boolean DEFAULT False, "NINTENDO_3DS" Boolean DEFAULT False, '
-    + ' "PSP" Boolean DEFAULT False, "PSP_VITA" Boolean DEFAULT False, "WONDERSWAN" Boolean DEFAULT False);';
+    'CREATE TABLE IF NOT EXISTS handhelds ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,"Active" Boolean DEFAULT "True", "Count" Integer DEFAULT "-1", "Position" Integer DEFAULT "3", "Name" Text DEFAULT "handhelds", '
+    + ' "Path_Images" Text, "Atari_Lynx" Boolean DEFAULT False, "NEO_GEO_Pocket" Boolean DEFAULT False, "Gamegear" Boolean DEFAULT False, "Game_And_Watch" Boolean DEFAULT False, "Gameboy" Boolean DEFAULT False, '
+    + ' "Gameboy_Color" Boolean DEFAULT False, "Gameboy_VirtualBoy" Boolean DEFAULT False, "Gameboy_Advance" Boolean DEFAULT False, "Nintendo_DS" Boolean DEFAULT False, "Nintendo_3DS" Boolean DEFAULT False, '
+    + ' "PSP" Boolean DEFAULT False, "PSP_Vita" Boolean DEFAULT False, "Wonderswan" Boolean DEFAULT False);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "handhelds" is checked and corrected');
 
   // Pinballs
   ExtraFE_Query_Local.Close;
   ExtraFE_Query_Local.SQL.Clear;
   ExtraFE_Query_Local.SQL.Text :=
-    'CREATE TABLE IF NOT EXISTS pinballs ("USER_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "ACTIVE" Boolean DEFAULT "True", "COUNT" Integer DEFAULT "-1", "POSITION" Integer DEFAULT "4", "NAME" Text DEFAULT "pinballs", '
-    + ' "PATH_IMAGES" Text, "VISUAL_PINBALL" Boolean DEFAULT False, "FUTURE_PINBALL" Boolean DEFAULT False);';
+    'CREATE TABLE IF NOT EXISTS pinballs ("User_ID" Integer NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT, "Active" Boolean DEFAULT "True", "Count" Integer DEFAULT "-1", "Position" Integer DEFAULT "4", "Name" Text DEFAULT "pinballs", '
+    + ' "Path_Images" Text, "Visual_Pinball" Boolean DEFAULT False, "Future_Pinball" Boolean DEFAULT False);';
   ExtraFE_Query_Local.ExecSQL;
-  CodeSite.Send('Table "pinballs" is checked and corrected');
-
-  CodeSite.ExitMethod('All the tables of the database is checked and corrected');
 end;
 
 { Check if Columns exits or have someone to delete }

@@ -110,7 +110,7 @@ begin
   Script_Mame_Uninstall.Panel := TPanel.Create(Main_Form);
   Script_Mame_Uninstall.Panel.Name := 'Script_Mame_Uninstall';
   Script_Mame_Uninstall.Panel.Parent := Main_Form;
-  Script_Mame_Uninstall.Panel.SetBounds(extrafe.res.Half_Width - 300, extrafe.res.Half_Height - 175, 600, 350);
+  Script_Mame_Uninstall.Panel.SetBounds(uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 300, uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 175, 600, 350);
   Script_Mame_Uninstall.Panel.Visible := True;
 
   CreateHeader(Script_Mame_Uninstall.Panel, 'IcoMoon-Free', #$e9a9, TAlphaColorRec.DeepSkyBlue, 'UnInstall  Mame emulator from ExtraFE', false, nil);
@@ -274,7 +274,8 @@ begin
   Script_Mame_Uninstall.Main.Tab3.Line_3.TextSettings.FontColor := TAlphaColorRec.White;
   Script_Mame_Uninstall.Main.Tab3.Line_3.TextSettings.Font.Size := 14;
   Script_Mame_Uninstall.Main.Tab3.Line_3.TextSettings.VertAlign := TTextAlign.Leading;
-  Script_Mame_Uninstall.Main.Tab3.Line_3.Text := ' "<font color="#ff63cbfc">Warning..</font>" you have choose to erase mame folder from your computer, completly.';
+  Script_Mame_Uninstall.Main.Tab3.Line_3.Text :=
+    ' "<font color="#ff63cbfc">Warning..</font>" you have choose to erase mame folder from your computer, completly.';
   Script_Mame_Uninstall.Main.Tab3.Line_3.Visible := false;
 
   Script_Mame_Uninstall.Main.Tab3.Remove := TButton.Create(Script_Mame_Uninstall.Main.Tab3.Box);
@@ -394,7 +395,7 @@ begin
 
   if Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked then
   begin
-    {Delete mame folder and subdirecories}
+    { Delete mame folder and subdirecories }
   end;
 
   Dec(emulation.Unique_Num);
@@ -462,7 +463,7 @@ begin
   begin
     Script_Mame_Uninstall.Main.Control.SetActiveTabWithTransition(Script_Mame_Uninstall.Main.Tabs[2], TTabTransition.Slide);
     Script_Mame_Uninstall.Main.Status := 'phase_3';
-    if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked = False) then
+    if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked = false) then
       Script_Mame_Uninstall.Main.Tab3.Line_2.Visible := True
     else if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked) then
     begin
@@ -471,7 +472,7 @@ begin
       Script_Mame_Uninstall.Main.Tab3.Line_2.Position.Y := 70;
       Script_Mame_Uninstall.Main.Tab3.Line_3.Position.Y := 110;
     end
-    else if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked = False) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked) then
+    else if (Script_Mame_Uninstall.Main.Tab2.Check_2.IsChecked = false) and (Script_Mame_Uninstall.Main.Tab2.Check_3.IsChecked) then
     begin
       Script_Mame_Uninstall.Main.Tab3.Line_3.Visible := True;
       Script_Mame_Uninstall.Main.Tab3.Line_3.Position.Y := 70;

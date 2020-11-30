@@ -643,7 +643,7 @@ begin
   Emu_VM_Default.GameMenu.PopUp.Back := TImage.Create(Emu_VM_Default.main);
   Emu_VM_Default.GameMenu.PopUp.Back.Name := 'Emu_Loading_Game';
   Emu_VM_Default.GameMenu.PopUp.Back.Parent := Emu_VM_Default.main;
-  Emu_VM_Default.GameMenu.PopUp.Back.SetBounds((extrafe.res.Half_Width - 250), ((extrafe.res.Half_Height - 200) - 150), 500, 500);
+  Emu_VM_Default.GameMenu.PopUp.Back.SetBounds((uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 250), ((uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 200) - 150), 500, 500);
   Emu_VM_Default.GameMenu.PopUp.Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black_Opacity.image);
   Emu_VM_Default.GameMenu.PopUp.Back.WrapMode := TImageWrapMode.Tile;
   Emu_VM_Default.GameMenu.PopUp.Back.Visible := true;
