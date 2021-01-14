@@ -324,6 +324,30 @@ type
   end;
 
 type
+  // CE = Console Emulator
+  TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_CONSOLES_NES_LISTEMULATOR = (CE_NES_MameNes, CE_NES_PuNes, CE_NES_FCEUX, CE_NES_MESEN, CE_NES_Nestopia_EU, CE_NES_Higan,
+    CE_NES_JNes, CE_NES_Nintendulator, CE_NES_QuickNes, CE_NES_RockNes);
+
+type
+  TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_CONSOLES_NES = record
+    Name: String;
+    Installed: Boolean;
+    Active: Boolean;
+    Position: Integer;
+    Unique: Single;
+    Active_Emu: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_CONSOLES_NES_LISTEMULATOR;
+    View_Mode: String;
+    Mame_Path: String;
+    Mame_Name: String;
+    Mame_Version: String;
+    Mame_Ini: String;
+    Mame_p_Path: String;
+    Mame_p_Images: String;
+    Mame_p_Sounds: String;
+    Mame_p_Views: String;
+  end;
+
+type
   TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_CONSOLES = record
     Count: Integer;
     Active: Boolean;
@@ -340,6 +364,7 @@ type
     Neo_Geo: Boolean;
     Neo_Geo_CD: Boolean;
     NES: Boolean;
+    NES_D: TDATABASE_ACTIVE_USER_LOCAL_EMULATORS_CONSOLES_NES;
     SNES: Boolean;
     Nintendo_64: Boolean;
     Gamecube: Boolean;

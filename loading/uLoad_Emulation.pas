@@ -38,7 +38,7 @@ uses
   uDB_AUser,
   uMain_AllTypes,
   uEmu_Arcade_Mame,
-  uEmu_Arcade_Mame_SetAll;
+  uEmu_Arcade_Mame_SetAll, uEmu_Consoles_Nes_SetAll;
 
 procedure uLoad_Emulation_FirstTime;
 begin
@@ -260,7 +260,8 @@ procedure Get_Consoles_Data;
 begin
   if uDB_AUser.Local.EMULATORS.Consoles then
   begin
-
+    if uDB_AUser.Local.EMULATORS.Consoles_D.NES then
+      uEmu_Consoles_Nes_SetAll.Get_Set_Nes_Data;
   end;
 end;
 

@@ -159,7 +159,7 @@ begin
   if vState then
   begin
     VKey.Construct.Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height + 1;
-    VKey.Construct.Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Height - 250;
+    VKey.Construct.Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 250;
     VKey.Construct.Ani.Start;
     VKey.Construct.Blur.Enabled := True;
     VKey.Construct.Blur_Ani.StartValue := 0;
@@ -169,7 +169,7 @@ begin
   else
   begin
     VKey.Enter_Pressed := True;
-    VKey.Construct.Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Height - 250;
+    VKey.Construct.Ani.StartValue := uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 250;
     VKey.Construct.Ani.StopValue := uDB_AUser.Local.SETTINGS.Resolution.Height + 1;
     VKey.Construct.Ani.Start;
     VKey.Construct.Blur_Ani.StartValue := 1;

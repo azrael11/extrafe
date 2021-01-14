@@ -9,6 +9,9 @@
         <Projects Include="..\ExtraFE_Databases\ExtraFE_Databases.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="tools\ExtraFE_Theme_Creator.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="ExtraFE_Databases:Make">
         <MSBuild Projects="..\ExtraFE_Databases\ExtraFE_Databases.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ExtraFE_Theme_Creator">
+        <MSBuild Projects="tools\ExtraFE_Theme_Creator.dproj"/>
+    </Target>
+    <Target Name="ExtraFE_Theme_Creator:Clean">
+        <MSBuild Projects="tools\ExtraFE_Theme_Creator.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ExtraFE_Theme_Creator:Make">
+        <MSBuild Projects="tools\ExtraFE_Theme_Creator.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ExtraFE;ExtraFE_Databases"/>
+        <CallTarget Targets="ExtraFE;ExtraFE_Databases;ExtraFE_Theme_Creator"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ExtraFE:Clean;ExtraFE_Databases:Clean"/>
+        <CallTarget Targets="ExtraFE:Clean;ExtraFE_Databases:Clean;ExtraFE_Theme_Creator:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ExtraFE:Make;ExtraFE_Databases:Make"/>
+        <CallTarget Targets="ExtraFE:Make;ExtraFE_Databases:Make;ExtraFE_Theme_Creator:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -38,7 +38,7 @@ begin
   vMame.Scene.Main.WrapMode := TImageWrapMode.Stretch;
   vMame.Scene.Main.Visible := True;
 
-  uView_Mode.Scene(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode, uDB_AUser.Local.USER.Num, uDB.Arcade_Query, vMame.Scene.Main,
+  uView_Mode.Scene(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode, uDB_AUser.Local.USER.Num, uDB.Mame_Query, vMame.Scene.Main,
     uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Views, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Images, uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.p_Sounds);
 end;
 
@@ -48,22 +48,24 @@ var
   vi: integer;
 begin
 
-  uDB.Arcade_Query.Close;
-  uDB.Arcade_Query.SQL.Clear;
-  uDB.Arcade_Query.SQL.Text := 'SELECT COUNT(*) FROM GAMES';
-  uDB.Arcade_Query.Open;
-  mame.Gamelist.Games_Count := uDB.Arcade_Query.Fields[0].AsInteger;
+  uDB.Mame_Query.Close;
+  uDB.Mame_Query.SQL.Clear;
+  uDB.Mame_Query.SQL.Text := 'SELECT COUNT(*) FROM GAMES';
+  uDB.Mame_Query.Open;
+  mame.Gamelist.Games_Count := uDB.Mame_Query.Fields[0].AsInteger;
 
   vQuery := 'SELECT gamename, romname FROM games ORDER BY gamename ASC';
-  uDB.Arcade_Query.Close;
-  uDB.Arcade_Query.SQL.Clear;
-  uDB.Arcade_Query.SQL.Text := vQuery;
-  uDB.Arcade_Query.DisableControls;
-  uDB.Arcade_Query.Open;
-  uDB.Arcade_Query.First;
+  uDB.Mame_Query.Close;
+  uDB.Mame_Query.SQL.Clear;
+  uDB.Mame_Query.SQL.Text := vQuery;
+  uDB.Mame_Query.DisableControls;
+  uDB.Mame_Query.Open;
+  uDB.Mame_Query.First;
 
   mame.Gamelist.ListGames := TStringlist.Create;
   mame.Gamelist.ListRoms := TStringlist.Create;
+
+  mame.Gamelist.RomsPath := TStringList.Create;
 
   mame.Gamelist.ListYear := TStringlist.Create;
   mame.Gamelist.ListManufaturer := TStringlist.Create;
@@ -72,56 +74,74 @@ begin
   mame.Gamelist.ListLanguages := TStringlist.Create;
 
   try
-    uDB.Arcade_Query.First;
-    while not uDB.Arcade_Query.Eof do
+    uDB.Mame_Query.First;
+    while not uDB.Mame_Query.Eof do
     begin
-      mame.Gamelist.ListGames.Add(uDB.Arcade_Query.FieldByName('gamename').AsString);
-      mame.Gamelist.ListRoms.Add(uDB.Arcade_Query.FieldByName('romname').AsString);
-      uDB.Arcade_Query.Next;
+      mame.Gamelist.ListGames.Add(uDB.Mame_Query.FieldByName('gamename').AsString);
+      mame.Gamelist.ListRoms.Add(uDB.Mame_Query.FieldByName('romname').AsString);
+      uDB.Mame_Query.Next;
     end;
   finally
-    uDB.Arcade_Query.EnableControls;
+    uDB.Mame_Query.EnableControls;
   end;
 
   vQuery := 'SELECT DISTINCT year FROM games';
-  uDB.Arcade_Query.Close;
-  uDB.Arcade_Query.SQL.Clear;
-  uDB.Arcade_Query.SQL.Text := vQuery;
-  uDB.Arcade_Query.DisableControls;
-  uDB.Arcade_Query.Open;
-  uDB.Arcade_Query.First;
+  uDB.Mame_Query.Close;
+  uDB.Mame_Query.SQL.Clear;
+  uDB.Mame_Query.SQL.Text := vQuery;
+  uDB.Mame_Query.DisableControls;
+  uDB.Mame_Query.Open;
+  uDB.Mame_Query.First;
 
   try
-    uDB.Arcade_Query.First;
-    while not uDB.Arcade_Query.Eof do
+    uDB.Mame_Query.First;
+    while not uDB.Mame_Query.Eof do
     begin
-      mame.Gamelist.ListYear.Add(uDB.Arcade_Query.FieldByName('year').AsString);
-      uDB.Arcade_Query.Next;
+      mame.Gamelist.ListYear.Add(uDB.Mame_Query.FieldByName('year').AsString);
+      uDB.Mame_Query.Next;
     end;
   finally
-    uDB.Arcade_Query.EnableControls;
+    uDB.Mame_Query.EnableControls;
   end;
 
   vQuery := 'SELECT DISTINCT manufacturer FROM games';
-  uDB.Arcade_Query.Close;
-  uDB.Arcade_Query.SQL.Clear;
-  uDB.Arcade_Query.SQL.Text := vQuery;
-  uDB.Arcade_Query.DisableControls;
-  uDB.Arcade_Query.Open;
-  uDB.Arcade_Query.First;
+  uDB.Mame_Query.Close;
+  uDB.Mame_Query.SQL.Clear;
+  uDB.Mame_Query.SQL.Text := vQuery;
+  uDB.Mame_Query.DisableControls;
+  uDB.Mame_Query.Open;
 
   try
-    uDB.Arcade_Query.First;
+    uDB.Mame_Query.First;
     while not uDB.Arcade_Query.Eof do
     begin
-      mame.Gamelist.ListManufaturer.Add(uDB.Arcade_Query.FieldByName('manufacturer').AsString);
-      uDB.Arcade_Query.Next;
+      mame.Gamelist.ListManufaturer.Add(uDB.Mame_Query.FieldByName('manufacturer').AsString);
+      uDB.Mame_Query.Next;
     end;
   finally
-    uDB.Arcade_Query.EnableControls;
+    uDB.Mame_Query.EnableControls;
   end;
 
-  vQuery := 'SELECT DISTINCT genre FROM games';
+  vQuery := 'SELECT * FROM paths';
+  uDB.Mame_Query.Close;
+  uDB.Mame_Query.SQL.Clear;
+  uDB.Mame_Query.SQL.Text := vQuery;
+  uDB.Mame_Query.DisableControls;
+  uDB.Mame_Query.Open;
+
+  try
+    uDB.Mame_Query.First;
+    while not uDB.Mame_Query.Eof do
+    begin
+      mame.Gamelist.RomsPath.Add(uDB.Mame_Query.FieldByName('path').AsString);
+
+      uDB.Mame_Query.Next;
+    end;
+  finally
+    uDB.Mame_Query.EnableControls;
+  end;
+
+  vQuery := 'SELECT DISTINCT genre FROM genre';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -140,7 +160,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  vQuery := 'SELECT DISTINCT monochrome FROM games';
+  vQuery := 'SELECT DISTINCT monochrome FROM monochrome';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -159,7 +179,7 @@ begin
     uDB.Arcade_Query.EnableControls;
   end;
 
-  vQuery := 'SELECT DISTINCT languages FROM games';
+  vQuery := 'SELECT DISTINCT language FROM languages';
   uDB.Arcade_Query.Close;
   uDB.Arcade_Query.SQL.Clear;
   uDB.Arcade_Query.SQL.Text := vQuery;
@@ -171,7 +191,7 @@ begin
     uDB.Arcade_Query.First;
     while not uDB.Arcade_Query.Eof do
     begin
-      mame.Gamelist.ListLanguages.Add(uDB.Arcade_Query.FieldByName('languages').AsString);
+      mame.Gamelist.ListLanguages.Add(uDB.Arcade_Query.FieldByName('language').AsString);
       uDB.Arcade_Query.Next;
     end;
   finally

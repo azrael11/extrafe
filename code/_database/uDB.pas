@@ -91,24 +91,27 @@ var
 
   ExtraFE_FDGUIxWaitCursor: TFDGUIxWaitCursor;
 
-  ExtraFE_MemTable: TFDMemTable; { Local_MemTable }
-  ExtraFE_MemTable_JSON: TFDStanStorageJSONLink;
+  { Global Favorites }
+  Fav: TFDConnection;
+  Fav_Query: TFDQuery;
 
   { Emulators }
+  { Arcade }
   Arcade: TFDConnection;
   Arcade_Query: TFDQuery;
 
-  Computers: TFDConnection;
-  Computers_Query: TFDQuery;
+  Mame: TFDConnection;
+  Mame_Query: TFDQuery;
 
-  Consoles: TFDConnection;
-  Consoles_Query: TFDQuery;
+  { Computers }
 
-  Handhelds: TFDConnection;
-  Handhelds_Query: TFDQuery;
+  { Consoles }
+  Nes: TFDConnection;
+  Nes_Query: TFDQuery;
 
-  Pinballs: TFDConnection;
-  Pinballs_Query: TFDQuery;
+  { Handhelds }
+
+  { Pinballs }
 
 implementation
 
@@ -180,6 +183,7 @@ end;
 { Local Database procedures }
 procedure Local_Create;
 begin
+  { Main database }
   ExtraFE_DB_Local := TFDConnection.Create(main.Main_Form);
   ExtraFE_DB_Local.Name := 'ExtraFE_Local_Database';
   with ExtraFE_DB_Local do
@@ -188,11 +192,26 @@ begin
     with Params do
     begin
       Add('DriverID=SQLITE');
-      Add('Database=' + extrafe.prog.Path + 'data\database\EXTRAFE.DB');
+      Add('Database=' + extrafe.prog.Path + 'data\database\extrafe.db');
     end;
     Open;
   end;
   ExtraFE_DB_Local.LoginPrompt := False;
+
+  { Favorites }
+  Fav := TFDConnection.Create(main.Main_Form);
+  Fav.Name := 'Favorites_Database';
+  with Fav do
+  begin
+    Close;
+    with Params do
+    begin
+      Add('DriverID=SQLITE');
+      Add('Database=' + extrafe.prog.Path + 'data\database\favorites.db');
+    end;
+    Open;
+  end;
+  Fav.LoginPrompt := False;
 
 end;
 
@@ -219,12 +238,12 @@ begin
   ExtraFE_FDGUIxWaitCursor := TFDGUIxWaitCursor.Create(load.Loading);
   ExtraFE_FDGUIxWaitCursor.Name := 'ExtraFE_Local_GUIxWaitCursor';
 
-  { Create a mem table for manipulation mem big lists not added in database }
-  ExtraFE_MemTable := TFDMemTable.Create(main.Main_Form);
-  ExtraFE_MemTable.Name := 'ExtraFE_Local_MemTable';
-  ExtraFE_MemTable.Active := False;
-  ExtraFE_MemTable_JSON := TFDStanStorageJSONLink.Create(main.Main_Form);
-  ExtraFE_MemTable_JSON.Name := 'ExtraFE_Local_JSON_Storage_Link';
+  Fav.Connected := True;
+
+  Fav_Query := TFDQuery.Create(main.Main_Form);
+  Fav_Query.Name := 'Favorites_Query';
+  Fav_Query.Connection := Fav;
+  Fav_Query.Active := False;
 end;
 
 function Local_Disconnect: Boolean;
@@ -236,7 +255,10 @@ begin
 end;
 
 procedure Emulators_Create;
+var
+  vi, vk: Integer;
 begin
+
   { Arcade }
   Arcade := TFDConnection.Create(emu.Emu_Form);
   Arcade.Name := 'Arcade_Database';
@@ -252,76 +274,66 @@ begin
   end;
   Arcade.LoginPrompt := False;
 
-  { Computers }
-  Computers := TFDConnection.Create(emu.Emu_Form);
-  Computers.Name := 'Computers_Database';
-  with Computers do
+  Mame := TFDConnection.Create(emu.Emu_Form);
+  Mame.Name := 'Mame_Database';
+  with Mame do
   begin
     Close;
     with Params do
     begin
       Add('DriverID=SQLITE');
-      Add('Database=' + extrafe.prog.Path + 'data\database\computers\computers.db');
+      Add('Database=' + extrafe.prog.Path + 'data\database\arcade\mame.db');
     end;
     Open;
   end;
-  Computers.LoginPrompt := False;
+  Arcade.LoginPrompt := False;
+
+  { Computers }
 
   { Consoles }
-  Consoles := TFDConnection.Create(emu.Emu_Form);
-  Consoles.Name := 'Consoles_Database';
-  with Consoles do
+  Nes := TFDConnection.Create(emu.Emu_Form);
+  Nes.Name := 'Nes_Database';
+  with Nes do
   begin
     Close;
     with Params do
     begin
       Add('DriverID=SQLITE');
-      Add('Database=' + extrafe.prog.Path + 'data\database\consoles\consoles.db');
+      Add('Database=' + extrafe.prog.Path + 'data\database\consoles\nes.db');
     end;
     Open;
   end;
-  Consoles.LoginPrompt := False;
+  Arcade.LoginPrompt := False;
 
   { Handhelds }
-  Handhelds := TFDConnection.Create(emu.Emu_Form);
-  Handhelds.Name := 'Handhelds_Database';
-  with Handhelds do
-  begin
-    Close;
-    with Params do
-    begin
-      Add('DriverID=SQLITE');
-      Add('Database=' + extrafe.prog.Path + 'data\database\handhelds\handhelds.db');
-    end;
-    Open;
-  end;
-  Handhelds.LoginPrompt := False;
 
   { Pinballs }
-  Pinballs := TFDConnection.Create(emu.Emu_Form);
-  Pinballs.Name := 'Pinballs_Database';
-  with Pinballs do
-  begin
-    Close;
-    with Params do
-    begin
-      Add('DriverID=SQLITE');
-      Add('Database=' + extrafe.prog.Path + 'data\database\pinballs\pinballs.db');
-    end;
-    Open;
-  end;
-  Pinballs.LoginPrompt := False;
 
 end;
 
 function Emulators_Connect: Boolean;
 begin
-  Arcade.Connected := True;
 
+  { Arcade }
+  Arcade.Connected := True;
   Arcade_Query := TFDQuery.Create(emu.Emu_Form);
   Arcade_Query.Name := 'Arcade_Local_Query';
   Arcade_Query.Connection := Arcade;
   Arcade_Query.Active := False;
+
+  Mame.Connected := True;
+  Mame_Query := TFDQuery.Create(emu.Emu_Form);
+  Mame_Query.Name := 'Mame_Local_Query';
+  Mame_Query.Connection := Mame;
+  Mame_Query.Active := False;
+
+  { Consoles }
+  Nes.Connected := True;
+  Nes_Query := TFDQuery.Create(emu.Emu_Form);
+  Nes_Query.Name := 'Nes_Local_Query';
+  Nes_Query.Connection := Nes;
+  Nes_Query.Active := False;
+
 end;
 
 function Emulators_Disconnect: Boolean;
@@ -493,9 +505,16 @@ begin
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'Computers', vColumns, vValues);
 
+  { Consoles Section Start }
   vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
   Query_Insert(ExtraFE_Query_Local, 'Consoles', vColumns, vValues);
+
+  vColumns := 'user_id';
+  vValues := '"' + vLocal_Num + '"';
+  Query_Insert(ExtraFE_Query_Local, 'Consoles_Nes', vColumns, vValues);
+
+  { Consoles Section End }
 
   vColumns := 'user_id';
   vValues := '"' + vLocal_Num + '"';
@@ -634,16 +653,16 @@ end;
 
 procedure Query_Delete_Column(vDB_Conn: TFDConnection; vQuery: TFDQuery; vTable_Name, vColumn_Name: String);
 var
-  vList_Name, vList_Type, vList_NN, vList_DV, vList_PK: TStringlist;
+  vList_Name, vList_Type, vList_NN, vList_DV, vList_PK: TStringList;
   vi: Integer;
   vFound: Boolean;
   vTables, vSTables, isNull, isDefault, isPrimaryKey: String;
 begin
-  vList_Name := TStringlist.Create;
-  vList_Type := TStringlist.Create;
-  vList_NN := TStringlist.Create;
-  vList_DV := TStringlist.Create;
-  vList_PK := TStringlist.Create;
+  vList_Name := TStringList.Create;
+  vList_Type := TStringList.Create;
+  vList_NN := TStringList.Create;
+  vList_DV := TStringList.Create;
+  vList_PK := TStringList.Create;
 
   vQuery.Close;
   vQuery.Open('PRAGMA table_info(' + vTable_Name + ')');

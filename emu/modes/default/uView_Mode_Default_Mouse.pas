@@ -62,6 +62,15 @@ type
   end;
 
 type
+  TEMU_VIEW_MODE_DEFAULT_RECT = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+    procedure OnMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
   TEMU_VIEW_MODE_DEFAULT_COMBOBOX = class(TObject)
     procedure OnChange(Sender: TObject);
   end;
@@ -74,6 +83,7 @@ type
     Model3D: TEMU_VIEW_MODE_DEFAULT_MODEL3D;
     Edit: TEMU_VIEW_MODE_DEFAULT_EDIT;
     ComboBox: TEMU_VIEW_MODE_DEFAULT_COMBOBOX;
+    Rect: TEMU_VIEW_MODE_DEFAULT_RECT;
     Panel: TEMU_VIEW_MODE_DEFAULT_PANEL;
   end;
 
@@ -87,7 +97,7 @@ uses
   uView_Mode_Default_Actions,
   uView_Mode_Default_Actions_Filters,
   uView_Mode_Default_Actions_Lists,
-  uEmu_Emu;
+  uEmu_Emu, uView_Mode_Default_Game;
 
 { TEMU_VIEW_MODE_DEFAULT_IMAGE }
 
@@ -98,7 +108,8 @@ end;
 
 procedure TEMU_VIEW_MODE_DEFAULT_IMAGE.OnMouseEnter(Sender: TObject);
 begin
-
+  if Emu_VM_Default_Var.Gamelist.Mouse_Menu = False then
+    uView_Mode_Default_Actions.Show_Gamelist_Mouse_Menu(True);
 end;
 
 procedure TEMU_VIEW_MODE_DEFAULT_IMAGE.OnMouseLeave(Sender: TObject);
@@ -142,7 +153,7 @@ begin
       else if TText(Sender).Name = 'Emu_Gamelist_Search_Icon' then
         uView_Mode_Default_Actions.Search_Open
       else
-        Exit_Action('Mouse');
+        Exit_Action
     end;
     BASS_ChannelPlay(Emu_VM_Default_Var.sounds.Gen_Click, False);
   end;
@@ -356,6 +367,59 @@ begin
     uView_Mode_Default_Actions_Lists.Clear_Info(TPanel(Sender).Tag);
 end;
 
+{ TEMU_VIEW_MODE_DEFAULT_RECT }
+
+procedure TEMU_VIEW_MODE_DEFAULT_RECT.OnMouseClick(Sender: TObject);
+begin
+
+end;
+
+procedure TEMU_VIEW_MODE_DEFAULT_RECT.OnMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+begin
+  if Emu_VM_Default_Var.Game_Mode then
+  begin
+    if TRectangle(Sender).Name = 'Emu_Gamelist_Games_Mouse_Up' then
+      uView_Mode_Default_Game.Menu_Up
+    else if TRectangle(Sender).Name = 'Emu_Gamelist_Games_Mouse_Down' then
+      uView_Mode_Default_Game.Menu_Down;
+  end
+  else
+  begin
+    if TRectangle(Sender).Name = 'Emu_Gamelist_Games_Mouse_Up' then
+      uView_Mode_Default_Actions.Move_Gamelist('UP')
+    else if TRectangle(Sender).Name = 'Emu_Gamelist_Games_Mouse_Down' then
+      uView_Mode_Default_Actions.Move_Gamelist('DOWN')
+    else if TRectangle(Sender).Name = 'Emu_Gamelist_Games_Mouse_Left' then
+      uView_Mode_Default_Actions.Move_Gamelist('PAGE UP')
+    else if TRectangle(Sender).Name = 'Emu_Gamelist_Games_Mouse_Right' then
+      uView_Mode_Default_Actions.Move_Gamelist('PAGE DOWN');
+  end;
+end;
+
+procedure TEMU_VIEW_MODE_DEFAULT_RECT.OnMouseEnter(Sender: TObject);
+begin
+  TRectangle(Sender).Cursor := crHandPoint;
+  TRectangle(Sender).Opacity := 0.8;
+end;
+
+procedure TEMU_VIEW_MODE_DEFAULT_RECT.OnMouseLeave(Sender: TObject);
+begin
+  TRectangle(Sender).Opacity := 0.1;
+  if Emu_VM_Default_Var.Gamelist.Mouse_Menu then
+    uView_Mode_Default_Actions.Show_Gamelist_Mouse_Menu(False);
+end;
+
+procedure TEMU_VIEW_MODE_DEFAULT_RECT.OnMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Single);
+begin
+  uView_Mode_Default_Actions.vMove_Timer.Enabled := False;
+  if Emu_VM_Default_Var.Favorites_Open then
+    Refresh_Load_Icons(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Total_Games, Emu_VM_Default_Var.favorites.Roms)
+  else
+    Refresh_Load_Icons(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Total_Games, Emu_VM_Default_Var.Gamelist.Roms);
+
+  Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled := True;
+end;
+
 initialization
 
 Emu_VM_Default_Mouse.Image := TEMU_VIEW_MODE_DEFAULT_IMAGE.Create;
@@ -363,6 +427,7 @@ Emu_VM_Default_Mouse.Text := TEMU_VIEW_MODE_DEFAULT_TEXT.Create;
 Emu_VM_Default_Mouse.Button := TEMU_VIEW_MODE_DEFAULT_BUTTON.Create;
 Emu_VM_Default_Mouse.Model3D := TEMU_VIEW_MODE_DEFAULT_MODEL3D.Create;
 Emu_VM_Default_Mouse.Edit := TEMU_VIEW_MODE_DEFAULT_EDIT.Create;
+Emu_VM_Default_Mouse.Rect := TEMU_VIEW_MODE_DEFAULT_RECT.Create;
 Emu_VM_Default_Mouse.ComboBox := TEMU_VIEW_MODE_DEFAULT_COMBOBOX.Create;
 Emu_VM_Default_Mouse.Panel := TEMU_VIEW_MODE_DEFAULT_PANEL.Create;
 
@@ -373,6 +438,7 @@ Emu_VM_Default_Mouse.Text.Free;
 Emu_VM_Default_Mouse.Button.Free;
 Emu_VM_Default_Mouse.Model3D.Free;
 Emu_VM_Default_Mouse.Edit.Free;
+Emu_VM_Default_Mouse.Rect.Free;
 Emu_VM_Default_Mouse.ComboBox.Free;
 Emu_VM_Default_Mouse.Panel.Free;
 

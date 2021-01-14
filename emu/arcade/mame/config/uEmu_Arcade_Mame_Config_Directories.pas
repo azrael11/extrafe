@@ -26,6 +26,9 @@ procedure Rom_Find_Path;
 procedure Rom_Create_Path;
 procedure Rom_Delete_Path(vRow: Integer);
 
+{ Tab Rom Extentions }
+procedure Rom_Ext_Create;
+
 { Tab Directories Actions }
 procedure Media_Find_Path(vNum: Integer);
 procedure Media_Create_Path;
@@ -41,7 +44,7 @@ uses
   uWindows,
   uSnippet_Text,
   uEmu_Arcade_Mame_AllTypes,
-  uEmu_Arcade_Mame_Config;
+  uEmu_Arcade_Mame_Config, uEmu_Arcade_Mame_Ini;
 
 procedure Media_Download_Free;
 begin
@@ -337,6 +340,13 @@ begin
   vMame.Config.Panel.Dirs.Roms_Tab.OnClick := mame.Config.Input.Mouse.TabItem.onMouseClick;
   vMame.Config.Panel.Dirs.Roms_Tab.Visible := True;
 
+  vMame.Config.Panel.Dirs.Roms_Ext_Tab := TTabItem.Create(vMame.Config.Panel.Dirs.TabControl);
+  vMame.Config.Panel.Dirs.Roms_Ext_Tab.Name := 'Mame_Dir_Tab_Roms_Ext';
+  vMame.Config.Panel.Dirs.Roms_Ext_Tab.Parent := vMame.Config.Panel.Dirs.TabControl;
+  vMame.Config.Panel.Dirs.Roms_Ext_Tab.Text := 'Roms Extentions';
+  vMame.Config.Panel.Dirs.Roms_Ext_Tab.OnClick := mame.Config.Input.Mouse.TabItem.onMouseClick;
+  vMame.Config.Panel.Dirs.Roms_Ext_Tab.Visible := True;
+
   vMame.Config.Panel.Dirs.Media_Tab := TTabItem.Create(vMame.Config.Panel.Dirs.TabControl);
   vMame.Config.Panel.Dirs.Media_Tab.Name := 'Mame_Dir_Tab_Media';
   vMame.Config.Panel.Dirs.Media_Tab.Parent := vMame.Config.Panel.Dirs.TabControl;
@@ -345,6 +355,7 @@ begin
   vMame.Config.Panel.Dirs.Media_Tab.Visible := True;
 
   Rom_Create_Path;
+  Rom_Ext_Create;
   Media_Create_Path;
 
   vMame.Config.Panel.Dirs.TabControl.TabIndex := 0;
@@ -356,17 +367,87 @@ var
 begin
   if SelectDirectory('Select Rom path.', '', vdir) = True then
   begin
-    mame.Emu.Ini.CORE_SEARCH_rompath.Insert(mame.Emu.Ini.CORE_SEARCH_rompath.Count, vdir);
+    // Εδώ πρέπει αν τσεκάρω αν υπάρχει ήδη το rom path
+    uDB.Mame_Query.Close;
+    uDB.Mame_Query.SQL.Clear;
+    uDB.Mame_Query.SQL.Text := 'INSERT INTO paths (path, emulator) VALUES (''' + vdir + ''', "mame")';
+    uDB.Mame_Query.ExecSQL;
+
+    mame.Gamelist.RomsPath.Add(vdir);
+    mame.Emu.Ini.CORE_SEARCH_rompath := mame.Gamelist.RomsPath;
+    FreeAndNil(vMame.Config.Panel.Dirs.Roms.Find);
     FreeAndNil(vMame.Config.Panel.Dirs.Roms.Box);
     Rom_Create_Path;
+    uEmu_Arcade_Mame_Ini.Save;
   end
 end;
 
 procedure Rom_Delete_Path(vRow: Integer);
 begin
   mame.Emu.Ini.CORE_SEARCH_rompath.Delete(vRow);
+  FreeAndNil(vMame.Config.Panel.Dirs.Roms.Find);
   FreeAndNil(vMame.Config.Panel.Dirs.Roms.Box);
   Rom_Create_Path;
+end;
+///
+
+procedure Rom_Ext_Create;
+var
+  vi, vk, vl, vCount: Integer;
+begin
+  vMame.Config.Panel.Dirs.Roms_Ext.Text := TLabel.Create(vMame.Config.Panel.Dirs.Roms_Ext_Tab);
+  vMame.Config.Panel.Dirs.Roms_Ext.Text.Name := 'Mame_Dir_Roms_Ext_Label';
+  vMame.Config.Panel.Dirs.Roms_Ext.Text.Parent := vMame.Config.Panel.Dirs.Roms_Ext_Tab;
+  vMame.Config.Panel.Dirs.Roms_Ext.Text.SetBounds(10, 10, 400, 40);
+  vMame.Config.Panel.Dirs.Roms_Ext.Text.Text := 'Select the extensions you want ExtraFE access for your roms' + #13#10 + 'Please leave only what you need.';
+  vMame.Config.Panel.Dirs.Roms_Ext.Text.Visible := True;
+
+  vMame.Config.Panel.Dirs.Roms_Ext.Box := TGroupBox.Create(vMame.Config.Panel.Dirs.Roms_Ext_Tab);
+  vMame.Config.Panel.Dirs.Roms_Ext.Box.Name := 'Mame_Dir_Roms_Ext_GroupBox';
+  vMame.Config.Panel.Dirs.Roms_Ext.Box.Parent := vMame.Config.Panel.Dirs.Roms_Ext_Tab;
+  vMame.Config.Panel.Dirs.Roms_Ext.Box.SetBounds(10, 60, (vMame.Config.Panel.Dirs.TabControl.Width - 20), 200);
+  vMame.Config.Panel.Dirs.Roms_Ext.Box.Text := 'Check Selections';
+  vMame.Config.Panel.Dirs.Roms_Ext.Box.Visible := True;
+
+  vCount := uDB.Query_Count(uDB.Mame_Query, 'roms_ext', '', '');
+
+  SetLength(vMame.Config.Panel.Dirs.Roms_Ext.Check, vCount);
+
+  uDB.Mame_Query.Close;
+  uDB.Mame_Query.SQL.Clear;
+  uDB.Mame_Query.SQL.Text := 'SELECT * FROM roms_ext';
+  uDB.Mame_Query.Open;
+
+  try
+    uDB.Mame_Query.First;
+    vi := 0;
+    vk := 0;
+    vl := 0;
+
+    while not uDB.Mame_Query.Eof do
+    begin
+      vMame.Config.Panel.Dirs.Roms_Ext.Check[vi] := TCheckBox.Create(vMame.Config.Panel.Dirs.Roms_Ext.Box);
+      vMame.Config.Panel.Dirs.Roms_Ext.Check[vi].Name := 'Mame_Dir_Roms_Ext_Check_' + vi.ToString;
+      vMame.Config.Panel.Dirs.Roms_Ext.Check[vi].Parent := vMame.Config.Panel.Dirs.Roms_Ext.Box;
+      vMame.Config.Panel.Dirs.Roms_Ext.Check[vi].SetBounds(10 + (vk * 110), 50 + (vl * 50), 100, 20);
+      vMame.Config.Panel.Dirs.Roms_Ext.Check[vi].Text := uDB.Mame_Query.FieldByName('rom_ext').AsString;
+      vMame.Config.Panel.Dirs.Roms_Ext.Check[vi].IsChecked := uDB.Mame_Query.FieldByName('active').AsInteger.ToBoolean;
+      vMame.Config.Panel.Dirs.Roms_Ext.Check[vi].Visible := True;
+
+      inc(vi);
+      if vk = 4 then
+      begin
+        vk := 0;
+        inc(vl);
+      end
+      else
+        inc(vk);
+      uDB.Mame_Query.Next;
+    end;
+  finally
+
+  end;
+
 end;
 
 ///
@@ -439,7 +520,8 @@ begin
         end;
       10:
         begin
-          TFile.Copy(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + 'image_not_found.png', vdir + 'image_not_found.png');
+          if not FileExists(vdir + 'image_not_found.png') then
+            TFile.Copy(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + 'image_not_found.png', vdir + 'image_not_found.png');
           uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots := vdir;
           uDB.Query_Update(uDB.ExtraFE_Query_Local, 'ARCADE_MEDIA', 'SNAPSHOTS', vdir, 'USER_ID', uDB_AUser.Local.USER.Num.ToString);
         end;
@@ -525,9 +607,11 @@ end;
 procedure Tab_Click(vName: String);
 begin
   if vName = 'Mame_Dir_Tab_Roms' then
-    extrafe.prog.State := 'mame_config_dirs'
+    extrafe.prog.State := 'emu_mame_config_dirs'
+  else if vName = 'Mame_Dir_Tab_Roms_Ext' then
+    extrafe.prog.State := 'emu_mame_config_roms_ext'
   else if vName = 'Mame_Dir_Tab_Media' then
-    extrafe.prog.State := 'mame_config_media';
+    extrafe.prog.State := 'emu_mame_config_media';
 end;
 
 end.

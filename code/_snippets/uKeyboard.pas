@@ -29,7 +29,6 @@ uses
   uLoad_Keyboard,
   uLoad_AllTypes,
   uEmu_Actions,
-  uEmu_Arcade_Mame_Keyboard,
   uMain_Keyboard,
   uWeather_Keyboard,
   uSoundplayer_Keyboard,
@@ -72,6 +71,7 @@ end;
 
 procedure MapKeyboard(vKey: String);
 begin
+
   if uSnippet_Search.vSearch.Actions.Active then
     if uSnippet_Search.vSearch.Actions.CanIType then
       uSnippet_Search.Key(vKey);
@@ -99,6 +99,8 @@ begin
     Result := 'DOWN_ARROW'
   else if UpperCase(vKey) = 'UP' then
     Result := 'UP_ARROW'
+  else if UpperCase(vKey) = 'ESC' then
+    Result := 'ESCAPE'
   else
     Result := UpperCase(vKey);
 end;

@@ -88,7 +88,7 @@ begin
     if vAction = 'Action' then
       uView_Mode_Default_Actions.Enter
     else if vAction = 'Escape' then
-      uView_Mode_Default_Actions.Exit_Action('Keyboard')
+      uView_Mode_Default_Actions.Exit_Action
     else if vAction = 'Settings' then
       uView_Mode_Default_Actions.Configuration_Action
     else if vAction = 'Search' then

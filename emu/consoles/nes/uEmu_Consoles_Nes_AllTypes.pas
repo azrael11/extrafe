@@ -1,37 +1,64 @@
 unit uEmu_Consoles_Nes_AllTypes;
 
 interface
+
 uses
   System.Classes,
-  System.IniFiles;
+  System.IniFiles,
+  FMX.Objects;
 
-{Media files for all emulators}
-type TEMU_NES_MEDIA_FILES= record
-  Snapshots: String;
-  Videos: String;
-  Box: String;
-  ThreeD_Box: String;
-  Flyer: String;
-  Music: String;
-  Manual: String;
-end;
+type
+  TEMU_NES_SCENE = record
+    Main: TImage;
+  end;
 
-{Emulator puNes}
+type
+  TEMU_NES_CONSTRUCT = record
+    // Install: TEMU_MAME_INSTALLATION;
+    Scene: TEMU_NES_SCENE;
+    // Config: TEMU_MAME_CONFIGURATION;
+  end;
+
+var
+  vNES: TEMU_NES_CONSTRUCT;
+
+  /// /////////////////////////////////////////////////////////////////////////////
+  ///
+  /// NES variables called mame
+  ///
+  /// /////////////////////////////////////////////////////////////////////////////
+
+  { Media files for all emulators }
+type
+  TEMU_NES_MEDIA_FILES = record
+    Snapshots: String;
+    Videos: String;
+    Box: String;
+    ThreeD_Box: String;
+    Flyer: String;
+    Music: String;
+    Manual: String;
+  end;
+
+  { Emulator puNes }
 type
   TEMU_NES_PUNES = record
 
   end;
-{Emulator iNES}
+
+  { Emulator iNES }
 type
   TEMU_NES_INES = record
 
   end;
-{Emulator Nestopia}
+
+  { Emulator Nestopia }
 type
   TEMU_NES_NESTOPIA = record
 
   end;
-{Emulator Mame}
+
+  { Emulator Mame }
 type
   TEMU_NES_MAME_INI = record
     // Core Configuration options
@@ -386,7 +413,6 @@ type
     FRONTEND_COMMAND_dtd: Byte;
   end;
 
-
 type
   TEMU_NES_MAME = record
     Name: String;
@@ -400,7 +426,18 @@ type
   end;
 
 type
+  TEMU_NES_GAMELIST = record
+    total_games: Integer;
+    games: TStringList;
+    roms: TStringList;
+    year: TStringList;
+    publisher: TStringList;
+    romsPath: TStringList;
+  end;
+
+type
   TEMU_NES = record
+    gamelist: TEMU_NES_GAMELIST;
     puNes: TEMU_NES_PUNES;
     iNes: TEMU_NES_INES;
     Nestopia: TEMU_NES_NESTOPIA;

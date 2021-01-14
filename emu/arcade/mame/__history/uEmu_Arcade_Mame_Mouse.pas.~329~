@@ -1,0 +1,98 @@
+unit uEmu_Arcade_Mame_Mouse;
+
+interface
+
+uses
+  System.Classes,
+  System.SysUtils,
+  System.UiTypes,
+  FMX.StdCtrls,
+  FMX.Ani,
+  FMX.Objects,
+  FMX.ListBox,
+  BASS;
+
+type
+  TEMU_ARCADE_MAME_BUTTON = class(TObject)
+    procedure OnMouseClick(Sender: TObject);
+    procedure OnMouseEnter(Sender: TObject);
+    procedure OnMouseLeave(Sender: TObject);
+  end;
+
+type
+  TEMU_ARCADE_MAME_MOUSE = record
+    Button: TEMU_ARCADE_MAME_BUTTON;
+  end;
+
+procedure Action(vAction: String);
+
+implementation
+
+uses
+  uLoad_AllTypes,
+  uEmu_Arcade_Mame,
+  uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Config;
+
+procedure Action(vAction: String);
+begin
+  if vAction = 'Emu_Exit' then
+    uEmu_Arcade_Mame.Exit
+  else if vAction = 'Emu_Settings' then
+  begin
+
+    uEmu_Arcade_Mame.Open_Global_Configuration;
+  end;
+end;
+
+{ TEMU_ARCADE_MAME_BUTTON }
+
+procedure TEMU_ARCADE_MAME_BUTTON.OnMouseClick(Sender: TObject);
+begin
+  if TButton(Sender).Name = 'Mame_Config_Button_0' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_1' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_2' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_3' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_4' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_5' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_6' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_7' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_8' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_9' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_10' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_11' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if TButton(Sender).Name = 'Mame_Config_Button_12' then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+end;
+
+procedure TEMU_ARCADE_MAME_BUTTON.OnMouseEnter(Sender: TObject);
+begin
+
+end;
+
+procedure TEMU_ARCADE_MAME_BUTTON.OnMouseLeave(Sender: TObject);
+begin
+
+end;
+
+initialization
+
+mame.Input.Mouse.Button := TEMU_ARCADE_MAME_BUTTON.Create;
+
+finalization
+
+mame.Input.Mouse.Button.Free;
+
+end.

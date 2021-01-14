@@ -1,6 +1,7 @@
 unit uSnippet_Text;
 
 interface
+
 uses
   System.Classes,
   System.SysUtils,
@@ -10,27 +11,27 @@ uses
   FMX.Objects,
   FMX.Graphics;
 
+// Counts Text string to pixels
+function uSnippet_Text_ToPixels(vText: TText): single;
+function uSnippet_Text_SetInGivenPixels(vLength: Integer; vText: TText): string;
 
-  //Counts Text string to pixels
-  function uSnippet_Text_ToPixels(vText: TText): single;
-  function uSnippet_Text_SetInGivenPixels(vLength: Integer; vText: TText) : string;
+// Change Color events
+procedure uSnippet_Text_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
+procedure uSnippet_Text_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
 
-  //Change Color events
-  procedure uSnippet_Text_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
-  procedure uSnippet_Text_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
-
-  function uSnippet_Text_Occurrences_Char(const Substring, Text: string): integer;
-  function uSnippet_Text_Occurrences_Char_Where(const Substring, Text: string): TStringList;
+function uSnippet_Text_Occurrences_Char(const Substring, Text: string): Integer;
+function uSnippet_Text_Occurrences_Char_Where(const Substring, Text: string): TStringList;
 
 implementation
+
 uses
   load,
   uload,
   uLoad_AllTypes;
 
-function uSnippet_Text_Occurrences_Char(const Substring, Text: string): integer;
+function uSnippet_Text_Occurrences_Char(const Substring, Text: string): Integer;
 var
-  offset: integer;
+  offset: Integer;
 begin
   result := 0;
   offset := PosEx(Substring, Text, 1);
@@ -43,15 +44,15 @@ end;
 
 function uSnippet_Text_Occurrences_Char_Where(const Substring, Text: string): TStringList;
 var
-  offset: integer;
+  offset: Integer;
 begin
-  Result:= TStringList.Create;
+  result := TStringList.Create;
   offset := PosEx(Substring, Text, 1);
-  Result.Add(offset.ToString);
+  result.Add(offset.ToString);
   while offset <> 0 do
   begin
     offset := PosEx(Substring, Text, offset + length(Substring));
-    Result.Add(offset.ToString);
+    result.Add(offset.ToString);
   end;
 end;
 
@@ -59,46 +60,50 @@ function uSnippet_Text_ToPixels(vText: TText): single;
 var
   vBitmap: TBitmap;
 begin
-  vBitmap:= TBitmap.Create;
-  vBitmap.Canvas.Font.Assign(vText.Font);
-  Result:= vBitmap.Canvas.TextWidth(vText.Text);
-  vBitmap.Free;
+  if vText <> nil then
+  begin
+    vBitmap := TBitmap.Create;
+    vBitmap.Canvas.Font.Assign(vText.Font);
+    result := vBitmap.Canvas.TextWidth(vText.Text);
+    vBitmap.Free;
+  end
+  else
+    Result := 640;
 end;
 
-function uSnippet_Text_SetInGivenPixels(vLength: Integer; vText: TText) : string;
+function uSnippet_Text_SetInGivenPixels(vLength: Integer; vText: TText): string;
 var
   aString: String;
   aText: TText;
   i: Integer;
 begin
-  aText:= vText;
-  aString:= vText.Text;
+  aText := vText;
+  aString := vText.Text;
   for i := vLength downto 0 do
+  begin
+    Delete(aString, length(aString), 1);
+    aText.Text := aString;
+    if uSnippet_Text_ToPixels(aText) < (vLength - 6) then
     begin
-      Delete(aString,length(aString), 1);
-      aText.Text:= aString;
-      if uSnippet_Text_ToPixels(aText) < (vLength- 6) then
-        begin
-          aText.Text:= aText.Text + '...';
-          Result := aText.Text;
-          Break;
-        end;
+      aText.Text := aText.Text + '...';
+      result := aText.Text;
+      Break;
     end;
+  end;
 end;
 
-////////////////////////////////////////////////////////////////////////////////
-//Change Color events
+/// /////////////////////////////////////////////////////////////////////////////
+// Change Color events
 procedure uSnippet_Text_ChangeColor_OnMouseEnter(Sender: TObject; mColor: TColor);
 begin
-  TText(Sender).TextSettings.FontColor:= mColor;
-  TText(Sender).Cursor:= crHandPoint;
+  TText(Sender).TextSettings.FontColor := mColor;
+  TText(Sender).Cursor := crHandPoint;
 end;
 
 procedure uSnippet_Text_ChangeColor_OnMouseLeave(Sender: TObject; mColor: TColor);
 begin
-  TText(Sender).TextSettings.FontColor:= mColor;
-  TText(Sender).Cursor:= crDefault;
+  TText(Sender).TextSettings.FontColor := mColor;
+  TText(Sender).Cursor := crDefault;
 end;
-
 
 end.

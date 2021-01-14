@@ -59,7 +59,7 @@ function GetVideo(vNum, vLevel: Integer): String;
 
 procedure Create_Selection_Control;
 procedure Clear_Selection_Control;
-procedure Create_Selection_Tab(vTab, vLevel: Integer; isActive: Boolean);
+procedure Create_Selection_Tab(vTab, vCategorie, vLevel: Integer; isActive: Boolean);
 
 procedure Category(vEmuLevel, vIndex: Integer);
 
@@ -67,6 +67,7 @@ procedure Trigger_Emulator;
 procedure Trigger_Click(vTriggerImage: Integer);
 
 procedure Arcade_Category;
+procedure Consoles_Category;
 procedure SubHeader_Level(vCategory: Integer);
 
 procedure Slide_Right;
@@ -133,6 +134,16 @@ begin
     else if vType = 'background' then
       Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Consoles_D.p_Images + 'background.png')
   end
+  else
+  begin
+    if emulation.Consoles[vNum].Name = emulation.Consoles[8].Name then // uEmu_Emu info
+    begin
+      if vType = 'logo' then
+        Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Consoles_D.NES_D.Mame_p_Images + 'logo.png')
+      else if vType = 'background' then
+        Result.LoadFromFile(uDB_AUser.Local.EMULATORS.Consoles_D.NES_D.Mame_p_Images + 'background.png')
+    end;
+  end;
 end;
 
 function Get_Handhelds_Image(vNum: Integer; vType: String): TBitmap;
@@ -210,7 +221,7 @@ begin
   emulation.Selection_Ani.Enabled := False;
 end;
 
-procedure Create_Selection_Tab(vTab, vLevel: Integer; isActive: Boolean);
+procedure Create_Selection_Tab(vTab, vCategorie, vLevel: Integer; isActive: Boolean);
 begin
   emulation.Selection_Tab[vTab].Tab := TALTabItem.Create(emulation.Selection);
   emulation.Selection_Tab[vTab].Tab.Name := 'Emulator_' + IntToStr(vTab);
@@ -222,16 +233,16 @@ begin
   emulation.Selection_Tab[vTab].Background.Parent := emulation.Selection_Tab[vTab].Tab;
   emulation.Selection_Tab[vTab].Background.SetBounds(0, 4, emulation.Selection_Tab[vTab].Tab.Width, emulation.Selection_Tab[vTab].Tab.Height);
   emulation.Selection_Tab[vTab].Background.Visible := True;
-  emulation.Selection_Tab[vTab].Background.Bitmap := GetBitmap(vTab, vLevel, 'background');
+  emulation.Selection_Tab[vTab].Background.Bitmap := GetBitmap(vCategorie, vLevel, 'background');
 
-  {emulation.Selection_Tab[vTab].Video_Pre := TFmxPasLibVlcPlayer.Create(emulation.Selection_Tab[vTab].Tab);
-  emulation.Selection_Tab[vTab].Video_Pre.Name := 'Emulator_Video_' + vTab.ToString;
-  emulation.Selection_Tab[vTab].Video_Pre.Parent := emulation.Selection_Tab[vTab].Tab;
-  emulation.Selection_Tab[vTab].Video_Pre.Width := 400;
-  emulation.Selection_Tab[vTab].Video_Pre.Height := 400;
-  emulation.Selection_Tab[vTab].Video_Pre.SetVideoAspectRatio('4:3');
-  emulation.Selection_Tab[vTab].Video_Pre.WrapMode := TImageWrapMode.Fit;
-  emulation.Selection_Tab[vTab].Video_Pre.Visible := isActive;}
+  { emulation.Selection_Tab[vTab].Video_Pre := TFmxPasLibVlcPlayer.Create(emulation.Selection_Tab[vTab].Tab);
+    emulation.Selection_Tab[vTab].Video_Pre.Name := 'Emulator_Video_' + vTab.ToString;
+    emulation.Selection_Tab[vTab].Video_Pre.Parent := emulation.Selection_Tab[vTab].Tab;
+    emulation.Selection_Tab[vTab].Video_Pre.Width := 400;
+    emulation.Selection_Tab[vTab].Video_Pre.Height := 400;
+    emulation.Selection_Tab[vTab].Video_Pre.SetVideoAspectRatio('4:3');
+    emulation.Selection_Tab[vTab].Video_Pre.WrapMode := TImageWrapMode.Fit;
+    emulation.Selection_Tab[vTab].Video_Pre.Visible := isActive; }
 
   emulation.Selection_Tab[vTab].Logo := TImage.Create(emulation.Selection_Tab[vTab].Tab);
   emulation.Selection_Tab[vTab].Logo.Name := 'Emulator_Logo_' + vTab.ToString;
@@ -240,7 +251,7 @@ begin
   emulation.Selection_Tab[vTab].Logo.Height := 186;
   emulation.Selection_Tab[vTab].Logo.Position.X := (emulation.Selection.Width / 2) - 300;
   emulation.Selection_Tab[vTab].Logo.Position.Y := (emulation.Selection.Height / 2) - 93;
-  emulation.Selection_Tab[vTab].Logo.Bitmap := GetBitmap(vTab, vLevel, 'logo');
+  emulation.Selection_Tab[vTab].Logo.Bitmap := GetBitmap(vCategorie, vLevel, 'logo');
   emulation.Selection_Tab[vTab].Logo.OnMouseEnter := vEmu_Input.mouse.Image.OnMouseEnter;
   emulation.Selection_Tab[vTab].Logo.OnMouseLeave := vEmu_Input.mouse.Image.OnMouseLeave;
   emulation.Selection_Tab[vTab].Logo.OnClick := vEmu_Input.mouse.Image.OnMouseClick;
@@ -320,7 +331,25 @@ begin
     if uDB_AUser.Local.EMULATORS.Arcade_D.Mame then
       if uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Active then
         if vi = uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Position then
-          Create_Selection_Tab(vi, 1, True);
+          Create_Selection_Tab(vi, 0, 1, True);
+  end;
+  emulation.Selection.TabIndex := 0;
+end;
+
+procedure Consoles_Category;
+var
+  vi: Integer;
+begin
+  emulation.Level := 1;
+  emulation.Category_Num := 2;
+  Clear_Selection_Control;
+  Create_Selection_Control;
+  for vi := 0 to 29 do
+  begin
+    if uDB_AUser.Local.EMULATORS.Consoles_D.NES then
+      if uDB_AUser.Local.EMULATORS.Consoles_D.NES_D.Active then
+        if vi = uDB_AUser.Local.EMULATORS.Consoles_D.NES_D.Position then
+          Create_Selection_Tab(vi, 2, 1, True);
   end;
   emulation.Selection.TabIndex := 0;
 end;
@@ -333,7 +362,7 @@ begin
     1:
       ;
     2:
-      ;
+      Consoles_Category;
     3:
       ;
     4:
@@ -364,31 +393,31 @@ begin
     begin
       emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Arcade_D.Name;
       if uDB_AUser.Local.EMULATORS.Arcade_D.Active then
-        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Arcade);
+        Create_Selection_Tab(vi, vi, 0, uDB_AUser.Local.EMULATORS.Arcade);
     end
     else if vi = uDB_AUser.Local.EMULATORS.Computers_D.Position then
     begin
       emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Computers_D.Name;
       if uDB_AUser.Local.EMULATORS.Computers_D.Active then
-        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Computers);
+        Create_Selection_Tab(vi, vi, 0, uDB_AUser.Local.EMULATORS.Computers);
     end
     else if vi = uDB_AUser.Local.EMULATORS.Consoles_D.Position then
     begin
       emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Consoles_D.Name;
       if uDB_AUser.Local.EMULATORS.Consoles_D.Active then
-        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Consoles);
+        Create_Selection_Tab(vi, vi, 0, uDB_AUser.Local.EMULATORS.Consoles);
     end
     else if vi = uDB_AUser.Local.EMULATORS.Handhelds_D.Position then
     begin
       emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Handhelds_D.Name;
       if uDB_AUser.Local.EMULATORS.Handhelds_D.Active then
-        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Handhelds);
+        Create_Selection_Tab(vi, vi, 0, uDB_AUser.Local.EMULATORS.Handhelds);
     end
     else if vi = uDB_AUser.Local.EMULATORS.Pinballs_D.Position then
     begin
       emulation.Category[vi].Name := uDB_AUser.Local.EMULATORS.Pinballs_D.Name;
       if uDB_AUser.Local.EMULATORS.Pinballs_D.Active then
-        Create_Selection_Tab(vi, 0, uDB_AUser.Local.EMULATORS.Pinballs);
+        Create_Selection_Tab(vi, vi, 0, uDB_AUser.Local.EMULATORS.Pinballs);
     end
   end;
   emulation.Selection.TabIndex := vIndex;
@@ -402,8 +431,8 @@ begin
     begin
       emulation.Selection.Next();
       emulation.Number := emulation.Selection.TabIndex;
-//      if emulation.Selection_Tab[emulation.Active_Num].Logo_Gray.Enabled = False then
-//        emulation.Selection_Tab[emulation.Active_Num].Video_Pre.Resume;
+      // if emulation.Selection_Tab[emulation.Active_Num].Logo_Gray.Enabled = False then
+      // emulation.Selection_Tab[emulation.Active_Num].Video_Pre.Resume;
     end;
 
 end;

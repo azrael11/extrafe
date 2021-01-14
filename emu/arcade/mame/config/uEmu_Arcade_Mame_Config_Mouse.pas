@@ -88,6 +88,7 @@ implementation
 uses
   uLoad_AllTypes,
   uEmu_Arcade_Mame_AllTypes,
+  uEmu_Arcade_Mame_Config,
   uEmu_Arcade_Mame_Config_Directories,
   uEmu_Arcade_Mame_Config_Display,
   uEmu_Arcade_Mame_Config_Advanced,
@@ -121,7 +122,9 @@ end;
 { TEMU_ARCADE_MAME_CONFIG_BUTTON }
 procedure TEMU_ARCADE_MAME_CONFIG_BUTTON.onMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_advanced' then
+  if ContainsText(TButton(Sender).Name, 'Mame_Config_Button_') then
+    uEmu_Arcade_Mame_Config.Show_Panel(TButton(Sender).Tag)
+  else if extrafe.prog.State = 'mame_config_advanced' then
     uEmu_Arcade_Mame_Config_Advanced_ButtonClick(TButton(Sender).Name)
   else if extrafe.prog.State = 'mame_config_ogl_bgfx' then
     uEmu_Arcade_Mame_Config_OpenGL_BGFX_ButtonClick(TButton(Sender).Name)
@@ -153,14 +156,14 @@ end;
 { TEMU_ARCADE_MAME_CONFIG_TEXT }
 procedure TEMU_ARCADE_MAME_CONFIG_TEXT.onMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_dirs' then
+  if extrafe.prog.State = 'emu_mame_config_dirs' then
   begin
     if TText(Sender).Name = 'Mame_Dir_Roms_Add' then
       uEmu_Arcade_Mame_Config_Directories.Rom_Find_Path
     else if TText(Sender).TagFloat = 10 then
       uEmu_Arcade_Mame_Config_Directories.Rom_Delete_Path(TSpeedButton(Sender).Tag);
   end
-  else if extrafe.prog.State = 'mame_config_media' then
+  else if extrafe.prog.State = 'emu_mame_config_media' then
   begin
     if ContainsText(TText(Sender).Name, 'Mame_Dir_Media_Change_') then
       uEmu_Arcade_Mame_Config_Directories.Media_Find_Path(TText(Sender).Tag)
@@ -199,21 +202,21 @@ end;
 { TEMU_ARCADE_MAME_CONFIG_TRACKBAR }
 procedure TEMU_ARCADE_MAME_CONFIG_TRACKBAR.OnChange(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_display' then
+  if extrafe.prog.State = 'emu_mame_config_display' then
     uEmu_Arcade_Mame_Config_Display_TrackbarChange(TTrackBar(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_advanced' then
+  else if extrafe.prog.State = 'emu_mame_config_advanced' then
     uEmu_Arcade_Mame_Config_Advanced_TrackbarChange(TTrackBar(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_screen' then
+  else if extrafe.prog.State = 'emu_mame_config_screen' then
     uEmu_Arcade_Mame_Config_Screen_TrackbarOnChange(TTrackBar(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_vector' then
+  else if extrafe.prog.State = 'emu_mame_config_vector' then
     uEmu_Arcade_Mame_Config_Vector_TrackbarChange(TTrackBar(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_sound' then
+  else if extrafe.prog.State = 'emu_mame_config_sound' then
     uEmu_Arcade_Mame_Config_Sound_TrackbarOnChange(TTrackBar(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_controls' then
+  else if extrafe.prog.State = 'emu_mame_config_controls' then
     uEmu_Arcade_Mame_Config_Controllers_TrackbarOnChange(TTrackBar(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_misc' then
+  else if extrafe.prog.State = 'emu_mame_config_misc' then
     uEmu_Arcade_Mame_Config_Misc_TrackbarOnChange(TTrackBar(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_miscII' then
+  else if extrafe.prog.State = 'emu_mame_config_miscII' then
     uEmu_Arcade_Mame_Config_MiscII_TrackbarOnChange(TTrackBar(Sender).Name);
 
 end;
@@ -231,23 +234,23 @@ end;
 { TEMU_ARCADE_MAME_CONFIG_CHECKBOX }
 procedure TEMU_ARCADE_MAME_CONFIG_CHECKBOX.onMouseClick(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_display' then
+  if extrafe.prog.State = 'emu_mame_config_display' then
     uEmu_Arcade_Mame_Config_Display_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_advanced' then
+  else if extrafe.prog.State = 'emu_mame_config_advanced' then
     uEmu_Arcade_Mame_Config_Advanced_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_screen' then
+  else if extrafe.prog.State = 'emu_mame_config_screen' then
     uEmu_Arcade_Mame_Config_Screen_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_ogl_bgfx' then
+  else if extrafe.prog.State = 'emu_mame_config_ogl_bgfx' then
     uEmu_Arcade_Mame_Config_OpenGL_BGFX_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_sound' then
+  else if extrafe.prog.State = 'emu_mame_config_sound' then
     uEmu_Arcade_Mame_Config_Sound_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_controls' then
+  else if extrafe.prog.State = 'emu_mame_config_controls' then
     uEmu_Arcade_Mame_Config_Controllers_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_misc' then
+  else if extrafe.prog.State = 'emu_mame_config_misc' then
     uEmu_Arcade_Mame_Config_Misc_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_miscII' then
+  else if extrafe.prog.State = 'emu_mame_config_miscII' then
     uEmu_Arcade_Mame_Config_MiscII_CheckboxClick(TCheckBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_smp' then
+  else if extrafe.prog.State = 'emu_mame_config_smp' then
     uEmu_Arcade_Mame_Config_SMP_CheckboxClick(TCheckBox(Sender).Name);
 end;
 
@@ -264,23 +267,23 @@ end;
 { TEMU_ARCADE_MAME_CONFIG_COMBOBOX }
 procedure TEMU_ARCADE_MAME_CONFIG_COMBOBOX.OnChange(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_display' then
+  if extrafe.prog.State = 'emu_mame_config_display' then
     uEmu_Arcade_Mame_Config_Display_ComboboxChange(TComboBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_screen' then
+  else if extrafe.prog.State = 'emu_mame_config_screen' then
     uEmu_Arcade_Mame_Config_Screen_ComboboxOnChange(TComboBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_ogl_bgfx' then
+  else if extrafe.prog.State = 'emu_mame_config_ogl_bgfx' then
     uEmu_Arcade_Mame_Config_OpenGL_BGFX_ComboboxOnChange(TComboBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_sound' then
+  else if extrafe.prog.State = 'emu_mame_config_sound' then
     uEmu_Arcade_Mame_Config_Sound_ComboboxOnChange(TComboBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_controls' then
+  else if extrafe.prog.State = 'emu_mame_config_controls' then
     uEmu_Arcade_Mame_Config_Controllers_ComboboxOnChange(TComboBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_controlmapping' then
+  else if extrafe.prog.State = 'emu_mame_config_controlmapping' then
     uEmu_Arcade_Mame_Config_ControllerMapping_SetContMapping(TComboBox(Sender).ItemIndex, TComboBox(Sender).Tag)
-  else if extrafe.prog.State = 'mame_config_misc' then
+  else if extrafe.prog.State = 'emu_mame_config_misc' then
     uEmu_Arcade_Mame_Config_Misc_ComboboxOnChange(TComboBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_miscII' then
+  else if extrafe.prog.State = 'emu_mame_config_miscII' then
     uEmu_Arcade_Mame_Config_MiscII_ComboboxOnChange(TComboBox(Sender).Name)
-  else if extrafe.prog.State = 'mame_config_smp' then
+  else if extrafe.prog.State = 'emu_mame_config_smp' then
     uEmu_Arcade_Mame_Config_SMP_ComboboxOnChange(TComboBox(Sender).Name);
 end;
 
@@ -297,15 +300,15 @@ end;
 { TEMU_ARCADE_MAME_CONFIG_OPENDIALOG }
 procedure TEMU_ARCADE_MAME_CONFIG_OPENDIALOG.OnClose(Sender: TObject);
 begin
-  if extrafe.prog.State = 'mame_config_advanced' then
+  if extrafe.prog.State = 'emu_mame_config_advanced' then
     uEmu_Arcade_Mame_Config_Advanced_OpenDialogOnClose
-  else if extrafe.prog.State = 'mame_config_ogl_bgfx' then
+  else if extrafe.prog.State = 'emu_mame_config_ogl_bgfx' then
     uEmu_Arcade_Mame_Config_OpenGL_BGFX_OpenDialogOnClose
-  else if extrafe.prog.State = 'mame_config_ogl_shaders' then
+  else if extrafe.prog.State = 'emu_mame_config_ogl_shaders' then
     uEmu_Arcade_Mame_Config_OpenGL_Shaders_OpenDialog
-  else if extrafe.prog.State = 'mame_config_misc' then
+  else if extrafe.prog.State = 'emu_mame_config_misc' then
     uEmu_Arcade_Mame_Config_Misc_OpenDialog
-  else if extrafe.prog.State = 'mame_config_miscII' then
+  else if extrafe.prog.State = 'emu_mame_config_miscII' then
     uEmu_Arcade_Mame_Config_MiscII_Opendialog;
 end;
 
@@ -323,7 +326,7 @@ end;
 
 procedure TEMU_ARCADE_MAME_CONFIG_TABITEM.onMouseClick(Sender: TObject);
 begin
-  if (extrafe.prog.State = 'mame_config_dirs') or (extrafe.prog.State = 'mame_config_media') then
+  if (extrafe.prog.State = 'emu_mame_config_dirs') or (extrafe.prog.State = 'emu_mame_config_media') then
     uEmu_Arcade_Mame_Config_Directories.Tab_Click(TTabItem(Sender).Name);
 end;
 

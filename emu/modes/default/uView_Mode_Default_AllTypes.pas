@@ -77,6 +77,7 @@ type
     games: String;
     play_count_refresh_status: String;
     favorites: String;
+    fav_list: array [0 .. 255] of string;
     menu: TEMU_VIEW_MODE_XML_GAME_MENU;
   end;
 
@@ -226,12 +227,22 @@ type
   end;
 
 type
+  TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES_MOUSE_MENU_RECT = record
+    Rect: TRectangle;
+    Line: TImage;
+    Icon: TImage;
+  end;
+
+type
   TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES = record
     list: TImage;
     List_Blur: TBlurEffect;
+    Box_Img_Left_Up, Box_Img_Left_Down, Box_Img_Left, Box_Img_Right_Up, Box_Img_Right_Down, Box_Img_Right, Box_Img_Up, Box_Img_Down: TImage;
+    Mouse_Menu_Rect: array [0 .. 3] of TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES_MOUSE_MENU_RECT;
     Listbox: TVertScrollBox;
-    Line: array [0 .. 20] of TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES_LINE;
+    Line: array of TEMU_VIEW_MODE_DEFAULT_GAMELIST_GAMES_LINE;
     Selection: TGlowEffect;
+    Above: TPanel;
   end;
 
 type
@@ -274,6 +285,7 @@ type
     Back: TImage;
     Marquee: TImage;
     Game_Info: TEMU_VIEW_MODE_DEFAULT_MEDIA_ACTION_GAMEINFO;
+    Box_Img_Left_Up, Box_Img_Left_Down, Box_Img_Left, Box_Img_Right_Up, Box_Img_Right_Down, Box_Img_Right, Box_Img_Up, Box_Img_Down: TImage;
     Video_Back: TImage;
     Video: TFmxPasLibVlcPlayer;
     Video_Timer_Cont: TTimer;
@@ -441,6 +453,8 @@ type
     Selected: Integer;
     Old_Selected: Integer;
     Total_Games: Integer;
+    Mouse_Menu: Boolean;
+
   end;
 
 type
@@ -520,7 +534,11 @@ type
 
 type
   TEMU_VIEW_MODE_DEFAULT_VARIABLES = record
+    State: String;
     Query: TFDQuery;
+    Emulator_Path: String;
+    Emulator_Name: String;
+    Emulator_Extra_Commands: String;
     User_Num: Integer;
     Config_Open: Boolean;
     Lists_Open: Boolean;
@@ -615,7 +633,8 @@ begin
   begin
     if Emu_VM_Default_Var.Config_Open then
       uView_Mode_Default.Create_Configuration(Emu_VM_Default.main);
-    uEmu_Emu.Mouse_Action('Emu_Settings');
+    uEmu_Emu.Action('Emu_Settings');
+    uView_Mode_Default_Actions.Refresh;
   end;
 end;
 
@@ -625,6 +644,8 @@ procedure TEMU_VIEW_MODE_DEFAULT_VARIABLES_TIMERS_GAMELIST.OnTimer(Sender: TObje
 begin
   if Emu_VM_Default.Gamelist.Gamelist.Timer.Enabled then
   begin
+    if BASS_ChannelPlay(Emu_VM_Default_Var.sounds.Gen_Click, False) then
+      BASS_ChannelStop(Emu_VM_Default_Var.sounds.Gen_Click);
     if Emu_VM_Default_Var.Favorites_Open then
       uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.favorites.Roms)
     else
@@ -656,24 +677,6 @@ begin
             Emu_VM_Default.Media.Video.Video_Back.SetBounds(50, 130, 650, 488)
           else
             Emu_VM_Default.Media.Video.Video_Back.SetBounds(137, 130, 488, 650);
-        end;
-        if Emu_VM_Default_Var.Favorites_Open then
-        begin
-          if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.Gamelist.Selected] + '.png')
-          then
-            Emu_VM_Default.Media.Video.Marquee.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.favorites.Roms
-              [Emu_VM_Default_Var.Gamelist.Selected] + '.png')
-          else
-            Emu_VM_Default.Media.Video.Marquee.Bitmap := nil;
-        end
-        else
-        begin
-          if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.Gamelist.Roms[Emu_VM_Default_Var.Gamelist.Selected] + '.png')
-          then
-            Emu_VM_Default.Media.Video.Marquee.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.Gamelist.Roms
-              [Emu_VM_Default_Var.Gamelist.Selected] + '.png')
-          else
-            Emu_VM_Default.Media.Video.Marquee.Bitmap := nil;
         end;
         Emu_VM_Default.Media.Video.Game_Info.Layout.SetBounds(0, -50, Emu_VM_Default.Media.Video.Video_Back.width, 50);
         Emu_VM_Default.Media.Video.Game_Info.favorite.SetBounds(Emu_VM_Default.Media.Video.Game_Info.Layout.width - 60, 5, 60, 50);

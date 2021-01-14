@@ -1,0 +1,26 @@
+unit uEmu_Consoles_Nes_Actions;
+
+interface
+uses
+  System.Classes;
+
+procedure Action(vAction: String);
+
+procedure Exit_Nes;
+
+implementation
+
+procedure Action(vAction: String);
+begin
+  if vAction = 'Emu_Exit' then
+    Exit_Nes;
+  
+end;
+
+procedure Exit_Nes;
+begin
+
+end;
+
+
+end.

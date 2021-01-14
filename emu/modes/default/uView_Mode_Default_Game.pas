@@ -72,13 +72,14 @@ uses
   uLoad_AllTypes,
   uView_Mode_Default_Actions,
   uView_Mode_Default_AllTypes,
-  uView_Mode_Default_Mouse;
+  uView_Mode_Default_Mouse, uView_Mode_Default_Key;
 
 procedure Load_Menu;
 var
   vi: Integer;
 begin
-  extrafe.Prog.State := 'emu_mame_game';
+
+  Emu_VM_Default_Var.State := Emu_VM_Default_Var.State + '_game';
   vGame_Main := Emu_VM_Default_Var.gamelist.Selected;
 
   Info_Box;
@@ -155,11 +156,11 @@ begin
     vQuery := 'SELECT * FROM ' + Emu_XML.Game.Games + ' WHERE ROMNAME="' + Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.gamelist.Selected] + '"'
   else
     vQuery := 'SELECT * FROM ' + Emu_XML.Game.Games + ' WHERE ROMNAME="' + Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected] + '"';
-  uDB.Arcade_Query.Close;
-  uDB.Arcade_Query.SQL.Clear;
-  uDB.Arcade_Query.SQL.Add(vQuery);
-  uDB.Arcade_Query.Open;
-  uDB.Arcade_Query.First;
+  Emu_VM_Default_Var.Query.Close;
+  Emu_VM_Default_Var.Query.SQL.Clear;
+  Emu_VM_Default_Var.Query.SQL.Add(vQuery);
+  Emu_VM_Default_Var.Query.Open;
+  Emu_VM_Default_Var.Query.First;
 
   for vi := 0 to 12 do
   begin
@@ -200,36 +201,72 @@ begin
     Emu_VM_Default.GameMenu.Info.Text[vi].WordWrap := true;
     case vi of
       0:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('gamename').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('gamename') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('gamename').AsString;
+        end;
       1:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('romname').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('romname') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('romname').AsString;
+        end;
       2:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('year').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('year') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('year').AsString;
+        end;
       3:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('manufacturer').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('manufacturer') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('manufacturer').AsString;
+        end;
       4:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('displaytype').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('displaytype') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('displaytype').AsString;
+        end;
       5:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('refreshrate').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('refreshrate') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('refreshrate').AsString;
+        end;
       6:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('width').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('width') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('width').AsString;
+        end;
       7:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('height').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('height') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('height').AsString;
+        end;
       8:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('channels').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('channels') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('channels').AsString;
+        end;
       9:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('savestate').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('savestate') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('savestate').AsString;
+        end;
       10:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('emulation').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('emulation') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('emulation').AsString;
+        end;
       11:
-        Emu_VM_Default.GameMenu.Info.Text[vi].Text := uDB.Arcade_Query.FieldByName('status').AsString;
+        begin
+          if Emu_VM_Default_Var.Query.FindField('status') <> nil then
+            Emu_VM_Default.GameMenu.Info.Text[vi].Text := Emu_VM_Default_Var.Query.FieldByName('status').AsString;
+        end;
       12:
         begin
-          vStr := uDB.Arcade_Query.FieldByName('hiscore').AsString;
-          if vStr = '0' then
-            Emu_VM_Default.GameMenu.Info.Text[vi].Text := 'No'
-          else
-            Emu_VM_Default.GameMenu.Info.Text[vi].Text := 'Yes';
+          // vStr := Emu_VM_Default_Var.Query.FieldByName('hiscore').AsString;
+          // if vStr = '0' then
+          // Emu_VM_Default.GameMenu.Info.Text[vi].Text := 'No'
+          // else
+          Emu_VM_Default.GameMenu.Info.Text[vi].Text := 'Yes';
         end;
     end;
     Emu_VM_Default.GameMenu.Info.Text[vi].Visible := true;
@@ -631,6 +668,8 @@ begin
       Emu_VM_Default_Var.gamelist.Roms);
     uView_Mode_Default_Actions.Refresh_Scene(Emu_VM_Default_Var.gamelist.Selected, Emu_VM_Default_Var.gamelist.Roms);
   end;
+  Emu_VM_Default_Var.State := extrafe.prog.State;
+  Emu_VM_Default_Var.Game_Mode := False;
 end;
 
 procedure Splash;
@@ -643,7 +682,8 @@ begin
   Emu_VM_Default.GameMenu.PopUp.Back := TImage.Create(Emu_VM_Default.main);
   Emu_VM_Default.GameMenu.PopUp.Back.Name := 'Emu_Loading_Game';
   Emu_VM_Default.GameMenu.PopUp.Back.Parent := Emu_VM_Default.main;
-  Emu_VM_Default.GameMenu.PopUp.Back.SetBounds((uDB_AUser.Local.SETTINGS.Resolution.Half_Width - 250), ((uDB_AUser.Local.SETTINGS.Resolution.Half_Height - 200) - 150), 500, 500);
+  Emu_VM_Default.GameMenu.PopUp.Back.SetBounds((uDB_AUser.Local.Settings.Resolution.Half_Width - 250),
+    ((uDB_AUser.Local.Settings.Resolution.Half_Height - 200) - 150), 500, 500);
   Emu_VM_Default.GameMenu.PopUp.Back.Bitmap.LoadFromFile(Emu_XML.Images_Path + Emu_XML.main.Black_Opacity.image);
   Emu_VM_Default.GameMenu.PopUp.Back.WrapMode := TImageWrapMode.Tile;
   Emu_VM_Default.GameMenu.PopUp.Back.Visible := true;
@@ -688,11 +728,16 @@ begin
   Emu_VM_Default.GameMenu.PopUp.Snap.Parent := Emu_VM_Default.GameMenu.PopUp.Back;
   Emu_VM_Default.GameMenu.PopUp.Snap.SetBounds(60, 80, 380, 380);
   if Emu_VM_Default_Var.Favorites_Open then
+  begin
     Emu_VM_Default.GameMenu.PopUp.Snap.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + Emu_VM_Default_Var.favorites.Roms
       [Emu_VM_Default_Var.gamelist.Selected] + '.png')
+  end
   else
-    Emu_VM_Default.GameMenu.PopUp.Snap.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + Emu_VM_Default_Var.gamelist.Roms
-      [Emu_VM_Default_Var.gamelist.Selected] + '.png');
+  begin
+    if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected] + '.png') then
+      Emu_VM_Default.GameMenu.PopUp.Snap.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + Emu_VM_Default_Var.gamelist.Roms
+        [Emu_VM_Default_Var.gamelist.Selected] + '.png');
+  end;
   Emu_VM_Default.GameMenu.PopUp.Snap.WrapMode := TImageWrapMode.Stretch;
   Emu_VM_Default.GameMenu.PopUp.Snap.Visible := true;
 
@@ -712,12 +757,12 @@ begin
   Emu_VM_Default.GameMenu.PopUp.Play_V.Name := 'Emu_Loading_Game_Play_V';
   Emu_VM_Default.GameMenu.PopUp.Play_V.Parent := Emu_VM_Default.GameMenu.PopUp.Back;
   Emu_VM_Default.GameMenu.PopUp.Play_V.SetBounds(90, 460, 200, 30);
-  if Emu_VM_Default_Var.Favorites_Open then
+  { if Emu_VM_Default_Var.Favorites_Open then
     Emu_VM_Default.GameMenu.PopUp.Play_V.Text := uDB.Query_Select(Emu_VM_Default_Var.Query, 'play_count_id_' + Emu_VM_Default_Var.User_Num.ToString,
-      Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.gamelist.Selected])
-  else
+    Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.gamelist.Selected])
+    else
     Emu_VM_Default.GameMenu.PopUp.Play_V.Text := uDB.Query_Select(Emu_VM_Default_Var.Query, 'play_count_id_' + Emu_VM_Default_Var.User_Num.ToString,
-      Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected]);
+    Emu_XML.Game.play_count_refresh_status, 'romname', Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected]); }
   Emu_VM_Default.GameMenu.PopUp.Play_V.Font.Family := 'Tahoma';
   Emu_VM_Default.GameMenu.PopUp.Play_V.Font.Size := 18;
   Emu_VM_Default.GameMenu.PopUp.Play_V.TextSettings.HorzAlign := TTextAlign.Leading;
@@ -781,6 +826,7 @@ end;
 
 procedure Run_Game;
 begin
+
   Emu_VM_Default_Var.Game_Loading := true;
   Emu_VM_Default.Settings.Visible := False;
   Splash;
@@ -907,16 +953,16 @@ begin
   else
     romName := Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected];
   vGame_Timer.Enabled := False;
-  uEmu_Commands.Run_Game(Emu_XML.emu.exe, romName, Emu_XML.emu.path, 0);
-  play_int := Emu_VM_Default.GameMenu.PopUp.Play_V.Text.ToInteger;
-  Inc(play_int, 1);
+  uEmu_Commands.Run_Game(Emu_XML.emu.exe, Emu_VM_Default_Var.Emulator_Extra_Commands + ' ' + romName, Emu_VM_Default_Var.Emulator_Path, 0);
+  // play_int := Emu_VM_Default.GameMenu.PopUp.Play_V.Text.ToInteger;
+  // Inc(play_int, 1);
 
-  if Emu_VM_Default_Var.Favorites_Open then
-    uDB.Query_Update(uDB.Arcade_Query, Emu_XML.Game.play_count_refresh_status, 'play_count_id_' + uDB_AUser.Local.USER.Num.ToString, play_int.ToString,
-      'romname', Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.gamelist.Selected])
-  else
-    uDB.Query_Update(uDB.Arcade_Query, Emu_XML.Game.play_count_refresh_status, 'play_count_id_' + uDB_AUser.Local.USER.Num.ToString, play_int.ToString,
-      'romname', Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected]);
+  // if Emu_VM_Default_Var.Favorites_Open then
+  // uDB.Query_Update(Emu_VM_Default_Var.Query, Emu_XML.Game.play_count_refresh_status, 'play_count' + uDB_AUser.Local.USER.Num.ToString, play_int.ToString,
+  // 'romname', Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.gamelist.Selected])
+  // else
+  // uDB.Query_Update(Emu_VM_Default_Var.Query, Emu_XML.Game.play_count_refresh_status, 'play_count' + uDB_AUser.Local.USER.Num.ToString, play_int.ToString,
+  // 'romname', Emu_VM_Default_Var.gamelist.Roms[Emu_VM_Default_Var.gamelist.Selected]);
 
   FreeAndNil(Emu_VM_Default.GameMenu.PopUp.Back);
   Emu_VM_Default.Left_Blur.Enabled := False;

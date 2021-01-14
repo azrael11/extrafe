@@ -38,26 +38,7 @@ var
     else if vParam = 'homepath' then
       mame.Emu.Ini.CORE_SEARCH_homepath := vValue
     else if vParam = 'rompath' then
-    begin
-      v1Pos := Pos(';', vValue);
-      if v1Pos <> 0 then
-      begin
-        v1Line := vValue;
-        repeat
-          v1Pos := Pos(';', v1Line);
-          if v1Pos = 0 then
-            mame.Emu.Ini.CORE_SEARCH_rompath.Add(v1Line)
-          else
-          begin
-            v1Result := Trim(Copy(v1Line, 0, v1Pos - 1));
-            mame.Emu.Ini.CORE_SEARCH_rompath.Add(v1Result);
-            v1Line := Trim(Copy(v1Line, v1Pos + 1, length(v1Line) - (v1Pos)));
-          end;
-        until v1Pos = 0;
-      end
-      else
-        mame.Emu.Ini.CORE_SEARCH_rompath.Add(vValue);
-    end
+      mame.Emu.Ini.CORE_SEARCH_rompath := mame.Gamelist.RomsPath
     else if vParam = 'hashpath' then
       mame.Emu.Ini.CORE_SEARCH_hashpath := vValue
     else if vParam = 'samplepath' then
@@ -1273,7 +1254,7 @@ begin
   vSaveMameIni.Add('# FRONTEND COMMAND OPTIONS');
   vSaveMameIni.Add('#');
   vSaveMameIni.Add('dtd                       ' + IntToStr(mame.Emu.Ini.FRONTEND_COMMAND_dtd));
-  vSaveMameIni.SaveToFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini + 'mame.ini');
+  vSaveMameIni.SaveToFile(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.Ini);
   FreeAndNil(vSaveMameIni);
 end;
 

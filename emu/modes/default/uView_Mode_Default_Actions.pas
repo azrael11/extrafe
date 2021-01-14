@@ -30,8 +30,10 @@ procedure Refresh_Load_Icons(vSelected, vGames_Count: Integer; vList_Roms: TStri
 procedure Refresh_Load_Flyers;
 procedure Refresh_Get_BarInfo;
 
+procedure Show_Gamelist_Mouse_Menu(vShow: Boolean);
+
 procedure Exit_Default;
-procedure Exit_Action(vComes: String);
+procedure Exit_Action;
 procedure Move_Gamelist(vMove_Action: String);
 procedure Refresh_After_Key;
 
@@ -146,7 +148,7 @@ begin
   Emu_VM_Default.Right_Blur.Enabled := not Emu_VM_Default_Var.Filters_Open;
 
   Emu_VM_Default_Var.Filters_Open := not Emu_VM_Default_Var.Filters_Open;
-  uEmu_Emu.Mouse_Action('Emu_Gamelist_Filters_Icon');
+  uEmu_Emu.Action('Emu_Gamelist_Filters_Icon');
 end;
 
 procedure Refresh;
@@ -161,7 +163,7 @@ begin
   begin
     Refresh_Gamelist(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Old_Selected, Emu_VM_Default_Var.Gamelist.Total_Games,
       Emu_VM_Default_Var.Gamelist.Games, Emu_VM_Default_Var.Gamelist.Roms, Emu_VM_Default_Var.Gamelist.Paths);
-    // Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Roms);
+    Refresh_Scene(Emu_VM_Default_Var.Gamelist.Selected, Emu_VM_Default_Var.Gamelist.Roms);
   end;
 end;
 
@@ -201,7 +203,7 @@ begin
   begin
     if ((vSelected + 10) + vi < 20) or (vSelected + vi >= vGames_Count + 10) then
     begin
-      Emu_VM_Default.Gamelist.Games.Line[vi].Text.Text := '';
+      Emu_VM_Default.Gamelist.Games.Line[vi].Text.Text := ' ';
       ri := -1;
     end
     else
@@ -220,7 +222,10 @@ begin
       for ki := 0 to vList_Path.Count - 1 do
       begin
         if FileExists(vList_Path.Strings[ki] + '\' + vList_Roms[ri] + '.zip') then
-          Emu_VM_Default.Gamelist.Games.Line[vi].Text.Color := TAlphaColorRec.White
+        begin
+          Emu_VM_Default.Gamelist.Games.Line[vi].Text.Color := TAlphaColorRec.White;
+          Break;
+        end
         else
           Emu_VM_Default.Gamelist.Games.Line[vi].Text.Color := TAlphaColorRec.Red;
       end;
@@ -236,20 +241,36 @@ end;
 
 procedure Refresh_Scene(vSelected: Integer; vList_Roms: TStringlist);
 begin
+  if Emu_VM_Default_Var.Favorites_Open then
+  begin
+    if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.Gamelist.Selected] + '.png') then
+      Emu_VM_Default.Media.Video.Marquee.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.favorites.Roms
+        [Emu_VM_Default_Var.Gamelist.Selected] + '.png')
+    else
+      Emu_VM_Default.Media.Video.Marquee.Bitmap := nil;
+  end
+  else
+  begin
+    if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.Gamelist.Roms[Emu_VM_Default_Var.Gamelist.Selected] + '.png') then
+      Emu_VM_Default.Media.Video.Marquee.Bitmap.LoadFromFile(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Marquees + Emu_VM_Default_Var.Gamelist.Roms
+        [Emu_VM_Default_Var.Gamelist.Selected] + '.png')
+    else
+      Emu_VM_Default.Media.Video.Marquee.Bitmap := nil;
+  end;
   if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4') then
   begin
-    { Emu_VM_Default.Media.Video.Video_Timer_Cont.Enabled := False;
-      Emu_VM_Default_Var.Video.Loaded := False;
-      Emu_VM_Default_Var.Video.Active_Video := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4';
-      Emu_VM_Default.Media.Video.Video.Play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4');
-      Emu_VM_Default_Var.Video.Times := 0; }
+{    Emu_VM_Default.Media.Video.Video_Timer_Cont.Enabled := False;
+    Emu_VM_Default_Var.Video.Loaded := False;
+    Emu_VM_Default_Var.Video.Active_Video := uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4';
+    Emu_VM_Default.Media.Video.Video.Play(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Videos + vList_Roms[vSelected] + '.mp4');
+    Emu_VM_Default_Var.Video.Times := 0;}
   end
   else
   begin
     if FileExists(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + vList_Roms[vSelected] + '.png') then
       Emu_VM_Default.Media.Video.Video.PlayNormal(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + vList_Roms[vSelected] + '.png')
     else
-      Emu_VM_Default.Media.Video.Video.PlayNormal(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + 'imagenotfound.png');
+      Emu_VM_Default.Media.Video.Video.PlayNormal(uDB_AUser.Local.EMULATORS.Arcade_D.Media.Snapshots + 'image_not_found.png');
     Refresh_Load_Flyers;
   end;
 end;
@@ -276,17 +297,17 @@ procedure Refresh_Get_BarInfo;
 begin
   if Emu_VM_Default_Var.Favorites_Open then
   begin
-    Emu_VM_Default.Media.Video.Game_Info.Players_Value.Text := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname',
+    Emu_VM_Default.Media.Video.Game_Info.Players_Value.Text := uDB.Query_Select(uDB.Arcade_Query, 'players', 'nplayers', 'romname',
       Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.Gamelist.Selected]);
-    Emu_VM_Default_Var.favorites.game_is := uDB.Query_Select(Emu_VM_Default_Var.Query, 'fav_id_' + Emu_VM_Default_Var.User_Num.ToString, Emu_XML.game.favorites,
-      'romname', Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.Gamelist.Selected]).ToBoolean;
+    // Emu_VM_Default_Var.favorites.game_is := uDB.Query_Select(Emu_VM_Default_Var.Query, 'fav_id_' + Emu_VM_Default_Var.User_Num.ToString, Emu_XML.game.favorites,
+    // 'romname', Emu_VM_Default_Var.favorites.Roms[Emu_VM_Default_Var.Gamelist.Selected]).ToBoolean;
   end
   else
   begin
-    Emu_VM_Default.Media.Video.Game_Info.Players_Value.Text := uDB.Query_Select(uDB.Arcade_Query, 'nplayers', 'games', 'romname',
+    Emu_VM_Default.Media.Video.Game_Info.Players_Value.Text := uDB.Query_Select(uDB.Arcade_Query, 'players', 'nplayers', 'romname',
       Emu_VM_Default_Var.Gamelist.Roms[Emu_VM_Default_Var.Gamelist.Selected]);
-    Emu_VM_Default_Var.favorites.game_is := uDB.Query_Select(Emu_VM_Default_Var.Query, 'fav_id_' + Emu_VM_Default_Var.User_Num.ToString, Emu_XML.game.favorites,
-      'romname', Emu_VM_Default_Var.Gamelist.Roms[Emu_VM_Default_Var.Gamelist.Selected]).ToBoolean;
+    // Emu_VM_Default_Var.favorites.game_is := uDB.Query_Select(Emu_VM_Default_Var.Query, 'fav_id_' + Emu_VM_Default_Var.User_Num.ToString, Emu_XML.game.favorites,
+    // 'romname', Emu_VM_Default_Var.Gamelist.Roms[Emu_VM_Default_Var.Gamelist.Selected]).ToBoolean;
   end;
   Emu_VM_Default.Media.Video.Game_Info.Favorite.Visible := Emu_VM_Default_Var.favorites.game_is;
 end;
@@ -349,7 +370,7 @@ begin
   end;
 end;
 
-procedure Exit_Action(vComes: String);
+procedure Exit_Action;
 begin
   if Emu_VM_Default_Var.Config_Open then
     Configuration_Action
@@ -362,10 +383,7 @@ begin
   else
   begin
     Exit_Default;
-    if vComes = 'Keyboard' then
-      uEmu_Emu.Key_Action('Exit')
-    else if vComes = 'Mouse' then
-      uEmu_Emu.Mouse_Action('Emu_Exit');
+    uEmu_Emu.Action('Emu_Exit');
   end;
 end;
 
@@ -378,6 +396,16 @@ begin
   end
   else
     uView_Mode_Default_Game.Load_Menu;
+end;
+
+procedure Show_Gamelist_Mouse_Menu(vShow: Boolean);
+begin
+  Emu_VM_Default.Gamelist.Games.Mouse_Menu_Rect[0].Rect.Visible := vShow;
+  Emu_VM_Default.Gamelist.Games.Mouse_Menu_Rect[1].Rect.Visible := vShow;
+  Emu_VM_Default.Gamelist.Games.Mouse_Menu_Rect[2].Rect.Visible := vShow;
+  Emu_VM_Default.Gamelist.Games.Mouse_Menu_Rect[3].Rect.Visible := vShow;
+  Emu_VM_Default.Gamelist.Games.Above.Visible := not vShow;
+  Emu_VM_Default_Var.Gamelist.Mouse_Menu := not Emu_VM_Default_Var.Gamelist.Mouse_Menu;
 end;
 
 procedure Favorites_Open;
@@ -658,26 +686,33 @@ begin
   Emu_VM_Default_Var.Gamelist.Games.Clear;
   Emu_VM_Default_Var.Gamelist.Roms.Clear;
 
-  uDB.Arcade_Query.Close;
-  uDB.Arcade_Query.SQL.Clear;
-  uDB.Arcade_Query.SQL.Text := 'SELECT gamename, romname FROM games ORDER BY gamename ASC';
-  uDB.Arcade_Query.DisableControls;
-  uDB.Arcade_Query.Open;
-  uDB.Arcade_Query.First;
+  Emu_VM_Default_Var.Query.Close;
+  Emu_VM_Default_Var.Query.SQL.Clear;
+  Emu_VM_Default_Var.Query.SQL.Text := 'SELECT gamename, romname FROM games ORDER BY gamename ASC';
+  Emu_VM_Default_Var.Query.DisableControls;
+  Emu_VM_Default_Var.Query.Open;
+  Emu_VM_Default_Var.Query.First;
 
   try
-    uDB.Arcade_Query.First;
-    while not uDB.Arcade_Query.Eof do
+    Emu_VM_Default_Var.Query.First;
+    while not Emu_VM_Default_Var.Query.Eof do
     begin
-      Emu_VM_Default_Var.Gamelist.Games.Add(uDB.Arcade_Query.FieldByName('gamename').AsString);
-      Emu_VM_Default_Var.Gamelist.Roms.Add(uDB.Arcade_Query.FieldByName('romname').AsString);
-      uDB.Arcade_Query.Next;
+      Emu_VM_Default_Var.Gamelist.Games.Add(Emu_VM_Default_Var.Query.FieldByName('gamename').AsString);
+      Emu_VM_Default_Var.Gamelist.Roms.Add(Emu_VM_Default_Var.Query.FieldByName('romname').AsString);
+      Emu_VM_Default_Var.Query.Next;
     end;
   finally
-    uDB.Arcade_Query.EnableControls;
+    Emu_VM_Default_Var.Query.EnableControls;
   end;
 
-  Emu_VM_Default_Var.Gamelist.Total_Games := uDB.Arcade_Query.RecordCount;
+  Emu_VM_Default_Var.Query.Close;
+  Emu_VM_Default_Var.Query.SQL.Clear;
+  Emu_VM_Default_Var.Query.SQL.Text := 'SELECT Count(*) FROM games';
+  Emu_VM_Default_Var.Query.DisableControls;
+  Emu_VM_Default_Var.Query.Open;
+  Emu_VM_Default_Var.Query.First;
+
+  Emu_VM_Default_Var.Gamelist.Total_Games := Emu_VM_Default_Var.Query.Fields[0].AsInteger;
   Emu_VM_Default.Gamelist.Lists.Lists_Text.Text := Emu_VM_Default_Var.Lists.Selected;
   Emu_VM_Default_Var.Gamelist.Selected := 0;
   Emu_VM_Default_Var.Gamelist.Old_Selected := -100;
@@ -737,25 +772,25 @@ begin
     Refresh_After_Key;
   end;
 
-  if vMove_Timer_Interval = 800 then
-    vMove_Timer.Interval := 600
-  else if vMove_Timer_Interval = 600 then
-    vMove_Timer.Interval := 450
-  else if vMove_Timer_Interval = 450 then
+  if vMove_Timer_Interval = 400 then
+    vMove_Timer.Interval := 350
+  else if vMove_Timer_Interval = 350 then
     vMove_Timer.Interval := 300
   else if vMove_Timer_Interval = 300 then
+    vMove_Timer.Interval := 250
+  else if vMove_Timer_Interval = 250 then
     vMove_Timer.Interval := 200
   else if vMove_Timer_Interval = 200 then
-    vMove_Timer.Interval := 100
-  else if vMove_Timer_Interval = 100 then
+    vMove_Timer.Interval := 150
+  else if vMove_Timer_Interval = 150 then
     vMove_Timer.Interval := 50
   else if vMove_Timer_Interval = 50 then
     vMove_Timer.Interval := 20
   else if vMove_Timer_Interval = 15 then
-    vMove_Timer.Interval := 800;
+    vMove_Timer.Interval := 400;
 
   vMove_Timer_Interval := vMove_Timer.Interval;
-
+  BASS_ChannelPlay(Emu_VM_Default_Var.sounds.Gen_Click, False);
 end;
 
 end.

@@ -16,16 +16,14 @@ const
     'Marquees', 'Pcbs', 'Snapshots', 'Titles', 'Artwork Preview', 'Bosses', 'Ends', 'How To', 'Logos', 'Scores', 'Selects', 'Versus', 'Game Over', 'Warnings',
     'Stamps', 'Soundtracks', 'Support Files', 'Videos');
 
-procedure Load;
+procedure Load(vMain_Panel, vRight_Panel, vLeft_Panel: TPanel);
 
 procedure Free_Panel(vFreePanel_Num: Integer);
 procedure Show_Panel(vShow: Integer);
 
 var
   mame_config_menu_panel: Integer;
-  mame_config_panel: TPanel;
-  mame_config_left: TPanel;
-  mame_config_right: TPanel;
+  mame_main, mame_left, mame_right: TPanel;
 
 implementation
 
@@ -33,7 +31,6 @@ uses
   uDB_AUser,
   uLoad_AllTypes,
   uEmu_Arcade_Mame_AllTypes,
-  uEmu_Arcade_Mame_Mouse,
   uEmu_Arcade_Mame_Config_Directories,
   uEmu_Arcade_Mame_Config_Display,
   uEmu_Arcade_Mame_Config_Advanced,
@@ -47,26 +44,29 @@ uses
   uEmu_Arcade_Mame_Config_Miscellaneous,
   uEmu_Arcade_Mame_Config_MiscellaneousII,
   uEmu_Arcade_Mame_Config_Snap_Movie_Playback,
-  uView_Mode;
+  uView_Mode,
+  uView_Mode_Default_AllTypes;
 
-procedure Load;
+procedure Load(vMain_Panel, vRight_Panel, vLeft_Panel: TPanel);
 var
   vi: Integer;
 begin
-  uView_Mode.Set_Config_Panels(uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode, mame_config_panel, mame_config_left, mame_config_right);
+  mame_main := vMain_Panel;
+  mame_left := vLeft_Panel;
+  mame_right := vRight_Panel;
 
-  if extrafe.prog.State = 'mame' then
-    uLoad_AllTypes.CreateHeader(mame_config_panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.DeepSkyBlue, 'Mame Global Configuration', False, nil)
-  else if extrafe.prog.State = 'mame_game' then
-    uLoad_AllTypes.CreateHeader(mame_config_panel, 'IcoMoon-Free', #$e994, TAlphaColorRec.Limegreen, 'Configuration For "Game In Here"', False, nil);
+  if extrafe.prog.State = 'emu_mame' then
+    uLoad_AllTypes.CreateHeader(mame_main, 'IcoMoon-Free', #$e994, TAlphaColorRec.DeepSkyBlue, 'Mame Global Configuration', False, nil)
+  else if extrafe.prog.State = 'emu_mame_game' then
+    uLoad_AllTypes.CreateHeader(mame_main, 'IcoMoon-Free', #$e994, TAlphaColorRec.Limegreen, 'Configuration For "Game In Here"', False, nil);
 
   for vi := 0 to 12 do
   begin
-    vMame.Config.Scene.Left_Buttons[vi] := TButton.Create(mame_config_left);
-    vMame.Config.Scene.Left_Buttons[vi].Name := 'Mame_Config_Button_' + IntToStr(vi);
-    vMame.Config.Scene.Left_Buttons[vi].Parent := mame_config_left;
+    vMame.Config.Scene.Left_Buttons[vi] := TButton.Create(mame_left);
+    vMame.Config.Scene.Left_Buttons[vi].Name := 'Mame_Config_Button_' + vi.ToString;
+    vMame.Config.Scene.Left_Buttons[vi].Parent := mame_left;
     vMame.Config.Scene.Left_Buttons[vi].SetBounds(10, 20 + ((vi * 22) + (vi * 10)), 130, 22);
-    vMame.Config.Scene.Left_Buttons[vi].OnClick := mame.Input.Mouse.Button.OnMouseClick;
+    vMame.Config.Scene.Left_Buttons[vi].OnClick := mame.Config.Input.Mouse.Button.OnMouseClick;
     vMame.Config.Scene.Left_Buttons[vi].Text := cMame_Config_Buttons_Names[vi];
     vMame.Config.Scene.Left_Buttons[vi].Tag := vi;
     vMame.Config.Scene.Left_Buttons[vi].Visible := True;
@@ -74,10 +74,10 @@ begin
 
   for vi := 0 to 12 do
   begin
-    vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(mame_config_right);
-    vMame.Config.Scene.Right_Panels[vi].Name := 'Mame_Config_A_Panel_' + IntToStr(vi);
-    vMame.Config.Scene.Right_Panels[vi].Parent := mame_config_right;
-    vMame.Config.Scene.Right_Panels[vi].SetBounds(0, 0, mame_config_right.Width, mame_config_right.Height);
+    vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(mame_right);
+    vMame.Config.Scene.Right_Panels[vi].Name := 'Mame_Config_A_Panel_' + vi.ToString;
+    vMame.Config.Scene.Right_Panels[vi].Parent := mame_right;
+    vMame.Config.Scene.Right_Panels[vi].SetBounds(0, 0, mame_right.Width, mame_right.Height);
     vMame.Config.Scene.Right_Panels[vi].Tag := vi;
     vMame.Config.Scene.Right_Panels[vi].Visible := False;
   end;
@@ -101,10 +101,10 @@ begin
       FreeAndNil(vMame.Config.Scene.Right_Panels[vi]);
     for vi := 0 to 12 do
     begin
-      vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(mame_config_right);
+      vMame.Config.Scene.Right_Panels[vi] := TPanel.Create(mame_right);
       vMame.Config.Scene.Right_Panels[vi].Name := 'Mame_Config_A_Panel_' + IntToStr(vi);
-      vMame.Config.Scene.Right_Panels[vi].Parent := mame_config_right;
-      vMame.Config.Scene.Right_Panels[vi].SetBounds(0, 0, mame_config_right.Width, mame_config_right.Height);
+      vMame.Config.Scene.Right_Panels[vi].Parent := mame_right;
+      vMame.Config.Scene.Right_Panels[vi].SetBounds(0, 0, mame_right.Width, mame_right.Height);
       vMame.Config.Scene.Right_Panels[vi].Tag := vi;
       vMame.Config.Scene.Right_Panels[vi].Visible := False;
     end;
@@ -119,7 +119,7 @@ begin
       begin
         uEmu_Arcade_Mame_Config_Directories.Load;
         vMame.Config.Scene.Right_Panels[0].Visible := True;
-        extrafe.prog.State := 'mame_config_dirs';
+        extrafe.prog.State := 'emu_mame_config_dirs';
         vMame.Config.Panel.Dirs.TabControl.TabIndex := 0;
         mame_config_menu_panel := 0;
       end;
@@ -127,84 +127,84 @@ begin
       begin
         uEmu_Arcade_Mame_Config_Display.Load;
         vMame.Config.Scene.Right_Panels[1].Visible := True;
-        extrafe.prog.State := 'mame_config_display';
+        extrafe.prog.State := 'emu_mame_config_display';
         mame_config_menu_panel := 1;
       end;
     2:
       begin
         uEmu_Arcade_Mame_Config_Create_Advanced_Panel;
         vMame.Config.Scene.Right_Panels[2].Visible := True;
-        extrafe.prog.State := 'mame_config_advanced';
+        extrafe.prog.State := 'emu_mame_config_advanced';
         mame_config_menu_panel := 2;
       end;
     3:
       begin
         uEmu_Arcade_Mame_Config_Create_Screen_Panel;
         vMame.Config.Scene.Right_Panels[3].Visible := True;
-        extrafe.prog.State := 'mame_config_screen';
+        extrafe.prog.State := 'emu_mame_config_screen';
         mame_config_menu_panel := 3;
       end;
     4:
       begin
         uEmu_Arcade_Mame_Config_Create_OpenGL_BGFX_Panel;
         vMame.Config.Scene.Right_Panels[4].Visible := True;
-        extrafe.prog.State := 'mame_config_ogl_bgfx';
+        extrafe.prog.State := 'emu_mame_config_ogl_bgfx';
         mame_config_menu_panel := 4;
       end;
     5:
       begin
         uEmu_Arcade_Mame_Config_Create_OpenGL_Shaders_Panel;
         vMame.Config.Scene.Right_Panels[5].Visible := True;
-        extrafe.prog.State := 'mame_config_ogl_shaders';
+        extrafe.prog.State := 'emu_mame_config_ogl_shaders';
         mame_config_menu_panel := 5;
       end;
     6:
       begin
         uEmu_Arcade_Mame_Config_Create_Vector_Panel;
         vMame.Config.Scene.Right_Panels[6].Visible := True;
-        extrafe.prog.State := 'mame_config_vector';
+        extrafe.prog.State := 'emu_mame_config_vector';
         mame_config_menu_panel := 6;
       end;
     7:
       begin
         uEmu_Arcade_Mame_Config_Create_Sound_Panel;
         vMame.Config.Scene.Right_Panels[7].Visible := True;
-        extrafe.prog.State := 'mame_config_sound';
+        extrafe.prog.State := 'emu_mame_config_sound';
         mame_config_menu_panel := 7;
       end;
     8:
       begin
         uEmu_Arcade_Mame_Config_Create_Controllers_Panel;
         vMame.Config.Scene.Right_Panels[8].Visible := True;
-        extrafe.prog.State := 'mame_config_controls';
+        extrafe.prog.State := 'emu_mame_config_controls';
         mame_config_menu_panel := 8;
       end;
     9:
       begin
         uEmu_Arcade_Mame_Config_Create_ControllerMapping_Panel;
         vMame.Config.Scene.Right_Panels[9].Visible := True;
-        extrafe.prog.State := 'mame_config_controlmapping';
+        extrafe.prog.State := 'emu_mame_config_controlmapping';
         mame_config_menu_panel := 9;
       end;
     10:
       begin
         uEmu_Arcade_Mame_Config_Create_Miscellaneous_Panel;
         vMame.Config.Scene.Right_Panels[10].Visible := True;
-        extrafe.prog.State := 'mame_config_misc';
+        extrafe.prog.State := 'emu_mame_config_misc';
         mame_config_menu_panel := 10;
       end;
     11:
       begin
         uEmu_Arcade_Mame_Config_Create_MiscellaneousII_Panel;
         vMame.Config.Scene.Right_Panels[11].Visible := True;
-        extrafe.prog.State := 'mame_config_miscII';
+        extrafe.prog.State := 'emu_mame_config_miscII';
         mame_config_menu_panel := 11;
       end;
     12:
       begin
         uEmu_Arcade_Mame_Config_Create_Snap_Movie_Playback_Panel;
         vMame.Config.Scene.Right_Panels[12].Visible := True;
-        extrafe.prog.State := 'mame_config_smp';
+        extrafe.prog.State := 'emu_mame_config_smp';
         mame_config_menu_panel := 12;
       end;
   end;

@@ -1,0 +1,19 @@
+unit uArcade_Actions;
+
+interface
+uses
+  System.Classes;
+
+function Fav_Get_Num(vEmulator_Name, vList_Name: String): Integer;
+
+
+implementation
+
+function Fav_Get_Num(vEmulator_Name, vList_Name: String): Integer;
+begin
+  if vEmulator_Name = 'mame' then
+    Result
+end;
+
+
+end.

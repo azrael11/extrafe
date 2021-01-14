@@ -88,8 +88,9 @@ type
     Cancel: TButton;
     Next: TButton;
     Back: TButton;
-    Status: String;
+    Status: Integer;
     Choosen: String;
+    IsEmuAlReadyInstalled: Boolean;
     Emu_Path: String;
   end;
 
@@ -99,26 +100,38 @@ type
     Main: TEMU_NES_INSTALL_MAIN;
   end;
 
+type
+  TINSTALATION_STATE = (vChoose, vInstall);
+
 procedure uEmulation_Consoles_Nes_Install;
 procedure uEmulation_Consoles_Nes_Install_Free;
 
-procedure uEmulation_Consoles_Nes_Slide_To_Next;
-procedure uEmulation_Consoles_Nes_Slide_To_Previous;
+procedure Slide_To_Next;
+procedure Slide_To_Previous;
 
 procedure Create_Tab1;
 procedure Create_Tab2;
-procedure uEmulation_Consoles_Nes_ShowEmulatorInfo(vName: String);
 procedure Create_Tab3;
-procedure Create_Tab4_1;
-procedure Create_Tab4_2;
+procedure Create_Tab4;
 procedure Create_Tab5;
+procedure Create_Tab6;
 
 procedure ShowButtons;
 
 procedure uEmulation_Consoles_Nes_Installation;
 
-const
-  cNes_Emu_Image: array [0 .. 3] of string = ('punes.png', 'ines.png', 'nestopia.png', 'mame_nes.png');
+procedure ShowEmulatorInfo(vName: String);
+
+procedure Emulator_MameNes(vState: TINSTALATION_STATE);
+procedure Emulator_PuNes(vState: TINSTALATION_STATE);
+procedure Emulator_Fceux(vState: TINSTALATION_STATE);
+procedure Emulator_Mesen(vState: TINSTALATION_STATE);
+procedure Emulator_NestopiaEU(vState: TINSTALATION_STATE);
+procedure Emulator_Higan(vState: TINSTALATION_STATE);
+procedure Emulator_JNes(vState: TINSTALATION_STATE);
+procedure Emulator_Nintendulator(vState: TINSTALATION_STATE);
+procedure Emulator_QuickNes(vState: TINSTALATION_STATE);
+procedure Emulator_RockNes(vState: TINSTALATION_STATE);
 
 var
   Nes_I: TEMU_NES_INSTALL;
@@ -134,14 +147,15 @@ uses
   uEmu_Consoles_Nes_AllTypes,
   uMain_Config_Emulation_Consoles_Scripts_Mouse,
   uDB_AUser,
-  uDB;
+  uDB,
+  uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators;
 
 procedure uEmulation_Consoles_Nes_Install;
 var
   vi: Integer;
 begin
   extrafe.prog.State := 'main_config_install_emulator';
-  Nes_I.Main.Status := 'phase_1';
+  Nes_I.Main.Status := 1;
 
   mainScene.Config.Main.Left_Blur.Enabled := True;
   mainScene.Config.Main.R.Emulators.Panel_Blur.Enabled := True;
@@ -186,9 +200,9 @@ begin
   Create_Tab1;
   Create_Tab2;
   Create_Tab3;
-  Create_Tab4_1;
-  Create_Tab4_2;
+  Create_Tab4;
   Create_Tab5;
+  Create_Tab6;
 
   Nes_I.Main.Next := TButton.Create(Nes_I.Main.Panel);
   Nes_I.Main.Next.Name := 'Script_Nes_Install_Main_Next';
@@ -228,20 +242,19 @@ end;
 
 procedure ShowButtons;
 begin
-  if Nes_I.Main.Status = 'phase_1' then
+  if Nes_I.Main.Status = 1 then
   begin
     Nes_I.Main.Next.Visible := True;
     Nes_I.Main.Back.Visible := false;
     Nes_I.Main.Cancel.Visible := True;
   end
-  else if (Nes_I.Main.Status = 'phase_2') or (Nes_I.Main.Status = 'phase_3') or (Nes_I.Main.Status = 'phase_4_1') or
-    (Nes_I.Main.Status = 'phase_4_2') then
+  else if Nes_I.Main.Status in [2 .. 5] then
   begin
     Nes_I.Main.Next.Visible := True;
     Nes_I.Main.Back.Visible := True;
     Nes_I.Main.Cancel.Visible := True;
   end
-  else if Nes_I.Main.Status = 'final' then
+  else if Nes_I.Main.Status = 6 then
   begin
     Nes_I.Main.Next.Visible := false;
     Nes_I.Main.Back.Visible := false;
@@ -249,61 +262,97 @@ begin
   end;
 end;
 
-procedure uEmulation_Consoles_Nes_Slide_To_Next;
+procedure Slide_To_Next;
 begin
-  if Nes_I.Main.Status = 'phase_1' then
-  begin
-    Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[1], TTabTransition.Slide, TTabTransitionDirection.Normal);
-    Nes_I.Main.Status := 'phase_2';
-  end
-  else if Nes_I.Main.Status = 'phase_2' then
-  begin
-    if Nes_I.Main.Choosen = 'Mame NES' then
-    begin
-      Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[2], TTabTransition.Slide, TTabTransitionDirection.Normal);
-      Nes_I.Main.Status := 'phase_3';
-    end
-    else
-      ShowMessage('Please Select an emulator with ready installation script');
-  end
-  else if Nes_I.Main.Status = 'phase_3' then
-  begin
-    if Nes_I.Main.Tab3.Radio_1.IsChecked then
-    begin
-      Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[3], TTabTransition.Slide, TTabTransitionDirection.Normal);
-      Nes_I.Main.Status := 'phase_4_1';
-    end
-    else if Nes_I.Main.Tab3.Radio_2.IsChecked then
-    begin
-      Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[4], TTabTransition.Slide, TTabTransitionDirection.Normal);
-      Nes_I.Main.Status := 'phase_4_2';
-    end;
-  end
-  else if (Nes_I.Main.Status = 'phase_4_1') or (Nes_I.Main.Status = 'phase_4_2') then
-  begin
-    Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[5], TTabTransition.Slide, TTabTransitionDirection.Normal);
-    Nes_I.Main.Status := 'final';
+  case Nes_I.Main.Status of
+    1:
+      Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[1], TTabTransition.Slide, TTabTransitionDirection.Normal);
+    2:
+      begin
+        if Nes_I.Main.Choosen <> '' then
+        begin
+          if Nes_I.Main.Choosen = 'Mame NES' then
+            Emulator_MameNes(vChoose)
+          else if Nes_I.Main.Choosen = 'PuNes' then
+            Emulator_PuNes(vChoose)
+          else if Nes_I.Main.Choosen = 'FCEUX' then
+            Emulator_Fceux(vChoose)
+          else if Nes_I.Main.Choosen = 'MESEN' then
+            Emulator_Mesen(vChoose)
+          else if Nes_I.Main.Choosen = 'Nestopia EU' then
+            Emulator_NestopiaEU(vChoose)
+          else if Nes_I.Main.Choosen = 'Higan' then
+            Emulator_Higan(vChoose)
+          else if Nes_I.Main.Choosen = 'JNes' then
+            Emulator_JNes(vChoose)
+          else if Nes_I.Main.Choosen = 'Nintendulator' then
+            Emulator_Nintendulator(vChoose)
+          else if Nes_I.Main.Choosen = 'QuickNes' then
+            Emulator_QuickNes(vChoose)
+          else if Nes_I.Main.Choosen = 'RockNes' then
+            Emulator_RockNes(vChoose);
+          Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[2], TTabTransition.Slide, TTabTransitionDirection.Normal);
+        end
+        else
+          ShowMessage('Please Select an emulator with ready installation script');
+      end;
+    3:
+      begin
+        if Nes_I.Main.Tab3.Radio_1.IsChecked or Nes_I.Main.Tab3.Radio_1.Visible = false then
+        begin
+          Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[3], TTabTransition.Slide, TTabTransitionDirection.Normal);
+        end
+        else if Nes_I.Main.Tab3.Radio_2.IsChecked then
+        begin
+          Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[4], TTabTransition.Slide, TTabTransitionDirection.Normal);
+          Inc(Nes_I.Main.Status);
+        end;
+        if Nes_I.Main.Choosen = 'Mame NES' then
+          Emulator_MameNes(vInstall)
+        else if Nes_I.Main.Choosen = 'PuNes' then
+          Emulator_PuNes(vInstall)
+        else if Nes_I.Main.Choosen = 'FCEUX' then
+          Emulator_Fceux(vInstall)
+        else if Nes_I.Main.Choosen = 'MESEN' then
+          Emulator_Mesen(vInstall)
+        else if Nes_I.Main.Choosen = 'Nestopia EU' then
+          Emulator_NestopiaEU(vInstall)
+        else if Nes_I.Main.Choosen = 'Higan' then
+          Emulator_Higan(vInstall)
+        else if Nes_I.Main.Choosen = 'JNes' then
+          Emulator_JNes(vInstall)
+        else if Nes_I.Main.Choosen = 'Nintendulator' then
+          Emulator_Nintendulator(vInstall)
+        else if Nes_I.Main.Choosen = 'QuickNes' then
+          Emulator_QuickNes(vInstall)
+        else if Nes_I.Main.Choosen = 'RockNes' then
+          Emulator_RockNes(vInstall);
+      end;
+    4:
+      begin
+        Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[5], TTabTransition.Slide, TTabTransitionDirection.Normal);
+        Inc(Nes_I.Main.Status);
+      end;
   end;
+
+  Inc(Nes_I.Main.Status);
   ShowButtons;
 end;
 
-procedure uEmulation_Consoles_Nes_Slide_To_Previous;
+procedure Slide_To_Previous;
 begin
-  if (Nes_I.Main.Status = 'phase_4_1') or (Nes_I.Main.Status = 'phase_4_2') then
+  if (Nes_I.Main.Status = 4) or (Nes_I.Main.Status = 5) then
   begin
     Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[2], TTabTransition.Slide, TTabTransitionDirection.Reversed);
-    Nes_I.Main.Status := 'phase_3';
+    if Nes_I.Main.Status = 5 then
+      Dec(Nes_I.Main.Status);
   end
-  else if Nes_I.Main.Status = 'phase_3' then
-  begin
-    Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[1], TTabTransition.Slide, TTabTransitionDirection.Reversed);
-    Nes_I.Main.Status := 'phase_2';
-  end
-  else if Nes_I.Main.Status = 'phase_2' then
-  begin
+  else if Nes_I.Main.Status = 3 then
+    Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[1], TTabTransition.Slide, TTabTransitionDirection.Reversed)
+  else if Nes_I.Main.Status = 2 then
     Nes_I.Main.Control.SetActiveTabWithTransition(Nes_I.Main.Tabs[0], TTabTransition.Slide, TTabTransitionDirection.Reversed);
-    Nes_I.Main.Status := 'phase_1';
-  end;
+
+  Dec(Nes_I.Main.Status);
   ShowButtons;
 end;
 
@@ -325,9 +374,8 @@ begin
   Nes_I.Main.Tab1.Text.TextSettings.FontColor := TAlphaColorRec.White;
   Nes_I.Main.Tab1.Text.TextSettings.Font.Size := 14;
   Nes_I.Main.Tab1.Text.TextSettings.VertAlign := TTextAlign.Leading;
-  Nes_I.Main.Tab1.Text.Text :=
-    ' This action will "<font color="#ff63cbfc">install a Nes_I Emulator</font>" to "<font color="#ff63cbfc">ExtraFE</font>".' + #13#10 +
-    ' If you wish to continue press next else press cancel.';
+  Nes_I.Main.Tab1.Text.Text := ' This action will "<font color="#ff63cbfc">install a Nes_I Emulator</font>" to "<font color="#ff63cbfc">ExtraFE</font>".' +
+    #13#10 + ' If you wish to continue press next else press cancel.';
   Nes_I.Main.Tab1.Text.Visible := True;
 end;
 
@@ -369,7 +417,7 @@ begin
     Nes_I.Main.Tab2.Items[vi].OnClick := ex_main.Input.mouse_script_consoles.ListBoxItem.OnClick;
     Nes_I.Main.Tab2.Items[vi].Visible := True;
 
-    inc(vi);
+    Inc(vi);
     uDB.ExtraFE_Query_Local.Next;
   end;
 
@@ -400,7 +448,7 @@ begin
 
 end;
 
-procedure uEmulation_Consoles_Nes_ShowEmulatorInfo(vName: String);
+procedure ShowEmulatorInfo(vName: String);
 var
   vImg: FMX.Graphics.TBitmap;
   vText: String;
@@ -419,9 +467,15 @@ begin
   vText := uDB.ExtraFE_Query_Local.FieldByName('Text').AsString;
   vStatus := uDB.ExtraFE_Query_Local.FieldByName('Status').AsString;
   if vStatus <> 'Full' then
-    Nes_I.Main.Next.Enabled := False
+  begin
+    Nes_I.Main.Next.Enabled := false;
+    Nes_I.Main.Choosen := '';
+  end
   else
+  begin
     Nes_I.Main.Next.Enabled := True;
+    Nes_I.Main.Choosen := vName;
+  end;
 
   vStatus := 'Status : ' + vStatus;
 
@@ -435,6 +489,7 @@ begin
   Nes_I.Main.Tab4_1.Edit_Info.Text := 'Find the executable file of  "' + Nes_I.Main.Choosen + '" emulator.';
   Nes_I.Main.Tab5.Text.Text := ' Installation of "<font color="#ff63cbfc">' + Nes_I.Main.Choosen + '</font>" is completed.' + #13#10 +
     '   Close and enjoy the thousands retro games of Nintendo NES.' + #13#10 + '   P.S. You must have the roms to play, ExtraFE provide no roms.';
+
 end;
 
 procedure Create_Tab3;
@@ -442,37 +497,47 @@ begin
   Nes_I.Main.Tab3.Box := TGroupBox.Create(Nes_I.Main.Tabs[2]);
   Nes_I.Main.Tab3.Box.Name := 'Script_Nes_Install_Main_Tab3_Box';
   Nes_I.Main.Tab3.Box.Parent := Nes_I.Main.Tabs[2];
-  Nes_I.Main.Tab3.Box.SetBounds(10, 10, Nes_I.Main.Control.Width - 20, 200);
+  Nes_I.Main.Tab3.Box.SetBounds(10, 65, Nes_I.Main.Control.Width - 20, Nes_I.Main.Control.Height - 130);
   Nes_I.Main.Tab3.Box.Text := 'Please choose installation type.';
   Nes_I.Main.Tab3.Box.Visible := True;
 
   Nes_I.Main.Tab3.Radio_1 := TRadioButton.Create(Nes_I.Main.Tab3.Box);
   Nes_I.Main.Tab3.Radio_1.Name := 'Script_Nes_Install_Main_Tab3_Radio_1';
   Nes_I.Main.Tab3.Radio_1.Parent := Nes_I.Main.Tab3.Box;
-  Nes_I.Main.Tab3.Radio_1.SetBounds(20, 30, 400, 24);
+  Nes_I.Main.Tab3.Radio_1.SetBounds(20, 50, 400, 24);
   Nes_I.Main.Tab3.Radio_1.OnClick := ex_main.Input.mouse_script_arcade.Radio.OnMouseClick;
   Nes_I.Main.Tab3.Radio_1.Visible := True;
 
   Nes_I.Main.Tab3.Radio_2 := TRadioButton.Create(Nes_I.Main.Tab3.Box);
   Nes_I.Main.Tab3.Radio_2.Name := 'Script_Nes_Install_Main_Tab3__Radio_2';
   Nes_I.Main.Tab3.Radio_2.Parent := Nes_I.Main.Tab3.Box;
-  Nes_I.Main.Tab3.Radio_2.SetBounds(20, 90, 400, 24);
+  Nes_I.Main.Tab3.Radio_2.SetBounds(20, 120, 400, 24);
   Nes_I.Main.Tab3.Radio_2.OnClick := ex_main.Input.mouse_script_arcade.Radio.OnMouseClick;
   Nes_I.Main.Tab3.Radio_2.Visible := True;
+
+  Nes_I.Main.Tab3.Text := TALText.Create(Nes_I.Main.Tab3.Box);
+  Nes_I.Main.Tab3.Text.Name := '';
+  Nes_I.Main.Tab3.Text.Parent := Nes_I.Main.Tab3.Box;
+  Nes_I.Main.Tab3.Text.SetBounds(20, 150, Nes_I.Main.Tab3.Box.Width - 40, 100);
+  Nes_I.Main.Tab3.Text.Color := TAlphaColorRec.White;
+  Nes_I.Main.Tab3.Text.TextIsHtml := True;
+  Nes_I.Main.Tab3.Text.Text := '';
+  Nes_I.Main.Tab3.Text.WordWrap := True;
+  Nes_I.Main.Tab3.Text.Visible := True;
 end;
 
-procedure Create_Tab4_1;
+procedure Create_Tab4;
 begin
   Nes_I.Main.Tab4_1.Box := TGroupBox.Create(Nes_I.Main.Tabs[3]);
   Nes_I.Main.Tab4_1.Box.Name := 'Script_Nes_Install_Main_Tab4_Computer_Box';
   Nes_I.Main.Tab4_1.Box.Parent := Nes_I.Main.Tabs[3];
-  Nes_I.Main.Tab4_1.Box.SetBounds(10, 10, Nes_I.Main.Control.Width - 20, 200);
+  Nes_I.Main.Tab4_1.Box.SetBounds(10, 65, Nes_I.Main.Control.Width - 20, Nes_I.Main.Control.Height - 130);
   Nes_I.Main.Tab4_1.Box.Visible := True;
 
   Nes_I.Main.Tab4_1.Edit_Info := TLabel.Create(Nes_I.Main.Tab4_1.Box);
   Nes_I.Main.Tab4_1.Edit_Info.Name := 'Script_Nes_Install_Main_Tab4_EditLabel';
   Nes_I.Main.Tab4_1.Edit_Info.Parent := Nes_I.Main.Tab4_1.Box;
-  Nes_I.Main.Tab4_1.Edit_Info.SetBounds(20, 40, 300, 24);
+  Nes_I.Main.Tab4_1.Edit_Info.SetBounds(20, 80, 300, 24);
   Nes_I.Main.Tab4_1.Edit_Info.TextSettings.Font.Style := Nes_I.Main.Tab4_1.Edit_Info.TextSettings.Font.Style + [TFontStyle.fsBold];
   Nes_I.Main.Tab4_1.Edit_Info.Visible := True;
 
@@ -486,7 +551,7 @@ begin
   Nes_I.Main.Tab4_1.Edit := TEdit.Create(Nes_I.Main.Tab4_1.Box);
   Nes_I.Main.Tab4_1.Edit.Name := 'Script_Nes_Install_Main_Tab4_Edit';
   Nes_I.Main.Tab4_1.Edit.Parent := Nes_I.Main.Tab4_1.Box;
-  Nes_I.Main.Tab4_1.Edit.SetBounds(20, 60, Nes_I.Main.Tab4_1.Box.Width - 80, 26);
+  Nes_I.Main.Tab4_1.Edit.SetBounds(20, 100, Nes_I.Main.Tab4_1.Box.Width - 80, 26);
   Nes_I.Main.Tab4_1.Edit.Text := '';
   Nes_I.Main.Tab4_1.Edit.ReadOnly := True;
   Nes_I.Main.Tab4_1.Edit.Caret.Color := TAlphaColorRec.DeepSkyBlue;
@@ -495,7 +560,7 @@ begin
   Nes_I.Main.Tab4_1.Find := TButton.Create(Nes_I.Main.Tab4_1.Box);
   Nes_I.Main.Tab4_1.Find.Name := 'Script_Nes_Install_Main_Tab4_Find';
   Nes_I.Main.Tab4_1.Find.Parent := Nes_I.Main.Tab4_1.Box;
-  Nes_I.Main.Tab4_1.Find.SetBounds(Nes_I.Main.Tab4_1.Box.Width - 60, 60, 50, 26);
+  Nes_I.Main.Tab4_1.Find.SetBounds(Nes_I.Main.Tab4_1.Box.Width - 60, 100, 50, 26);
   Nes_I.Main.Tab4_1.Find.Text := 'Find';
   Nes_I.Main.Tab4_1.Find.OnClick := ex_main.Input.mouse_script_consoles.Button.OnMouseClick;
   Nes_I.Main.Tab4_1.Find.Visible := True;
@@ -512,18 +577,18 @@ begin
   Nes_I.Main.Tab4_1.Start := TButton.Create(Nes_I.Main.Tab4_1.Box);
   Nes_I.Main.Tab4_1.Start.Name := 'Script_Nes_Install_Main_Tab4_Start';
   Nes_I.Main.Tab4_1.Start.Parent := Nes_I.Main.Tab4_1.Box;
-  Nes_I.Main.Tab4_1.Start.SetBounds(30, 120, 200, 26);
+  Nes_I.Main.Tab4_1.Start.SetBounds(20, 150, Nes_I.Main.Tab4_1.Box.Width - 40, 32);
   Nes_I.Main.Tab4_1.Start.Text := 'Start the installation.';
   Nes_I.Main.Tab4_1.Start.OnClick := ex_main.Input.mouse_script_consoles.Button.OnMouseClick;
   Nes_I.Main.Tab4_1.Start.Visible := false;
 end;
 
-procedure Create_Tab4_2;
+procedure Create_Tab5;
 begin
 
 end;
 
-procedure Create_Tab5;
+procedure Create_Tab6;
 begin
   Nes_I.Main.Tab5.Box := TGroupBox.Create(Nes_I.Main.Tabs[5]);
   Nes_I.Main.Tab5.Box.Name := 'Script_Nes_Install_Main_Tab5_Box';
@@ -563,44 +628,178 @@ begin
   Nes_I.Main.Tab4_1.Find.Visible := false;
   Nes_I.Main.Tab4_1.Edit_Info.Text := 'Start the installation.';
 
-  nes.Mame.Name := ExtractFileName(Nes_I.Main.Tab4_1.Edit.Text);
-  nes.Mame.Path := ExtractFilePath(Nes_I.Main.Tab4_1.Edit.Text);
+  if Nes_I.Main.Choosen = 'Mame NES' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.Mame_Nes
+  else if Nes_I.Main.Choosen = 'PuNes' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.PuNes
+  else if Nes_I.Main.Choosen = 'FCEUX' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.FCEUX
+  else if Nes_I.Main.Choosen = 'MESEN' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.MESEN
+  else if Nes_I.Main.Choosen = 'Nestopia EU' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.Nestopia_EU
+  else if Nes_I.Main.Choosen = 'Higan' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.Higan
+  else if Nes_I.Main.Choosen = 'JNes' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.JNes
+  else if Nes_I.Main.Choosen = 'Nintendulator' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.Nintendulator
+  else if Nes_I.Main.Choosen = 'QuickNes' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.Quick_Nes
+  else if Nes_I.Main.Choosen = 'RockNes' then
+    uMain_Config_Emulation_Consoles_Scripts_Nes_Install_Emulators.Rock_Nes;
 
-  // Create mame ini if dont exist
-  if not FileExists(nes.Mame.Path + 'mame.ini') then
-    ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(nes.Mame.Path + nes.Mame.Name, Char(34)) + ' -cc'), PChar(nes.Mame.Path), SW_HIDE);
-  nes.Mame.p_Ini_Path := nes.Mame.Path;
-
-  Nes_I.Main.Tab4_1.Progress.Value := 20;
-  Application.ProcessMessages;
-
-  nes.Mame.Database := extrafe.prog.Path + 'emu\consoles\nes\database\';
-  ShellExecute(0, nil, 'cmd.exe', PChar('/C ' + AnsiQuotedStr(nes.Mame.Path + nes.Mame.Name, Char(34)) + ' nes -glist > ' + nes.Mame.Database +
-    'mame_data_games.xml'), nil, SW_HIDE);
-
-  Nes_I.Main.Tab4_1.Progress.Value := 40;
-  Application.ProcessMessages;
-
-  if emulation.Level = 0 then
-    emulation.Selection_Tab[2].Logo_Gray.Enabled := false;
-  inc(emulation.Category[2].Second_Level, 1);
-  Nes_I.Main.Tab4_1.Progress.Value := 100;
-  Nes_I.Main.Tab4_1.Edit_Info.Text := 'Installation complete. Click next to start using it.';
-
-  emulation.emu[2, 8] := 'active';
-  emulation.Consoles[8].Installed := True;
-
-  // Clear and create the main control tab
-  uMain_Emulation.Clear_Selection_Control;
-  uMain_Emulation.Create_Selection_Control;
-  uMain_Emulation.Category(2, 0);
-
-  FreeAndNil(mainScene.Config.Main.R.Emulators.Consoles[8].Panel);
-  uMain_Config_Emulators.CreateConsolesPanel(8);
 
   Nes_I.Main.Cancel.Visible := false;
   Nes_I.Main.Back.Visible := false;
   Nes_I.Main.Next.Enabled := True;
+end;
+
+procedure Emulator_MameNes(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+    // Εδώ πρέπει να βάλω όλες τις πιθανότητες στις οποίες να αναφέρεται το mame.exe εγκατεστημένο
+    if uDB_AUser.Local.Emulators.Arcade_D.Mame then
+    begin
+      Nes_I.Main.Tab3.Radio_1.Visible := false;
+      Nes_I.Main.Tab3.Radio_2.Visible := false;
+
+      Nes_I.Main.Tab3.Text.Text := 'No need to choose type of installation for this emulator as the common emulator " Mame " is already installed ' + #10#13 +
+        'Just press Next to continue';
+      Nes_I.Main.Next.Enabled := True;
+      Nes_I.Main.IsEmuAlReadyInstalled := True;
+    end
+    else
+    begin
+      Nes_I.Main.Tab3.Radio_1.Visible := True;
+      Nes_I.Main.Tab3.Radio_2.Visible := True;
+
+      Nes_I.Main.Tab3.Text.Text := '';
+    end;
+  end
+  else if vState = vInstall then
+  begin
+    if Nes_I.Main.Tab3.Radio_1.Visible then
+    begin
+
+    end
+    else
+    begin
+      Nes_I.Main.Tab4_1.Edit_Info.Visible := false;
+      Nes_I.Main.Tab4_1.Edit.Visible := false;
+      Nes_I.Main.Tab4_1.Find.Visible := false;
+      Nes_I.Main.Tab4_1.Start.Visible := True;
+    end;
+  end;
+end;
+
+procedure Emulator_PuNes(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_Fceux(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_Mesen(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_NestopiaEU(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_Higan(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_JNes(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_Nintendulator(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_QuickNes(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
+end;
+
+procedure Emulator_RockNes(vState: TINSTALATION_STATE);
+begin
+  if vState = vChoose then
+  begin
+
+  end
+  else if vState = vInstall then
+  begin
+
+  end;
 end;
 
 { TMAIN_NES_INSTALL_DIALOG }

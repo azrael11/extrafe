@@ -1,0 +1,9 @@
+unit uArcade_Actions;
+
+interface
+uses
+  System.Classes;
+
+implementation
+
+end.

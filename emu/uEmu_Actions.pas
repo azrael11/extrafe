@@ -1,6 +1,7 @@
 unit uEmu_Actions;
 
 interface
+
 uses
   System.Classes,
   System.UITypes,
@@ -8,7 +9,7 @@ uses
   FMX.Forms;
 
 procedure uEmu_LoadEmulator(vNum: Integer);
-procedure uEmu_Actions_Exit;
+procedure Exit;
 
 procedure Key(vKey: String);
 procedure Key_Up(vKey: String);
@@ -17,6 +18,7 @@ var
   vCurrent_View_Mode: String;
 
 implementation
+
 uses
   emu,
   uDB_AUser,
@@ -24,8 +26,10 @@ uses
   main,
   uMain_AllTypes,
   {Arcade}
-  //Mame
-  uEmu_Arcade_Mame;
+  // Mame
+  uEmu_Arcade_Mame,
+  uLoad_AllTypes,
+  uEmu_Consoles_Nes;
 
 function choose_view_mode: String;
 var
@@ -35,30 +39,49 @@ begin
   vInt := Trunc(uDB_AUser.Local.EMULATORS.Active_Unique);
   vInt2 := FloatToStr(Frac(uDB_AUser.Local.EMULATORS.Active_Unique)).ToInteger;
   case vInt of
-    0 :
+    0:
       case vInt2 of
-        0 : Result := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode;
+        0:
+          Result := uDB_AUser.Local.EMULATORS.Arcade_D.Mame_D.View_Mode;
       end;
   end;
 end;
 
-
 procedure uEmu_LoadEmulator(vNum: Integer);
 begin
-  Emu_Form.WindowState:= TWindowState.wsMaximized;
-  case vNum of
-    0: uEmu_Arcade_Mame.Load;
+  Emu_Form.WindowState := TWindowState.wsMaximized;
+  case emulation.Category_Num of
+    0:
+      begin
+        uEmu_Arcade_Mame.Load;
+      end;
+    1:
+      begin
+
+      end;
+    2:
+      begin
+        if emulation.Consoles[vNum].Name = '' then
+          uEmu_Consoles_Nes.Load;
+      end;
+    3:
+      begin
+
+      end;
+    4:
+      begin
+
+      end;
   end;
-  vCurrent_View_Mode := choose_view_mode;
 end;
 
-procedure uEmu_Actions_Exit;
+procedure Exit;
 begin
-  mainScene.Main.Down_Level_Ani.Name := 'Main_Down_Animation_Back';
-  mainScene.Main.Down_Level_Ani.StartValue := 0.1;
-  mainScene.Main.Down_Level_Ani.StopValue := 1;
-  mainScene.Main.Down_Level_Ani.Duration := 1;
-  mainScene.Main.Down_Level_Ani.Start;
+  mainScene.main.Down_Level_Ani.Name := 'Main_Down_Animation_Back';
+  mainScene.main.Down_Level_Ani.StartValue := 0.1;
+  mainScene.main.Down_Level_Ani.StopValue := 1;
+  mainScene.main.Down_Level_Ani.Duration := 1;
+  mainScene.main.Down_Level_Ani.Start;
   Emu_Form.Close;
   Main_Form.ShowModal;
 end;

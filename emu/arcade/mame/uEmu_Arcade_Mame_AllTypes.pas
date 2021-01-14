@@ -18,7 +18,6 @@ uses
   FMX.Types,
   System.Inifiles,
   FmxPasLibVlcPlayerUnit,
-  uEmu_Arcade_Mame_Mouse,
   uEmu_Arcade_Mame_Config_Mouse,
   ALFmxLayouts,
   Radiant.Shapes,
@@ -67,12 +66,21 @@ type
   end;
 
 type
+  TMAME_CONFIG_DIRECTORIES_ROMS_EXT = record
+    Text: TLabel;
+    Box: TGroupBox;
+    Check: array of TCheckBox;
+  end;
+
+type
   TMAME_CONFIG_DIRECTORIES = record
     TabControl: TTabControl;
     Roms_Tab: TTabItem;
+    Roms_Ext_Tab: TTabItem;
     Media_Tab: TTabItem;
 
     Roms: TMAME_CONFIG_DIRECTORIES_ROMS;
+    Roms_Ext: TMAME_CONFIG_DIRECTORIES_ROMS_EXT;
     Media: TMAME_CONFIG_DIRECTORIES_MEDIA;
   end;
 
@@ -652,6 +660,7 @@ type
     ListGenre: TStringList;
     ListMonochrome: TStringList;
     ListLanguages: TStringList;
+    RomsPath: TStringList;
     Timer: TTimer;
     Selected: Integer;
     Search_Selected: Integer;
@@ -680,13 +689,6 @@ type
 type
   TEMU_MAME_EMU = record
     Ini: TEMU_MAME_INI;
-  end;
-
-type
-  TEMU_MAME_INPUT = record
-    Mouse: TEMU_ARCADE_MAME_MOUSE;
-    // Keyboard: TEMU_ARCADE_MAME_KEYBOARD;
-    // Joystick: TEMU_ARCADE_MAME_JOYSTICK;
   end;
 
 type
@@ -763,7 +765,6 @@ type
     Gamelist: TEMU_GAMELISTS;
     Monitor: TEMU_MAME_MONITOR;
     Main: TEMU_MAME_MAIN;
-    Input: TEMU_MAME_INPUT;
     Config: TEMU_MAME_CONFIG;
   end;
 
